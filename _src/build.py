@@ -125,8 +125,14 @@ def pubs_html():
                 d = f' <a href="https://doi.org/{e(p["doi"])}">doi:{e(p["doi"])}</a>'
             elif p.get('url'):
                 d = f' <a href="{e(p["url"])}">{bi("رابط", "Link")}</a>'
-            if p.get('page'):
+            rs = next((r for r in research if (p.get('doi') and r.get('doi') == p.get('doi')) or r['orig_title'].replace('’', "'") == p['title'].replace('’', "'")), None)
+            if rs:
+                d += f' · <a href="../research/{rs["slug"]}/index.html">{bi("تفاصيل البحث", "Research details")}</a>'
+            elif p.get('page'):
                 d += f' · <a href="../{p["page"]}index.html">{bi("تفاصيل البحث", "Research details")}</a>'
+            qj = next((j for j in QUART if p['venue'].startswith(j + ',') or p['venue'].startswith(j + ' ')), None)
+            if qj:
+                d += ' ' + qbadge_t(qj)
             dirr = 'rtl' if p['lang'] == 'ar' else 'ltr'
             lis.append(f'''<li class="pub2" data-t="{p['type']}" dir="{dirr}"><p class="au">{bold_me(p['authors'])} ({y})</p><h3>{e(p['title'])}</h3><p class="v">{e(p['venue'])}.{d}</p><span class="kind">{bi(*PTYPES[p['type']])}</span></li>''')
         out.append(f'<div class="yr-group"><h2 class="yr mono">{y}</h2><ol class="plist">{"".join(lis)}</ol></div>')
@@ -153,23 +159,42 @@ def hero():
   <p class="h2-cta"><a href="#research">{bi('أحدث الأبحاث', 'Recent research')} <i class="chev"></i></a><a href="books/index.html">{bi('المكتبة المفتوحة', 'Open Library')} <i class="chev"></i></a></p>
 </section>'''
 
-def research_cards():
-    cards = []
-    for k, r in enumerate(research):
-        cls = 'rcard lead' if k == 0 else 'rcard'
-        cards.append(f'''<a class="{cls}" href="research/{r['slug']}/index.html">
+# Journal quartile (Clarivate JCR, 2025 edition) — only Q1/Q2 are shown
+QUART = {'Frontiers in Psychology': 'Q1', 'Frontiers in Education': 'Q1', 'Education Sciences': 'Q1', 'Acta Psychologica': 'Q1'}
+def qbadge_t(journal):
+    q = QUART.get(journal)
+    return f'<span class="qb" title="Journal Citation Reports 2025">{q}</span>' if q else ''
+
+def rtitle_html(r, tag='h3', cls='orig'):
+    if r.get('orig_lang') == 'ar':
+        return f'<{tag} class="{cls}" dir="rtl" lang="ar">{e(r["orig_title"])}</{tag}><p class="tr en">{e(r.get("title_en",""))}</p>'
+    return f'<{tag} class="{cls}" dir="ltr" lang="en">{e(r["orig_title"])}</{tag}><p class="tr ar">{e(r["title_ar"])}</p>'
+
+def rcard(r, lead=False, up=''):
+    j = bi(e(r['journal']), e(r.get('journal_en', r['journal']))) if r.get('journal_en') else e(r['journal'])
+    teaser = f'<p class="teaser">{bi(e(r["teaser_ar"]), e(r["teaser_en"]))}</p>' if r.get('teaser_ar') else ''
+    return f'''<a class="{'rcard lead' if lead else 'rcard'}" href="{up}research/{r['slug']}/index.html">
   <span class="rk">{bi(e(r['kind_ar']), e(r['kind_en']))}</span>
-  <span class="rj mono">{e(r['journal'])} · {r['date'][:4]}</span>
-  <h3 class="orig" dir="ltr" lang="en">{e(r['orig_title'])}</h3>
-  <p class="tr ar">{e(r['title_ar'])}</p>
-  <p class="teaser">{bi(e(r['teaser_ar']), e(r['teaser_en']))}</p>
+  <span class="rj"><span class="mono">{j} · {r['date'][:4]}</span>{qbadge_t(r['journal'])}</span>
+  {rtitle_html(r)}
+  {teaser}
   <span class="go">{bi('قراءة البحث', 'Read the research')} <i class="arr"></i></span>
-</a>''')
-    return f'''<section id="research" class="alt">
-  <div class="sec-head"><div><p class="eyebrow">{bi('أحدث الأبحاث', 'Recent research')}</p><h2>{bi('أبحاث منشورة', 'Published research')}</h2></div></div>
-  <div class="rgrid">{''.join(cards)}</div>
+</a>'''
+
+HOME_RESEARCH = 5
+def research_index():
+    return f'''<section class="first alt">
+  <div class="sec-head"><div><p class="eyebrow">{bi('الأبحاث', 'Research')}</p><h2>{bi('أبحاث منشورة', 'Published research')}</h2></div></div>
+  <div class="rgrid">{''.join(rcard(r, k == 0, '../') for k, r in enumerate(research))}</div>
+  <p class="all-pubs"><a href="../publications/index.html">{bi('القائمة الكاملة للمنشورات', 'Full list of publications')} <i class="chev"></i></a></p>
 </section>'''
 
+def research_cards():
+    cards = [rcard(r, k == 0) for k, r in enumerate(research[:HOME_RESEARCH])]
+    return f'''<section id="research" class="alt">
+  <div class="sec-head"><div><p class="eyebrow">{bi('أحدث الأبحاث', 'Recent research')}</p><h2>{bi('أبحاث منشورة', 'Published research')}</h2></div><a class="more-link" href="research/index.html">{bi('كل الأبحاث', 'All research')} ({len(research)}) <i class="chev"></i></a></div>
+  <div class="rgrid">{''.join(cards)}</div>
+</section>'''
 
 def books_band():
     try:
@@ -233,51 +258,56 @@ def explainer(slug):
 
 def research_page(r):
     facts = ''.join(f'<dt>{bi(f[0], f[1])}</dt><dd>{bi(e(f[2]), e(f[3]))}</dd>' for f in r.get('facts', []))
-    absd = ''.join(f'<dt>{bi(x[0], x[1])}</dt><dd><span class="ar">{e(x[2])}</span><span class="en" dir="ltr">{e(x[3])}</span></dd>' for x in r['abstract'])
-    finds = ''.join(f'<li><b>{e(f[0])}</b><span>{bi(e(f[1]), e(f[2]))}</span></li>' for f in r['findings'])
-    imps = ''.join(f'<li>{bi(e(i[0]), e(i[1]))}</li>' for i in r['implications'])
-    return f'''<section class="first"><p class="crumb"><a href="../../index.html">{bi('الرئيسية', 'Home')}</a> / <a href="../../publications/index.html">{bi('المنشورات', 'Publications')}</a></p>
+    absd = ''.join(f'<dt>{bi(x[0], x[1])}</dt><dd><span class="ar">{e(x[2])}</span><span class="en" dir="ltr">{e(x[3])}</span></dd>' for x in r.get('abstract', []))
+    finds = ''.join(f'<li><b>{e(f[0])}</b><span>{bi(e(f[1]), e(f[2]))}</span></li>' for f in r.get('findings', []))
+    imps = ''.join(f'<li>{bi(e(i[0]), e(i[1]))}</li>' for i in r.get('implications', []))
+    ar_orig = r.get('orig_lang') == 'ar'
+    title = (f'<h1 class="orig rtitle" dir="rtl" lang="ar">{e(r["orig_title"])}</h1><p class="tr en">Title in English: {e(r.get("title_en",""))}</p>' if ar_orig
+             else f'<h1 class="orig rtitle" dir="ltr" lang="en">{e(r["orig_title"])}</h1><p class="tr ar">ترجمة العنوان: {e(r["title_ar"])}</p>')
+    venue = bi(e(r['venue_ar']), e(r['venue'])) if r.get('venue_ar') else f'<span dir="ltr">{e(r["venue"])}</span>'
+    q = QUART.get(r['journal'])
+    qrow = f'<dt>{bi("تصنيف المجلة", "Journal rank")}</dt><dd><span class="qb">{q}</span> <span class="qnote">{bi("تقارير الاستشهاد بالمجلات (JCR 2025)", "Journal Citation Reports, 2025")}</span></dd>' if q else ''
+    doi = f'<dt>DOI</dt><dd class="mono" dir="ltr"><a href="https://doi.org/{r["doi"]}">{r["doi"]}</a></dd>' if r.get('doi') else ''
+    full = f'<a class="btn ghost" style="align-self:flex-start" href="{e(r["url"])}">{bi("النص الكامل في موقع المجلة", "Full text on the journal site")}</a>' if r.get('url') else ''
+    tabs, panels = [], []
+    def add(pid, ar, en, html):
+        tabs.append(f'<button class="tab" role="tab" aria-selected="{"true" if not tabs else "false"}" data-p="{pid}">{bi(ar, en)}</button>')
+        panels.append(f'<div class="panel{" abstract" if pid == "q0" else ""}" id="{pid}"{" hidden" if len(panels) else ""}>{html}</div>')
+    cite = f'<div class="cite"><span class="eyebrow">{bi("التوثيق (APA)", "Cite (APA)")}</span><p dir="ltr" id="citeText">{r["cite"]}</p><button type="button" class="copy" id="copyCite">{bi("نسخ", "Copy")}</button></div>'
+    if r.get('summary_ar'):
+        add('qx', 'بإيجاز', 'At a glance', f'<button type="button" class="listen" data-say-ar="{e(r["summary_ar"])}" data-say-en="{e(r["summary_en"])}">{bi("استمع إلى الملخص", "Listen to the summary")}</button>{explainer(r["slug"]) or "<p>" + bi(e(r["summary_ar"]), e(r["summary_en"])) + "</p>"}')
+    if absd:
+        note = '' if ar_orig else '<p class="note ar">ترجمة المستخلص إلى العربية غير رسمية؛ النص المعتمد هو المنشور في المجلة.</p>'
+        note = note if not ar_orig else '<p class="note en">The English text is an informal translation; the published Arabic text is authoritative.</p>'
+        add('q0', 'المستخلص', 'Abstract', f'<dl>{absd}</dl><p class="kw"><b>{bi("الكلمات المفتاحية:", "Keywords:")}</b> {bi(e(r.get("keywords_ar","")), e(r.get("keywords_en","")))}</p>{note}{cite}')
+    if finds:
+        add('q3', 'النتائج الرئيسة', 'Key findings', f'<ul class="findings">{finds}</ul>')
+    if imps:
+        add('q4', 'التطبيقات', 'Implications', f'<ol class="ideas">{imps}</ol>')
+    if not absd:
+        add('q0', 'التوثيق', 'Citation', f'<p class="note">{bi("المستخلص والنص الكامل متاحان في موقع المجلة.", "The abstract and full text are available on the journal site.")}</p>{cite}')
+    right = f'<div><div class="tabs" role="tablist">{"".join(tabs)}</div>{"".join(panels)}</div>'
+    return f'''<section class="first"><p class="crumb"><a href="../../index.html">{bi('الرئيسية', 'Home')}</a> / <a href="../index.html">{bi('الأبحاث', 'Research')}</a></p>
 <article class="story">
   <div class="story-meta">
     <span class="badge">{bi(e(r['kind_ar']), e(r['kind_en']))}</span>
-    <h1 class="orig rtitle" dir="ltr" lang="en">{e(r['orig_title'])}</h1>
-    <p class="tr ar">ترجمة العنوان: {e(r['title_ar'])}</p>
+    {title}
     <dl class="facts">
       <dt>{bi('الباحثون', 'Authors')}</dt><dd dir="ltr">{e(r['authors_en'])}<span class="ar" dir="rtl"><br>{e(r['authors_ar'])}</span></dd>
-      <dt>{bi('المجلة', 'Journal')}</dt><dd dir="ltr">{e(r['venue'])}</dd>
+      <dt>{bi('المجلة', 'Journal')}</dt><dd>{venue}</dd>
+      {qrow}
       <dt>{bi('تاريخ النشر', 'Published')}</dt><dd class="mono">{r['date']}</dd>
       {facts}
-      <dt>DOI</dt><dd class="mono" dir="ltr"><a href="https://doi.org/{r['doi']}">{r['doi']}</a></dd>
+      {doi}
     </dl>
-    <a class="btn ghost" style="align-self:flex-start" href="{e(r['url'])}">{bi('النص الكامل في موقع المجلة', 'Full text on the journal site')}</a>
+    {full}
     {share_bar(r)}
   </div>
-  <div>
-    <div class="tabs" role="tablist">
-      <button class="tab" role="tab" aria-selected="true" data-p="qx">{bi('بإيجاز', 'At a glance')}</button>
-      <button class="tab" role="tab" aria-selected="false" data-p="q0">{bi('المستخلص', 'Abstract')}</button>
-      <button class="tab" role="tab" aria-selected="false" data-p="q2">{bi('الملخص الموجز', 'Brief summary')}</button>
-      <button class="tab" role="tab" aria-selected="false" data-p="q3">{bi('النتائج الرئيسة', 'Key findings')}</button>
-      <button class="tab" role="tab" aria-selected="false" data-p="q4">{bi('التطبيقات التربوية', 'Implications')}</button>
-    </div>
-    <div class="panel" id="qx">
-      <button type="button" class="listen" data-say-ar="{e(r['summary_ar'])}" data-say-en="{e(r['summary_en'])}">{bi('استمع إلى الملخص', 'Listen to the summary')}</button>
-      {explainer(r['slug'])}
-    </div>
-    <div class="panel abstract" id="q0" hidden>
-      <dl>{absd}</dl>
-      <p class="kw"><b>{bi('الكلمات المفتاحية:', 'Keywords:')}</b> {bi(e(r['keywords_ar']), e(r['keywords_en']))}</p>
-      <p class="note ar">ترجمة المستخلص إلى العربية غير رسمية؛ النص المعتمد هو المنشور في المجلة.</p>
-      <div class="cite"><span class="eyebrow">{bi('التوثيق (APA)', 'Cite (APA)')}</span><p dir="ltr" id="citeText">{r['cite']}</p><button type="button" class="copy" id="copyCite">{bi('نسخ', 'Copy')}</button></div>
-    </div>
-    <div class="panel" id="q2" hidden><p>{bi(e(r['summary_ar']), e(r['summary_en']))}</p></div>
-    <div class="panel" id="q3" hidden><ul class="findings">{finds}</ul></div>
-    <div class="panel" id="q4" hidden><ol class="ideas">{imps}</ol></div>
-  </div>
+  {right}
 </article></section>'''
 
 def research_dys():
-    return f'''<section class="first"><p class="crumb"><a href="../../index.html">{bi('الرئيسية', 'Home')}</a> / <a href="../../publications/index.html">{bi('المنشورات', 'Publications')}</a></p>
+    return f'''<section class="first"><p class="crumb"><a href="../../index.html">{bi('الرئيسية', 'Home')}</a> / <a href="../index.html">{bi('الأبحاث', 'Research')}</a></p>
 {featured}<div class="share-wrap">{share_bar(next(x for x in research if x['slug']=='ai-visual-instruction-dyslexia'))}</div></section>'''
 
 def contact_html():
@@ -336,7 +366,8 @@ DESCS = {
  'publications': "Full list of publications by Dr. Omar A. Alsamani: journal articles, book chapters and theses on gifted education, twice-exceptional students, autism, creativity, entrepreneurship and AI in education.",
  'photography': "Landscape, wildlife and heritage photography by Omar Alsamani.",
  'contact': "Contact Dr. Omar A. Alsamani for research collaboration, training, consulting and media.",
- 'about': "Dr. Omar A. Alsamani, Associate Professor of Special Education at the University of Ha'il: gifted education, twice-exceptionality, innovation and entrepreneurship, AI in education.",
+ 'about': "Dr. Omar A. Alsamani, Associate Professor (PhD) and Certified Chief Innovation Officer: innovation strategy and ecosystems, giftedness and talent development, special education and twice-exceptionality.",
+ 'research': "Published research by Dr. Omar A. Alsamani on giftedness, twice-exceptionality, innovation, entrepreneurship and AI in education.",
 }
 def seo(name, title):
     path = '' if name == 'index' else name + '/'
@@ -352,13 +383,12 @@ def seo(name, title):
         authors = [a.strip() for a in rr['authors_en'].split(',')]
         abstract = rr.get('abstract_plain') or ' '.join(x[3] for x in rr.get('abstract', []))
         ld.append({"@context": "https://schema.org", "@type": "ScholarlyArticle", "headline": rr['orig_title'][:110], "name": rr['orig_title'],
-                   "alternativeHeadline": rr['title_ar'], "author": [PERSON if 'Alsamani' in a else {"@type": "Person", "name": a} for a in authors],
-                   "datePublished": rr['date'], "isPartOf": {"@type": "Periodical", "name": rr['journal']}, "identifier": {"@type": "PropertyValue", "propertyID": "DOI", "value": rr['doi']},
-                   "sameAs": "https://doi.org/" + rr['doi'], "url": url, "abstract": abstract, "keywords": rr.get('keywords_en', ''), "inLanguage": "en", "image": SITE + "img/ph15.webp"})
+                   "alternativeHeadline": rr.get('title_en') if rr.get('orig_lang') == 'ar' else rr['title_ar'], "author": [PERSON if 'Alsamani' in a else {"@type": "Person", "name": a} for a in authors],
+                   "datePublished": rr['date'], "isPartOf": {"@type": "Periodical", "name": rr['journal']}, "url": url, "abstract": abstract, "keywords": rr.get('keywords_en', ''), "inLanguage": rr.get('orig_lang', 'en'), "image": SITE + "img/ph15.webp"})
         extra += f'<meta name="citation_title" content="{e(rr["orig_title"])}">\n'
         for a in authors:
             extra += f'<meta name="citation_author" content="{e(a)}">\n'
-        extra += f'<meta name="citation_publication_date" content="{rr["date"].replace("-", "/")}">\n<meta name="citation_journal_title" content="{e(rr["journal"])}">\n<meta name="citation_doi" content="{rr["doi"]}">\n'
+        extra += f'<meta name="citation_publication_date" content="{rr["date"].replace("-", "/")}">\n<meta name="citation_journal_title" content="{e(rr["journal"])}">\n' + (f'<meta name="citation_doi" content="{rr["doi"]}">\n' if rr.get('doi') else '')
         if rr.get('pdf'):
             extra += f'<meta name="citation_pdf_url" content="{e(rr["pdf"])}">\n'
         extra += f'<meta name="keywords" content="{e(rr.get("keywords_en", ""))}">\n'
@@ -386,6 +416,7 @@ PAGES = [('index', 0, 'Dr. Omar A. Alsamani | د. عمر عبدالله الصم
          ('photography', 1, 'Photography | Omar Alsamani | التصوير', photo_html),
          ('about', 1, 'About | Dr. Omar A. Alsamani | نبذة', about_html),
          ('contact', 1, 'Contact | Dr. Omar A. Alsamani | تواصل', contact_html),
+         ('research', 1, 'Research | Dr. Omar A. Alsamani | الأبحاث', research_index),
          ('research/ai-visual-instruction-dyslexia', 2, 'AI-based visual instruction and reading comprehension in dyslexia | Alsamani', research_dys)]
 for _r in research:
     if not _r.get('custom'):

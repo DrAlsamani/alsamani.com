@@ -361,5 +361,217 @@
   "keywords_en": "learning disabilities; generative artificial intelligence (GenAI); reading comprehension; dyslexia; special education; innovation in education; single-case design",
   "summary_en": "Three elementary students with dyslexia in Yanbu, Saudi Arabia, received ChatGPT-generated visual explanations aligned with their Grade 4 Arabic coursebook. All three moved from a 0–10% baseline to mastery and maintained it weeks later.",
   "abstract_plain": "Students with learning disabilities (LD), particularly dyslexia, often face significant challenges in reading comprehension that traditional instruction may not fully address. Generative Artificial Intelligence (GenAI) offers emerging opportunities to provide personalised and visual instructional support to bridge these gaps."
+ },
+ {
+  "slug": "teachers-perceptions-2e-characteristics",
+  "date": "2023-05-02",
+  "orig_title": "Elementary school teachers’ perceptions of the characteristics of twice-exceptional students",
+  "title_ar": "تصورات معلمي المرحلة الابتدائية لخصائص الطلاب مزدوجي الاستثنائية",
+  "journal": "Frontiers in Education",
+  "venue": "Frontiers in Education, 8, 1150274",
+  "kind_ar": "مقال محكّم · دراسة نوعية ظاهراتية",
+  "kind_en": "Peer-reviewed article · Qualitative phenomenological study",
+  "authors_en": "Omar Abdullah Alsamani, Yasir Ayed Alsamiri, Seham Defallah Alfaidi",
+  "authors_ar": "عمر عبدالله الصمعاني، ياسر عايض السميري، سهام الفايدي",
+  "doi": "10.3389/feduc.2023.1150274",
+  "url": "https://www.frontiersin.org/journals/education/articles/10.3389/feduc.2023.1150274/full",
+  "facts": [
+   [
+    "المنهج",
+    "Design",
+    "دراسة نوعية ظاهراتية؛ مقابلات معمقة شبه مقننة",
+    "Qualitative phenomenological study; in-depth semi-structured interviews"
+   ],
+   [
+    "المشاركون",
+    "Participants",
+    "14 معلمًا ومعلمة في المرحلة الابتدائية بالمدينة المنورة",
+    "14 elementary school teachers in Medina"
+   ]
+  ],
+  "teaser_ar": "يرى المعلمون الموهبة والإعاقة حالتين منفصلتين، لا حالة واحدة تؤثر سماتها في التعلم مجتمعة.",
+  "teaser_en": "Teachers tend to see giftedness and disability as two separate conditions rather than one combined profile.",
+  "abstract": [
+   [
+    "المستخلص",
+    "Abstract",
+    "استكشفت هذه الدراسة تصورات معلمي المرحلة الابتدائية في المملكة العربية السعودية وفهمهم لخصائص الطلاب مزدوجي الاستثنائية. وهي دراسة نوعية ظاهراتية شارك فيها 14 معلمًا ومعلمة في مدارس المدينة المنورة، وجُمعت بياناتها بمقابلات معمقة شبه مقننة للتعرف على تصوراتهم عن هذه الفئة من الطلاب. وأظهرت النتائج أن المعلمين يربطون سمة الموهبة لدى هؤلاء الطلاب بخصائص منها: مهارات التواصل الممتازة، والقدرة على حل المشكلات، وقوة الاحتفاظ بالمعلومات، وحب الاستطلاع، والإبداع، والتفكير المجرد، ومهارات القيادة. ويرى المعلمون كذلك أن هؤلاء الطلاب يواجهون تحديات أكاديمية مرتبطة بإعاقتهم في القراءة والكتابة والرياضيات، ويدركون أنهم يعانون غالبًا من تدني تقدير الذات وصعوبة المحافظة على التركيز. وبوجه عام، يميل المعلمون إلى النظر إلى هؤلاء الطلاب على أنهم يحملون حالتين مستقلتين، الموهبة والإعاقة المسببة للتحديات الأكاديمية، بدلًا من النظر إليهم على أنهم في حالة واحدة هي ازدواجية الاستثنائية، تتضمن سمات تؤثر في تعلمهم مجتمعة.",
+    "The current study explored the perceptions and understanding of Saudi elementary school teachers regarding the characteristics of twice-exceptional (2e) students. This qualitative phenomenological study recruited 14 elementary school teachers at schools in Medina City in Saudi Arabia. Data were gathered through in-depth semi-structured interviews to gain insight into participants' perceptions of this student population. Findings indicated that teachers associate certain characteristics with the giftedness trait of 2e students, including excellent communication skills, problem-solving ability, strong retention, curiosity, creativity, abstract thinking, and leadership skills. Moreover, Saudi elementary school teachers perceive that 2e students experience academic challenges related to their disabilities in reading, writing, and mathematics, as well as are aware that such students tend to struggle with low self-esteem and maintaining concentration. Overall, there is a tendency to view these students as having two independent conditions—giftedness and disabilities that cause academic challenges—rather than identifying these individuals as having a single condition of being twice exceptional that comprises traits that impact their learning in combination."
+   ]
+  ],
+  "keywords_ar": "الطلاب مزدوجو الاستثنائية؛ الموهوبون ذوو صعوبات التعلم؛ تصورات معلمي المرحلة الابتدائية؛ خصائص الموهوبين؛ تعليم الموهوبين؛ المملكة العربية السعودية",
+  "keywords_en": "twice-exceptional students; gifted students with learning disabilities; elementary teachers' perceptions; gifted students characteristics; gifted education; Saudi Arabia",
+  "summary_ar": "قابلت الدراسة 14 معلمًا ومعلمة في المدينة المنورة عن خصائص الطلاب مزدوجي الاستثنائية. يتعرف المعلمون على سمات الموهبة وعلى التحديات الأكاديمية، لكنهم يرونها حالتين منفصلتين، لا حالة واحدة متكاملة تحتاج إلى فهم خاص.",
+  "summary_en": "The study interviewed 14 elementary teachers in Medina about the characteristics of twice-exceptional students. Teachers recognize both giftedness traits and academic difficulties, but tend to treat them as two separate conditions rather than one integrated profile.",
+  "findings": [
+   [
+    "14",
+    "معلمًا ومعلمة في المرحلة الابتدائية بالمدينة المنورة.",
+    "elementary school teachers in Medina."
+   ],
+   [
+    "7",
+    "سمات للموهبة: التواصل، وحل المشكلات، وقوة الاحتفاظ، وحب الاستطلاع، والإبداع، والتفكير المجرد، والقيادة.",
+    "giftedness traits: communication, problem solving, retention, curiosity, creativity, abstract thinking, leadership."
+   ],
+   [
+    "3",
+    "مجالات للتحديات الأكاديمية: القراءة والكتابة والرياضيات.",
+    "areas of academic difficulty: reading, writing, mathematics."
+   ],
+   [
+    "2 ≠ 1",
+    "حالتان منفصلتان في نظر المعلمين، لا حالة واحدة.",
+    "two separate conditions in teachers' eyes, not one."
+   ]
+  ],
+  "implications": [
+   [
+    "إعداد المعلمين لفهم ازدواجية الاستثنائية حالةً واحدة تتداخل فيها الموهبة والإعاقة.",
+    "Prepare teachers to understand twice-exceptionality as one profile in which giftedness and disability interact."
+   ],
+   [
+    "الانتباه إلى تقدير الذات والتركيز لدى هؤلاء الطلاب إلى جانب الدعم الأكاديمي.",
+    "Attend to these students' self-esteem and concentration alongside academic support."
+   ]
+  ],
+  "cite": "Alsamani, O. A., Alsamiri, Y. A., &amp; Alfaidi, S. D. (2023). Elementary school teachers’ perceptions of the characteristics of twice-exceptional students. <i>Frontiers in Education, 8</i>, 1150274. https://doi.org/10.3389/feduc.2023.1150274"
+ },
+ {
+  "slug": "supportive-community-gifted-entrepreneurs",
+  "date": "2026-05",
+  "orig_lang": "ar",
+  "orig_title": "المجتمع الداعم للابتكار وريادة الأعمال للأفراد الموهوبين كما يراه روّاد الأعمال المبتكرون السعوديون: دراسة نوعية ظاهراتية",
+  "title_en": "The supportive community for innovation and entrepreneurship among gifted individuals as perceived by Saudi innovative entrepreneurs: A phenomenological qualitative study",
+  "title_ar": "المجتمع الداعم للابتكار وريادة الأعمال للأفراد الموهوبين كما يراه روّاد الأعمال المبتكرون السعوديون: دراسة نوعية ظاهراتية",
+  "journal": "مجلة العلوم التربوية والنفسية",
+  "journal_en": "Journal of Educational and Psychological Sciences",
+  "venue": "Journal of Educational and Psychological Sciences, Qassim University, 19(2), 621–652",
+  "venue_ar": "مجلة العلوم التربوية والنفسية، جامعة القصيم، 19(2)، 621–652",
+  "kind_ar": "مقال محكّم · دراسة نوعية ظاهراتية",
+  "kind_en": "Peer-reviewed article (in Arabic) · Qualitative phenomenological study",
+  "authors_en": "Omar Abdullah Alsamani",
+  "authors_ar": "عمر عبدالله الصمعاني",
+  "doi": "",
+  "url": "https://jeps.qu.edu.sa/index.php/jep/article/view/2949",
+  "facts": [
+   [
+    "المنهج",
+    "Design",
+    "دراسة نوعية ظاهراتية؛ مقابلات فردية شبه مقننة",
+    "Qualitative phenomenological study; semi-structured individual interviews"
+   ],
+   [
+    "المشاركون",
+    "Participants",
+    "10 من روّاد الأعمال السعوديين المبتكرين",
+    "10 Saudi innovative entrepreneurs"
+   ]
+  ],
+  "teaser_ar": "عشرة من روّاد الأعمال المبتكرين يصفون ما يحتاجه الموهوب من مجتمعه ليحوّل موهبته إلى نجاح ريادي مستدام.",
+  "teaser_en": "Ten innovative entrepreneurs describe what gifted individuals need from their community to turn talent into lasting entrepreneurial success.",
+  "abstract": [
+   [
+    "الهدف",
+    "Aim",
+    "هدفت هذه الدراسة النوعية الظاهراتية إلى استكشاف الكيفية التي يرى بها روّاد الأعمال السعوديون المبتكرون ظاهرة الدعم المجتمعي للابتكار وريادة الأعمال للأفراد الموهوبين، وكيف يصفون ما يحتاجه الجيل الجديد من الأفراد الموهوبين المبتكرين من المجتمع من أجل تحويل موهبتهم إلى نجاح ريادي مستدام.",
+    "This phenomenological qualitative study aimed to explore how Saudi innovative entrepreneurs perceive the phenomenon of community support for innovation and entrepreneurship among gifted individuals, and how they describe what the new generation of gifted and innovative individuals needs from the community in order to transform their talent into sustainable entrepreneurial success."
+   ],
+   [
+    "المنهج",
+    "Method",
+    "مقابلات فردية شبه مقننة مع عشرة من روّاد الأعمال السعوديين المبتكرين.",
+    "Semi-structured individual interviews with ten Saudi innovative entrepreneurs."
+   ],
+   [
+    "النتائج",
+    "Findings",
+    "أربعة محاور رئيسة: (1) الاعتراف بالملف الفريد للمبتكر وفهمه، (2) الاستثمار في المبتكر وربطه بالسوق، (3) التمكين المالي والتشغيلي، (4) بناء الهوية الريادية في بيئات مرنة.",
+    "Four major themes: (1) recognizing and understanding the innovator's unique profile, (2) investing in the innovator and connecting them to the market, (3) financial and operational enablement, (4) building entrepreneurial identity in flexible environments."
+   ]
+  ],
+  "keywords_ar": "الأفراد الموهوبون؛ الإبداع؛ الابتكار؛ ريادة الأعمال؛ الموهبة الريادية",
+  "keywords_en": "gifted individuals; creativity; innovation; entrepreneurship; entrepreneurial giftedness",
+  "summary_ar": "قابلت الدراسة عشرة من روّاد الأعمال السعوديين المبتكرين عن الدعم المجتمعي الذي يحتاجه الموهوبون في الابتكار وريادة الأعمال. وانتهت إلى أربعة محاور: فهم ملف المبتكر، والاستثمار فيه وربطه بالسوق، وتمكينه ماليًا وتشغيليًا، وبناء هويته الريادية في بيئات مرنة.",
+  "summary_en": "The study interviewed ten Saudi innovative entrepreneurs about the community support gifted individuals need in innovation and entrepreneurship. Four themes emerged: understanding the innovator's profile, investing in innovators and linking them to markets, financial and operational enablement, and building entrepreneurial identity in flexible environments.",
+  "findings": [
+   [
+    "10",
+    "من روّاد الأعمال السعوديين المبتكرين.",
+    "Saudi innovative entrepreneurs."
+   ],
+   [
+    "4",
+    "محاور: فهم ملف المبتكر، والاستثمار فيه وربطه بالسوق، والتمكين المالي والتشغيلي، وبناء الهوية الريادية.",
+    "themes: the innovator's profile, investment and market links, financial and operational enablement, entrepreneurial identity."
+   ]
+  ],
+  "implications": [
+   [
+    "إرشاد يقدمه ممارسون ذوو خبرة لروّاد الأعمال الموهوبين.",
+    "Mentoring for gifted entrepreneurs by experienced practitioners."
+   ],
+   [
+    "تمويل مدروس ميسّر، ودعم تشغيلي يحمي من الاحتراق.",
+    "Thoughtful, accessible funding and operational support that prevents burnout."
+   ],
+   [
+    "فرص تعلم مستمرة بأدوات جاهزة، وتحديات حقيقية ضمن أطر داعمة.",
+    "Continuous learning with ready tools, and real challenges within supportive frameworks."
+   ]
+  ],
+  "cite": "Alsamani, O. A. (2026). The supportive community for innovation and entrepreneurship among gifted individuals as perceived by Saudi innovative entrepreneurs: A phenomenological qualitative study. <i>Journal of Educational and Psychological Sciences, 19</i>(2), 621–652. [In Arabic]"
+ },
+ {
+  "slug": "twice-exceptionality-primary-barriers",
+  "date": "2026-02",
+  "light": true,
+  "orig_title": "Twice-exceptionality in primary schools: Teachers’ perceived barriers to identifying and supporting 2e students",
+  "title_ar": "ازدواجية الاستثنائية في المدارس الابتدائية: المعوقات التي يدركها المعلمون في التعرف على الطلاب مزدوجي الاستثنائية ودعمهم",
+  "journal": "Acta Psychologica",
+  "venue": "Acta Psychologica (Elsevier), 262, 106031",
+  "kind_ar": "مقال محكّم",
+  "kind_en": "Peer-reviewed article",
+  "authors_en": "Omar Abdullah Alsamani, Yasir Ayed Alsamiri, Reem A. Alabdulwahab",
+  "authors_ar": "عمر عبدالله الصمعاني، ياسر عايض السميري، ريم العبدالوهاب",
+  "doi": "10.1016/j.actpsy.2025.106031",
+  "url": "https://doi.org/10.1016/j.actpsy.2025.106031",
+  "cite": "Alsamani, O. A., Alsamiri, Y. A., &amp; Alabdulwahab, R. A. (2026). Twice-exceptionality in primary schools: Teachers’ perceived barriers to identifying and supporting 2e students. <i>Acta Psychologica, 262</i>, 106031. https://doi.org/10.1016/j.actpsy.2025.106031"
+ },
+ {
+  "slug": "successful-innovators-phenomenology",
+  "date": "2023",
+  "light": true,
+  "orig_title": "The development of innovation for the creatively gifted: A phenomenological study of the lived experiences of successful outstanding innovators",
+  "title_ar": "تنمية الابتكار لدى الموهوبين إبداعيًا: دراسة ظاهراتية للخبرات المعيشة لمبتكرين متميزين ناجحين",
+  "journal": "International Journal of Educational Sciences",
+  "venue": "International Journal of Educational Sciences, 41(1–3), 70–81",
+  "kind_ar": "مقال محكّم · دراسة ظاهراتية",
+  "kind_en": "Peer-reviewed article · Phenomenological study",
+  "authors_en": "Omar Abdullah Alsamani",
+  "authors_ar": "عمر عبدالله الصمعاني",
+  "doi": "10.31901/24566322.2023/41.1-3.1279",
+  "url": "https://doi.org/10.31901/24566322.2023/41.1-3.1279",
+  "cite": "Alsamani, O. A. (2023). The development of innovation for the creatively gifted: A phenomenological study of the lived experiences of successful outstanding innovators. <i>International Journal of Educational Sciences, 41</i>(1–3), 70–81. https://doi.org/10.31901/24566322.2023/41.1-3.1279"
+ },
+ {
+  "slug": "creatively-gifted-university-needs",
+  "date": "2023",
+  "light": true,
+  "orig_lang": "ar",
+  "orig_title": "احتياجات الطلبة الموهوبين ذوي السمات الإبداعية والابتكارية في المرحلة الجامعية لتحفيز الإبداع والابتكار",
+  "title_ar": "احتياجات الطلبة الموهوبين ذوي السمات الإبداعية والابتكارية في المرحلة الجامعية لتحفيز الإبداع والابتكار",
+  "title_en": "Needs of creatively and innovatively gifted students at the university level to foster creativity and innovation",
+  "journal": "مجلة العلوم الإنسانية",
+  "journal_en": "Journal of Human Sciences",
+  "venue": "Journal of Human Sciences, University of Ha'il, 19(2), 39–62",
+  "venue_ar": "مجلة العلوم الإنسانية، جامعة حائل، 19(2)، 39–62",
+  "kind_ar": "مقال محكّم",
+  "kind_en": "Peer-reviewed article (in Arabic)",
+  "authors_en": "Omar Abdullah Alsamani",
+  "authors_ar": "عمر عبدالله الصمعاني",
+  "doi": "",
+  "url": "",
+  "cite": "Alsamani, O. A. (2023). Needs of creatively and innovatively gifted students at the university level to foster creativity and innovation. <i>Journal of Human Sciences, 19</i>(2), 39–62. [In Arabic]"
  }
 ]
