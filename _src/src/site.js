@@ -68,3 +68,6 @@
     document.addEventListener('keydown',e=>{if(lb.hidden)return;if(e.key==='Escape')lb.hidden=true;if(e.key==='ArrowRight')open(cur+1);if(e.key==='ArrowLeft')open(cur-1)});
   }
 })();
+(function(){var b=document.getElementById('menuBtn');if(!b)return;var h=document.querySelector('header.top');
+b.onclick=function(){var o=h.classList.toggle('open');b.setAttribute('aria-expanded',o);document.body.style.overflow=o?'hidden':''};
+h.querySelectorAll('nav.links.mobile a').forEach(function(a){a.addEventListener('click',function(){h.classList.remove('open');document.body.style.overflow=''})})})();

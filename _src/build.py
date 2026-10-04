@@ -9,7 +9,7 @@ P = lambda *a: os.path.join(ROOT, *a)
 feed = json.load(open(P('data/feed.json')))
 pubs = json.load(open(P('data/publications.json')))
 research = sorted(json.load(open(P('data/research.json'))), key=lambda x: x['date'], reverse=True)
-css = open(P('src/site.css')).read() + open(P('src/extra.css')).read()
+css = open(P('src/site.css')).read() + open(P('src/extra.css')).read() + open(P('src/apple.css')).read()
 js = open(P('src/site.js')).read()
 featured = open(P('src/featured.html')).read()
 e = html.escape
@@ -44,7 +44,7 @@ def page(name, depth, title_ar, body, full, seo_html=''):
 <header class="top"><div class="bar wrap">
   <a class="brand" href="{href('index', depth)}">{bi('د. عمر عبدالله الصمعاني', 'Dr. Omar A. Alsamani')}</a>
   <nav class="links" aria-label="Main">{nav}</nav>
-  <div class="bar-end"><button class="lang" id="langBtn" type="button">English</button><a class="brand-en ar" href="{href('index', depth)}" dir="ltr" lang="en">Dr. Omar A. Alsamani</a></div>
+  <div class="bar-end"><button class="lang" id="langBtn" type="button">English</button><button class="menu-btn" id="menuBtn" type="button" aria-label="Menu" aria-expanded="false"><i></i><i></i></button><a class="brand-en ar" href="{href('index', depth)}" dir="ltr" lang="en">Dr. Omar A. Alsamani</a></div>
 </div>
 <nav class="links mobile" aria-label="Main">{nav}</nav>
 </header>
@@ -91,12 +91,13 @@ def feed_html():
         rows.append(f'''<li class="{cls}" data-t="{i['type']}"><div class="meta"><time class="mono" datetime="{i['date']}">{fmt_date(i['date'])}</time><span class="ntype">{bi(*TYPES[i['type']])}</span></div>
 <div>{title}{body}{link}</div></li>''')
     n_pubs = len(pubs)
-    upd = f'''<section id="updates">
+    upd = f'''<section id="updates" class="alt">
   <div class="sec-head"><div><p class="eyebrow">{bi('المستجدات', 'Updates')}</p><h2>{bi('آخر الأعمال والأخبار', 'Recent work and news')}</h2></div>
   <div class="filters" role="group">{chips}</div></div>
   <ol class="feed">{''.join(rows)}</ol>
 </section>'''
-    return f'''{research_cards()}
+    return f'''{hero()}
+{research_cards()}
 {books_band()}
 {photo_band()}
 {upd}
@@ -144,6 +145,14 @@ def photo_html():
 </section>'''
 
 
+def hero():
+    return f'''<section class="hero2">
+  <p class="h2-role">{bi('أستاذ مشارك · رئيس ابتكار معتمد (<bdi>CCInO®</bdi>)', 'Associate Professor · Certified Chief Innovation Officer (CCInO®)')}</p>
+  <h1>{bi('د. عمر عبدالله الصمعاني', 'Dr. Omar A. Alsamani')}</h1>
+  <p class="h2-line">{bi('استراتيجية الابتكار ومنظوماته · الموهبة وتنميتها · التربية الخاصة ومزدوجو الاستثنائية', 'Innovation strategy and ecosystems · Giftedness and talent development · Special education and twice-exceptionality')}</p>
+  <p class="h2-cta"><a href="#research">{bi('أحدث الأبحاث', 'Recent research')} <i class="chev"></i></a><a href="books/index.html">{bi('المكتبة المفتوحة', 'Open Library')} <i class="chev"></i></a></p>
+</section>'''
+
 def research_cards():
     cards = []
     for k, r in enumerate(research):
@@ -156,7 +165,7 @@ def research_cards():
   <p class="teaser">{bi(e(r['teaser_ar']), e(r['teaser_en']))}</p>
   <span class="go">{bi('قراءة البحث', 'Read the research')} <i class="arr"></i></span>
 </a>''')
-    return f'''<section id="research" class="first">
+    return f'''<section id="research" class="alt">
   <div class="sec-head"><div><p class="eyebrow">{bi('أحدث الأبحاث', 'Recent research')}</p><h2>{bi('أبحاث منشورة', 'Published research')}</h2></div></div>
   <div class="rgrid">{''.join(cards)}</div>
 </section>'''
@@ -192,13 +201,11 @@ def books_band():
 </section>'''
 
 def photo_band():
-    return f'''<section class="pband">
-  <div class="pb-grid">
-    <a href="photography/index.html" class="pb-main" style="background-image:url(img/ph09.webp)" aria-label="Photography"></a>
-    <a href="photography/index.html" class="pb-a" style="background-image:url(img/ph15.webp)" aria-label="Photography"></a>
-    <a href="photography/index.html" class="pb-b" style="background-image:url(img/ph19.webp)" aria-label="Photography"></a>
-  </div>
-  <div class="pb-cap"><span class="eyebrow">{bi('أعمال فوتوغرافية', 'Photographic work')}</span><a href="photography/index.html">{bi('معرض الصور', 'View the gallery')} <i class="arr"></i></a></div>
+    return f'''<section class="pband2">
+  <a class="pb2-hero" href="photography/index.html" style="background-image:url(img/ph09.webp)">
+    <span class="pb2-text"><span class="eyebrow">{bi('التصوير', 'Photography')}</span><b>{bi('الطبيعة والحياة الفطرية والتراث', 'Landscape, wildlife and heritage')}</b><span class="pb2-go">{bi('معرض الصور', 'View the gallery')} <i class="chev"></i></span></span>
+  </a>
+  <div class="pb2-row"><a href="photography/index.html" style="background-image:url(img/ph15.webp)" aria-label="Photography"></a><a href="photography/index.html" style="background-image:url(img/ph19.webp)" aria-label="Photography"></a></div>
 </section>'''
 
 def share_bar(r):

@@ -59,3 +59,74 @@ document.addEventListener('click',ev=>{const a=ev.target.closest&&ev.target.clos
 document.addEventListener('copy',ev=>{const sel=String(getSelection());if(sel.length<120||ev.target.closest&&ev.target.closest('input,textarea'))return;
   const t=document.title,u=location.href.split('#')[0];const en=document.documentElement.lang==='en';const src=en?'\n\n— Source: '+t+', Dr. Omar A. Alsamani. '+u:'\n\n— المصدر: '+t+'، د. عمر عبدالله الصمعاني. '+u;
   ev.clipboardData.setData('text/plain',sel+src);ev.preventDefault()});
+// ===== Reader notebook: highlights, notes, export (stored on this device only) =====
+(function(){
+  const B=window.BOOK||{};if(!B.slug)return;const EN=B.lang==='en';const T=(a,e)=>EN?e:a;
+  const page=document.querySelector('.page');const KEY='bp:notes:'+B.slug;
+  const load=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){return[]}};
+  const save=n=>{try{localStorage.setItem(KEY,JSON.stringify(n))}catch(e){}};
+  const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const toast=t=>{const d=document.createElement('div');d.className='bp-toast';d.textContent=t;document.body.appendChild(d);setTimeout(()=>d.remove(),1800)};
+  const chapterTitle=()=>{const h=document.querySelector('.page h1');return h?h.textContent.replace('¶','').trim():document.title};
+  const cite=()=>T('— '+(B.title||document.title)+'، '+(B.author||'د. عمر عبدالله الصمعاني'),'— '+(B.title||document.title)+', '+(B.author||'Dr. Omar A. Alsamani'));
+  // section the selection sits in
+  const sectionOf=node=>{let el=node.nodeType===1?node:node.parentElement;let best=null;
+    document.querySelectorAll('.page h2[id],.page h3[id]').forEach(h=>{if(h.compareDocumentPosition(el)&Node.DOCUMENT_POSITION_FOLLOWING)best=h});
+    return best?{id:best.id,t:best.textContent.replace('¶','').trim()}:{id:'',t:''}};
+  // paint highlights of this chapter
+  function wrapText(q,id){if(!page||!q)return false;const w=document.createTreeWalker(page,NodeFilter.SHOW_TEXT,{acceptNode:n=>n.parentElement.closest('.bp-cite,script,style,mark.bp-hl')?NodeFilter.FILTER_REJECT:NodeFilter.FILTER_ACCEPT});
+    let n;while((n=w.nextNode())){const i=n.data.indexOf(q);if(i>-1){const r=document.createRange();r.setStart(n,i);r.setEnd(n,i+q.length);const m=document.createElement('mark');m.className='bp-hl';m.dataset.id=id;try{r.surroundContents(m);return true}catch(e){return false}}}
+    // quote spans several nodes: mark its first line only
+    const first=q.split(/\n/)[0].slice(0,80);return first!==q?wrapText(first,id):false}
+  function paint(){load().filter(x=>x.f===B.cur&&x.q).forEach(x=>{if(!document.querySelector('mark.bp-hl[data-id="'+x.id+'"]'))wrapText(x.q,x.id)})}
+  // selection toolbar
+  const tb=document.createElement('div');tb.className='bp-seltb';tb.hidden=true;
+  tb.innerHTML=`<button data-nt="hl">${T('تظليل','Highlight')}</button><button data-nt="note">${T('ملاحظة','Note')}</button><button data-nt="cp">${T('نسخ مع المصدر','Copy with source')}</button>`;
+  document.body.appendChild(tb);let selQ='',selNode=null;
+  document.addEventListener('selectionchange',()=>{const s=getSelection();const t=String(s).trim();
+    if(!page||t.length<3||!s.rangeCount||!page.contains(s.anchorNode)){if(!tb.contains(document.activeElement))tb.hidden=true;return}
+    selQ=t.slice(0,1200);selNode=s.anchorNode;const r=s.getRangeAt(0).getBoundingClientRect();
+    tb.hidden=false;const touch=matchMedia('(pointer:coarse)').matches;const y=touch?r.bottom+scrollY+14:r.top+scrollY-tb.offsetHeight-10;tb.style.top=Math.max(scrollY+60,y)+'px';tb.style.left=Math.min(innerWidth-tb.offsetWidth-8,Math.max(8,r.left+r.width/2-tb.offsetWidth/2))+'px'});
+  function add(withNote){const sec=sectionOf(selNode);const n=load();const x={id:Date.now().toString(36),f:B.cur,c:chapterTitle(),s:sec.t,a:sec.id,q:selQ,n:'',ts:new Date().toISOString().slice(0,10)};
+    n.push(x);save(n);getSelection().removeAllRanges();tb.hidden=true;wrapText(x.q,x.id);count();if(withNote)openPanel(x.id);else toast(T('ظُلّل النص وحُفظ في ملاحظاتك','Highlighted and saved to your notes'))}
+  tb.addEventListener('mousedown',e=>e.preventDefault());
+  tb.addEventListener('click',e=>{const b=e.target.closest('[data-nt]');if(!b)return;const a=b.dataset.nt;
+    if(a==='hl')add(false);if(a==='note')add(true);
+    if(a==='cp'){const txt='«'+selQ+'»\n'+cite()+'\n'+location.href.split('#')[0];(navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(()=>toast(T('نُسخ النص مع المصدر','Copied with source'))).catch(()=>{});tb.hidden=true}});
+  // panel
+  const pn=document.createElement('div');pn.className='bp-notes';pn.hidden=true;pn.setAttribute('dir',EN?'ltr':'rtl');
+  pn.innerHTML=`<div class="bp-npanel" role="dialog" aria-label="${T('ملاحظاتي','My notes')}"><div class="bp-head"><b>${T('ملاحظاتي','My notes')}</b><button type="button" class="bp-x" data-nx aria-label="${T('إغلاق','Close')}">×</button></div>
+  <div class="bp-nbody"><label class="bp-nlab">${T('ملاحظة حرة على هذا الفصل','Notes on this chapter')}</label><textarea id="bpFree" rows="4" placeholder="${T('اكتب ما يخطر لك أثناء القراءة…','Write anything that comes to mind as you read…')}"></textarea>
+  <div class="bp-nfilter"><button data-nv="ch" aria-pressed="true">${T('هذا الفصل','This chapter')}</button><button data-nv="all" aria-pressed="false">${T('الكتاب كله','Whole book')}</button></div><div id="bpNList"></div></div>
+  <div class="bp-nfoot"><button data-ne="copy">${T('نسخ الكل','Copy all')}</button><button data-ne="dl">${T('تنزيل','Download')}</button><button data-ne="share">${T('مشاركة','Share')}</button><button data-ne="mail">${T('بريد','Email')}</button><small>${T('تُحفظ ملاحظاتك على هذا الجهاز فقط، ولا تُرسل إلى أي جهة.','Your notes are stored on this device only and are not sent anywhere.')}</small></div></div>`;
+  document.body.appendChild(pn);const list=pn.querySelector('#bpNList'),free=pn.querySelector('#bpFree');let view='ch';
+  const FK=()=>'free:'+B.cur;
+  function render(focus){const n=load().filter(x=>!x.q?false:(view==='all'||x.f===B.cur));
+    const fr=load().find(x=>x.id===FK());free.value=fr?fr.n:'';
+    list.innerHTML=n.length?n.map(x=>`<article class="bp-note" data-id="${x.id}"><a class="bp-nsrc" href="${x.f}${x.a?'#'+x.a:''}">${esc(x.c)}${x.s?' · '+esc(x.s):''}</a><blockquote>${esc(x.q)}</blockquote><textarea rows="2" placeholder="${T('أضف تعليقك…','Add your comment…')}">${esc(x.n)}</textarea><div class="bp-nact"><button data-go>${T('اذهب إلى الموضع','Go to passage')}</button><button data-del>${T('حذف','Delete')}</button></div></article>`).join('')
+      :`<p class="bp-nempty">${T('حدّد أي نص في الكتاب لتظليله أو إضافة ملاحظة عليه.','Select any text in the book to highlight it or add a note.')}</p>`;
+    if(focus){const t=list.querySelector('[data-id="'+focus+'"] textarea');if(t)setTimeout(()=>t.focus(),60)}}
+  function openPanel(focus){pn.hidden=false;render(focus)}
+  list.addEventListener('input',e=>{const a=e.target.closest('.bp-note');if(!a)return;const n=load();const x=n.find(y=>y.id===a.dataset.id);if(x){x.n=e.target.value;save(n)}});
+  free.addEventListener('input',()=>{const n=load();let x=n.find(y=>y.id===FK());if(!x){x={id:FK(),f:B.cur,c:chapterTitle(),n:''};n.push(x)}x.n=free.value;save(n);count()});
+  list.addEventListener('click',e=>{const a=e.target.closest('.bp-note');if(!a)return;const id=a.dataset.id;
+    if(e.target.closest('[data-del]')){save(load().filter(y=>y.id!==id));const m=document.querySelector('mark.bp-hl[data-id="'+id+'"]');if(m)m.replaceWith(...m.childNodes);render();count()}
+    if(e.target.closest('[data-go]')){const x=load().find(y=>y.id===id);if(x&&x.f!==B.cur){location.href=x.f+'#n-'+id;return}const m=document.querySelector('mark.bp-hl[data-id="'+id+'"]');if(m){pn.hidden=true;m.scrollIntoView({block:'center',behavior:'smooth'});m.classList.add('flash');setTimeout(()=>m.classList.remove('flash'),1600)}}});
+  pn.addEventListener('click',e=>{if(e.target===pn||e.target.closest('[data-nx]'))pn.hidden=true;const v=e.target.closest('[data-nv]');if(v){view=v.dataset.nv;pn.querySelectorAll('[data-nv]').forEach(b=>b.setAttribute('aria-pressed',b===v));render()}
+    const ex=e.target.closest('[data-ne]');if(ex)doExport(ex.dataset.ne)});
+  function asText(){const n=load();const byF={};n.forEach(x=>{(byF[x.f]=byF[x.f]||{c:x.c,items:[]}).items.push(x)});
+    const base=location.href.split('#')[0].replace(/[^/]*$/,'');let out=T('ملاحظاتي على كتاب: ','My notes on: ')+(B.title||document.title)+'\n'+(B.author||'')+'\n\n';
+    Object.keys(byF).forEach(f=>{const g=byF[f];out+='## '+g.c+'\n'+base+f+'\n\n';g.items.forEach(x=>{if(x.q)out+='> '+x.q.replace(/\n/g,'\n> ')+'\n'+(x.s?'('+x.s+')\n':'')+(x.n?x.n+'\n':'')+'\n';else if(x.n)out+=T('ملاحظة: ','Note: ')+x.n+'\n\n'})});
+    return out+cite()+'\n'+base+'index.html\n'}
+  function doExport(k){const t=asText();
+    if(k==='copy')(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>toast(T('نُسخت الملاحظات','Notes copied'))).catch(()=>{});
+    if(k==='dl'){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([t],{type:'text/markdown;charset=utf-8'}));a.download=(B.slug||'notes')+'-notes.md';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),2000)}
+    if(k==='share'){if(navigator.share)navigator.share({title:T('ملاحظاتي','My notes'),text:t}).catch(()=>{});else doExport('copy')}
+    if(k==='mail')location.href='mailto:?subject='+encodeURIComponent(T('ملاحظاتي على ','My notes on ')+(B.title||document.title))+'&body='+encodeURIComponent(t.slice(0,1800))}
+  // bar button with count
+  function count(){const k=load().filter(x=>x.q||x.n).length;document.querySelectorAll('[data-notes] i').forEach(i=>{i.textContent=k?String(k):'';i.hidden=!k})}
+  document.addEventListener('click',e=>{if(e.target.closest('[data-notes]'))openPanel()});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!pn.hidden)pn.hidden=true});
+  paint();count();
+  const m=location.hash.match(/^#n-(.+)/);if(m){const h=document.querySelector('mark.bp-hl[data-id="'+m[1]+'"]');if(h)setTimeout(()=>{h.scrollIntoView({block:'center'});h.classList.add('flash')},200)}
+})();
