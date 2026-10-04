@@ -1,7 +1,7 @@
 (function(){
   const root=document.documentElement, $=id=>document.getElementById(id);
   function setLang(l){root.lang=l;root.dir=l==='ar'?'rtl':'ltr';$('langBtn').textContent=l==='ar'?'English':'العربية';try{localStorage.setItem('lang',l)}catch(e){}}
-  let saved='ar';try{saved=localStorage.getItem('lang')||'ar'}catch(e){}
+  let saved='en';try{saved=localStorage.getItem('lang')||'en'}catch(e){}
   setLang(saved);
   $('langBtn').onclick=()=>setLang(root.lang==='ar'?'en':'ar');
 
