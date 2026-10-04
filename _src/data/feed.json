@@ -27,11 +27,13 @@
   "title_en": "Scoping review: artificial intelligence in gifted and talented education",
   "body_ar": "حددت المراجعة مسارين: مسارًا تعليميًا تطويريًا يركز على التمايز والإبداع والتعلم الشخصي، ومسارًا تقويميًا يركز على التعرف على الموهوبين وذوي الاستثنائية المزدوجة ودعم القرار.",
   "body_en": "The review identified two trajectories: an instructional and developmental one focused on differentiation, creativity and personalised learning, and an assessment-oriented one focused on gifted and twice-exceptional identification and decision support.",
-  "link": "https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2026.1898467/full",
-  "link_label": "doi:10.3389/fpsyg.2026.1898467",
+  "link": "research/ai-gifted-education-scoping-review/index.html",
+  "link_label": "",
   "orig_title": "Artificial intelligence in gifted and talented education: a scoping review",
   "orig_lang": "en",
-  "venue": "Frontiers in Psychology"
+  "venue": "Frontiers in Psychology",
+  "link_label_ar": "تفاصيل البحث",
+  "link_label_en": "Research details"
  },
  {
   "date": "2026-05-25",
@@ -40,11 +42,13 @@
   "title_en": "Structured collaboration with generative AI in entrepreneurship education",
   "body_ar": "يدرس البحث بروتوكولًا منظمًا للتعاون بين الطلاب والذكاء الاصطناعي التوليدي لتطوير أفكار ريادية مبتكرة وتنمية التفكير الاستراتيجي، ويتضمن الملحق نص البروتوكول.",
   "body_en": "The study examines a structured protocol for student–GenAI collaboration to develop innovative business ideas and strategic thinking; the protocol is included in the appendix.",
-  "link": "https://link.springer.com/article/10.1007/s44217-026-01593-9",
-  "link_label": "doi:10.1007/s44217-026-01593-9",
+  "link": "research/genai-entrepreneurship-education/index.html",
+  "link_label": "",
   "orig_title": "Structured collaboration with generative artificial intelligence to foster innovation and strategic thinking in entrepreneurship education",
   "orig_lang": "en",
-  "venue": "Discover Education · Springer Nature"
+  "venue": "Discover Education · Springer Nature",
+  "link_label_ar": "تفاصيل البحث",
+  "link_label_en": "Research details"
  },
  {
   "date": "2026-05-17",
@@ -53,11 +57,13 @@
   "title_en": "From deficits to strengths: mothers’ lived experiences of recognizing and nurturing talents in children with autism spectrum disorder",
   "body_ar": "",
   "body_en": "",
-  "link": "https://doi.org/10.21833/ijaas.2026.05.004",
-  "link_label": "doi:10.21833/ijaas.2026.05.004",
+  "link": "research/mothers-talents-autism/index.html",
+  "link_label": "",
   "orig_title": "From deficits to strengths: Mothers' lived experiences of recognizing and nurturing talents in children with autism spectrum disorder",
   "orig_lang": "en",
-  "venue": "International Journal of Advanced and Applied Sciences, 13(5)"
+  "venue": "International Journal of Advanced and Applied Sciences, 13(5)",
+  "link_label_ar": "تفاصيل البحث",
+  "link_label_en": "Research details"
  },
  {
   "date": "2026-05-17",

@@ -8,6 +8,7 @@ ROOT = os.path.dirname(os.path.abspath(__file__))
 P = lambda *a: os.path.join(ROOT, *a)
 feed = json.load(open(P('data/feed.json')))
 pubs = json.load(open(P('data/publications.json')))
+research = sorted(json.load(open(P('data/research.json'))), key=lambda x: x['date'], reverse=True)
 css = open(P('src/site.css')).read() + open(P('src/extra.css')).read()
 js = open(P('src/site.js')).read()
 featured = open(P('src/featured.html')).read()
@@ -89,23 +90,16 @@ def feed_html():
         rows.append(f'''<li class="{cls}" data-t="{i['type']}"><div class="meta"><time class="mono" datetime="{i['date']}">{fmt_date(i['date'])}</time><span class="ntype">{bi(*TYPES[i['type']])}</span></div>
 <div>{title}{body}{link}</div></li>''')
     n_pubs = len(pubs)
-    return f'''<section id="updates" class="first">
+    upd = f'''<section id="updates">
   <div class="sec-head"><div><p class="eyebrow">{bi('المستجدات', 'Updates')}</p><h2>{bi('آخر الأعمال والأخبار', 'Recent work and news')}</h2></div>
   <div class="filters" role="group">{chips}</div></div>
   <ol class="feed">{''.join(rows)}</ol>
-</section>
-<section id="featured">
-  <div class="sec-head"><div><p class="eyebrow">{bi('بحث مختار', 'Featured research')}</p></div></div>
-  <a class="feat-card" href="research/ai-visual-instruction-dyslexia/index.html">
-    <span class="badge">Frontiers in Education · 2026</span>
-    <h3 class="orig" dir="ltr" lang="en">The effects of AI-based visual instruction on the reading comprehension of students with dyslexia in Saudi Arabia: a single-case experimental study</h3>
-    <p class="tr ar">أثر التعليم البصري القائم على الذكاء الاصطناعي في الفهم القرائي لدى الطلاب ذوي عُسر القراءة في المملكة العربية السعودية: دراسة تجريبية أحادية الحالة</p>
-    <span class="go">{bi('المستخلص، والعرض، والنتائج، والتطبيقات التربوية', 'Abstract, overview, findings and implications')} ←</span>
-  </a>
-</section>
-<section class="index-links">
-  <a class="tile" href="publications/index.html"><span class="mono num">{n_pubs}</span><span>{bi('عملًا منشورًا: المقالات والفصول والرسائل العلمية', 'published works: articles, chapters and theses')}</span><span class="go">{bi('المنشورات', 'Publications')} ←</span></a>
-  <a class="tile photo" href="photography/index.html" style="background-image:url(img/th13.webp)"><span>{bi('أعمال فوتوغرافية', 'Photographic work')}</span><span class="go">{bi('التصوير', 'Photography')} ←</span></a>
+</section>'''
+    return f'''{research_cards()}
+{photo_band()}
+{upd}
+<section class="index-links one">
+  <a class="tile" href="publications/index.html"><span class="mono num">{n_pubs}</span><span>{bi('عملًا منشورًا: المقالات والفصول والرسائل العلمية', 'published works: articles, chapters and theses')}</span><span class="go">{bi('قائمة المنشورات', 'All publications')} <i class="arr"></i></span></a>
 </section>'''
 
 def bold_me(a):
@@ -147,8 +141,75 @@ def photo_html():
   <div class="masonry" id="gallery"></div></div>
 </section>'''
 
+
+def research_cards():
+    cards = []
+    for k, r in enumerate(research):
+        cls = 'rcard lead' if k == 0 else 'rcard'
+        cards.append(f'''<a class="{cls}" href="research/{r['slug']}/index.html">
+  <span class="rk">{bi(e(r['kind_ar']), e(r['kind_en']))}</span>
+  <span class="rj mono">{e(r['journal'])} · {r['date'][:4]}</span>
+  <h3 class="orig" dir="ltr" lang="en">{e(r['orig_title'])}</h3>
+  <p class="tr ar">{e(r['title_ar'])}</p>
+  <p class="teaser">{bi(e(r['teaser_ar']), e(r['teaser_en']))}</p>
+  <span class="go">{bi('قراءة البحث', 'Read the research')} <i class="arr"></i></span>
+</a>''')
+    return f'''<section id="research" class="first">
+  <div class="sec-head"><div><p class="eyebrow">{bi('أحدث الأبحاث', 'Recent research')}</p><h2>{bi('أبحاث منشورة', 'Published research')}</h2></div></div>
+  <div class="rgrid">{''.join(cards)}</div>
+</section>'''
+
+def photo_band():
+    return f'''<section class="pband">
+  <div class="pb-grid">
+    <a href="photography/index.html" class="pb-main" style="background-image:url(img/ph09.webp)" aria-label="Photography"></a>
+    <a href="photography/index.html" class="pb-a" style="background-image:url(img/ph15.webp)" aria-label="Photography"></a>
+    <a href="photography/index.html" class="pb-b" style="background-image:url(img/ph19.webp)" aria-label="Photography"></a>
+  </div>
+  <div class="pb-cap"><span class="eyebrow">{bi('أعمال فوتوغرافية', 'Photographic work')}</span><a href="photography/index.html">{bi('معرض الصور', 'View the gallery')} <i class="arr"></i></a></div>
+</section>'''
+
+def research_page(r):
+    facts = ''.join(f'<dt>{bi(f[0], f[1])}</dt><dd>{bi(e(f[2]), e(f[3]))}</dd>' for f in r.get('facts', []))
+    absd = ''.join(f'<dt>{bi(x[0], x[1])}</dt><dd><span class="ar">{e(x[2])}</span><span class="en" dir="ltr">{e(x[3])}</span></dd>' for x in r['abstract'])
+    finds = ''.join(f'<li><b>{e(f[0])}</b><span>{bi(e(f[1]), e(f[2]))}</span></li>' for f in r['findings'])
+    imps = ''.join(f'<li>{bi(e(i[0]), e(i[1]))}</li>' for i in r['implications'])
+    return f'''<section class="first"><p class="crumb"><a href="../../index.html">{bi('الرئيسية', 'Home')}</a> / <a href="../../publications/index.html">{bi('المنشورات', 'Publications')}</a></p>
+<article class="story">
+  <div class="story-meta">
+    <span class="badge">{bi(e(r['kind_ar']), e(r['kind_en']))}</span>
+    <h1 class="orig rtitle" dir="ltr" lang="en">{e(r['orig_title'])}</h1>
+    <p class="tr ar">ترجمة العنوان: {e(r['title_ar'])}</p>
+    <dl class="facts">
+      <dt>{bi('الباحثون', 'Authors')}</dt><dd dir="ltr">{e(r['authors_en'])}<span class="ar" dir="rtl"><br>{e(r['authors_ar'])}</span></dd>
+      <dt>{bi('المجلة', 'Journal')}</dt><dd dir="ltr">{e(r['venue'])}</dd>
+      <dt>{bi('تاريخ النشر', 'Published')}</dt><dd class="mono">{r['date']}</dd>
+      {facts}
+      <dt>DOI</dt><dd class="mono" dir="ltr"><a href="https://doi.org/{r['doi']}">{r['doi']}</a></dd>
+    </dl>
+    <a class="btn ghost" style="align-self:flex-start" href="{e(r['url'])}">{bi('النص الكامل في موقع المجلة', 'Full text on the journal site')}</a>
+  </div>
+  <div>
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" aria-selected="true" data-p="q0">{bi('المستخلص', 'Abstract')}</button>
+      <button class="tab" role="tab" aria-selected="false" data-p="q2">{bi('الملخص الموجز', 'Brief summary')}</button>
+      <button class="tab" role="tab" aria-selected="false" data-p="q3">{bi('النتائج الرئيسة', 'Key findings')}</button>
+      <button class="tab" role="tab" aria-selected="false" data-p="q4">{bi('التطبيقات التربوية', 'Implications')}</button>
+    </div>
+    <div class="panel abstract" id="q0">
+      <dl>{absd}</dl>
+      <p class="kw"><b>{bi('الكلمات المفتاحية:', 'Keywords:')}</b> {bi(e(r['keywords_ar']), e(r['keywords_en']))}</p>
+      <p class="note ar">ترجمة المستخلص إلى العربية غير رسمية؛ النص المعتمد هو المنشور في المجلة.</p>
+      <div class="cite"><span class="eyebrow">{bi('التوثيق (APA)', 'Cite (APA)')}</span><p dir="ltr" id="citeText">{r['cite']}</p><button type="button" class="copy" id="copyCite">{bi('نسخ', 'Copy')}</button></div>
+    </div>
+    <div class="panel" id="q2" hidden><p>{bi(e(r['summary_ar']), e(r['summary_en']))}</p></div>
+    <div class="panel" id="q3" hidden><ul class="findings">{finds}</ul></div>
+    <div class="panel" id="q4" hidden><ol class="ideas">{imps}</ol></div>
+  </div>
+</article></section>'''
+
 def research_dys():
-    return f'''<section class="first"><p class="crumb"><a href="../../publications/index.html">{bi('المنشورات', 'Publications')}</a> / {bi('تفاصيل البحث', 'Research details')}</p>
+    return f'''<section class="first"><p class="crumb"><a href="../../index.html">{bi('الرئيسية', 'Home')}</a> / <a href="../../publications/index.html">{bi('المنشورات', 'Publications')}</a></p>
 {featured}</section>'''
 
 def about_html():
@@ -163,13 +224,16 @@ PAGES = [('index', 0, 'د. عمر عبدالله الصمعاني | Dr. Omar Als
          ('publications', 1, 'المنشورات | د. عمر عبدالله الصمعاني', pubs_html),
          ('photography', 1, 'التصوير | د. عمر عبدالله الصمعاني', photo_html),
          ('about', 1, 'نبذة | د. عمر عبدالله الصمعاني', about_html),
-         ('research/ai-visual-instruction-dyslexia', 2, 'AI-based visual instruction and dyslexia | د. عمر الصمعاني', research_dys)]
+         ('research/ai-visual-instruction-dyslexia', 2, 'AI-based visual instruction and dyslexia | Dr. Omar Alsamani', research_dys)]
+for _r in research:
+    if not _r.get('custom'):
+        PAGES.append((f"research/{_r['slug']}", 2, _r['orig_title'][:70] + ' | Dr. Omar Alsamani', (lambda rr: (lambda: research_page(rr)))(_r)))
 
 for target, full in (('dist', True), ('preview', False)):
     for name, depth, title, fn in PAGES:
         body = fn()
         if depth == 1:
-            body = body.replace('href="publications/', 'href="../publications/').replace('href="photography/', 'href="../photography/').replace('url(img/', 'url(../img/')
+            body = body.replace('href="publications/', 'href="../publications/').replace('href="photography/', 'href="../photography/').replace('url(img/', 'url(../img/').replace('href="research/', 'href="../research/')
         out = P(target, 'index.html' if name == 'index' else f'{name}/index.html')
         t = title if full else ('Alsamani.com' if name == 'index' else title)
         write(out, page(name, depth, t, body, full or depth > 0))

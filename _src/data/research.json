@@ -1,0 +1,354 @@
+[
+ {
+  "slug": "ai-gifted-education-scoping-review",
+  "date": "2026-07-29",
+  "orig_title": "Artificial intelligence in gifted and talented education: a scoping review",
+  "title_ar": "الذكاء الاصطناعي في تعليم الموهوبين والمتفوقين: مراجعة نطاقية",
+  "journal": "Frontiers in Psychology",
+  "venue": "Frontiers in Psychology, Vol. 17, Article 1898467",
+  "kind_ar": "مقال محكّم · مراجعة نطاقية",
+  "kind_en": "Peer-reviewed article · Scoping review",
+  "authors_en": "Omar Abdullah Alsamani, Yasir Ayed Alsamiri",
+  "authors_ar": "عمر عبدالله الصمعاني، ياسر عايض السميري",
+  "doi": "10.3389/fpsyg.2026.1898467",
+  "url": "https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2026.1898467/full",
+  "facts": [
+   [
+    "المنهج",
+    "Design",
+    "مراجعة نطاقية وفق PRISMA-ScR وإطار السكان–المفهوم–السياق",
+    "Scoping review informed by PRISMA-ScR and the Population–Concept–Context framework"
+   ],
+   [
+    "الدراسات المشمولة",
+    "Included studies",
+    "26 دراسة",
+    "26 studies"
+   ]
+  ],
+  "teaser_ar": "خريطة لاستخدامات الذكاء الاصطناعي في تعليم الموهوبين: مسار تعليمي تطويري، ومسار تقويمي للتعرف ودعم القرار.",
+  "teaser_en": "A map of how AI is used in gifted education: an instructional and developmental trajectory, and an assessment trajectory for identification and decision support.",
+  "abstract": [
+   [
+    "المقدمة",
+    "Introduction",
+    "يتزايد تبنّي الذكاء الاصطناعي في تعليم الموهوبين والمتفوقين، غير أن الأدبيات الناشئة ما تزال متفرقة بين المجالات التعليمية والتطويرية والتقويمية والأخلاقية.",
+    "Artificial intelligence (AI) is being increasingly adopted across gifted and talented education. However, the emerging literature remains dispersed across instructional, developmental, assessment, and ethical domains."
+   ],
+   [
+    "المنهجية",
+    "Methods",
+    "ترسم هذه المراجعة النطاقية خريطة لكيفية دراسة الذكاء الاصطناعي في تعليم الموهوبين والمتفوقين، بما في ذلك أشكال الذكاء الاصطناعي المدروسة، والفئات والسياقات الممثَّلة، والأغراض التعليمية المستهدفة، والفرص والمخاطر والفجوات الواردة في الأدبيات. واتباعًا لمنهج المراجعة النطاقية المسترشد بـ PRISMA-ScR وإطار السكان–المفهوم–السياق، أسفرت عمليات البحث في قواعد البيانات والفرز عن 26 دراسة مستوفية للمعايير.",
+    "This scoping review maps how AI has been studied in gifted and talented education, including the forms of AI examined, the populations and contexts represented, the educational purposes addressed, and the opportunities, risks, and gaps reported across the literature. Following a scoping review approach informed by PRISMA-ScR and the Population–Concept–Context framework, database searches and screening procedures identified 26 eligible studies."
+   ],
+   [
+    "النتائج",
+    "Results",
+    "حددت المراجعة مسارين عامين. الأول تعليمي وتطويري، يُستخدم فيه الذكاء الاصطناعي التوليدي والتعليم الخصوصي الذكي والمواد المولَّدة آليًا، أو يُقترح استخدامها، لدعم التمايز والكتابة والتساؤل والإبداع والإرشاد والتعلم المُفرَّد. والثاني تقويمي، تُطبَّق فيه نماذج تعلم الآلة وما يتصل بها في التعرف على الموهوبين والمتفوقين، والتعرف على مزدوجي الاستثنائية، ودعم القرار. وفي المسارين كليهما، تقدّم الأدبيات الذكاء الاصطناعي أداةً تتوقف قيمتها على تصميم المهمة وحكم المعلم والإشراف البشري، أكثر من كونه بديلًا عن المعلمين. ومن الفرص المذكورة دعم الإعداد المتمايز، والتعلم المتقدم، والإنتاج الإبداعي، والتعرف على الملامح المركبة للمتعلمين. ومن المخاطر المذكورة التحيز في بيانات التعرف، والاعتماد المفرط، وتهديد الأصالة، ومخاوف الخصوصية، ومحدودية الشفافية، وضعف إعداد المعلمين والمؤسسات.",
+    "The review identified two broad trajectories. The first is instructional and developmental, where generative AI, AI tutoring, and AI-generated materials are used or proposed to support differentiation, writing, questioning, creativity, mentoring, and personalized learning. The second is assessment-oriented, where machine learning and related models are applied to gifted and talented identification, twice-exceptional identification, and decision support. Across both trajectories, the literature positions AI less as a replacement for educators than as a tool whose value depends on task design, teacher judgment, and human oversight. Reported opportunities include support for differentiated preparation, advanced learning, creative production, and the recognition of complex learner profiles. The reported risks include bias in identification data, overreliance, threats to originality, privacy concerns, limited transparency, and insufficient preparation among educators and institutions."
+   ],
+   [
+    "المناقشة",
+    "Discussion",
+    "إجمالًا، ما تزال قاعدة الأدلة حول الذكاء الاصطناعي في تعليم الموهوبين والمتفوقين في مرحلة مبكرة. وتشير المراجعة إلى أن للذكاء الاصطناعي إمكانات للنهوض بتعليم الموهوبين والمتفوقين. وينبغي أن تتجه البحوث المستقبلية نحو دراسات طولية ومقارنة ومتمركزة حول العدالة، ولا سيما في التعرف المدعوم بالذكاء الاصطناعي وتعليم مزدوجي الاستثنائية.",
+    "Overall, the evidence base on AI in gifted and talented education remains at an early stage. The review suggests that AI holds potential to advance gifted and talented education. Future research should move toward longitudinal, comparative, and equity-centered studies, particularly in AI-supported identification and twice-exceptional education."
+   ]
+  ],
+  "keywords_ar": "الذكاء الاصطناعي؛ ChatGPT؛ الذكاء الاصطناعي التوليدي؛ تعليم الموهوبين والمتفوقين؛ تعلم الآلة؛ مراجعة نطاقية؛ تنمية الموهبة؛ مزدوجو الاستثنائية",
+  "keywords_en": "artificial intelligence; ChatGPT; generative AI; gifted and talented education; machine learning; scoping review; talent development; twice-exceptional",
+  "summary_ar": "راجعت الدراسة 26 دراسة عن توظيف الذكاء الاصطناعي في تعليم الموهوبين، وصنّفتها في مسارين: مسار يستخدم الذكاء الاصطناعي في التدريس والتطوير، ومسار يستخدمه في التعرف على الموهوبين ودعم القرار. وتخلص إلى أن قيمة هذه الأدوات مرهونة بتصميم المهمة وحكم المعلم والإشراف البشري، وأن الأدلة ما تزال في مرحلة مبكرة.",
+  "summary_en": "The review examined 26 studies on AI in gifted education and grouped them into two trajectories: AI for instruction and development, and AI for identification and decision support. It concludes that the value of these tools depends on task design, teacher judgment and human oversight, and that the evidence remains at an early stage.",
+  "findings": [
+   [
+    "26",
+    "دراسة مستوفية للمعايير شملتها المراجعة.",
+    "eligible studies included in the review."
+   ],
+   [
+    "2",
+    "مساران: تعليمي تطويري، وتقويمي للتعرف ودعم القرار.",
+    "trajectories: instructional/developmental and assessment-oriented."
+   ],
+   [
+    "2e",
+    "التعرف على مزدوجي الاستثنائية ضمن تطبيقات تعلم الآلة.",
+    "twice-exceptional identification appears among machine-learning applications."
+   ],
+   [
+    "!",
+    "مخاطر: التحيز، والاعتماد المفرط، والأصالة، والخصوصية، والشفافية، وإعداد المعلمين.",
+    "risks: bias, overreliance, originality, privacy, transparency, educator preparation."
+   ]
+  ],
+  "implications": [
+   [
+    "توظيف الذكاء الاصطناعي في برامج الموهوبين أداةً مساندة للمعلم، مع إبقاء القرار التربوي بيد الإنسان.",
+    "Use AI in gifted programs as a support for teachers, keeping educational decisions with people."
+   ],
+   [
+    "مراجعة بيانات التعرف والنماذج الآلية للكشف عن التحيز قبل اعتمادها في الترشيح.",
+    "Audit identification data and models for bias before using them in nomination."
+   ],
+   [
+    "إعداد المعلمين والمؤسسات لاستخدام هذه الأدوات، وتوجيه البحوث نحو دراسات طولية ومقارنة.",
+    "Prepare educators and institutions to use these tools, and direct research toward longitudinal and comparative studies."
+   ]
+  ],
+  "cite": "Alsamani, O. A., & Alsamiri, Y. A. (2026). Artificial intelligence in gifted and talented education: A scoping review. <i>Frontiers in Psychology, 17</i>, 1898467. https://doi.org/10.3389/fpsyg.2026.1898467"
+ },
+ {
+  "slug": "genai-entrepreneurship-education",
+  "date": "2026-05-15",
+  "orig_title": "Structured collaboration with generative artificial intelligence to foster innovation and strategic thinking in entrepreneurship education",
+  "title_ar": "التعاون المنظم مع الذكاء الاصطناعي التوليدي لتعزيز الابتكار والتفكير الاستراتيجي في تعليم ريادة الأعمال",
+  "journal": "Discover Education",
+  "venue": "Discover Education (Springer Nature), Vol. 5, Article 582",
+  "kind_ar": "مقال محكّم · دراسة استكشافية كمية",
+  "kind_en": "Peer-reviewed article · Exploratory quantitative study",
+  "authors_en": "Omar Abdullah Alsamani",
+  "authors_ar": "عمر عبدالله الصمعاني",
+  "doi": "10.1007/s44217-026-01593-9",
+  "url": "https://link.springer.com/article/10.1007/s44217-026-01593-9",
+  "facts": [
+   [
+    "المنهج",
+    "Design",
+    "دراسة استكشافية كمية داخل الفصل",
+    "Classroom-based exploratory quantitative study"
+   ],
+   [
+    "العينة",
+    "Participants",
+    "123 طالبًا جامعيًا من تخصصات متعددة",
+    "123 undergraduate students from several disciplines"
+   ],
+   [
+    "المدة",
+    "Duration",
+    "أسبوعان ضمن مشروع أعمال ابتكاري",
+    "Two weeks within an innovation business project"
+   ]
+  ],
+  "teaser_ar": "123 طالبًا جامعيًا يتعاونون مع الذكاء الاصطناعي التوليدي وفق بروتوكول منظم لتطوير أفكار ريادية وتحليل SWOT.",
+  "teaser_en": "123 undergraduates collaborate with generative AI through a structured protocol to develop business ideas and SWOT analyses.",
+  "abstract": [
+   [
+    "المستخلص",
+    "Abstract",
+    "تهدف هذه الدراسة الاستكشافية إلى استكشاف كيفية انخراط طلاب المرحلة الجامعية في تعاون منظم مع أدوات الذكاء الاصطناعي التوليدي ضمن تعليم ريادة الأعمال في سياق تعليمي حقيقي، مع التركيز على الاستراتيجيات المطبقة، والنواتج الابتكارية والمعرفية المدرَكة، والتحديات التي يواجهونها، وكيفية تعاملهم معها أثناء العملية. وشارك في هذه الدراسة الاستكشافية الكمية القائمة داخل الفصل 123 طالبًا جامعيًا من تخصصات جامعية متعددة، طبّقوا بروتوكولًا منظمًا للتعاون بين الطالب والذكاء الاصطناعي استمر أسبوعين ضمن مشروع أعمال ابتكاري في الفصل. وقُدّمت للمشاركين استبانة بعد المهمة لاستكشاف تصوراتهم حول أثر التعاون المنظم مع أدوات الذكاء الاصطناعي التوليدي في الابتكار والتفكير الاستراتيجي وتنمية المهارات والتحديات في سياق تعليم ريادة الأعمال. وأشارت النتائج إلى أن المشاركين طبّقوا خلال التجربة استراتيجيات مختلفة لهندسة الأوامر، وأظهروا مهارات تكيفية في حل المشكلات مع الذكاء الاصطناعي التوليدي، منها إعادة صياغة الأوامر، وطلب التوضيح، ومساءلة افتراضات مشروعاتهم. وأفاد الطلاب بأن التعاون مع الذكاء الاصطناعي التوليدي شجعهم على إعداد تحليلات SWOT متقدمة، وتنمية مهاراتهم المعرفية، وتوليد أفكار أعمال مبتكرة. وتشير النتائج إلى أن التعاون المنظم مع الذكاء الاصطناعي التوليدي في مشروعات توليد أفكار الأعمال الابتكارية يمكن أن يؤدي دورًا داعمًا بوصفه شريكًا معرفيًا واستراتيجيًا. كما قدّمت الدراسة توصيات للبحوث المستقبلية ولممارسات الذكاء الاصطناعي التوليدي على المستوى الجامعي.",
+    "This exploratory study aims to explore how undergraduate students engage in a structured collaboration with generative artificial intelligence (GenAI) tools within entrepreneurship education in a real educational context, focusing on applied strategies, perceived innovation and cognitive outcomes, the challenges they encounter, and how they address these challenges during the process. This classroom-based quantitative exploratory study recruited 123 undergraduate students from several university disciplines who participated in a structured student-AI protocol that lasted for two weeks and was part of a classroom-based innovation business project. A post-task survey was provided to participants to explore students’ perceptions of how structured collaboration with GenAI tools influences innovation, strategic thinking, skill development, and challenges in an entrepreneurship education context. The results indicated that participants during the experiment implemented different prompt-engineering strategies and revealed adaptive problem-solving skills with GenAI, including rephrasing their prompts, asking for clarifications, and challenging the students’ project assumptions. Students revealed that the GenAI-student collaboration encouraged them to develop advanced SWOT analyses, develop cognitive skills, and generate innovative business ideas. The results suggested that structured collaboration with GenAI in innovative business ideation projects can play a supportive role as a cognitive and strategic collaborative partner. Recommendations for future research and GenAI practices at the university level were also provided in this study."
+   ]
+  ],
+  "keywords_ar": "الذكاء الاصطناعي التوليدي؛ ريادة الأعمال؛ الابتكار؛ تحليل SWOT؛ هندسة الأوامر؛ التعاون بين الإنسان والذكاء الاصطناعي؛ تطوير الأعمال؛ تعليم الموهوبين؛ تطوير الاستراتيجيات؛ تنمية الموهبة",
+  "keywords_en": "Generative artificial intelligence (GenAI); Entrepreneurship; Innovation; SWOT analysis; Prompt engineering; GenAI-human collaboration; Business development; Gifted education; Strategy development; Talent development",
+  "summary_ar": "طبّق 123 طالبًا جامعيًا بروتوكولًا منظمًا للتعاون مع أدوات الذكاء الاصطناعي التوليدي مدة أسبوعين ضمن مشروع أعمال ابتكاري. وأظهر الطلاب استراتيجيات متنوعة في صياغة الأوامر ومساءلة افتراضاتهم، وأفادوا بأن التعاون ساعدهم في إعداد تحليلات SWOT متقدمة وتوليد أفكار مبتكرة. ونص البروتوكول متاح في ملحق البحث.",
+  "summary_en": "123 undergraduates followed a structured protocol for collaborating with GenAI tools over two weeks in an innovation business project. Students used varied prompting strategies and questioned their own assumptions, and reported that the collaboration helped them produce advanced SWOT analyses and generate innovative ideas. The protocol is included in the article’s appendix.",
+  "findings": [
+   [
+    "123",
+    "طالبًا جامعيًا من تخصصات متعددة.",
+    "undergraduates from several disciplines."
+   ],
+   [
+    "2",
+    "أسبوعان من التعاون المنظم ضمن مشروع أعمال.",
+    "weeks of structured collaboration in a business project."
+   ],
+   [
+    "SWOT",
+    "تحليلات SWOT متقدمة وأفكار أعمال مبتكرة بحسب تصورات الطلاب.",
+    "advanced SWOT analyses and innovative ideas, as reported by students."
+   ],
+   [
+    "↻",
+    "إعادة صياغة الأوامر، وطلب التوضيح، ومساءلة الافتراضات.",
+    "rephrasing prompts, asking for clarification, challenging assumptions."
+   ]
+  ],
+  "implications": [
+   [
+    "لأعضاء هيئة التدريس: اعتماد بروتوكول منظم للتعاون مع الذكاء الاصطناعي في مشروعات ريادة الأعمال بدل الاستخدام الحر.",
+    "For faculty: use a structured collaboration protocol in entrepreneurship projects rather than open-ended use."
+   ],
+   [
+    "تدريب الطلاب على هندسة الأوامر ومساءلة مخرجات الذكاء الاصطناعي.",
+    "Train students in prompt engineering and in questioning AI output."
+   ],
+   [
+    "للجامعات: تطوير ممارسات وسياسات لتوظيف الذكاء الاصطناعي التوليدي شريكًا معرفيًا في التعليم.",
+    "For universities: develop practices and policies for using GenAI as a cognitive partner in teaching."
+   ]
+  ],
+  "cite": "Alsamani, O. A. (2026). Structured collaboration with generative artificial intelligence to foster innovation and strategic thinking in entrepreneurship education. <i>Discover Education, 5</i>, 582. https://doi.org/10.1007/s44217-026-01593-9"
+ },
+ {
+  "slug": "mothers-talents-autism",
+  "date": "2026-05",
+  "orig_title": "From deficits to strengths: Mothers’ lived experiences of recognizing and nurturing talents in children with autism spectrum disorder",
+  "title_ar": "من التركيز على العجز إلى إبراز نقاط القوة: خبرات الأمهات المعيشة في اكتشاف مواهب الأطفال ذوي اضطراب طيف التوحد ورعايتها",
+  "journal": "International Journal of Advanced and Applied Sciences",
+  "venue": "International Journal of Advanced and Applied Sciences, 13(5), 35–42",
+  "kind_ar": "مقال محكّم · دراسة ظاهراتية",
+  "kind_en": "Peer-reviewed article · Phenomenological study",
+  "authors_en": "Omar Abdullah Alsamani",
+  "authors_ar": "عمر عبدالله الصمعاني",
+  "doi": "10.21833/ijaas.2026.05.004",
+  "url": "https://www.science-gate.com/archive/1021833ijaas202605004.html",
+  "facts": [
+   [
+    "المنهج",
+    "Design",
+    "دراسة ظاهراتية؛ تحليل ظاهراتي تفسيري",
+    "Phenomenological study; interpretative phenomenological analysis"
+   ],
+   [
+    "المشاركات",
+    "Participants",
+    "9 أمهات",
+    "Nine mothers"
+   ]
+  ],
+  "teaser_ar": "تسع أمهات يروين كيف اكتشفن مواهب أطفالهن ذوي التوحد، وكيف دعمنها حين غاب الاعتراف المؤسسي.",
+  "teaser_en": "Nine mothers describe how they recognised their autistic children’s talents and supported them where institutions did not.",
+  "abstract": [
+   [
+    "المستخلص",
+    "Abstract",
+    "على الرغم من التوسع السريع في أبحاث التوحد، فإنها ما تزال قائمة في الغالب على أطر تركز على العجز وتبرز جوانب القصور بدل نقاط القوة. وتستكشف هذه الدراسة الظاهراتية الخبرات المعيشة للأمهات في التعرف على المواهب ونقاط القوة الكامنة لدى أطفالهن ذوي اضطراب طيف التوحد ودعمها، في السياق الاجتماعي والثقافي السعودي. وشاركت تسع أمهات في مقابلات معمقة شبه مقننة، وحُللت البيانات بالتحليل الظاهراتي التفسيري، فكشف عن خمسة محاور مترابطة: (أ) «بصيص أمل» أولي عند اكتشاف القدرات لأول مرة؛ (ب) محدودية اعتراف المؤسسات بنقاط قوة الأطفال؛ (ج) نشوء مناصرة منزلية وممارسات غير رسمية تركز على نقاط القوة؛ (د) اعتراف اجتماعي مشروط بالمواهب المرتبطة باضطراب طيف التوحد؛ (هـ) تأييد نهج تعليمي قائم على نقاط القوة. وتبيّن النتائج أن للأمهات دورًا محوريًا بوصفهن مراقبات رئيسات لنقاط قوة أطفالهن ومناصرات لها، وتؤكد الحاجة إلى إبراز المواهب ونقاط القوة في ممارسات التقييم والتدخل.",
+    "Although research on autism has expanded rapidly, it is still mainly based on deficit-oriented frameworks that emphasize limitations rather than strengths. This phenomenological study explores mothers’ lived experiences in identifying and supporting the hidden talents and strengths of their children with autism spectrum disorder (ASD) within the Saudi sociocultural context. Nine mothers participated in in-depth, semi-structured interviews. The data were analyzed using interpretative phenomenological analysis, which revealed five interconnected themes: (a) an initial “glimpse of hope” when abilities were first recognized; (b) limited recognition of children’s strengths by institutions; (c) the development of home-based advocacy and informal strength-focused practices; (d) socially conditional acknowledgment of ASD-related talents; and (e) support for a strengths-based approach to education. The findings show that mothers play a central role as key observers and advocates of their children’s strengths. They also highlight the need to make talents and strengths more visible in assessment and intervention practices."
+   ]
+  ],
+  "keywords_ar": "اضطراب طيف التوحد؛ النهج القائم على نقاط القوة؛ خبرات الأمهات؛ المواهب الكامنة؛ السياق السعودي",
+  "keywords_en": "Autism spectrum disorder; Strengths-based approach; Mothers’ experiences; Hidden talents; Saudi context",
+  "summary_ar": "قابلت الدراسة تسع أمهات لأطفال ذوي اضطراب طيف التوحد في السعودية. وأظهرت أن الأمهات هن أول من يلحظ مواهب أطفالهن ويدافع عنها، في حين يبقى اعتراف المؤسسات بهذه المواهب محدودًا. وتدعو إلى إدراج نقاط القوة والمواهب في التقييم والتدخل.",
+  "summary_en": "The study interviewed nine mothers of children with autism in Saudi Arabia. Mothers were the first to notice and advocate for their children’s talents, while institutional recognition remained limited. It calls for including strengths and talents in assessment and intervention.",
+  "findings": [
+   [
+    "9",
+    "أمهات شاركن في مقابلات معمقة.",
+    "mothers in in-depth interviews."
+   ],
+   [
+    "5",
+    "محاور مترابطة كشف عنها التحليل.",
+    "interconnected themes."
+   ],
+   [
+    "⌂",
+    "مناصرة منزلية وممارسات غير رسمية تركز على نقاط القوة.",
+    "home-based advocacy and informal strength-focused practices."
+   ],
+   [
+    "≠",
+    "اعتراف مؤسسي محدود، واعتراف اجتماعي مشروط بالمواهب.",
+    "limited institutional and socially conditional recognition of talents."
+   ]
+  ],
+  "implications": [
+   [
+    "إدراج قياس نقاط القوة والمواهب في تقييم الأطفال ذوي التوحد، لا الاكتفاء بجوانب القصور.",
+    "Include strengths and talents in the assessment of autistic children, not only limitations."
+   ],
+   [
+    "إشراك الأمهات شريكات في الملاحظة وبناء الخطط التربوية.",
+    "Involve mothers as partners in observation and educational planning."
+   ],
+   [
+    "تبني نهج تعليمي قائم على نقاط القوة في برامج التربية الخاصة.",
+    "Adopt a strengths-based approach in special education programs."
+   ]
+  ],
+  "cite": "Alsamani, O. A. (2026). From deficits to strengths: Mothers’ lived experiences of recognizing and nurturing talents in children with autism spectrum disorder. <i>International Journal of Advanced and Applied Sciences, 13</i>(5), 35–42. https://doi.org/10.21833/ijaas.2026.05.004"
+ },
+ {
+  "slug": "teacher-pd-twice-exceptional",
+  "date": "2026-02-26",
+  "orig_title": "Teachers’ perceptions of professional development needs for identifying and supporting twice-exceptional students in inclusive schools in Saudi Arabia",
+  "title_ar": "تصورات المعلمين لاحتياجات التطوير المهني في التعرف على الطلاب مزدوجي الاستثنائية ودعمهم في مدارس الدمج بالمملكة العربية السعودية",
+  "journal": "Education Sciences",
+  "venue": "Education Sciences (MDPI), 16(3), 366",
+  "kind_ar": "مقال محكّم · دراسة نوعية ظاهراتية",
+  "kind_en": "Peer-reviewed article · Qualitative phenomenological study",
+  "authors_en": "Yasir Ayed Alsamiri, Omar Abdullah Alsamani",
+  "authors_ar": "ياسر عايض السميري، عمر عبدالله الصمعاني",
+  "doi": "10.3390/educsci16030366",
+  "url": "https://www.mdpi.com/2227-7102/16/3/366",
+  "facts": [
+   [
+    "المنهج",
+    "Design",
+    "دراسة نوعية ظاهراتية؛ مقابلات معمقة شبه مقننة",
+    "Qualitative phenomenological study; in-depth semi-structured interviews"
+   ],
+   [
+    "المشاركون",
+    "Participants",
+    "12 معلمًا ومعلمة من أربع مدارس في حائل",
+    "12 teachers from four schools in Hail"
+   ]
+  ],
+  "teaser_ar": "اثنا عشر معلمًا يصفون الفجوة بين وعيهم بمزدوجي الاستثنائية واستعدادهم العملي لتعليمهم.",
+  "teaser_en": "Twelve teachers describe the gap between their awareness of 2e students and their practical preparedness.",
+  "abstract": [
+   [
+    "المستخلص",
+    "Abstract",
+    "كثيرًا ما لا يحصل الطلاب مزدوجو الاستثنائية، الذين يجمعون بين إمكانات عالية واحتياجات مرتبطة بالإعاقة، على الخدمات الكافية في فصول الدمج، وقد يرتبط ذلك جزئيًا بمحدودية إعداد المعلمين. وتهدف هذه الدراسة النوعية الظاهراتية إلى استكشاف تصورات المعلمين السعوديين لاحتياجات التطوير المهني في التعرف على الطلاب مزدوجي الاستثنائية ودعمهم في المدارس الحكومية الدامجة. وأجرينا مقابلات معمقة شبه مقننة مع 12 معلمًا ومعلمة (7 ذكور و5 إناث؛ تتراوح أعمارهم بين 25 و55 عامًا) من أربع مدارس في مدينة حائل، منهم خمسة معلمين للتعليم العام، وثلاثة لتعليم الموهوبين، وأربعة للتربية الخاصة. وبعد تحليل البيانات، كشفت النتائج عن ثلاثة محاور رئيسة وعدة محاور فرعية: (أ) فهم الاحتياجات الفريدة للطلاب مزدوجي الاستثنائية، (ب) معوقات التدريب الفعال للمعلمين، (ج) أثر التدريب غير الكافي في التعليم والتعلم. وتقدم النتائج فهمًا للفجوة بين الوعي المفاهيمي لدى المعلمين واستعدادهم العملي، وتشير إلى أن التدريب القائم على الممارسة يُعدّ حاجة ماسة للتعرف الناجح على الطلاب مزدوجي الاستثنائية ودعمهم تربويًا في فصول الدمج.",
+    "Twice-exceptional (2e) students who demonstrate high potential alongside disability-related needs are frequently underserved in inclusive classrooms, which in part might be related to teachers’ limited preparation. This qualitative phenomenological study aims to explore Saudi teachers’ perceptions of professional development (PD) needs for identifying and supporting 2e students in inclusive public schools. We conducted in-depth semi-structured interviews with 12 teachers (7 male, 5 female; ages 25–55) from four schools in Hail city. Five were general education teachers, three were gifted education teachers, and four were special education teachers. After analyzing the data, the findings revealed three major themes and several subthemes: (a) Understanding the Unique Needs of 2e Students, (b) Barriers to Effective Teacher Training, and (c) Impact of Inadequate Training on Teaching and Learning. The study findings offer insights into the gap between teachers’ conceptual awareness and their practical preparedness, suggesting that practice-oriented training is perceived as a critical need for successful identification and educational support for 2e students in the inclusive classroom."
+   ]
+  ],
+  "keywords_ar": "ازدواجية الاستثنائية؛ التطوير المهني؛ التربية الخاصة؛ تعليم الموهوبين؛ التعليم الدامج",
+  "keywords_en": "twice-exceptionality; professional development; special education; gifted education; inclusive education",
+  "summary_ar": "قابلت الدراسة 12 معلمًا من التعليم العام وتعليم الموهوبين والتربية الخاصة في حائل حول إعدادهم لتعليم مزدوجي الاستثنائية. وتبيّن أن لدى المعلمين وعيًا بالمفهوم، لكن استعدادهم العملي محدود، وأن التدريب القائم على الممارسة هو أبرز احتياجاتهم.",
+  "summary_en": "The study interviewed 12 general, gifted and special education teachers in Hail about their preparation for teaching twice-exceptional students. Teachers showed conceptual awareness but limited practical preparedness, and identified practice-oriented training as their main need.",
+  "findings": [
+   [
+    "12",
+    "معلمًا ومعلمة من أربع مدارس في حائل.",
+    "teachers from four schools in Hail."
+   ],
+   [
+    "5 · 3 · 4",
+    "تعليم عام · تعليم الموهوبين · تربية خاصة.",
+    "general · gifted · special education teachers."
+   ],
+   [
+    "3",
+    "محاور رئيسة: الاحتياجات، ومعوقات التدريب، وأثر ضعفه.",
+    "major themes: needs, training barriers, impact of inadequate training."
+   ],
+   [
+    "⇄",
+    "فجوة بين الوعي المفاهيمي والاستعداد العملي.",
+    "gap between conceptual awareness and practical preparedness."
+   ]
+  ],
+  "implications": [
+   [
+    "تصميم برامج تطوير مهني تطبيقية في التعرف على مزدوجي الاستثنائية ودعمهم.",
+    "Design practice-oriented professional development on identifying and supporting 2e students."
+   ],
+   [
+    "تدريب مشترك يجمع معلمي التعليم العام وتعليم الموهوبين والتربية الخاصة.",
+    "Joint training that brings general, gifted and special education teachers together."
+   ],
+   [
+    "إدراج ازدواجية الاستثنائية في برامج إعداد المعلمين في الجامعات.",
+    "Include twice-exceptionality in university teacher-preparation programs."
+   ]
+  ],
+  "cite": "Alsamiri, Y. A., & Alsamani, O. A. (2026). Teachers’ perceptions of professional development needs for identifying and supporting twice-exceptional students in inclusive schools in Saudi Arabia. <i>Education Sciences, 16</i>(3), 366. https://doi.org/10.3390/educsci16030366"
+ },
+ {
+  "slug": "ai-visual-instruction-dyslexia",
+  "custom": true,
+  "date": "2026-04-01",
+  "orig_title": "The effects of AI-based visual instruction on the reading comprehension of students with dyslexia in Saudi Arabia: a single-case experimental study",
+  "title_ar": "أثر التعليم البصري القائم على الذكاء الاصطناعي في الفهم القرائي لدى الطلاب ذوي عُسر القراءة في المملكة العربية السعودية: دراسة تجريبية أحادية الحالة",
+  "journal": "Frontiers in Education",
+  "kind_ar": "مقال محكّم · تصميم أحادي الحالة",
+  "kind_en": "Peer-reviewed article · Single-case design",
+  "teaser_ar": "شروح بصرية يولّدها ChatGPT لثلاثة طلاب ذوي عُسر القراءة: من خط أساس 0–10% إلى الإتقان، مع احتفاظ بالأثر بعد أسابيع.",
+  "teaser_en": "ChatGPT-generated visual explanations for three students with dyslexia: from a 0–10% baseline to mastery, maintained weeks later."
+ }
+]
