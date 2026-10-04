@@ -611,6 +611,8 @@ html[lang="ar"] .hero2 h1{letter-spacing:0;line-height:1.25}
 #books .bk-cover.en{direction:ltr;text-align:left}
 .hp{position:absolute!important;left:auto!important;right:auto!important;width:1px!important;height:1px!important;opacity:0;overflow:hidden;clip-path:inset(50%);pointer-events:none}
 .eyebrow::before,.eyebrow::after{display:none!important}
+.ph-banner{height:min(62vh,560px);border-radius:18px;background-size:cover;background-position:center 40%;margin-bottom:56px}@media(max-width:640px){.ph-banner{height:44vh;border-radius:12px;margin-bottom:32px}}
+.photo-sec{background:#000!important;box-shadow:0 0 0 100vmax #000;clip-path:inset(0 -100vmax);margin-inline:0!important;padding-inline:0!important}.photo-sec .sec-head h2{color:#F5F5F7}.photo-sec .eyebrow{color:#A1A1A6!important}.photo-sec .ph-banner{margin-top:8px}
 </style>
 </head>
 <body>
@@ -746,7 +748,7 @@ html[lang="ar"] .hero2 h1{letter-spacing:0;line-height:1.25}
   const g=$('gallery');
   if(g){
     const base=(document.querySelector('main')?.dataset.base)||'';
-    const order=[21,22,15,19,13,7,3,12,20,10,4,8,16,5,2,9,17,1,18,11,6,14];const pad=n=>String(n).padStart(2,'0');
+    const order=[21,22,15,19,13,7,3,12,20,10,4,8,16,5,2,9,17,1,18,11,6,14,23];const pad=n=>String(n).padStart(2,'0');
     const lb=$('lb'),li=$('lbi');let cur=0;
     function open(i){cur=(i+order.length)%order.length;li.src=base+'img/ph'+pad(order[cur])+'.webp';lb.hidden=false}
     order.forEach((n,i)=>{const b=document.createElement('button');b.type='button';b.innerHTML='<img loading="lazy" src="'+base+'img/th'+pad(n)+'.webp" alt="">';b.onclick=()=>open(i);g.appendChild(b)});

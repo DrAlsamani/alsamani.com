@@ -140,6 +140,7 @@ def pubs_html():
 
 def photo_html():
     return f'''<section id="photo" class="photo-sec first">
+  <div class="ph-banner" style="background-image:url(../img/ph23.webp)" role="img" aria-label="Grand Teton"></div>
   <div class="wrap"><div class="sec-head"><div><p class="eyebrow">{bi('أعمال فوتوغرافية', 'Photographic work')}</p><h2>{bi('التصوير الفوتوغرافي', 'Photography')}</h2><p>{bi('مختارات في الطبيعة والحياة الفطرية والتراث.', 'Selected work in landscape, wildlife and heritage.')}</p></div></div>
   <div class="masonry" id="gallery"></div></div>
 </section>'''
