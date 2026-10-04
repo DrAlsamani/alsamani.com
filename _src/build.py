@@ -21,7 +21,7 @@ TYPES = {'publication': ('نشر', 'Publication'), 'training': ('تدريب', 'T
          'article': ('مقال', 'Article'), 'news': ('خبر', 'News'), 'talk': ('مشاركة علمية', 'Talk')}
 PTYPES = {'article': ('مقال محكّم', 'Journal article'), 'chapter': ('فصل في كتاب', 'Book chapter'),
           'thesis': ('رسالة علمية', 'Thesis'), 'book': ('كتاب', 'Book')}
-NAV = [('index', 'المستجدات', 'Updates'), ('books', 'الكتب', 'Books'), ('publications', 'المنشورات', 'Publications'),
+NAV = [('index', 'المستجدات', 'Updates'), ('books', 'المكتبة المفتوحة', 'Open Library'), ('publications', 'المنشورات', 'Publications'),
        ('photography', 'التصوير', 'Photography'), ('about', 'نبذة', 'About'), ('contact', 'تواصل', 'Contact')]
 
 def href(page, depth):
@@ -177,7 +177,7 @@ def books_band():
         cards.append(f'''<article class="bkcard" style="--bk:{b.get('accent','#2C3E8F')}">
   <a class="bk-cover" href="books/{b['slug']}/index.html" aria-hidden="true" tabindex="-1"><b>{e(b['title'])}</b><span>{e(b['author'])}</span></a>
   <div class="bk-body">
-    <span class="bk-kind">{bi('كتاب · نشر مفتوح', 'Book · open access')}</span>
+    <span class="bk-kind">{bi('كتاب مفتوح', 'Open book')}</span>
     <h3><a href="books/{b['slug']}/index.html"><span class="ar">{e(b['title'])}</span><span class="en">{e(b['title_en'])} <small lang="ar">{e(b['title'])}</small></span></a></h3>
     <p class="bk-sub">{bi(e(b['subtitle']), e(b['subtitle_en']))}</p>
     <p class="bk-desc">{bi(e(b['description']), e(b['description_en']))}</p>
@@ -186,7 +186,7 @@ def books_band():
   </div>
 </article>''')
     return f'''<section id="books">
-  <div class="sec-head"><div><p class="eyebrow">{bi('الكتب', 'Books')}</p><h2>{bi('كتب مفتوحة للقراءة والتحميل', 'Open books to read and download')}</h2></div><a class="more-link" href="books/index.html">{bi('كل الكتب', 'All books')} <i class="arr"></i></a></div>
+  <div class="sec-head"><div><p class="eyebrow">{bi('المكتبة المفتوحة', 'Open Library')}</p><h2>{bi('كتب مفتوحة للقراءة والتحميل', 'Open books to read and download')}</h2></div><a class="more-link" href="books/index.html">{bi('المكتبة المفتوحة', 'Open Library')} <i class="arr"></i></a></div>
   <div class="bkgrid">{''.join(cards)}</div>
 </section>'''
 
@@ -271,17 +271,7 @@ def research_dys():
 def contact_html():
     return f'''<section class="first">
   <div class="sec-head"><div><p class="eyebrow">{bi('تواصل', 'Contact')}</p><h2>{bi('التواصل', 'Get in touch')}</h2></div></div>
-  <div class="contact-grid">
-    <div>
-      <h3 class="ch">{bi('مجالات التواصل', 'Reasons to get in touch')}</h3>
-      <ul class="clist">
-        <li>{bi('التعاون البحثي والنشر المشترك', 'Research collaboration and co-authorship')}</li>
-        <li>{bi('البرامج التدريبية وورش العمل', 'Training programs and workshops')}</li>
-        <li>{bi('الاستشارات في برامج الموهوبين والابتكار وريادة الأعمال', 'Consulting on gifted programs, innovation and entrepreneurship')}</li>
-        <li>{bi('المشاركات العلمية والإعلامية', 'Academic and media participation')}</li>
-        <li>{bi('الاستفسارات حول الأبحاث المنشورة', 'Questions about published research')}</li>
-      </ul>
-    </div>
+  <div class="contact-grid one">
     <div>
       <h3 class="ch">{bi('قنوات التواصل', 'Channels')}</h3>
       <ul class="channels">

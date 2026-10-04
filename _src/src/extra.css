@@ -256,3 +256,5 @@ html[dir="rtl"] .bk-cover{border-radius:10px 3px 3px 10px;box-shadow:inset -7px 
 .bkcard .btn.solid{background:var(--bk);border-color:var(--bk)}
 .bkcard .btn.ghost{color:var(--bk);border-color:var(--bk)}
 @media (max-width:700px){.bkcard{grid-template-columns:1fr;gap:18px;padding:22px}.bk-cover{max-width:150px}}
+
+.contact-grid.one{grid-template-columns:minmax(0,560px)}
