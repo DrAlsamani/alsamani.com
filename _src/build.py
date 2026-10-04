@@ -58,7 +58,7 @@ def page(name, depth, title_ar, body, full, seo_html=''):
   <p class="sf-copy mono">© 2026 alsamani.com</p>
 </footer>
 </div>
-<div class="lb" id="lb" hidden><button class="x" id="lbx" aria-label="Close">×</button><button class="pv" id="lbp" aria-label="Previous">‹</button><img id="lbi" alt=""><button class="nx" id="lbn" aria-label="Next">›</button></div>
+<div class="lb" id="lb" hidden><button class="x" id="lbx" aria-label="Close">×</button><button class="pv" id="lbp" aria-label="Previous">‹</button><img id="lbi" alt=""><span class="lb-cr">© Omar A. Alsamani</span><button class="nx" id="lbn" aria-label="Next">›</button></div>
 <script>{js}</script>
 '''
     if full:
@@ -140,9 +140,8 @@ def pubs_html():
 
 def photo_html():
     return f'''<section id="photo" class="photo-sec first">
-  <div class="ph-banner" style="background-image:url(../img/ph14.webp)" role="img" aria-label="Night sky over a mountain lake"></div>
-  <div class="wrap"><div class="sec-head"><div><p class="eyebrow">{bi('أعمال فوتوغرافية', 'Photographic work')}</p><h2>{bi('التصوير الفوتوغرافي', 'Photography')}</h2><p>{bi('مختارات في الطبيعة والحياة الفطرية والتراث.', 'Selected work in landscape, wildlife and heritage.')}</p></div></div>
-  <div class="masonry" id="gallery"></div></div>
+  {carousel(HOME_SET + [25, 8, 23], 1)}
+  <div class="wrap"><div class="masonry" id="gallery"></div></div>
 </section>'''
 
 
@@ -201,13 +200,15 @@ def books_band():
   <div class="bkgrid">{''.join(cards)}</div>
 </section>'''
 
+def carousel(ids, depth):
+    gal = '../' * depth + 'photography/index.html'
+    return f'''<div class="cr" data-carousel="{','.join(map(str, ids))}" dir="ltr"><div class="cr-track"></div>
+  <div class="cr-ui"><div class="cr-dots"></div><button type="button" class="cr-play" aria-label="Play / pause"></button></div></div>
+<p class="cr-credit">{bi('بعدسة عمر الصمعاني', 'Photographs by Omar A. Alsamani')}{'' if depth else f' · <a href="{gal}">' + bi('معرض الصور', 'Gallery') + ' <i class="chev"></i></a>'}</p>'''
+
+HOME_SET = [15, 14, 24, 4, 16, 19, 12, 9, 11, 21, 22, 3, 13, 18]
 def photo_band():
-    return f'''<section class="pband2">
-  <a class="pb2-hero" href="photography/index.html" style="background-image:url(img/ph15.webp)">
-    <span class="pb2-text"><span class="eyebrow">{bi('التصوير', 'Photography')}</span><b>{bi('الطبيعة والحياة الفطرية والتراث', 'Landscape, wildlife and heritage')}</b><span class="pb2-go">{bi('معرض الصور', 'View the gallery')} <i class="chev"></i></span></span>
-  </a>
-  <div class="pb2-row"><a href="photography/index.html" style="background-image:url(img/ph16.webp)" aria-label="Photography"></a><a href="photography/index.html" style="background-image:url(img/ph09.webp)" aria-label="Photography"></a></div>
-</section>'''
+    return f'''<section class="pband2">{carousel(HOME_SET, 0)}</section>'''
 
 def share_bar(r):
     url = f"https://alsamani.com/research/{r['slug']}/"
