@@ -117,7 +117,7 @@ html[lang="en"] .slide h4{font-family:var(--f-body);font-weight:600}
 .dots{display:flex;gap:6px}
 .dots i{width:7px;height:7px;border-radius:50%;background:var(--line)}
 .dots i.on{background:var(--dune)}
-@media (max-width:860px){.story{grid-template-columns:1fr}.story-meta{border-inline-end:0;border-bottom:1px solid var(--line)}.panel{padding:22px 20px}.slide{padding:20px}}
+@media (max-width:860px){.story{grid-template-columns:minmax(0,1fr)}.story-meta{border-inline-end:0;border-bottom:1px solid var(--line)}.panel{padding:22px 20px}.slide{padding:20px}}
 @media (prefers-reduced-motion:reduce){.slide{transition:none}}
 
 .abstract dl{margin:0;display:grid;gap:4px}
@@ -463,6 +463,10 @@ html[dir="rtl"] .bk-cover{border-radius:10px 3px 3px 10px;box-shadow:inset -7px 
 @media (max-width:700px){.bkcard{grid-template-columns:1fr;gap:18px;padding:22px}.bk-cover{max-width:150px}}
 
 .contact-grid.one{grid-template-columns:minmax(0,560px)}
+/* mobile: never let long titles, DOIs or URLs widen the layout */
+.story-meta,.story-meta>*{min-width:0}.facts dd,.facts a,.rtitle,.story-meta h1,.story-meta h3{overflow-wrap:anywhere}
+@media (max-width:600px){.facts{grid-template-columns:minmax(0,1fr);gap:2px 0}.facts dd{margin-bottom:8px}}
+html[dir="rtl"] .facts dd{text-align:right}
 </style>
 </head>
 <body>

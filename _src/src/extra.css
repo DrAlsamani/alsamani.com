@@ -258,3 +258,7 @@ html[dir="rtl"] .bk-cover{border-radius:10px 3px 3px 10px;box-shadow:inset -7px 
 @media (max-width:700px){.bkcard{grid-template-columns:1fr;gap:18px;padding:22px}.bk-cover{max-width:150px}}
 
 .contact-grid.one{grid-template-columns:minmax(0,560px)}
+/* mobile: never let long titles, DOIs or URLs widen the layout */
+.story-meta,.story-meta>*{min-width:0}.facts dd,.facts a,.rtitle,.story-meta h1,.story-meta h3{overflow-wrap:anywhere}
+@media (max-width:600px){.facts{grid-template-columns:minmax(0,1fr);gap:2px 0}.facts dd{margin-bottom:8px}}
+html[dir="rtl"] .facts dd{text-align:right}

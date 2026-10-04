@@ -53,6 +53,8 @@
   // continue reading on the book home
   const r=$('#bpResume');if(r){try{const last=localStorage.getItem('bp:'+B.slug+':last');if(last&&last!=='index.html'&&last!=='elements.html'){fetch('book-index.json').then(x=>x.json()).then(d=>{const c=d.toc.find(t=>t.f===last);if(c){r.innerHTML=(EN2?'Continue where you left off: ':'تابع القراءة من حيث توقفت: ')+'<a href="'+c.f+'">'+(c.kicker?c.kicker+' — ':'')+c.h1+'</a>';r.hidden=false}})}}catch(e){}}
 })();
+// switching edition = choosing the site language
+document.addEventListener('click',ev=>{const a=ev.target.closest&&ev.target.closest('a[hreflang]');if(a)try{localStorage.setItem('siteLang',a.getAttribute('hreflang'))}catch(e){}});
 // keep attribution with copied passages
 document.addEventListener('copy',ev=>{const sel=String(getSelection());if(sel.length<120||ev.target.closest&&ev.target.closest('input,textarea'))return;
   const t=document.title,u=location.href.split('#')[0];const en=document.documentElement.lang==='en';const src=en?'\n\n— Source: '+t+', Dr. Omar A. Alsamani. '+u:'\n\n— المصدر: '+t+'، د. عمر عبدالله الصمعاني. '+u;

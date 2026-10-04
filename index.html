@@ -112,7 +112,7 @@ html[lang="en"] .slide h4{font-family:var(--f-body);font-weight:600}
 .dots{display:flex;gap:6px}
 .dots i{width:7px;height:7px;border-radius:50%;background:var(--line)}
 .dots i.on{background:var(--dune)}
-@media (max-width:860px){.story{grid-template-columns:1fr}.story-meta{border-inline-end:0;border-bottom:1px solid var(--line)}.panel{padding:22px 20px}.slide{padding:20px}}
+@media (max-width:860px){.story{grid-template-columns:minmax(0,1fr)}.story-meta{border-inline-end:0;border-bottom:1px solid var(--line)}.panel{padding:22px 20px}.slide{padding:20px}}
 @media (prefers-reduced-motion:reduce){.slide{transition:none}}
 
 .abstract dl{margin:0;display:grid;gap:4px}
@@ -458,6 +458,10 @@ html[dir="rtl"] .bk-cover{border-radius:10px 3px 3px 10px;box-shadow:inset -7px 
 @media (max-width:700px){.bkcard{grid-template-columns:1fr;gap:18px;padding:22px}.bk-cover{max-width:150px}}
 
 .contact-grid.one{grid-template-columns:minmax(0,560px)}
+/* mobile: never let long titles, DOIs or URLs widen the layout */
+.story-meta,.story-meta>*{min-width:0}.facts dd,.facts a,.rtitle,.story-meta h1,.story-meta h3{overflow-wrap:anywhere}
+@media (max-width:600px){.facts{grid-template-columns:minmax(0,1fr);gap:2px 0}.facts dd{margin-bottom:8px}}
+html[dir="rtl"] .facts dd{text-align:right}
 </style>
 </head>
 <body>
@@ -522,24 +526,26 @@ html[dir="rtl"] .bk-cover{border-radius:10px 3px 3px 10px;box-shadow:inset -7px 
 <section id="books">
   <div class="sec-head"><div><p class="eyebrow"><span class="ar">المكتبة المفتوحة</span><span class="en">Open Library</span></p><h2><span class="ar">كتب مفتوحة للقراءة والتحميل</span><span class="en">Open books to read and download</span></h2></div><a class="more-link" href="books/index.html"><span class="ar">المكتبة المفتوحة</span><span class="en">Open Library</span> <i class="arr"></i></a></div>
   <div class="bkgrid"><article class="bkcard" style="--bk:#9c4318">
-  <a class="bk-cover" href="books/innovation-management/index.html" aria-hidden="true" tabindex="-1"><b>إدارة الابتكار</b><span>د. عمر عبدالله الصمعاني</span></a>
+  <a class="bk-cover ar" href="books/innovation-management/index.html" aria-hidden="true" tabindex="-1"><b>إدارة الابتكار</b><span>د. عمر عبدالله الصمعاني</span></a>
+  <a class="bk-cover en" href="books/innovation-management/en/index.html" aria-hidden="true" tabindex="-1"><b>Innovation Management</b><span>Dr. Omar A. Alsamani</span></a>
   <div class="bk-body">
     <span class="bk-kind"><span class="ar">كتاب مفتوح</span><span class="en">Open book</span></span>
-    <h3><a href="books/innovation-management/index.html"><span class="ar">إدارة الابتكار</span><span class="en">Innovation Management <small lang="ar">إدارة الابتكار</small></span></a></h3>
+    <h3><a class="ar" href="books/innovation-management/index.html">إدارة الابتكار</a><a class="en" href="books/innovation-management/en/index.html">Innovation Management <small lang="ar">إدارة الابتكار</small></a></h3>
     <p class="bk-sub"><span class="ar">من المبادرات المتفرقة إلى قدرة مؤسسية مستدامة</span><span class="en">From scattered initiatives to a sustained organizational capability</span></p>
     <p class="bk-desc"><span class="ar">يتتبع الكتاب مسار الابتكار من رصد الإشارة الأولى إلى حل يُعتمد في العمل ويحقق قيمة، ويحلل مقوماته المؤسسية: الاستراتيجية، والنظام، والثقافة، والحوكمة، والفرق، والقياس، ويضع الإنسان في مركزها.</span><span class="en">A guide to building innovation as an institutional capability: strategy, systems, culture, governance, teams and measurement, with people at the centre.</span></p>
     <div class="bk-facts"><span><b class='mono'>24</b><span class="ar">فصلًا وملحقًا</span><span class="en">chapters and appendices</span></span><span><b class='mono'>259</b><span class="ar">صفحة</span><span class="en">pages</span></span><span><b class='mono'>113</b><span class="ar">شكلًا وجدولًا وأداة</span><span class="en">figures, tables and tools</span></span></div>
-    <div class="bk-actions"><a class="btn solid" href="books/innovation-management/index.html"><span class="ar">اقرأ على الموقع</span><span class="en">Read online</span></a><a class="btn ghost" href="books/innovation-management/pdf/innovation-management-full.pdf"><span class="ar">تحميل PDF</span><span class="en">Download PDF</span> · 4.6 MB</a></div>
+    <div class="bk-actions"><a class="btn solid ar" href="books/innovation-management/index.html">اقرأ على الموقع</a><a class="btn solid en" href="books/innovation-management/en/index.html">Read online</a><a class="btn ghost" href="books/innovation-management/pdf/innovation-management-full.pdf"><span class="ar">تحميل PDF</span><span class="en">Arabic PDF</span> · 4.6 MB</a></div>
   </div>
 </article><article class="bkcard" style="--bk:#0d6b67">
-  <a class="bk-cover" href="books/diagnosis-identification/index.html" aria-hidden="true" tabindex="-1"><b>المرجع في التشخيص والتعرف على ذوي الاستثنائية</b><span>د. عمر عبدالله الصمعاني</span></a>
+  <a class="bk-cover ar" href="books/diagnosis-identification/index.html" aria-hidden="true" tabindex="-1"><b>المرجع في التشخيص والتعرف على ذوي الاستثنائية</b><span>د. عمر عبدالله الصمعاني</span></a>
+  <a class="bk-cover en" href="books/diagnosis-identification/en/index.html" aria-hidden="true" tabindex="-1"><b>Diagnosis and Identification of Exceptional Learners</b><span>Dr. Omar A. Alsamani</span></a>
   <div class="bk-body">
     <span class="bk-kind"><span class="ar">كتاب مفتوح</span><span class="en">Open book</span></span>
-    <h3><a href="books/diagnosis-identification/index.html"><span class="ar">المرجع في التشخيص والتعرف على ذوي الاستثنائية</span><span class="en">Diagnosis and Identification of Exceptional Learners <small lang="ar">المرجع في التشخيص والتعرف على ذوي الاستثنائية</small></span></a></h3>
+    <h3><a class="ar" href="books/diagnosis-identification/index.html">المرجع في التشخيص والتعرف على ذوي الاستثنائية</a><a class="en" href="books/diagnosis-identification/en/index.html">Diagnosis and Identification of Exceptional Learners <small lang="ar">المرجع في التشخيص والتعرف على ذوي الاستثنائية</small></a></h3>
     <p class="bk-sub"><span class="ar">من الملاحظة الأولية إلى القرار لذوي الإعاقة والموهوبين ومزدوجي الاستثنائية</span><span class="en">From first observation to decision for learners with disabilities, the gifted and the twice-exceptional</span></p>
     <p class="bk-desc"><span class="ar">يتتبع الكتاب الطريق من الملاحظة الأولى إلى القرار، ويعرض المقاييس المعتمدة عالميًا كما تبدو وكما تُطبق فعلًا، ويقرأها في ضوء التنظيمات السعودية والأدوات العربية: أربعة أبواب، وخمسة عشر فصلًا، وخمسة ملاحق، وأكثر من أربعين حالة.</span><span class="en">A reference on diagnosis and identification across disabilities, giftedness and twice-exceptionality, read in light of Saudi regulations and Arabic instruments.</span></p>
     <div class="bk-facts"><span><b class='mono'>20</b><span class="ar">فصلًا وملحقًا</span><span class="en">chapters and appendices</span></span><span><b class='mono'>497</b><span class="ar">صفحة</span><span class="en">pages</span></span><span><b class='mono'>281</b><span class="ar">شكلًا وجدولًا وأداة</span><span class="en">figures, tables and tools</span></span></div>
-    <div class="bk-actions"><a class="btn solid" href="books/diagnosis-identification/index.html"><span class="ar">اقرأ على الموقع</span><span class="en">Read online</span></a><a class="btn ghost" href="books/diagnosis-identification/pdf/diagnosis-identification-full.pdf"><span class="ar">تحميل PDF</span><span class="en">Download PDF</span> · 10.4 MB</a></div>
+    <div class="bk-actions"><a class="btn solid ar" href="books/diagnosis-identification/index.html">اقرأ على الموقع</a><a class="btn solid en" href="books/diagnosis-identification/en/index.html">Read online</a><a class="btn ghost" href="books/diagnosis-identification/pdf/diagnosis-identification-full.pdf"><span class="ar">تحميل PDF</span><span class="en">Arabic PDF</span> · 10.4 MB</a></div>
   </div>
 </article></div>
 </section>

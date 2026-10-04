@@ -175,14 +175,15 @@ def books_band():
                  f"<span><b class='mono'>{st.get('pages','')}</b>{bi('صفحة', 'pages')}</span>" if st.get('pages') else '',
                  f"<span><b class='mono'>{st.get('figs',0)+st.get('tabs',0)+st.get('tools',0)}</b>{bi('شكلًا وجدولًا وأداة', 'figures, tables and tools')}</span>"]
         cards.append(f'''<article class="bkcard" style="--bk:{b.get('accent','#2C3E8F')}">
-  <a class="bk-cover" href="books/{b['slug']}/index.html" aria-hidden="true" tabindex="-1"><b>{e(b['title'])}</b><span>{e(b['author'])}</span></a>
+  <a class="bk-cover ar" href="books/{b['slug']}/index.html" aria-hidden="true" tabindex="-1"><b>{e(b['title'])}</b><span>{e(b['author'])}</span></a>
+  <a class="bk-cover en" href="books/{b['slug']}/en/index.html" aria-hidden="true" tabindex="-1"><b>{e(b['title_en'])}</b><span>{e(b.get('author_en',''))}</span></a>
   <div class="bk-body">
     <span class="bk-kind">{bi('كتاب مفتوح', 'Open book')}</span>
-    <h3><a href="books/{b['slug']}/index.html"><span class="ar">{e(b['title'])}</span><span class="en">{e(b['title_en'])} <small lang="ar">{e(b['title'])}</small></span></a></h3>
+    <h3><a class="ar" href="books/{b['slug']}/index.html">{e(b['title'])}</a><a class="en" href="books/{b['slug']}/en/index.html">{e(b['title_en'])} <small lang="ar">{e(b['title'])}</small></a></h3>
     <p class="bk-sub">{bi(e(b['subtitle']), e(b['subtitle_en']))}</p>
     <p class="bk-desc">{bi(e(b['description']), e(b['description_en']))}</p>
     <div class="bk-facts">{''.join(facts)}</div>
-    <div class="bk-actions"><a class="btn solid" href="books/{b['slug']}/index.html">{bi('اقرأ على الموقع', 'Read online')}</a><a class="btn ghost" href="books/{b['slug']}/pdf/{b['slug']}-full.pdf">{bi('تحميل PDF', 'Download PDF')}{(' · ' + str(st['mb']) + ' MB') if st.get('mb') else ''}</a></div>
+    <div class="bk-actions"><a class="btn solid ar" href="books/{b['slug']}/index.html">اقرأ على الموقع</a><a class="btn solid en" href="books/{b['slug']}/en/index.html">Read online</a><a class="btn ghost" href="books/{b['slug']}/pdf/{b['slug']}-full.pdf">{bi('تحميل PDF', 'Arabic PDF')}{(' · ' + str(st['mb']) + ' MB') if st.get('mb') else ''}</a></div>
   </div>
 </article>''')
     return f'''<section id="books">

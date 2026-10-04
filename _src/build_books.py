@@ -95,7 +95,8 @@ def build_book(b, make_pdf):
 
     def chrome(s, f, is_index=False):
         pdf_btn = '' if is_index else f'<a class="bp-btn" href="pdf/{f[:-5]}.pdf" download>تحميل الفصل PDF</a>'
-        if os.path.exists(os.path.join(src, 'en', f)): pdf_btn = f'<a class="bp-btn" href="en/{f}" hreflang="en" lang="en">English</a>' + pdf_btn
+        has_en = os.path.exists(os.path.join(src, 'en', f)) or f == 'index.html'
+        if has_en: pdf_btn = f'<a class="bp-btn" href="en/{f}" hreflang="en" lang="en">English</a>' + pdf_btn
         bar = f'''<div class="bp-bar" dir="rtl"><div class="bp-in">
 <a class="bp-home" href="../../index.html">د. عمر عبدالله الصمعاني</a><span class="bp-sep">/</span><a href="../index.html">المكتبة المفتوحة</a><span class="bp-sep">/</span><a href="index.html" class="bp-book">{e(b['title'])}</a>
 <span class="bp-sp"></span><span class="bp-tools"><button class="bp-ic" type="button" data-rd="z-" aria-label="تصغير الخط" title="تصغير الخط">أ−</button><button class="bp-ic" type="button" data-rd="z+" aria-label="تكبير الخط" title="تكبير الخط">أ+</button><button class="bp-ic" type="button" data-rd="theme" aria-label="الوضع الليلي" title="الوضع الليلي/النهاري">ليلي</button></span>{pdf_btn}<button class="bp-btn" type="button" data-share>مشاركة</button><button class="bp-btn" type="button" data-bp="search">بحث</button><button class="bp-btn solid" type="button" data-bp="toc">المحتويات</button></div></div>
@@ -107,6 +108,7 @@ def build_book(b, make_pdf):
 <div class="bp-links"><a href="elements.html">عناصر الكتاب: الأشكال والجداول والأدوات</a><a href="index.html#downloads">تحميل الكتاب</a></div>
 </div></div>'''
         head_add = (('<meta name="robots" content="noindex,nofollow">' if draft else '') + FONTS +
+                    (f'<link rel="alternate" hreflang="en" href="https://alsamani.com/books/{slug}/en/{f}">' if has_en else '') +
                     '<link rel="stylesheet" href="assets/platform.css">' +
                     f'<script>window.BOOK={{slug:"{slug}",cur:"{f}"}}</script><script src="assets/platform.js" defer></script>')
         s = s.replace('</head>', head_add + '\n</head>', 1)
@@ -144,16 +146,30 @@ def build_book(b, make_pdf):
 
     if make_pdf:
         make_pdfs(b, src, dst, order, toc)
-    build_en(b, order, draft)
+    build_en(b, order, draft, toc)
     return {'slug': slug, 'chapters': len(toc), 'figs': len(elements['fig']), 'tabs': len(elements['tab']), 'tools': len(elements['tool'])}
 
 
 EN_FONTS = '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">'
 EN_CSS = '<style>:root{--f-body:"Source Serif 4",Georgia,serif;--f-display:"Source Serif 4",Georgia,serif;--f-ui:"IBM Plex Sans",system-ui,sans-serif}.questions li::before{content:counter(q)}html{direction:ltr!important}body{letter-spacing:0;text-align:left}caption{text-align:left!important}.formula small{direction:ltr}.cover svg{left:auto!important;right:0}</style>'
 
-def build_en(b, order, draft):
+def en_landing(b, toc, draft):
+    """English entry page for a book whose English edition has not started yet."""
+    slug = b['slug']; dst = os.path.join(OUT, slug, 'en'); os.makedirs(dst, exist_ok=True)
+    rows = ''.join(f'<li><a href="../{t["f"]}" lang="ar" dir="rtl">{e(t["h1"])}</a></li>' for t in toc)
+    page = f'''<!doctype html><html lang="en" dir="ltr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>{e(b.get("title_en", b["title"]))} | Dr. Omar A. Alsamani</title>{'<meta name="robots" content="noindex,nofollow">' if draft else ''}<meta name="description" content="{e(b.get("description_en",""))}"><link rel="alternate" hreflang="ar" href="https://alsamani.com/books/{slug}/index.html">{FONTS}{EN_FONTS}<link rel="stylesheet" href="../../library.css"><style>.en-book{{max-width:860px;margin:0 auto;padding:48px 20px 80px;font-family:"Source Serif 4",Georgia,serif;color:#1d1d1f}}.en-book .k{{font:600 12px/1.4 "IBM Plex Sans",sans-serif;letter-spacing:.12em;text-transform:uppercase;color:{b.get("accent","#2C3E8F")}}}.en-book h1{{font-size:clamp(28px,4vw,40px);margin:.3em 0 .1em;line-height:1.15}}.en-book .ar-t{{font-family:"Noto Naskh Arabic",serif;color:#666;margin:0 0 1em}}.en-book .sub{{font-size:19px;color:#444}}.en-book .note{{border-left:3px solid {b.get("accent","#2C3E8F")};background:#f6f4ef;padding:14px 18px;font:15px/1.6 "IBM Plex Sans",sans-serif;margin:28px 0}}.en-book ol{{columns:2;column-gap:32px;padding-inline-start:22px}}.en-book li{{break-inside:avoid;margin:0 0 8px;font-family:"Noto Naskh Arabic",serif}}.en-book a{{color:{b.get("accent","#2C3E8F")}}}.en-book .acts{{display:flex;gap:12px;flex-wrap:wrap;margin:24px 0;font-family:"IBM Plex Sans",sans-serif}}.en-book .acts a{{padding:10px 18px;border:1px solid {b.get("accent","#2C3E8F")};border-radius:4px;text-decoration:none}}.en-book .acts a.solid{{background:{b.get("accent","#2C3E8F")};color:#fff}}@media(max-width:640px){{.en-book ol{{columns:1}}}}</style>
+<script>try{{localStorage.setItem('siteLang','en')}}catch(e){{}}</script></head><body>
+<header class="lib-top" dir="ltr"><a href="../../../index.html">Dr. Omar A. Alsamani</a><span><a href="../../index.html">Open Library</a> · <a href="../index.html" lang="ar" onclick="try{{localStorage.setItem('siteLang','ar')}}catch(e){{}}">العربية</a></span></header>
+<main class="en-book"><p class="k">Open book{' · preliminary edition' if draft else ''}</p><h1>{e(b.get("title_en", b["title"]))}</h1><p class="ar-t" lang="ar" dir="rtl">{e(b["title"])}</p><p class="sub">{e(b.get("subtitle_en",""))}</p><p>{e(b.get("description_en",""))}</p><p><b>{e(b.get("author_en",""))}</b></p>
+<p class="note">The English edition of this book is in preparation. The complete Arabic edition is available now: it can be read online chapter by chapter, searched, and downloaded in full or by chapter.</p>
+<div class="acts"><a class="solid" href="../index.html" lang="ar">Read the Arabic edition</a><a href="../pdf/{slug}-full.pdf">Download the Arabic PDF</a></div>
+<h2>Contents (Arabic edition)</h2><ol>{rows}</ol></main></body></html>'''
+    open(os.path.join(dst, 'index.html'), 'w').write(page)
+
+def build_en(b, order, draft, toc_ar=None):
     slug = b['slug']; src = P('books', slug, 'en')
-    if not os.path.isdir(src): return
+    if not os.path.isfile(os.path.join(src, 'index.html')):
+        return en_landing(b, toc_ar or [], draft)
     dst = os.path.join(OUT, slug, 'en'); os.makedirs(dst, exist_ok=True)
     have = [f for f in order if os.path.exists(os.path.join(src, f))]
     title_en = b.get('title_en', b['title'])
@@ -235,14 +251,20 @@ def make_pdfs(b, src, dst, order, toc):
         w.write(pth)
 
 def library(results):
-    cards = ''
+    cards, cards_en = '', ''
     for b in books:
         st = '' if b['status'] == 'published' else '<span class="lib-badge">إصدار أولي</span>'
         cards += f'''<a class="lib-card" href="{b["slug"]}/index.html" style="--bk:{b.get("accent","#2C3E8F")}"><div class="lib-spine"><b>{e(b["title"])}</b><span>{e(b["author"])}</span></div><div class="lib-meta">{st}<h3>{e(b["title"])}</h3><p class="lib-sub">{e(b.get("subtitle",""))}</p><p>{e(b["description"])}</p><span class="lib-go">القراءة والتحميل ←</span></div></a>'''
+        st_en = '' if b['status'] == 'published' else '<span class="lib-badge">Preliminary edition</span>'
+        en_note = '' if os.path.isfile(P('books', b['slug'], 'en', 'index.html')) else '<p class="lib-ednote">English edition in preparation · Arabic edition available in full</p>'
+        cards_en += f'''<a class="lib-card" href="{b["slug"]}/en/index.html" hreflang="en" style="--bk:{b.get("accent","#2C3E8F")}"><div class="lib-spine"><b>{e(b.get("title_en",b["title"]))}</b><span>{e(b.get("author_en",""))}</span></div><div class="lib-meta">{st_en}<h3>{e(b.get("title_en",b["title"]))}</h3><p class="lib-sub">{e(b.get("subtitle_en",""))}</p><p>{e(b.get("description_en",""))}</p>{en_note}<span class="lib-go">Read and download →</span></div></a>'''
     any_pub = any(b['status'] == 'published' for b in books)
-    page = f'''<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>المكتبة المفتوحة | د. عمر عبدالله الصمعاني</title>{'' if any_pub else '<meta name="robots" content="noindex,nofollow">'}{FONTS}<link rel="stylesheet" href="library.css"></head><body>
-<header class="lib-top"><a href="../index.html">د. عمر عبدالله الصمعاني</a><span>المكتبة المفتوحة</span></header>
-<main class="lib"><p class="lib-eyebrow">د. عمر عبدالله الصمعاني</p><h1>المكتبة المفتوحة</h1><p class="lib-lead">كتب منشورة نشرًا مفتوحًا: تُقرأ على الموقع فصلًا فصلًا، ويُبحث في نصها، وتُحمَّل كاملة أو مجزأة.</p><div class="lib-grid">{cards}</div></main></body></html>'''
+    page = f'''<!doctype html><html lang="en" dir="ltr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Open Library | Dr. Omar A. Alsamani</title>{'' if any_pub else '<meta name="robots" content="noindex,nofollow">'}{FONTS}{EN_FONTS}<link rel="stylesheet" href="library.css">
+<style>html[lang="ar"] .en,html[lang="en"] .ar{{display:none!important}}html[lang="en"] body{{font-family:"Source Serif 4",Georgia,serif}}html[lang="en"] .lib-top,html[lang="en"] .lib-go,html[lang="en"] .lib-badge,html[lang="en"] .lib-eyebrow{{font-family:"IBM Plex Sans",sans-serif}}.lib-ednote{{font-size:.85em;opacity:.75;margin:.4em 0}}.lib-lang{{background:none;border:1px solid currentColor;border-radius:3px;padding:2px 10px;font:inherit;cursor:pointer;margin-inline-start:12px;color:inherit}}</style>
+<script>(function(){{var l='en';try{{l=localStorage.getItem('siteLang')||'en'}}catch(e){{}}document.documentElement.lang=l;document.documentElement.dir=l==='ar'?'rtl':'ltr';if(l==='ar')document.title='المكتبة المفتوحة | د. عمر عبدالله الصمعاني'}})();
+function libLang(){{var l=document.documentElement.lang==='ar'?'en':'ar';try{{localStorage.setItem('siteLang',l)}}catch(e){{}}location.reload()}}</script></head><body>
+<header class="lib-top"><a href="../index.html"><span class="ar">د. عمر عبدالله الصمعاني</span><span class="en">Dr. Omar A. Alsamani</span></a><span><span class="ar">المكتبة المفتوحة</span><span class="en">Open Library</span><button type="button" class="lib-lang" onclick="libLang()"><span class="ar">English</span><span class="en">العربية</span></button></span></header>
+<main class="lib"><p class="lib-eyebrow"><span class="ar">د. عمر عبدالله الصمعاني</span><span class="en">Dr. Omar A. Alsamani</span></p><h1><span class="ar">المكتبة المفتوحة</span><span class="en">Open Library</span></h1><p class="lib-lead"><span class="ar">كتب منشورة نشرًا مفتوحًا: تُقرأ على الموقع فصلًا فصلًا، ويُبحث في نصها، وتُحمَّل كاملة أو مجزأة.</span><span class="en">Open-access books: read online chapter by chapter, search the full text, and download each book in full or by chapter.</span></p><div class="lib-grid ar">{cards}</div><div class="lib-grid en">{cards_en}</div></main></body></html>'''
     open(os.path.join(OUT, 'index.html'), 'w').write(page)
     shutil.copy(P('src', 'books', 'library.css'), os.path.join(OUT, 'library.css'))
 
