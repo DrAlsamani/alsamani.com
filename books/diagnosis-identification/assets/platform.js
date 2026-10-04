@@ -53,3 +53,7 @@
   // continue reading on the book home
   const r=$('#bpResume');if(r){try{const last=localStorage.getItem('bp:'+B.slug+':last');if(last&&last!=='index.html'&&last!=='elements.html'){fetch('book-index.json').then(x=>x.json()).then(d=>{const c=d.toc.find(t=>t.f===last);if(c){r.innerHTML='تابع القراءة من حيث توقفت: <a href="'+c.f+'">'+(c.kicker?c.kicker+' — ':'')+c.h1+'</a>';r.hidden=false}})}}catch(e){}}
 })();
+// keep attribution with copied passages
+document.addEventListener('copy',ev=>{const sel=String(getSelection());if(sel.length<120||ev.target.closest&&ev.target.closest('input,textarea'))return;
+  const t=document.title,u=location.href.split('#')[0];const src='\n\n— المصدر: '+t+'، د. عمر عبدالله الصمعاني. '+u;
+  ev.clipboardData.setData('text/plain',sel+src);ev.preventDefault()});

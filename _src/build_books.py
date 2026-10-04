@@ -32,6 +32,14 @@ def order_of(index_html):
             seen.add(l); out.append(l)
     return out
 
+YEAR = '٢٠٢٦'
+def cite_box(b, f, title, h1):
+    url = f"https://alsamani.com/books/{b['slug']}/{f}"
+    lic = b.get('license', 'جميع الحقوق محفوظة للمؤلف. يُسمح بالقراءة والتحميل والمشاركة والاقتباس لأغراض غير تجارية، بشرط ذكر اسم المؤلف والمصدر.')
+    return f'''<aside class="bp-cite" dir="rtl"><b>للاستشهاد بهذا الجزء</b>
+<p class="bp-ref">الصمعاني، عمر عبدالله. ({YEAR}). {e(title)}. في <i>{e(b['title'])}</i>. alsamani.com. <span dir="ltr">{url}</span></p>
+<p class="bp-lic2">© {YEAR} {e(b['author'])}. {e(lic)}</p></aside>'''
+
 def build_book(b, make_pdf):
     slug = b['slug']; src = P('books', slug); dst = os.path.join(OUT, slug)
     os.makedirs(os.path.join(dst, 'assets'), exist_ok=True)
@@ -81,6 +89,7 @@ def build_book(b, make_pdf):
             if hm: cur_id, cur_t = hm.group(1), text(hm.group(2)); continue
             t = text(re.sub(r'<(script|style|nav)[\s\S]*?</\1>', '', p))
             if len(t) > 40: search.append({'f': f, 'id': cur_id, 'c': title, 's': cur_t, 't': t[:4000]})
+        s = s.replace('<nav class="pager"', cite_box(b, f, title, text(h1.group(1)) if h1 else title) + '\n<nav class="pager"', 1)
         toc.append({'f': f, 'title': title, 'h1': text(h1.group(1)) if h1 else title, 'kicker': text(kicker.group(1)) if kicker else '', 'secs': secs})
         pages[f] = s
 
@@ -138,9 +147,12 @@ def make_pdfs(b, src, dst, order, toc):
     """Print with the book's original typography (fonts embedded in the PDF)."""
     pdir = os.path.join(dst, 'pdf'); os.makedirs(pdir, exist_ok=True)
     tmp = P('books', '.print', b['slug']); shutil.rmtree(tmp, ignore_errors=True); shutil.copytree(src, tmp)
+    shutil.copy(P('src', 'books', 'platform.css'), os.path.join(tmp, 'assets', 'platform.css'))
     print_css = '<style>@page{size:A4;margin:20mm 18mm 20mm}.booknav,.pager{display:none!important}body{background:#fff}</style>'
     for f in order + ['index.html']:
-        s = open(os.path.join(tmp, f)).read().replace('</head>', print_css + '</head>', 1)
+        s = open(os.path.join(tmp, f)).read().replace('</head>', print_css + '<link rel="stylesheet" href="assets/platform.css"></head>', 1)
+        t = next((x for x in toc if x['f'] == f), None)
+        if t: s = s.replace('<nav class="pager"', cite_box(b, f, t['title'], t['h1']) + '<nav class="pager"', 1)
         open(os.path.join(tmp, f), 'w').write(s)
     # full book: index (cover + contents) then every page in reading order
     bodies, styles = [], []
@@ -149,11 +161,19 @@ def make_pdfs(b, src, dst, order, toc):
         styles += re.findall(r'<style>([\s\S]*?)</style>', s)
         body = re.search(r'<body>([\s\S]*)</body>', s).group(1)
         bodies.append(f'<section class="bp-print-part" style="break-before:page">{body}</section>')
-    full = f'''<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>{e(b["title"])}</title><link rel="stylesheet" href="assets/book.css">{''.join(f'<link rel="stylesheet" href="assets/{x}">' for x in os.listdir(os.path.join(src,'assets')) if x!='book.css')}<style>{"".join(dict.fromkeys(styles))}</style></head><body>{"".join(bodies)}</body></html>'''
+    full = f'''<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>{e(b["title"])}</title><link rel="stylesheet" href="assets/book.css">{''.join(f'<link rel="stylesheet" href="assets/{x}">' for x in os.listdir(os.path.join(src,'assets')) if x!='book.css')}<link rel="stylesheet" href="assets/platform.css"><style>{"".join(dict.fromkeys(styles))}</style></head><body>{"".join(bodies)}</body></html>'''
     open(os.path.join(tmp, '_full.html'), 'w').write(full)
     jobs = [(f, f'{f[:-5]}.pdf') for f in order] + [('_full.html', f'{b["slug"]}-full.pdf')]
-    open(os.path.join(tmp, 'jobs.json'), 'w').write(json.dumps({'dir': tmp, 'out': pdir, 'title': b['title'], 'jobs': jobs}))
+    open(os.path.join(tmp, 'jobs.json'), 'w').write(json.dumps({'dir': tmp, 'out': pdir, 'title': b['title'], 'author': b['author'], 'author_en': b.get('author_en',''), 'jobs': jobs}))
     subprocess.run(['node', P('src', 'books', 'print.js'), os.path.join(tmp, 'jobs.json')], check=True)
+    # PDF metadata: author, title, rights
+    from pypdf import PdfReader, PdfWriter
+    for f, out in jobs:
+        pth = os.path.join(pdir, out); r = PdfReader(pth); w = PdfWriter(clone_from=r)
+        w.add_metadata({'/Title': b['title'] if out.endswith('-full.pdf') else f"{b['title']} — {next((t['h1'] for t in toc if t['f'] == f), '')}",
+                        '/Author': f"{b['author']} ({b.get('author_en','')})", '/Subject': b.get('subtitle',''),
+                        '/Keywords': 'alsamani.com', '/Creator': 'alsamani.com', '/Rights': f"© {b['author']}"})
+        w.write(pth)
 
 def library(results):
     cards = ''
