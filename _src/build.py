@@ -169,6 +169,25 @@ def photo_band():
   <div class="pb-cap"><span class="eyebrow">{bi('أعمال فوتوغرافية', 'Photographic work')}</span><a href="photography/index.html">{bi('معرض الصور', 'View the gallery')} <i class="arr"></i></a></div>
 </section>'''
 
+def share_bar(r):
+    url = f"https://alsamani.com/research/{r['slug']}/"
+    t = r['orig_title']
+    from urllib.parse import quote
+    pdf = f'<a class="sb pdf" href="{e(r["pdf"])}">{bi("تحميل البحث PDF", "Download PDF")}</a>' if r.get('pdf') else ''
+    return f'''<div class="sharebar" data-url="{url}" data-title="{e(t)}">
+  {pdf}
+  <button type="button" class="sb copylink">{bi("نسخ رابط الصفحة", "Copy page link")}</button>
+  <button type="button" class="sb native" hidden>{bi("مشاركة", "Share")}</button>
+  <a class="sb" href="https://wa.me/?text={quote(t + ' ' + url)}">WhatsApp</a>
+  <a class="sb" href="https://x.com/intent/post?text={quote(t)}&url={quote(url)}">X</a>
+  <a class="sb" href="https://www.linkedin.com/sharing/share-offsite/?url={quote(url)}">LinkedIn</a>
+  <a class="sb" href="mailto:?subject={quote(t)}&body={quote(url)}">{bi("بريد", "Email")}</a>
+</div>'''
+
+def explainer(slug):
+    f = P('src/explainers', slug + '.html')
+    return open(f).read() if os.path.exists(f) else ''
+
 def research_page(r):
     facts = ''.join(f'<dt>{bi(f[0], f[1])}</dt><dd>{bi(e(f[2]), e(f[3]))}</dd>' for f in r.get('facts', []))
     absd = ''.join(f'<dt>{bi(x[0], x[1])}</dt><dd><span class="ar">{e(x[2])}</span><span class="en" dir="ltr">{e(x[3])}</span></dd>' for x in r['abstract'])
@@ -188,15 +207,21 @@ def research_page(r):
       <dt>DOI</dt><dd class="mono" dir="ltr"><a href="https://doi.org/{r['doi']}">{r['doi']}</a></dd>
     </dl>
     <a class="btn ghost" style="align-self:flex-start" href="{e(r['url'])}">{bi('النص الكامل في موقع المجلة', 'Full text on the journal site')}</a>
+    {share_bar(r)}
   </div>
   <div>
     <div class="tabs" role="tablist">
-      <button class="tab" role="tab" aria-selected="true" data-p="q0">{bi('المستخلص', 'Abstract')}</button>
+      <button class="tab" role="tab" aria-selected="true" data-p="qx">{bi('بإيجاز', 'At a glance')}</button>
+      <button class="tab" role="tab" aria-selected="false" data-p="q0">{bi('المستخلص', 'Abstract')}</button>
       <button class="tab" role="tab" aria-selected="false" data-p="q2">{bi('الملخص الموجز', 'Brief summary')}</button>
       <button class="tab" role="tab" aria-selected="false" data-p="q3">{bi('النتائج الرئيسة', 'Key findings')}</button>
       <button class="tab" role="tab" aria-selected="false" data-p="q4">{bi('التطبيقات التربوية', 'Implications')}</button>
     </div>
-    <div class="panel abstract" id="q0">
+    <div class="panel" id="qx">
+      <button type="button" class="listen" data-say-ar="{e(r['summary_ar'])}" data-say-en="{e(r['summary_en'])}">{bi('استمع إلى الملخص', 'Listen to the summary')}</button>
+      {explainer(r['slug'])}
+    </div>
+    <div class="panel abstract" id="q0" hidden>
       <dl>{absd}</dl>
       <p class="kw"><b>{bi('الكلمات المفتاحية:', 'Keywords:')}</b> {bi(e(r['keywords_ar']), e(r['keywords_en']))}</p>
       <p class="note ar">ترجمة المستخلص إلى العربية غير رسمية؛ النص المعتمد هو المنشور في المجلة.</p>
@@ -210,7 +235,7 @@ def research_page(r):
 
 def research_dys():
     return f'''<section class="first"><p class="crumb"><a href="../../index.html">{bi('الرئيسية', 'Home')}</a> / <a href="../../publications/index.html">{bi('المنشورات', 'Publications')}</a></p>
-{featured}</section>'''
+{featured}<div class="share-wrap">{share_bar(next(x for x in research if x['slug']=='ai-visual-instruction-dyslexia'))}</div></section>'''
 
 def about_html():
     s = open(P('src/about.html')).read()

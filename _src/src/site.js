@@ -16,6 +16,20 @@
   if($('copyCite'))$('copyCite').onclick=function(){const el=$('citeText'),b=this;const sel=()=>{const r=document.createRange();r.selectNodeContents(el);const g=getSelection();g.removeAllRanges();g.addRange(r)};
     if(navigator.clipboard)navigator.clipboard.writeText(el.innerText).then(()=>{b.innerHTML='<span class="ar">نُسخ</span><span class="en">Copied</span>'}).catch(sel);else sel()};
 
+  // listen (browser speech)
+  document.querySelectorAll('.listen').forEach(b=>{
+    if(!('speechSynthesis' in window)){b.hidden=true;return}
+    b.onclick=()=>{const ss=window.speechSynthesis;if(ss.speaking){ss.cancel();b.classList.remove('on');return}
+      const l=root.lang==='ar'?'ar':'en';const u=new SpeechSynthesisUtterance(b.dataset['say'+(l==='ar'?'Ar':'En')]);u.lang=l==='ar'?'ar-SA':'en-US';u.rate=.95;
+      const v=ss.getVoices().find(x=>x.lang&&x.lang.toLowerCase().startsWith(l));if(v)u.voice=v;
+      u.onend=()=>b.classList.remove('on');b.classList.add('on');ss.speak(u)}});
+  // share bar
+  document.querySelectorAll('.sharebar').forEach(sb=>{
+    const url=sb.dataset.url,title=sb.dataset.title;
+    const n=sb.querySelector('.native');if(navigator.share&&n){n.hidden=false;n.onclick=()=>navigator.share({title,url}).catch(()=>{})}
+    const c=sb.querySelector('.copylink');if(c)c.onclick=()=>{const done=()=>{c.innerHTML='<span class="ar">نُسخ الرابط</span><span class="en">Link copied</span>'};
+      if(navigator.clipboard)navigator.clipboard.writeText(url).then(done).catch(()=>{});else done()};
+  });
   // feed filter
   const fchips=[...document.querySelectorAll('[data-ft]')];
   fchips.forEach(c=>c.onclick=()=>{fchips.forEach(x=>x.setAttribute('aria-pressed',x===c));document.querySelectorAll('.entry').forEach(p=>p.hidden=!(c.dataset.ft==='all'||p.dataset.t===c.dataset.ft))});

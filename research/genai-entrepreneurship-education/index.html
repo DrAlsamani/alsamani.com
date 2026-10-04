@@ -300,6 +300,75 @@ h1.rtitle{font-size:1.25rem;line-height:1.5}
 .arr{font-style:normal}
 html[dir="ltr"] .arr::after{content:"→"}
 html[dir="rtl"] .arr::after{content:"←"}
+
+/* explainers */
+.listen{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:6px 14px;font:500 var(--s1) var(--f-body);cursor:pointer;margin-bottom:18px}
+.listen::before{content:"";width:0;height:0;border-block:5px solid transparent;border-inline-start:8px solid var(--accent)}
+.listen.on::before{border:0;width:9px;height:9px;background:var(--dune);border-radius:2px}
+.xp{display:grid;gap:16px;font-size:.9375rem}
+.xp h4{font-family:var(--f-body)!important;font-size:.9688rem;font-weight:600;margin:0 0 6px}
+.xp h5{font-size:var(--s1);color:var(--muted);margin:0 0 8px;font-weight:600}
+.xp-chips{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+.xp-chips li{border:1px solid var(--line);border-radius:999px;padding:3px 11px;font-size:.8125rem;background:var(--bg)}
+.xp-chips.ok li{border-color:color-mix(in srgb,var(--accent) 35%,var(--line))}
+.xp-chips.warn li{border-color:color-mix(in srgb,var(--dune) 45%,var(--line))}
+.xp-root{display:flex;align-items:center;gap:12px;justify-self:center;background:var(--accent);color:var(--bg);border-radius:999px;padding:8px 20px}
+.xp-root b{font-size:1.5rem}
+.xp-branches{display:grid;grid-template-columns:1fr 1fr;gap:12px;position:relative}
+.xp-branch{border:1px solid var(--line);border-top:3px solid var(--accent);border-radius:8px;padding:14px;background:var(--surface)}
+.xp-branch.alt{border-top-color:var(--dune)}
+.xp-tools{margin:0 0 10px;color:var(--muted);font-size:.8125rem}
+.xp-core{background:var(--accent-soft);border-radius:8px;padding:12px 14px;margin:0;line-height:1.8}
+.xp-two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:620px){.xp-branches,.xp-two{grid-template-columns:1fr}}
+.xp-stats{display:flex;gap:10px;flex-wrap:wrap}
+.xp-stats div{flex:1 1 110px;border:1px solid var(--line);border-radius:8px;padding:10px 12px;display:grid}
+.xp-stats b{font-size:1.5rem;color:var(--accent);line-height:1.2}
+.xp-stats span{font-size:var(--s1);color:var(--muted)}
+.xp-dialog{display:grid;grid-template-columns:1fr 1.4fr 1fr;gap:10px;align-items:center}
+.xp-node{border:2px solid var(--ink);border-radius:50%;aspect-ratio:1;display:grid;place-items:center;text-align:center;padding:10px;font-weight:600;font-size:.875rem;max-width:150px;justify-self:center;width:100%}
+.xp-node.ai{border-color:var(--accent);color:var(--accent)}
+.xp-node small{font-weight:400;color:var(--muted)}
+.xp-arrows{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.xp-arrows li{font-size:.8125rem;text-align:center;border-bottom:1px dashed var(--muted);padding-bottom:4px;position:relative}
+.xp-arrows li::after{content:"⇄";position:absolute;inset-inline-end:-4px;bottom:-9px;color:var(--muted);font-size:.75rem;background:var(--surface)}
+@media (max-width:620px){.xp-dialog{grid-template-columns:1fr}.xp-node{max-width:120px}}
+.xp-out{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:center}
+.xp-swot{display:grid;grid-template-columns:repeat(2,34px);gap:3px}
+.xp-swot i{font-style:normal;font-family:var(--f-mono);display:grid;place-items:center;height:34px;background:var(--accent-soft);color:var(--accent);font-weight:600;border-radius:3px}
+.xp-out .xp-note{grid-column:1/-1}
+.xp-note{margin:0;color:var(--muted);font-size:var(--s1)}
+.xp-lead{margin:0}
+.xp-stations{list-style:none;margin:0;padding:0;display:grid;gap:0;position:relative}
+.xp-stations li{display:grid;grid-template-columns:34px 1fr;gap:12px;align-items:center;padding-block:8px;position:relative}
+.xp-stations li::before{content:"";position:absolute;inset-inline-start:16px;top:0;bottom:0;width:2px;background:var(--line)}
+.xp-stations li:first-child::before{top:50%}.xp-stations li:last-child::before{bottom:50%}
+.xp-stations b{position:relative;z-index:1;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--surface);border:2px solid var(--accent);color:var(--accent);font-family:var(--f-mono)}
+.xp-stations li:last-child b{background:var(--accent);color:var(--bg)}
+.xp-shift{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:center;text-align:center}
+.xp-shift .from,.xp-shift .to{border-radius:8px;padding:10px 14px;font-weight:600;font-size:.875rem}
+.xp-shift .from{background:var(--bg);border:1px solid var(--line);color:var(--muted)}
+.xp-shift .to{background:var(--accent);color:var(--bg)}
+.xp-shift .arr::after{font-size:1.25rem;color:var(--dune)}
+.gapline{flex:0 1 120px;border-top:2px dashed var(--dune);color:var(--dune);font-size:.75rem;padding-top:4px}
+.xp-people{display:grid;gap:8px;justify-items:center;text-align:center}
+.dots{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.dots i,.legend i{display:inline-block;width:16px;height:16px;border-radius:50%}
+.g1{background:var(--muted)}.g2{background:var(--dune)}.g3{background:var(--accent)}
+.legend{list-style:none;margin:0;padding:0;display:flex;gap:14px;flex-wrap:wrap;justify-content:center;font-size:var(--s1)}
+.legend li{display:flex;align-items:center;gap:6px}
+.legend i{width:10px;height:10px}
+.xp-themes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.xp-themes div{border:1px solid var(--line);border-radius:8px;padding:10px;font-size:.8125rem;display:grid;gap:4px}
+.xp-themes b{font-family:var(--f-mono);color:var(--dune)}
+@media (max-width:620px){.xp-themes{grid-template-columns:1fr}}
+.xp-people .dots i{width:16px;height:16px}
+.xp-people .dots i.g1{background:var(--muted)}.xp-people .dots i.g2{background:var(--dune)}.xp-people .dots i.g3{background:var(--accent)}
+.sharebar{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;padding-top:14px;border-top:1px solid var(--line)}
+.sb{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:6px;padding:5px 11px;font:500 var(--s1) var(--f-body);text-decoration:none;cursor:pointer}
+.sb:hover{border-color:var(--accent)}
+.sb.pdf{background:var(--accent);color:var(--bg);border-color:var(--accent)}
+.share-wrap{margin-top:16px}
 </style>
 </head>
 <body>
@@ -332,15 +401,46 @@ html[dir="rtl"] .arr::after{content:"←"}
       <dt>DOI</dt><dd class="mono" dir="ltr"><a href="https://doi.org/10.1007/s44217-026-01593-9">10.1007/s44217-026-01593-9</a></dd>
     </dl>
     <a class="btn ghost" style="align-self:flex-start" href="https://link.springer.com/article/10.1007/s44217-026-01593-9"><span class="ar">النص الكامل في موقع المجلة</span><span class="en">Full text on the journal site</span></a>
+    <div class="sharebar" data-url="https://alsamani.com/research/genai-entrepreneurship-education/" data-title="Structured collaboration with generative artificial intelligence to foster innovation and strategic thinking in entrepreneurship education">
+  <a class="sb pdf" href="https://link.springer.com/content/pdf/10.1007/s44217-026-01593-9.pdf"><span class="ar">تحميل البحث PDF</span><span class="en">Download PDF</span></a>
+  <button type="button" class="sb copylink"><span class="ar">نسخ رابط الصفحة</span><span class="en">Copy page link</span></button>
+  <button type="button" class="sb native" hidden><span class="ar">مشاركة</span><span class="en">Share</span></button>
+  <a class="sb" href="https://wa.me/?text=Structured%20collaboration%20with%20generative%20artificial%20intelligence%20to%20foster%20innovation%20and%20strategic%20thinking%20in%20entrepreneurship%20education%20https%3A//alsamani.com/research/genai-entrepreneurship-education/">WhatsApp</a>
+  <a class="sb" href="https://x.com/intent/post?text=Structured%20collaboration%20with%20generative%20artificial%20intelligence%20to%20foster%20innovation%20and%20strategic%20thinking%20in%20entrepreneurship%20education&url=https%3A//alsamani.com/research/genai-entrepreneurship-education/">X</a>
+  <a class="sb" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A//alsamani.com/research/genai-entrepreneurship-education/">LinkedIn</a>
+  <a class="sb" href="mailto:?subject=Structured%20collaboration%20with%20generative%20artificial%20intelligence%20to%20foster%20innovation%20and%20strategic%20thinking%20in%20entrepreneurship%20education&body=https%3A//alsamani.com/research/genai-entrepreneurship-education/"><span class="ar">بريد</span><span class="en">Email</span></a>
+</div>
   </div>
   <div>
     <div class="tabs" role="tablist">
-      <button class="tab" role="tab" aria-selected="true" data-p="q0"><span class="ar">المستخلص</span><span class="en">Abstract</span></button>
+      <button class="tab" role="tab" aria-selected="true" data-p="qx"><span class="ar">بإيجاز</span><span class="en">At a glance</span></button>
+      <button class="tab" role="tab" aria-selected="false" data-p="q0"><span class="ar">المستخلص</span><span class="en">Abstract</span></button>
       <button class="tab" role="tab" aria-selected="false" data-p="q2"><span class="ar">الملخص الموجز</span><span class="en">Brief summary</span></button>
       <button class="tab" role="tab" aria-selected="false" data-p="q3"><span class="ar">النتائج الرئيسة</span><span class="en">Key findings</span></button>
       <button class="tab" role="tab" aria-selected="false" data-p="q4"><span class="ar">التطبيقات التربوية</span><span class="en">Implications</span></button>
     </div>
-    <div class="panel abstract" id="q0">
+    <div class="panel" id="qx">
+      <button type="button" class="listen" data-say-ar="طبّق 123 طالبًا جامعيًا بروتوكولًا منظمًا للتعاون مع أدوات الذكاء الاصطناعي التوليدي مدة أسبوعين ضمن مشروع أعمال ابتكاري. وأظهر الطلاب استراتيجيات متنوعة في صياغة الأوامر ومساءلة افتراضاتهم، وأفادوا بأن التعاون ساعدهم في إعداد تحليلات SWOT متقدمة وتوليد أفكار مبتكرة. ونص البروتوكول متاح في ملحق البحث." data-say-en="123 undergraduates followed a structured protocol for collaborating with GenAI tools over two weeks in an innovation business project. Students used varied prompting strategies and questioned their own assumptions, and reported that the collaboration helped them produce advanced SWOT analyses and generate innovative ideas. The protocol is included in the article’s appendix."><span class="ar">استمع إلى الملخص</span><span class="en">Listen to the summary</span></button>
+      <div class="xp xp-loop">
+  <div class="xp-stats"><div><b class="mono">123</b><span><span class="ar">طالبًا جامعيًا</span><span class="en">undergraduates</span></span></div><div><b class="mono">2</b><span><span class="ar">أسبوعان</span><span class="en">weeks</span></span></div><div><b class="mono">1</b><span><span class="ar">بروتوكول منظم</span><span class="en">structured protocol</span></span></div></div>
+  <div class="xp-dialog">
+    <div class="xp-node"><span class="ar">الطالب<br><small>صاحب فكرة المشروع</small></span><span class="en">Student<br><small>owns the business idea</small></span></div>
+    <ul class="xp-arrows">
+      <li><span class="ar">صياغة الأوامر وإعادة صياغتها</span><span class="en">Writing and rephrasing prompts</span></li>
+      <li><span class="ar">طلب التوضيح</span><span class="en">Asking for clarification</span></li>
+      <li><span class="ar">مساءلة افتراضات المشروع</span><span class="en">Challenging project assumptions</span></li>
+    </ul>
+    <div class="xp-node ai"><span class="ar">الذكاء الاصطناعي التوليدي<br><small>شريك معرفي واستراتيجي</small></span><span class="en">Generative AI<br><small>cognitive and strategic partner</small></span></div>
+  </div>
+  <div class="xp-out">
+    <div class="xp-swot" aria-hidden="true"><i>S</i><i>W</i><i>O</i><i>T</i></div>
+    <ul class="xp-chips ok"><li><span class="ar">تحليلات SWOT متقدمة</span><span class="en">Advanced SWOT analyses</span></li><li><span class="ar">تنمية المهارات المعرفية</span><span class="en">Cognitive skills</span></li><li><span class="ar">أفكار أعمال مبتكرة</span><span class="en">Innovative business ideas</span></li></ul>
+    <p class="xp-note"><span class="ar">بحسب تصورات الطلاب في استبانة ما بعد المهمة.</span><span class="en">As reported by students in a post-task survey.</span></p>
+  </div>
+</div>
+
+    </div>
+    <div class="panel abstract" id="q0" hidden>
       <dl><dt><span class="ar">المستخلص</span><span class="en">Abstract</span></dt><dd><span class="ar">تهدف هذه الدراسة الاستكشافية إلى استكشاف كيفية انخراط طلاب المرحلة الجامعية في تعاون منظم مع أدوات الذكاء الاصطناعي التوليدي ضمن تعليم ريادة الأعمال في سياق تعليمي حقيقي، مع التركيز على الاستراتيجيات المطبقة، والنواتج الابتكارية والمعرفية المدرَكة، والتحديات التي يواجهونها، وكيفية تعاملهم معها أثناء العملية. وشارك في هذه الدراسة الاستكشافية الكمية القائمة داخل الفصل 123 طالبًا جامعيًا من تخصصات جامعية متعددة، طبّقوا بروتوكولًا منظمًا للتعاون بين الطالب والذكاء الاصطناعي استمر أسبوعين ضمن مشروع أعمال ابتكاري في الفصل. وقُدّمت للمشاركين استبانة بعد المهمة لاستكشاف تصوراتهم حول أثر التعاون المنظم مع أدوات الذكاء الاصطناعي التوليدي في الابتكار والتفكير الاستراتيجي وتنمية المهارات والتحديات في سياق تعليم ريادة الأعمال. وأشارت النتائج إلى أن المشاركين طبّقوا خلال التجربة استراتيجيات مختلفة لهندسة الأوامر، وأظهروا مهارات تكيفية في حل المشكلات مع الذكاء الاصطناعي التوليدي، منها إعادة صياغة الأوامر، وطلب التوضيح، ومساءلة افتراضات مشروعاتهم. وأفاد الطلاب بأن التعاون مع الذكاء الاصطناعي التوليدي شجعهم على إعداد تحليلات SWOT متقدمة، وتنمية مهاراتهم المعرفية، وتوليد أفكار أعمال مبتكرة. وتشير النتائج إلى أن التعاون المنظم مع الذكاء الاصطناعي التوليدي في مشروعات توليد أفكار الأعمال الابتكارية يمكن أن يؤدي دورًا داعمًا بوصفه شريكًا معرفيًا واستراتيجيًا. كما قدّمت الدراسة توصيات للبحوث المستقبلية ولممارسات الذكاء الاصطناعي التوليدي على المستوى الجامعي.</span><span class="en" dir="ltr">This exploratory study aims to explore how undergraduate students engage in a structured collaboration with generative artificial intelligence (GenAI) tools within entrepreneurship education in a real educational context, focusing on applied strategies, perceived innovation and cognitive outcomes, the challenges they encounter, and how they address these challenges during the process. This classroom-based quantitative exploratory study recruited 123 undergraduate students from several university disciplines who participated in a structured student-AI protocol that lasted for two weeks and was part of a classroom-based innovation business project. A post-task survey was provided to participants to explore students’ perceptions of how structured collaboration with GenAI tools influences innovation, strategic thinking, skill development, and challenges in an entrepreneurship education context. The results indicated that participants during the experiment implemented different prompt-engineering strategies and revealed adaptive problem-solving skills with GenAI, including rephrasing their prompts, asking for clarifications, and challenging the students’ project assumptions. Students revealed that the GenAI-student collaboration encouraged them to develop advanced SWOT analyses, develop cognitive skills, and generate innovative business ideas. The results suggested that structured collaboration with GenAI in innovative business ideation projects can play a supportive role as a cognitive and strategic collaborative partner. Recommendations for future research and GenAI practices at the university level were also provided in this study.</span></dd></dl>
       <p class="kw"><b><span class="ar">الكلمات المفتاحية:</span><span class="en">Keywords:</span></b> <span class="ar">الذكاء الاصطناعي التوليدي؛ ريادة الأعمال؛ الابتكار؛ تحليل SWOT؛ هندسة الأوامر؛ التعاون بين الإنسان والذكاء الاصطناعي؛ تطوير الأعمال؛ تعليم الموهوبين؛ تطوير الاستراتيجيات؛ تنمية الموهبة</span><span class="en">Generative artificial intelligence (GenAI); Entrepreneurship; Innovation; SWOT analysis; Prompt engineering; GenAI-human collaboration; Business development; Gifted education; Strategy development; Talent development</span></p>
       <p class="note ar">ترجمة المستخلص إلى العربية غير رسمية؛ النص المعتمد هو المنشور في المجلة.</p>
@@ -373,6 +473,20 @@ html[dir="rtl"] .arr::after{content:"←"}
   if($('copyCite'))$('copyCite').onclick=function(){const el=$('citeText'),b=this;const sel=()=>{const r=document.createRange();r.selectNodeContents(el);const g=getSelection();g.removeAllRanges();g.addRange(r)};
     if(navigator.clipboard)navigator.clipboard.writeText(el.innerText).then(()=>{b.innerHTML='<span class="ar">نُسخ</span><span class="en">Copied</span>'}).catch(sel);else sel()};
 
+  // listen (browser speech)
+  document.querySelectorAll('.listen').forEach(b=>{
+    if(!('speechSynthesis' in window)){b.hidden=true;return}
+    b.onclick=()=>{const ss=window.speechSynthesis;if(ss.speaking){ss.cancel();b.classList.remove('on');return}
+      const l=root.lang==='ar'?'ar':'en';const u=new SpeechSynthesisUtterance(b.dataset['say'+(l==='ar'?'Ar':'En')]);u.lang=l==='ar'?'ar-SA':'en-US';u.rate=.95;
+      const v=ss.getVoices().find(x=>x.lang&&x.lang.toLowerCase().startsWith(l));if(v)u.voice=v;
+      u.onend=()=>b.classList.remove('on');b.classList.add('on');ss.speak(u)}});
+  // share bar
+  document.querySelectorAll('.sharebar').forEach(sb=>{
+    const url=sb.dataset.url,title=sb.dataset.title;
+    const n=sb.querySelector('.native');if(navigator.share&&n){n.hidden=false;n.onclick=()=>navigator.share({title,url}).catch(()=>{})}
+    const c=sb.querySelector('.copylink');if(c)c.onclick=()=>{const done=()=>{c.innerHTML='<span class="ar">نُسخ الرابط</span><span class="en">Link copied</span>'};
+      if(navigator.clipboard)navigator.clipboard.writeText(url).then(done).catch(()=>{});else done()};
+  });
   // feed filter
   const fchips=[...document.querySelectorAll('[data-ft]')];
   fchips.forEach(c=>c.onclick=()=>{fchips.forEach(x=>x.setAttribute('aria-pressed',x===c));document.querySelectorAll('.entry').forEach(p=>p.hidden=!(c.dataset.ft==='all'||p.dataset.t===c.dataset.ft))});

@@ -300,6 +300,75 @@ h1.rtitle{font-size:1.25rem;line-height:1.5}
 .arr{font-style:normal}
 html[dir="ltr"] .arr::after{content:"→"}
 html[dir="rtl"] .arr::after{content:"←"}
+
+/* explainers */
+.listen{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:6px 14px;font:500 var(--s1) var(--f-body);cursor:pointer;margin-bottom:18px}
+.listen::before{content:"";width:0;height:0;border-block:5px solid transparent;border-inline-start:8px solid var(--accent)}
+.listen.on::before{border:0;width:9px;height:9px;background:var(--dune);border-radius:2px}
+.xp{display:grid;gap:16px;font-size:.9375rem}
+.xp h4{font-family:var(--f-body)!important;font-size:.9688rem;font-weight:600;margin:0 0 6px}
+.xp h5{font-size:var(--s1);color:var(--muted);margin:0 0 8px;font-weight:600}
+.xp-chips{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+.xp-chips li{border:1px solid var(--line);border-radius:999px;padding:3px 11px;font-size:.8125rem;background:var(--bg)}
+.xp-chips.ok li{border-color:color-mix(in srgb,var(--accent) 35%,var(--line))}
+.xp-chips.warn li{border-color:color-mix(in srgb,var(--dune) 45%,var(--line))}
+.xp-root{display:flex;align-items:center;gap:12px;justify-self:center;background:var(--accent);color:var(--bg);border-radius:999px;padding:8px 20px}
+.xp-root b{font-size:1.5rem}
+.xp-branches{display:grid;grid-template-columns:1fr 1fr;gap:12px;position:relative}
+.xp-branch{border:1px solid var(--line);border-top:3px solid var(--accent);border-radius:8px;padding:14px;background:var(--surface)}
+.xp-branch.alt{border-top-color:var(--dune)}
+.xp-tools{margin:0 0 10px;color:var(--muted);font-size:.8125rem}
+.xp-core{background:var(--accent-soft);border-radius:8px;padding:12px 14px;margin:0;line-height:1.8}
+.xp-two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:620px){.xp-branches,.xp-two{grid-template-columns:1fr}}
+.xp-stats{display:flex;gap:10px;flex-wrap:wrap}
+.xp-stats div{flex:1 1 110px;border:1px solid var(--line);border-radius:8px;padding:10px 12px;display:grid}
+.xp-stats b{font-size:1.5rem;color:var(--accent);line-height:1.2}
+.xp-stats span{font-size:var(--s1);color:var(--muted)}
+.xp-dialog{display:grid;grid-template-columns:1fr 1.4fr 1fr;gap:10px;align-items:center}
+.xp-node{border:2px solid var(--ink);border-radius:50%;aspect-ratio:1;display:grid;place-items:center;text-align:center;padding:10px;font-weight:600;font-size:.875rem;max-width:150px;justify-self:center;width:100%}
+.xp-node.ai{border-color:var(--accent);color:var(--accent)}
+.xp-node small{font-weight:400;color:var(--muted)}
+.xp-arrows{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.xp-arrows li{font-size:.8125rem;text-align:center;border-bottom:1px dashed var(--muted);padding-bottom:4px;position:relative}
+.xp-arrows li::after{content:"⇄";position:absolute;inset-inline-end:-4px;bottom:-9px;color:var(--muted);font-size:.75rem;background:var(--surface)}
+@media (max-width:620px){.xp-dialog{grid-template-columns:1fr}.xp-node{max-width:120px}}
+.xp-out{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:center}
+.xp-swot{display:grid;grid-template-columns:repeat(2,34px);gap:3px}
+.xp-swot i{font-style:normal;font-family:var(--f-mono);display:grid;place-items:center;height:34px;background:var(--accent-soft);color:var(--accent);font-weight:600;border-radius:3px}
+.xp-out .xp-note{grid-column:1/-1}
+.xp-note{margin:0;color:var(--muted);font-size:var(--s1)}
+.xp-lead{margin:0}
+.xp-stations{list-style:none;margin:0;padding:0;display:grid;gap:0;position:relative}
+.xp-stations li{display:grid;grid-template-columns:34px 1fr;gap:12px;align-items:center;padding-block:8px;position:relative}
+.xp-stations li::before{content:"";position:absolute;inset-inline-start:16px;top:0;bottom:0;width:2px;background:var(--line)}
+.xp-stations li:first-child::before{top:50%}.xp-stations li:last-child::before{bottom:50%}
+.xp-stations b{position:relative;z-index:1;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--surface);border:2px solid var(--accent);color:var(--accent);font-family:var(--f-mono)}
+.xp-stations li:last-child b{background:var(--accent);color:var(--bg)}
+.xp-shift{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:center;text-align:center}
+.xp-shift .from,.xp-shift .to{border-radius:8px;padding:10px 14px;font-weight:600;font-size:.875rem}
+.xp-shift .from{background:var(--bg);border:1px solid var(--line);color:var(--muted)}
+.xp-shift .to{background:var(--accent);color:var(--bg)}
+.xp-shift .arr::after{font-size:1.25rem;color:var(--dune)}
+.gapline{flex:0 1 120px;border-top:2px dashed var(--dune);color:var(--dune);font-size:.75rem;padding-top:4px}
+.xp-people{display:grid;gap:8px;justify-items:center;text-align:center}
+.dots{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.dots i,.legend i{display:inline-block;width:16px;height:16px;border-radius:50%}
+.g1{background:var(--muted)}.g2{background:var(--dune)}.g3{background:var(--accent)}
+.legend{list-style:none;margin:0;padding:0;display:flex;gap:14px;flex-wrap:wrap;justify-content:center;font-size:var(--s1)}
+.legend li{display:flex;align-items:center;gap:6px}
+.legend i{width:10px;height:10px}
+.xp-themes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.xp-themes div{border:1px solid var(--line);border-radius:8px;padding:10px;font-size:.8125rem;display:grid;gap:4px}
+.xp-themes b{font-family:var(--f-mono);color:var(--dune)}
+@media (max-width:620px){.xp-themes{grid-template-columns:1fr}}
+.xp-people .dots i{width:16px;height:16px}
+.xp-people .dots i.g1{background:var(--muted)}.xp-people .dots i.g2{background:var(--dune)}.xp-people .dots i.g3{background:var(--accent)}
+.sharebar{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;padding-top:14px;border-top:1px solid var(--line)}
+.sb{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:6px;padding:5px 11px;font:500 var(--s1) var(--f-body);text-decoration:none;cursor:pointer}
+.sb:hover{border-color:var(--accent)}
+.sb.pdf{background:var(--accent);color:var(--bg);border-color:var(--accent)}
+.share-wrap{margin-top:16px}
 </style>
 </head>
 <body>
@@ -332,15 +401,49 @@ html[dir="rtl"] .arr::after{content:"←"}
       <dt>DOI</dt><dd class="mono" dir="ltr"><a href="https://doi.org/10.3389/fpsyg.2026.1898467">10.3389/fpsyg.2026.1898467</a></dd>
     </dl>
     <a class="btn ghost" style="align-self:flex-start" href="https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2026.1898467/full"><span class="ar">النص الكامل في موقع المجلة</span><span class="en">Full text on the journal site</span></a>
+    <div class="sharebar" data-url="https://alsamani.com/research/ai-gifted-education-scoping-review/" data-title="Artificial intelligence in gifted and talented education: a scoping review">
+  <a class="sb pdf" href="https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2026.1898467/pdf"><span class="ar">تحميل البحث PDF</span><span class="en">Download PDF</span></a>
+  <button type="button" class="sb copylink"><span class="ar">نسخ رابط الصفحة</span><span class="en">Copy page link</span></button>
+  <button type="button" class="sb native" hidden><span class="ar">مشاركة</span><span class="en">Share</span></button>
+  <a class="sb" href="https://wa.me/?text=Artificial%20intelligence%20in%20gifted%20and%20talented%20education%3A%20a%20scoping%20review%20https%3A//alsamani.com/research/ai-gifted-education-scoping-review/">WhatsApp</a>
+  <a class="sb" href="https://x.com/intent/post?text=Artificial%20intelligence%20in%20gifted%20and%20talented%20education%3A%20a%20scoping%20review&url=https%3A//alsamani.com/research/ai-gifted-education-scoping-review/">X</a>
+  <a class="sb" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A//alsamani.com/research/ai-gifted-education-scoping-review/">LinkedIn</a>
+  <a class="sb" href="mailto:?subject=Artificial%20intelligence%20in%20gifted%20and%20talented%20education%3A%20a%20scoping%20review&body=https%3A//alsamani.com/research/ai-gifted-education-scoping-review/"><span class="ar">بريد</span><span class="en">Email</span></a>
+</div>
   </div>
   <div>
     <div class="tabs" role="tablist">
-      <button class="tab" role="tab" aria-selected="true" data-p="q0"><span class="ar">المستخلص</span><span class="en">Abstract</span></button>
+      <button class="tab" role="tab" aria-selected="true" data-p="qx"><span class="ar">بإيجاز</span><span class="en">At a glance</span></button>
+      <button class="tab" role="tab" aria-selected="false" data-p="q0"><span class="ar">المستخلص</span><span class="en">Abstract</span></button>
       <button class="tab" role="tab" aria-selected="false" data-p="q2"><span class="ar">الملخص الموجز</span><span class="en">Brief summary</span></button>
       <button class="tab" role="tab" aria-selected="false" data-p="q3"><span class="ar">النتائج الرئيسة</span><span class="en">Key findings</span></button>
       <button class="tab" role="tab" aria-selected="false" data-p="q4"><span class="ar">التطبيقات التربوية</span><span class="en">Implications</span></button>
     </div>
-    <div class="panel abstract" id="q0">
+    <div class="panel" id="qx">
+      <button type="button" class="listen" data-say-ar="راجعت الدراسة 26 دراسة عن توظيف الذكاء الاصطناعي في تعليم الموهوبين، وصنّفتها في مسارين: مسار يستخدم الذكاء الاصطناعي في التدريس والتطوير، ومسار يستخدمه في التعرف على الموهوبين ودعم القرار. وتخلص إلى أن قيمة هذه الأدوات مرهونة بتصميم المهمة وحكم المعلم والإشراف البشري، وأن الأدلة ما تزال في مرحلة مبكرة." data-say-en="The review examined 26 studies on AI in gifted education and grouped them into two trajectories: AI for instruction and development, and AI for identification and decision support. It concludes that the value of these tools depends on task design, teacher judgment and human oversight, and that the evidence remains at an early stage."><span class="ar">استمع إلى الملخص</span><span class="en">Listen to the summary</span></button>
+      <div class="xp xp-map">
+  <div class="xp-root"><b class="mono">26</b><span><span class="ar">دراسة شملتها المراجعة</span><span class="en">studies reviewed</span></span></div>
+  <div class="xp-branches">
+    <div class="xp-branch">
+      <h4><span class="ar">المسار الأول: تعليمي وتطويري</span><span class="en">Trajectory 1: instructional and developmental</span></h4>
+      <p class="xp-tools"><span class="ar">ذكاء اصطناعي توليدي · تعليم خصوصي ذكي · مواد مولَّدة آليًا</span><span class="en">Generative AI · AI tutoring · AI-generated materials</span></p>
+      <ul class="xp-chips"><li><span class="ar">التمايز</span><span class="en">Differentiation</span></li><li><span class="ar">الكتابة</span><span class="en">Writing</span></li><li><span class="ar">التساؤل</span><span class="en">Questioning</span></li><li><span class="ar">الإبداع</span><span class="en">Creativity</span></li><li><span class="ar">الإرشاد</span><span class="en">Mentoring</span></li><li><span class="ar">التعلم المُفرَّد</span><span class="en">Personalized learning</span></li></ul>
+    </div>
+    <div class="xp-branch alt">
+      <h4><span class="ar">المسار الثاني: تقويمي</span><span class="en">Trajectory 2: assessment-oriented</span></h4>
+      <p class="xp-tools"><span class="ar">تعلم الآلة والنماذج المرتبطة به</span><span class="en">Machine learning and related models</span></p>
+      <ul class="xp-chips"><li><span class="ar">التعرف على الموهوبين</span><span class="en">Gifted identification</span></li><li><span class="ar">التعرف على مزدوجي الاستثنائية</span><span class="en">2e identification</span></li><li><span class="ar">دعم القرار</span><span class="en">Decision support</span></li></ul>
+    </div>
+  </div>
+  <div class="xp-core"><span class="ar">في المسارين: الذكاء الاصطناعي أداة لا بديل عن المعلم؛ قيمته رهن <b>بتصميم المهمة</b> و<b>حكم المعلم</b> و<b>الإشراف البشري</b>.</span><span class="en">In both: AI is a tool, not a replacement for educators. Its value depends on <b>task design</b>, <b>teacher judgment</b> and <b>human oversight</b>.</span></div>
+  <div class="xp-two">
+    <div><h5><span class="ar">الفرص</span><span class="en">Opportunities</span></h5><ul class="xp-chips ok"><li><span class="ar">الإعداد المتمايز</span><span class="en">Differentiated preparation</span></li><li><span class="ar">التعلم المتقدم</span><span class="en">Advanced learning</span></li><li><span class="ar">الإنتاج الإبداعي</span><span class="en">Creative production</span></li><li><span class="ar">رصد الملامح المركبة للمتعلمين</span><span class="en">Complex learner profiles</span></li></ul></div>
+    <div><h5><span class="ar">المخاطر</span><span class="en">Risks</span></h5><ul class="xp-chips warn"><li><span class="ar">تحيز بيانات التعرف</span><span class="en">Bias in identification data</span></li><li><span class="ar">الاعتماد المفرط</span><span class="en">Overreliance</span></li><li><span class="ar">تهديد الأصالة</span><span class="en">Originality</span></li><li><span class="ar">الخصوصية</span><span class="en">Privacy</span></li><li><span class="ar">محدودية الشفافية</span><span class="en">Transparency</span></li><li><span class="ar">إعداد المعلمين والمؤسسات</span><span class="en">Educator preparation</span></li></ul></div>
+  </div>
+</div>
+
+    </div>
+    <div class="panel abstract" id="q0" hidden>
       <dl><dt><span class="ar">المقدمة</span><span class="en">Introduction</span></dt><dd><span class="ar">يتزايد تبنّي الذكاء الاصطناعي في تعليم الموهوبين والمتفوقين، غير أن الأدبيات الناشئة ما تزال متفرقة بين المجالات التعليمية والتطويرية والتقويمية والأخلاقية.</span><span class="en" dir="ltr">Artificial intelligence (AI) is being increasingly adopted across gifted and talented education. However, the emerging literature remains dispersed across instructional, developmental, assessment, and ethical domains.</span></dd><dt><span class="ar">المنهجية</span><span class="en">Methods</span></dt><dd><span class="ar">ترسم هذه المراجعة النطاقية خريطة لكيفية دراسة الذكاء الاصطناعي في تعليم الموهوبين والمتفوقين، بما في ذلك أشكال الذكاء الاصطناعي المدروسة، والفئات والسياقات الممثَّلة، والأغراض التعليمية المستهدفة، والفرص والمخاطر والفجوات الواردة في الأدبيات. واتباعًا لمنهج المراجعة النطاقية المسترشد بـ PRISMA-ScR وإطار السكان–المفهوم–السياق، أسفرت عمليات البحث في قواعد البيانات والفرز عن 26 دراسة مستوفية للمعايير.</span><span class="en" dir="ltr">This scoping review maps how AI has been studied in gifted and talented education, including the forms of AI examined, the populations and contexts represented, the educational purposes addressed, and the opportunities, risks, and gaps reported across the literature. Following a scoping review approach informed by PRISMA-ScR and the Population–Concept–Context framework, database searches and screening procedures identified 26 eligible studies.</span></dd><dt><span class="ar">النتائج</span><span class="en">Results</span></dt><dd><span class="ar">حددت المراجعة مسارين عامين. الأول تعليمي وتطويري، يُستخدم فيه الذكاء الاصطناعي التوليدي والتعليم الخصوصي الذكي والمواد المولَّدة آليًا، أو يُقترح استخدامها، لدعم التمايز والكتابة والتساؤل والإبداع والإرشاد والتعلم المُفرَّد. والثاني تقويمي، تُطبَّق فيه نماذج تعلم الآلة وما يتصل بها في التعرف على الموهوبين والمتفوقين، والتعرف على مزدوجي الاستثنائية، ودعم القرار. وفي المسارين كليهما، تقدّم الأدبيات الذكاء الاصطناعي أداةً تتوقف قيمتها على تصميم المهمة وحكم المعلم والإشراف البشري، أكثر من كونه بديلًا عن المعلمين. ومن الفرص المذكورة دعم الإعداد المتمايز، والتعلم المتقدم، والإنتاج الإبداعي، والتعرف على الملامح المركبة للمتعلمين. ومن المخاطر المذكورة التحيز في بيانات التعرف، والاعتماد المفرط، وتهديد الأصالة، ومخاوف الخصوصية، ومحدودية الشفافية، وضعف إعداد المعلمين والمؤسسات.</span><span class="en" dir="ltr">The review identified two broad trajectories. The first is instructional and developmental, where generative AI, AI tutoring, and AI-generated materials are used or proposed to support differentiation, writing, questioning, creativity, mentoring, and personalized learning. The second is assessment-oriented, where machine learning and related models are applied to gifted and talented identification, twice-exceptional identification, and decision support. Across both trajectories, the literature positions AI less as a replacement for educators than as a tool whose value depends on task design, teacher judgment, and human oversight. Reported opportunities include support for differentiated preparation, advanced learning, creative production, and the recognition of complex learner profiles. The reported risks include bias in identification data, overreliance, threats to originality, privacy concerns, limited transparency, and insufficient preparation among educators and institutions.</span></dd><dt><span class="ar">المناقشة</span><span class="en">Discussion</span></dt><dd><span class="ar">إجمالًا، ما تزال قاعدة الأدلة حول الذكاء الاصطناعي في تعليم الموهوبين والمتفوقين في مرحلة مبكرة. وتشير المراجعة إلى أن للذكاء الاصطناعي إمكانات للنهوض بتعليم الموهوبين والمتفوقين. وينبغي أن تتجه البحوث المستقبلية نحو دراسات طولية ومقارنة ومتمركزة حول العدالة، ولا سيما في التعرف المدعوم بالذكاء الاصطناعي وتعليم مزدوجي الاستثنائية.</span><span class="en" dir="ltr">Overall, the evidence base on AI in gifted and talented education remains at an early stage. The review suggests that AI holds potential to advance gifted and talented education. Future research should move toward longitudinal, comparative, and equity-centered studies, particularly in AI-supported identification and twice-exceptional education.</span></dd></dl>
       <p class="kw"><b><span class="ar">الكلمات المفتاحية:</span><span class="en">Keywords:</span></b> <span class="ar">الذكاء الاصطناعي؛ ChatGPT؛ الذكاء الاصطناعي التوليدي؛ تعليم الموهوبين والمتفوقين؛ تعلم الآلة؛ مراجعة نطاقية؛ تنمية الموهبة؛ مزدوجو الاستثنائية</span><span class="en">artificial intelligence; ChatGPT; generative AI; gifted and talented education; machine learning; scoping review; talent development; twice-exceptional</span></p>
       <p class="note ar">ترجمة المستخلص إلى العربية غير رسمية؛ النص المعتمد هو المنشور في المجلة.</p>
@@ -373,6 +476,20 @@ html[dir="rtl"] .arr::after{content:"←"}
   if($('copyCite'))$('copyCite').onclick=function(){const el=$('citeText'),b=this;const sel=()=>{const r=document.createRange();r.selectNodeContents(el);const g=getSelection();g.removeAllRanges();g.addRange(r)};
     if(navigator.clipboard)navigator.clipboard.writeText(el.innerText).then(()=>{b.innerHTML='<span class="ar">نُسخ</span><span class="en">Copied</span>'}).catch(sel);else sel()};
 
+  // listen (browser speech)
+  document.querySelectorAll('.listen').forEach(b=>{
+    if(!('speechSynthesis' in window)){b.hidden=true;return}
+    b.onclick=()=>{const ss=window.speechSynthesis;if(ss.speaking){ss.cancel();b.classList.remove('on');return}
+      const l=root.lang==='ar'?'ar':'en';const u=new SpeechSynthesisUtterance(b.dataset['say'+(l==='ar'?'Ar':'En')]);u.lang=l==='ar'?'ar-SA':'en-US';u.rate=.95;
+      const v=ss.getVoices().find(x=>x.lang&&x.lang.toLowerCase().startsWith(l));if(v)u.voice=v;
+      u.onend=()=>b.classList.remove('on');b.classList.add('on');ss.speak(u)}});
+  // share bar
+  document.querySelectorAll('.sharebar').forEach(sb=>{
+    const url=sb.dataset.url,title=sb.dataset.title;
+    const n=sb.querySelector('.native');if(navigator.share&&n){n.hidden=false;n.onclick=()=>navigator.share({title,url}).catch(()=>{})}
+    const c=sb.querySelector('.copylink');if(c)c.onclick=()=>{const done=()=>{c.innerHTML='<span class="ar">نُسخ الرابط</span><span class="en">Link copied</span>'};
+      if(navigator.clipboard)navigator.clipboard.writeText(url).then(done).catch(()=>{});else done()};
+  });
   // feed filter
   const fchips=[...document.querySelectorAll('[data-ft]')];
   fchips.forEach(c=>c.onclick=()=>{fchips.forEach(x=>x.setAttribute('aria-pressed',x===c));document.querySelectorAll('.entry').forEach(p=>p.hidden=!(c.dataset.ft==='all'||p.dataset.t===c.dataset.ft))});

@@ -94,7 +94,8 @@
     "Prepare educators and institutions to use these tools, and direct research toward longitudinal and comparative studies."
    ]
   ],
-  "cite": "Alsamani, O. A., & Alsamiri, Y. A. (2026). Artificial intelligence in gifted and talented education: A scoping review. <i>Frontiers in Psychology, 17</i>, 1898467. https://doi.org/10.3389/fpsyg.2026.1898467"
+  "cite": "Alsamani, O. A., & Alsamiri, Y. A. (2026). Artificial intelligence in gifted and talented education: A scoping review. <i>Frontiers in Psychology, 17</i>, 1898467. https://doi.org/10.3389/fpsyg.2026.1898467",
+  "pdf": "https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2026.1898467/pdf"
  },
  {
   "slug": "genai-entrepreneurship-education",
@@ -179,7 +180,8 @@
     "For universities: develop practices and policies for using GenAI as a cognitive partner in teaching."
    ]
   ],
-  "cite": "Alsamani, O. A. (2026). Structured collaboration with generative artificial intelligence to foster innovation and strategic thinking in entrepreneurship education. <i>Discover Education, 5</i>, 582. https://doi.org/10.1007/s44217-026-01593-9"
+  "cite": "Alsamani, O. A. (2026). Structured collaboration with generative artificial intelligence to foster innovation and strategic thinking in entrepreneurship education. <i>Discover Education, 5</i>, 582. https://doi.org/10.1007/s44217-026-01593-9",
+  "pdf": "https://link.springer.com/content/pdf/10.1007/s44217-026-01593-9.pdf"
  },
  {
   "slug": "mothers-talents-autism",
@@ -337,7 +339,8 @@
     "Include twice-exceptionality in university teacher-preparation programs."
    ]
   ],
-  "cite": "Alsamiri, Y. A., & Alsamani, O. A. (2026). Teachers’ perceptions of professional development needs for identifying and supporting twice-exceptional students in inclusive schools in Saudi Arabia. <i>Education Sciences, 16</i>(3), 366. https://doi.org/10.3390/educsci16030366"
+  "cite": "Alsamiri, Y. A., & Alsamani, O. A. (2026). Teachers’ perceptions of professional development needs for identifying and supporting twice-exceptional students in inclusive schools in Saudi Arabia. <i>Education Sciences, 16</i>(3), 366. https://doi.org/10.3390/educsci16030366",
+  "pdf": "https://www.mdpi.com/2227-7102/16/3/366/pdf"
  },
  {
   "slug": "ai-visual-instruction-dyslexia",
@@ -349,6 +352,7 @@
   "kind_ar": "مقال محكّم · تصميم أحادي الحالة",
   "kind_en": "Peer-reviewed article · Single-case design",
   "teaser_ar": "شروح بصرية يولّدها ChatGPT لثلاثة طلاب ذوي عُسر القراءة: من خط أساس 0–10% إلى الإتقان، مع احتفاظ بالأثر بعد أسابيع.",
-  "teaser_en": "ChatGPT-generated visual explanations for three students with dyslexia: from a 0–10% baseline to mastery, maintained weeks later."
+  "teaser_en": "ChatGPT-generated visual explanations for three students with dyslexia: from a 0–10% baseline to mastery, maintained weeks later.",
+  "pdf": "https://www.frontiersin.org/journals/education/articles/10.3389/feduc.2026.1727782/pdf"
  }
 ]
