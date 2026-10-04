@@ -65,3 +65,7 @@ html[dir="ltr"] .orig{text-align:left}
 .pub2 .kind{font-size:.75rem;color:var(--muted);justify-self:start}
 @media (max-width:640px){.yr-group{grid-template-columns:1fr;gap:4px}}
 .photo-sec.first{margin-top:0}
+
+h1,h2,h3{font-weight:600;letter-spacing:0}
+.brand{font-weight:600!important;font-size:1rem!important}
+.sec-head h2{font-weight:600}

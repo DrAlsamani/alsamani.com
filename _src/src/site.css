@@ -3,10 +3,10 @@
 :root{
   --bg:#F5F6F3; --surface:#FFFFFF; --ink:#16201F; --muted:#5A6664; --line:#DCE1DD;
   --accent:#2C3E8F; --accent-soft:#E6E9F5; --dune:#C9822B;
-  --f-display:"Thmanyah Sans","Alexandria","IBM Plex Sans Arabic",system-ui,sans-serif;
+  --f-display:"Thmanyah Sans","IBM Plex Sans Arabic",system-ui,-apple-system,"Segoe UI",sans-serif;
   --f-body:"Thmanyah Sans","IBM Plex Sans Arabic",system-ui,-apple-system,"Segoe UI",sans-serif;
   --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
-  --s1:.8125rem; --s2:1rem; --s3:1.1875rem; --s4:1.1875rem; --s5:1.5rem; --s6:clamp(1.65rem,3.2vw,2.125rem);
+  --s1:.8125rem; --s2:1rem; --s3:1.1875rem; --s4:1.1875rem; --s5:1.3125rem; --s6:clamp(1.65rem,3.2vw,2.125rem);
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --bg:#0E1322; --surface:#151B2E; --ink:#E9ECF2; --muted:#9CA6BA; --line:#262F47;

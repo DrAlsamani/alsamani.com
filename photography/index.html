@@ -11,16 +11,16 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%232C3E8F'/%3E%3Ctext x='16' y='22' font-size='16' text-anchor='middle' fill='%23fff' font-family='sans-serif'%3EOA%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&family=Alexandria:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
 /* Layout: an academic's study lit by desert dusk — RTL-first, a narrow reading column, wide photographic plates */
 :root{
   --bg:#F5F6F3; --surface:#FFFFFF; --ink:#16201F; --muted:#5A6664; --line:#DCE1DD;
   --accent:#2C3E8F; --accent-soft:#E6E9F5; --dune:#C9822B;
-  --f-display:"Thmanyah Sans","Alexandria","IBM Plex Sans Arabic",system-ui,sans-serif;
+  --f-display:"Thmanyah Sans","IBM Plex Sans Arabic",system-ui,-apple-system,"Segoe UI",sans-serif;
   --f-body:"Thmanyah Sans","IBM Plex Sans Arabic",system-ui,-apple-system,"Segoe UI",sans-serif;
   --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
-  --s1:.8125rem; --s2:1rem; --s3:1.1875rem; --s4:1.1875rem; --s5:1.5rem; --s6:clamp(1.65rem,3.2vw,2.125rem);
+  --s1:.8125rem; --s2:1rem; --s3:1.1875rem; --s4:1.1875rem; --s5:1.3125rem; --s6:clamp(1.65rem,3.2vw,2.125rem);
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --bg:#0E1322; --surface:#151B2E; --ink:#E9ECF2; --muted:#9CA6BA; --line:#262F47;
@@ -257,6 +257,10 @@ html[dir="ltr"] .orig{text-align:left}
 .pub2 .kind{font-size:.75rem;color:var(--muted);justify-self:start}
 @media (max-width:640px){.yr-group{grid-template-columns:1fr;gap:4px}}
 .photo-sec.first{margin-top:0}
+
+h1,h2,h3{font-weight:600;letter-spacing:0}
+.brand{font-weight:600!important;font-size:1rem!important}
+.sec-head h2{font-weight:600}
 </style>
 </head>
 <body>
