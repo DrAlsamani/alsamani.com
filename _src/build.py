@@ -44,7 +44,7 @@ def page(name, depth, title_ar, body, full, seo_html=''):
 <header class="top"><div class="bar wrap">
   <a class="brand" href="{href('index', depth)}">{bi('د. عمر عبدالله الصمعاني', 'Dr. Omar Abdullah Alsamani')}</a>
   <nav class="links" aria-label="Main">{nav}</nav>
-  <button class="lang" id="langBtn" type="button">English</button>
+  <div class="bar-end"><button class="lang" id="langBtn" type="button">English</button><a class="brand-en ar" href="{href('index', depth)}" dir="ltr" lang="en">Dr. Omar Abdullah Alsamani</a></div>
 </div>
 <nav class="links mobile" aria-label="Main">{nav}</nav>
 </header>
