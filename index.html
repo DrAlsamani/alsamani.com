@@ -49,7 +49,8 @@ html[lang="en"] .eyebrow{text-transform:uppercase;letter-spacing:.12em}
 header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);margin-inline:-20px;padding-inline:20px}
 .bar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:14px}
 .brand{font-family:var(--f-display);font-size:var(--s3);font-weight:700;color:var(--ink);text-decoration:none;white-space:nowrap}
-.brand span{color:var(--dune)}
+.brand{font-size:1.0625rem}
+#latest{border-top:0;padding-top:48px}
 nav.links{display:flex;gap:22px;flex-wrap:wrap}
 nav.links a{color:var(--muted);text-decoration:none;font-size:.9375rem}
 nav.links a:hover{color:var(--ink)}
@@ -199,11 +200,10 @@ footer{padding-block:34px;border-top:1px solid var(--line);color:var(--muted);fo
 
 <div class="wrap">
 <header class="top"><div class="bar wrap">
-  <a class="brand" href="#top">alsamani<span>.</span>com</a>
+  <a class="brand" href="#top"><span class="ar">د. عمر عبدالله الصمعاني</span><span class="en">Dr. Omar Abdullah Alsamani</span></a>
   <nav class="links" aria-label="Main">
-    <a href="#latest"><span class="ar">جديدي</span><span class="en">Latest</span></a>
+    <a href="#latest"><span class="ar">أحدث الأبحاث</span><span class="en">Latest research</span></a>
     <a href="#news"><span class="ar">الأخبار</span><span class="en">News</span></a>
-    <a href="#research"><span class="ar">البحث</span><span class="en">Research</span></a>
     <a href="#pubs"><span class="ar">المنشورات</span><span class="en">Publications</span></a>
     <a href="#photo"><span class="ar">التصوير</span><span class="en">Photography</span></a>
     <a href="#about"><span class="ar">نبذة</span><span class="en">About</span></a>
@@ -213,30 +213,6 @@ footer{padding-block:34px;border-top:1px solid var(--line);color:var(--muted);fo
 </div></header>
 
 <main id="top">
-<div class="hero">
-  <div>
-    <p class="eyebrow"><span class="ar">أستاذ مشارك · جامعة حائل</span><span class="en">Associate Professor · University of Ha'il</span></p>
-    <h1><span class="ar">د. عمر عبدالله الصمعاني</span><span class="en">Dr. Omar Abdullah Alsamani</span></h1>
-    <p class="role"><span class="ar">الابتكار وريادة الأعمال · تعليم الموهوبين · التربية الخاصة</span><span class="en">Innovation and entrepreneurship · Gifted education · Special education</span></p>
-    <p class="thesis"><span class="ar">تتناول أبحاثه التعرف على الموهوبين وذوي الاستثنائية المزدوجة وتقييمهم، والبيئات الداعمة للإبداع والابتكار وريادة الأعمال، وتوظيف الذكاء الاصطناعي في التعليم والتشخيص، مع تركيز على السياق التعليمي السعودي.</span><span class="en">His research addresses the identification and assessment of gifted and twice-exceptional learners, environments that support creativity, innovation and entrepreneurship, and the use of artificial intelligence in instruction and assessment, with a focus on the Saudi educational context.</span></p>
-    <ul class="tags">
-      <li><span class="ar">الابتكار وريادة الأعمال</span><span class="en">Innovation & entrepreneurship</span></li>
-      <li><span class="ar">الموهبة والتفوق</span><span class="en">Giftedness</span></li>
-      <li><span class="ar">مزدوجو الاستثنائية 2e</span><span class="en">Twice-exceptionality</span></li>
-      <li><span class="ar">التشخيص والتعرف</span><span class="en">Identification</span></li>
-      <li><span class="ar">الذكاء الاصطناعي في التعليم</span><span class="en">AI in education</span></li>
-      
-    </ul>
-    <div class="cta">
-      <a class="btn solid" href="#latest"><span class="ar">أحدث الأبحاث</span><span class="en">Latest research</span></a>
-    </div>
-  </div>
-  <figure class="plate">
-    <img src="img/ph15.webp" alt="رجل يمد يده إلى فهد عند الغروب على كثيب رملي">
-    <figcaption><span><span class="ar">تصوير: عمر الصمعاني</span><span class="en">Photograph: Omar Alsamani</span></span></figcaption>
-  </figure>
-</div>
-
 <!-- LATEST -->
 <section id="latest">
   <div class="sec-head">
@@ -357,21 +333,6 @@ footer{padding-block:34px;border-top:1px solid var(--line);color:var(--muted);fo
   </ol>
 </section>
 
-<!-- RESEARCH AREAS -->
-<section id="research">
-  <div class="sec-head"><div>
-    <p class="eyebrow"><span class="ar">البحث العلمي</span><span class="en">Research</span></p>
-    <h2><span class="ar">المجالات البحثية</span><span class="en">Areas of research</span></h2>
-  </div></div>
-  <div class="areas">
-    <div class="area"><h3><span class="ar">الابتكار وريادة الأعمال</span><span class="en">Innovation and entrepreneurship</span></h3><p><span class="ar">تعليم ريادة الأعمال، والتفكير الاستراتيجي، والبيئات الداعمة للابتكار، ورواد الأعمال المبتكرون.</span><span class="en">Entrepreneurship education, strategic thinking, innovation-supportive environments, and innovative entrepreneurs.</span></p></div>
-    <div class="area"><h3><span class="ar">تعليم الموهوبين</span><span class="en">Gifted education</span></h3><p><span class="ar">رعاية الموهبة وتنميتها، والإبداع لدى الموهوبين، وإعداد معلميهم.</span><span class="en">Talent development, creativity among gifted learners, and the preparation of their teachers.</span></p></div>
-    <div class="area"><h3><span class="ar">مزدوجو الاستثنائية</span><span class="en">Twice-exceptionality</span></h3><p><span class="ar">الطلاب الموهوبون ذوو الإعاقة أو صعوبات التعلم، والانتقال من التركيز على العجز إلى نقاط القوة.</span><span class="en">Gifted learners with disabilities, and the move from a deficit view to a strengths view.</span></p></div>
-    <div class="area"><h3><span class="ar">التشخيص والتعرف</span><span class="en">Identification</span></h3><p><span class="ar">أساليب اكتشاف الموهوبين وتقييمهم، وفرص الترشيح العادلة في السياق السعودي.</span><span class="en">Methods for identifying and assessing gifted learners, and fair nomination in the Saudi context.</span></p></div>
-    <div class="area"><h3><span class="ar">الذكاء الاصطناعي في التعليم</span><span class="en">AI in education</span></h3><p><span class="ar">توظيف الذكاء الاصطناعي التوليدي في التعليم والتشخيص وتنمية التفكير الاستراتيجي.</span><span class="en">Generative AI for instruction, identification and strategic thinking.</span></p></div>
-  </div>
-</section>
-
 <!-- PUBLICATIONS -->
 <section id="pubs">
   <div class="sec-head">
@@ -449,9 +410,9 @@ footer{padding-block:34px;border-top:1px solid var(--line);color:var(--muted);fo
   <div class="about">
     <div>
       <p class="eyebrow"><span class="ar">نبذة</span><span class="en">About</span></p>
-      <h2 style="font-size:var(--s5);margin-bottom:18px"><span class="ar">عن عمر الصمعاني</span><span class="en">About Omar Alsamani</span></h2>
-      <p><span class="ar">أستاذ مشارك بجامعة حائل، متخصص في التربية الخاصة وتعليم الموهوبين وتنمية الموهبة والإبداع والابتكار. يتناول عملي التشخيص والتعرف، ومزدوجي الاستثنائية، وتوظيف الذكاء الاصطناعي في التعليم، والابتكار وريادة الأعمال، مع تركيز على السياق التعليمي السعودي.</span><span class="en">Associate Professor at the University of Ha'il, specializing in special education, gifted education and talent development, creativity and innovation. My work covers identification and assessment, twice-exceptionality, AI in education, and innovation and entrepreneurship, with a focus on the Saudi educational context.</span></p>
-      <p><span class="ar">أعمل في البحث والتدريس والإشراف على طلاب الدراسات العليا وتقديم الورش التدريبية، باللغتين العربية والإنجليزية.</span><span class="en">I work across research, teaching, graduate supervision and workshop facilitation, in Arabic and English.</span></p>
+      <h2 style="font-size:var(--s5);margin-bottom:18px"><span class="ar">د. عمر عبدالله الصمعاني</span><span class="en">Dr. Omar Abdullah Alsamani</span></h2>
+      <p><span class="ar">أستاذ مشارك بجامعة حائل، متخصص في التربية الخاصة وتعليم الموهوبين وتنمية الموهبة والإبداع والابتكار. تتناول أبحاثه التشخيص والتعرف، ومزدوجي الاستثنائية، وتوظيف الذكاء الاصطناعي في التعليم، والابتكار وريادة الأعمال، مع تركيز على السياق التعليمي السعودي.</span><span class="en">Associate Professor at the University of Ha'il, specializing in special education, gifted education and talent development, creativity and innovation. His work covers identification and assessment, twice-exceptionality, AI in education, and innovation and entrepreneurship, with a focus on the Saudi educational context.</span></p>
+      <p><span class="ar">يعمل في البحث العلمي والتدريس والإشراف على طلاب الدراسات العليا وتقديم البرامج التدريبية، باللغتين العربية والإنجليزية.</span><span class="en">He works across research, teaching, graduate supervision and professional training, in Arabic and English.</span></p>
     </div>
     <ul class="cv">
       <li><span class="mono">PhD</span><div><span class="ar">دكتوراه الفلسفة، جامعة نورثرن كولورادو، الولايات المتحدة (2019)</span><span class="en">Doctor of Philosophy, University of Northern Colorado, USA (2019)</span>
@@ -461,6 +422,21 @@ footer{padding-block:34px;border-top:1px solid var(--line);color:var(--muted);fo
       <li><span class="mono">MA</span><div><span class="ar">ماجستير التربية الخاصة (الموهبة والابتكار)، جامعة إكستر، المملكة المتحدة</span><span class="en">MA in Special Education (Giftedness and Innovation), University of Exeter, UK</span></div></li>
       <li><span class="mono">Now</span><div><span class="ar">أستاذ مشارك، جامعة حائل</span><span class="en">Associate Professor, University of Ha'il</span></div></li>
     </ul>
+  </div>
+</section>
+
+<!-- RESEARCH AREAS -->
+<section id="research">
+  <div class="sec-head"><div>
+    <p class="eyebrow"><span class="ar">البحث العلمي</span><span class="en">Research</span></p>
+    <h2><span class="ar">المجالات البحثية</span><span class="en">Areas of research</span></h2>
+  </div></div>
+  <div class="areas">
+    <div class="area"><h3><span class="ar">الابتكار وريادة الأعمال</span><span class="en">Innovation and entrepreneurship</span></h3><p><span class="ar">تعليم ريادة الأعمال، والتفكير الاستراتيجي، والبيئات الداعمة للابتكار، ورواد الأعمال المبتكرون.</span><span class="en">Entrepreneurship education, strategic thinking, innovation-supportive environments, and innovative entrepreneurs.</span></p></div>
+    <div class="area"><h3><span class="ar">تعليم الموهوبين</span><span class="en">Gifted education</span></h3><p><span class="ar">رعاية الموهبة وتنميتها، والإبداع لدى الموهوبين، وإعداد معلميهم.</span><span class="en">Talent development, creativity among gifted learners, and the preparation of their teachers.</span></p></div>
+    <div class="area"><h3><span class="ar">مزدوجو الاستثنائية</span><span class="en">Twice-exceptionality</span></h3><p><span class="ar">الطلاب الموهوبون ذوو الإعاقة أو صعوبات التعلم، والانتقال من التركيز على العجز إلى نقاط القوة.</span><span class="en">Gifted learners with disabilities, and the move from a deficit view to a strengths view.</span></p></div>
+    <div class="area"><h3><span class="ar">التشخيص والتعرف</span><span class="en">Identification</span></h3><p><span class="ar">أساليب اكتشاف الموهوبين وتقييمهم، وفرص الترشيح العادلة في السياق السعودي.</span><span class="en">Methods for identifying and assessing gifted learners, and fair nomination in the Saudi context.</span></p></div>
+    <div class="area"><h3><span class="ar">الذكاء الاصطناعي في التعليم</span><span class="en">AI in education</span></h3><p><span class="ar">توظيف الذكاء الاصطناعي التوليدي في التعليم والتشخيص وتنمية التفكير الاستراتيجي.</span><span class="en">Generative AI for instruction, identification and strategic thinking.</span></p></div>
   </div>
 </section>
 
