@@ -383,6 +383,14 @@ html[dir="rtl"] .arr::after{content:"←"}
 .sb:hover{border-color:var(--accent)}
 .sb.pdf{background:var(--accent);color:var(--bg);border-color:var(--accent)}
 .share-wrap{margin-top:16px}
+.contact-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:40px}
+@media (max-width:760px){.contact-grid{grid-template-columns:1fr}}
+.ch{font-family:var(--f-body)!important;font-size:1rem;margin-bottom:12px}
+.clist{margin:0;padding-inline-start:20px;display:grid;gap:8px;color:var(--muted)}
+.channels{list-style:none;margin:0;padding:0;border-top:2px solid var(--ink)}
+.channels a{display:flex;justify-content:space-between;gap:12px;padding-block:14px;border-bottom:1px solid var(--line);text-decoration:none;color:var(--ink)}
+.channels a:hover b{color:var(--accent)}
+.channels span{color:var(--muted);font-family:var(--f-mono);font-size:.8125rem}
 </style>
 </head>
 <body>
@@ -392,13 +400,15 @@ html[dir="rtl"] .arr::after{content:"←"}
   <nav class="links" aria-label="Main"><a href="../../index.html"><span class="ar">المستجدات</span><span class="en">Updates</span></a>
 <a href="../../publications/index.html"><span class="ar">المنشورات</span><span class="en">Publications</span></a>
 <a href="../../photography/index.html"><span class="ar">التصوير</span><span class="en">Photography</span></a>
-<a href="../../about/index.html"><span class="ar">نبذة</span><span class="en">About</span></a></nav>
+<a href="../../about/index.html"><span class="ar">نبذة</span><span class="en">About</span></a>
+<a href="../../contact/index.html"><span class="ar">تواصل</span><span class="en">Contact</span></a></nav>
   <button class="lang" id="langBtn" type="button">English</button>
 </div>
 <nav class="links mobile" aria-label="Main"><a href="../../index.html"><span class="ar">المستجدات</span><span class="en">Updates</span></a>
 <a href="../../publications/index.html"><span class="ar">المنشورات</span><span class="en">Publications</span></a>
 <a href="../../photography/index.html"><span class="ar">التصوير</span><span class="en">Photography</span></a>
-<a href="../../about/index.html"><span class="ar">نبذة</span><span class="en">About</span></a></nav>
+<a href="../../about/index.html"><span class="ar">نبذة</span><span class="en">About</span></a>
+<a href="../../contact/index.html"><span class="ar">تواصل</span><span class="en">Contact</span></a></nav>
 </header>
 <main data-base="../../">
 <section class="first"><p class="crumb"><a href="../../index.html"><span class="ar">الرئيسية</span><span class="en">Home</span></a> / <a href="../../publications/index.html"><span class="ar">المنشورات</span><span class="en">Publications</span></a></p>

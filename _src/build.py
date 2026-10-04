@@ -22,7 +22,7 @@ TYPES = {'publication': ('نشر', 'Publication'), 'training': ('تدريب', 'T
 PTYPES = {'article': ('مقال محكّم', 'Journal article'), 'chapter': ('فصل في كتاب', 'Book chapter'),
           'thesis': ('رسالة علمية', 'Thesis'), 'book': ('كتاب', 'Book')}
 NAV = [('index', 'المستجدات', 'Updates'), ('publications', 'المنشورات', 'Publications'),
-       ('photography', 'التصوير', 'Photography'), ('about', 'نبذة', 'About')]
+       ('photography', 'التصوير', 'Photography'), ('about', 'نبذة', 'About'), ('contact', 'تواصل', 'Contact')]
 
 def href(page, depth):
     up = '../' * depth
@@ -233,6 +233,31 @@ def research_dys():
     return f'''<section class="first"><p class="crumb"><a href="../../index.html">{bi('الرئيسية', 'Home')}</a> / <a href="../../publications/index.html">{bi('المنشورات', 'Publications')}</a></p>
 {featured}<div class="share-wrap">{share_bar(next(x for x in research if x['slug']=='ai-visual-instruction-dyslexia'))}</div></section>'''
 
+def contact_html():
+    return f'''<section class="first">
+  <div class="sec-head"><div><p class="eyebrow">{bi('تواصل', 'Contact')}</p><h2>{bi('التواصل', 'Get in touch')}</h2></div></div>
+  <div class="contact-grid">
+    <div>
+      <h3 class="ch">{bi('مجالات التواصل', 'Reasons to get in touch')}</h3>
+      <ul class="clist">
+        <li>{bi('التعاون البحثي والنشر المشترك', 'Research collaboration and co-authorship')}</li>
+        <li>{bi('البرامج التدريبية وورش العمل', 'Training programs and workshops')}</li>
+        <li>{bi('الاستشارات في برامج الموهوبين والابتكار وريادة الأعمال', 'Consulting on gifted programs, innovation and entrepreneurship')}</li>
+        <li>{bi('المشاركات العلمية والإعلامية', 'Academic and media participation')}</li>
+        <li>{bi('الاستفسارات حول الأبحاث المنشورة', 'Questions about published research')}</li>
+      </ul>
+    </div>
+    <div>
+      <h3 class="ch">{bi('قنوات التواصل', 'Channels')}</h3>
+      <ul class="channels">
+        <li><a href="https://www.linkedin.com/in/alsamani/"><b>LinkedIn</b><span>linkedin.com/in/alsamani</span></a></li>
+        <li><a href="https://www.x.com/Omar_ALsamani"><b>X</b><span>@Omar_ALsamani</span></a></li>
+        <li><a href="https://scholar.google.com/citations?user=1tSLgBIAAAAJ"><b>Google Scholar</b><span>Omar A. Alsamani</span></a></li>
+      </ul>
+    </div>
+  </div>
+</section>'''
+
 def about_html():
     s = open(P('src/about.html')).read()
     return s
@@ -252,6 +277,7 @@ DESCS = {
  'index': "Research by Dr. Omar Abdullah Alsamani (University of Ha'il) on gifted education, twice-exceptionality, innovation and entrepreneurship, special education and AI in education — abstracts, findings and implications in English and Arabic.",
  'publications': "Full list of publications by Dr. Omar Abdullah Alsamani: journal articles, book chapters and theses on gifted education, twice-exceptional students, autism, creativity, entrepreneurship and AI in education.",
  'photography': "Landscape, wildlife and heritage photography by Omar Alsamani.",
+ 'contact': "Contact Dr. Omar Abdullah Alsamani for research collaboration, training, consulting and media.",
  'about': "Dr. Omar Abdullah Alsamani, Associate Professor of Special Education at the University of Ha'il: gifted education, twice-exceptionality, innovation and entrepreneurship, AI in education.",
 }
 def seo(name, title):
@@ -301,6 +327,7 @@ PAGES = [('index', 0, 'Dr. Omar Abdullah Alsamani | د. عمر عبدالله ا
          ('publications', 1, 'Publications | Dr. Omar Abdullah Alsamani | المنشورات', pubs_html),
          ('photography', 1, 'Photography | Omar Alsamani | التصوير', photo_html),
          ('about', 1, 'About | Dr. Omar Abdullah Alsamani | نبذة', about_html),
+         ('contact', 1, 'Contact | Dr. Omar Abdullah Alsamani | تواصل', contact_html),
          ('research/ai-visual-instruction-dyslexia', 2, 'AI-based visual instruction and reading comprehension in dyslexia | Alsamani', research_dys)]
 for _r in research:
     if not _r.get('custom'):
