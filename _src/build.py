@@ -28,15 +28,11 @@ def href(page, depth):
     up = '../' * depth
     return up + ('index.html' if page == 'index' else page + '/index.html')
 
-def page(name, depth, title_ar, body, full):
+def page(name, depth, title_ar, body, full, seo_html=''):
     nav = '\n'.join(f'<a href="{href(p, depth)}"{" aria-current=\"page\"" if p == name else ""}>{bi(a, b)}</a>' for p, a, b in NAV)
     head_meta = ''
     if full:
-        head_meta = f'''<meta name="description" content="د. عمر عبدالله الصمعاني، أستاذ مشارك بجامعة حائل — Dr. Omar Abdullah Alsamani, Associate Professor, University of Ha'il.">
-<meta property="og:title" content="{title_ar}">
-<meta property="og:image" content="https://alsamani.com/img/ph15.webp">
-<meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%232C3E8F'/%3E%3Ctext x='16' y='22' font-size='16' text-anchor='middle' fill='%23fff' font-family='sans-serif'%3EOA%3C/text%3E%3C/svg%3E">
+        head_meta = seo_html + f'''<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%232C3E8F'/%3E%3Ctext x='16' y='22' font-size='16' text-anchor='middle' fill='%23fff' font-family='sans-serif'%3EOA%3C/text%3E%3C/svg%3E">
 '''
     inner = f'''<title>{title_ar}</title>
 {head_meta}<link rel="preconnect" href="https://fonts.googleapis.com">
@@ -245,14 +241,70 @@ def write(path, content):
     os.makedirs(os.path.dirname(path), exist_ok=True)
     open(path, 'w').write(content)
 
-PAGES = [('index', 0, 'د. عمر عبدالله الصمعاني | Dr. Omar Alsamani', feed_html),
-         ('publications', 1, 'المنشورات | د. عمر عبدالله الصمعاني', pubs_html),
-         ('photography', 1, 'التصوير | د. عمر عبدالله الصمعاني', photo_html),
-         ('about', 1, 'نبذة | د. عمر عبدالله الصمعاني', about_html),
-         ('research/ai-visual-instruction-dyslexia', 2, 'AI-based visual instruction and dyslexia | Dr. Omar Alsamani', research_dys)]
+
+SITE = 'https://alsamani.com/'
+PERSON = {"@type": "Person", "@id": SITE + "#person", "name": "Omar Abdullah Alsamani", "alternateName": ["عمر عبدالله الصمعاني", "Omar A. Alsamani", "Omar Alsamani"],
+          "jobTitle": "Associate Professor", "affiliation": {"@type": "CollegeOrUniversity", "name": "University of Ha'il"}, "url": SITE,
+          "alumniOf": [{"@type": "CollegeOrUniversity", "name": "University of Northern Colorado"}, {"@type": "CollegeOrUniversity", "name": "University of Exeter"}],
+          "knowsAbout": ["Gifted education", "Twice-exceptionality", "Talent development", "Creativity", "Innovation and entrepreneurship", "Special education", "Artificial intelligence in education", "Identification and assessment"],
+          "sameAs": ["https://www.linkedin.com/in/alsamani/", "https://www.x.com/Omar_ALsamani", "https://scholar.google.com/citations?user=1tSLgBIAAAAJ"]}
+DESCS = {
+ 'index': "Research by Dr. Omar Abdullah Alsamani (University of Ha'il) on gifted education, twice-exceptionality, innovation and entrepreneurship, special education and AI in education — abstracts, findings and implications in English and Arabic.",
+ 'publications': "Full list of publications by Dr. Omar Abdullah Alsamani: journal articles, book chapters and theses on gifted education, twice-exceptional students, autism, creativity, entrepreneurship and AI in education.",
+ 'photography': "Landscape, wildlife and heritage photography by Omar Alsamani.",
+ 'about': "Dr. Omar Abdullah Alsamani, Associate Professor of Special Education at the University of Ha'il: gifted education, twice-exceptionality, innovation and entrepreneurship, AI in education.",
+}
+def seo(name, title):
+    path = '' if name == 'index' else name + '/'
+    url = SITE + path
+    rr = next((x for x in research if 'research/' + x['slug'] == name), None)
+    desc = DESCS.get(name, '')
+    og_type = 'website'
+    ld = []
+    extra = ''
+    if rr:
+        og_type = 'article'
+        desc = (rr.get('summary_en') or rr.get('teaser_en', ''))[:300]
+        authors = [a.strip() for a in rr['authors_en'].split(',')]
+        abstract = rr.get('abstract_plain') or ' '.join(x[3] for x in rr.get('abstract', []))
+        ld.append({"@context": "https://schema.org", "@type": "ScholarlyArticle", "headline": rr['orig_title'][:110], "name": rr['orig_title'],
+                   "alternativeHeadline": rr['title_ar'], "author": [PERSON if 'Alsamani' in a else {"@type": "Person", "name": a} for a in authors],
+                   "datePublished": rr['date'], "isPartOf": {"@type": "Periodical", "name": rr['journal']}, "identifier": {"@type": "PropertyValue", "propertyID": "DOI", "value": rr['doi']},
+                   "sameAs": "https://doi.org/" + rr['doi'], "url": url, "abstract": abstract, "keywords": rr.get('keywords_en', ''), "inLanguage": "en", "image": SITE + "img/ph15.webp"})
+        extra += f'<meta name="citation_title" content="{e(rr["orig_title"])}">\n'
+        for a in authors:
+            extra += f'<meta name="citation_author" content="{e(a)}">\n'
+        extra += f'<meta name="citation_publication_date" content="{rr["date"].replace("-", "/")}">\n<meta name="citation_journal_title" content="{e(rr["journal"])}">\n<meta name="citation_doi" content="{rr["doi"]}">\n'
+        if rr.get('pdf'):
+            extra += f'<meta name="citation_pdf_url" content="{e(rr["pdf"])}">\n'
+        extra += f'<meta name="keywords" content="{e(rr.get("keywords_en", ""))}">\n'
+    elif name in ('index', 'about'):
+        ld.append({"@context": "https://schema.org", **PERSON})
+        if name == 'index':
+            ld.append({"@context": "https://schema.org", "@type": "WebSite", "name": "Dr. Omar Abdullah Alsamani", "url": SITE, "inLanguage": ["en", "ar"]})
+    elif name == 'publications':
+        ld.append({"@context": "https://schema.org", "@type": "CollectionPage", "name": "Publications", "url": url, "about": {"@id": SITE + "#person"}})
+    lds = ''.join(f'<script type="application/ld+json">{json.dumps(x, ensure_ascii=False)}</script>\n' for x in ld)
+    return f'''<meta name="description" content="{e(desc)}">
+<link rel="canonical" href="{url}">
+<meta property="og:type" content="{og_type}">
+<meta property="og:site_name" content="Dr. Omar Abdullah Alsamani">
+<meta property="og:title" content="{e(title)}">
+<meta property="og:description" content="{e(desc)}">
+<meta property="og:url" content="{url}">
+<meta property="og:image" content="{SITE}img/ph15.webp">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="author" content="Omar Abdullah Alsamani">
+{extra}{lds}'''
+
+PAGES = [('index', 0, 'Dr. Omar Abdullah Alsamani | د. عمر عبدالله الصمعاني — Gifted Education, Innovation and Entrepreneurship', feed_html),
+         ('publications', 1, 'Publications | Dr. Omar Abdullah Alsamani | المنشورات', pubs_html),
+         ('photography', 1, 'Photography | Omar Alsamani | التصوير', photo_html),
+         ('about', 1, 'About | Dr. Omar Abdullah Alsamani | نبذة', about_html),
+         ('research/ai-visual-instruction-dyslexia', 2, 'AI-based visual instruction and reading comprehension in dyslexia | Alsamani', research_dys)]
 for _r in research:
     if not _r.get('custom'):
-        PAGES.append((f"research/{_r['slug']}", 2, _r['orig_title'][:70] + ' | Dr. Omar Alsamani', (lambda rr: (lambda: research_page(rr)))(_r)))
+        PAGES.append((f"research/{_r['slug']}", 2, _r['orig_title'][:80] + ' | Alsamani', (lambda rr: (lambda: research_page(rr)))(_r)))
 
 for target, full in (('dist', True), ('preview', False)):
     for name, depth, title, fn in PAGES:
@@ -261,9 +313,13 @@ for target, full in (('dist', True), ('preview', False)):
             body = body.replace('href="publications/', 'href="../publications/').replace('href="photography/', 'href="../photography/').replace('url(img/', 'url(../img/').replace('href="research/', 'href="../research/')
         out = P(target, 'index.html' if name == 'index' else f'{name}/index.html')
         t = title if full else ('Alsamani.com' if name == 'index' else title)
-        write(out, page(name, depth, t, body, full or depth > 0))
+        write(out, page(name, depth, t, body, full or depth > 0, seo(name, title) if full else ''))
     os.makedirs(P(target, 'img'), exist_ok=True)
     for f in os.listdir(P('img')):
         if f.endswith('.webp'):
             shutil.copy(P('img', f), P(target, 'img', f))
+from datetime import date
+urls = [SITE] + [SITE + n + '/' for n, *_ in PAGES if n != 'index']
+write(P('dist', 'sitemap.xml'), '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + ''.join(f'<url><loc>{u}</loc><lastmod>{date.today()}</lastmod></url>\n' for u in urls) + '</urlset>\n')
+write(P('dist', 'robots.txt'), 'User-agent: *\nAllow: /\nDisallow: /_src/\nSitemap: https://alsamani.com/sitemap.xml\n')
 print('built', len(feed), 'feed items,', len(pubs), 'publications')

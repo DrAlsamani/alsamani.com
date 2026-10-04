@@ -353,6 +353,13 @@
   "kind_en": "Peer-reviewed article · Single-case design",
   "teaser_ar": "شروح بصرية يولّدها ChatGPT لثلاثة طلاب ذوي عُسر القراءة: من خط أساس 0–10% إلى الإتقان، مع احتفاظ بالأثر بعد أسابيع.",
   "teaser_en": "ChatGPT-generated visual explanations for three students with dyslexia: from a 0–10% baseline to mastery, maintained weeks later.",
-  "pdf": "https://www.frontiersin.org/journals/education/articles/10.3389/feduc.2026.1727782/pdf"
+  "pdf": "https://www.frontiersin.org/journals/education/articles/10.3389/feduc.2026.1727782/pdf",
+  "authors_en": "Omar Abdullah Alsamani, Yasir Ayed Alsamiri",
+  "venue": "Frontiers in Education, Vol. 11, Article 1727782",
+  "doi": "10.3389/feduc.2026.1727782",
+  "url": "https://www.frontiersin.org/journals/education/articles/10.3389/feduc.2026.1727782/full",
+  "keywords_en": "learning disabilities; generative artificial intelligence (GenAI); reading comprehension; dyslexia; special education; innovation in education; single-case design",
+  "summary_en": "Three elementary students with dyslexia in Yanbu, Saudi Arabia, received ChatGPT-generated visual explanations aligned with their Grade 4 Arabic coursebook. All three moved from a 0–10% baseline to mastery and maintained it weeks later.",
+  "abstract_plain": "Students with learning disabilities (LD), particularly dyslexia, often face significant challenges in reading comprehension that traditional instruction may not fully address. Generative Artificial Intelligence (GenAI) offers emerging opportunities to provide personalised and visual instructional support to bridge these gaps."
  }
 ]
