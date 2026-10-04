@@ -687,6 +687,49 @@ html,body{overflow-x:clip}@media (max-width:640px){.cr-dots{gap:5px;padding:8px 
 .qnote{color:var(--muted);font-size:.8125rem}
 .all-pubs{text-align:center;margin-top:36px}.all-pubs a{color:var(--accent);text-decoration:none}
 .rcard .tr.en{color:var(--muted)}
+/* feature article: the best of each study, for the general reader */
+.ft-jump{text-align:center;margin:28px 0 0}.ft-jump a{color:var(--accent);text-decoration:none;font-size:1.0625rem}
+.feat{background:var(--bg);padding-block:72px 96px}
+.ft-in{max-width:760px;margin:0 auto}
+.ft-kick{color:var(--dune);font-weight:600;font-size:.9375rem;margin:0 0 10px;text-align:center}
+.ft-q{font-size:clamp(1.625rem,3.4vw,2.375rem)!important;line-height:1.2;text-align:center;margin:0 auto 22px;max-width:20em;text-wrap:balance}
+.ft-lede{font-size:clamp(1.125rem,2vw,1.3125rem);line-height:1.65;color:var(--ink);margin:0 0 40px}
+.ft-in>p{font-size:1.0625rem;line-height:1.8}
+.ft-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:0 0 48px}
+.ft-stats div{background:var(--alt);border-radius:18px;padding:22px 20px;display:flex;flex-direction:column;gap:6px}
+.ft-stats b{font-size:clamp(1.75rem,3.6vw,2.5rem);line-height:1;font-weight:700;letter-spacing:-.02em;color:var(--ink)}
+.ft-stats span{color:var(--muted);font-size:.9375rem;line-height:1.45}
+.ft-h{font-size:clamp(1.25rem,2.4vw,1.625rem)!important;margin:56px 0 16px!important}
+.ft-fig{margin:40px calc(50% - min(50vw,560px) + 20px) 8px;background:var(--alt);border-radius:22px;padding:clamp(18px,4vw,40px)}
+.ft-fig svg{width:100%;height:auto;display:block}
+.ft-fig figcaption{color:var(--muted);font-size:.875rem;text-align:center;margin-top:14px}
+.ft-themes{list-style:none;padding:0;margin:0;display:grid;gap:16px}
+.ft-themes>li{display:grid;grid-template-columns:44px minmax(0,1fr);gap:16px;background:var(--alt);border-radius:18px;padding:24px}
+.ft-n{width:44px;height:44px;border-radius:50%;background:var(--ink);color:var(--bg);display:grid;place-items:center;font-weight:700;font-size:1.0625rem}
+.ft-themes h4{margin:6px 0 8px;font-size:1.1875rem;line-height:1.35}
+.ft-themes p{margin:0;color:var(--muted);line-height:1.75}
+.ft-themes ul{margin:12px 0 0;padding-inline-start:20px;display:grid;gap:4px}
+.ft-themes ul li{line-height:1.6}
+.ft-quote{margin:18px 0 0;padding:18px 22px;border-inline-start:3px solid var(--dune);background:var(--bg);border-radius:0 12px 12px 0}
+html[dir="rtl"] .ft-quote{border-radius:12px 0 0 12px}
+.ft-quote p{font-size:1.125rem;line-height:1.7;color:var(--ink)!important;margin:0}
+.ft-quote p::before{content:"«"}.ft-quote p::after{content:"»"}
+html[lang="en"] .ft-quote p::before{content:"“"}html[lang="en"] .ft-quote p::after{content:"”"}
+.ft-quote cite{display:block;font-style:normal;color:var(--muted);font-size:.8125rem;margin-top:8px}
+.ft-take{list-style:none;padding:0;margin:0;display:grid;gap:12px}
+.ft-take li{position:relative;padding-inline-start:36px;font-size:1.0625rem;line-height:1.7}
+.ft-take li::before{content:"";position:absolute;inset-inline-start:0;top:.45em;width:20px;height:20px;border-radius:50%;background:var(--accent);mask:radial-gradient(circle,#000 60%,transparent 62%)}
+.ft-take li::after{content:"";position:absolute;inset-inline-start:6px;top:calc(.45em + 5px);width:8px;height:5px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg)}
+.ft-close{margin-top:48px!important;font-size:1.25rem!important;line-height:1.6!important;text-align:center;color:var(--ink)}
+.ft-src{text-align:center;color:var(--muted);font-size:.8125rem!important;margin-top:40px}
+@media (max-width:640px){.ft-themes>li{grid-template-columns:1fr;padding:20px}.ft-fig{margin-inline:-4px}}
+/* svg figure tokens */
+.fg-ink{fill:var(--ink)}.fg-mut{fill:var(--muted)}.fg-bg{fill:var(--bg)}.fg-acc{fill:var(--accent)}.fg-dune{fill:var(--dune)}
+.fg-sk{stroke:var(--line);fill:none}.fg-ska{stroke:var(--accent);fill:none}.fg-skd{stroke:var(--dune);fill:none}
+.ft-fig text{font-family:inherit}
+.ft-paper{background:#fff!important}
+.ft-paper img{width:100%;height:auto;display:block;border-radius:10px;cursor:zoom-in}
+:root[data-theme="dark"] .ft-paper{background:#f5f5f7!important}
 </style>
 </head>
 <body>
@@ -735,6 +778,7 @@ html,body{overflow-x:clip}@media (max-width:640px){.cr-dots{gap:5px;padding:8px 
   </div>
   <div><div class="tabs" role="tablist"><button class="tab" role="tab" aria-selected="true" data-p="q0"><span class="ar">التوثيق</span><span class="en">Citation</span></button></div><div class="panel abstract" id="q0"><p class="note"><span class="ar">المستخلص والنص الكامل متاحان في موقع المجلة.</span><span class="en">The abstract and full text are available on the journal site.</span></p><div class="cite"><span class="eyebrow"><span class="ar">التوثيق (APA)</span><span class="en">Cite (APA)</span></span><p dir="ltr" id="citeText">Alsamani, O. A., Alsamiri, Y. A., &amp; Alabdulwahab, R. A. (2026). Twice-exceptionality in primary schools: Teachers’ perceived barriers to identifying and supporting 2e students. <i>Acta Psychologica, 262</i>, 106031. https://doi.org/10.1016/j.actpsy.2025.106031</p><button type="button" class="copy" id="copyCite"><span class="ar">نسخ</span><span class="en">Copy</span></button></div></div></div>
 </article></section>
+<div id="feat"></div>
 </main>
 <footer class="site-foot">
   <div class="sf-id"><span class="mono-mark" aria-hidden="true">OA</span><div><b><span class="ar">د. عمر عبدالله الصمعاني</span><span class="en">Dr. Omar A. Alsamani</span></b></div></div>

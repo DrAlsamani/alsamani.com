@@ -9,6 +9,19 @@ P = lambda *a: os.path.join(ROOT, *a)
 feed = json.load(open(P('data/feed.json')))
 pubs = json.load(open(P('data/publications.json')))
 research = sorted(json.load(open(P('data/research.json'))), key=lambda x: x['date'], reverse=True)
+for _r in research:   # feature articles and paper-derived metadata (data/articles/<slug>.json / .meta.json)
+    _a, _m = P('data/articles', _r['slug'] + '.json'), P('data/articles', _r['slug'] + '.meta.json')
+    if os.path.exists(_a):
+        _r['article'] = json.load(open(_a))
+    if os.path.exists(_m):
+        _meta = json.load(open(_m))
+        if _meta.get('abstract_ar') or _meta.get('abstract_en'):
+            _r['abstract'] = [['المستخلص', 'Abstract', _meta.get('abstract_ar', ''), _meta.get('abstract_en', '')]]
+        for _k in ('keywords_ar', 'keywords_en', 'summary_ar', 'summary_en', 'teaser_ar', 'teaser_en', 'facts', 'findings', 'kind_ar', 'kind_en'):
+            if _meta.get(_k):
+                _r[_k] = _meta[_k]
+        if _meta.get('url'):
+            _r['url'] = _meta['url']
 css = open(P('src/site.css')).read() + open(P('src/extra.css')).read() + open(P('src/apple.css')).read()
 js = open(P('src/site.js')).read()
 featured = open(P('src/featured.html')).read()
@@ -256,6 +269,43 @@ def explainer(slug):
     f = P('src/explainers', slug + '.html')
     return open(f).read() if os.path.exists(f) else ''
 
+def figure(slug):
+    f = P('src/figures', slug + '.html')
+    return open(f).read() if os.path.exists(f) else ''
+
+def article_html(r):
+    a = r.get('article')
+    if not a:
+        return ''
+    B = lambda x: bi(e(x[0]), e(x[1]))
+    out = [f'<section class="feat" aria-label="Article"><div class="ft-in">']
+    out.append(f'<p class="ft-kick">{bi("قراءة في البحث", "The study in brief")}</p><h2 class="ft-q">{B(a["q"])}</h2><p class="ft-lede">{B(a["lede"])}</p>')
+    if a.get('stats'):
+        out.append('<div class="ft-stats">' + ''.join(f'<div><b>{e(n)}</b><span>{bi(e(x), e(y))}</span></div>' for n, x, y in a['stats']) + '</div>')
+    for sec in a.get('sections', []):
+        out.append(f'<h3 class="ft-h">{B(sec["h"])}</h3><p>{B(sec["p"])}</p>')
+    for pf in a.get('paper_figs', []):
+        src = f'../../img/research/{r["slug"]}/{pf["file"]}'
+        out.append(f'<figure class="ft-fig ft-paper"><a href="{src}" target="_blank" rel="noopener"><img src="{src}" alt="" loading="lazy"></a><figcaption>{B(pf["cap"])}</figcaption></figure>')
+    for fk, ck in ((r['slug'], 'fig_cap'), (r['slug'] + '-2', 'fig2_cap')):
+        fig = figure(fk)
+        if fig:
+            cap = f'<figcaption>{B(a[ck])}</figcaption>' if a.get(ck) else ''
+            out.append(f'<figure class="ft-fig">{fig}{cap}</figure>')
+    if a.get('themes'):
+        out.append(f'<h3 class="ft-h">{B(a["themes_h"])}</h3><ol class="ft-themes">')
+        for i, t in enumerate(a['themes'], 1):
+            subs = ''.join(f'<li>{B(x)}</li>' for x in t.get('subs', []))
+            q = f'<blockquote class="ft-quote"><p>{B(t["quote"])}</p><cite>{bi("من أقوال المشاركين", "A participant")}</cite></blockquote>' if t.get('quote') else ''
+            out.append(f'<li><span class="ft-n">{i}</span><div><h4>{B(t["t"])}</h4><p>{B(t["p"])}</p>{"<ul>" + subs + "</ul>" if subs else ""}{q}</div></li>')
+        out.append('</ol>')
+    if a.get('take'):
+        out.append(f'<h3 class="ft-h">{B(a["take_h"])}</h3><ul class="ft-take">' + ''.join(f'<li>{B(x)}</li>' for x in a['take']) + '</ul>')
+    if a.get('close'):
+        out.append(f'<p class="ft-close">{B(a["close"])}</p>')
+    out.append(f'<p class="ft-src">{bi("مبني على البحث المنشور؛ النص المعتمد هو المنشور في المجلة.", "Based on the published article; the journal version is authoritative.")}</p></div></section>')
+    return ''.join(out)
+
 def research_page(r):
     facts = ''.join(f'<dt>{bi(f[0], f[1])}</dt><dd>{bi(e(f[2]), e(f[3]))}</dd>' for f in r.get('facts', []))
     absd = ''.join(f'<dt>{bi(x[0], x[1])}</dt><dd><span class="ar">{e(x[2])}</span><span class="en" dir="ltr">{e(x[3])}</span></dd>' for x in r.get('abstract', []))
@@ -275,7 +325,8 @@ def research_page(r):
         panels.append(f'<div class="panel{" abstract" if pid == "q0" else ""}" id="{pid}"{" hidden" if len(panels) else ""}>{html}</div>')
     cite = f'<div class="cite"><span class="eyebrow">{bi("التوثيق (APA)", "Cite (APA)")}</span><p dir="ltr" id="citeText">{r["cite"]}</p><button type="button" class="copy" id="copyCite">{bi("نسخ", "Copy")}</button></div>'
     if r.get('summary_ar'):
-        add('qx', 'بإيجاز', 'At a glance', f'<button type="button" class="listen" data-say-ar="{e(r["summary_ar"])}" data-say-en="{e(r["summary_en"])}">{bi("استمع إلى الملخص", "Listen to the summary")}</button>{explainer(r["slug"]) or "<p>" + bi(e(r["summary_ar"]), e(r["summary_en"])) + "</p>"}')
+        glance = ('<p>' + bi(e(r["summary_ar"]), e(r["summary_en"])) + '</p>') if r.get('article') else (explainer(r["slug"]) or '<p>' + bi(e(r["summary_ar"]), e(r["summary_en"])) + '</p>')
+        add('qx', 'بإيجاز', 'At a glance', f'<button type="button" class="listen" data-say-ar="{e(r["summary_ar"])}" data-say-en="{e(r["summary_en"])}">{bi("استمع إلى الملخص", "Listen to the summary")}</button>{glance}')
     if absd:
         note = '' if ar_orig else '<p class="note ar">ترجمة المستخلص إلى العربية غير رسمية؛ النص المعتمد هو المنشور في المجلة.</p>'
         note = note if not ar_orig else '<p class="note en">The English text is an informal translation; the published Arabic text is authoritative.</p>'
@@ -304,7 +355,8 @@ def research_page(r):
     {share_bar(r)}
   </div>
   {right}
-</article></section>'''
+</article>{('<p class="ft-jump"><a href="#feat">' + bi('اقرأ عرض البحث', 'Read the illustrated summary') + ' <i class="chev"></i></a></p>') if r.get('article') else ''}</section>
+<div id="feat"></div>{article_html(r)}'''
 
 def research_dys():
     return f'''<section class="first"><p class="crumb"><a href="../../index.html">{bi('الرئيسية', 'Home')}</a> / <a href="../index.html">{bi('الأبحاث', 'Research')}</a></p>
@@ -434,6 +486,8 @@ for target, full in (('dist', True), ('preview', False)):
     for f in os.listdir(P('img')):
         if f.endswith('.webp'):
             shutil.copy(P('img', f), P(target, 'img', f))
+    if os.path.isdir(P('img', 'research')):
+        shutil.copytree(P('img', 'research'), P(target, 'img', 'research'), dirs_exist_ok=True)
 from datetime import date
 urls = [SITE] + [SITE + n + '/' for n, *_ in PAGES if n != 'index']
 write(P('dist', 'sitemap.xml'), '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + ''.join(f'<url><loc>{u}</loc><lastmod>{date.today()}</lastmod></url>\n' for u in urls) + '</urlset>\n')

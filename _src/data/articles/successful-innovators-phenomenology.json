@@ -1,0 +1,124 @@
+{
+  "q": ["ما الذي يحوّل الموهبة الإبداعية إلى ابتكار ناجح؟", "What turns creative giftedness into successful innovation?"],
+  "lede": [
+    "كثير من الموهوبين إبداعيًا لا يبلغون مستوى عاليًا من الإنتاج الابتكاري، وبعضهم يقطع رحلته ليبحث عن وظيفة عادية لا صلة لها بشغفه. لفهم ما يصنع الفرق، أجرت الدراسة مقابلات معمّقة مع أحد عشر مبتكرًا سعوديًا ناجحًا، وسألتهم عن العوامل التي ساعدتهم على تحويل إمكاناتهم الإبداعية إلى منتجات ومشروعات ابتكارية.",
+    "Many creatively gifted people never reach a high level of innovative production, and some abandon the journey for an ordinary job unrelated to their passion. To understand what makes the difference, the study interviewed eleven successful Saudi innovators in depth about the factors that helped them turn creative potential into innovative products and ventures."
+  ],
+  "stats": [
+    ["11", "مبتكرًا ناجحًا شاركوا في مقابلات فردية معمّقة", "successful innovators interviewed individually in depth"],
+    ["15+", "سنة من الخبرة في الابتكار شرطًا للمشاركة", "years of innovation experience required to take part"],
+    ["8", "محاور رئيسة انبثقت من تحليل المقابلات", "major themes emerged from the interviews"],
+    ["50–90", "دقيقة تقريبًا مدة كل مقابلة", "minutes, the approximate length of each interview"]
+  ],
+  "sections": [
+    {
+      "h": ["الموهبة وحدها لا تكفي", "Giftedness alone is not enough"],
+      "p": [
+        "تُعدّ القدرة الإبداعية مكوّنًا أساسيًا في معظم نظريات الموهبة، غير أن امتلاكها لا يعني بالضرورة أن صاحبها سيصبح مبتكرًا ناجحًا؛ فرحلة الابتكار مليئة بالتحديات والظروف التي تؤثر في مآلاتها. وتميّز الدراسة بين الإبداع بوصفه إنتاج أفكار جديدة ومناسبة، والابتكار بوصفه التطبيق الناجح لتلك الأفكار، وريادة الأعمال بوصفها تسويق مخرجات الابتكار تجاريًا.",
+        "Creativity is a core component of most theories of giftedness, yet having creative ability does not guarantee becoming a successful innovator; the innovation journey is full of challenges that shape its outcome. The study distinguishes creativity (producing new and appropriate ideas), innovation (the successful production of creative ideas), and entrepreneurship (the commercialization of innovative outcomes)."
+      ]
+    },
+    {
+      "h": ["كيف أُجريت الدراسة", "How the study worked"],
+      "p": [
+        "اعتمدت الدراسة تصميمًا نوعيًا فينومينولوجيًا يهدف إلى فهم المعنى المشترك في الخبرات المعيشة للمشاركين. اختير المشاركون بالعينة القصدية وفق شروط محددة: خبرة في العمل الابتكاري تزيد على خمس عشرة سنة، ومنتجات أو مشروعات ابتكارية بارزة ذات أثر في المجتمع، ومشروعات ريادية مربحة. شارك أحد عشر مبتكرًا من منطقتي الرياض والقصيم، وجُمعت البيانات عبر مقابلات فردية شبه منظمة، أتبعها بعضهم برسائل صوتية لاستكمال أفكارهم، ثم أُعيد إلى كل مشارك نص مقابلته لمراجعته. وحلّل البيانات باحثان مستقلان ثم قارنا نتائجهما.",
+        "The study used a qualitative phenomenological design aimed at capturing the shared meaning of participants’ lived experiences. Participants were selected through purposeful sampling against clear criteria: more than 15 years of innovation work, prominent innovative products or projects with a contribution to society, and profitable entrepreneurial ventures. Eleven innovators from the Riyadh and Qassim regions took part. Data came from individual semi-structured interviews, which some participants followed with voice notes to elaborate; each participant then reviewed his own transcript. Two researchers analyzed the data independently and compared their results."
+      ]
+    }
+  ],
+  "paper_figs": [],
+  "themes_h": ["ماذا وجدت الدراسة؟", "What the study found"],
+  "themes": [
+    {
+      "t": ["عادات يومية منتجة", "Good daily habits"],
+      "p": [
+        "ذكر جميع المشاركين (100%) أنهم امتلكوا عادات ساعدتهم على تنمية مهاراتهم ومعارفهم ثم ابتكاراتهم. ووصفوا طفولة ومراهقة مختلفة عن أقرانهم: وقتًا يقضونه في التعلّم والإنتاج والهوايات المثمرة بدل الملهيات، بل رأى أحدهم في الفراغ والملل محفّزًا للإبداع.",
+        "All participants (100%) described habits that helped them build skills, knowledge, and eventually innovations. They recalled childhoods and adolescences unlike those of their peers, spent learning, making things, and pursuing productive hobbies rather than distractions; one even saw free time and boredom as a catalyst for creativity."
+      ],
+      "quote": [
+        "«كانت لديّ عادة جيدة، فأنا أستمتع بتعلّم أشياء جديدة، ولا أحب قضاء وقت طويل مع أصدقائي في اللعب.»",
+        "“I had a good habit that I enjoy learning new things and I don’t like spending much time with my friends playing games.”"
+      ]
+    },
+    {
+      "t": ["الثقة بالنفس ضرورة", "Self-confidence is a necessity"],
+      "p": [
+        "أكد 82% من المشاركين أن الثقة بالنفس كانت شرطًا لمواصلة الطريق رغم الإخفاقات. وأشار بعضهم إلى أن فقدانها هو ما يجعل كثيرًا من الموهوبين لا يُكملون مشروعاتهم، فهم يعرفون أصدقاء أذكياء قادرين على إنجاز أشياء عظيمة لكنهم لا يثقون بقدراتهم.",
+        "Eighty-two percent of participants said self-confidence was essential for persisting through failure. Several noted that losing it is what keeps many gifted people from finishing their projects: they knew capable friends who could do great things but did not trust their own abilities."
+      ],
+      "quote": [
+        "«أحب أن أجد الحل بنفسي، أثق بنفسي، وأستطيع فعلها حتى لو استغرق ذلك بعض الوقت.»",
+        "“I like to find a solution myself, I trust myself, I can do it even if it takes some time.”"
+      ]
+    },
+    {
+      "t": ["التعلّم الذاتي وتطوير الذات", "Autonomous learning and self-development"],
+      "p": [
+        "أشار جميع المشاركين (100%) إلى أن التعلّم الذاتي والتطوير المستمر كانا من أهم ما قادهم إلى ابتكارات ناجحة. وصفوا انفتاحهم على التجارب الجديدة، وساعات عمل طويلة في المجال الذي يحبونه بدافع داخلي، ودورات مكثفة نقلتهم من مستوى إلى آخر.",
+        "All participants (100%) identified autonomous learning and continuous self-development as central to their success. They described openness to new experiences, long hours of intrinsically motivated work in a field they loved, and intensive courses that moved them from one level to the next."
+      ],
+      "quote": [
+        "«نحن دائمًا في عمل لا يعرف الكلل، وتطوير مستمر، وهذا ما يغذّي الإبداع.»",
+        "“We always have tireless work, always continuous development, and this fosters creativity.”"
+      ]
+    },
+    {
+      "t": ["الأقران محرّك للرحلة", "Peers drive the journey"],
+      "p": [
+        "تحدّث جميع المشاركين (100%) بإسهاب عن أهمية العلاقة بالأقران، وهي نتيجة لم تكن متوقعة بهذا الوضوح. فالتعلّم من الأقران ومعهم، والمنافسة الإيجابية بينهم، والإرشاد من مبتكرين نجحوا حديثًا، كانت كلها عوامل دفعتهم إلى تقديم أفضل ما لديهم.",
+        "All participants (100%) spoke at length about peer relationships, a finding the study describes as surprising in its strength. Learning from and with peers, healthy competition, and coaching from innovators who had recently succeeded all pushed them to produce their best work."
+      ],
+      "subs": [
+        ["التعلّم المشترك وتبادل الأفكار", "Learning together and sharing ideas"],
+        ["المنافسة الإيجابية بين الأقران", "Positive, challenging competition"],
+        ["إرشاد الأقران الأكثر خبرة", "Coaching from more experienced peers"]
+      ],
+      "quote": [
+        "«أتعلّم من أقراني ومعهم؛ نتبادل الأفكار، ونستكشف، ونقضي الوقت معًا، ويتحدى بعضنا بعضًا.»",
+        "“I learn from and with peers, we share ideas, explore, spend time together, and challenge each other.”"
+      ]
+    },
+    {
+      "t": ["الشبكات والسمعة", "Networks and reputation"],
+      "p": [
+        "رأى 73% من المشاركين أن بناء شبكة علاقات واسعة يختصر الطريق ويفتح الفرص ويتيح رؤية الأمور من زوايا مختلفة، ونبّه بعضهم إلى أن كثيرًا من الموهوبين انطوائيون ويحتاجون إلى تنمية هذا الجانب. وبالنسبة نفسها أكدوا أن الكفاءة وحدها لا تكفي، وأن على المبتكر أن يسوّق نفسه ويبني سمعته.",
+        "Seventy-three percent of participants said a wide network shortens the journey, brings opportunities, and offers new perspectives; some noted that many talented people are introverted and need to work on this. The same proportion stressed that competence alone is not enough: innovators must market themselves and build a reputation."
+      ],
+      "subs": [
+        ["الشبكات الاجتماعية تجلب الفرص (73%)", "Social networking brings opportunities (73%)"],
+        ["تسويق الذات وبناء السمعة (73%)", "Marketing oneself and building a reputation (73%)"]
+      ],
+      "quote": [
+        "«أن تكون قويًا لا يكفي، عليك أن تسوّق نفسك.»",
+        "“Being strong is not enough, you need to market yourself.”"
+      ]
+    },
+    {
+      "t": ["الاستدامة: دخل من الابتكار وفريق داعم", "Sustaining the work: income and a supportive team"],
+      "p": [
+        "لاحظ المشاركون أن كثيرًا من زملائهم تعثّروا وفقدوا الأمل بسبب شح المال، فاضطر بعضهم إلى وظيفة لا صلة لها بشغفه ففقد اهتمامه بالابتكار. لذلك دعا 73% منهم إلى جعل الابتكار مصدر دخل في وقت مبكر. ورأى 82% أن العمل مع فريق داعم يتولى الإدارة والتسويق والتشغيل يتيح للمبتكر التفرغ للتطوير، ويمنحه الحماس حين يُنهكه التعب.",
+        "Participants had watched peers give up for lack of money; one described a gifted friend forced into an unrelated paid job who then lost interest in his innovation. Seventy-three percent therefore urged making innovation a source of income early. Eighty-two percent said working with a supportive team that handles administration, marketing, and operations frees the innovator to focus on development and restores enthusiasm when exhausted."
+      ],
+      "subs": [
+        ["جعل الابتكار مصدر دخل مبكرًا (73%)", "Make innovation a source of income early (73%)"],
+        ["العمل مع فريق داعم (82%)", "Work with a supportive team (82%)"]
+      ],
+      "quote": [
+        "«من المهم أن تجعل الابتكار مصدر دخلك في أبكر وقت ممكن.»",
+        "“It is important to make innovation your source of income as early as you can.”"
+      ]
+    }
+  ],
+  "take_h": ["ما الذي يعنيه ذلك عمليًا؟", "What it means in practice"],
+  "take": [
+    ["ينبغي للمدارس والجامعات أن تدعم التعلّم الذاتي للطلبة الموهوبين إبداعيًا رسميًا، إلى جانب المناهج الأساسية المقدَّمة للجميع.", "Schools and universities should formally support autonomous learning for creatively gifted students, alongside the core curriculum offered to all."],
+    ["الاهتمام بميول الطلبة الموهوبين وتقديم أنشطة ومقررات اختيارية مرنة تتيح مساحة للأنشطة الإبداعية وتطوير منتجات ابتكارية.", "Attend to gifted students’ interests and offer activities and flexible elective courses that leave room for creative work and the development of innovative products."],
+    ["تحدّي الطلبة الموهوبين إبداعيًا بمشكلات يحلّونها بطرق إبداعية ضمن برامجهم التعليمية.", "Challenge creatively gifted students with problems to solve creatively as part of their education."],
+    ["بناء ملف إنجاز لكل طالب موهوب إبداعيًا يساعد المعلمين على فهم اهتماماته وإنجازاته ومهاراته الإبداعية ودمجها في تعليمه.", "Build a portfolio for each creatively gifted student so educators understand his or her creative interests, achievements, and skills and can build them into instruction."],
+    ["توفير مستشارين ماليين يرافقون المبتكرين لتطوير منتجات ابتكارية مربحة تضمن استمرارهم.", "Provide financial advisors who help innovators develop profitable products so they can sustain their work."]
+  ],
+  "close": [
+    "تخلص الدراسة إلى أن رحلة الابتكار طويلة وشاقة، وأن نجاحها لا يقوم على الموهبة وحدها، بل على عادات منتجة وثقة بالنفس وتعلّم ذاتي، وعلى أقران وفريق ومصدر دخل يحملون المبتكر حتى يكمل طريقه.",
+    "The study concludes that the innovation journey is long and difficult, and that success rests not on talent alone but on productive habits, self-confidence, and self-directed learning, supported by peers, a team, and an income that carry the innovator to the end of the road."
+  ]
+}

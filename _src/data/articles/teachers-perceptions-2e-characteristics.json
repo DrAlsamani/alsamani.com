@@ -1,0 +1,103 @@
+{
+ "q": [
+  "كيف يرى المعلمون الطالب الموهوب ذا الإعاقة؟",
+  "How do teachers see a gifted student with a disability?"
+ ],
+ "lede": [
+  "الطالب مزدوج الاستثنائية موهوب ولديه إعاقة في الوقت نفسه. سألت هذه الدراسة أربعة عشر معلمًا في المرحلة الابتدائية بالمدينة المنورة كيف يرون هؤلاء الطلاب، فكشفت نمطًا لافتًا في طريقة التفكير.",
+  "A twice-exceptional student is gifted and has a disability at the same time. This study asked fourteen elementary teachers in Medina how they see these students, and found a telling pattern in how they think about them."
+ ],
+ "stats": [
+  [
+   "14",
+   "معلمًا ومعلمة (7 و7)",
+   "teachers (7 female, 7 male)"
+  ],
+  [
+   "7",
+   "سمات للموهبة ذكرها المعلمون",
+   "giftedness traits named"
+  ],
+  [
+   "3",
+   "مجالات للتحديات الأكاديمية",
+   "areas of academic difficulty"
+  ]
+ ],
+ "fig_cap": [
+  "يرى المعلمون الموهبة والإعاقة حالتين منفصلتين، بينما ازدواجية الاستثنائية حالة واحدة تتفاعل سماتها.",
+  "Teachers see giftedness and disability as two separate conditions; twice-exceptionality is one condition whose traits interact."
+ ],
+ "themes_h": [
+  "ماذا وجدت الدراسة؟",
+  "What the study found"
+ ],
+ "themes": [
+  {
+   "t": [
+    "سمات الموهبة",
+    "Signs of giftedness"
+   ],
+   "p": [
+    "ربط المعلمون الموهبة لدى هؤلاء الطلاب بسمات واضحة.",
+    "Teachers linked giftedness in these students to clear traits."
+   ],
+   "subs": [
+    [
+     "مهارات تواصل ممتازة",
+     "Excellent communication skills"
+    ],
+    [
+     "حل المشكلات وقوة الاحتفاظ بالمعلومات",
+     "Problem solving and strong retention"
+    ],
+    [
+     "حب الاستطلاع والإبداع والتفكير المجرد",
+     "Curiosity, creativity and abstract thinking"
+    ],
+    [
+     "مهارات القيادة",
+     "Leadership skills"
+    ]
+   ]
+  },
+  {
+   "t": [
+    "التحديات الأكاديمية والنفسية",
+    "Academic and emotional challenges"
+   ],
+   "p": [
+    "يواجه هؤلاء الطلاب صعوبات مرتبطة بإعاقتهم في القراءة والكتابة والرياضيات، ويعانون غالبًا من تدني تقدير الذات وصعوبة التركيز.",
+    "These students face disability-related difficulties in reading, writing and mathematics, and often struggle with low self-esteem and concentration."
+   ]
+  },
+  {
+   "t": [
+    "حالتان منفصلتان لا حالة واحدة",
+    "Two conditions, not one"
+   ],
+   "p": [
+    "يميل المعلمون إلى رؤية الموهبة والإعاقة حالتين مستقلتين، بدل فهمهما حالة واحدة تؤثر سماتها في التعلم مجتمعة.",
+    "Teachers tend to see giftedness and disability as two independent conditions rather than one condition whose traits shape learning together."
+   ]
+  }
+ ],
+ "take_h": [
+  "ما الذي يعنيه ذلك عمليًا؟",
+  "What it means in practice"
+ ],
+ "take": [
+  [
+   "إعداد المعلمين لفهم ازدواجية الاستثنائية حالةً واحدة تتداخل فيها الموهبة والإعاقة.",
+   "Prepare teachers to understand twice-exceptionality as one profile in which giftedness and disability interact."
+  ],
+  [
+   "الانتباه إلى تقدير الذات والتركيز إلى جانب الدعم الأكاديمي.",
+   "Attend to self-esteem and concentration alongside academic support."
+  ]
+ ],
+ "close": [
+  "حين يُرى الطالب حالتين منفصلتين، يُعالَج نصفه ويُهمَل النصف الآخر.",
+  "When a student is seen as two separate conditions, half of the student is served and the other half overlooked."
+ ]
+}

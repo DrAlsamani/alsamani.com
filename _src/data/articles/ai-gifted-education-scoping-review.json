@@ -1,0 +1,141 @@
+{
+  "q": [
+    "كيف يُدرَس الذكاء الاصطناعي في تعليم الموهوبين، وما الذي يعد به وما الذي يُخشى منه؟",
+    "How is AI being studied in gifted education, and what does it promise and risk?"
+  ],
+  "lede": [
+    "دخل الذكاء الاصطناعي ميدان تعليم الموهوبين بسرعة، لكن الأبحاث حوله ظلت متفرقة بين التدريس والتقييم والأخلاقيات. ترسم هذه المراجعة الاستكشافية خريطة لهذا الأدب: أنواع الذكاء الاصطناعي التي دُرست، والفئات والسياقات الممثَّلة، والأغراض التي وُظِّف لها، والفرص والمخاطر والفجوات التي أبلغت عنها الدراسات.",
+    "Artificial intelligence has entered gifted and talented education quickly, but research on it has remained scattered across instruction, assessment, and ethics. This scoping review maps that literature: the types of AI studied, the populations and contexts represented, the purposes AI was put to, and the opportunities, risks, and gaps the studies report."
+  ],
+  "stats": [
+    ["26", "دراسة استوفت معايير الإدراج", "studies met the inclusion criteria"],
+    ["397", "سجلًا من أربع قواعد بيانات قبل الفرز", "database records before screening"],
+    ["19", "من الدراسات نُشرت في عام 2025 وحده", "of the studies were published in 2025 alone"],
+    ["13", "دراسة تناولت الذكاء الاصطناعي التوليدي والنماذج اللغوية الكبيرة", "studies examined generative AI and large language models"]
+  ],
+  "sections": [
+    {
+      "h": ["لماذا يهم هذا الموضوع؟", "Why this matters"],
+      "p": [
+        "يحتاج الطلبة الموهوبون إلى عمق وتعقيد يتجاوزان توقعات الصف الدراسي، ويشكو معلموهم من ضيق الوقت والدعم اللازمين للتخطيط الفردي. ويُنظر إلى الذكاء الاصطناعي التوليدي بوصفه وسيلة لإعداد مهام متمايزة ومواد قائمة على الاهتمامات كانت تستغرق ساعات. غير أن للذكاء الاصطناعي وظيفة ثانية أبعد أثرًا: المساعدة في تحديد من يُعترف به موهوبًا أصلًا. وهنا تتجاور الوعود والمخاطر؛ فالنماذج تتعلم من السجلات القائمة، وقد تعيد إنتاج التحيزات التي يُفترض أن تحدّ منها. والمهمة الضعيفة التي يولّدها الذكاء الاصطناعي يمكن للمعلم تعديلها، أما قرار التعرف الخاطئ فقد يحدد حصول الطالب على الخدمات من عدمه.",
+        "Gifted learners need depth and complexity beyond grade-level expectations, and their teachers report limited time and support for the individualized planning this requires. Generative AI is increasingly seen as a way to draft differentiated tasks and interest-based materials that would otherwise take hours. AI also serves a second, more consequential function: helping decide who is identified as gifted in the first place. Here promise and hazard run side by side, since models learn from existing records and can reproduce the disparities they are meant to reduce. A weak AI-generated task can be revised by a teacher; a flawed identification decision can determine access to services."
+      ]
+    },
+    {
+      "h": ["كيف أُجريت المراجعة؟", "How the review worked"],
+      "p": [
+        "اتبعت الدراسة منهج المراجعة الاستكشافية وفق إرشادات PRISMA-ScR وإطار «الفئة–المفهوم–السياق». وبُحث في أربع قواعد بيانات (Web of Science وScopus وEBSCOhost وProQuest) عن منشورات بين يناير 2010 ومايو 2026، فنتج 397 سجلًا، بقي منها 242 بعد حذف المكرر. فحص باحثان مستقلان العناوين والملخصات ثم النصوص الكاملة، وبلغ معامل الاتفاق (كوهين κ) ‏0.84 في مرحلة الأهلية، وانتهيا إلى 26 دراسة. ثم استُخلصت البيانات من كل دراسة، وصُنّفت الدراسات استقرائيًا في ستة محاور.",
+        "The study followed a scoping review design reported in line with PRISMA-ScR and guided by the Population–Concept–Context framework. Four databases (Web of Science, Scopus, EBSCOhost, and ProQuest) were searched for publications from January 2010 through May 2026, yielding 397 records, or 242 after duplicates were removed. Two reviewers independently screened titles, abstracts, and full texts, reaching Cohen's κ = 0.84 at the eligibility stage, and agreed on a final set of 26 studies. Data were then charted for each study, and the studies were grouped inductively into six themes."
+      ]
+    },
+    {
+      "h": ["صورة الأدب: حديث ومتركز", "A recent and concentrated literature"],
+      "p": [
+        "الأدب حديث جدًا: معظم الدراسات نُشرت بعد عام 2023، و19 منها في عام 2025 وحده. ويغلب عليه الذكاء الاصطناعي التوليدي، بينما ظهر تعلم الآلة والشبكات العصبية أساسًا في دراسات التعرف والتصنيف. وهو متركز جغرافيًا؛ إذ جاءت 9 دراسات من الولايات المتحدة و7 من تركيا، ولم تأتِ أي دراسة من أفريقيا جنوب الصحراء أو أمريكا اللاتينية أو جنوب آسيا.",
+        "The literature is very recent: most studies appeared after 2023, and 19 were published in 2025 alone. Generative AI dominates, while machine learning and neural networks appear mainly in identification and classification studies. It is also geographically concentrated, with 9 studies from the United States and 7 from Türkiye, and none from Sub-Saharan Africa, Latin America, or South Asia."
+      ]
+    }
+  ],
+  "paper_figs": [
+    {
+      "file": "fig1.webp",
+      "cap": [
+        "مخطط PRISMA لمسار اختيار الدراسات: من 397 سجلًا في قواعد البيانات إلى 26 دراسة مُدرجة في المراجعة.",
+        "PRISMA flow diagram of study selection: from 397 database records to the 26 studies included in the review."
+      ]
+    },
+    {
+      "file": "fig2.webp",
+      "cap": [
+        "خصائص الدراسات المُدرجة بحسب (أ) سنة النشر، (ب) الدولة، (ج) نوع الذكاء الاصطناعي، (د) طبيعة الأدلة.",
+        "Characteristics of the included studies by (a) publication year, (b) country or region, (c) AI type, and (d) evidence base."
+      ]
+    },
+    {
+      "file": "fig3.webp",
+      "cap": [
+        "توزيع إسهامات الدراسات على المحاور الستة؛ يمكن أن تُسهم الدراسة الواحدة في أكثر من محور.",
+        "Distribution of study contributions across the six themes; a single study could contribute to more than one theme."
+      ]
+    }
+  ],
+  "themes_h": ["ماذا وجدت الدراسة؟", "What the study found"],
+  "themes": [
+    {
+      "t": ["التعلم المخصص والمتمايز", "Personalized and differentiated learning"],
+      "p": [
+        "كان هذا أوضح مجالات الأدب حضورًا. قُدِّم الذكاء الاصطناعي بوصفه أداة توسّع قدرة المعلم على تقديم فرص تعلم متقدمة وقائمة على الاهتمامات، لا بديلًا عن حكمه المهني. لكن أغلب هذا العمل مفاهيمي أو تطبيقي، وقد وجدت دراسة شبه تجريبية لمساعد تعليمي قائم على نموذج لغوي في فصل علوم افتراضي متقدم أنه لا فروق دالة في نواتج التعلم، مع حاجة تفاعل الطلبة مع الأداة إلى بنية وتوجيه أوضح.",
+        "This was the most visible domain in the literature. AI was framed as a tool that may extend teachers' capacity to offer advanced and interest-based learning, not as a substitute for professional judgment. Much of this work, however, is conceptual or practice-oriented, and a quasi-experimental study of an LLM co-tutor in an advanced virtual science class found no significant differences in learning outcomes, while showing that students' interactions with AI required clearer structure and guidance."
+      ]
+    },
+    {
+      "t": ["الكتابة واللغة والقراءة", "Writing, language, and literacy"],
+      "p": [
+        "دُرس ChatGPT أداةً للعصف الذهني وداعمًا للكتابة ومصدرًا للتغذية الراجعة، ومولِّدًا لمواد قرائية يعدّها المعلم وفق اهتمامات الطلبة ومستوياتهم. أفاد طلبة جامعيون موهوبون بكسب في الكفاءة والمرونة، لكن الدراسات نبهت أيضًا إلى قضايا النزاهة والأصالة والاعتماد على الأداة.",
+        "ChatGPT was examined as a brainstorming tool, a writing support, a source of feedback, and a teacher-facing generator of literacy materials matched to students' interests and reading levels. Gifted college students reported gains in efficiency and adaptability, but the studies also flagged concerns about integrity, originality, and dependence on AI."
+      ],
+      "subs": [
+        ["في إحدى الدراسات استخدم المعلمون ChatGPT لكتابة نصوص مسرحية مخصصة من عوالم تخيلها الطلبة أنفسهم، فتحوّل الذكاء الاصطناعي من مساعد للطالب إلى أداة لتصميم المنهج.", "In one study, teachers used ChatGPT to write personalized playscripts from worlds the students had imagined, shifting AI from a student writing assistant to a curriculum-design tool."]
+      ]
+    },
+    {
+      "t": ["الإبداع والتساؤل والتفكير العالي", "Creativity, questioning, and higher-order thinking"],
+      "p": [
+        "تشير الدراسات إلى فائدة مشروطة: يدعم الذكاء الاصطناعي التفكير العالي حين يُدمج في مهام تطلب من الطلبة مساءلة الأفكار وتطويرها، وتضعف قيمته حين تُعامل مخرجاته بوصفها نقطة النهاية. فالقيمة تتوقف على تصميم المهمة أكثر من الأداة نفسها.",
+        "The studies point to a conditional benefit: AI may support higher-order thinking when it is embedded in tasks that require students to question and extend ideas, and its value is weaker when students treat AI output as an endpoint. The value seems to depend on how the task is built rather than on the tool."
+      ],
+      "subs": [
+        ["كانت الأسئلة التي ولّدها الذكاء الاصطناعي أقوى في المستويات الدنيا من تصنيف بلوم، بينما تفوقت الأسئلة التي كتبها البشر في المستويات العليا.", "AI-generated questions were stronger at the lower levels of Bloom's Taxonomy, whereas human-written questions were stronger at the higher levels."],
+        ["حسّنت أنشطة STEM المولَّدة بالذكاء الاصطناعي الإبداع العلمي لدى طلبة موهوبين في الصف الرابع.", "AI-generated STEM activities improved scientific creativity among gifted fourth graders."]
+      ]
+    },
+    {
+      "t": ["التعرف والتقييم ودعم القرار", "Identification, assessment, and decision support"],
+      "p": [
+        "تعاملت دراسات تعلم الآلة مع التعرف على الموهوبين بوصفه مشكلة تصنيف، ووجدت أن النماذج قد تكشف أنماطًا يصعب رصدها بالإجراءات التقليدية. لكن تطبيقها كشف تحديات تتعلق بالطلبة الأقل تمثيلًا وتحيز تقديرات المعلمين عبر الفئات الاجتماعية والاقتصادية والعرقية. ولذلك تخلص المراجعة إلى أن الذكاء الاصطناعي في التقييم ينبغي أن يُفهم دعمًا للقرار لا بديلًا عنه.",
+        "Machine learning studies treated gifted identification as a classification problem and found that models could detect patterns that traditional procedures may miss. Applying them, however, revealed challenges related to underrepresented students and teacher rating bias across socioeconomic and ethnic groups. The review therefore concludes that AI in assessment should be understood as decision support, not decision replacement."
+      ]
+    },
+    {
+      "t": ["مزدوجو الاستثنائية", "Twice-exceptional learners"],
+      "p": [
+        "كان هذا مجالًا صغيرًا لكنه بالغ الأهمية، لأن هؤلاء الطلبة يجمعون بين قدرات متقدمة وصعوبات قد يحجب أحدها الآخر. أظهر التدريس الهجين بين الإنسان والذكاء الاصطناعي تحسنًا في مهارات الكتابة لدى طلبة ثنائيي اللغة مزدوجي الاستثنائية، واستُخدمت ملفات متعلمين افتراضية لمساعدة المعلمين على التخطيط. لكن التعقيد نفسه يجعلهم عرضة لسوء التصنيف إذا اعتمدت النماذج على بيانات ناقصة أو فئات جامدة.",
+        "This was a smaller but particularly important area, since these learners combine advanced strengths with difficulties that can mask one another. Human–AI hybrid tutoring improved writing-related outcomes for twice-exceptional bilingual students, and synthetic learner profiles helped teachers think through support before classroom use. The same complexity, though, makes these learners vulnerable to misclassification when AI systems rely on incomplete data or rigid categories."
+      ]
+    },
+    {
+      "t": ["جاهزية المعلم والممارسة المؤسسية والأخلاقيات", "Teacher readiness, institutions, and ethics"],
+      "p": [
+        "ظهر التطبيق المسؤول شرطًا لجميع الاستخدامات الأخرى. أبدى معلمو الموهوبين نظرة إيجابية وكفاءة ذاتية مرتفعة نسبيًا في استخدام الذكاء الاصطناعي، مع حذر من القضايا الأخلاقية وحاجة إلى تطوير مهني موجّه. فدمج الذكاء الاصطناعي في تعليم الموهوبين ليس مسألة تقنية في المقام الأول، بل مسألة مهنية وتربوية تشكّلها خبرة المعلم وسياسات المؤسسة والإشراف البشري.",
+        "Responsible implementation emerged as a condition for every other use. Gifted educators held generally positive views and relatively high AI self-efficacy, alongside caution about ethical issues and a need for targeted professional development. AI integration in gifted education is therefore not mainly a technical issue but a professional and pedagogical one, shaped by teacher expertise, institutional policy, and human oversight."
+      ]
+    }
+  ],
+  "take_h": ["ما الذي يعنيه ذلك عمليًا؟", "What it means in practice"],
+  "take": [
+    [
+      "في التدريس اليومي، يفيد الذكاء الاصطناعي أكثر في الإعداد السريع لا في تقديم تعليم جاهز؛ والمكسب الأبقى يأتي من مهام تطلب من الطلبة نقد مخرجاته ومراجعتها وتطويرها.",
+      "In everyday instruction, AI is most useful for rapid preparation rather than finished teaching; the more durable gain comes from tasks that ask students to critique, revise, or extend what AI produces."
+    ],
+    [
+      "حين يُستخدم في التعرف، يكون مصدرًا واحدًا للأدلة بين مصادر عدة لا القرار نفسه: مع الإفصاح عن البيانات التي يعتمد عليها، ومراقبة أدائه عبر الفئات السكانية، وإبقاء المراجعة البشرية على كل قرار مؤثر.",
+      "Where AI informs identification, it belongs in the process as one source of evidence among several, not as the decision itself: be explicit about the data the model uses, monitor its performance across demographic groups, and keep human review over every consequential decision."
+    ],
+    [
+      "مزدوجو الاستثنائية يستدعون أكبر قدر من الحذر؛ فالقرارات بشأنهم أسلم حين يقف الذكاء الاصطناعي إلى جانب معرفة المختصين والأسر والطلبة أنفسهم.",
+      "Twice-exceptional learners call for the most caution; decisions about them are sounder when AI sits alongside the knowledge of specialists, families, and the students themselves."
+    ],
+    [
+      "على مستوى المؤسسات، تبقى السياسات المبنية على مبادئ (الإفصاح، والاستخدام المقبول، وخصوصية البيانات، ومراجعة المعلم للمواد المولَّدة) صالحة مع تغيّر الأدوات، بخلاف القواعد الخاصة بمنصات بعينها.",
+      "At the institutional level, principle-based policies covering disclosure, acceptable use, data privacy, and teacher review of AI-generated materials remain useful as tools change, whereas platform-specific rules date quickly."
+    ],
+    [
+      "يحتاج البحث إلى الانتقال من إثبات الإمكان إلى دراسات طولية ومقارنة ومتمحورة حول العدالة، ولا سيما في التعرف المدعوم بالذكاء الاصطناعي وتعليم مزدوجي الاستثنائية.",
+      "Research needs to move from demonstrating feasibility toward longitudinal, comparative, and equity-centered studies, particularly in AI-supported identification and twice-exceptional education."
+    ]
+  ],
+  "close": [
+    "تتوقف فائدة الذكاء الاصطناعي في تعليم الموهوبين على الحكم البشري أكثر من الأدوات نفسها: قد يخفف عبء الإعداد ويكشف أنماطًا في الملفات المعقدة، لكن قرارات التحدي والعدالة وما يُعدّ عملًا أصيلًا للطالب تبقى بيد المعلمين والمقيّمين.",
+    "AI's usefulness in gifted education depends on human judgment more than on the tools themselves: it may ease preparation and surface patterns in complex profiles, but decisions about challenge, equity, and what counts as a student's own work remain with teachers and evaluators."
+  ]
+}

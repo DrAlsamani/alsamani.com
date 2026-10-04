@@ -1,0 +1,66 @@
+{
+  "q": ["هل يمكن للذكاء الاصطناعي التوليدي أن يكون شريكًا في التفكير لطلاب ريادة الأعمال؟",
+        "Can generative AI act as a thinking partner for entrepreneurship students?"],
+  "lede": ["تتسع أدوات الذكاء الاصطناعي التوليدي في الجامعات، ويبقى السؤال: كيف تُستخدم بحيث تنمّي تفكير الطالب بدل أن تحلّ محله؟ تتبّعت الدراسة 123 طالبًا جامعيًا عملوا أسبوعين مع هذه الأدوات وفق بروتوكول منظم من خمس مراحل لتطوير أفكار مشاريع ريادية وتحليلات SWOT، ثم استطلعت تصوراتهم عن التجربة.",
+           "Generative AI tools are spreading across universities, and the open question is how to use them so that they develop students' thinking rather than replace it. The study followed 123 undergraduates who spent two weeks working with these tools through a structured five-stage protocol to develop entrepreneurial project ideas and SWOT analyses, then surveyed their perceptions of the experience."],
+  "stats": [
+    ["123", "طالبًا جامعيًا من تخصصات متعددة في ست شعب", "undergraduates from several disciplines, across six course sections"],
+    ["91.9%", "أفادوا بتطور جوهري أو متوسط أو جذري في فكرة مشروعهم", "reported a major, moderate, or radical change in their project idea"],
+    ["69.9%", "عدّوا الأسئلة المفتوحة أكثر استراتيجيات التفاعل فاعلية", "rated open-ended questions as the most effective interaction strategy"],
+    ["79%", "قالوا إن الأداة حسّنت تحديدهم لنقاط قوة مشروعهم", "said the tool improved how they identified their project's strengths"]
+  ],
+  "sections": [
+    {"h": ["كيف أُجريت الدراسة", "How the study worked"],
+     "p": ["أُجريت الدراسة داخل مقرر لريادة الأعمال في جامعة حائل يدرسه طلاب من تخصصات مختلفة، منها الأعمال والهندسة والتصميم والعلوم الصحية وتقنية المعلومات. عمل الطلاب في فرق صغيرة على مشروع ابتكاري مدته أسبوعان، واختارت كل فرقة أداة الذكاء الاصطناعي التي تفضّلها، مثل ChatGPT أو Claude أو Gemini أو DeepSeek أو Grok. وتسلّم الطلاب قبل البدء بروتوكولًا مكتوبًا يتضمن تعليمات كل مرحلة وأمثلة على الأوامر النصية. وبعد انتهاء التجربة أجابوا عن استبانة تناولت الاستراتيجيات التي استخدموها، والتحديات التي واجهوها، وأثر التجربة في أفكارهم وتعلّمهم، وبلغ معامل ثباتها (ألفا كرونباخ) 0.94.",
+           "The study took place in an entrepreneurship course at the University of Hail that is open to students from all majors, including business, engineering, design, health sciences, and information technology. Students worked in small teams on a two-week innovation project, and each team chose its own GenAI tool, such as ChatGPT, Claude, Gemini, DeepSeek, or Grok. Before starting, students received a written protocol with instructions for each stage and sample prompts. After the activity, they completed a survey on the strategies they used, the challenges they faced, and how the experience affected their ideas and learning; the survey's reliability (Cronbach's alpha) was 0.94."]},
+    {"h": ["البروتوكول: خمس مراحل للتعاون بين الطالب والذكاء الاصطناعي", "The protocol: five stages of student–AI collaboration"],
+     "p": ["صُمّم البروتوكول ليبقي الطالب صاحب القرار في كل خطوة. (1) التأسيس والتعريف، قبل استخدام الأداة: يحدد الفريق فكرة المشروع والعملاء المستهدفين والمشكلة التي يعالجها، ويعدّ تحليل SWOT أوليًا للمقارنة لاحقًا. (2) البدء والاستكشاف: يعرّف الفريق الأداة بمشروعه بالتفصيل، ويطلب منها أن تطرح عليه أسئلة استكشافية لفهمه، ثم يشاركها التحليل الأولي ويسألها عمّا أغفله. (3) التحدي النقدي: يطلب الفريق من الأداة أن تتحدى الافتراضات الأساسية للمشروع، وأن تقترح بدائل، وتحلل المنافسين ونماذج العمل الممكنة. (4) التنقيح الاستراتيجي: يعيد الفريق بناء تحليل SWOT عبر جولات متتالية من التغذية الراجعة، ويبحث كيف تتحول نقاط الضعف إلى فرص. (5) التوليف والتأمل: يلخّص الفريق الأفكار الجديدة ويحدد الخطوات التالية، ويوثّق المحادثة كاملة، ويتأمل كيف عدّل أسلوب صياغة أوامره. ومن نصائح البروتوكول للطلاب: لا تقبل الإجابة الأولى دائمًا، واطلب من الأداة حججًا مضادة لمقترحاتها.",
+           "The protocol was designed to keep students in charge at every step. (1) Foundation and definition, before any AI use: the team defines its project idea, target customers, and the problem it addresses, and drafts a preliminary SWOT analysis to compare against later. (2) Initiation and exploration: the team introduces the project to the AI in detail, asks it to pose exploratory questions to understand the project, then shares the initial analysis and asks what was overlooked. (3) Critical challenge: the team asks the AI to challenge the project's core assumptions, propose alternatives, and analyze competitors and possible business models. (4) Strategic refinement: the team rebuilds its SWOT analysis through repeated rounds of feedback and explores how weaknesses might become opportunities. (5) Synthesis and reflection: the team summarizes the new ideas, sets next steps, documents the full conversation, and reflects on how it adjusted its prompting. Among the protocol's tips to students: do not always accept the first answer, and ask the AI for counterarguments to its own suggestions."]}
+  ],
+  "paper_figs": [
+    {"file": "fig1.webp", "cap": ["الشكل 1: بروتوكول التعاون المنظم مع الذكاء الاصطناعي التوليدي بمراحله الخمس كما طُبّق في الدراسة.",
+                                  "Figure 1: The five-stage structured collaboration protocol with GenAI implemented in the study."]},
+    {"file": "fig2.webp", "cap": ["الشكل 2: عدد الأفكار المولَّدة بحسب نمط التفاعل مع الأداة، من التفاعل الذي تقوده الأداة إلى التفاعل الذي يقوده الطالب. أبلغ أصحاب التفاعل المتوازن عن أكثر الأفكار تنوعًا.",
+                                  "Figure 2: Idea generation by type of AI interaction, from AI-led to student-led. Students in balanced interactions reported the most varied idea generation."]}
+  ],
+  "themes_h": ["ماذا وجدت الدراسة؟", "What the study found"],
+  "themes": [
+    {"t": ["الأسئلة المفتوحة هي الاستراتيجية الأكثر استخدامًا والأعلى قيمة", "Open-ended questions were the most used and most valued strategy"],
+     "p": ["استخدم 62.6% من الطلاب الأسئلة المفتوحة، وطلب 55.3% تحسين تحليل SWOT، وطلب 44.7% تقييم أفكارهم. أما طلب تحدّي الافتراضات فاستخدمه 38.2% فقط. وعند سؤالهم عن أكثر الاستراتيجيات فاعلية، اختار 69.9% الأسئلة المفتوحة و52.9% تحسين تحليل SWOT، ما يشير إلى أن الحوار الاستكشافي والتقييمي كان أنفع لهم من طلب إجابات جاهزة.",
+           "62.6% of students used open-ended questions, 55.3% asked the AI to improve their SWOT analysis, and 44.7% asked it to evaluate their ideas. Asking the AI to challenge assumptions was used by only 38.2%. When asked which strategies were most effective, 69.9% chose open-ended questions and 52.9% chose SWOT improvement, suggesting that exploratory and evaluative dialogue served them better than answer-seeking prompts."]},
+    {"t": ["صياغة الأوامر كانت تحديًا ومهارة مكتسبة في آن", "Prompting was both a challenge and a skill learned"],
+     "p": ["واجه 32.5% صعوبة في صياغة أسئلة فعّالة، وتلقى 30.1% إجابات سطحية أو عامة، وواجه 14.6% صعوبة في توجيه المحادثة، ومثلهم معلومات غير دقيقة، بينما لم يُبلغ 38.2% عن أي تحدٍّ. وتعامل الطلاب مع ذلك بطرق محددة، ولم يعجز عن تجاوز التحدي سوى 10.1%.",
+           "32.5% struggled to formulate effective questions, 30.1% received superficial or generic responses, 14.6% had difficulty directing the conversation, and the same share encountered inaccurate information, while 38.2% reported no challenges. Students responded with specific tactics, and only 10.1% were unable to overcome the difficulty."],
+     "subs": [["إعادة صياغة السؤال بوضوح أكبر (50.4%)", "Rephrasing the question more clearly (50.4%)"],
+              ["طلب توضيحات إضافية من الأداة (46.2%)", "Asking the tool for further clarification (46.2%)"],
+              ["تقسيم السؤال المركّب إلى أسئلة أبسط (30.3%)", "Breaking complex questions into simpler ones (30.3%)"],
+              ["الاستعانة بأستاذ المقرر (23.5%)", "Asking the course instructor for help (23.5%)"]]},
+    {"t": ["الأفكار تغيّرت فعلًا", "Project ideas changed substantially"],
+     "p": ["لم يُبلغ أي طالب عن بقاء فكرته دون تغيير. أفاد 36.6% بتغيير كبير في جوانبها الأساسية، و30.9% بتغيير متوسط، و24.4% بإعادة بناء جذرية للفكرة، و8.1% بتعديلات طفيفة. وطوّر 39% فكرة أو فكرتين جديدتين، و38.2% من ثلاث إلى خمس أفكار، و8.9% أكثر من عشر أفكار.",
+           "No student reported that their idea stayed the same. 36.6% reported a major change to its core aspects, 30.9% a moderate change, 24.4% a radical restructuring, and 8.1% minor edits. 39% developed one or two new ideas, 38.2% developed three to five, and 8.9% developed more than ten."]},
+    {"t": ["التوازن بين الطالب والأداة أنتج أفكارًا أكثر", "Balanced collaboration produced more ideas"],
+     "p": ["عند مقارنة أنماط التفاعل، أبلغ الطلاب الذين تقاسموا القيادة مع الأداة بالتوازن عن أكثر نتائج توليد الأفكار تنوعًا، وولّد كثير منهم بين ثلاث وعشر أفكار، في حين ارتبط التفاعل الذي تقوده الأداة بعدد أقل من الأفكار.",
+           "Comparing interaction styles, students who shared the lead with the AI in a balanced way reported the most diverse idea-generation results, many producing between three and ten ideas, whereas AI-led interactions were linked with fewer ideas."]},
+    {"t": ["تحليل SWOT تحسّن داخليًا أكثر منه خارجيًا", "SWOT analysis improved more on the inside than the outside"],
+     "p": ["قال 79% إن الأداة حسّنت تحديدهم لنقاط القوة، و57.1% لنقاط الضعف، بينما انخفضت النسب في الجوانب الخارجية: 40.3% للفرص و31.1% للتهديدات، و26.1% للربط بين عناصر التحليل. وترى الدراسة أن الطلاب قد يجدون استخدام الأداة لتطوير مفاهيم مشروعهم أسهل من فحص ظروف السوق والمخاطر الخارجية، وهو ما يحتاج إلى دعم تدريسي أكبر.",
+           "79% said the tool improved how they identified strengths and 57.1% how they recognized weaknesses, but the shares were lower for external dimensions: 40.3% for opportunities, 31.1% for threats, and 26.1% for integrating the SWOT components. The study suggests students may find it easier to use the AI to refine their own concepts than to examine market conditions and external risk, an area that calls for stronger instructional support."]},
+    {"t": ["ثقة أكبر واستعداد للتعلم", "Greater confidence and openness"],
+     "p": ["في عبارات التقييم الذاتي، لم يختر أي طالب «لا أوافق» أو «لا أوافق بشدة» لأي عبارة. وكانت أعلى درجات الموافقة الشديدة لعبارة الشعور بالقدرة على استخدام الذكاء الاصطناعي في العمل الأكاديمي أو المهني مستقبلًا (87 طالبًا)، ثم اكتساب الثقة في تطوير أفكار مبتكرة (72)، وتعلّم مهارات جديدة في التفاعل مع الأداة (69)، وزيادة الانفتاح على تغيير الأفكار الأولية (67).",
+           "On the self-assessment statements, no student selected \"disagree\" or \"strongly disagree\" for any item. The most strong agreements were for feeling able to use GenAI in future academic or professional work (87 students), followed by gaining confidence in developing innovative ideas (72), learning new skills for interacting with GenAI (69), and becoming more open to changing initial ideas (67)."]}
+  ],
+  "take_h": ["ما الذي يعنيه ذلك عمليًا؟", "What it means in practice"],
+  "take": [
+    ["يكون الذكاء الاصطناعي التوليدي أنفع في التعليم حين يُدمج ضمن تعاون منظم يدفع الطلاب إلى مساءلة مخرجاته وصياغة أوامرهم بأنفسهم، لا حين يُستخدم للحصول على إجابات جاهزة.",
+     "GenAI is most useful in teaching when it is embedded in structured collaboration that pushes students to question its outputs and write their own prompts, not when it is used to obtain ready-made answers."],
+    ["يحتاج الطلاب إلى دعم صريح في الثقافة الرقمية بالذكاء الاصطناعي، وصياغة الأوامر، وتقييم المخرجات بدل قبولها دون نقد.",
+     "Students need explicit support in AI literacy, prompt formulation, and evaluating outputs rather than accepting them uncritically."],
+    ["يحتاج أعضاء هيئة التدريس إلى وعي تربوي وأخلاقي يمكّنهم من توجيه الطلاب نحو استخدام مسؤول وناقد لهذه الأدوات.",
+     "Faculty need pedagogical and ethical awareness to guide students toward responsible, critical use of these tools."],
+    ["ينبغي للجامعات أن تتجاوز خياري الحظر أو الاستخدام غير المنظم، وأن تضع أدلة عملية توضّح الاستخدامات المناسبة وغير المناسبة، وتراجعها دوريًا مع تطور الأدوات.",
+     "Universities should move beyond either banning these tools or allowing unstructured use, and develop practical guidelines on appropriate and inappropriate uses, updated regularly as the tools evolve."],
+    ["التحليل الخارجي للسوق والمخاطر هو الجانب الذي يحتاج فيه الطلاب إلى توجيه تدريسي أقوى عند العمل مع هذه الأدوات.",
+     "External market and risk analysis is where students need stronger instructional guidance when working with these tools."]
+  ],
+  "close": ["تخلص الدراسة إلى أن السؤال الأهم ليس هل يستخدم الطلاب الذكاء الاصطناعي التوليدي، بل بأي شروط وبأي توجيه يصبح هذا الاستخدام ذا قيمة تعليمية.",
+            "The study concludes that the central question is not whether students should use generative AI, but under what conditions and with what guidance its use becomes educationally valuable."]
+}

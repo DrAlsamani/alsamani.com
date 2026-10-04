@@ -1,0 +1,163 @@
+{
+ "q": [
+  "ما الذي يحتاجه الطلبة الموهوبون المبدعون في الجامعة لتنمية إبداعهم وابتكارهم؟",
+  "What do creatively gifted university students need to develop their creativity and innovation?"
+ ],
+ "lede": [
+  "يُنظر إلى الإبداع والابتكار بوصفهما من أهم مهارات القرن الحادي والعشرين، وقد جعلتهما رؤية المملكة 2030 ضمن المهارات المستهدفة في برنامج تنمية القدرات البشرية. غير أن الطلبة الموهوبين في المرحلة الجامعية لم يحظوا بالقدر الكافي من الدراسة، وبعضهم يملك ابتكارات وأعمالًا إبداعية قد لا تجد في الجامعة ما يدعمها. لذلك استطلعت هذه الدراسة آراء 101 من أعضاء هيئة التدريس في جامعة حائل حول احتياجات هؤلاء الطلبة والخدمات التي ينبغي أن تقدمها الجامعة لهم.",
+  "Creativity and innovation are widely regarded as core twenty-first-century skills, and Saudi Vision 2030 lists them among the skills targeted by its Human Capability Development Program. Yet gifted students at the university level have received little research attention, and some of them have inventions and creative work that their university may have no means to support. This study surveyed 101 faculty members at the University of Ha'il about what these students need and which services the university should provide."
+ ],
+ "stats": [
+  [
+   "101",
+   "عضو هيئة تدريس شاركوا في الاستبانة (84.2% من 120 دُعوا إليها)",
+   "faculty members responded (84.2% of the 120 invited)"
+  ],
+  [
+   "30",
+   "احتياجًا مقترحًا موزعة على ثلاثة أبعاد",
+   "proposed needs, grouped into three dimensions"
+  ],
+  [
+   "3.20–3.61",
+   "مدى متوسطات أهمية العبارات على مقياس من 0 إلى 4",
+   "range of item importance means on a 0–4 scale"
+  ],
+  [
+   "5",
+   "متغيرات شخصية لم تُظهر فروقًا دالة في الاستجابات",
+   "faculty characteristics that showed no significant differences in ratings"
+  ]
+ ],
+ "sections": [
+  {
+   "h": [
+    "لماذا الجامعة؟",
+    "Why the university level?"
+   ],
+   "p": [
+    "تشير الدراسة إلى أن البيئة التعليمية التي لا تدعم الإبداع قد تقود إلى تدني التحصيل لدى كثير من الطلبة الموهوبين، وأن إدراج الإبداع والابتكار في التعليم يساعدهم على تجاوز صعوبات اجتماعية وعاطفية وتطوير احترام الذات. وفي الوقت الذي تقدم فيه جامعات عالمية مراكز متخصصة لخدمة الموهوبين ومشاريعهم، ما زال أمام الجامعات السعودية مجال واسع للتطوير. ولأن أعضاء هيئة التدريس هم من يتعامل مع الطلبة الموهوبين داخل القاعة وخارجها، اتجهت الدراسة إلى رأيهم.",
+    "The study notes that learning environments that do not support creativity can lead to underachievement among many gifted students, while building creativity and innovation into education helps them overcome social and emotional difficulties and develop self-esteem. Many universities abroad now run dedicated centers for gifted students and their projects; Saudi universities, the study argues, still have considerable room to develop. Because faculty members are the ones who work with gifted students in and out of the classroom, the study turned to their views."
+   ]
+  },
+  {
+   "h": [
+    "كيف أُجريت الدراسة؟",
+    "How the study worked"
+   ],
+   "p": [
+    "اعتمدت الدراسة المنهج الوصفي المسحي، وبنى الباحث استبانة من 30 عبارة على أساس نظرية عناصر الإبداع الأربعة لرودس (1961): الفرد المبدع، وعمليات الإبداع، والبيئة، والمنتج الإبداعي. وتوزعت العبارات على ثلاثة أبعاد: تطوير الشخصية الإبداعية والابتكارية، والبيئة المكانية «الجامعية» والحسية المحفزة، وعمليات الإبداع وتطوير المنتج الابتكاري. قيّم المشاركون أهمية كل احتياج على مقياس من 0 (ليس له أهمية) إلى 4 (أهمية عالية جدًا)، وجُمعت البيانات في الفصل الدراسي الثاني من عام 2023، وبلغ معامل ثبات الأداة ككل (ألفا كرونباخ) 0.973.",
+    "The study used a descriptive survey design. The author developed a 30-item questionnaire grounded in Rhodes's (1961) Four P's of creativity: the creative person, the creative process, the environment (press), and the creative product. The items formed three dimensions: developing the creative and innovative personality; the physical (university) and sensory environment that stimulates creativity; and the creative process and development of innovative products. Participants rated each need from 0 (not important) to 4 (very highly important). Data were collected in the second semester of 2023, and the instrument's overall reliability (Cronbach's alpha) was 0.973."
+   ]
+  }
+ ],
+ "paper_figs": [
+  {
+   "file": "fig1.webp",
+   "cap": [
+    "نظرية عناصر الإبداع الأربعة (4Ps) لرودس (1961)، الإطار المرجعي الذي بُنيت عليه أبعاد الاستبانة: الفرد المبدع، وعمليات الإبداع، والبيئة، والمنتج الإبداعي «الابتكار».",
+    "Rhodes's (1961) Four P's of creativity, the framework behind the questionnaire's dimensions: the creative person, the creative process, the environment, and the creative product (innovation). Labels in Arabic, as in the original."
+   ]
+  }
+ ],
+ "themes_h": [
+  "ماذا وجدت الدراسة؟",
+  "What the study found"
+ ],
+ "themes": [
+  {
+   "t": [
+    "بناء الشخصية أولًا",
+    "Building the person comes first"
+   ],
+   "p": [
+    "حصل بُعد تطوير الشخصية الإبداعية والابتكارية على أعلى متوسط بين الأبعاد الثلاثة (3.44 من 4)، وجاءت عباراته العشر كلها بدرجة أهمية «عالية جدًا». وترى الدراسة في ذلك دلالة على أهمية الاستثمار في الطلبة الموهوبين بالتركيز على بناء شخصياتهم وسد حاجاتهم المعرفية والنفسية والعاطفية.",
+    "The dimension on developing the creative and innovative personality had the highest mean of the three (3.44 out of 4), and all ten of its items were rated \"very highly important.\" The study reads this as a call to invest in gifted students by building their personalities and meeting their cognitive, psychological, and emotional needs."
+   ],
+   "subs": [
+    [
+     "تنمية مهارات التفكير وحل المشكلات (3.61، المرتبة الأولى)",
+     "Developing thinking and problem-solving skills (3.61, ranked first)"
+    ],
+    [
+     "تنمية مهارات التواصل مع الآخرين (3.61)",
+     "Developing communication skills with others (3.61)"
+    ],
+    [
+     "تطوير المعرفة والمعلومات في مجال اهتمامهم الإبداعي (3.59)",
+     "Building knowledge in their area of creative interest (3.59)"
+    ]
+   ]
+  },
+  {
+   "t": [
+    "بيئة آمنة للتجربة",
+    "A safe environment to try and fail"
+   ],
+   "p": [
+    "بلغ متوسط بُعد البيئة الجامعية المحفزة 3.35، وتصدّرته الحاجة إلى بيئة يشعر فيها الطلبة بالأمان عند محاولتهم تطوير منتج أو فكرة إبداعية قد تنجح أو تفشل (3.46)، تليها حرية اختيار نوع المشروع الذي لديهم فيه شغف وتميز (3.41)، ثم توفير أدوات وأجهزة متنوعة في مجال اهتمامهم (3.39).",
+    "The stimulating-environment dimension averaged 3.35. Its top item was an environment in which students feel safe when trying to develop a product or creative idea that may succeed or fail (3.46), followed by freedom to choose projects they are passionate about and excel in (3.41) and access to a variety of tools and equipment in their field of interest (3.39)."
+   ]
+  },
+  {
+   "t": [
+    "من الفكرة إلى المنتج",
+    "From idea to product"
+   ],
+   "p": [
+    "بلغ متوسط بُعد عمليات الإبداع وتطوير المنتج الابتكاري 3.37. وجاء في مقدمته حضور الدورات التدريبية التطويرية وورش العمل ذات العلاقة بالمجال الإبداعي (3.45)، وتثقيف الطلبة بأهم المشاريع الإبداعية الواعدة المتوافقة مع رؤية المملكة 2030 (3.45). أما العبارة الوحيدة التي جاءت بدرجة «عالية» لا «عالية جدًا» فهي إتاحة مقررات اختيارية قائمة على تنفيذ المشاريع الإبداعية ومسجلة في السجل الأكاديمي (3.20).",
+    "The creative-process and product-development dimension averaged 3.37. Its leading items were attending training courses and workshops related to students' creative field (3.45) and informing students about promising creative projects aligned with Saudi Vision 2030 (3.45). The only item in the whole questionnaire rated \"highly\" rather than \"very highly\" important was offering credit-bearing elective courses built around carrying out creative projects (3.20)."
+   ],
+   "subs": [
+    [
+     "تيسير المشاركة في المحافل والمسابقات العالمية (3.42)",
+     "Facilitating participation in international competitions (3.42)"
+    ],
+    [
+     "إيجاد مركز دائم في الجامعة يهتم بالموهوبين والمبدعين والمبتكرين (3.42)",
+     "Establishing a permanent university center for gifted, creative, and innovative students (3.42)"
+    ]
+   ]
+  },
+  {
+   "t": [
+    "اتفاق واسع بين أعضاء هيئة التدريس",
+    "Broad agreement among faculty"
+   ],
+   "p": [
+    "لم تظهر فروق ذات دلالة إحصائية في تقديرات المشاركين لأي من الأبعاد الثلاثة تبعًا للعمر أو الرتبة الأكاديمية أو الجنس أو وجود اهتمام إبداعي لديهم أو سنوات الخدمة. أي أن أعضاء هيئة التدريس، على اختلاف خصائصهم، اتفقوا على الأهمية العالية لهذه الاحتياجات.",
+    "There were no statistically significant differences in ratings on any of the three dimensions by age, academic rank, gender, personal creative interest, or years of service. Faculty members, whatever their background, agreed that these needs are highly important."
+   ]
+  }
+ ],
+ "take_h": [
+  "ما الذي يعنيه ذلك عمليًا؟",
+  "What it means in practice"
+ ],
+ "take": [
+  [
+   "أن توفر الجامعة بيئة محفزة تساعد الطلبة الموهوبين ذوي السمات الإبداعية على تعزيز إنتاجهم الإبداعي والابتكاري.",
+   "Universities should provide a stimulating environment that helps creatively gifted students strengthen their creative and innovative output."
+  ],
+  [
+   "أن تُقدَّم برامج تدريبية وتعليمية تتناغم مع اهتمامات الطلبة الإبداعية، وتشجعهم على العمل في فرق مع طلبة من تخصصات مختلفة ومع أعضاء هيئة التدريس.",
+   "Training and educational programs should match students' creative interests and encourage teamwork with students from other disciplines and with faculty."
+  ],
+  [
+   "أن تُعتمد البرامج والمشاريع والدورات رسميًا في سجل الطالب المهاري، بما يبرز أعماله وإنجازاته الإبداعية.",
+   "Programs, projects, and courses should be formally recognized in the student's skills record, so that creative work and achievements are visible."
+  ],
+  [
+   "أن تدعم الجامعات أعضاء هيئة التدريس وتدرّبهم على تحفيز الطلبة الموهوبين، لأن كثيرًا منهم يخفقون في غياب البيئة المحفزة والأساتذة المراعين لاهتماماتهم.",
+   "Universities should train and support faculty to motivate gifted students, since many such students struggle without a stimulating environment and instructors attentive to their interests."
+  ],
+  [
+   "أن ينوّع أعضاء هيئة التدريس أساليب التدريس، ويتيحوا المرونة في الواجبات والأنشطة الصفية بما يسمح للطلبة باتباع الطريقة التي تتوافق مع رؤاهم الإبداعية.",
+   "Faculty should vary their teaching methods and allow flexibility in assignments and class activities so students can work in ways that fit their creative vision."
+  ]
+ ],
+ "close": [
+  "تخلص الدراسة إلى أن أعضاء هيئة التدريس يرون في الاحتياجات الثلاثين خدمات ذات أهمية عالية، ينبغي أن تُبنى عليها برامج الجامعات السعودية لتعزيز الإنتاج الإبداعي والابتكاري لدى طلبتها الموهوبين.",
+  "The study concludes that faculty see all thirty needs as highly important, and that Saudi universities should build their programs for gifted students' creative and innovative work around them."
+ ]
+}

@@ -28,7 +28,8 @@ echo "== Sources backup"
 mkdir -p dist/_src/books dist/_src/data dist/_src/src
 cp build.py build_books.py update.sh dist/_src/
 cp data/*.json dist/_src/data/; cp src/*.css src/*.js src/*.html dist/_src/src/ 2>/dev/null || true
-cp -r src/books src/explainers dist/_src/src/ 2>/dev/null || true
+cp -r src/books src/explainers src/figures dist/_src/src/ 2>/dev/null || true
+mkdir -p dist/_src/data/articles dist/_src/tools && cp data/articles/*.json dist/_src/data/articles/ && cp tools/figs.py tools/ARTICLE_SPEC.md dist/_src/tools/
 cp books/books.json books/tr_tool.py books/UPDATE.md dist/_src/books/
 rm -rf dist/_src/books/_tr && cp -r books/_tr dist/_src/books/_tr && find dist/_src/books/_tr -name '*.todo.json' -delete
 

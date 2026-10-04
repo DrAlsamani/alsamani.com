@@ -1,0 +1,94 @@
+{
+ "q": [
+  "هل المعلمون مستعدون لتعليم الطلاب الموهوبين ذوي الإعاقة؟",
+  "Are teachers prepared to teach gifted students with disabilities?"
+ ],
+ "lede": [
+  "في فصول الدمج طلاب يجمعون بين قدرات عالية واحتياجات مرتبطة بإعاقة، ويفوتهم كثير من الدعم. سألت هذه الدراسة اثني عشر معلمًا في حائل عما يحتاجونه من تطوير مهني للتعرف على هؤلاء الطلاب ودعمهم.",
+  "Inclusive classrooms include students who combine high ability with disability-related needs, and many go underserved. This study asked twelve teachers in Hail what professional development they need to identify and support these students."
+ ],
+ "stats": [
+  [
+   "12",
+   "معلمًا ومعلمة",
+   "teachers"
+  ],
+  [
+   "4",
+   "مدارس في حائل",
+   "schools in Hail"
+  ],
+  [
+   "5 · 3 · 4",
+   "تعليم عام · موهوبين · تربية خاصة",
+   "general · gifted · special education"
+  ],
+  [
+   "3",
+   "محاور رئيسة",
+   "major themes"
+  ]
+ ],
+ "fig_cap": [
+  "المعلمون يعرفون المفهوم، لكن استعدادهم العملي أقل بكثير؛ والتدريب القائم على الممارسة هو ما يسد الفجوة.",
+  "Teachers understand the concept, but their practical readiness lags far behind; practice-oriented training is what closes the gap."
+ ],
+ "themes_h": [
+  "ماذا وجدت الدراسة؟",
+  "What the study found"
+ ],
+ "themes": [
+  {
+   "t": [
+    "فهم الاحتياجات الفريدة لمزدوجي الاستثنائية",
+    "Understanding the unique needs of 2e students"
+   ],
+   "p": [
+    "يدرك المعلمون أن هؤلاء الطلاب مختلفون، لكن فهمهم لاحتياجاتهم المتداخلة يبقى عامًا.",
+    "Teachers recognize that these students are different, but their grasp of their overlapping needs remains general."
+   ]
+  },
+  {
+   "t": [
+    "معوقات التدريب الفعال",
+    "Barriers to effective training"
+   ],
+   "p": [
+    "يصف المعلمون تدريبًا قليلًا أو بعيدًا عن واقع الفصل.",
+    "Teachers describe training that is scarce or far removed from classroom reality."
+   ]
+  },
+  {
+   "t": [
+    "أثر ضعف التدريب في التعليم والتعلم",
+    "Impact of inadequate training"
+   ],
+   "p": [
+    "ينعكس ضعف الإعداد على التعرف على هؤلاء الطلاب وعلى ما يُقدَّم لهم في الفصل.",
+    "Weak preparation shows in how these students are identified and in what they receive in class."
+   ]
+  }
+ ],
+ "take_h": [
+  "ما الذي يعنيه ذلك عمليًا؟",
+  "What it means in practice"
+ ],
+ "take": [
+  [
+   "برامج تطوير مهني تطبيقية في التعرف على مزدوجي الاستثنائية ودعمهم.",
+   "Practice-oriented professional development on identifying and supporting 2e students."
+  ],
+  [
+   "تدريب مشترك يجمع معلمي التعليم العام والموهوبين والتربية الخاصة.",
+   "Joint training that brings general, gifted and special education teachers together."
+  ],
+  [
+   "إدراج ازدواجية الاستثنائية في برامج إعداد المعلمين بالجامعات.",
+   "Include twice-exceptionality in university teacher-preparation programs."
+  ]
+ ],
+ "close": [
+  "الوعي وحده لا يكفي؛ المعلم يحتاج إلى تدريب يضعه أمام الطالب الحقيقي في الفصل.",
+  "Awareness alone is not enough; teachers need training that puts them in front of the real student in the classroom."
+ ]
+}

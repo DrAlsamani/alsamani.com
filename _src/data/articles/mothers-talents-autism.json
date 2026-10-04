@@ -1,0 +1,109 @@
+{
+ "q": [
+  "كيف تكتشف الأمهات مواهب أطفالهن ذوي التوحد، وكيف يدعمنها؟",
+  "How do mothers discover and support the talents of their autistic children?"
+ ],
+ "lede": [
+  "تنشغل معظم أبحاث التوحد بما لا يستطيعه الطفل. تنظر هذه الدراسة إلى الجهة الأخرى: إلى ما يُحسنه، ومن خلال أقرب الناس إليه. قابلت الدراسة تسع أمهات سعوديات، واستمعت إلى قصصهن مع مواهب أطفالهن ونقاط قوتهم.",
+  "Most autism research focuses on what a child cannot do. This study looks the other way: at what the child does well, through the people closest to them. It interviewed nine Saudi mothers about their children's talents and strengths."
+ ],
+ "stats": [
+  [
+   "9",
+   "أمهات في مقابلات معمقة",
+   "mothers in in-depth interviews"
+  ],
+  [
+   "5",
+   "محاور مترابطة",
+   "interconnected themes"
+  ],
+  [
+   "IPA",
+   "تحليل ظاهراتي تفسيري",
+   "interpretative phenomenological analysis"
+  ]
+ ],
+ "fig_cap": [
+  "المحاور الخمسة بوصفها رحلة: من بصيص الأمل الأول إلى المطالبة بتعليم يقوم على نقاط القوة.",
+  "The five themes as a journey: from the first glimpse of hope to a call for strengths-based education."
+ ],
+ "themes_h": [
+  "ماذا وجدت الدراسة؟",
+  "What the study found"
+ ],
+ "themes": [
+  {
+   "t": [
+    "بصيص أمل",
+    "A glimpse of hope"
+   ],
+   "p": [
+    "تبدأ القصة غالبًا بلحظة تلاحظ فيها الأم قدرة غير متوقعة لدى طفلها، فتتغير نظرتها إليه وإلى مستقبله.",
+    "The story often begins when a mother notices an unexpected ability in her child, which changes how she sees the child and the future."
+   ]
+  },
+  {
+   "t": [
+    "اعتراف مؤسسي محدود",
+    "Limited institutional recognition"
+   ],
+   "p": [
+    "تصف الأمهات مدارس ومراكز تركّز على جوانب القصور، ونادرًا ما تلتفت إلى ما يتميز به الطفل.",
+    "Mothers describe schools and centers that focus on deficits and rarely notice what the child excels at."
+   ]
+  },
+  {
+   "t": [
+    "مناصرة من البيت",
+    "Advocacy at home"
+   ],
+   "p": [
+    "حين يغيب الاعتراف الرسمي، تبني الأمهات ممارسات منزلية غير رسمية لرعاية نقاط القوة وتنميتها.",
+    "When formal recognition is missing, mothers build informal home practices to nurture and grow their children's strengths."
+   ]
+  },
+  {
+   "t": [
+    "اعتراف اجتماعي مشروط",
+    "Conditional social acknowledgment"
+   ],
+   "p": [
+    "يعترف المحيط بمواهب الطفل أحيانًا، لكن هذا الاعتراف يبقى مشروطًا ومتقلبًا.",
+    "Those around the child sometimes acknowledge the talents, but that acknowledgment stays conditional and uneven."
+   ]
+  },
+  {
+   "t": [
+    "تعليم يقوم على نقاط القوة",
+    "A strengths-based approach"
+   ],
+   "p": [
+    "تتفق الأمهات على حاجة أطفالهن إلى نهج تعليمي يبدأ مما يُحسنونه.",
+    "Mothers agree that their children need an educational approach that starts from what they do well."
+   ]
+  }
+ ],
+ "take_h": [
+  "ما الذي يعنيه ذلك عمليًا؟",
+  "What it means in practice"
+ ],
+ "take": [
+  [
+   "إدراج المواهب ونقاط القوة في تقييم الأطفال ذوي التوحد، لا جوانب القصور وحدها.",
+   "Include talents and strengths in assessing autistic children, not only limitations."
+  ],
+  [
+   "إشراك الأمهات شريكات في الملاحظة والتخطيط التربوي.",
+   "Involve mothers as partners in observation and educational planning."
+  ],
+  [
+   "تبنّي نهج قائم على نقاط القوة في برامج التربية الخاصة.",
+   "Adopt a strengths-based approach in special education programs."
+  ]
+ ],
+ "close": [
+  "الأم هي الملاحِظة الأولى لمواهب طفلها والمدافعة عنها؛ والمطلوب أن تراها المؤسسات أيضًا.",
+  "The mother is the first to observe and champion her child's strengths; institutions need to see them too."
+ ]
+}
