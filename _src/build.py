@@ -202,10 +202,10 @@ def books_band():
 
 def photo_band():
     return f'''<section class="pband2">
-  <a class="pb2-hero" href="photography/index.html" style="background-image:url(img/ph09.webp)">
+  <a class="pb2-hero" href="photography/index.html" style="background-image:url(img/ph21.webp)">
     <span class="pb2-text"><span class="eyebrow">{bi('التصوير', 'Photography')}</span><b>{bi('الطبيعة والحياة الفطرية والتراث', 'Landscape, wildlife and heritage')}</b><span class="pb2-go">{bi('معرض الصور', 'View the gallery')} <i class="chev"></i></span></span>
   </a>
-  <div class="pb2-row"><a href="photography/index.html" style="background-image:url(img/ph15.webp)" aria-label="Photography"></a><a href="photography/index.html" style="background-image:url(img/ph19.webp)" aria-label="Photography"></a></div>
+  <div class="pb2-row"><a href="photography/index.html" style="background-image:url(img/ph22.webp)" aria-label="Photography"></a><a href="photography/index.html" style="background-image:url(img/ph19.webp)" aria-label="Photography"></a></div>
 </section>'''
 
 def share_bar(r):

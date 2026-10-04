@@ -706,10 +706,10 @@ html[lang="ar"] .hero2 h1{letter-spacing:0;line-height:1.25}
 </article></div>
 </section>
 <section class="pband2">
-  <a class="pb2-hero" href="photography/index.html" style="background-image:url(img/ph09.webp)">
+  <a class="pb2-hero" href="photography/index.html" style="background-image:url(img/ph21.webp)">
     <span class="pb2-text"><span class="eyebrow"><span class="ar">التصوير</span><span class="en">Photography</span></span><b><span class="ar">الطبيعة والحياة الفطرية والتراث</span><span class="en">Landscape, wildlife and heritage</span></b><span class="pb2-go"><span class="ar">معرض الصور</span><span class="en">View the gallery</span> <i class="chev"></i></span></span>
   </a>
-  <div class="pb2-row"><a href="photography/index.html" style="background-image:url(img/ph15.webp)" aria-label="Photography"></a><a href="photography/index.html" style="background-image:url(img/ph19.webp)" aria-label="Photography"></a></div>
+  <div class="pb2-row"><a href="photography/index.html" style="background-image:url(img/ph22.webp)" aria-label="Photography"></a><a href="photography/index.html" style="background-image:url(img/ph19.webp)" aria-label="Photography"></a></div>
 </section>
 <section id="updates" class="alt">
   <div class="sec-head"><div><p class="eyebrow"><span class="ar">المستجدات</span><span class="en">Updates</span></p><h2><span class="ar">آخر الأعمال والأخبار</span><span class="en">Recent work and news</span></h2></div>
@@ -801,7 +801,7 @@ html[lang="ar"] .hero2 h1{letter-spacing:0;line-height:1.25}
   const g=$('gallery');
   if(g){
     const base=(document.querySelector('main')?.dataset.base)||'';
-    const order=[15,19,13,7,3,12,20,10,4,8,16,5,2,9,17,1,18,11,6,14];const pad=n=>String(n).padStart(2,'0');
+    const order=[21,22,15,19,13,7,3,12,20,10,4,8,16,5,2,9,17,1,18,11,6,14];const pad=n=>String(n).padStart(2,'0');
     const lb=$('lb'),li=$('lbi');let cur=0;
     function open(i){cur=(i+order.length)%order.length;li.src=base+'img/ph'+pad(order[cur])+'.webp';lb.hidden=false}
     order.forEach((n,i)=>{const b=document.createElement('button');b.type='button';b.innerHTML='<img loading="lazy" src="'+base+'img/th'+pad(n)+'.webp" alt="">';b.onclick=()=>open(i);g.appendChild(b)});
