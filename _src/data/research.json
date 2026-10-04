@@ -525,7 +525,6 @@
  {
   "slug": "twice-exceptionality-primary-barriers",
   "date": "2026-02",
-  "light": true,
   "orig_title": "Twice-exceptionality in primary schools: Teachers’ perceived barriers to identifying and supporting 2e students",
   "title_ar": "ازدواجية الاستثنائية في المدارس الابتدائية: المعوقات التي يدركها المعلمون في التعرف على الطلاب مزدوجي الاستثنائية ودعمهم",
   "journal": "Acta Psychologica",
@@ -541,7 +540,6 @@
  {
   "slug": "successful-innovators-phenomenology",
   "date": "2023",
-  "light": true,
   "orig_title": "The development of innovation for the creatively gifted: A phenomenological study of the lived experiences of successful outstanding innovators",
   "title_ar": "تنمية الابتكار لدى الموهوبين إبداعيًا: دراسة ظاهراتية للخبرات المعيشة لمبتكرين متميزين ناجحين",
   "journal": "International Journal of Educational Sciences",
@@ -557,7 +555,6 @@
  {
   "slug": "creatively-gifted-university-needs",
   "date": "2023",
-  "light": true,
   "orig_lang": "ar",
   "orig_title": "احتياجات الطلبة الموهوبين ذوي السمات الإبداعية والابتكارية في المرحلة الجامعية لتحفيز الإبداع والابتكار",
   "title_ar": "احتياجات الطلبة الموهوبين ذوي السمات الإبداعية والابتكارية في المرحلة الجامعية لتحفيز الإبداع والابتكار",
@@ -618,5 +615,20 @@
   "summary_en": "A reference chapter in Springer Nature's Dictionary of Disability and Biomedical Research defining twice-exceptionality and explaining how giftedness and disability interact within one individual, with consequences for identification and support.",
   "cite": "Alsamani, O. A. (2026). Twice-exceptionality. In G. Bennett &amp; E. Goodall (Eds.), <i>Dictionary of Disability and Biomedical Research</i>. Springer Nature. https://doi.org/10.1007/978-981-92-1629-1_266-1",
   "chapter": true
+ },
+ {
+  "slug": "mental-health-disability-prevention",
+  "date": "2024-11-01",
+  "orig_title": "Promoting mental health and wellbeing as means to prevent disability: a review",
+  "title_ar": "تعزيز الصحة النفسية والرفاه وسيلةً للوقاية من الإعاقة: مراجعة",
+  "journal": "Frontiers in Public Health",
+  "venue": "Frontiers in Public Health, 12, 1425535",
+  "kind_ar": "مقال محكّم · مراجعة سردية",
+  "kind_en": "Peer-reviewed article · Narrative review",
+  "authors_en": "Yasir A. Alsamiri, Malik A. Hussain, Omar A. Alsamani, Abdulrahman A. Al bulayhi",
+  "authors_ar": "ياسر عايض السميري، مالك حسين، عمر عبدالله الصمعاني، عبدالرحمن البليهي",
+  "doi": "10.3389/fpubh.2024.1425535",
+  "url": "https://www.frontiersin.org/journals/public-health/articles/10.3389/fpubh.2024.1425535/full",
+  "cite": "Alsamiri, Y. A., Hussain, M. A., Alsamani, O. A., & Al bulayhi, A. A. (2024). Promoting mental health and wellbeing as means to prevent disability: A review. <i>Frontiers in Public Health, 12</i>, 1425535. https://doi.org/10.3389/fpubh.2024.1425535"
  }
 ]

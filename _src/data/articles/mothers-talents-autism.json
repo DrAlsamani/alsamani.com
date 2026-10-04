@@ -1,28 +1,64 @@
 {
  "q": [
-  "كيف تكتشف الأمهات مواهب أطفالهن ذوي التوحد، وكيف يدعمنها؟",
-  "How do mothers discover and support the talents of their autistic children?"
+  "كيف تكتشف الأمهات مواهب أطفالهن ذوي التوحد، وكيف يرعينها؟",
+  "How do mothers discover and nurture the talents of their autistic children?"
  ],
  "lede": [
-  "تنشغل معظم أبحاث التوحد بما لا يستطيعه الطفل. تنظر هذه الدراسة إلى الجهة الأخرى: إلى ما يُحسنه، ومن خلال أقرب الناس إليه. قابلت الدراسة تسع أمهات سعوديات، واستمعت إلى قصصهن مع مواهب أطفالهن ونقاط قوتهم.",
-  "Most autism research focuses on what a child cannot do. This study looks the other way: at what the child does well, through the people closest to them. It interviewed nine Saudi mothers about their children's talents and strengths."
+  "تنطلق معظم الأطر التشخيصية والتربوية في مجال التوحد مما لا يستطيعه الطفل، وتترك ما يُحسنه في الظل. تقترب هذه الدراسة من الجهة الأخرى عبر أقرب الناس إلى الطفل: استمعت إلى تسع أمهات سعوديات يتحدثن عن لحظة اكتشاف موهبة أطفالهن، وعن محاولاتهن رعايتها في بيئة لا تلتفت إليها كثيرًا.",
+  "Most diagnostic and educational frameworks in autism start from what a child cannot do, leaving what the child does well in the background. This study approaches the question from the other side, through the people closest to the child: it listened to nine Saudi mothers describe discovering their children's talents and trying to nurture them in settings that rarely notice them."
  ],
  "stats": [
   [
    "9",
-   "أمهات في مقابلات معمقة",
+   "أمهات في مقابلات معمّقة",
    "mothers in in-depth interviews"
+  ],
+  [
+   "4",
+   "مدن سعودية",
+   "Saudi cities"
+  ],
+  [
+   "60–90",
+   "دقيقة لكل مقابلة",
+   "minutes per interview"
   ],
   [
    "5",
    "محاور مترابطة",
    "interconnected themes"
-  ],
-  [
-   "IPA",
-   "تحليل ظاهراتي تفسيري",
-   "interpretative phenomenological analysis"
   ]
+ ],
+ "sections": [
+  {
+   "h": [
+    "لماذا الأمهات؟",
+    "Why mothers?"
+   ],
+   "p": [
+    "يتزايد الاهتمام في أدبيات التربية الخاصة بالانتقال من التركيز على القصور إلى الالتفات إلى نقاط القوة، إذ يُظهر كثير من الأفراد ذوي التوحد قدرات مثل الذاكرة المتقدمة والانتباه للتفاصيل وحل المشكلات بطرق إبداعية، ويصف مفهوم «مزدوجي الاستثنائية» من يجمعون بين موهبة وإعاقة في آن. غير أن معظم الممارسات القائمة على نقاط القوة ما زالت نظرية. والأم، بحكم رعايتها اليومية، تلاحظ هذه القدرات غالبًا قبل أي تقييم رسمي، ومع ذلك نادرًا ما تُسأل عنها. وفي السياق السعودي، حيث الوعي المجتمعي بالتوحد ما زال محدودًا ونادرًا ما تتضمن الأنظمة التعليمية تدخلات قائمة على نقاط القوة، تبقى تجربة الأمهات في هذا الجانب قليلة الدراسة.",
+    "Special education research has been shifting from a focus on deficits toward attention to strengths: many autistic individuals show abilities such as advanced memory, attention to detail, and creative problem-solving, and the concept of twice-exceptionality describes those who combine high ability with a disability. Yet most strengths-based practices remain largely theoretical. Mothers, through daily caregiving, often notice these abilities before any formal evaluation, but they are rarely asked about them. In Saudi Arabia, where public awareness of autism is still limited and schools rarely build in strengths-based interventions, mothers' experiences of this side of their children's development have received little study."
+   ]
+  },
+  {
+   "h": [
+    "كيف أُجريت الدراسة؟",
+    "How the study worked"
+   ],
+   "p": [
+    "اعتمدت الدراسة المنهج الظاهراتي، وحللت البيانات بطريقة التحليل الظاهراتي التفسيري (IPA). شاركت تسع أمهات سعوديات من أربع مدن (حائل وجدة والخبر والدمام)، لكل منهن طفل مشخَّص رسميًا باضطراب طيف التوحد، ويظهر لديه موهبة أو نقاط قوة ملحوظة، وتشارك الأم بفاعلية في دعمه. تراوحت أعمار الأطفال بين 5 و15 عامًا. أُجريت المقابلات شبه المنظمة باللغة العربية مطلع عام 2025، وجهًا لوجه أو هاتفيًا. حلل الباحث وزميل متخصص في البحث النوعي وفي التوحد النصوص كلٌّ على حدة، واطّلعت المشاركات على ملخصات مقابلاتهن للتحقق من دقة التفسير.",
+    "The study used a phenomenological design, analyzing the data with interpretative phenomenological analysis (IPA). Nine Saudi mothers from four cities (Hail, Jeddah, Al-Khobar, and Dammam) took part; each had a child with a formal autism diagnosis who showed observable talents or strengths, and each was actively involved in supporting that child. The children were 5 to 15 years old. Semi-structured interviews were held in Arabic in early 2025, in person or by phone. The author and a peer with qualitative and autism expertise analyzed the transcripts independently, and participants reviewed summaries of their transcripts to check the accuracy of the interpretations."
+   ]
+  }
+ ],
+ "paper_figs": [
+  {
+   "file": "table1.webp",
+   "cap": [
+    "الجدول 1 من الدراسة: خصائص المشاركات وأطفالهن، ومنها عمر الطفل وعمره عند التشخيص والمدينة.",
+    "Table 1 from the study: characteristics of the participating mothers and their children, including the child's age, age at diagnosis, and city."
+   ]
+  }
  ],
  "fig_cap": [
   "المحاور الخمسة بوصفها رحلة: من بصيص الأمل الأول إلى المطالبة بتعليم يقوم على نقاط القوة.",
@@ -35,52 +71,86 @@
  "themes": [
   {
    "t": [
-    "بصيص أمل",
-    "A glimpse of hope"
+    "بصيص أمل: اكتشاف القدرة",
+    "A glimpse of hope: discovering ability"
    ],
    "p": [
-    "تبدأ القصة غالبًا بلحظة تلاحظ فيها الأم قدرة غير متوقعة لدى طفلها، فتتغير نظرتها إليه وإلى مستقبله.",
-    "The story often begins when a mother notices an unexpected ability in her child, which changes how she sees the child and the future."
+    "وصفت سبع أمهات لحظة ملاحظة موهبة الطفل أول مرة بأنها نقطة تحول إيجابية، وسط رحلة مزدحمة بالتشخيصات وخطط العلاج. أعادت هذه اللحظة تشكيل نظرة الأم إلى طفلها وإلى تجربة الأمومة كلها، وزادها تقدير الآخرين لموهبته، كإشادة أخصائية برسمه، ثقةً بأن له ما يقدّمه.",
+    "Seven mothers described first noticing a talent as a positive turning point in a journey crowded with diagnoses and therapy plans. The moment reframed how they saw their child and their whole experience of mothering, and recognition from others, such as a specialist praising a drawing, reinforced their sense that the child had something to offer."
+   ],
+   "quote": [
+    "«كأنها المرة الأولى التي أرى فيها شيئًا مُبهجًا في ابني… هناك شيء آخر، شيء مُبهج.» (P8)",
+    "“It felt like the first time I saw something joyful in my son … there’s something else, something joyful.” (P8)"
    ]
   },
   {
    "t": [
-    "اعتراف مؤسسي محدود",
-    "Limited institutional recognition"
+    "المؤسسة التي لا ترى",
+    "The blind institution"
    ],
    "p": [
-    "تصف الأمهات مدارس ومراكز تركّز على جوانب القصور، ونادرًا ما تلتفت إلى ما يتميز به الطفل.",
-    "Mothers describe schools and centers that focus on deficits and rarely notice what the child excels at."
+    "عبّرت سبع أمهات عن خيبة أملهن من مختصين ركزوا على ما ينقص الطفل وتجاهلوا قدراته، فلم تؤخذ ملاحظات الأمهات عن نقاط القوة بجدية في التقييم ولا في التخطيط للتدخل. وترى الأمهات أن هذا الإطار يمحو جوانب مهمة من هوية الطفل.",
+    "Seven mothers expressed frustration with professionals who focused on what the child lacked and overlooked what the child could do; their observations about strengths were not taken seriously in assessment or intervention planning. Mothers felt this framing erased meaningful parts of their child's identity."
+   ],
+   "quote": [
+    "«لم يسألني أحد عمّا يحبه أو يُحسنه. دائمًا الحديث عن الخطأ فيه… أخبرتهم أنه سريع جدًا في الأرقام والرياضيات… وهذا مهم.» (P9)",
+    "“No one asked me what he likes or is good at. It’s always about what’s wrong with him … I told them he’s really fast with numbers and math ... this is important.” (P9)"
    ]
   },
   {
    "t": [
-    "مناصرة من البيت",
-    "Advocacy at home"
+    "الأم مدافعةً عن المواهب الخفية",
+    "Maternal advocacy for hidden talents"
    ],
    "p": [
-    "حين يغيب الاعتراف الرسمي، تبني الأمهات ممارسات منزلية غير رسمية لرعاية نقاط القوة وتنميتها.",
-    "When formal recognition is missing, mothers build informal home practices to nurture and grow their children's strengths."
+    "حين غاب الدعم الخارجي، صنعت ست أمهات بيئات تعلّم خاصة في البيت: ألغاز تنمّي المهارات البصرية المكانية، وموسيقى لطفلة تتركز حين تسمع الأغاني، ورسم يتحول إلى وسيلة لتعليم الأرقام. لكن لهذه المناصرة كلفة؛ فقد وصفت أمهات شعورهن بالعزلة والإرهاق وهن يحملن عبئين معًا: متابعة العلاج، وإفساح المجال لنمو جوانب القوة.",
+    "Without outside support, six mothers created their own learning environments at home: puzzles for visual-spatial skills, music for a daughter who focused when songs played, drawing turned into a way to teach numbers. This advocacy came at a cost; several mothers described feeling isolated or overwhelmed as they carried a dual load of managing therapy and making room for strengths to grow."
+   ],
+   "subs": [
+    [
+     "ألغاز وفيديوهات تعليمية في البيت",
+     "Puzzles and instructional videos at home"
+    ],
+    [
+     "الموسيقى مدخلًا للتركيز",
+     "Music as a way into focus"
+    ],
+    [
+     "الرسم وسيلةً لتعلّم الأرقام وغيرها",
+     "Drawing as a route to numbers and more"
+    ]
+   ],
+   "quote": [
+    "«أشعر أنني أمشي هذا الطريق وحدي. أريد من يساعدني على تنمية موهبته، لا إصلاح مشكلاته فقط.» (P2)",
+    "“I feel like I’m walking this road alone. I want someone to help me grow his talent, not just fix his problems.” (P2)"
    ]
   },
   {
    "t": [
-    "اعتراف اجتماعي مشروط",
-    "Conditional social acknowledgment"
+    "الموهبة طريقًا مشروطًا إلى الاعتراف الاجتماعي",
+    "Talent as a conditional route to social recognition"
    ],
    "p": [
-    "يعترف المحيط بمواهب الطفل أحيانًا، لكن هذا الاعتراف يبقى مشروطًا ومتقلبًا.",
-    "Those around the child sometimes acknowledge the talents, but that acknowledgment stays conditional and uneven."
+    "رأت ست أمهات في موهبة الطفل فرصة لتغيير نظرة الآخرين إليه، لكن حديثهن عنها قوبل بالتشكيك أو المجاملة السطحية أو بإعادة الحوار إلى المخاوف المعتادة، حتى داخل العائلة الممتدة. وعشن صراعًا داخليًا بين الرغبة في إبراز قدرات الطفل والخوف من أن يُنظر إليهن بوصفهن ساذجات أو في حالة إنكار. ويتغير الموقف غالبًا حين يرى الآخرون الموهبة بأعينهم، فينتقل من الشفقة إلى الاحترام.",
+    "Six mothers saw their child's talent as a chance to change how others saw the child, but talking about it met with disbelief, polite but shallow praise, or a turn back to conventional concerns, even within the extended family. Mothers felt torn between affirming their child's abilities and fearing they would be seen as naive or in denial. Attitudes often shifted, from sympathy toward respect, once others witnessed the talent themselves."
+   ],
+   "quote": [
+    "«يظن الناس أنني أبالغ أو أتخيل حين أقول إنها تُحسن شيئًا. كأنهم لا يصدقون أن طفلًا ذا توحد يمكن أن يكون موهوبًا.» (P8)",
+    "“People think I’m exaggerating or imagining things when I say she’s good at something. It’s like they don’t believe a child with autism can be gifted.” (P8)"
    ]
   },
   {
    "t": [
-    "تعليم يقوم على نقاط القوة",
-    "A strengths-based approach"
+    "دعوة إلى التعلّم من خلال نقاط القوة",
+    "A call for learning through strengths"
    ],
    "p": [
-    "تتفق الأمهات على حاجة أطفالهن إلى نهج تعليمي يبدأ مما يُحسنونه.",
-    "Mothers agree that their children need an educational approach that starts from what they do well."
+    "اتفقت الأمهات التسع جميعًا على أن المدارس والمراكز العلاجية نادرًا ما توظّف اهتمامات أطفالهن ومواهبهم، وأن البدء مما يحبه الطفل أو يُحسنه ليس مجرد خيار مفضّل، بل مدخل ضروري إلى انتباهه وتفاعله ودافعيته للتعلم.",
+    "All nine mothers agreed that schools and therapy centers rarely draw on their children's interests and talents, and that starting from what a child loves or does well is not merely preferable but a necessary gateway to attention, engagement, and motivation to learn."
+   ],
+   "quote": [
+    "«حين يحاولون تعليمه أشياء لا تهمه، بالكاد يستجيب. لكن حين يتعلق الأمر بما يحبه، يركز… ربما هذا هو المفتاح.» (P4)",
+    "“When they try to teach him things he doesn’t care about, he barely responds. But when it’s about what he loves, he focuses … This may be the key.” (P4)"
    ]
   }
  ],
@@ -90,20 +160,28 @@
  ],
  "take": [
   [
-   "إدراج المواهب ونقاط القوة في تقييم الأطفال ذوي التوحد، لا جوانب القصور وحدها.",
-   "Include talents and strengths in assessing autistic children, not only limitations."
+   "أن تتسع أنظمة التشخيص والتعليم لتشمل الاهتمامات والمواهب ونقاط القوة، إلى جانب جوانب الاحتياج.",
+   "Diagnostic and educational systems should cover interests, talents, and strengths alongside areas of need."
   ],
   [
-   "إشراك الأمهات شريكات في الملاحظة والتخطيط التربوي.",
-   "Involve mothers as partners in observation and educational planning."
+   "أن يتجاوز إعداد المعلمين والمختصين الإكلينيكيين والأخصائيين النفسيين المدرسيين النماذج المرتكزة على القصور، نحو نماذج مستجيبة ثقافيًا تُبرز الإمكانات والفردية.",
+   "Training for educators, clinicians, and school psychologists should move beyond deficit-oriented paradigms toward culturally responsive models that highlight potential and individuality."
   ],
   [
-   "تبنّي نهج قائم على نقاط القوة في برامج التربية الخاصة.",
-   "Adopt a strengths-based approach in special education programs."
+   "أن تُصمَّم مناهج وتدخلات تراعي أساليب التعلم المفضّلة لدى هؤلاء الأطفال وتنطلق من اهتماماتهم ومواهبهم.",
+   "Curricula and interventions should reflect these children's preferred ways of learning and build on their interests and talents."
+  ],
+  [
+   "أن تُدمج رؤى الأمهات في عمليات التشخيص والتخطيط التربوي، لأنهن في موقع فريد لفهم أطفالهن.",
+   "Mothers' perspectives should be built into diagnosis and educational planning, since they are uniquely placed to understand their children."
+  ],
+  [
+   "أن يُوعّى المجتمع بإمكانات الأطفال ذوي التوحد، بما يسهم في مواجهة الوصمة.",
+   "Raising public awareness of the potential of autistic children can help challenge stigma."
   ]
  ],
  "close": [
-  "الأم هي الملاحِظة الأولى لمواهب طفلها والمدافعة عنها؛ والمطلوب أن تراها المؤسسات أيضًا.",
-  "The mother is the first to observe and champion her child's strengths; institutions need to see them too."
+  "الأم هي أول من يلاحظ قدرة طفلها، وأول من يعمل عليها، وأكثر من يثابر في الدفاع عنها؛ والمطلوب أنظمة تشخيص وتعليم ومجتمع تبني على هذه القدرات أيضًا.",
+  "Mothers are the first to observe their child's abilities, the first to act on them, and the most persistent in defending them; diagnostic, educational, and social systems need to build on those strengths as well."
  ]
 }

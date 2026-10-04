@@ -205,7 +205,7 @@ def research_index():
 def research_cards():
     cards = [rcard(r, k == 0) for k, r in enumerate(research[:HOME_RESEARCH])]
     return f'''<section id="research" class="alt">
-  <div class="sec-head"><div><p class="eyebrow">{bi('أحدث الأبحاث', 'Recent research')}</p><h2>{bi('أبحاث منشورة', 'Published research')}</h2></div><a class="more-link" href="research/index.html">{bi('كل الأبحاث', 'All research')} ({len(research)}) <i class="chev"></i></a></div>
+  <div class="sec-head"><div><p class="eyebrow">{bi('أحدث الأبحاث', 'Recent research')}</p><h2>{bi('أبحاث منشورة', 'Published research')}</h2></div><a class="more-link" href="publications/index.html">{bi('كل المنشورات', 'All publications')} ({len(pubs)}) <i class="chev"></i></a></div>
   <div class="rgrid">{''.join(cards)}</div>
 </section>'''
 

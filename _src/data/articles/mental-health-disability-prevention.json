@@ -1,0 +1,145 @@
+{
+ "q": [
+  "هل يمكن أن يكون تعزيز الصحة النفسية طريقًا للوقاية من الإعاقة؟",
+  "Can promoting mental health help prevent disability?"
+ ],
+ "lede": [
+  "لا تقتصر الصحة على الجسد؛ فالصحة النفسية ركن أساسي من أركان الرفاه العام، واضطرابها قد يقيّد قدرة الإنسان على العمل والتعلم ورعاية نفسه حتى يصل إلى حد الإعاقة. ومن هنا راجعت هذه الدراسة الأدبيات المنشورة لتتبّع الصلة بين تعزيز الصحة النفسية والوقاية من الإعاقة، ولتجمع في صورة واحدة ما تتناوله دراسات كثيرة متفرقة: العلاقة بين الجانبين، واستراتيجيات التعزيز، والعوائق، والسياسات.",
+  "Health is not only physical: mental health is one of the key pillars of general welfare, and when it breaks down it can restrict a person's ability to work, learn, and care for themselves to the point of disability. This review examined the published literature on the link between mental health promotion and disability prevention, bringing together in one picture what many studies address separately: the relationship itself, strategies for promotion, barriers, and policy."
+ ],
+ "stats": [
+  [
+   "50",
+   "دراسة استوفت معايير الإدراج في المراجعة بعد الفرز",
+   "articles met the inclusion criteria after screening"
+  ],
+  [
+   "4",
+   "قواعد بيانات بُحث فيها: PubMed وGoogle Scholar وPsycINFO وWeb of Science",
+   "databases searched: PubMed, Google Scholar, PsycINFO, and Web of Science"
+  ],
+  [
+   "11",
+   "عامًا هي المدة الزمنية التي غطّاها البحث في الأدبيات",
+   "years of published literature covered by the search"
+  ],
+  [
+   "14",
+   "إجراءً وخدمةً تلخّصها المراجعة لتعزيز الصحة النفسية والوقاية من الإعاقة",
+   "strategies, facilities, and measures summarized by the review"
+  ]
+ ],
+ "sections": [
+  {
+   "h": [
+    "لماذا هذا السؤال؟",
+    "Why this question?"
+   ],
+   "p": [
+    "رغم تزايد الاهتمام بقضايا الصحة النفسية، ما زال كثيرون يتجنبون طلب المساعدة خشية الوصمة، وقد يؤدي ذلك إلى تفاقم المشكلات النفسية حتى تُضعف أداء الفرد. وتلاحظ المراجعة أن معظم الأبحاث تركّز على جانب واحد أو جوانب قليلة من هذه المسألة، فسعت إلى عرض الصلات بين الصحة النفسية والإعاقة واستراتيجيات التحسين وتحدياته وتطبيقه عبر السياسات في إطار متكامل، بحيث يُنظر إلى الصحة الجسدية والنفسية على قدم المساواة.",
+    "Although more people now address mental health issues, many still avoid seeking help because of stigma, which can allow problems to worsen until they impair functioning. The review notes that most studies focus on one or a few aspects of the issue, so it sets out to present the links among mental health, disability, improvement strategies, their challenges, and policy implementation in an integrated way, treating physical and mental health as equals."
+   ]
+  },
+  {
+   "h": [
+    "كيف أُجريت المراجعة؟",
+    "How the review worked"
+   ],
+   "p": [
+    "اعتمدت الدراسة منهج المراجعة السردية للأدبيات. بُحث في أربع قواعد بيانات باستخدام كلمات مفتاحية مثل «تعزيز الصحة النفسية» و«الرفاه» و«الوقاية من الإعاقة» و«التدخلات في الصحة النفسية» و«برامج الرفاه»، واقتصر البحث على المقالات المحكّمة المنشورة بالإنجليزية خلال الأعوام الأحد عشر السابقة، دون تحديد نطاق جغرافي. واستُبعدت المقالات التي لا تتناول علاقة بين الصحة النفسية والإعاقة، فاستقرت المراجعة على 50 مقالًا. واستُخرجت من كل دراسة بيانات التصميم والعينة والتدخل والنتائج، ثم حُلّلت بتوليف سردي لتحديد الموضوعات والأنماط والفجوات، مع الاستعانة بقائمة التقييم النقدي لمعهد جوانا بريغز عند الحاجة.",
+    "The study is a narrative literature review. Four databases were searched with keywords such as \"mental health promotion,\" \"wellbeing,\" \"disablement prevention,\" \"mental health interventions,\" and \"wellbeing programs.\" The search was limited to peer-reviewed English-language articles published within the past eleven years, with no geographic restriction. Articles that did not address a relationship between mental health and disability were excluded, leaving 50 articles. Design, demographics, intervention details, and findings were extracted from each study and analyzed through narrative synthesis to identify themes, patterns, and gaps, with the Joanna Briggs Institute critical appraisal checklist used where required."
+   ]
+  }
+ ],
+ "paper_figs": [],
+ "themes_h": [
+  "ماذا وجدت المراجعة؟",
+  "What the review found"
+ ],
+ "themes": [
+  {
+   "t": [
+    "الصحة النفسية والإعاقة يغذّي كلٌّ منهما الآخر",
+    "Mental health problems and disability reinforce each other"
+   ],
+   "p": [
+    "تشير الأدبيات إلى أن اضطرابات مثل الاكتئاب والقلق واضطراب ما بعد الصدمة والفصام قد تعوق الحياة اليومية وتحول دون المشاركة الكاملة في المجتمع. فالاكتئاب الشديد يصعّب الحفاظ على العلاقات والعمل ورعاية الذات، والقلق غير المعالج قد يقود إلى سلوكيات التجنب والعزلة. وتضيف الوصمة عائقًا آخر أمام الرعاية والتسهيلات والعمل والسكن والتعليم، فتنشأ حلقة مفرغة: الإعاقة الناتجة عن مشكلات نفسية تزيد الضغوط، فتتدهور الصحة النفسية أكثر.",
+    "The literature indicates that disorders such as depression, anxiety, PTSD, and schizophrenia can hinder daily living and prevent full participation in society. Severe depression makes it hard to keep relationships, work, and self-care; untreated anxiety can lead to avoidance and social isolation. Stigma adds a further barrier to care, accommodations, employment, housing, and education, creating a vicious cycle in which disability arising from mental health problems increases stress and further erodes mental health."
+   ],
+   "subs": [
+    [
+     "ضعف الوظائف المعرفية (الانتباه والذاكرة والوظائف التنفيذية) يحدّ من الاستقلالية",
+     "Cognitive impairment (attention, memory, executive function) limits independent functioning"
+    ],
+    [
+     "اجتماع المشكلات النفسية والجسدية يرفع خطر الإعاقة الجسدية ويعقّد العلاج والتأهيل",
+     "Co-occurring mental and physical problems raise the risk of physical disability and complicate treatment and rehabilitation"
+    ],
+    [
+     "في إحدى الدراسات المستعرضة، كان غير المعالَجين أكثر عرضة بمرتين للإبلاغ عن قيود وظيفية",
+     "In one cited study, people without treatment were twice as likely to report functional restrictions"
+    ]
+   ]
+  },
+  {
+   "t": [
+    "الدعم الاجتماعي درع واقية",
+    "Social support as a protective shield"
+   ],
+   "p": [
+    "يرتبط امتلاك شبكات اجتماعية قوية بانخفاض الضغط والقلق وانخفاض خطر الإعاقة. ويمكن تعزيز هذا الدعم عبر مجموعات الدعم وبرامج المشاركة المجتمعية ومبادرات التعاون المتبادل، بما يبني العلاقات والتعاطف والمرونة النفسية في الأوقات الصعبة.",
+    "Strong social networks are associated with lower stress and anxiety and a lower risk of disability. Support can be strengthened through support groups, community engagement programs, and mutual-help initiatives that build relationships, empathy, and resilience during difficult times."
+   ]
+  },
+  {
+   "t": [
+    "النشاط البدني والعلاج النفسي وإدارة الضغوط",
+    "Exercise, psychological therapy, and stress management"
+   ],
+   "p": [
+    "تعرض المراجعة ثلاث استراتيجيات أخرى: ممارسة الرياضة بانتظام، وقد ارتبطت بتراجع أعراض القلق والاكتئاب وتحسّن جودة الحياة؛ والعلاج النفسي والإرشاد، ومنها العلاج المعرفي السلوكي والتدخلات القائمة على اليقظة الذهنية، مع أهمية إتاحة خدمات منخفضة التكلفة؛ وتقنيات إدارة الضغوط مثل التأمل الواعي والتنفس العميق وإعادة البناء المعرفي، إذ يرتبط الضغط المزمن بالاحتراق والاكتئاب والقلق.",
+    "The review describes three further strategies: regular exercise, linked to reduced anxiety and depressive symptoms and better quality of life; psychotherapy and counseling, including CBT and mindfulness-based interventions, with emphasis on low-cost access; and stress-management techniques such as mindfulness meditation, deep breathing, and cognitive restructuring, since chronic stress is linked to burnout, depression, and anxiety."
+   ]
+  },
+  {
+   "t": [
+    "ثلاثة عوائق رئيسة",
+    "Three main barriers"
+   ],
+   "p": [
+    "تعدّ المراجعة وصمة المرض النفسي العائق الأكبر، إذ قد تدفع الناس إلى تجنّب برامج الوقاية خشية الحكم عليهم. ويليها تفاوت الوصول إلى الخدمات لدى الفئات الأكثر هشاشة بسبب غياب التأمين وحواجز اللغة والثقافة، وهنا قد تسهم خدمات الصحة عن بُعد والبرامج الرقمية، خصوصًا في المناطق النائية. ثم شحّ التمويل، إذ لا تحظى برامج الوقاية غالبًا بالأولوية في تمويل الرعاية الصحية مقارنةً ببرامج العلاج.",
+    "The review identifies mental illness stigma as the major obstacle, since people may avoid prevention programs for fear of being judged or labeled. Next is unequal access to services among vulnerable groups, owing to lack of insurance and language and cultural barriers, where telehealth and digital programs can help, especially in remote areas. Third is scarce funding: prevention programs are often not prioritized in healthcare budgets compared with treatment programs."
+   ]
+  }
+ ],
+ "take_h": [
+  "ما الذي يعنيه ذلك عمليًا؟",
+  "What it means in practice"
+ ],
+ "take": [
+  [
+   "الاستثمار في برامج تعزيز الصحة النفسية والوقاية منها مع التركيز على التدخل المبكر.",
+   "Invest in mental health promotion and prevention programs that focus on early intervention."
+  ],
+  [
+   "دمج الفحص والعلاج النفسي في الرعاية الصحية الأولية، وإدراج فحص الصحة النفسية ضمن تقييمات الوقاية من الإعاقة الدورية.",
+   "Integrate mental health screening and treatment into primary care, and add mental health screening to routine disability-prevention assessments."
+  ],
+  [
+   "تدريب مختصي الصحة النفسية ومقدمي خدمات الوقاية من الإعاقة على التدخلات المبنية على الأدلة ومهارات التوعية والإرشاد.",
+   "Train mental health specialists and disability-prevention professionals in evidence-based interventions, awareness, and counseling skills."
+  ],
+  [
+   "تعزيز التعاون بين مقدمي الرعاية الصحية والمؤسسات المجتمعية والتعليمية والجهات الحكومية، وربط خدمات الصحة النفسية بخدمات الإعاقة.",
+   "Foster collaboration among healthcare providers, community and educational institutions, and government bodies, and link mental health services with disability services."
+  ],
+  [
+   "إجراء دراسات طولية تتابع المشاركين في برامج الوقاية، وتبنّي نهج يتمحور حول الفرد ويشركه في التخطيط.",
+   "Conduct longitudinal studies following participants in prevention programs, and adopt person-centered approaches that involve people in planning."
+  ]
+ ],
+ "close": [
+  "تخلص المراجعة إلى أن تعزيز الصحة النفسية والرفاه، والتدخل المبكر على مستوى المجتمع والدولة، سبيلٌ لكسر الحلقة المفرغة بين الاضطراب النفسي والإعاقة، ونحو مجتمع أكثر صحة وشمولًا.",
+  "The review concludes that promoting mental health and wellbeing, with early intervention at community and national levels, is a way to break the vicious cycle between mental health problems and disability and to build a healthier, more inclusive society."
+ ]
+}

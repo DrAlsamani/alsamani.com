@@ -1,0 +1,183 @@
+{
+ "q": [
+  "لماذا يصعب على المعلمين اكتشاف الطلاب مزدوجي الاستثنائية ودعمهم؟",
+  "Why do teachers struggle to identify and support twice-exceptional students?"
+ ],
+ "lede": [
+  "الطلاب مزدوجو الاستثنائية موهوبون ولديهم صعوبات تعلم في آنٍ واحد، وكثيرًا ما يبقون غير مرئيين في الفصول العادية، فلا تُستثمر مواهبهم ولا تُلبّى احتياجاتهم. سألت هذه الدراسة 200 معلم ومعلمة في 20 مدرسة ابتدائية حكومية في المملكة العربية السعودية عن العوائق التي تحول دون اكتشاف هؤلاء الطلاب ودعمهم.",
+  "Twice-exceptional (2e) students are both gifted and have learning disabilities, and they often remain invisible in mainstream classrooms, their talents untapped and their difficulties unmet. This study asked 200 teachers in 20 Saudi public primary schools what stands in the way of identifying and supporting these students."
+ ],
+ "stats": [
+  [
+   "200",
+   "معلم ومعلمة قدّموا إجابات مفتوحة مفصّلة",
+   "teachers gave detailed open-ended responses"
+  ],
+  [
+   "20",
+   "مدرسة ابتدائية حكومية",
+   "public primary schools"
+  ],
+  [
+   "12",
+   "سنة متوسط الخبرة التدريسية",
+   "years of teaching experience on average"
+  ],
+  [
+   "7",
+   "عوائق فرعية ضمن محورين رئيسيين",
+   "sub-themes across two main themes"
+  ]
+ ],
+ "sections": [
+  {
+   "h": [
+    "موهبة تخفي صعوبة، وصعوبة تحجب موهبة",
+    "When giftedness masks difficulty, and difficulty hides giftedness"
+   ],
+   "p": [
+    "قد تُخفي قدرات الطالب الموهوب صعوبات التعلم لديه فيبدو طالبًا عاديًا، وقد يطغى التركيز على صعوبات التعلم على موهبته فيُعامل من زاوية القصور وحدها. وفي المملكة العربية السعودية لا يوجد حتى الآن نظام متخصص لاكتشاف هذه الفئة ودعمها، ولا تحظى باعتراف رسمي بوصفها فئة مستقلة.",
+    "A gifted student's abilities can mask a learning disability, making the student look like a typical learner; conversely, a focus on the disability can overshadow the student's giftedness and lead to a deficit-oriented approach. In Saudi Arabia, there is not yet a specialized system for identifying and supporting 2e students, and they lack formal recognition as a distinct group."
+   ]
+  },
+  {
+   "h": [
+    "كيف أُجريت الدراسة؟",
+    "How the study worked"
+   ],
+   "p": [
+    "اعتمدت الدراسة تصميمًا نوعيًا مقطعيًا، واستندت إلى نموذج غانييه المتمايز للموهبة والتفوق (DMGT) ومفهوم منطقة النمو القريبة عند فيجوتسكي. وُزّعت استبانة بأسئلة مفتوحة على معلمين لديهم ثلاث سنوات خبرة على الأقل وسبق لهم التعامل مع طلاب مزدوجي الاستثنائية، بعد تجريبها على ثمانية معلمين. وحلّل باحثان الإجابات بأسلوب تحليل المحتوى الاستقرائي، وبلغ معامل الاتفاق بينهما (كابا كوهين) 0.83.",
+    "The study used a qualitative, cross-sectional design grounded in Gagné's Differentiated Model of Giftedness and Talent (DMGT) and Vygotsky's Zone of Proximal Development. An open-ended questionnaire, piloted with eight teachers, went to teachers with at least three years of experience and prior encounters with 2e students. Two coders analyzed the responses through inductive content analysis, reaching a Cohen's κ of 0.83."
+   ]
+  }
+ ],
+ "paper_figs": [
+  {
+   "file": "table2.webp",
+   "cap": [
+    "الخريطة الموضوعية لنتائج الدراسة: محوران رئيسيان وسبعة عوائق فرعية مع اقتباس توضيحي من المعلمين لكل منها (الجدول 2 من الدراسة).",
+    "Thematic map of the results: two main themes and seven sub-themes, each with an illustrative teacher quotation (Table 2 of the paper)."
+   ]
+  }
+ ],
+ "themes_h": [
+  "ماذا وجدت الدراسة؟",
+  "What the study found"
+ ],
+ "themes": [
+  {
+   "t": [
+    "الحاجة إلى معلمين بخبرة مزدوجة",
+    "The need for dual-trained teachers"
+   ],
+   "p": [
+    "رأى معظم المشاركين أن المعلمين المؤهلين في تعليم الموهوبين والتربية الخاصة معًا أقدر على إدراك التداخل بين القدرات المتقدمة وصعوبات التعلم، واقترح بعضهم غرف مصادر يعمل فيها معلمون بهذه الخبرة المزدوجة.",
+    "Most participants felt that teachers trained in both gifted and special education are better able to recognize the interplay between advanced abilities and learning difficulties; some proposed resource rooms staffed by educators with this dual expertise."
+   ],
+   "quote": [
+    "«أعتقد أن اكتشاف الطلاب مزدوجي الاستثنائية ينبغي أن يتولاه معلمون مدرَّبون في تعليم الموهوبين والتربية الخاصة معًا.»",
+    "“I believe identifying 2e students should be handled by educators trained in both gifted education and special education.”"
+   ]
+  },
+  {
+   "t": [
+    "فصول مكتظة",
+    "Overcrowded classrooms"
+   ],
+   "p": [
+    "تحرم الأعداد الكبيرة في الفصل المعلمَ من الوقت اللازم لملاحظة كل طالب وتقييمه، وهي الوسيلة الرئيسة التي يعتمد عليها المعلمون في الاكتشاف. ودعا بعض المشاركين إلى تقليص أعداد الطلاب أو توفير كوادر مساندة.",
+    "Large classes leave teachers without the time to observe and assess each student, which is their main means of identification. Some participants called for smaller classes or additional support staff."
+   ],
+   "quote": [
+    "«أجد صعوبة في اكتشاف الطلاب مزدوجي الاستثنائية لأن في فصلي أكثر من 35 طالبًا.»",
+    "“I have difficulty identifying 2e as I have more than 35 students in my class.”"
+   ]
+  },
+  {
+   "t": [
+    "نقص التدريب",
+    "A lack of training"
+   ],
+   "p": [
+    "عبّر جميع المشاركين عن قلقهم من غياب التدريب المتخصص، إذ يصعب دونه التمييز بين علامات الموهبة وأعراض صعوبات التعلم، مما يقود إلى خطأ في التصنيف أو دعم غير كافٍ. وأشار النقاش إلى أن أغلبهم لم يكونوا على علم بوجود هذه الفئة أصلًا.",
+    "All participants voiced concern about the lack of specialized training; without it, distinguishing signs of giftedness from symptoms of a learning disability is hard, leading to misidentification or inadequate support. The discussion notes that most respondents were unaware that this group of students existed."
+   ],
+   "quote": [
+    "«من دون تدريب مناسب يصعب أن أعرف هل سلوك الطالب ناتج عن الموهبة أم عن صعوبة تعلم.»",
+    "“Without proper training, it's challenging to tell whether a student's behavior is due to giftedness or a learning disability.”"
+   ]
+  },
+  {
+   "t": [
+    "تعاون يعوقه ضيق الوقت",
+    "Collaboration, limited by time"
+   ],
+   "p": [
+    "عدّ المعلمون التعاون بين معلمي التربية الخاصة ومعلمي الفصول العادية من أفضل سبل الدعم، كالتخطيط المشترك للدروس وإعداد خطط تربوية فردية تراعي الموهبة والصعوبة معًا، لكن إيجاد وقت تخطيط مشترك وتنسيق الجداول يظل تحديًا.",
+    "Teachers saw collaboration between specialist and mainstream teachers as one of the best forms of support, including co-planning lessons and building IEPs that address both strengths and disabilities, but finding common planning time and aligning schedules remains a challenge."
+   ],
+   "quote": [
+    "«التعاون بين المعلمين المتخصصين ومعلمي الفصول العادية من أفضل الطرق لدعم الطلاب مزدوجي الاستثنائية، لأنهم يستطيعون العمل معًا على كل جانب من جوانب احتياجات الطالب.»",
+    "“Collaboration between specialist teachers and mainstream classroom teachers is one of the best ways to support 2e because they can work together on every aspect of the student's needs.”"
+   ]
+  },
+  {
+   "t": [
+    "التمويل وحدود المسؤولية",
+    "Funding and unclear responsibility"
+   ],
+   "p": [
+    "تحدث المعلمون عن مواد قديمة ونقص في الكوادر بسبب محدودية التمويل، وعن تمويل ثابت لبرامج صعوبات التعلم يقابله شح في مخصصات الموهوبين وغياب تام لمخصصات مزدوجي الاستثنائية. كما برز سؤال: من المسؤول عن دعم هؤلاء الطلاب، المعلم المتخصص أم جميع المعلمين؟ واتفق كثيرون على أن لوزارة التعليم دورًا محوريًا في توفير الموارد والتدريب والإرشادات.",
+    "Teachers described outdated materials and too few support staff because of limited funds, with steady funding for learning disabilities, scarce allocations for giftedness, and none for 2e. They also debated who should be responsible for these students, specialists or all teachers, with wide agreement that the Ministry of Education should play a pivotal role in providing resources, training, and guidance."
+   ],
+   "quote": [
+    "«ينبغي أن تموّل وزارة التعليم جميع برامج مزدوجي الاستثنائية وتجعلها متاحة لجميع المعلمين في جميع المدارس.»",
+    "“The Ministry of Education should fund all 2e programs and make them accessible to all teachers in all schools.”"
+   ]
+  },
+  {
+   "t": [
+    "إعداد مستمر لا دورة واحدة",
+    "Ongoing preparation, not a single course"
+   ],
+   "p": [
+    "أكد معظم المشاركين أهمية إعداد جميع المعلمين لدعم هؤلاء الطلاب، وأفاد من تلقّوا تدريبًا بأنه حسّن قدرتهم على الاكتشاف وثقتهم في التدريس ويسّر التعاون بينهم، لكنهم شددوا على أن التطوير المهني يجب أن يكون مستمرًا ومتجددًا.",
+    "Most participants stressed preparing all teachers to support 2e students. Those who had received training said it improved their identification, their confidence, and staff collaboration, but they emphasized that professional development must be continuous and updated."
+   ],
+   "quote": [
+    "«مع أن التدريب الأولي كان مفيدًا، فإن التطوير المهني المستمر باستراتيجيات وبحوث محدَّثة أمر ضروري. ينبغي أن تقدم الوزارة ورش عمل منتظمة.»",
+    "“While initial training was helpful, continuous professional development with updated strategies and research is essential. The Ministry should offer regular workshops.”"
+   ]
+  }
+ ],
+ "take_h": [
+  "ما الذي يعنيه ذلك عمليًا؟",
+  "What it means in practice"
+ ],
+ "take": [
+  [
+   "اعتراف رسمي بفئة مزدوجي الاستثنائية وتعريف واضح لها في السياسة الوطنية، للحد من الخطأ في التصنيف وتجاوز التركيز على جانب الإعاقة وحده.",
+   "Formal recognition and a national policy definition of 2e, to reduce misidentification and move schools beyond a focus on the disability alone."
+  ],
+  [
+   "اكتشاف متعدد المحكات يجمع ملاحظات المعلمين وملفات الإنجاز ونتائج الذكاء والتحصيل ومقاييس الإبداع، للكشف عن جوانب القوة والصعوبة معًا.",
+   "Multi-criteria identification combining teacher observation, portfolios, IQ and achievement scores, and creativity measures to capture both strengths and disabilities."
+  ],
+  [
+   "تدريب لجميع المعلمين يجمع بين مهارات تعليم الموهوبين والتربية الخاصة، مع تطوير مهني مستمر.",
+   "Training for all teachers that combines gifted- and special-education skills, with ongoing professional development."
+  ],
+  [
+   "فصول أصغر ووقت مجدول للتعاون، وسياسة تنظّم العمل المشترك بين معلمي الموهوبين ومعلمي التربية الخاصة.",
+   "Smaller classes and scheduled collaboration time, with policy that systematizes joint work between gifted and special-education teachers."
+  ],
+  [
+   "تمويل مخصص يربط أنشطة الإثراء بالدعم التعليمي الإضافي ويوفر الأدوات المساعدة، مع رصد معدلات الاكتشاف والدعم لبناء قاعدة أدلة محلية.",
+   "Dedicated funds linking enrichment with extra learning support and covering assistive tools, alongside tracking identification and support rates to build a local evidence base."
+  ]
+ ],
+ "close": [
+  "من دون اعتراف رسمي ودعم وتدريب كافٍ للمعلمين، يبقى من غير المرجح أن تُلبّى احتياجات الطلاب مزدوجي الاستثنائية.",
+  "Without formal recognition, support, and adequate teacher training, the needs of twice-exceptional students are unlikely to be met."
+ ]
+}

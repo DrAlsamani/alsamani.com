@@ -1,28 +1,64 @@
 {
  "q": [
-  "كيف يرى المعلمون الطالب الموهوب ذا الإعاقة؟",
-  "How do teachers see a gifted student with a disability?"
+  "كيف يرى معلمو المرحلة الابتدائية الطالب الموهوب ذا الإعاقة؟",
+  "How do elementary teachers see a gifted student with a disability?"
  ],
  "lede": [
-  "الطالب مزدوج الاستثنائية موهوب ولديه إعاقة في الوقت نفسه. سألت هذه الدراسة أربعة عشر معلمًا في المرحلة الابتدائية بالمدينة المنورة كيف يرون هؤلاء الطلاب، فكشفت نمطًا لافتًا في طريقة التفكير.",
-  "A twice-exceptional student is gifted and has a disability at the same time. This study asked fourteen elementary teachers in Medina how they see these students, and found a telling pattern in how they think about them."
+  "الطالب مزدوج الاستثنائية موهوب ولديه إعاقة في الوقت نفسه، وكثيرًا ما تُكتشف إعاقته وتُغفل موهبته. ولأن المعلم في السنوات الأولى هو غالبًا أول من يرشّح الطلاب للبرامج، أجرت الدراسة مقابلات معمّقة مع أربعة عشر معلمًا ومعلمة في المدارس الابتدائية بالمدينة المنورة لمعرفة كيف يرون هؤلاء الطلاب.",
+  "A twice-exceptional (2e) student is gifted and has a disability at the same time, and schools often recognize the disability while overlooking the giftedness. Because teachers in the early grades are often the first to nominate students for programs, the study held in-depth interviews with 14 elementary teachers in Medina to learn how they perceive these students."
  ],
  "stats": [
   [
    "14",
-   "معلمًا ومعلمة (7 و7)",
-   "teachers (7 female, 7 male)"
+   "معلمًا ومعلمة (7 و7) في المدينة المنورة",
+   "teachers in Medina (7 female, 7 male)"
   ],
   [
    "7",
    "سمات للموهبة ذكرها المعلمون",
-   "giftedness traits named"
+   "giftedness traits teachers described"
   ],
   [
-   "3",
-   "مجالات للتحديات الأكاديمية",
-   "areas of academic difficulty"
+   "5",
+   "تحديات أكاديمية ونفسية",
+   "academic and emotional challenges"
+  ],
+  [
+   "14/14",
+   "أشاروا إلى ضعف الكتابة",
+   "pointed to weak writing skills"
   ]
+ ],
+ "sections": [
+  {
+   "h": [
+    "لماذا المرحلة الابتدائية؟",
+    "Why the elementary years?"
+   ],
+   "p": [
+    "يصعب قياس الموهبة باختبارات في الصفوف الأولى، فيصبح ترشيح المعلم الطريق الرئيس للتعرّف على الموهوبين. وتخفي القدرة العالية لدى الطالب مزدوج الاستثنائية احتياجاته الخاصة في هذه السنوات، فلا تُقدَّم له التدخلات المناسبة، وتتراكم صعوباته في المرحلتين المتوسطة والثانوية. وفي المملكة يدرس هؤلاء الطلاب في فصول التعليم العام مع معلم التعليم العام، ولا يتضمن إعداد المعلمين قبل الخدمة تدريبًا رسميًا على هذه الفئة.",
+    "Giftedness is hard to test for in the early grades, so teacher nomination becomes the main route to identification. In these years a 2e student's high ability can mask special education needs, so accommodations are not put in place and difficulties build up by middle and high school. In Saudi Arabia these students are placed in general education classrooms with general education teachers, whose pre-service preparation includes no formal training on this population."
+   ]
+  },
+  {
+   "h": [
+    "كيف أُجريت الدراسة؟",
+    "How the study worked"
+   ],
+   "p": [
+    "دراسة نوعية ظاهراتية. من بين 27 معلمًا استجابوا للدعوة، استوفى 14 شروط المشاركة: معلم ابتدائي معتمد في المدينة المنورة، يدرك وجود طلاب مزدوجي الاستثنائية في فصله، وله ثلاث سنوات على الأقل في تدريسهم. تراوحت أعمارهم بين 28 و45 عامًا، وخبرتهم بين 5 و14 عامًا. أُجريت مقابلات شبه منظمة باللغة العربية من ثماني أسئلة راجعها خبيران، استغرقت كل منها 45–60 دقيقة داخل المدرسة، وأجرت معلمةٌ المقابلات مع المعلمات. ثم حُلّلت البيانات تحليلًا موضوعيًا، وبنى باحثان ترميزهما كلٌّ على حدة ثم قارنا النتائج.",
+    "This was a qualitative phenomenological study. Of 27 teachers who responded, 14 met the criteria: certified elementary teachers in Medina who were aware of 2e students in their classrooms and had at least three years of experience teaching them. They were 28 to 45 years old, with 5 to 14 years of teaching experience. Semi-structured interviews in Arabic, built on eight expert-reviewed questions, lasted 45–60 minutes each and took place at the teachers' schools; a female interviewer met with the female teachers. The data were analyzed thematically, with two researchers coding separately and then comparing results."
+   ]
+  }
+ ],
+ "paper_figs": [
+  {
+   "file": "table1.webp",
+   "cap": [
+    "الجدول 1 من الدراسة: الموضوعات الفرعية لكل سؤال بحثي، وعدد المعلمين الذين أشاروا إلى كلٍّ منها ونسبتهم، مع اقتباس ممثِّل.",
+    "Table 1 from the paper: sub-themes for each research question, with the number and share of teachers who raised each and a representative quote."
+   ]
+  }
  ],
  "fig_cap": [
   "يرى المعلمون الموهبة والإعاقة حالتين منفصلتين، بينما ازدواجية الاستثنائية حالة واحدة تتفاعل سماتها.",
@@ -35,50 +71,92 @@
  "themes": [
   {
    "t": [
-    "سمات الموهبة",
-    "Signs of giftedness"
+    "متحدثون جيدون وحلّالون للمشكلات",
+    "Strong speakers and problem solvers"
    ],
    "p": [
-    "ربط المعلمون الموهبة لدى هؤلاء الطلاب بسمات واضحة.",
-    "Teachers linked giftedness in these students to clear traits."
+    "رأى 12 من 14 معلمًا أن مهارات التواصل نقطة قوة واضحة لدى هؤلاء الطلاب، خصوصًا في الحديث والعرض الشفهي داخل الفصل. وربط معظمهم قدراتهم المعرفية بمهارة حل المشكلات، وهو ما ظهر لدى المعلمين والمعلمات على السواء.",
+    "Twelve of the 14 teachers saw communication as a clear strength, especially speaking and oral presentation in class. Most linked these students' cognitive abilities to problem solving, a view shared by male and female teachers alike."
+   ],
+   "quote": [
+    "«حل المشكلات من نقاط قوة الطلاب مزدوجي الاستثنائية، لأنهم يستطيعون تحديد أسباب المشكلة وفهمها فهمًا كاملًا.» (معلم)",
+    "“Problem-solving is one of the strengths of twice-exceptional students, because they can identify the causes of [an] issue and understand it fully.” (MT2)"
+   ]
+  },
+  {
+   "t": [
+    "ذاكرة قوية وفضول وتفكير مجرد",
+    "Strong retention, curiosity and abstract thinking"
+   ],
+   "p": [
+    "وصف المعلمون قدرة هؤلاء الطلاب على الاحتفاظ بالمعلومات، وفضولهم وشغفهم بتعلم كل جديد، وسرعتهم في استيعاب المفاهيم المجردة. وروت إحدى المعلمات كيف كشف تغيير بسيط في مكان جلوس طالبة متأخرة دراسيًا عن قدرة لم تكن ظاهرة.",
+    "Teachers described these students' strong retention, their curiosity and eagerness to learn anything new, and how quickly they grasp abstract concepts. One teacher recounted how a simple change in where an underachieving student sat revealed an ability that had not been visible."
    ],
    "subs": [
     [
-     "مهارات تواصل ممتازة",
-     "Excellent communication skills"
+     "التفكير المجرد: 12 من 14",
+     "Abstract thinking: 12 of 14"
     ],
     [
-     "حل المشكلات وقوة الاحتفاظ بالمعلومات",
-     "Problem solving and strong retention"
-    ],
-    [
-     "حب الاستطلاع والإبداع والتفكير المجرد",
-     "Curiosity, creativity and abstract thinking"
-    ],
-    [
-     "مهارات القيادة",
-     "Leadership skills"
+     "حب الاستطلاع: 10 من 14",
+     "Curiosity: 10 of 14"
     ]
+   ],
+   "quote": [
+    "«كانت لدي طالبة في الصف الثالث متأخرة دراسيًا... وضعتها في الصف الأول، فوجدت أن ذلك جعلها أكثر مشاركة في الفصل. وأدركت [بعد هذه النقلة] أن [هذه الطالبة] تمتلك مهارات ممتازة في التفكير المجرد.» (معلمة)",
+    "“I had a student in Grade 3 who was underachieving in school ... I put this student in the front row and found that this caused her to become a more active participant in the class. I came to realize [after this move] that [this 2e student] has excellent abstract-thinking skills.” (FT7)"
    ]
   },
   {
    "t": [
-    "التحديات الأكاديمية والنفسية",
-    "Academic and emotional challenges"
+    "الإبداع والقيادة",
+    "Creativity and leadership"
    ],
    "p": [
-    "يواجه هؤلاء الطلاب صعوبات مرتبطة بإعاقتهم في القراءة والكتابة والرياضيات، ويعانون غالبًا من تدني تقدير الذات وصعوبة التركيز.",
-    "These students face disability-related difficulties in reading, writing and mathematics, and often struggle with low self-esteem and concentration."
+    "عدّ 11 معلمًا الإبداع سمة ملحوظة لدى هؤلاء الطلاب، وذكر العدد نفسه مهارات القيادة: يتحملون مسؤوليات تتجاوز أعمارهم، ويتمتعون بالقبول والقدرة على الإقناع بين زملائهم.",
+    "Eleven teachers named creativity as an observed trait, and the same number cited leadership: these students take on responsibilities beyond their age and tend to be popular and persuasive among peers."
+   ],
+   "quote": [
+    "«الطلاب مزدوجو الاستثنائية قادة، سواء في مشاريع الفصل أو في الرياضة، ويحظون بشعبية ولديهم قدرة على الإقناع.» (معلمة)",
+    "“Twice-exceptional students are leaders, whether in class projects or sports, and are popular and persuasive.” (FT2)"
    ]
   },
   {
    "t": [
-    "حالتان منفصلتان لا حالة واحدة",
-    "Two conditions, not one"
+    "صعوبات في القراءة والكتابة والرياضيات",
+    "Difficulties in reading, writing and math"
    ],
    "p": [
-    "يميل المعلمون إلى رؤية الموهبة والإعاقة حالتين مستقلتين، بدل فهمهما حالة واحدة تؤثر سماتها في التعلم مجتمعة.",
-    "Teachers tend to see giftedness and disability as two independent conditions rather than one condition whose traits shape learning together."
+    "أجمع المعلمون على أن ضعف الكتابة تحدٍّ شائع، إذ يواجه بعض الطلاب صعوبات حركية في الخط تعيق إنجاز الواجبات المكتوبة. وأشار جميعهم تقريبًا إلى ضعف القراءة، خاصة عند القراءة الجهرية، وذكر 11 منهم ضعف الأداء في الرياضيات.",
+    "All teachers named weak writing as a common challenge; some students struggle with the motor skills of handwriting, which can get in the way of written assignments. Nearly all pointed to weak reading, especially when reading aloud, and 11 mentioned poor performance in mathematics."
+   ],
+   "quote": [
+    "«إحدى أفضل طالباتي أداءً في الإبداع، وهي مزدوجة الاستثنائية، تعاني كثيرًا في مهارات الكتابة.» (معلمة)",
+    "“One of my best-performing twice-exceptional students in creativity struggles significantly with writing skills.” (FT2)"
+   ]
+  },
+  {
+   "t": [
+    "التركيز وتقدير الذات",
+    "Concentration and self-esteem"
+   ],
+   "p": [
+    "ذكر 10 معلمين أن بعض هؤلاء الطلاب يتفوقون في مواد كثيرة لكنهم يجدون صعوبة في التركيز ويتشتت انتباههم بسهولة. وأشار 9 إلى تدني تقدير الذات، ورأت إحدى المعلمات أن ذلك يزيد معاناتهم في المدرسة.",
+    "Ten teachers said some of these students excel in many subjects yet struggle to concentrate and are easily distracted. Nine pointed to low self-esteem, which one teacher said makes school harder for them."
+   ],
+   "quote": [
+    "«أظن أن الطالب مزدوج الاستثنائية في فصلي سريع التشتت ويجد صعوبة في إكمال الواجبات.» (معلم)",
+    "“I think the twice-exceptional student in my class is easily distracted and has difficulty completing assignments.” (MT6)"
+   ]
+  },
+  {
+   "t": [
+    "وعيٌ بالوجود، لا فهمٌ للصورة كاملة",
+    "Aware they exist, but not of the whole picture"
+   ],
+   "p": [
+    "أدرك المعلمون أن الطالب يمكن أن يكون موهوبًا ولديه إعاقة في آن، لكن معرفتهم بسمات هذه الفئة كانت محدودة العمق. فقد لاحظ بعضهم طلابًا شديدي الفضول ضعيفي الكتابة، دون أن يستخلصوا دلالة هذا التناقض. وقلّة منهم فقط أحالوا هؤلاء الطلاب إلى خدمات التربية الخاصة. ويميل المعلمون عمومًا إلى رؤية الموهبة والإعاقة حالتين مستقلتين، بدل فهمهما حالة واحدة تتفاعل سماتها في التعلم.",
+    "Teachers knew a student could be gifted and have a disability at once, but the depth of their knowledge about this group was limited. Several noticed students who were highly curious yet wrote poorly, without drawing conclusions from that contrast. Few had referred these students to special education services. Overall, teachers tended to see giftedness and disability as two independent conditions rather than one condition whose traits shape learning together."
    ]
   }
  ],
@@ -88,16 +166,24 @@
  ],
  "take": [
   [
-   "إعداد المعلمين لفهم ازدواجية الاستثنائية حالةً واحدة تتداخل فيها الموهبة والإعاقة.",
-   "Prepare teachers to understand twice-exceptionality as one profile in which giftedness and disability interact."
+   "أن تستثمر وزارة التعليم في برامج تخدم هؤلاء الطلاب، وفي تطوير مهني يعرّف المعلمين باحتياجاتهم الخاصة.",
+   "The Ministry of Education should invest in programs that serve these students and in professional development that teaches teachers about their special needs."
   ],
   [
-   "الانتباه إلى تقدير الذات والتركيز إلى جانب الدعم الأكاديمي.",
-   "Attend to self-esteem and concentration alongside academic support."
+   "أن يتعلم المعلمون، ويُفضَّل خلال دراستهم الجامعية، السمات الحقيقية للطالب مزدوج الاستثنائية وخدمات التربية الخاصة التي يحتاجها.",
+   "Teachers should learn, preferably during their university studies, the true characteristics of 2e students and the special education services they need."
+  ],
+  [
+   "ألا يُكتفى بخدمة جانب الموهبة؛ فإحالة الطالب لدعم إعاقته تحميه من التأخر الدراسي المزمن وربما الإخفاق.",
+   "Serving the gifted side is not enough; referring the student for disability support guards against chronic underachievement and even failure."
+  ],
+  [
+   "أن تشمل الدراسات القادمة معلمي التربية الخاصة والموهوبين والأسر والطلاب أنفسهم، وأن تسأل هل يرى المعلمون هذه الفئة فئةً قائمة بذاتها.",
+   "Future research should include special and gifted education teachers, parents and 2e students themselves, and ask whether teachers see this group as a distinct population."
   ]
  ],
  "close": [
-  "حين يُرى الطالب حالتين منفصلتين، يُعالَج نصفه ويُهمَل النصف الآخر.",
-  "When a student is seen as two separate conditions, half of the student is served and the other half overlooked."
+  "يرى المعلمون الموهبة ويرون الإعاقة، لكن خدمة الطالب مزدوج الاستثنائية تتطلب رؤيتهما معًا في طالب واحد.",
+  "Teachers see the giftedness and they see the disability; serving a twice-exceptional student requires seeing both together in one learner."
  ]
 }

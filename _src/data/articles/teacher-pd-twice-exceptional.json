@@ -1,37 +1,78 @@
 {
  "q": [
-  "هل المعلمون مستعدون لتعليم الطلاب الموهوبين ذوي الإعاقة؟",
-  "Are teachers prepared to teach gifted students with disabilities?"
+  "ما الذي يحتاجه المعلمون للتعرف على الطلاب مزدوجي الاستثنائية ودعمهم؟",
+  "What do teachers need to identify and support twice-exceptional students?"
  ],
  "lede": [
-  "في فصول الدمج طلاب يجمعون بين قدرات عالية واحتياجات مرتبطة بإعاقة، ويفوتهم كثير من الدعم. سألت هذه الدراسة اثني عشر معلمًا في حائل عما يحتاجونه من تطوير مهني للتعرف على هؤلاء الطلاب ودعمهم.",
-  "Inclusive classrooms include students who combine high ability with disability-related needs, and many go underserved. This study asked twelve teachers in Hail what professional development they need to identify and support these students."
+  "في فصول الدمج طلاب يجمعون بين قدرات عالية واحتياجات مرتبطة بإعاقة، ويفوت كثيرًا منهم الدعم المناسب، ويرتبط ذلك جزئيًا بمحدودية إعداد المعلمين. أجرت هذه الدراسة مقابلات معمّقة مع اثني عشر معلمًا ومعلمة في مدارس حكومية بمدينة حائل، لتتعرف كيف يرون احتياجاتهم من التطوير المهني في هذا المجال.",
+  "Inclusive classrooms include students who combine high ability with disability-related needs, and many of them go underserved, partly because teachers have had limited preparation. This study conducted in-depth interviews with twelve teachers in public schools in Hail to understand how they see their professional development needs in this area."
  ],
  "stats": [
   [
    "12",
    "معلمًا ومعلمة",
-   "teachers"
+   "teachers interviewed"
   ],
   [
    "4",
-   "مدارس في حائل",
-   "schools in Hail"
+   "مدارس حكومية في حائل",
+   "public schools in Hail"
   ],
   [
-   "5 · 3 · 4",
-   "تعليم عام · موهوبين · تربية خاصة",
-   "general · gifted · special education"
+   "10",
+   "سنوات خبرة في المتوسط",
+   "years of teaching experience, on average"
   ],
   [
-   "3",
-   "محاور رئيسة",
-   "major themes"
+   "12/12",
+   "أكدوا الحاجة إلى دعم مزدوج",
+   "described the need for dual-focused support"
   ]
+ ],
+ "sections": [
+  {
+   "h": [
+    "طالب واحد واستثنائيتان",
+    "One student, two exceptionalities"
+   ],
+   "p": [
+    "الطالب مزدوج الاستثنائية (2e) يملك إمكانات معرفية عالية، ولديه في الوقت نفسه إعاقة مثل عسر القراءة أو صعوبات التعلم أو اضطراب فرط الحركة وتشتت الانتباه أو اضطراب طيف التوحد. وأبرز ما يعقّد التعرف عليه «أثر الحجب»: قد تخفي الموهبة الإعاقة، وقد تخفي الإعاقة الموهبة، فتُساء قراءة قدراته ويتلقى تعليمًا لا يناسبه. وتشير الدراسة إلى أن معظم البحوث في هذا المجال جاءت من سياقات غربية، وأن برامج إعداد المعلمين في المملكة لا تتناول تعقيدات الاستثنائية المزدوجة، وكثيرًا ما يُتناول الموهوبون وذوو الإعاقة في التدريب بوصفهما مجالين منفصلين.",
+    "A twice-exceptional (2e) student shows high cognitive potential while also having a disability such as dyslexia, a learning disability, ADHD, or autism spectrum disorder. Identification is complicated by the masking effect: giftedness can hide the disability, or the disability can hide the giftedness, so the student's abilities are misread and the education provided does not fit. The study notes that most research on twice-exceptionality comes from Western contexts, that teacher preparation in Saudi Arabia does not address the complexities of dual exceptionality, and that existing training often treats giftedness and disability as separate domains."
+   ]
+  },
+  {
+   "h": [
+    "كيف أُجريت الدراسة؟",
+    "How the study worked"
+   ],
+   "p": [
+    "اعتمدت الدراسة منهجًا نوعيًا ظاهراتيًا. شارك فيها اثنا عشر معلمًا ومعلمة (7 معلمين و5 معلمات، تتراوح أعمارهم بين 25 و55 عامًا) من أربع مدارس حكومية بحائل: خمسة من التعليم العام، وثلاثة من تعليم الموهوبين، وأربعة من التربية الخاصة، وجميعهم لديهم خبرة مباشرة مع طلاب مزدوجي الاستثنائية. استغرقت كل مقابلة شبه منظمة من 45 إلى 60 دقيقة، وحُللت البيانات تحليلًا موضوعيًا وفق منهج براون وكلارك، إذ رمّز الباحثان النصوص كلٌّ على حدة ثم تناقشا حتى اتفقا على البنية النهائية للمحاور، وراجع المشاركون نصوص مقابلاتهم.",
+    "The study used a qualitative phenomenological design. Twelve teachers (7 men and 5 women, aged 25 to 55) from four public schools in Hail took part: five in general education, three in gifted education, and four in special education, all with direct experience teaching 2e students. Each semi-structured interview lasted 45 to 60 minutes. The data were analyzed thematically following Braun and Clarke; the two researchers coded the transcripts independently and then met until they agreed on the final thematic structure, and participants reviewed their own transcripts."
+   ]
+  },
+  {
+   "h": [
+    "عدسة الممارسة التأملية",
+    "The lens of reflective practice"
+   ],
+   "p": [
+    "تستند الدراسة إلى نظرية الممارسة التأملية لدونالد شون: التأمل في أثناء الفعل، والتأمل بعد الفعل. فمن دون فهم متين لسمات مزدوجي الاستثنائية يصعب على المعلم أن يفسر السلوك المعقد الذي يراه في الفصل، أو أن يراجع تدخلاته بعد ذلك؛ كأن يميز بين نوبة سلوكية وإحباط سببه الفجوة بين إمكانات الطالب وأدائه. ومن هنا ترى الدراسة أن التطوير المهني ينبغي أن يصل بين المعرفة النظرية والتطبيق.",
+    "The study draws on Donald Schön's theory of reflective practice: reflection-in-action and reflection-on-action. Without a solid understanding of 2e traits, a teacher struggles to interpret the complex behavior seen in class or to review an intervention afterward, for example to tell a behavioral outburst apart from frustration caused by the gap between a student's potential and performance. For this reason, the study argues that professional development should bridge theoretical knowledge and practical application."
+   ]
+  }
  ],
  "fig_cap": [
   "المعلمون يعرفون المفهوم، لكن استعدادهم العملي أقل بكثير؛ والتدريب القائم على الممارسة هو ما يسد الفجوة.",
   "Teachers understand the concept, but their practical readiness lags far behind; practice-oriented training is what closes the gap."
+ ],
+ "paper_figs": [
+  {
+   "file": "fig1.webp",
+   "cap": [
+    "الجدول 2 من الدراسة (بالإنجليزية): المحاور الثلاثة ومحاورها الفرعية العشرة، وعدد المعلمين (من 12) الذين عبّروا عن كل منها.",
+    "Table 2 from the paper: the three themes, their ten subthemes, and how many of the 12 teachers expressed each one."
+   ]
+  }
  ],
  "themes_h": [
   "ماذا وجدت الدراسة؟",
@@ -44,28 +85,96 @@
     "Understanding the unique needs of 2e students"
    ],
    "p": [
-    "يدرك المعلمون أن هؤلاء الطلاب مختلفون، لكن فهمهم لاحتياجاتهم المتداخلة يبقى عامًا.",
-    "Teachers recognize that these students are different, but their grasp of their overlapping needs remains general."
+    "رأى المعلمون في احتياجات هؤلاء الطلاب المحرّك الأول لحاجتهم إلى تطوير مهني متخصص، وحددوا من خلالها ما ينبغي أن يكون في صلب التدريب: دعم يتناول نقاط القوة والصعوبات معًا، وانتباه للتحديات الاجتماعية والانفعالية كالإحباط والعزلة والقلق وضعف تقدير الذات، وتعليم مُفرَّد يجمع بين استراتيجيات التربية الخاصة وتعليم الموهوبين. ورأوا كذلك أن على المعلم أن يدافع عن هؤلاء الطلاب داخل النظام المدرسي، لأنهم، كما قال أحدهم، «قد يسقطون من بين الشقوق إذا لم تُلحظ استثنائيتهم المزدوجة».",
+    "Teachers saw these students' needs as the main driver of their need for specialized professional development, and through them named what training should center on: support that addresses strengths and difficulties together, attention to social and emotional challenges such as frustration, isolation, anxiety, and low self-esteem, and individualized instruction that combines strategies from special and gifted education. They also saw a role for teachers as advocates within the school system, because, as one put it, these students \"can fall through the cracks if their dual exceptionalities are not recognized.\""
+   ],
+   "subs": [
+    [
+     "الدعم المزدوج (12 من 12)",
+     "Dual-focused support (12 of 12)"
+    ],
+    [
+     "التحديات الاجتماعية والانفعالية (12 من 12)",
+     "Social and emotional challenges (12 of 12)"
+    ],
+    [
+     "ملامح تعلّم معقدة (11 من 12)",
+     "Complex learning profiles (11 of 12)"
+    ],
+    [
+     "الحاجة إلى المناصرة (10 من 12)",
+     "Need for advocacy (10 of 12)"
+    ],
+    [
+     "تكييف التعليم (8 من 12)",
+     "Instructional customization (8 of 12)"
+    ]
+   ],
+   "quote": [
+    "رغم إمكاناتها العالية، جعل وجود الإعاقة لدى إحدى طالباتي من الصعب عليّ أن ألحظ موهبتها.",
+    "Despite their high potential, the presence of a disability in one of my students made it difficult for me to notice her giftedness."
    ]
   },
   {
    "t": [
     "معوقات التدريب الفعال",
-    "Barriers to effective training"
+    "Barriers to effective teacher training"
    ],
    "p": [
-    "يصف المعلمون تدريبًا قليلًا أو بعيدًا عن واقع الفصل.",
-    "Teachers describe training that is scarce or far removed from classroom reality."
+    "وصف المعلمون نظامًا تعليميًا لا يقدم تدريبًا على الاستثنائية المزدوجة، وفجوة بين سياسات التدريب والاحتياجات الفعلية لهؤلاء الطلاب. وأضافوا قلة الموارد والميزانيات، وندرة المدربين المتخصصين، وتدريبًا قد لا يكون جيدًا أو وثيق الصلة حين يتوفر. ومن المعوقات أيضًا تصورات خاطئة، منها الاعتقاد بأن تدريب التعليم العام يكفي، أو أن ما يُقدَّم للموهوبين أو لذوي الإعاقة يغطي احتياجات هؤلاء الطلاب.",
+    "Teachers described an education system that offers no training on twice-exceptionality and a gap between training policies and these students' actual needs. They added limited resources and budgets, a scarcity of expert trainers, and training that, when available, may lack quality or relevance. Misconceptions were a further barrier, including the belief that general education training is sufficient, or that what is already provided to gifted students or students with disabilities covers 2e students' needs."
+   ],
+   "subs": [
+    [
+     "قيود النظام والسياسات (10 من 12)",
+     "Systemic limitations (10 of 12)"
+    ],
+    [
+     "محدودية الموارد (9 من 12)",
+     "Resource constraints (9 of 12)"
+    ],
+    [
+     "ضعف الوعي والتصورات الخاطئة (9 من 12)",
+     "Low awareness and misconceptions (9 of 12)"
+    ]
+   ],
+   "quote": [
+    "ثمة فجوة كبيرة بين سياسات التدريب والاحتياجات الحقيقية للطلاب مزدوجي الاستثنائية، وهذا يخلق تحديات للمعلمين.",
+    "There is a significant gap between the training policies and the real needs of 2e students, which creates challenges for teachers."
    ]
   },
   {
    "t": [
     "أثر ضعف التدريب في التعليم والتعلم",
-    "Impact of inadequate training"
+    "Impact of inadequate training on teaching and learning"
    ],
    "p": [
-    "ينعكس ضعف الإعداد على التعرف على هؤلاء الطلاب وعلى ما يُقدَّم لهم في الفصل.",
-    "Weak preparation shows in how these students are identified and in what they receive in class."
+    "ربط المعلمون غياب التدريب بشعورهم بعدم الجاهزية وقلة الثقة في التعرف على هؤلاء الطلاب، وبضغط يقع على المعلم والطالب معًا. أما أثره في الطلاب فيظهر في التشخيص الخاطئ، وفي دعم لا يناسبهم، وفي تفاقم الصعوبات التي يواجهونها وزيادة إحباطهم.",
+    "Teachers linked the lack of training to feeling unprepared, to low confidence in identifying these students, and to stress for both teacher and student. For students, the consequences they described were misidentification, support that does not fit, and challenges that grow worse, including increased frustration."
+   ],
+   "subs": [
+    [
+     "جاهزية المعلم (8 من 12)",
+     "Teacher preparedness (8 of 12)"
+    ],
+    [
+     "نواتج تعلم الطلاب (9 من 12)",
+     "Students' outcomes (9 of 12)"
+    ]
+   ],
+   "quote": [
+    "كثيرًا ما يؤدي التدريب غير الكافي إلى ضعف الثقة في التعرف على الطلاب مزدوجي الاستثنائية بفاعلية.",
+    "Inadequate training often results in a lack of confidence to identify 2e students effectively."
+   ]
+  },
+  {
+   "t": [
+    "وعي لا يتحول بالضرورة إلى ممارسة",
+    "Awareness that does not always become practice"
+   ],
+   "p": [
+    "تُظهر المناقشة أن المعلمين يملكون فهمًا مفاهيميًا واضحًا للاستثنائية المزدوجة، ويصفون مواقف حجبت فيها الموهبةُ الصعوبةَ أو العكس. لكن هذا الإدراك لم يتحول دائمًا إلى تعرّف دقيق أو استجابة تعليمية فعالة. ومع محدودية الإعداد يعتمد المعلمون على اجتهادهم الشخصي واستراتيجيات غير رسمية، مما يزيد شعورهم بعدم اليقين، خصوصًا في قرارات التعرف، ويبقى تأملهم في ممارستهم جهدًا فرديًا في الغالب.",
+    "The discussion shows that teachers hold a clear conceptual understanding of twice-exceptionality and describe situations in which giftedness masked a difficulty or the reverse. Yet this recognition did not necessarily translate into accurate identification or effective instructional responses. With limited preparation, teachers rely on personal judgment and informal strategies, which increases their uncertainty, particularly in identification decisions, and their reflection on practice remains largely individual."
    ]
   }
  ],
@@ -75,20 +184,24 @@
  ],
  "take": [
   [
-   "برامج تطوير مهني تطبيقية في التعرف على مزدوجي الاستثنائية ودعمهم.",
-   "Practice-oriented professional development on identifying and supporting 2e students."
+   "تدريب على الاستثنائية المزدوجة بوصفها مجال ممارسة مستقلًا، لا جزءًا من تعليم الموهوبين أو التربية الخاصة وحدهما.",
+   "Training on twice-exceptionality as a distinct area of practice, not as part of gifted or special education alone."
   ],
   [
-   "تدريب مشترك يجمع معلمي التعليم العام والموهوبين والتربية الخاصة.",
-   "Joint training that brings general, gifted and special education teachers together."
+   "تركيز التدريب على تحديات التعرف، والتخطيط التعليمي المتكامل، والدعم الاجتماعي والانفعالي في فصول الدمج.",
+   "Training that focuses on identification challenges, integrated instructional planning, and social-emotional support in inclusive classrooms."
   ],
   [
-   "إدراج ازدواجية الاستثنائية في برامج إعداد المعلمين بالجامعات.",
-   "Include twice-exceptionality in university teacher-preparation programs."
+   "تطوير مهني يعتمد على أمثلة حقيقية من الفصول، ويتيح للمعلمين التأمل في تجاربهم التدريسية.",
+   "Professional development built on real classroom examples, with opportunities for teachers to reflect on their own teaching."
+  ],
+  [
+   "بيئة داعمة من النظام التعليمي توفر الموارد اللازمة والوصول إلى الخبرة المتخصصة، لأن التدريب وحده دون ذلك يحدّ من نواتج الطلاب.",
+   "A supportive environment from the education system, with the needed resources and access to specialized expertise, since training without this support limits student outcomes."
   ]
  ],
  "close": [
-  "الوعي وحده لا يكفي؛ المعلم يحتاج إلى تدريب يضعه أمام الطالب الحقيقي في الفصل.",
-  "Awareness alone is not enough; teachers need training that puts them in front of the real student in the classroom."
+  "الوفاء بوعد التعليم الدامج يتطلب تجاوز الوعي العام لدى المعلمين إلى تدريب قائم على الممارسة.",
+  "Fulfilling the promise of inclusive education requires moving beyond teachers' general awareness toward practice-based training."
  ]
 }
