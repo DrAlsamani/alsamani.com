@@ -116,3 +116,6 @@ mark.bp-hl.flash{background:rgba(255,159,10,.7);transition:background .6s}
 .bp-nfoot small{flex-basis:100%;color:var(--ink-2);font-size:12px}
 [data-notes] i{font-style:normal;display:inline-block;min-width:18px;margin-inline-start:6px;background:var(--accent);color:#fff;border-radius:999px;font-size:11px;line-height:18px;text-align:center}
 @media print{mark.bp-hl{background:none}.bp-seltb,.bp-notes{display:none!important}}
+/* mobile: keep a way back to the site */
+@media (max-width:640px){.bp-in .bp-home{display:inline-grid!important;place-items:center;width:30px;height:30px;border:1px solid var(--line);border-radius:50%;font-size:0!important;flex:0 0 auto}
+.bp-in .bp-home::before{content:"OA";font:600 11px var(--f-ui);letter-spacing:.04em;color:var(--ink)}}
