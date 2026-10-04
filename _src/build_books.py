@@ -120,15 +120,16 @@ def build_book(b, make_pdf):
 
     # book home = original cover/TOC + downloads + elements entry
     chap_dl = ''.join(f'<li><a href="pdf/{t["f"][:-5]}.pdf" download><span>{e(t["kicker"] or "")}</span><b>{e(t["h1"])}</b><i>PDF</i></a></li>' for t in toc)
-    dl = f'''<section class="bp-dl" id="downloads"><h2><span class="sec">التحميل</span>الكتاب للقراءة والتحميل</h2>
-<p>الكتاب متاح مجانًا. اقرأه على الموقع فصلًا فصلًا، أو حمّل النسخة الورقية كاملة بصيغة PDF، أو حمّل الفصل الذي تحتاجه.</p>
+    dl = f'''<section class="bp-dl" id="downloads"><h2><span class="sec">التحميل</span>تحميل الكتاب</h2>
+<p>لمن أراد نسخة للقراءة خارج الموقع: الكتاب كاملًا بصيغة PDF، أو أي فصل منفردًا.</p>
 <div class="bp-dl-main"><a class="bp-big" href="pdf/{slug}-full.pdf" download><b>الكتاب كاملًا</b><span>PDF · النسخة الورقية</span></a><a class="bp-big ghost" href="{toc[0]["f"]}"><b>ابدأ القراءة</b><span>{e(toc[0]["h1"])}</span></a><a class="bp-big ghost" href="elements.html"><b>عناصر الكتاب</b><span>{" · ".join(x for x in [f'{len(elements["tool"])} أداة' if elements["tool"] else '', f'{len(elements["fig"])} شكلًا', f'{len(elements["tab"])} جدولًا'] if x)}</span></a></div>
-<p class="bp-resume" id="bpResume" hidden></p>
 <details class="bp-chaps"><summary>تحميل الفصول منفردة</summary><ol>{chap_dl}</ol></details>
 <p class="bp-lic">{e(b.get('license_note','نشر مفتوح. الحقوق محفوظة للمؤلف، ويُسمح بالقراءة والتحميل والاقتباس مع ذكر المصدر.'))}</p></section>'''
-    home = idx.replace('<h2 id="contents">', dl + '\n<h2 id="contents">', 1)
+    idx = idx.replace('<h2 id="contents">', '<p class="bp-resume" id="bpResume" hidden></p>\n<h2 id="contents">', 1)
+    k = idx.rfind('<div class="endmark"')
+    home = idx[:k] + dl + '\n' + idx[k:] if k > -1 else idx.replace('</body>', dl + '\n</body>', 1)
     if os.path.exists(os.path.join(src, 'en', 'index.html')):
-        home = home.replace('<section class="bp-dl" id="downloads">', '<p class="bp-ednote"><a href="en/index.html" lang="en">English edition</a> · قيد الترجمة فصلًا فصلًا</p>\n<section class="bp-dl" id="downloads">', 1)
+        home = home.replace('<h2 id="contents">', '<p class="bp-ednote"><a href="en/index.html" lang="en">English edition</a> · قيد الترجمة فصلًا فصلًا</p>\n<h2 id="contents">', 1)
     open(os.path.join(dst, 'index.html'), 'w').write(chrome(home, 'index.html', True))
 
     # elements page
