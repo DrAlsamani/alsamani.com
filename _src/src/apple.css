@@ -150,3 +150,10 @@ html[lang="ar"] .hero2 h1{letter-spacing:0;line-height:1.25}
 .eyebrow::before,.eyebrow::after{display:none!important}
 .ph-banner{height:min(62vh,560px);border-radius:18px;background-size:cover;background-position:center 40%;margin-bottom:56px}@media(max-width:640px){.ph-banner{height:44vh;border-radius:12px;margin-bottom:32px}}
 .photo-sec{background:#000!important;box-shadow:0 0 0 100vmax #000;clip-path:inset(0 -100vmax);margin-inline:0!important;padding-inline:0!important}.photo-sec .sec-head h2{color:#F5F5F7}.photo-sec .eyebrow{color:#A1A1A6!important}.photo-sec .ph-banner{margin-top:8px}
+.page-banner{margin:32px 0 0;height:min(48vh,440px)}
+@media (max-width:640px){.page-banner{height:34vh}}
+.pb2-text{inset-inline:auto!important;left:56px!important;right:auto!important;top:56px!important;align-items:flex-start!important;text-align:left;max-width:min(46%,520px)}
+html[dir="rtl"] .pb2-text{align-items:flex-start!important;text-align:right}
+.pb2-hero::before{background:linear-gradient(90deg,rgba(0,0,0,.42) 0%,rgba(0,0,0,0) 55%)!important}
+@media (max-width:640px){.pb2-text{left:20px!important;top:24px!important;max-width:70%}.pb2-hero{background-position:70% center}}
+#books .bk-cover.en{align-items:flex-start!important}#books .bk-cover.en b{text-align:left}

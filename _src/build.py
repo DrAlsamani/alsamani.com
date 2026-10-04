@@ -140,7 +140,7 @@ def pubs_html():
 
 def photo_html():
     return f'''<section id="photo" class="photo-sec first">
-  <div class="ph-banner" style="background-image:url(../img/ph23.webp)" role="img" aria-label="Grand Teton"></div>
+  <div class="ph-banner" style="background-image:url(../img/ph14.webp)" role="img" aria-label="Night sky over a mountain lake"></div>
   <div class="wrap"><div class="sec-head"><div><p class="eyebrow">{bi('أعمال فوتوغرافية', 'Photographic work')}</p><h2>{bi('التصوير الفوتوغرافي', 'Photography')}</h2><p>{bi('مختارات في الطبيعة والحياة الفطرية والتراث.', 'Selected work in landscape, wildlife and heritage.')}</p></div></div>
   <div class="masonry" id="gallery"></div></div>
 </section>'''
@@ -203,10 +203,10 @@ def books_band():
 
 def photo_band():
     return f'''<section class="pband2">
-  <a class="pb2-hero" href="photography/index.html" style="background-image:url(img/ph21.webp)">
+  <a class="pb2-hero" href="photography/index.html" style="background-image:url(img/ph15.webp)">
     <span class="pb2-text"><span class="eyebrow">{bi('التصوير', 'Photography')}</span><b>{bi('الطبيعة والحياة الفطرية والتراث', 'Landscape, wildlife and heritage')}</b><span class="pb2-go">{bi('معرض الصور', 'View the gallery')} <i class="chev"></i></span></span>
   </a>
-  <div class="pb2-row"><a href="photography/index.html" style="background-image:url(img/ph22.webp)" aria-label="Photography"></a><a href="photography/index.html" style="background-image:url(img/ph19.webp)" aria-label="Photography"></a></div>
+  <div class="pb2-row"><a href="photography/index.html" style="background-image:url(img/ph16.webp)" aria-label="Photography"></a><a href="photography/index.html" style="background-image:url(img/ph09.webp)" aria-label="Photography"></a></div>
 </section>'''
 
 def share_bar(r):
@@ -278,14 +278,15 @@ def research_dys():
 {featured}<div class="share-wrap">{share_bar(next(x for x in research if x['slug']=='ai-visual-instruction-dyslexia'))}</div></section>'''
 
 def contact_html():
-    return f'''<section class="first">
+    return f'''<div class="ph-banner page-banner" style="background-image:url(../img/ph04.webp)" role="img" aria-label="Desert tent at night"></div>
+<section class="first">
   <div class="sec-head"><div><p class="eyebrow">{bi('تواصل', 'Contact')}</p><h2>{bi('التواصل', 'Get in touch')}</h2></div></div>
   <div class="contact-grid one">
     <div>
       <h3 class="ch">{bi('قنوات التواصل', 'Channels')}</h3>
       <ul class="channels">
         <li><a href="https://www.linkedin.com/in/alsamani/"><b>LinkedIn</b><span>linkedin.com/in/alsamani</span></a></li>
-        <li><a href="https://www.x.com/Omar_ALsamani"><b>X</b><span>@Omar_ALsamani</span></a></li>
+        <li><a href="https://www.x.com/Omar_ALsamani"><b>X</b><span dir="ltr">@Omar_ALsamani</span></a></li>
         <li><a href="https://scholar.google.com/citations?user=1tSLgBIAAAAJ"><b>Google Scholar</b><span>Omar A. Alsamani</span></a></li>
       </ul>
     </div>
