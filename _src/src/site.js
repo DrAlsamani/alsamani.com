@@ -30,6 +30,19 @@
     const c=sb.querySelector('.copylink');if(c)c.onclick=()=>{const done=()=>{c.innerHTML='<span class="ar">نُسخ الرابط</span><span class="en">Link copied</span>'};
       if(navigator.clipboard)navigator.clipboard.writeText(url).then(done).catch(()=>{});else done()};
   });
+  // contact form
+  const cf=$('cform');
+  if(cf){cf.addEventListener('submit',async ev=>{ev.preventDefault();const note=$('cnote'),btn=$('csend');
+    const msg=(a,e)=>note.innerHTML='<span class="ar">'+a+'</span><span class="en">'+e+'</span>';
+    if(cf._honey.value)return;
+    btn.disabled=true;msg('جارٍ الإرسال…','Sending…');
+    const d={name:cf.name.value,email:cf.email.value,topic:cf.topic.value,message:cf.message.value,_subject:'alsamani.com: '+cf.topic.value+' — '+cf.name.value,_replyto:cf.email.value,_template:'table'};
+    try{const r=await fetch(cf.dataset.endpoint,{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify(d)});
+      const j=await r.json().catch(()=>({}));
+      if(r.ok&&String(j.success)!=='false'){cf.reset();msg('وصلت رسالتك، شكرًا لك.','Your message was sent. Thank you.')}
+      else msg('تعذّر الإرسال. حاول مرة أخرى أو تواصل عبر لينكد إن.','Sending failed. Please try again or use LinkedIn.')}
+    catch(e){msg('تعذّر الإرسال. تحقق من الاتصال وحاول مرة أخرى.','Sending failed. Check your connection and try again.')}
+    btn.disabled=false})}
   // feed filter
   const fchips=[...document.querySelectorAll('[data-ft]')];
   fchips.forEach(c=>c.onclick=()=>{fchips.forEach(x=>x.setAttribute('aria-pressed',x===c));document.querySelectorAll('.entry').forEach(p=>p.hidden=!(c.dataset.ft==='all'||p.dataset.t===c.dataset.ft))});

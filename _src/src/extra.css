@@ -185,3 +185,9 @@ html[dir="rtl"] .arr::after{content:"←"}
 .channels a{display:flex;justify-content:space-between;gap:12px;padding-block:14px;border-bottom:1px solid var(--line);text-decoration:none;color:var(--ink)}
 .channels a:hover b{color:var(--accent)}
 .channels span{color:var(--muted);font-family:var(--f-mono);font-size:.8125rem}
+.cform-wrap{margin-top:44px;padding-top:28px;border-top:1px solid var(--line);max-width:720px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:560px){.row2{grid-template-columns:1fr}}
+select{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:10px 12px;width:100%}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+.btn[disabled]{opacity:.6;cursor:wait}

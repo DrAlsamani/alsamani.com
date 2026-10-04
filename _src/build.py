@@ -256,6 +256,26 @@ def contact_html():
       </ul>
     </div>
   </div>
+  <div class="cform-wrap">
+    <h3 class="ch">{bi('أرسل رسالة', 'Send a message')}</h3>
+    <form class="contact" id="cform" data-endpoint="https://formsubmit.co/ajax/o.alsamani@uoh.edu.sa">
+      <div class="row2">
+        <label for="cname">{bi('الاسم', 'Name')}<input id="cname" name="name" required autocomplete="name"></label>
+        <label for="cmail">{bi('البريد الإلكتروني', 'Email')}<input id="cmail" name="email" type="email" required autocomplete="email"></label>
+      </div>
+      <label for="ctopic">{bi('الموضوع', 'Topic')}<select id="ctopic" name="topic">
+        <option value="Research collaboration">التعاون البحثي · Research collaboration</option>
+        <option value="Training / workshops">التدريب وورش العمل · Training and workshops</option>
+        <option value="Consulting">الاستشارات · Consulting</option>
+        <option value="Media / academic participation">مشاركة علمية أو إعلامية · Academic or media</option>
+        <option value="Question about a paper">استفسار عن بحث · Question about a paper</option>
+        <option value="Other">أخرى · Other</option></select></label>
+      <label for="cmsg">{bi('الرسالة', 'Message')}<textarea id="cmsg" name="message" required></textarea></label>
+      <input type="text" name="_honey" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <button class="btn solid" type="submit" id="csend" style="justify-self:start">{bi('إرسال', 'Send')}</button>
+      <p class="note" id="cnote" role="status"></p>
+    </form>
+  </div>
 </section>'''
 
 def about_html():
