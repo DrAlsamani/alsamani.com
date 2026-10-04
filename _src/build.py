@@ -140,7 +140,7 @@ def pubs_html():
 
 def photo_html():
     return f'''<section id="photo" class="photo-sec first">
-  {carousel(HOME_SET + [25, 8, 23], 1)}
+  {carousel(HOME_SET, 1)}
   <div class="wrap"><div class="masonry" id="gallery"></div></div>
 </section>'''
 
@@ -204,9 +204,11 @@ def carousel(ids, depth):
     gal = '../' * depth + 'photography/index.html'
     return f'''<div class="cr" data-carousel="{','.join(map(str, ids))}" dir="ltr"><div class="cr-track"></div>
   <div class="cr-ui"><div class="cr-dots"></div><button type="button" class="cr-play" aria-label="Play / pause"></button></div></div>
+<div class="strip" data-strip="{','.join(map(str, STRIP_SET))}" dir="ltr"><div class="st-track"></div></div>
 <p class="cr-credit">{bi('بعدسة عمر الصمعاني', 'Photographs by Omar A. Alsamani')}{'' if depth else f' · <a href="{gal}">' + bi('معرض الصور', 'Gallery') + ' <i class="chev"></i></a>'}</p>'''
 
 HOME_SET = [15, 14, 24, 4, 16, 19, 12, 9, 11, 21, 22, 3, 13, 18]
+STRIP_SET = [20, 25, 1, 26, 8, 5, 23, 2, 7, 6, 10]
 def photo_band():
     return f'''<section class="pband2">{carousel(HOME_SET, 0)}</section>'''
 

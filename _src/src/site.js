@@ -84,6 +84,11 @@
     let x0=null;track.addEventListener('pointerdown',e=>{x0=e.clientX;moved=false});
     track.addEventListener('pointerup',e=>{if(x0===null)return;const d=e.clientX-x0;x0=null;if(Math.abs(d)>40){moved=true;go(idx+(d<0?1:-1));restart();setTimeout(()=>moved=false,50)}});
     addEventListener('resize',()=>place(false));requestAnimationFrame(()=>place(false));restart()});
+  // second row: smaller photographs at their natural proportions, drifting slowly
+  document.querySelectorAll('[data-strip]').forEach(box=>{const list=box.dataset.strip.split(',').map(Number);const tr=box.querySelector('.st-track');
+    list.concat(list).forEach((n,k)=>{const b=document.createElement('button');b.type='button';b.className='st-item';b.setAttribute('aria-label','Open photograph');
+      b.innerHTML='<img loading="lazy" src="'+base+'img/th'+pad(n)+'.webp" alt="">';b.onclick=()=>open(list,k%list.length);tr.appendChild(b)});
+    tr.style.animationDuration=(list.length*7)+'s'});
 })();
 (function(){var b=document.getElementById('menuBtn');if(!b)return;var h=document.querySelector('header.top');
 b.onclick=function(){var o=h.classList.toggle('open');b.setAttribute('aria-expanded',o);document.body.style.overflow=o?'hidden':''};
