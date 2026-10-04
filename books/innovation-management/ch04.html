@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>الفصل الرابع: استراتيجية الابتكار والاستشراف</title>
+<link rel="stylesheet" href="assets/book.css">
+<link rel="stylesheet" href="assets/innov.css">
+<style>
+.cascade{display:grid;gap:0;max-width:640px;margin-inline:auto;font-family:var(--f-ui)}
+.cascade .lv{border-radius:12px;padding:12px 16px;border:1.5px solid var(--line);background:var(--paper);display:grid;grid-template-columns:120px 1fr;gap:12px;align-items:center}
+.cascade .lv b{font-size:15px;color:var(--accent)}
+.cascade .lv span{font-size:14px;line-height:1.7}
+.cascade .lv small{display:block;font-size:12.5px;color:var(--ink-2)}
+.cascade .lv.h{background:var(--accent-soft);border-color:color-mix(in srgb,var(--accent) 40%,transparent)}
+.cascade .ar{height:22px;display:grid;place-items:center;color:var(--ink-2);font-size:13px}
+.cascade .split{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cascade .split div{border-radius:12px;padding:10px 14px;font-size:13.5px;line-height:1.7;border:1.5px dashed var(--line)}
+.cascade .split b{display:block;font-size:14px}
+@media (max-width:560px){.cascade .lv{grid-template-columns:1fr}.cascade .split{grid-template-columns:1fr}}
+.hz{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;font-family:var(--f-ui)}
+.hz>div{border-radius:14px;padding:14px;min-width:0;border:1.5px solid var(--line)}
+.hz .h1{background:var(--example-soft)} .hz .h2{background:var(--teacher-soft)} .hz .h3{background:var(--accent-soft)}
+.hz i{font-style:normal;font-size:12px;font-weight:700;color:var(--ink-2)}
+.hz b{display:block;font-family:var(--f-display);font-size:18px;margin:2px 0 6px}
+.hz dl{margin:0;display:grid;gap:6px}
+.hz dt{font-size:12px;font-weight:700;color:var(--ink-2)}
+.hz dd{margin:0;font-size:13.5px;line-height:1.7}
+@media (max-width:640px){.hz{grid-template-columns:1fr}}
+.fore{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;font-family:var(--f-ui);position:relative}
+.fore>div{border-radius:12px;padding:12px;background:var(--paper-2);min-width:0;position:relative}
+.fore>div:not(:last-child)::after{content:"←";position:absolute;inset-inline-end:-10px;top:50%;transform:translateY(-50%);color:var(--accent);font-weight:700;z-index:1}
+.fore b{display:block;font-size:15px;color:var(--accent)}
+.fore span{display:block;font-size:13px;line-height:1.7;color:var(--ink-2);margin-top:4px}
+.fore>div:last-child{background:var(--accent-soft)}
+@media (max-width:640px){.fore{grid-template-columns:1fr 1fr}.fore>div::after{display:none}}
+.canvas{border:2px solid var(--accent);border-radius:16px;overflow:hidden;margin:24px 0;font-family:var(--f-ui)}
+.canvas .th{background:var(--accent);color:var(--paper);padding:12px 18px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:baseline}
+.canvas .th b{font-family:var(--f-display);font-size:19px}
+.canvas .th span{font-size:13px;opacity:.9}
+.canvas .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line)}
+.canvas .cell{background:var(--paper);padding:12px 14px;min-height:110px;min-width:0}
+.canvas .cell b{display:block;font-size:14.5px;color:var(--accent)}
+.canvas .cell span{display:block;font-size:13px;line-height:1.7;color:var(--ink-2);margin-top:4px}
+.canvas .wide{grid-column:span 3;min-height:auto}
+@media (max-width:640px){.canvas .grid{grid-template-columns:1fr}.canvas .wide{grid-column:auto}.canvas .cell{min-height:0}}
+</style>
+<meta name="robots" content="noindex,nofollow"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap"><link rel="stylesheet" href="assets/platform.css"><script>window.BOOK={slug:"innovation-management",cur:"ch04.html"}</script><script src="assets/platform.js" defer></script>
+</head>
+<body>
+<div class="bp-bar" dir="rtl"><div class="bp-in">
+<a class="bp-home" href="../../index.html">د. عمر عبدالله الصمعاني</a><span class="bp-sep">/</span><a href="../index.html">الكتب</a><span class="bp-sep">/</span><a href="index.html" class="bp-book">إدارة الابتكار</a>
+<span class="bp-sp"></span><span class="bp-tools"><button class="bp-ic" type="button" data-rd="z-" aria-label="تصغير الخط" title="تصغير الخط">أ−</button><button class="bp-ic" type="button" data-rd="z+" aria-label="تكبير الخط" title="تكبير الخط">أ+</button><button class="bp-ic" type="button" data-rd="theme" aria-label="الوضع الليلي" title="الوضع الليلي/النهاري">ليلي</button></span><a class="bp-btn" href="pdf/ch04.pdf" download>تحميل الفصل PDF</a><button class="bp-btn" type="button" data-share>مشاركة</button><button class="bp-btn" type="button" data-bp="search">بحث</button><button class="bp-btn solid" type="button" data-bp="toc">المحتويات</button></div></div>
+<div class="bp-share" id="bpShare" hidden dir="rtl"><b>مشاركة هذه الصفحة</b><button type="button" data-sh="copy">نسخ الرابط</button><button type="button" data-sh="native" hidden>مشاركة…</button><a data-sh="wa" target="_blank" rel="noopener">واتساب</a><a data-sh="x" target="_blank" rel="noopener">X</a><a data-sh="li" target="_blank" rel="noopener">LinkedIn</a><a data-sh="tg" target="_blank" rel="noopener">تيليجرام</a><a data-sh="mail">البريد</a><small>لمشاركة قسم بعينه: مرّر المؤشر على عنوانه واضغط ¶</small></div>
+<div class="bp-drawer" id="bpDrawer" hidden dir="rtl"><div class="bp-panel" role="dialog" aria-label="المحتويات والبحث">
+<div class="bp-head"><b>إدارة الابتكار</b><button type="button" class="bp-x" data-bp="close" aria-label="إغلاق">×</button></div>
+<div class="bp-search"><input id="bpQ" type="search" placeholder="ابحث في نص الكتاب…" autocomplete="off"><div id="bpRes"></div></div>
+<nav class="bp-toc" id="bpToc"></nav>
+<div class="bp-links"><a href="elements.html">عناصر الكتاب: الأشكال والجداول والأدوات</a><a href="index.html#downloads">تحميل الكتاب</a></div>
+</div></div>
+<div class="page">
+
+<nav class="booknav"><a href="index.html">→ إدارة الابتكار</a><span>الجزء الثاني: البناء المؤسسي والإنسان</span></nav>
+
+<header class="opener">
+  <div class="num" aria-hidden="true">٤</div>
+  <div>
+    <div class="kicker">الفصل الرابع</div>
+    <h1>استراتيجية الابتكار والاستشراف</h1>
+  </div>
+  <p class="sub">يتناول هذا الفصل استراتيجية الابتكار بوصفها مجموعة اختيارات تحدد أين تبحث المؤسسة عن القيمة، وبأي طموح، وبأي وسائل. ويبيّن كيف تحدد الاستراتيجية «ماذا ولماذا» وتترك للناس «كيف»، وكيف يغذيها الاستشراف بقراءة منظمة للمستقبل.</p>
+</header>
+
+<nav class="toc" aria-label="محتويات الفصل">
+  <b>في هذا الفصل</b>
+  <ol>
+    <li class="u"><a href="#intro">مدخل</a></li>
+    <li value="1"><a href="#s1">ما استراتيجية الابتكار؟</a></li>
+    <li><a href="#s2">من استراتيجية المؤسسة إلى ساحات البحث</a></li>
+    <li><a href="#s3">مكونات الاستراتيجية</a></li>
+    <li><a href="#s4">مستوى الطموح وتوازن الآفاق</a></li>
+    <li><a href="#s5">الموجَّه والصاعد</a></li>
+    <li><a href="#s6">الاستشراف</a></li>
+    <li><a href="#s7">الاستراتيجية وثيقة حية</a></li>
+    <li class="u"><a href="#tool">أداة الفصل</a></li>
+    <li class="u"><a href="#summary">الخلاصة والأسئلة</a></li>
+  </ol>
+</nav>
+
+<h2 id="intro" class="unnum">مدخل</h2>
+
+<div class="scene">
+  <span class="lbl">حالة افتتاحية: خطة استراتيجية (حالة مركّبة)</span>
+  <p>تضمنت الخطة الاستراتيجية لإحدى الجهات هدفًا نصه: «أن نكون جهة مبتكرة ورائدة». وبعد عام، تلقت منصة الأفكار ما يزيد على ثلاثمئة مقترح في عشرات الاتجاهات، من تحسين مواقف السيارات إلى إنشاء تطبيقات جديدة. ولم تستطع لجنة التقييم المفاضلة بينها، لأن أحدًا لم يكن يعرف أيها أهم للجهة، فاختارت أكثرها جاذبية في العرض، ولم يُنفَّذ منها إلا القليل.</p>
+</div>
+
+<p>كانت الأفكار وفيرة وأصحابها متحمسين، وكان الخلل في غياب الاختيار. فعبارة «أن نكون مبتكرين» أمنية لا استراتيجية؛ لا تقول أين ينبغي أن يبحث الناس، ولا ما الذي لن تستثمر فيه الجهة، ولا كيف يُحكم على الأفكار. ويتناول هذا الفصل الاستراتيجية التي تجيب عن هذه الأسئلة.</p>
+
+<h3>أهداف الفصل</h3>
+<p>يُتوقع من القارئ بعد دراسة هذا الفصل أن يكون قادرًا على:</p>
+<ol class="objectives">
+  <li>تعريف استراتيجية الابتكار بوصفها مجموعة اختيارات مترابطة.</li>
+  <li>اشتقاق ساحات البحث وأسئلة التحدي من أهداف المؤسسة.</li>
+  <li>تحديد مكونات استراتيجية الابتكار وصياغتها في صفحة واحدة.</li>
+  <li>الموازنة بين الآفاق الزمنية للابتكار وفق طبيعة المؤسسة.</li>
+  <li>توظيف الاستشراف في بناء الاستراتيجية ومراجعتها.</li>
+</ol>
+
+<h2 id="s1"><span class="sec">٤-١</span>ما استراتيجية الابتكار؟</h2>
+<p>استراتيجية الابتكار مجموعة اختيارات مترابطة تحدد لماذا تحتاج المؤسسة إلى الابتكار، وأين ستبحث عن القيمة، وبأي مستوى من الطموح، وبأي وسائل، وكيف ستوزع مواردها. وقد لاحظ بيسانو أن كثيرًا من المؤسسات تستثمر في الابتكار دون استراتيجية واضحة، فتتراكم لديها مبادرات متفرقة يصعب الحكم عليها أو الموازنة بينها، وأن الاستراتيجية تُعرف بما تلتزم به من اختيارات، وبما تستبعده أيضًا <span class="cite">(<span class="en">Pisano, 2015</span>)</span>.</p>
+<p>ويتضح من ذلك أن الاستراتيجية ليست قائمة رغبات، ولا عبارة عامة، ولا جدولًا بجميع المبادرات المقترحة. ويمكن اختصار جوهرها في سؤالين تستخدمهما أدبيات الاستراتيجية عمومًا: <strong>أين</strong> نعمل، و<strong>كيف</strong> ننجح <span class="cite">(<span class="en">Lafley &amp; Martin, 2013</span>)</span>. وفي الابتكار يعني الأول الساحات التي تبحث فيها المؤسسة عن قيمة جديدة، ويعني الثاني الوسائل التي ستصل بها إليها: البناء الداخلي، أو الشراكة، أو الاستحواذ على قدرة جاهزة <span class="cite">(<span class="en">Capron &amp; Mitchell, 2012</span>)</span>.</p>
+
+<h2 id="s2"><span class="sec">٤-٢</span>من استراتيجية المؤسسة إلى ساحات البحث</h2>
+<p>لا تُبنى استراتيجية الابتكار من فراغ؛ فهي تنطلق من الغايات الكبرى للمؤسسة، والتحديات التي تعيقها، والتحولات التي قد تمس قدرتها على أداء رسالتها. ومن الخطأ نسخ موضوعات ابتكار رائجة لا ترتبط بهذه الغايات.</p>
+<p>وتتحول الغايات العامة إلى <strong>ساحات بحث</strong>، وهي مجالات فرص محددة توجّه الاستكشاف، ثم إلى <strong>أسئلة تحدٍّ</strong> يستطيع الموظفون والشركاء الإسهام فيها. فبدل دعوة الجميع إلى اقتراح أي فكرة، يُوجَّه الاستكشاف إلى أسئلة مثل: كيف نجعل الوصول إلى الخدمة أبسط لفئة لا تصلها القنوات الحالية؟ كيف نقلل الزمن الضائع بين وحدتين؟ وتحدد هذه الأسئلة <em>ماذا</em> و<em>لماذا</em>، وتترك الحل مفتوحًا.</p>
+
+<figure id="fig-1">
+<div class="fig-frame">
+<div class="cascade">
+  <div class="lv"><b>غاية المؤسسة</b><span>تحسين جودة الحياة للمستفيدين<small>من الخطة الاستراتيجية للمؤسسة</small></span></div>
+  <div class="ar">↓</div>
+  <div class="lv"><b>ساحة البحث</b><span>الوصول إلى الخدمات لكبار السن<small>مجال فرص ذو أولوية</small></span></div>
+  <div class="ar">↓</div>
+  <div class="lv h"><b>سؤال التحدي</b><span>كيف نُمكّن كبير السن من إنجاز خدمته دون الحاجة إلى الحضور أو إلى مساعدة دائمة؟<small>يحدد المشكلة ولا يفرض الحل</small></span></div>
+  <div class="ar">↓</div>
+  <div class="split">
+    <div><b>ما تحدده الاستراتيجية</b>المشكلة، والفئة، وحدود التجربة، ومعايير القيمة</div>
+    <div><b>ما يبقى للناس</b>طريقة الحل: إجراء، أو قناة، أو شراكة، أو تقنية</div>
+  </div>
+</div>
+</div>
+<figcaption><b>شكل ٤-١</b> من غاية المؤسسة إلى سؤال التحدي: الاستراتيجية تحدد «ماذا ولماذا» وتترك «كيف». (مثال توضيحي)</figcaption>
+</figure>
+
+<p>وبهذا تتسق الاستراتيجية مع ما عرضه الفصل الثالث عن الاستقلالية المعرفية ضمن حدود؛ فساحات البحث وأسئلة التحدي هي الحدود الواضحة التي تمنح الناس حرية التفكير داخلها، وتجعل إسهاماتهم قابلة للمقارنة والتقييم.</p>
+
+<h2 id="s3"><span class="sec">٤-٣</span>مكونات الاستراتيجية</h2>
+<p>تتضمن استراتيجية الابتكار الجيدة ستة مكونات، يجيب كل منها عن سؤال محدد:</p>
+
+<div class="tw">
+<table id="tab-1">
+<caption><b>جدول ٤-١</b> مكونات استراتيجية الابتكار</caption>
+<thead><tr><th>المكوّن</th><th>السؤال الذي يجيب عنه</th><th>مثال على الصياغة</th></tr></thead>
+<tbody>
+<tr><td>المسوّغ</td><td>لماذا نحتاج إلى الابتكار الآن؟</td><td>تزايد الطلب مع ثبات الموارد</td></tr>
+<tr><td>النتائج المستهدفة</td><td>ما القيمة التي نريد تحقيقها؟</td><td>خفض زمن الحصول على الخدمة إلى النصف</td></tr>
+<tr><td>ساحات البحث</td><td>أين نبحث، وأين لن نبحث الآن؟</td><td>ثلاث ساحات ذات أولوية، واستبعاد صريح لما سواها</td></tr>
+<tr><td>مستوى الطموح</td><td>كيف نوزع جهدنا بين القريب والبعيد؟</td><td>غالبية الجهد للتحسين، وجزء محدد للرهانات المستقبلية</td></tr>
+<tr><td>وسائل الإنجاز</td><td>كيف سنصل؟</td><td>تطوير داخلي، وشراكات مع جامعات وشركات ناشئة</td></tr>
+<tr><td>المبادئ والحدود</td><td>ما المخاطر المقبولة، وما الذي لا يجوز التضحية به؟</td><td>لا تجربة تمس سلامة البيانات الشخصية</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>ويحتاج كل مكوّن إلى قدرات تدعمه، من بيانات وخبرات وتمويل وحوكمة، وهي موضوع الفصول التالية من هذا الجزء.</p>
+
+<h2 id="s4"><span class="sec">٤-٤</span>مستوى الطموح وتوازن الآفاق</h2>
+<p>يقدم تقسيم المبادرات إلى ثلاثة آفاق زمنية لغة مفيدة للموازنة بين الحاضر والمستقبل <span class="cite">(<span class="en">Baghai et al., 1999</span>)</span>.</p>
+
+<figure id="fig-2">
+<div class="hz">
+  <div class="h1"><i>الأفق الأول</i><b>تحسين القائم</b>
+    <dl><div><dt>المقصد</dt><dd>تعظيم القيمة من الخدمات والقدرات الحالية</dd></div>
+    <div><dt>عدم اليقين</dt><dd>منخفض</dd></div>
+    <div><dt>معيار النجاح</dt><dd>الكفاءة والجودة والرضا</dd></div></dl></div>
+  <div class="h2"><i>الأفق الثاني</i><b>التوسع المجاور</b>
+    <dl><div><dt>المقصد</dt><dd>نقل قدرات قائمة إلى فئات أو مجالات جديدة</dd></div>
+    <div><dt>عدم اليقين</dt><dd>متوسط</dd></div>
+    <div><dt>معيار النجاح</dt><dd>التبني في الفئة الجديدة ونمو القيمة</dd></div></dl></div>
+  <div class="h3"><i>الأفق الثالث</i><b>بناء المستقبل</b>
+    <dl><div><dt>المقصد</dt><dd>إنشاء أسس جديدة للقيمة قد تعيد تعريف عمل المؤسسة</dd></div>
+    <div><dt>عدم اليقين</dt><dd>مرتفع</dd></div>
+    <div><dt>معيار النجاح</dt><dd>جودة التعلم أولًا، ثم القيمة</dd></div></dl></div>
+</div>
+<figcaption><b>شكل ٤-٢</b> آفاق الابتكار الثلاثة. المصدر: بتصرف عن <span class="en">Baghai et al. (1999)</span>.</figcaption>
+</figure>
+
+<p>ولا تُعامل الآفاق صناديق زمنية جامدة، ولا تُعامل نسبة توزيع بعينها، كنسبة ٧٠/٢٠/١٠ الشائعة، قاعدة عامة؛ فالتوزيع يعتمد على القطاع وسرعة التغير ونضج المؤسسة ومستوى المخاطر المقبول. وقيمة النموذج الأساسية أنه يجعل الاستثمار في المستقبل ظاهرًا ومقصودًا، ويمنع هيمنة الأفق الأول لأنه الأسهل في التنبؤ والقياس.</p>
+<p>وفي الجهات العامة، تقترح منظمة التعاون الاقتصادي والتنمية النظر إلى المحفظة من خلال أربعة مقاصد: <strong>ابتكار تحسيني</strong> يرفع أداء القائم، و<strong>ابتكار موجّه بمهمة</strong> يحشد الجهود نحو نتيجة كبرى محددة، و<strong>ابتكار تكيفي</strong> يستجيب لتغيرات ناشئة، و<strong>ابتكار استباقي</strong> يستكشف قضايا مستقبلية لم تتضح بعد <span class="cite">(<span class="en">OECD, 2022</span>)</span>. وتصلح الأولويات الوطنية للبحث والتطوير والابتكار التي عرضها الفصل الثاني مثالًا على الابتكار الموجّه بمهمة.</p>
+
+<h2 id="s5"><span class="sec">٤-٥</span>الموجَّه والصاعد</h2>
+<p><strong>الابتكار الموجَّه</strong> من القيادة يحدد تحديات ذات أولوية ويحشد الموارد حولها، وميزته الوضوح والارتباط بالاستراتيجية، وخطره أن يفترض القادة فهمًا كاملًا للواقع فيغلقوا مساحة الاكتشاف. و<strong>الابتكار الصاعد</strong> من الموظفين يستفيد من المعرفة القريبة من العمل والمستفيدين، وخطره أن ينتج أفكارًا محلية كثيرة غير مرتبطة بالأولويات، كما في الحالة الافتتاحية.</p>
+<p>والمنهج المتوازن يجمع بينهما: تحدد الاستراتيجية ساحات البحث والحدود من الأعلى، ويملأ الموظفون والمستفيدون والشركاء هذه الساحات بالفرص والحلول من الأسفل. وهذا الجمع هو التطبيق المؤسسي لمبدأ «ماذا ولماذا من القيادة، وكيف من الناس»؛ فلا يتحول الابتكار الصاعد إلى نشاط عشوائي، ولا يتحول التوجيه القيادي إلى وصفة جاهزة للحل. كما أن وضوح الساحات يمنح المشاركين معنى لإسهامهم، إذ يعرفون إلى أي غاية يصب جهدهم.</p>
+
+<h2 id="s6"><span class="sec">٤-٦</span>الاستشراف</h2>
+<p>تُبنى الاستراتيجية على افتراضات عن المستقبل، وكثيرًا ما تكون هذه الافتراضات ضمنية: أن المستفيدين سيستمرون في السلوك نفسه، وأن الأنظمة لن تتغير، وأن التقنية المتاحة ستبقى كما هي. والاستشراف هو الجهد المنظم لجعل هذه الافتراضات صريحة واختبارها أمام بدائل محتملة.</p>
+<p>وقد نبّه أنسوف مبكرًا إلى أن المفاجآت الاستراتيجية تسبقها في الغالب <strong>إشارات ضعيفة</strong>، أي معلومات أولية غامضة عن تغير قادم، وأن المؤسسة التي تتعلم رصدها تكسب وقتًا للاستعداد قبل أن تتضح الصورة للجميع <span class="cite">(<span class="en">Ansoff, 1975</span>)</span>. ومن أدوات الاستشراف الأوسع استخدامًا <strong>تخطيط السيناريوهات</strong>، الذي لا يحاول التنبؤ بمستقبل واحد، وإنما يرسم عدة مستقبلات معقولة ومختلفة، ليختبر قرارات المؤسسة أمامها جميعًا <span class="cite">(<span class="en">Schoemaker, 1995</span>)</span>.</p>
+
+<figure id="fig-3">
+<div class="fig-frame">
+<div class="fore">
+  <div><b>الإشارات</b><span>رصد منتظم لمعلومات أولية عن تغير محتمل في المستفيدين أو التقنية أو الأنظمة.</span></div>
+  <div><b>الاتجاهات</b><span>تجميع الإشارات المتقاربة في اتجاهات وتقدير سرعتها وأثرها.</span></div>
+  <div><b>السيناريوهات</b><span>رسم عدة مستقبلات معقولة بحسب أهم عوامل عدم اليقين.</span></div>
+  <div><b>الخيارات</b><span>ما الذي نفعله الآن في كل الأحوال، وما الذي نستكشفه، وما الذي نراقبه؟</span></div>
+</div>
+</div>
+<figcaption><b>شكل ٤-٣</b> من الإشارة إلى الخيار: كيف يغذي الاستشراف استراتيجية الابتكار.</figcaption>
+</figure>
+
+<p>ولا قيمة للاستشراف إذا انتهى بتقرير لا يغيّر شيئًا. فالمخرج المطلوب منه أسئلة تحدٍّ جديدة، أو تعديل في ساحات البحث، أو مبادرات استكشافية في الأفق الثالث. وهنا يتصل الاستشراف بمصفوفة رصد الواقع الخارجي التي قدمها الفصل الثاني، فهي أداته للرصد المنتظم، وتخطيط السيناريوهات أداته الدورية.</p>
+
+<h2 id="s7"><span class="sec">٤-٧</span>الاستراتيجية وثيقة حية</h2>
+<p>تتغير الافتراضات والأسواق والتقنيات والتشريعات، ولذلك تُراجَع استراتيجية الابتكار دوريًا، وعند ظهور إشارة قوية تغيّر فهم المؤسسة لواقعها. وغاية المراجعة التحقق من أن ساحات البحث ما زالت الأهم، وأن الموارد لا تتركز كلها في الأفق الأول، وأن التجارب لم تكشف خطأ في افتراض استراتيجي.</p>
+<p>ولا تؤدي الاستراتيجية وظيفتها إذا بقيت وثيقة لا يعرفها إلا من كتبها. فينبغي أن تُترجم إلى أسئلة تحدٍّ واضحة، ومعايير تقييم معلنة، وأولويات تمويل، ورسائل تشرح لماذا اختيرت هذه الساحات، وأن يعرف كل قطاع أو وحدة دوره فيها: اكتشاف الفرص، أو تقديم الخبرة، أو تشغيل التجارب، أو تبني الحلول.</p>
+
+<div class="callout" data-k="teacher">
+  <div class="tag">تطبيق مهني</div>
+  <p>اكتب أسماء خمس مبادرات ابتكارية تعمل عليها مؤسستك الآن، واسأل عن كل منها: أي ساحة بحث في الاستراتيجية تخدم؟ وأي سؤال تحدٍّ تجيب عنه؟ فإن وجدت مبادرات لا تخدم أي ساحة، فإما أن الاستراتيجية تغفل أولوية حقيقية تحتاج إلى إضافتها، وإما أن المبادرة تستهلك موارد خارج الاتجاه.</p>
+</div>
+
+<h2 id="tool" class="unnum">أداة الفصل: استراتيجية الابتكار في صفحة واحدة</h2>
+<p>صُغ استراتيجية الابتكار لمؤسستك في هذه الصفحة الواحدة، ثم ناقشها وانشرها. فإذا تعذّر عليك ملء خانة منها بوضوح، فهناك قرار لم يُتخذ بعد.</p>
+
+<div class="canvas">
+  <div class="th"><b>لوحة استراتيجية الابتكار</b><span>تُراجع مرة في السنة على الأقل</span></div>
+  <div class="grid">
+    <div class="cell"><b>١. المسوّغ</b><span>لماذا نحتاج إلى الابتكار الآن؟ ما التغير أو التحدي أو الطموح؟</span></div>
+    <div class="cell"><b>٢. النتائج المستهدفة</b><span>ما القيمة التي نريدها خلال ثلاث سنوات، وكيف سنعرف أننا حققناها؟</span></div>
+    <div class="cell"><b>٣. ساحات البحث</b><span>ثلاث إلى خمس ساحات ذات أولوية، ولكل منها سؤال تحدٍّ.</span></div>
+    <div class="cell"><b>٤. ما لن نفعله الآن</b><span>ساحات أو أنواع مبادرات مستبعدة صراحة.</span></div>
+    <div class="cell"><b>٥. مستوى الطموح</b><span>النسبة التقريبية للجهد في كل أفق، وسبب هذا التوزيع.</span></div>
+    <div class="cell"><b>٦. وسائل الإنجاز</b><span>تطوير داخلي، وشراكات، وغيرها، ومن يقود كلًّا منها.</span></div>
+    <div class="cell wide"><b>٧. المبادئ والحدود</b><span>المخاطر المقبولة، والضوابط الأخلاقية والنظامية، وما لا يجوز التضحية به.</span></div>
+    <div class="cell wide"><b>٨. الافتراضات الاستراتيجية ومحفزات المراجعة</b><span>ما الذي نفترضه عن المستقبل؟ وما الإشارة التي إن ظهرت راجعنا الاستراتيجية؟</span></div>
+  </div>
+</div>
+
+<h2 id="summary" class="unnum">خلاصة الفصل</h2>
+<div class="summary">
+<ul>
+  <li>استراتيجية الابتكار مجموعة اختيارات مترابطة، تُعرف بما تلتزم به وبما تستبعده.</li>
+  <li>تجيب الاستراتيجية عن سؤالين: أين نبتكر، وكيف نصل.</li>
+  <li>تتحول غايات المؤسسة إلى ساحات بحث، ثم إلى أسئلة تحدٍّ تحدد «ماذا ولماذا» وتترك «كيف» للناس.</li>
+  <li>للاستراتيجية ستة مكونات: المسوّغ، والنتائج، وساحات البحث، ومستوى الطموح، ووسائل الإنجاز، والمبادئ والحدود.</li>
+  <li>توازن الآفاق الثلاثة يجعل الاستثمار في المستقبل مقصودًا، ولا توجد نسبة توزيع تصلح لكل مؤسسة.</li>
+  <li>يجمع المنهج المتوازن بين الابتكار الموجّه والصاعد، فيمنح الناس حرية داخل ساحات واضحة ومعنى لإسهامهم.</li>
+  <li>يغذي الاستشراف الاستراتيجية بتحويل الإشارات الضعيفة إلى اتجاهات وسيناريوهات وخيارات قابلة للقرار.</li>
+</ul>
+</div>
+
+<h3>مصطلحات الفصل</h3>
+<dl class="gloss">
+  <dt>استراتيجية الابتكار<span class="en">Innovation strategy</span></dt><dd>مجموعة اختيارات مترابطة تحدد لماذا تبتكر المؤسسة، وأين، وبأي طموح، وبأي وسائل.</dd>
+  <dt>ساحة البحث<span class="en">Search field / Innovation arena</span></dt><dd>مجال فرص ذو أولوية يوجّه جهود الاستكشاف.</dd>
+  <dt>سؤال التحدي<span class="en">Challenge question</span></dt><dd>صياغة لمشكلة ذات أولوية تحدد المطلوب ولا تفرض الحل.</dd>
+  <dt>آفاق الابتكار<span class="en">Three horizons</span></dt><dd>تقسيم المبادرات بحسب بُعدها عن الأعمال القائمة ودرجة عدم اليقين فيها.</dd>
+  <dt>الابتكار الموجّه بمهمة<span class="en">Mission-oriented innovation</span></dt><dd>حشد الجهود والموارد نحو نتيجة كبرى محددة.</dd>
+  <dt>الإشارات الضعيفة<span class="en">Weak signals</span></dt><dd>معلومات أولية غامضة عن تغير قادم.</dd>
+  <dt>تخطيط السيناريوهات<span class="en">Scenario planning</span></dt><dd>رسم عدة مستقبلات معقولة لاختبار القرارات أمامها.</dd>
+</dl>
+
+<h3>أسئلة للمراجعة والمناقشة</h3>
+<ol class="questions">
+  <li>لماذا لا تُعد عبارة «أن نكون مؤسسة مبتكرة» استراتيجية؟ أعد صياغتها بما يحقق شروط الاستراتيجية. <span class="lv">تطبيق</span></li>
+  <li>اشتق من إحدى غايات مؤسستك ساحة بحث وسؤال تحدٍّ يحدد المشكلة ولا يفرض الحل. <span class="lv">تطبيق</span></li>
+  <li>كيف يتوزع جهد مؤسستك الحالي على الآفاق الثلاثة؟ وهل يتسق هذا التوزيع مع ما تواجهه من تغيرات؟ <span class="lv">تحليل</span></li>
+  <li>ما العلاقة بين ساحات البحث ومبدأ الاستقلالية المعرفية ضمن حدود الذي عرضه الفصل الثالث؟ <span class="lv">تحليل</span></li>
+  <li>اختر إشارة ضعيفة في قطاعك، وابنِ حولها سيناريوهين مختلفين، ثم حدد خيارًا يصلح في الحالتين. <span class="lv">تقويم</span></li>
+</ol>
+
+<div class="endmark" aria-hidden="true">✦ ✦ ✦</div>
+<nav class="pager"><a class="prev" href="ch03.html"><small>الفصل السابق</small><b>قيادة الابتكار</b></a><a class="next" href="ch05.html"><small>الفصل التالي</small><b>نظام إدارة الابتكار</b></a></nav>
+</div>
+</body>
+</html>

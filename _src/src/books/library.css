@@ -1,0 +1,21 @@
+:root{--bg:#F5F6F3;--surface:#fff;--ink:#16201F;--muted:#5A6664;--line:#DCE1DD;--accent:#2C3E8F;--dune:#C9822B}
+@media (prefers-color-scheme:dark){:root{--bg:#0E1322;--surface:#151B2E;--ink:#E9ECF2;--muted:#9CA6BA;--line:#262F47;--accent:#9DB0FF;--dune:#E3A55A;color-scheme:dark}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans Arabic",system-ui,sans-serif;line-height:1.8;padding-inline:20px}
+.lib-top{max-width:1100px;margin:0 auto;padding-block:16px;display:flex;gap:10px;border-bottom:1px solid var(--line);font-size:14px}
+.lib-top a{color:var(--ink);font-weight:600;text-decoration:none}.lib-top span{color:var(--muted)}.lib-top span::before{content:"/ ";color:var(--line)}
+.lib{max-width:1100px;margin:0 auto;padding-block:44px 80px}
+.lib-eyebrow{color:var(--dune);font-size:13px;font-weight:600;margin:0}
+.lib h1{font-family:"Noto Naskh Arabic",serif;font-size:2.2rem;margin:4px 0 8px}
+.lib-lead{color:var(--muted);max-width:60ch;margin:0 0 32px}
+.lib-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,460px),1fr));gap:20px}
+.lib-card{display:grid;grid-template-columns:150px 1fr;gap:22px;padding:22px;border:1px solid var(--line);border-radius:16px;background:var(--surface);text-decoration:none;color:var(--ink);transition:border-color .2s,transform .2s}
+.lib-card:hover{border-color:var(--bk);transform:translateY(-2px)}
+.lib-spine{aspect-ratio:2/3;border-radius:4px 10px 10px 4px;background:var(--bk);color:#fff;display:flex;flex-direction:column;justify-content:space-between;padding:16px 14px;box-shadow:inset 6px 0 0 rgba(0,0,0,.18),0 10px 24px -12px rgba(0,0,0,.4)}
+.lib-spine b{font-family:"Noto Naskh Arabic",serif;font-size:1.5rem;line-height:1.3}
+.lib-spine span{font-size:11px;opacity:.85}
+.lib-meta h3{font-family:"Noto Naskh Arabic",serif;font-size:1.4rem;margin:0}
+.lib-sub{color:var(--dune);font-size:14px;margin:2px 0 8px}
+.lib-meta p{margin:0 0 10px;color:var(--muted);font-size:14.5px}
+.lib-go{color:var(--accent);font-weight:600;font-size:14px}
+.lib-badge{display:inline-block;font-size:11.5px;border:1px dashed var(--dune);color:var(--dune);border-radius:999px;padding:0 10px;margin-bottom:6px}
+@media (max-width:520px){.lib-card{grid-template-columns:1fr}.lib-spine{max-width:140px}}

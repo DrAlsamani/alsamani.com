@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>الفصل الثالث: قيادة الابتكار</title>
+<link rel="stylesheet" href="assets/book.css">
+<link rel="stylesheet" href="assets/innov.css">
+<style>
+.fn{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;font-family:var(--f-ui);counter-reset:f}
+.fn>div{counter-increment:f;border:1.5px solid var(--line);border-radius:12px;padding:12px;min-width:0;background:var(--paper)}
+.fn>div::before{content:counter(f,arabic-indic);display:grid;place-items:center;width:28px;height:28px;border-radius:8px;background:var(--accent-soft);color:var(--accent);font-weight:700;font-size:14px;margin-bottom:6px}
+.fn b{display:block;font-size:15px;line-height:1.5}
+.fn span{display:block;font-size:13px;line-height:1.7;color:var(--ink-2);margin-top:4px}
+.fn .wide{grid-column:span 2}
+@media (max-width:760px){.fn{grid-template-columns:1fr 1fr}.fn .wide{grid-column:span 2}}
+@media (max-width:420px){.fn{grid-template-columns:1fr}.fn .wide{grid-column:auto}}
+.amb{display:grid;grid-template-columns:1fr 1fr;gap:12px;font-family:var(--f-ui)}
+.amb>div{border-radius:14px;padding:16px;min-width:0}
+.amb .ex{background:var(--example-soft);border:1.5px solid color-mix(in srgb,var(--example) 35%,transparent)}
+.amb .xp{background:var(--accent-soft);border:1.5px solid color-mix(in srgb,var(--accent) 40%,transparent)}
+.amb h5{font-family:var(--f-display);font-size:19px;margin:0 0 2px}
+.amb .ex h5{color:var(--example)} .amb .xp h5{color:var(--accent)}
+.amb .en{font-size:12px;color:var(--ink-2);display:block;margin-bottom:8px}
+.amb ul{margin:0;padding-inline-start:1.1em;font-size:14px;line-height:1.8}
+.amb .tension{grid-column:1/-1;text-align:center;font-size:13.5px;font-weight:700;color:var(--ink-2);border:1.5px dashed var(--line);border-radius:12px;padding:10px}
+@media (max-width:600px){.amb{grid-template-columns:1fr}}
+.selfcheck{border:2px solid var(--accent);border-radius:16px;overflow:hidden;margin:24px 0;font-family:var(--f-ui)}
+.selfcheck .th{background:var(--accent);color:var(--paper);padding:12px 18px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:baseline}
+.selfcheck .th b{font-family:var(--f-display);font-size:19px}
+.selfcheck .th span{font-size:13px;opacity:.9}
+.selfcheck ol{list-style:none;margin:0;padding:6px 18px 10px;counter-reset:s}
+.selfcheck li{counter-increment:s;display:grid;grid-template-columns:30px minmax(0,1fr) auto;gap:12px;align-items:center;padding:10px 0;border-bottom:1px dashed var(--line);margin:0;font-size:14.5px;line-height:1.7}
+.selfcheck li:last-child{border-bottom:0}
+.selfcheck li::before{content:counter(s,arabic-indic);width:26px;height:26px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;font-weight:700;font-size:13px}
+.selfcheck .sc{display:flex;gap:4px}
+.selfcheck .sc i{font-style:normal;width:26px;height:26px;border:1.5px solid var(--line);border-radius:6px;display:grid;place-items:center;font-size:12px;color:var(--ink-2)}
+.selfcheck .foot{padding:12px 18px;font-size:13.5px;line-height:1.8;border-top:1px solid var(--line);background:var(--paper-2)}
+@media (max-width:560px){.selfcheck li{grid-template-columns:30px 1fr}.selfcheck .sc{grid-column:2}}
+</style>
+<meta name="robots" content="noindex,nofollow"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap"><link rel="stylesheet" href="assets/platform.css"><script>window.BOOK={slug:"innovation-management",cur:"ch03.html"}</script><script src="assets/platform.js" defer></script>
+</head>
+<body>
+<div class="bp-bar" dir="rtl"><div class="bp-in">
+<a class="bp-home" href="../../index.html">د. عمر عبدالله الصمعاني</a><span class="bp-sep">/</span><a href="../index.html">الكتب</a><span class="bp-sep">/</span><a href="index.html" class="bp-book">إدارة الابتكار</a>
+<span class="bp-sp"></span><span class="bp-tools"><button class="bp-ic" type="button" data-rd="z-" aria-label="تصغير الخط" title="تصغير الخط">أ−</button><button class="bp-ic" type="button" data-rd="z+" aria-label="تكبير الخط" title="تكبير الخط">أ+</button><button class="bp-ic" type="button" data-rd="theme" aria-label="الوضع الليلي" title="الوضع الليلي/النهاري">ليلي</button></span><a class="bp-btn" href="pdf/ch03.pdf" download>تحميل الفصل PDF</a><button class="bp-btn" type="button" data-share>مشاركة</button><button class="bp-btn" type="button" data-bp="search">بحث</button><button class="bp-btn solid" type="button" data-bp="toc">المحتويات</button></div></div>
+<div class="bp-share" id="bpShare" hidden dir="rtl"><b>مشاركة هذه الصفحة</b><button type="button" data-sh="copy">نسخ الرابط</button><button type="button" data-sh="native" hidden>مشاركة…</button><a data-sh="wa" target="_blank" rel="noopener">واتساب</a><a data-sh="x" target="_blank" rel="noopener">X</a><a data-sh="li" target="_blank" rel="noopener">LinkedIn</a><a data-sh="tg" target="_blank" rel="noopener">تيليجرام</a><a data-sh="mail">البريد</a><small>لمشاركة قسم بعينه: مرّر المؤشر على عنوانه واضغط ¶</small></div>
+<div class="bp-drawer" id="bpDrawer" hidden dir="rtl"><div class="bp-panel" role="dialog" aria-label="المحتويات والبحث">
+<div class="bp-head"><b>إدارة الابتكار</b><button type="button" class="bp-x" data-bp="close" aria-label="إغلاق">×</button></div>
+<div class="bp-search"><input id="bpQ" type="search" placeholder="ابحث في نص الكتاب…" autocomplete="off"><div id="bpRes"></div></div>
+<nav class="bp-toc" id="bpToc"></nav>
+<div class="bp-links"><a href="elements.html">عناصر الكتاب: الأشكال والجداول والأدوات</a><a href="index.html#downloads">تحميل الكتاب</a></div>
+</div></div>
+<div class="page">
+
+<nav class="booknav"><a href="index.html">→ إدارة الابتكار</a><span>الجزء الأول: الأسس</span></nav>
+
+<header class="opener">
+  <div class="num" aria-hidden="true">٣</div>
+  <div>
+    <div class="kicker">الفصل الثالث</div>
+    <h1>قيادة الابتكار</h1>
+  </div>
+  <p class="sub">يتناول هذا الفصل دور القيادة في إدارة الابتكار: كيف تختلف قيادة المجهول عن قيادة المعلوم، وما الوظائف التي لا يقوم بها غير القائد، وكيف يوازن بين تشغيل الحاضر واستكشاف المستقبل، ولماذا يتعلم الموظفون معنى الابتكار من سلوك قائدهم اليومي أكثر مما يتعلمونه من خطابه.</p>
+</header>
+
+<nav class="toc" aria-label="محتويات الفصل">
+  <b>في هذا الفصل</b>
+  <ol>
+    <li class="u"><a href="#intro">مدخل</a></li>
+    <li value="1"><a href="#s1">قيادة المجهول</a></li>
+    <li><a href="#s2">الوظائف القيادية في إدارة الابتكار</a></li>
+    <li><a href="#s3">البراعة التنظيمية</a></li>
+    <li><a href="#s4">القائد صانع البيئة</a></li>
+    <li><a href="#s5">كيف تُطفئ الإدارة الابتكار دون قصد؟</a></li>
+    <li><a href="#s6">الرعاية القيادية</a></li>
+    <li><a href="#s7">القرار القيادي عبر المراحل</a></li>
+    <li class="u"><a href="#tool">أداة الفصل</a></li>
+    <li class="u"><a href="#summary">الخلاصة والأسئلة</a></li>
+  </ol>
+</nav>
+
+<h2 id="intro" class="unnum">مدخل</h2>
+
+<div class="scene">
+  <span class="lbl">حالة افتتاحية: مدير جديد (حالة مركّبة)</span>
+  <p>في لقائه الأول بالموظفين، دعا مدير جديد إلى «الأفكار الجريئة» ووعد بدعمها. وبعد أسابيع، عرضت موظفة فكرة لتبسيط إجراء يتكرر يوميًا، وجرّبتها على نطاق صغير مع زميلين. فكان أول سؤال وُجّه إليها في الاجتماع: «من أذن لكِ بذلك؟». لم تُرفض الفكرة، ولم تُناقش نتائجها، وانتقل الاجتماع إلى البند التالي.</p>
+</div>
+
+<p>لم يكرر أحد من الحاضرين التجربة بعد ذلك. فقد تعلّموا من موقف واحد ما لم تغيّره كلمة الافتتاح: أن المبادرة مخاطرة شخصية. وهذا جوهر ما يتناوله الفصل؛ فالقيادة في الابتكار تُقاس بما يتعلمه الناس من ردود الأفعال اليومية أكثر مما تُقاس بما يُعلن.</p>
+
+<h3>أهداف الفصل</h3>
+<p>يُتوقع من القارئ بعد دراسة هذا الفصل أن يكون قادرًا على:</p>
+<ol class="objectives">
+  <li>التمييز بين قيادة العمل المعلوم وقيادة العمل الذي يكتنفه عدم اليقين.</li>
+  <li>تفسير أثر القيادة المتمركزة حول الإنسان في الدافعية والابتكار في ضوء أصولها النظرية.</li>
+  <li>تحديد الوظائف القيادية الأساسية في إدارة الابتكار.</li>
+  <li>شرح مفهوم البراعة التنظيمية وأساليب الموازنة بين الاستغلال والاستكشاف.</li>
+  <li>رصد السلوكيات القيادية التي تشجع الابتكار وتلك التي تطفئه دون قصد.</li>
+  <li>مواءمة القرار القيادي ونوع الدليل المطلوب مع مرحلة المبادرة.</li>
+</ol>
+
+<h2 id="s1"><span class="sec">٣-١</span>قيادة المجهول</h2>
+<p>تقوم الإدارة التقليدية على تحقيق أهداف معروفة بموارد وجداول وإجراءات محددة، ويُحاسَب فيها القائد على مدى الالتزام بالخطة. أما الابتكار فيتعامل مع أوضاع لا تزال فيها جوانب من المشكلة أو الحل أو التبني أو الجدوى غير معروفة. ولهذا لا يستطيع القائد أن يطلب من فريق الابتكار الدقة نفسها التي يطلبها من مشروع تشغيلي مكتمل المتطلبات، لكنه يستطيع أن يطلب وضوح الافتراضات، وجودة التجارب، وسرعة التعلم، والانضباط في القرار.</p>
+<p>ويتحول السؤال القيادي تبعًا لذلك من «هل نضمن نجاح المبادرة؟» إلى «ما الذي نحتاج إلى معرفته قبل أن نزيد التزامنا؟». ودور القائد هنا أن يمنع تحويل الجهل إلى ثقة زائفة، ويوزع الاستثمار على مراحل، ويربط كل مرحلة بالدليل المناسب لها.</p>
+
+<h2 id="s2"><span class="sec">٣-٢</span>الوظائف القيادية في إدارة الابتكار</h2>
+<p>لا يمكن تفويض الابتكار إلى إدارة متخصصة ثم انتظار نتائجه. فالمبادرة المؤسسية للابتكار تبدأ بتفويض صريح من القيادة العليا يمنحها الشرعية، وبالتزام مستمر بدعم القائمين عليها وحمايتهم حين تصطدم مبادراتهم بالوضع القائم، وهو ما يجعله المعيار الدولي لنظام إدارة الابتكار في مقدمة متطلبات القيادة <span class="cite">(<span class="en">International Organization for Standardization [ISO], 2024</span>)</span>. ويمكن إجمال دور القيادة في سبع وظائف مترابطة:</p>
+
+<figure id="fig-1">
+<div class="fn">
+  <div><b>تحديد الاتجاه</b><span>ربط الابتكار بأهداف المؤسسة، وتحديد مجالات التركيز والقيمة المنتظرة.</span></div>
+  <div><b>منح الشرعية</b><span>إعلان أن الاستكشاف والتجريب جزء أصيل من العمل اليومي.</span></div>
+  <div><b>توفير الحماية</b><span>حماية التجارب المنضبطة من الرفض المبكر ومن معايير التشغيل المستقر.</span></div>
+  <div><b>تخصيص الموارد</b><span>وقت وتمويل وخبرات ووصول إلى المستفيدين والبيانات، بقدر يتدرج مع الأدلة.</span></div>
+  <div><b>تصميم القرار</b><span>معايير ونقاط مراجعة واضحة للاستمرار أو التعديل أو الإيقاف.</span></div>
+  <div><b>بناء التعلم</b><span>الترحيب بالأخبار غير المريحة، ومراجعة الافتراضات، وتبادل الدروس.</span></div>
+  <div class="wide"><b>تمكين التنفيذ</b><span>إزالة العوائق، وضمان وجود جهة تشغيل تتبنى الحل عند نجاحه.</span></div>
+</div>
+<figcaption><b>شكل ٣-١</b> الوظائف القيادية السبع في إدارة الابتكار.</figcaption>
+</figure>
+
+<p>ولا يؤدي القائد في هذه الوظائف دور صاحب الفكرة الأفضل. فوظيفته أن يصمم سياقًا يستطيع فيه أصحاب المعارف المتنوعة اكتشاف المشكلات وبناء الحلول، وأن يضمن تحوّل الجهود إلى قرارات وقيمة. ويتجه دوره في ذلك اتجاهين: <strong>إلى الخارج</strong>، بمتابعة الواقع الخارجي وضمان ملاءمة المؤسسة على المدى البعيد، و<strong>إلى الداخل</strong>، بتهيئة القيم والثقافة والهياكل التي تجعل الابتكار ممكنًا ومستدامًا.</p>
+
+<h2 id="s3"><span class="sec">٣-٣</span>البراعة التنظيمية</h2>
+<p>تحتاج المؤسسة إلى الكفاءة والموثوقية لتقديم أعمالها الحالية، وتحتاج في الوقت ذاته إلى المرونة والتجريب لاستكشاف المستقبل. وقد وصف مارش هذين النشاطين بـ<strong>الاستغلال</strong>، أي تحسين ما تعرفه المؤسسة وتعميقه، و<strong>الاستكشاف</strong>، أي البحث عما لا تعرفه بعد، وبيّن أن المؤسسات تميل إلى تفضيل الاستغلال لأن عائده أقرب وأوضح، فتضعف قدرتها على التجدد مع الوقت <span class="cite">(<span class="en">March, 1991</span>)</span>. ويُطلق على القدرة على الجمع بينهما <strong>البراعة التنظيمية</strong> <span class="cite">(<span class="en">O'Reilly &amp; Tushman, 2013</span>)</span>.</p>
+
+<figure id="fig-2">
+<div class="fig-frame">
+<div class="amb">
+  <div class="ex"><h5>الاستغلال</h5><span class="en">Exploitation</span>
+    <ul><li>تحسين ما هو قائم وتعميقه</li><li>يكافئ الالتزام بالخطة وتقليل التباين</li><li>عائد قريب وواضح</li><li>يُقاس بالكفاءة والجودة</li></ul></div>
+  <div class="xp"><h5>الاستكشاف</h5><span class="en">Exploration</span>
+    <ul><li>البحث عن قيمة جديدة</li><li>يحتاج إلى تعديل الخطة وقبول النتائج غير المتوقعة</li><li>عائد بعيد وغير مؤكد</li><li>يُقاس بجودة التعلم ثم بالقيمة</li></ul></div>
+  <div class="tension">إذا خضع الاستكشاف لمعايير الاستغلال وحدها، اختارت المؤسسة دائمًا الأقرب إلى المألوف</div>
+</div>
+</div>
+<figcaption><b>شكل ٣-٢</b> الاستغلال والاستكشاف: منطقان مختلفان تحتاجهما المؤسسة معًا.</figcaption>
+</figure>
+
+<p>وينشأ التوتر لأن النظام التشغيلي يكافئ الالتزام بالخطة، بينما يحتاج الاستكشاف إلى تعديلها. فإذا طُبّقت معايير الربحية أو الإنتاجية المعتادة على المبادرات الناشئة، اختارت المؤسسة في الغالب الأفكار القريبة من المألوف. وإذا تُرك الاستكشاف بلا ضوابط، تحوّل إلى نشاط مشتت. وتعالج المؤسسات هذا التوتر بأحد أسلوبين أو بالجمع بينهما: <strong>الفصل الهيكلي</strong>، بإنشاء وحدات أو ميزانيات مستقلة للاستكشاف ترتبط بالقيادة العليا، و<strong>البراعة السياقية</strong>، بتمكين الأفراد والفرق من توزيع وقتهم بين المنطقين ضمن العمل نفسه <span class="cite">(<span class="en">O'Reilly &amp; Tushman, 2013</span>)</span>. والغاية في الحالين توفير بيئة مؤقتة للتعلم، ثم بناء جسر منظم إلى التشغيل.</p>
+
+<h2 id="s4"><span class="sec">٣-٤</span>القائد صانع البيئة</h2>
+<p>في أعلى مراتب القيادة يعمل الناس من أجل القائد أكثر مما يعملون بحكم سلطته في التكليف: لأنه يقدّر جهدهم، ويراعي ظروفهم، ويثق بقدرتهم. وهذه القيادة ليست مسألة شخصية أو مزاج؛ فلها أصول معرفية تفسر لماذا تقود إلى العمل العميق والولاء، ولماذا يحتاجها الابتكار تحديدًا.</p>
+<h3>الأصل الأول: التبادل الاجتماعي والشعور بالدعم</h3>
+<p>تفترض نظرية التبادل الاجتماعي أن العلاقات في العمل تقوم، إلى جانب العقد الرسمي، على تبادل غير مكتوب للثقة والاهتمام <span class="cite">(<span class="en">Blau, 1964</span>)</span>. وحين يدرك الموظف أن مؤسسته وقائده يقدّرون إسهامه ويهتمون بحاله، ينشأ لديه شعور بالالتزام برد الجميل، يظهر في ارتباط أقوى بالمؤسسة، وجهد أكبر، واستعداد لعمل ما يتجاوز المطلوب. وقد أكدت مراجعة واسعة لأبحاث الدعم التنظيمي المُدرَك هذه العلاقة <span class="cite">(<span class="en">Rhoades &amp; Eisenberger, 2002</span>)</span>. والابتكار في جوهره عمل يتجاوز المطلوب؛ فلا أحد يُلزَم بكشف مشكلة أو اقتراح بديل أو المخاطرة بتجربة.</p>
+
+<h3>الأصل الثاني: الحاجات النفسية الأساسية</h3>
+<p>تبيّن نظرية تقرير المصير أن الدافعية الذاتية تنمو حين تُشبَع ثلاث حاجات نفسية أساسية: <strong>الاستقلالية</strong>، أي الشعور بأن الفرد يختار ما يفعله، و<strong>الكفاءة</strong>، أي الشعور بالقدرة والتقدم، و<strong>الانتماء</strong>، أي الشعور بالتقدير والصلة بالآخرين <span class="cite">(<span class="en">Gagné &amp; Deci, 2005</span>)</span>. والقائد المتعاطف يُشبع هذه الحاجات حين يثق بفريقه فيمنحه مساحة، ويعترف بتقدمه، ويعامل أفراده بوصفهم أشخاصًا لا أدوات. وتتصل هذه النظرية بما سبق في هذا الكتاب؛ فالدافعية الداخلية هي الأساس الذي يقف عليه الإبداع <span class="cite">(<span class="en">Amabile, 1996</span>)</span>.</p>
+<p>والاستقلالية المقصودة هنا استقلالية معرفية في طريقة التفكير والحل، لا انفصال عن المؤسسة. فالقائد يرسم بوضوح <strong>ماذا</strong> و<strong>لماذا</strong>: المشكلة المراد حلها، وحاجات المنظومة التي يخدمها الحل، والقيود التي لا يجوز تجاوزها، ثم يترك للفريق <strong>كيف</strong>. وقد عبّرت أمابيل عن ذلك بأن الناس يكونون أكثر إبداعًا حين يُمنحون حرية اختيار الطريق إلى قمة الجبل، ولا يلزم أن يختاروا الجبل نفسه <span class="cite">(<span class="en">Amabile, 1998</span>)</span>. وبهذا تتسق الاستقلالية مع منطلق الكتاب في أن الابتكار يبدأ من مشكلة ذات أولوية.</p>
+
+<h3>الأصل الثالث: أنماط القيادة المتمركزة حول الإنسان</h3>
+<p>يتضمن نمط <strong>القيادة التحويلية</strong> بُعدًا يُسمى «الاعتبار الفردي»، أي مراعاة حاجات كل فرد ودعم نموه، وقد أظهر تحليل بعدي لنتائج الدراسات علاقة إيجابية بين هذا النمط وإبداع العاملين <span class="cite">(<span class="en">Koh et al., 2019</span>)</span>. ويذهب نمط <strong>القيادة الخادمة</strong> أبعد من ذلك، إذ يجعل خدمة الأتباع وتلبية حاجات كل منهم ونموه غاية في ذاتها، لا وسيلة لرفع الأداء فقط <span class="cite">(<span class="en">Eva et al., 2019</span>)</span>. وقد بيّن تحليل بعدي شمل ١٣٠ دراسة أن لهذا النمط قدرة تفسيرية تتجاوز القيادة التحويلية، وأن أثره يمر عبر الثقة بالقائد، والإحساس بالعدالة، وجودة العلاقة بين القائد والموظف <span class="cite">(<span class="en">Lee et al., 2020</span>)</span>.</p>
+
+<figure id="fig-3">
+<div class="fig-frame">
+<div class="flow" style="max-width:640px">
+  <div class="st"><span class="n">١</span><b>سلوك القائد</b><span>تقدير ومراعاة واعتراف بالجهد، ومساحة مستقلة في «كيف» ضمن حدود واضحة لـ«ماذا ولماذا».</span></div>
+  <div class="ar"><i></i></div>
+  <div class="st"><span class="n">٢</span><b>ما يشعر به الموظف</b><span>دعم مُدرَك، وحاجات نفسية مُشبعة: استقلالية وكفاءة وانتماء.</span></div>
+  <div class="ar"><i></i></div>
+  <div class="st"><span class="n">٣</span><b>ما ينشأ لديه</b><span>دافعية ذاتية، وثقة، والتزام برد الجميل.</span></div>
+  <div class="ar"><i></i></div>
+  <div class="st"><span class="n">٤</span><b>ما يفعله</b><span>عمل عميق، ومبادرة تتجاوز المطلوب، وولاء، واستعداد للتجربة.</span></div>
+  <div class="ar"><i></i></div>
+  <div class="dec">بيئة تُنتج الابتكار</div>
+</div>
+</div>
+<figcaption><b>شكل ٣-٣</b> كيف تتحول القيادة المتمركزة حول الإنسان إلى ابتكار: تركيب من نظريات التبادل الاجتماعي وتقرير المصير والقيادة.</figcaption>
+</figure>
+
+<h3>ما تُظهره الأبحاث عن السلوك اليومي</h3>
+<p>وتتجلى هذه الأصول في تفاصيل يومية صغيرة. وقد حللت أمابيل وزملاؤها نحو اثني عشر ألف تدوينة يومية كتبها ٢٣٨ فردًا في ٢٦ فريقًا بسبع شركات، فوجدوا أن تصرفات القائد اليومية الصغيرة، كالإصغاء والتقدير وتقديم الدعم أو حجبه، تؤثر في شعور الأفراد بالدعم وفي إبداعهم، وأن ردود أفعالهم تجاه التصرفات السلبية كانت أقوى من ردود أفعالهم تجاه الإيجابية <span class="cite">(<span class="en">Amabile et al., 2004</span>)</span>. كما بيّن ديتيرت وبوريس أن انفتاح المدير على المقترحات يرتبط بتعبير الموظفين عن أفكارهم ومخاوفهم، وأن ذلك يمر عبر شعورهم بالأمان <span class="cite">(<span class="en">Detert &amp; Burris, 2007</span>)</span>.</p>
+
+<div class="compare">
+  <div class="bad"><h6>سلوكيات تطفئ الابتكار</h6>
+  <ul style="margin:0;padding-inline-start:1.1em">
+    <li>السؤال عن المسؤول عن الخطأ قبل السؤال عما تعلّمناه</li>
+    <li>طلب ضمان النجاح قبل التجربة</li>
+    <li>تفضيل العرض الجذاب على الدليل</li>
+    <li>الموافقة على مبادرات كثيرة دون موارد كافية</li>
+    <li>عدّ الإيقاف فشلًا شخصيًا</li>
+  </ul></div>
+  <div class="good"><h6>سلوكيات تدعم الابتكار</h6>
+  <ul style="margin:0;padding-inline-start:1.1em">
+    <li>طلب الدليل على الأفكار، والتمييز بين الرأي والافتراض والحقيقة</li>
+    <li>الترحيب بالمعلومات التي تنقض التوقعات</li>
+    <li>تحديد حدود التجربة بدل منعها</li>
+    <li>منح الفرق وصولًا مباشرًا إلى المستفيدين</li>
+    <li>الاعتراف بما لا يعرفه، وشرح أسباب قراراته</li>
+  </ul></div>
+</div>
+
+<p>ومن هنا يتضح أن الموظفين يستنتجون ثقافة الابتكار من طريقة تعامل قائدهم مع أول فكرة غير مألوفة، وأول تجربة لم تنجح، وأول شخص خالف الرأي السائد. ويعود الكتاب إلى هذه العلاقة بين الفرد وبيئته بتفصيل في الفصلين السابع والثامن.</p>
+
+<div class="callout" data-k="warn">
+  <div class="tag">تنبيه</div>
+  <p>التعاطف لا يعني خفض المعايير أو تجنب المساءلة. فالبيئة الأقدر على الابتكار تجمع بين الاهتمام الصادق بالإنسان والتوقعات العالية منه، كما يبيّن الفصل الثامن في حديثه عن الأمان النفسي. والولاء المقصود هنا التزام بالغاية والفريق، لا طاعة تُسكت الرأي المخالف.</p>
+</div>
+
+<h2 id="s5"><span class="sec">٣-٥</span>كيف تُطفئ الإدارة الابتكار دون قصد؟</h2>
+<p>قليل من القادة يعلنون رفض الابتكار، لكن المؤسسة قد تقمعه بممارسات تبدو منطقية كل منها على حدة. ومن أكثرها شيوعًا:</p>
+<ul>
+  <li>جعل الابتكار عملًا إضافيًا يُمارس بعد الانتهاء من العبء التشغيلي الكامل.</li>
+  <li>طلب دراسة جدوى تفصيلية من فكرة لا تزال قائمة على افتراضات غير مختبرة.</li>
+  <li>إخضاع تجربة صغيرة لسلسلة الموافقات نفسها المطلوبة لتعميم حل على المؤسسة كلها.</li>
+  <li>ترك الأفكار دون رد، أو نسبتها إلى غير أصحابها، أو تنفيذها دون إشراك من اقترحها.</li>
+  <li>مكافأة التشغيل الخالي من الأخطاء وحده، دون الاعتراف باكتشاف المشكلات أو جودة التجارب.</li>
+</ul>
+<p>والخطر الأكبر في الرسالة التي يتعلمها الآخرون من رفض فكرة واحدة. فحين يدرك الموظف أن كشف المشكلات يزيد عبئه، وأن الأفكار تختفي دون رد، يتعلم الصمت. وتبيّن أدبيات صوت الموظف أن امتناع الأفراد عن طرح مقترحاتهم ومخاوفهم يحرم المؤسسة من معلومات قد تكون حاسمة <span class="cite">(<span class="en">Morrison, 2014</span>)</span>.</p>
+
+<h2 id="s6"><span class="sec">٣-٦</span>الرعاية القيادية</h2>
+<p>للراعي القيادي دور فعلي يتجاوز إدراج اسمه في وثيقة المبادرة؛ فوظيفته أن يربطها بالاستراتيجية، ويوفر لها الشرعية والوصول، ويتدخل عند تعارض مصالح الإدارات، ويضمن وجود جهة مستعدة لتبنيها. ومن مهامه كذلك احتضان الأفكار التي لا تنتمي إلى إدارة بعينها في الهيكل القائم، مع أنها قد تكون أساس قيمة مستقبلية. وقد بيّنت الدراسات أن الابتكارات تحتاج في الغالب إلى من يتبناها ويدافع عنها في وجه المقاومة، وأن هذا الدور يتجاوز السلطة الرسمية إلى الإقناع وبناء التحالفات <span class="cite">(<span class="en">Howell &amp; Higgins, 1990</span>)</span>.</p>
+
+<div class="callout" data-k="key">
+  <div class="tag">قاعدة الرعاية</div>
+  <p>الرعاية الجيدة تحمي الفريق كي يتعلم، ولا تحمي الفكرة من الاختبار. فإذا أظهرت الأدلة ضعف الحاجة أو صعوبة التبني، فمن مسؤولية الراعي أن يدعم التعديل أو الإيقاف.</p>
+</div>
+
+<h2 id="s7"><span class="sec">٣-٧</span>القرار القيادي عبر المراحل</h2>
+<p>تختلف طبيعة القرار باختلاف مرحلة المبادرة، ولا ينبغي أن يطلب القائد المعلومات نفسها في كل مرحلة. فدراسة الجدوى التفصيلية في بداية فكرة شديدة الجدة قد تنتج أرقامًا تبدو دقيقة، وهي مبنية على افتراضات ضعيفة. والأنسب أن تتطور دقة القرار مع تطور الأدلة.</p>
+
+<div class="tw">
+<table id="tab-1">
+<caption><b>جدول ٣-١</b> سؤال القائد ونوع الدليل في كل مرحلة</caption>
+<thead><tr><th>المرحلة</th><th>سؤال القائد</th><th>الدليل الكافي</th></tr></thead>
+<tbody>
+<tr><td>الفرصة</td><td>هل تتسق مع أولوياتنا، وتستحق الاستكشاف؟</td><td>وصف واضح للحاجة، ومؤشرات أولية على أهميتها</td></tr>
+<tr><td>التطوير</td><td>هل فهمنا المشكلة، وما الذي تعلمناه؟</td><td>افتراضات معلنة، ونتائج تجارب صغيرة</td></tr>
+<tr><td>التجربة الميدانية</td><td>هل المخاطر الأخلاقية والتشغيلية والنظامية مقبولة؟</td><td>خطة تجربة بحدود واضحة وشروط إيقاف</td></tr>
+<tr><td>التوسع</td><td>هل سيستمر الحل ويحافظ على قيمته عند الحجم الأكبر؟</td><td>دليل على التبني، وتكلفة فعلية، وجهة تشغيل مستعدة</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>ومن أكثر صور القرار القيادي إضرارًا بالابتكار ألّا يُتخذ قرار أصلًا. فالفكرة التي لا تُقبل ولا تُرفض، وتبقى معلقة بين الاجتماعات، تموت دون أن يتعلم منها أحد، ويتعلم صاحبها ألّا يكرر المحاولة. وعدم اتخاذ القرار هو في حقيقته قرار، لكنه قرار بلا مسؤولية ولا تعلم. ويتناول الفصل العاشر آليات الحوكمة التي تمنع بقاء المبادرات في هذه المنطقة.</p>
+
+<h2 id="tool" class="unnum">أداة الفصل: مرآة القائد</h2>
+<p>أجب عن البنود التالية بصدق عن آخر ثلاثة أشهر، ثم اطلب من فريقك أن يجيبوا عنها في تقييمك دون ذكر أسمائهم، وقارن بين الإجابات. فالفجوة بين تقديرك لنفسك وتقدير فريقك لك هي أهم ما تكشفه هذه الأداة.</p>
+
+<div class="selfcheck">
+  <div class="th"><b>مرآة القائد</b><span>١ = نادرًا · ٥ = دائمًا</span></div>
+  <ol>
+    <li><span>حين تُعرض عليّ فكرة غير مألوفة، أسأل عن الدليل والافتراضات قبل أن أحكم عليها.</span><span class="sc"><i>١</i><i>٢</i><i>٣</i><i>٤</i><i>٥</i></span></li>
+    <li><span>حين تفشل تجربة، أسأل عمّا تعلمناه قبل أن أسأل عن المسؤول.</span><span class="sc"><i>١</i><i>٢</i><i>٣</i><i>٤</i><i>٥</i></span></li>
+    <li><span>يتلقى أصحاب الأفكار ردًا واضحًا مني أو من الجهة المعنية خلال مدة معلومة.</span><span class="sc"><i>١</i><i>٢</i><i>٣</i><i>٤</i><i>٥</i></span></li>
+    <li><span>أخصص وقتًا أو موارد فعلية للاستكشاف.</span><span class="sc"><i>١</i><i>٢</i><i>٣</i><i>٤</i><i>٥</i></span></li>
+    <li><span>أحدد للفريق حدود التجربة المسموحة بدل أن أطلب موافقتي على كل خطوة.</span><span class="sc"><i>١</i><i>٢</i><i>٣</i><i>٤</i><i>٥</i></span></li>
+    <li><span>أعترف أمام الفريق بما لا أعرفه، وأشرح أسباب قراراتي.</span><span class="sc"><i>١</i><i>٢</i><i>٣</i><i>٤</i><i>٥</i></span></li>
+    <li><span>أدعم إيقاف المبادرة حين يدل الدليل على ذلك، حتى لو كنت متحمسًا لها.</span><span class="sc"><i>١</i><i>٢</i><i>٣</i><i>٤</i><i>٥</i></span></li>
+    <li><span>أنسب الأفكار والجهود إلى أصحابها علنًا.</span><span class="sc"><i>١</i><i>٢</i><i>٣</i><i>٤</i><i>٥</i></span></li>
+  </ol>
+  <div class="foot">قراءة النتيجة: لا يهم المجموع بقدر ما تهم البنود التي حصلت على أدنى الدرجات، والبنود التي اختلف فيها تقدير القائد عن تقدير فريقه بدرجتين أو أكثر.</div>
+</div>
+
+<h2 id="summary" class="unnum">خلاصة الفصل</h2>
+<div class="summary">
+<ul>
+  <li>قيادة الابتكار قيادة للمجهول: يُطلب فيها وضوح الافتراضات وجودة التجارب وسرعة التعلم والانضباط في القرار.</li>
+  <li>للقيادة سبع وظائف في إدارة الابتكار، تبدأ بتحديد الاتجاه ومنح الشرعية، وتنتهي بتمكين التنفيذ.</li>
+  <li>تحتاج المؤسسة إلى الاستغلال والاستكشاف معًا، وتجمع بينهما بالفصل الهيكلي أو بالبراعة السياقية أو بكليهما.</li>
+  <li>يتعلم الموظفون معنى الابتكار من سلوك قائدهم اليومي، ووقع التصرفات السلبية الصغيرة أشد من وقع الإيجابية.</li>
+  <li>القيادة التي يعمل الناس من أجلها تقوم على أصول معرفية: التبادل الاجتماعي، والحاجات النفسية الأساسية، والقيادة التحويلية والخادمة. وهي تُنتج العمل العميق والمبادرة التي يحتاجها الابتكار.</li>
+  <li>تُطفئ الإدارة الابتكار دون قصد بممارسات تبدو منطقية منفردة، وأخطرها ما يعلّم الناس الصمت.</li>
+  <li>الرعاية الجيدة تحمي الفريق كي يتعلم، ولا تحمي الفكرة من الاختبار.</li>
+  <li>تتطور دقة القرار مع تطور الأدلة، وترك المبادرة دون قرار هو أسوأ القرارات.</li>
+</ul>
+</div>
+
+<h3>مصطلحات الفصل</h3>
+<dl class="gloss">
+  <dt>الاستغلال<span class="en">Exploitation</span></dt><dd>تحسين ما تعرفه المؤسسة وتعميقه لتحقيق الكفاءة.</dd>
+  <dt>الاستكشاف<span class="en">Exploration</span></dt><dd>البحث عن معارف وفرص جديدة تحت عدم اليقين.</dd>
+  <dt>البراعة التنظيمية<span class="en">Organizational ambidexterity</span></dt><dd>قدرة المؤسسة على الجمع بين الاستغلال والاستكشاف في آن واحد.</dd>
+  <dt>صوت الموظف<span class="en">Employee voice</span></dt><dd>تعبير الموظف عن أفكاره ومقترحاته ومخاوفه بهدف تحسين العمل.</dd>
+  <dt>القيادة الخادمة<span class="en">Servant leadership</span></dt><dd>نمط قيادي يجعل خدمة الأتباع وتلبية حاجاتهم ونموهم غاية في ذاتها.</dd>
+  <dt>الدعم التنظيمي المُدرَك<span class="en">Perceived organizational support</span></dt><dd>اعتقاد الموظف بأن مؤسسته تقدّر إسهامه وتهتم بحاله.</dd>
+  <dt>الراعي القيادي<span class="en">Executive sponsor</span></dt><dd>قائد يربط المبادرة بالاستراتيجية ويوفر لها الشرعية والموارد ويزيل عوائقها.</dd>
+</dl>
+
+<h3>أسئلة للمراجعة والمناقشة</h3>
+<ol class="questions">
+  <li>لماذا لا يصلح سؤال «هل نضمن النجاح؟» في قيادة الابتكار؟ وما السؤال البديل؟ <span class="lv">فهم</span></li>
+  <li>أي الوظائف القيادية السبع أضعف حضورًا في مؤسستك؟ وما أثر ذلك في المبادرات؟ <span class="lv">تحليل</span></li>
+  <li>اقترح أسلوبًا لتطبيق البراعة التنظيمية في إدارة تعمل تحت ضغط تشغيلي عالٍ. <span class="lv">تطبيق</span></li>
+  <li>عد إلى الحالة الافتتاحية: ما الذي كان ينبغي أن يقوله المدير؟ وما أثر ذلك في سلوك الفريق؟ <span class="lv">تطبيق</span></li>
+  <li>«عدم اتخاذ القرار أسوأ من الرفض». ناقش هذه العبارة. <span class="lv">تقويم</span></li>
+  <li>فسّر، في ضوء نظرية تقرير المصير، لماذا قد يقدّم موظف جهدًا استثنائيًا لقائد بعينه دون حافز مادي. <span class="lv">تحليل</span></li>
+</ol>
+
+<div class="endmark" aria-hidden="true">✦ ✦ ✦</div>
+<nav class="pager"><a class="prev" href="ch02.html"><small>الفصل السابق</small><b>لماذا الابتكار الآن؟</b></a><a class="next" href="ch04.html"><small>الفصل التالي</small><b>استراتيجية الابتكار والاستشراف</b></a></nav>
+</div>
+</body>
+</html>

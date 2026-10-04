@@ -1,0 +1,577 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>الفصل الأول: ما الابتكار؟</title>
+<link rel="stylesheet" href="assets/book.css">
+<link rel="stylesheet" href="assets/innov.css">
+<style>
+/* chain: idea → innovation */
+.chain{display:grid;grid-template-columns:auto repeat(4,minmax(0,1fr)) auto;gap:8px;align-items:stretch;font-family:var(--f-ui)}
+.chain .end{display:grid;place-items:center;border-radius:12px;padding:12px 10px;text-align:center;font-weight:700;font-size:15px;writing-mode:horizontal-tb}
+.chain .start{background:var(--paper-2);border:1.5px dashed var(--line);color:var(--ink-2)}
+.chain .goal{background:var(--accent);color:var(--paper)}
+.chain .el{border:1.5px solid var(--line);border-radius:12px;padding:12px 12px 10px;background:var(--paper);position:relative;min-width:0}
+.chain .el b{display:block;font-size:16px;color:var(--accent)}
+.chain .el span{display:block;font-size:13.5px;line-height:1.7;color:var(--ink-2)}
+.chain .el i{font-style:normal;font-size:12px;font-weight:700;color:var(--ink-2);display:block;margin-bottom:2px}
+.chain .el small{display:block;margin-top:8px;font-size:12.5px;line-height:1.6;color:var(--warn);border-top:1px dashed var(--line);padding-top:6px}
+@media (max-width:760px){.chain{grid-template-columns:1fr 1fr}.chain .end{grid-column:1/-1}}
+/* definitions table tweaks */
+table.defs td:first-child{width:24%}
+/* rings */
+.rings{display:grid;grid-template-columns:minmax(0,300px) 1fr;gap:26px;align-items:center}
+.rings svg{width:100%;height:auto}
+.rings .r1{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.5}
+.rings .r2{fill:color-mix(in srgb,var(--accent) 22%,var(--paper));stroke:var(--accent);stroke-width:1.5}
+.rings .r3{fill:var(--accent);stroke:var(--accent)}
+.rings text{font-family:var(--f-ui);font-size:13px;font-weight:700;fill:var(--ink);text-anchor:middle}
+.rings text.w{fill:var(--paper)}
+.rings ul{list-style:none;padding:0;margin:0;display:grid;gap:10px;font-family:var(--f-ui);font-size:14.5px;line-height:1.75}
+.rings ul li{margin:0;display:grid;grid-template-columns:16px 1fr;gap:10px}
+.rings ul li::before{content:"";width:14px;height:14px;border-radius:50%;margin-top:6px;border:1.5px solid var(--accent)}
+.rings ul li.a::before{background:var(--accent-soft)} .rings ul li.b::before{background:color-mix(in srgb,var(--accent) 22%,var(--paper))} .rings ul li.c::before{background:var(--accent)}
+@media (max-width:620px){.rings{grid-template-columns:1fr}.rings svg{max-width:280px;margin-inline:auto}}
+/* neighbours */
+.nb{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;font-family:var(--f-ui)}
+.nb>div{border-radius:12px;padding:12px;border:1.5px solid var(--line);background:var(--paper);min-width:0}
+.nb b{display:block;font-size:16px}
+.nb .q{display:block;font-size:13px;font-weight:700;color:var(--accent);margin:4px 0 6px;line-height:1.6}
+.nb span{display:block;font-size:13px;line-height:1.7;color:var(--ink-2)}
+.nb .core{border-color:var(--accent);background:var(--accent-soft)}
+@media (max-width:760px){.nb{grid-template-columns:1fr 1fr}.nb .core{grid-column:1/-1}}
+/* oslo domains */
+.dom{display:grid;grid-template-columns:1fr 2fr;gap:14px;font-family:var(--f-ui)}
+.dom .col{border:1.5px solid var(--line);border-radius:14px;padding:14px;min-width:0}
+.dom h5{font-family:var(--f-display);font-size:18px;margin:0 0 2px;font-weight:700}
+.dom .tag{font-size:12.5px;color:var(--ink-2);display:block;margin-bottom:10px}
+.dom .cells{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+.dom .cell{background:var(--paper-2);border-radius:10px;padding:9px 11px;font-size:13.5px;line-height:1.65}
+.dom .cell b{display:block;font-size:14.5px;color:var(--accent)}
+@media (max-width:640px){.dom{grid-template-columns:1fr}}
+/* henderson-clark */
+.hc{display:grid;grid-template-columns:96px 1fr 1fr;gap:8px;font-family:var(--f-ui);max-width:640px;margin-inline:auto}
+.hc .ax{font-size:12.5px;font-weight:700;color:var(--ink-2);display:grid;place-items:center;text-align:center;line-height:1.55;padding:4px}
+.hc .ax.v{background:var(--paper-2);border-radius:10px}
+.hc .q{border-radius:12px;padding:14px;min-height:118px;border:1.5px solid var(--line);background:var(--paper);min-width:0}
+.hc .q b{display:block;font-size:16px;font-family:var(--f-display)}
+.hc .q span{font-size:13px;line-height:1.7;color:var(--ink-2);display:block;margin-top:4px}
+.hc .q.inc{background:var(--good-soft);border-color:color-mix(in srgb,var(--good) 40%,transparent)}
+.hc .q.rad{background:var(--accent-soft);border-color:color-mix(in srgb,var(--accent) 50%,transparent)}
+.hc .q.arc{background:var(--example-soft);border-color:color-mix(in srgb,var(--example) 40%,transparent)}
+.hc .q.mod{background:var(--teacher-soft);border-color:color-mix(in srgb,var(--teacher) 40%,transparent)}
+.hc .cap{grid-column:1/-1;font-size:12.5px;color:var(--ink-2);text-align:center}
+@media (max-width:520px){.hc{grid-template-columns:62px 1fr 1fr;gap:6px}.hc .ax{font-size:11.5px;padding:2px}.hc .q{padding:10px}.hc .q span{font-size:12.5px}}
+/* principles */
+.prin{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;font-family:var(--f-ui);counter-reset:p}
+.prin>div{counter-increment:p;border:1.5px solid var(--line);border-radius:12px;padding:12px;min-width:0;background:var(--paper)}
+.prin>div::before{content:counter(p,arabic-indic);display:grid;place-items:center;width:28px;height:28px;border-radius:8px;background:var(--accent-soft);color:var(--accent);font-weight:700;font-size:14px;margin-bottom:6px}
+.prin b{display:block;font-size:15px;line-height:1.5}
+.prin .en{display:block;font-size:11.5px;color:var(--ink-2);font-weight:500;margin:2px 0 4px}
+.prin span.d{display:block;font-size:13px;line-height:1.7;color:var(--ink-2)}
+.prin .ch{display:block;font-size:12px;font-weight:700;color:var(--accent);margin-top:6px}
+@media (max-width:760px){.prin{grid-template-columns:1fr 1fr}}
+@media (max-width:420px){.prin{grid-template-columns:1fr}}
+/* case checks: four criteria */
+.case .checks{grid-template-columns:repeat(4,1fr)}
+@media (max-width:560px){.case .checks{grid-template-columns:repeat(2,1fr)}}
+/* tool card */
+.toolcard{border:2px solid var(--accent);border-radius:16px;overflow:hidden;margin:24px 0;font-family:var(--f-ui)}
+.toolcard .th{background:var(--accent);color:var(--paper);padding:12px 18px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:baseline}
+.toolcard .th b{font-family:var(--f-display);font-size:19px}
+.toolcard .th span{font-size:13px;opacity:.9}
+.toolcard .tb{padding:6px 18px 16px}
+.toolcard .row{display:grid;grid-template-columns:30px minmax(0,1fr) minmax(0,1.1fr);gap:12px;padding:12px 0;border-bottom:1px dashed var(--line);align-items:start}
+.toolcard .row:last-child{border-bottom:0}
+.toolcard .row i{font-style:normal;width:26px;height:26px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;font-weight:700;font-size:13px}
+.toolcard .row b{font-size:15px;display:block;line-height:1.6}
+.toolcard .row .hint{font-size:13px;color:var(--ink-2);line-height:1.7}
+.toolcard .row .opts{display:flex;flex-wrap:wrap;gap:6px}
+.toolcard .row .opts span{border:1px solid var(--line);border-radius:999px;padding:1px 10px;font-size:12.5px;background:var(--paper)}
+@media (max-width:600px){.toolcard .row{grid-template-columns:30px 1fr}.toolcard .row .opts{grid-column:2}}
+.readmap{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;font-family:var(--f-ui);margin:14px 0}
+.readmap>div{border-radius:12px;padding:12px 14px;background:var(--paper-2);font-size:14px;line-height:1.75;min-width:0}
+.readmap b{display:block;font-size:15px;color:var(--accent);margin-bottom:2px}
+@media (max-width:640px){.readmap{grid-template-columns:1fr}}
+</style>
+<meta name="robots" content="noindex,nofollow"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap"><link rel="stylesheet" href="assets/platform.css"><script>window.BOOK={slug:"innovation-management",cur:"ch01.html"}</script><script src="assets/platform.js" defer></script>
+</head>
+<body>
+<div class="bp-bar" dir="rtl"><div class="bp-in">
+<a class="bp-home" href="../../index.html">د. عمر عبدالله الصمعاني</a><span class="bp-sep">/</span><a href="../index.html">الكتب</a><span class="bp-sep">/</span><a href="index.html" class="bp-book">إدارة الابتكار</a>
+<span class="bp-sp"></span><span class="bp-tools"><button class="bp-ic" type="button" data-rd="z-" aria-label="تصغير الخط" title="تصغير الخط">أ−</button><button class="bp-ic" type="button" data-rd="z+" aria-label="تكبير الخط" title="تكبير الخط">أ+</button><button class="bp-ic" type="button" data-rd="theme" aria-label="الوضع الليلي" title="الوضع الليلي/النهاري">ليلي</button></span><a class="bp-btn" href="pdf/ch01.pdf" download>تحميل الفصل PDF</a><button class="bp-btn" type="button" data-share>مشاركة</button><button class="bp-btn" type="button" data-bp="search">بحث</button><button class="bp-btn solid" type="button" data-bp="toc">المحتويات</button></div></div>
+<div class="bp-share" id="bpShare" hidden dir="rtl"><b>مشاركة هذه الصفحة</b><button type="button" data-sh="copy">نسخ الرابط</button><button type="button" data-sh="native" hidden>مشاركة…</button><a data-sh="wa" target="_blank" rel="noopener">واتساب</a><a data-sh="x" target="_blank" rel="noopener">X</a><a data-sh="li" target="_blank" rel="noopener">LinkedIn</a><a data-sh="tg" target="_blank" rel="noopener">تيليجرام</a><a data-sh="mail">البريد</a><small>لمشاركة قسم بعينه: مرّر المؤشر على عنوانه واضغط ¶</small></div>
+<div class="bp-drawer" id="bpDrawer" hidden dir="rtl"><div class="bp-panel" role="dialog" aria-label="المحتويات والبحث">
+<div class="bp-head"><b>إدارة الابتكار</b><button type="button" class="bp-x" data-bp="close" aria-label="إغلاق">×</button></div>
+<div class="bp-search"><input id="bpQ" type="search" placeholder="ابحث في نص الكتاب…" autocomplete="off"><div id="bpRes"></div></div>
+<nav class="bp-toc" id="bpToc"></nav>
+<div class="bp-links"><a href="elements.html">عناصر الكتاب: الأشكال والجداول والأدوات</a><a href="index.html#downloads">تحميل الكتاب</a></div>
+</div></div>
+<div class="page">
+
+<nav class="booknav"><a href="index.html">→ إدارة الابتكار</a><span>الجزء الأول: الأسس</span></nav>
+
+<header class="opener">
+  <div class="num" aria-hidden="true">١</div>
+  <div>
+    <div class="kicker">الفصل الأول</div>
+    <h1>ما الابتكار؟</h1>
+  </div>
+  <p class="sub">يتناول هذا الفصل مفهوم الابتكار من خلال عناصره الأربعة المستخلصة من التعريفات المرجعية، وهي: الجدة، والتطبيق، والتبني، والقيمة. ويهدف إلى بناء لغة مشتركة تميّز الابتكار من الإبداع والاختراع والتحسين، وتحدد مجالاته ودرجاته، بوصف الاتفاق على المفهوم شرطًا سابقًا لإدارته.</p>
+</header>
+
+<nav class="toc" aria-label="محتويات الفصل">
+  <b>في هذا الفصل</b>
+  <ol>
+    <li class="u"><a href="#intro">مدخل</a></li>
+    <li value="1"><a href="#s1">الحاجة إلى تعريف مشترك</a></li>
+    <li><a href="#s2">الابتكار في التعريفات المرجعية</a></li>
+    <li><a href="#s3">الجدة النسبية</a></li>
+    <li><a href="#s4">الابتكار والمفاهيم المجاورة</a></li>
+    <li><a href="#s5">مجالات الابتكار</a></li>
+    <li><a href="#s6">درجات الابتكار</a></li>
+    <li><a href="#s7">الابتكار في القطاع العام والمؤسسات غير الربحية</a></li>
+    <li><a href="#s8">مبادئ إدارة الابتكار</a></li>
+    <li><a href="#s9">مفاهيم شائعة غير دقيقة</a></li>
+    <li class="u"><a href="#cases">حالات تطبيقية</a></li>
+    <li class="u"><a href="#tool">أداة الفصل</a></li>
+    <li class="u"><a href="#summary">الخلاصة والأسئلة</a></li>
+  </ol>
+</nav>
+
+<h2 id="intro" class="unnum">مدخل</h2>
+
+<div class="scene">
+  <span class="lbl">حالة افتتاحية: اجتماع الخطة السنوية (حالة مركّبة)</span>
+  <p>في اجتماع لإعداد الخطة السنوية لإحدى المؤسسات، طُلب من كل إدارة تقديم «مبادراتها الابتكارية». فقدمت إدارة الموارد البشرية نموذجًا إلكترونيًا لطلبات الإجازة يحل محل النموذج الورقي، وقدمت إدارة تقنية المعلومات مشروعًا لتجربة مساعد آلي يعمل بالذكاء الاصطناعي للرد على الاستفسارات، واقترحت إدارة الخدمات مسابقة أفكار للموظفين، وعرضت إدارة الجودة خفض زمن معالجة الطلبات من عشرة أيام إلى ستة من خلال إعادة ترتيب خطوات الإجراء.</p>
+  <p style="margin-bottom:0">وانتهى الاجتماع بقائمة مبادرات تحمل جميعها صفة «الابتكار»، دون أن يُطرح السؤال الجوهري: أيّ هذه المبادرات يُعد ابتكارًا بالمعنى الدقيق؟ وأيها تحسين تشغيلي يكفيه التنفيذ المتقن؟ وأيها نشاط ممهِّد للابتكار لا يُعد ابتكارًا في ذاته؟ وما الذي يترتب على هذا التمييز في طريقة إدارة كل منها؟</p>
+</div>
+
+<p>تتكرر هذه الحالة بصيغ مختلفة في كثير من المؤسسات. وقد يكون بعض هذه المبادرات عالي القيمة، لكن غياب التعريف المشترك يقود المؤسسة إلى إدارة مبادرات متباينة في طبيعتها بالأسلوب نفسه؛ فتُطالَب المبادرة شديدة الغموض بخطة تنفيذ تفصيلية، ويُعامَل التحسين المعروف الحل معاملة الرهان الذي يحتاج إلى تجريب، ويُحتسب النشاط التحفيزي إنجازًا ابتكاريًا قبل أن يتحول أي من مخرجاته إلى واقع.</p>
+
+<h3>أهداف الفصل</h3>
+<p>يُتوقع من القارئ بعد دراسة هذا الفصل أن يكون قادرًا على:</p>
+<ol class="objectives">
+  <li>تعريف الابتكار تعريفًا عمليًا يجمع عناصره الأربعة، والمقارنة بين أبرز تعريفاته المرجعية.</li>
+  <li>تحديد درجة الجدة في مبادرة ما: جديدة على المؤسسة، أو على القطاع، أو على العالم.</li>
+  <li>التمييز بين الابتكار وكل من الإبداع والاختراع والتحسين والتحول وريادة الأعمال.</li>
+  <li>تصنيف المبادرة بحسب مجالها ودرجتها، واستنتاج أسلوب الإدارة المناسب لها.</li>
+  <li>شرح المبادئ الثمانية لإدارة الابتكار في سلسلة المعايير الدولية <span class="en">ISO 56000</span>.</li>
+  <li>رصد المفاهيم غير الدقيقة عن الابتكار في خطاب المؤسسة وممارساتها.</li>
+</ol>
+
+<h2 id="s1"><span class="sec">١-١</span>الحاجة إلى تعريف مشترك</h2>
+<p>قد يبدو الاهتمام بالتعريف شأنًا أكاديميًا، غير أنه في إدارة الابتكار قرار عملي ذو أثر مباشر؛ إذ يحدد التعريف الذي تتبناه المؤسسة، صراحة أو ضمنًا، ما تموّله وما تقيسه وما تكافئ عليه. وتقع المؤسسات عادة في أحد خطأين متقابلين.</p>
+<p><strong>الخطأ الأول: التوسيع المفرط.</strong> عندما يُطلق وصف الابتكار على كل تغيير، يتعذر التمييز بين المبادرات التي تتطلب الاستكشاف والتجريب والتعلم، والتحسينات التي يمكن إدارتها بأدوات الجودة والتطوير المستمر. وتكون النتيجة تقارير حافلة بالمبادرات «الابتكارية»، في حين يبقى ما تقدمه المؤسسة لمستفيديها على حاله تقريبًا. وقد أطلق <span class="en">Blank</span> على هذه الظاهرة وصف «مسرح الابتكار»، ويقصد به الأنشطة التي تحاكي الابتكار في مظهرها، كالورش والمسابقات والمختبرات، دون أن تُحدث تغييرًا في المنتجات أو الخدمات أو أساليب العمل <span class="cite">(<span class="en">Blank, 2019</span>)</span>.</p>
+<p><strong>الخطأ الثاني: التضييق المفرط.</strong> عندما يُقصَر الابتكار على الاختراعات والتقنيات المتقدمة وبراءات الاختراع، تُهمَل فرص واسعة في الخدمات والإجراءات وتجربة المستفيد ونموذج التشغيل والعلاقات بين الوحدات التنظيمية. وكثير من الابتكارات الأعلى أثرًا في المؤسسات الحكومية والخدمية لم يتطلب تقنية جديدة؛ فقد قام على إعادة النظر في طريقة تقديم الخدمة.</p>
+<p>والتعريف الجيد يتجنب الخطأين: واسع بما يشمل كل مجال تُصنع فيه القيمة، ومنضبط بما يميز الابتكار مما سواه.</p>
+
+<h2 id="s2"><span class="sec">١-٢</span>الابتكار في التعريفات المرجعية</h2>
+<p>يعود الاستخدام الاقتصادي الحديث لمفهوم الابتكار إلى جوزيف شومبيتر، الذي رأى أن التطور الاقتصادي يتحقق بتنفيذ «تركيبات جديدة» من الموارد والمعارف، وحدد لها خمس صور: تقديم سلعة جديدة أو نوعية جديدة من سلعة قائمة، وإدخال طريقة إنتاج جديدة، وفتح سوق جديدة، والوصول إلى مصدر جديد للمواد الخام، وإعادة تنظيم صناعة ما <span class="cite">(<span class="en">Schumpeter, 1934</span>)</span>. ويتضمن هذا التصور المبكر أمرين جديرين بالملاحظة: أن الابتكار يتجاوز المنتج إلى الطريقة والسوق والتنظيم، وأنه يقترن بالتنفيذ ولا يكتمل بالاكتشاف وحده.</p>
+<p>وقد بنت التعريفات اللاحقة على هذا الأساس. ويقف هذا القسم عند ثلاثة منها، لكونها الأكثر استخدامًا في السياسات العامة والمعايير وأدوات القياس.</p>
+
+<h3>دليل أوسلو</h3>
+<p>يصدر دليل أوسلو عن منظمة التعاون الاقتصادي والتنمية والمكتب الإحصائي للاتحاد الأوروبي، ويُعد المرجع الدولي لقياس الابتكار في المسوح الوطنية. وتعرّف طبعته الرابعة الابتكار بأنه منتج أو عملية جديدة أو محسّنة (أو مزيج منهما)، تختلف اختلافًا ملحوظًا عن المنتجات أو العمليات السابقة للوحدة، وأُتيحت للمستخدمين المحتملين في حالة المنتج، أو أُدخلت في الاستخدام الفعلي داخل الوحدة في حالة العملية <span class="cite">(<span class="en">OECD/Eurostat, 2018</span>)</span>.</p>
+<p>والقيد الحاسم في هذا التعريف هو <strong>التطبيق</strong>؛ فالفكرة التي لم تتجاوز الوثيقة، والنموذج الأولي الذي لم يُطرح، والنظام الذي جرى شراؤه ولم يُشغَّل، لا تُعد ابتكارات وفق معيار أوسلو مهما بلغت جدتها. ويضيف الدليل قيدًا ثانيًا هو «الاختلاف الملحوظ»، فلا يكفي التعديل الطفيف المعتاد لعدّ التغيير ابتكارًا.</p>
+
+<h3>سلسلة المعايير الدولية <span class="en">ISO 56000</span></h3>
+<p>تعرّف المنظمة الدولية للتقييس الابتكار بأنه كيان جديد أو متغيّر يحقق قيمة أو يعيد توزيعها <span class="cite">(<span class="en">ISO, 2025</span>)</span>. ومفهوم الكيان في هذا التعريف واسع عن قصد، إذ قد يكون منتجًا أو خدمة أو عملية أو نموذجًا أو أسلوبًا. ويضع التعريف <strong>القيمة</strong> في مركزه، فالجدة لا تكفي ما لم يترتب عليها نفع، ماليًا كان أو اجتماعيًا أو بيئيًا أو غير ذلك. ويتيح تعبير «إعادة التوزيع» إدراج ابتكارات تغيّر الجهة المستفيدة من القيمة دون أن تزيد قيمتها الكلية بالضرورة، كأن تصل خدمة إلى فئة كانت محرومة منها.</p>
+
+<h3>الابتكار بوصفه ما يُدرَك على أنه جديد</h3>
+<p>وفي أدبيات انتشار الابتكارات، عرّف روجرز الابتكار بأنه فكرة أو ممارسة أو شيء يدركه الفرد أو الوحدة المتبنية على أنه جديد <span class="cite">(<span class="en">Rogers, 2003</span>)</span>. ويقترب من ذلك تعريف دامانبور للابتكار التنظيمي بأنه تبنّي فكرة أو سلوك جديد على المؤسسة المتبنية <span class="cite">(<span class="en">Damanpour, 1991</span>)</span>. وتنبع أهمية هذا المنظور من أنه ينقل السؤال من «هل هذا جديد على العالم؟» إلى «هل هو جديد في هذا السياق، ويتطلب من العاملين فيه تغيير ما اعتادوه؟».</p>
+
+<div class="tw">
+<table id="tab-1" class="defs">
+<caption><b>جدول ١-١</b> مقارنة بين التعريفات المرجعية للابتكار</caption>
+<thead><tr><th>المرجع</th><th>جوهر التعريف</th><th>العنصر الذي يبرزه</th><th>دلالته الإدارية</th></tr></thead>
+<tbody>
+<tr><td>شومبيتر <span class="en">(1934)</span></td><td>تنفيذ تركيبات جديدة من الموارد والمعارف</td><td>اتساع المجالات، والتنفيذ</td><td>قد يقع الابتكار في السوق أو التنظيم إلى جانب المنتج</td></tr>
+<tr><td>دليل أوسلو <span class="en">(2018)</span></td><td>منتج أو عملية جديدة أو محسّنة بدرجة ملحوظة، أُتيحت أو أُدخلت في الاستخدام</td><td>التطبيق الفعلي</td><td>لا تُحتسب الفكرة أو النموذج الأولي ابتكارًا قبل وصوله إلى الاستخدام</td></tr>
+<tr><td><span class="en">ISO 56000 (2025)</span></td><td>كيان جديد أو متغيّر يحقق قيمة أو يعيد توزيعها</td><td>القيمة</td><td>السؤال الأول عن أي مبادرة: ما القيمة المتوقعة، ولمن؟</td></tr>
+<tr><td>روجرز <span class="en">(2003)</span></td><td>فكرة أو ممارسة أو شيء يُدرَك على أنه جديد لدى من يتبناه</td><td>الجدة النسبية، والتبني</td><td>الحل المعروف في سياق آخر قد يكون ابتكارًا في هذا السياق، ويتطلب إدارة للتبني</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>التعريف الإجرائي المعتمد في الكتاب</h3>
+<p>يُستخلص من هذه التعريفات تعريف إجرائي يعتمده الكتاب في فصوله اللاحقة:</p>
+<div class="callout" data-k="key">
+  <div class="tag">تعريف الكتاب</div>
+  <p><strong>الابتكار</strong> تطبيقٌ جديد أو محسّن بدرجة ذات دلالة، يعالج حاجة أو يستثمر فرصة، ويتبناه مستخدمون أو جهة تشغيل، ويحقق قيمة قابلة للملاحظة.</p>
+</div>
+<p>ويتضمن هذا التعريف أربعة عناصر، ويكفي غياب أي منها لبقاء المبادرة دون مستوى الابتكار:</p>
+
+<figure id="fig-1">
+<div class="fig-frame">
+  <div class="chain">
+    <div class="end start">فكرة</div>
+    <div class="el"><i>العنصر الأول</i><b>الجدة</b><span>اختلاف ذو دلالة عن الممارسة السابقة لدى الجهة المتبنية.</span><small>عند غيابه: تكرار لما هو قائم.</small></div>
+    <div class="el"><i>العنصر الثاني</i><b>التطبيق</b><span>انتقال الحل إلى الاستخدام الفعلي أو إتاحته للمستخدمين.</span><small>عند غيابه: فكرة أو نموذج على الورق.</small></div>
+    <div class="el"><i>العنصر الثالث</i><b>التبني</b><span>استخدام الحل من قبل المعنيين واستمرارهم عليه.</span><small>عند غيابه: حل أُطلق ولم يُستخدم.</small></div>
+    <div class="el"><i>العنصر الرابع</i><b>القيمة</b><span>نفع ملحوظ للمستفيد أو المؤسسة أو المجتمع.</span><small>عند غيابه: تغيير بلا أثر.</small></div>
+    <div class="end goal">ابتكار</div>
+  </div>
+</div>
+<figcaption><b>شكل ١-١</b> العناصر الأربعة التي تحوّل الفكرة إلى ابتكار، والنتيجة المترتبة على غياب كل منها.</figcaption>
+</figure>
+
+<p>فـ<strong>الجدة</strong> مفهوم نسبي يفصّله القسم التالي. و<strong>التطبيق</strong> هو ما يفصل الابتكار عن الفكرة والاختراع. أما <strong>التبني</strong> فعنصر كثيرًا ما يُغفل، رغم أن عددًا غير قليل من الأنظمة والمنصات يُطلق رسميًا ثم يبقى مهجورًا، أو يستخدمه الموظفون في حده الأدنى مع الإبقاء على طرقهم السابقة إلى جانبه. وأما <strong>القيمة</strong> فقد تكون اقتصادية أو اجتماعية أو تشغيلية أو معرفية أو بيئية، وقد تعود على المستفيد أو الموظف أو المؤسسة أو المجتمع.</p>
+<p>ولترتيب العناصر دلالة زمنية؛ فالتبني والقيمة يأتيان بعد التطبيق، ومن ثم لا يمكن الحكم على مبادرة بأنها ابتكار يوم إطلاقها. فيوم الإطلاق يثبت وجود تطبيق جديد، أما الابتكار فلا يثبت إلا بعد التحقق من استخدامه ومن الأثر الذي أحدثه. وبهذا يكون تعريف الكتاب أشد من الحد الأدنى الذي يعتمده دليل أوسلو لأغراض القياس الإحصائي، إذ يكتفي الدليل بأن يُتاح الجديد للمستخدمين أو يُدخل في الاستخدام <span class="cite">(<span class="en">OECD/Eurostat, 2018</span>)</span>؛ لأن غرض الكتاب إداري: الحكم على ما إذا كانت المبادرة قد أدت ما أُطلقت من أجله.</p>
+
+<h2 id="s3"><span class="sec">١-٣</span>الجدة النسبية</h2>
+<p>من الأسئلة المتكررة في النقاشات الإدارية: هل يُعد تطبيق حل قائم في جهة أخرى ابتكارًا؟ والإجابة التي تتفق عليها أدبيات القياس أن الجدة تُقاس بالنسبة إلى وحدة مرجعية، ويميز دليل أوسلو في ذلك بين ثلاث درجات <span class="cite">(<span class="en">OECD/Eurostat, 2018</span>)</span>:</p>
+
+<figure id="fig-2">
+<div class="fig-frame">
+<div class="rings">
+  <svg viewBox="0 0 300 300" role="img" aria-label="ثلاث دوائر متداخلة لدرجات الجدة">
+    <circle class="r1" cx="150" cy="150" r="140"/>
+    <circle class="r2" cx="150" cy="185" r="96"/>
+    <circle class="r3" cx="150" cy="222" r="52"/>
+    <text x="150" y="44">جديد على المؤسسة</text>
+    <text x="150" y="136">جديد على القطاع أو السوق</text>
+    <text class="w" x="150" y="220">جديد على</text>
+    <text class="w" x="150" y="238">العالم</text>
+  </svg>
+  <ul>
+    <li class="a"><span><b>جديد على المؤسسة:</b> سبق تطبيقه في مؤسسات أخرى، وهو جديد على هذه المؤسسة. وهذه الدرجة هي الأوسع والأكثر شيوعًا، وكثيرًا ما تكون الأسرع أثرًا لأن الحل مجرّب في سياق آخر.</span></li>
+    <li class="b"><span><b>جديد على القطاع أو السوق:</b> لم يسبق تطبيقه في القطاع أو النطاق الجغرافي أو السوق الذي تعمل فيه المؤسسة.</span></li>
+    <li class="c"><span><b>جديد على العالم:</b> لم يسبق تطبيقه في أي مكان، وهو الأندر والأعلى مخاطرة.</span></li>
+  </ul>
+</div>
+</div>
+<figcaption><b>شكل ١-٢</b> درجات الجدة: كل ابتكار جديد على العالم جديد بالضرورة على السوق وعلى المؤسسة، والعكس غير صحيح.</figcaption>
+</figure>
+
+<p>ويترتب على هذا التمييز نتيجتان عمليتان:</p>
+<p><strong>أولًا:</strong> أن نقل حل ناجح من سياق إلى آخر قد يُعد ابتكارًا حقيقيًا، متى تطلّب تكييفًا وتغييرًا ذا دلالة في المؤسسة المتبنية.</p>
+<p><strong>ثانيًا:</strong> أن درجة الجدة تؤثر في أسلوب الإدارة؛ فالحل الجديد على المؤسسة وحدها يمكن الإفادة فيه من تجارب الآخرين، ويتركز عدم اليقين فيه في الملاءمة والتكييف والتبني. أما الحل الجديد على العالم فيكتنفه عدم اليقين في جوانبه كلها تقريبًا: إمكانية عمله، والحاجة إليه، وتكلفته.</p>
+
+
+<div class="callout" data-k="example">
+  <div class="tag">مثال</div>
+  <p>عندما تتبنى جهة حكومية نظام المواعيد المسبقة الذي سبقتها إليه جهات أخرى، فإنها لا تخترع شيئًا جديدًا. غير أنها قد تحتاج إلى إعادة توزيع الموظفين على الفترات، وتعديل آلية استقبال المراجعين دون موعد، وتغيير مؤشرات الأداء التي كانت تقيس عدد المعاملات اليومية. وهذه التغييرات هي ما يجعل التطبيق ابتكارًا على مستوى المؤسسة، وهي في الوقت ذاته ما يحدد نجاحه.</p>
+</div>
+
+<h2 id="s4"><span class="sec">١-٤</span>الابتكار والمفاهيم المجاورة</h2>
+<p>يُستخدم مصطلح الابتكار في الخطاب العام مرادفًا لمفاهيم قريبة منه. والتمييز بينها ضروري، لأن لكل منها منطقه الخاص في الإدارة، وإن تداخلت في الممارسة.</p>
+
+<figure id="fig-3">
+<div class="fig-frame">
+<div class="nb">
+  <div><b>الإبداع</b><span class="q">هل الفكرة أصيلة وملائمة؟</span><span>توليد أفكار جديدة ونافعة. مصدر رئيس للابتكار، ولا يضمن تنفيذه.</span></div>
+  <div><b>الاختراع</b><span class="q">هل أُنتجت معرفة أو تقنية جديدة؟</span><span>قد يبقى إنجازًا علميًا دون استخدام، وقد يتحول إلى ابتكار.</span></div>
+  <div class="core"><b>الابتكار</b><span class="q">هل طُبّق جديدٌ وتُبنّي وحقق قيمة؟</span><span>محور هذا الكتاب. يستفيد من المفاهيم المجاورة ويختلف عنها.</span></div>
+  <div><b>التحسين</b><span class="q">هل ارتفع أداء ما هو قائم؟</span><span>قد يرقى إلى الابتكار إذا كان الاختلاف ملموسًا، وقد يبقى تطويرًا اعتياديًا.</span></div>
+  <div><b>التحول</b><span class="q">هل تغيّر النموذج بكامله؟</span><span>أوسع من مبادرة واحدة، ويتطلب محفظة من الابتكارات والتغييرات.</span></div>
+</div>
+</div>
+<figcaption><b>شكل ١-٣</b> الابتكار والمفاهيم المجاورة له، والسؤال الذي يميّز كلًا منها.</figcaption>
+</figure>
+
+<h3>الإبداع والابتكار</h3>
+<p>يتفق الباحثون في علم نفس الإبداع على أن الناتج الإبداعي يجمع بين الأصالة والملاءمة، أي أن يكون جديدًا غير مألوف، ونافعًا أو مناسبًا لغرض محدد <span class="cite">(<span class="en">Amabile, 1996; Runco &amp; Jaeger, 2012</span>)</span>. والإبداع بهذا المعنى مصدر رئيس للابتكار، غير أن بينهما مسافة واسعة؛ فقد تظل الفكرة الإبداعية في ذهن صاحبها أو في محضر اجتماع، في حين يتطلب الابتكار ما لا يتطلبه الإبداع من موارد وتنظيم وتجريب وقرار وتبنٍّ.</p>
+<p>وقد اقترح رودس في وقت مبكر النظر إلى الإبداع من أربعة جوانب مترابطة: <strong>الشخص</strong> المبدع وما يتسم به من قدرات ودافعية، و<strong>العملية</strong> التي تُولَّد بها الأفكار وتُطوَّر، و<strong>البيئة</strong> المحيطة وما تفرضه من ضغوط أو تتيحه من فرص، و<strong>الناتج</strong> الذي يتجسد فيه الإبداع <span class="cite">(<span class="en">Rhodes, 1961</span>)</span>. وتبرز قيمة هذا التصور في إدارة الابتكار عند مقارنته بالممارسة الشائعة التي تركز على الناتج وحده، كعدد الأفكار أو المشروعات أو براءات الاختراع، دون الالتفات إلى الأفراد الذين يُتوقع منهم الابتكار، والبيئة التي يعملون فيها، والعمليات التي تحتضن أفكارهم. وقد بيّنت أمابيل أن الابتكار التنظيمي يتوقف على تفاعل إبداع الأفراد والفرق مع بيئة العمل، بما تتضمنه من موارد وممارسات إدارية ودافعية مؤسسية للابتكار <span class="cite">(<span class="en">Amabile, 1988</span>)</span>. ويخصص الكتاب الفصل السابع لهذه العلاقة.</p>
+
+
+<h3>الاختراع والابتكار</h3>
+<p>الاختراع إنتاج معرفة أو تقنية أو تركيب جديد، ويُوثَّق غالبًا ببراءة اختراع. ويصبح الاختراع ابتكارًا عندما يجد استخدامًا ويُدمج في منتج أو خدمة أو عملية تحقق قيمة. ومن الأمثلة المعروفة أن أحد مهندسي شركة كوداك بنى عام ١٩٧٥ نموذجًا مبكرًا للكاميرا الرقمية، ثم تأخرت الشركة كثيرًا في جعل التصوير الرقمي محورًا لأعمالها، في حين تحولت التقنية ذاتها على أيدي شركات أخرى إلى ابتكار غيّر الصناعة. وعليه، فليس كل اختراع ابتكارًا، وليس كل ابتكار اختراعًا؛ إذ لا تتضمن ابتكارات كثيرة، ولا سيما في الخدمات ونماذج الأعمال، أي تقنية جديدة.</p>
+
+<h3>التحسين والابتكار</h3>
+<p>التحسين رفع لأداء ما هو قائم، كتقليص زمن إجراء، أو حذف خطوة زائدة، أو رفع جودة خدمة. ولا تعارض بين التحسين والابتكار؛ فالتحسين يرقى إلى الابتكار عندما يختلف اختلافًا ملموسًا عن الممارسة السابقة، ويُدخَل في الاستخدام، ويحقق قيمة. ويبقى تطويرًا تشغيليًا عندما يكون تعديلًا محدودًا معروف الطريقة.</p>
+<p>والمعيار الأنفع في التمييز بينهما هو <strong>درجة عدم اليقين</strong> لا حجم التغيير. فإذا كان الحل معروفًا والسبب مفهومًا والمطلوب هو التنفيذ المنضبط، فإن أدوات التحسين المستمر كافية. أما إذا كان الحل غير معروف، أو كانت هناك افتراضات جوهرية غير مختبرة تتعلق بالمستخدم أو التنفيذ أو القيمة، فإن المبادرة تتطلب منطق الابتكار القائم على التجريب والتعلم والقرار المرحلي.</p>
+
+<h3>التحول والابتكار</h3>
+<p>التحول تغيير جوهري في نموذج العمل أو التشغيل أو العلاقة مع المستفيدين أو القدرات المؤسسية. ويتطلب محفظة من الابتكارات والتغييرات المتكاملة، وقيادة وإدارة تغيير تمتدان سنوات. ومن ثم فإن «التحول الرقمي» يتضمن ابتكارات عديدة، كما يتضمن أعمالًا لا ابتكار فيها، كترحيل البيانات وتوحيد الأنظمة وتدريب الموظفين.</p>
+
+<h3>ريادة الأعمال والابتكار</h3>
+<p>تُعنى ريادة الأعمال باكتشاف فرصة وتنظيم الموارد حولها لإنشاء مشروع أو نشاط مستدام. وقد تعتمد على الابتكار دون أن تكون مرادفة له؛ فقد يحدث الابتكار داخل مؤسسة قائمة دون إنشاء مشروع جديد، وقد يطبق مشروع ريادي نموذجًا معروفًا في سوق جديدة دون ابتكار يُذكر. ويُستخدم مصطلح <strong>الريادة الداخلية</strong> <span class="cite">(<span class="en">Intrapreneurship</span>)</span> لوصف السلوك الريادي داخل المؤسسات القائمة، وهو وثيق الصلة بموضوع هذا الكتاب.</p>
+
+<div class="tw">
+<table id="tab-2">
+<caption><b>جدول ١-٢</b> الفروق بين الابتكار والمفاهيم المجاورة</caption>
+<thead><tr><th>المفهوم</th><th>ناتجه</th><th>معيار نجاحه</th><th>منطق إدارته</th></tr></thead>
+<tbody>
+<tr><td>الإبداع</td><td>أفكار</td><td>الأصالة والملاءمة</td><td>توسيع البدائل وتأجيل الحكم</td></tr>
+<tr><td>الاختراع</td><td>معرفة أو تقنية جديدة</td><td>الجدة التقنية والإثبات العلمي</td><td>البحث والتطوير وحماية الملكية الفكرية</td></tr>
+<tr><td>التحسين</td><td>أداء أفضل لما هو قائم</td><td>الكفاءة والجودة والموثوقية</td><td>التحليل والتنفيذ المنضبط والتحسين المستمر</td></tr>
+<tr><td>الابتكار</td><td>حل جديد مطبق ومتبنّى</td><td>القيمة المتحققة</td><td>التجريب والتعلم والقرار المرحلي</td></tr>
+<tr><td>التحول</td><td>نموذج عمل أو تشغيل جديد</td><td>تغير القدرات والنتائج على مستوى المؤسسة</td><td>محفظة متكاملة وقيادة تغيير طويلة المدى</td></tr>
+<tr><td>ريادة الأعمال</td><td>مشروع أو نشاط مستدام</td><td>البقاء والنمو</td><td>اقتناص الفرصة وتنظيم الموارد حولها</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2 id="s5"><span class="sec">١-٥</span>مجالات الابتكار</h2>
+<p>يمكن أن يقع الابتكار في أي عنصر يُسهم في إنشاء القيمة أو إيصالها. وقد قدمت الأدبيات تصنيفات متعددة لمجالاته، يعرض هذا القسم اثنين منها يكمّل أحدهما الآخر.</p>
+
+<h3>تصنيف دليل أوسلو</h3>
+<p>يُجمِل دليل أوسلو مجالات الابتكار في نوعين رئيسين: <strong>ابتكار المنتج</strong> سلعةً كان أو خدمة، و<strong>ابتكار عمليات الأعمال</strong>، ويفصّل الثاني في ست وظائف <span class="cite">(<span class="en">OECD/Eurostat, 2018</span>)</span>.</p>
+
+<figure id="fig-4">
+<div class="fig-frame">
+<div class="dom">
+  <div class="col">
+    <h5>ابتكار المنتج</h5>
+    <span class="tag">ما تقدمه المؤسسة لمستفيديها</span>
+    <div class="cells">
+      <div class="cell"><b>السلع</b>منتجات ملموسة جديدة أو محسّنة.</div>
+      <div class="cell"><b>الخدمات</b>خدمات جديدة أو محسّنة في خصائصها أو سهولة استخدامها أو جودتها.</div>
+    </div>
+  </div>
+  <div class="col">
+    <h5>ابتكار عمليات الأعمال</h5>
+    <span class="tag">الطريقة التي تعمل بها المؤسسة</span>
+    <div class="cells">
+      <div class="cell"><b>الإنتاج والتقديم</b>أساليب إنتاج السلع أو تقديم الخدمات.</div>
+      <div class="cell"><b>التوزيع والإمداد</b>الخدمات اللوجستية والتسليم.</div>
+      <div class="cell"><b>التسويق والمبيعات</b>القنوات والتسعير والترويج.</div>
+      <div class="cell"><b>المعلومات والاتصالات</b>أنظمة البيانات والتقنية.</div>
+      <div class="cell"><b>الإدارة والتنظيم</b>الهياكل والأدوار وأساليب اتخاذ القرار.</div>
+      <div class="cell"><b>تطوير المنتجات والعمليات</b>أسلوب الابتكار ذاته.</div>
+    </div>
+  </div>
+</div>
+</div>
+<figcaption><b>شكل ١-٤</b> مجالات الابتكار وفق دليل أوسلو (٢٠١٨). المصدر: بتصرف عن <span class="en">OECD/Eurostat (2018)</span>.</figcaption>
+</figure>
+
+<p>ويُلاحَظ في هذا التصنيف أن «تطوير المنتجات والعمليات» يُعد بذاته مجالًا للابتكار؛ فالمؤسسة التي تطوّر أسلوبها في استكشاف الفرص واختبار الحلول إنما تبتكر في قدرتها على الابتكار، وهو موضوع الجزء الثاني من الكتاب.</p>
+
+<h3>المجالات الأربعة عند تيد وبيسانت</h3>
+<p>يقترح تيد وبيسانت النظر إلى «مساحة الابتكار» من خلال أربعة أبعاد: <strong>المنتج</strong>، أي ما تقدمه المؤسسة، و<strong>العملية</strong>، أي أسلوب إنتاجه وتقديمه، و<strong>الموقع</strong>، أي السياق الذي يُقدَّم فيه والفئة الموجه إليها، و<strong>النموذج الذهني</strong>، أي التصور الأساسي لطبيعة عمل المؤسسة <span class="cite">(<span class="en">Tidd &amp; Bessant, 2021</span>)</span>. وتتجلى فائدة البعدين الأخيرين في توجيه الانتباه إلى ابتكارات لا تغيّر المنتج أو العملية، كتقديم خدمة قائمة لفئة جديدة، أو إعادة تعريف ما تقدمه المؤسسة: منتجًا، أم نتيجة، أم حلًا متكاملًا.</p>
+
+<div class="callout" data-k="teacher">
+  <div class="tag">تطبيق مهني</div>
+  <p>اعرض قائمة مبادرات مؤسستك على هذين التصنيفين. فإذا تركزت المبادرات في خانة واحدة، كالتقنية أو المنتج، فتصوّر مؤسستك للابتكار أضيق من الفرص المتاحة لها. وكثيرًا ما تكمن الفرص الكبرى في المجالات المهملة: الهيكل، والشبكة، والقناة، وأسلوب اتخاذ القرار.</p>
+</div>
+
+<p>وهذه المجالات متكاملة؛ فالحل المؤثر قد يجمع في آن واحد تغييرًا في الخدمة والعملية والتقنية ونموذج التشغيل. والتقنية على وجه الخصوص أحد الممكّنات، ولا تُعد ابتكارًا إلا إذا غيّرت القيمة أو التجربة أو الأداء تغييرًا ملموسًا؛ فرقمنة إجراء معيب قد تُسرّع المشكلة بدل أن تعالجها.</p>
+
+<h2 id="s6"><span class="sec">١-٦</span>درجات الابتكار</h2>
+<p>تتفاوت الابتكارات في مقدار ما تُحدثه من تغيير. وتتعدد التصنيفات المستخدمة في الأدبيات لهذه الدرجات، ولكل منها زاوية نظر مختلفة.</p>
+
+<h3>الابتكار التحسيني والمجاور والجذري</h3>
+<p><strong>الابتكار التحسيني</strong> (ويُسمى أيضًا التدريجي) يبني على منتج أو خدمة أو قدرة أو فئة مستفيدين معروفة، ولذلك يكون عدم اليقين فيه منخفضًا نسبيًا. و<strong>الابتكار المجاور</strong> ينقل قدرة قائمة إلى فئة أو سوق جديدة، أو يضيف قدرة جديدة إلى مجال مألوف. أما <strong>الابتكار الجذري</strong> أو التحويلي فيغيّر الافتراضات الأساسية، أو يقدم قيمة ونموذجًا مختلفين اختلافًا كبيرًا <span class="cite">(<span class="en">Nagji &amp; Tuff, 2012</span>)</span>.</p>
+<p>ولا تنطوي هذه الدرجات على حكم قيمي؛ فالجذري ليس أفضل في جميع الأحوال، والتحسيني ليس قليل الشأن. فقد تتراكم تحسينات متتالية لتُحدث أثرًا كبيرًا، وقد تكون فكرة جذرية غير ملائمة أو غير قابلة للتبني. والمهم أن تحدد المؤسسة درجة عدم اليقين والمخاطر والقدرات التي تتطلبها كل مبادرة، وأن تديرها بما يناسبها. ويعود الكتاب إلى هذا التوزيع في سياق الاستراتيجية وإدارة المحفظة في الفصلين الرابع والعاشر.</p>
+
+<h3>المكونات والبنية</h3>
+<p>لاحظ هندرسون وكلارك أن التصنيف الثنائي (تحسيني/جذري) يحجب نوعين مهمين من الابتكار؛ إذ يتكون كل منتج أو خدمة من <strong>مكونات</strong>، ومن <strong>بنية</strong> تربط هذه المكونات بعضها ببعض. ومن تقاطع هذين البعدين تنشأ أربعة أنواع <span class="cite">(<span class="en">Henderson &amp; Clark, 1990</span>)</span>:</p>
+
+<figure id="fig-5">
+<div class="fig-frame">
+<div class="hc">
+  <div></div>
+  <div class="ax">المكونات: مفاهيمها تتعزز</div>
+  <div class="ax">المكونات: مفاهيمها تُستبدل</div>
+  <div class="ax v">الروابط لا تتغير</div>
+  <div class="q inc"><b>تحسيني</b><span>تحسين المكونات ضمن البنية ذاتها، كرفع كفاءة خطوة في إجراء قائم.</span></div>
+  <div class="q mod"><b>وحدوي</b><span>استبدال مكوّن بتقنية أو طريقة جديدة دون تغيير البنية، كالتوقيع الإلكتروني بدل الورقي.</span></div>
+  <div class="ax v">الروابط تتغير</div>
+  <div class="q arc"><b>بنيوي</b><span>ربط مكونات معروفة بطريقة جديدة، كجمع خدمات متفرقة في رحلة واحدة.</span></div>
+  <div class="q rad"><b>جذري</b><span>مفاهيم جديدة وروابط جديدة معًا، كنموذج خدمة غير مسبوق.</span></div>
+  <div class="cap">بتصرف عن <span class="en">Henderson &amp; Clark (1990)</span>، والأمثلة إعداد المؤلف.</div>
+</div>
+</div>
+<figcaption><b>شكل ١-٥</b> مصفوفة الابتكار بحسب المكونات والبنية.</figcaption>
+</figure>
+
+<p>ويكتسب <strong>الابتكار البنيوي</strong> أهمية خاصة في المؤسسات الخدمية والحكومية؛ إذ تعود كثير من مشكلات الخدمة إلى طريقة ارتباط المكونات أكثر من ضعفها؛ فقد تؤدي كل إدارة عملها بكفاءة، وتبقى المشكلة في طريقة ارتباطها: التسليم بين الوحدات، وتكرار طلب المعلومات ذاتها، وتجزئة ملكية الرحلة. وقد بيّن هندرسون وكلارك أن هذا النوع يمثل تحديًا خاصًا للمؤسسات القائمة، لأنه يبدو محدودًا في ظاهره، في حين يتطلب معرفة ببنية النظام بأكمله، وهي معرفة تكون في الغالب كامنة في الهياكل وقنوات الاتصال المعتادة.</p>
+
+<h3>الابتكار المساند والابتكار المزعزِع</h3>
+<p>ميّز كريستنسن بين <strong>الابتكار المساند</strong>، الذي يحسّن أداء المنتجات في الأبعاد التي يقدّرها العملاء الحاليون، و<strong>الابتكار المزعزِع</strong>، الذي يبدأ غالبًا بأداء أدنى في تلك الأبعاد، لكنه أبسط أو أقل تكلفة أو أيسر وصولًا، فيستقطب فئات مهملة أو جديدة، ثم يتطور حتى ينافس الحلول السائدة <span class="cite">(<span class="en">Christensen, 1997</span>)</span>. وتتمثل «معضلة» المؤسسات الناجحة في أن ممارساتها الجيدة ذاتها، كالإصغاء إلى أفضل عملائها والاستثمار في أعلى الفرص ربحية، تدفعها إلى تجاهل هذا النوع حتى يفوت الأوان.</p>
+
+
+<h2 id="s7"><span class="sec">١-٧</span>الابتكار في القطاع العام والمؤسسات غير الربحية</h2>
+<p>نشأت أدبيات الابتكار في سياق الشركات والأسواق، فحملت كثيرًا من افتراضاتها كالمنافسة والربح والعميل الذي يملك حرية الاختيار. غير أن الابتكار في الجهات الحكومية والمؤسسات غير الربحية يضاهيه أهمية وقد يفوقه، لأن أثره يمس شرائح واسعة من المستفيدين الذين لا يملكون في الغالب بديلًا عن الخدمة.</p>
+<p>وقد عرّف مولغان وألبري الابتكار الناجح في القطاع العام بأنه إنشاء عمليات أو منتجات أو خدمات أو أساليب تقديم جديدة وتطبيقها، بما يحقق تحسنًا ملموسًا في النتائج أو الكفاءة أو الفاعلية أو الجودة <span class="cite">(<span class="en">Mulgan &amp; Albury, 2003</span>)</span>. والقيمة في هذا السياق هي ما أطلق عليه مور «القيمة العامة»، أي ما يقدّره المجتمع وأفراده، لا ما يحقق عائدًا ماليًا فحسب <span class="cite">(<span class="en">Moore, 1995</span>)</span>.</p>
+
+<div class="tw">
+<table id="tab-3">
+<caption><b>جدول ١-٣</b> أوجه الاختلاف في الابتكار بين القطاعين</caption>
+<thead><tr><th>البعد</th><th>الشركات</th><th>الجهات العامة والمؤسسات غير الربحية</th></tr></thead>
+<tbody>
+<tr><td>مقياس القيمة</td><td>العائد والحصة السوقية ورضا العميل</td><td>النتائج المجتمعية، وعدالة الوصول، والثقة، والكفاءة</td></tr>
+<tr><td>دافع الابتكار</td><td>المنافسة والنمو</td><td>التوجهات الوطنية، وتوقعات المستفيدين، ومحدودية الموارد، والأزمات</td></tr>
+<tr><td>المستفيد</td><td>عميل يختار ويدفع</td><td>مستفيد قد لا يملك بديلًا، وقد يختلف عن الجهة الممولة</td></tr>
+<tr><td>تحمّل المخاطر</td><td>مقبول في حدود العائد المتوقع</td><td>أكثر حساسية بفعل المساءلة العامة وأثر الخطأ في الثقة</td></tr>
+<tr><td>الانتشار</td><td>الابتكار ميزة تنافسية تُحمى</td><td>الابتكار يُستحسن نقله بين الجهات وتعميمه</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>ويترتب على هذه الفروق أن أدوات الشركات لا تُنقل إلى القطاع العام دون تكييف؛ فمعيار العائد على الاستثمار وحده لا يكفي لتقييم مبادرة تستهدف إيصال خدمة إلى فئة محرومة. ويستخدم الكتاب لفظ «المستفيد» ليشمل العميل والمواطن والمستخدم الداخلي، ولفظ «القيمة» ليشمل القيمة الاقتصادية والعامة معًا.</p>
+
+<h2 id="s8"><span class="sec">١-٨</span>مبادئ إدارة الابتكار</h2>
+<p>إذا كان الابتكار هو النتيجة، فإن إدارة الابتكار هي الممارسات والقدرات التي تجعل هذه النتيجة ممكنة ومتكررة؛ وتشمل توجيه الفرص والأفكار والمبادرات، وإدارة تدفقها من <strong>الواجهة الأمامية للابتكار</strong> حيث تُستكشف الاحتياجات وتُولَّد الأفكار، إلى التطبيق وتحقيق القيمة. وتقوم سلسلة المعايير الدولية <span class="en">ISO 56000</span> على ثمانية مبادئ تمثل خلاصة الخبرة المتراكمة في هذا المجال <span class="cite">(<span class="en">ISO, 2025; Fernandez &amp; Swart, 2025</span>)</span>، ويعرضها هذا القسم لأنها تقدم خريطة موجزة لموضوعات الكتاب.</p>
+
+<figure id="fig-6">
+<div class="prin">
+  <div><b>تحقيق القيمة</b><span class="en">Realization of value</span><span class="d">الغاية هي القيمة المتحققة، أما عدد الأفكار والأنشطة فمؤشر وسيط إليها.</span><span class="ch">الفصلان ١٦، ١٧</span></div>
+  <div><b>قيادة مستشرفة للمستقبل</b><span class="en">Future-focused leaders</span><span class="d">قيادة تجمع بين إدارة الحاضر واستكشاف المستقبل.</span><span class="ch">الفصل ٣</span></div>
+  <div><b>التوجه الاستراتيجي</b><span class="en">Strategic direction</span><span class="d">ابتكار موجّه بأهداف واضحة وأولويات معلنة.</span><span class="ch">الفصل ٤</span></div>
+  <div><b>الثقافة</b><span class="en">Culture</span><span class="d">قيم وسلوكيات تجمع بين الإبداع والتنفيذ المنضبط.</span><span class="ch">الفصلان ٧، ٨</span></div>
+  <div><b>استثمار الرؤى</b><span class="en">Exploiting insights</span><span class="d">الإفادة من مصادر المعرفة المتنوعة داخل المؤسسة وخارجها.</span><span class="ch">الفصلان ١١، ١٨</span></div>
+  <div><b>إدارة عدم اليقين</b><span class="en">Managing uncertainty</span><span class="d">التعامل مع المخاطر بالتعلم والتجريب المحسوب.</span><span class="ch">الفصل ١٤</span></div>
+  <div><b>القدرة على التكيف</b><span class="en">Adaptability</span><span class="d">تعديل الهياكل والعمليات استجابة للتغير.</span><span class="ch">الفصلان ٦، ١٠</span></div>
+  <div><b>منظور النظم</b><span class="en">Systems approach</span><span class="d">النظر إلى الابتكار بوصفه منظومة مترابطة العناصر.</span><span class="ch">الفصل ٥</span></div>
+</div>
+<figcaption><b>شكل ١-٦</b> المبادئ الثمانية لإدارة الابتكار في سلسلة <span class="en">ISO 56000</span>، والفصول التي تتناول كلًا منها في هذا الكتاب.</figcaption>
+</figure>
+
+<p>ولا تنص هذه المبادئ على أدوات بعينها، كالتفكير التصميمي أو الهاكاثون؛ فالأدوات تتبدل، والمبادئ هي التي تحدد متى تفيد الأداة ومتى تصبح ممارسة شكلية.</p>
+
+<h2 id="s9"><span class="sec">١-٩</span>مفاهيم شائعة غير دقيقة</h2>
+<p>يُختتم الجانب النظري من الفصل بخمسة مفاهيم غير دقيقة تتكرر في خطاب المؤسسات عن الابتكار. ويقود كل منها إلى قرارات إدارية محددة، ومن ثم فإن تصحيحها يتجاوز الدقة اللفظية إلى تصويب الممارسة.</p>
+
+<div class="callout" data-k="myth">
+  <div class="tag">الابتكار يبدأ بالأفكار</div>
+  <p>البداية الأدق حاجة أو مشكلة أو فرصة أو تغيّر يستدعي الاستجابة، وتأتي الفكرة لاحقًا بوصفها فرضية للحل. والمؤسسة التي تبدأ بجمع الأفكار دون توجيه تحصل على عدد كبير من المقترحات المتفرقة التي يصعب تقييمها، ونادرًا ما يتحول منها شيء إلى التطبيق. ويفصّل الفصل الحادي عشر في ذلك.</p>
+</div>
+
+<div class="callout" data-k="myth">
+  <div class="tag">الابتكار هو التقنية</div>
+  <p>التقنية ممكّن مهم، غير أن كثيرًا من الابتكارات الأعلى أثرًا يقع في الخدمات والإجراءات ونماذج الأعمال والهياكل. وقد أخفقت مشروعات تقنية كبيرة في تحقيق القيمة لأنها بُنيت لمشكلة لم تُفهم فهمًا كافيًا.</p>
+</div>
+
+<div class="callout" data-k="myth">
+  <div class="tag">الابتكار مقصور على المبدعين</div>
+  <p>تحتاج المؤسسة إلى من يكتشف المشكلات، ومن يحلل الأدلة، ومن يصمم التجارب، ومن ينفذ، ومن يرعى، ومن يملك الخبرة التشغيلية. وقد يكون من لا يُعرف بغزارة الأفكار هو من يجعل الفكرة قابلة للتطبيق.</p>
+</div>
+
+<div class="callout" data-k="myth">
+  <div class="tag">وجود مختبر أو منصة دليل على القدرة الابتكارية</div>
+  <p>المختبرات والمنصات والجوائز أدوات، وقد تصبح جزءًا من مسرح الابتكار إذا لم ترتبط بأولويات وموارد وقرارات وجهة تشغيل، وإذا بقيت معزولة عن العمل اليومي للوحدات وأفرادها. ومعيار القدرة الابتكارية وجود تدفق منظم للفرص، وتعلم من التجارب، وقرارات مبنية على الأدلة، ونتائج متحققة.</p>
+</div>
+
+
+
+<div class="callout" data-k="myth">
+  <div class="tag">الإطلاق هو نهاية المسار</div>
+  <p>يثبت الإطلاق وجود تطبيق جديد، أما الابتكار فلا يثبت إلا بعد تبنّيه وتحقق أثره. والمؤسسة التي تكتفي بالاحتفاء بالإطلاق ثم تنتقل إلى غيره تفقد في الغالب الجزء الأصعب والأهم من المسار.</p>
+</div>
+
+<h2 id="cases" class="unnum">حالات تطبيقية: هل هذه المبادرة ابتكار؟</h2>
+<p>يعود هذا القسم إلى مبادرات الحالة الافتتاحية، ويطبق عليها العناصر الأربعة. والحالات توضيحية، صيغت تفاصيلها لإبراز طريقة التحليل.</p>
+
+<div class="case">
+  <div class="case-head"><h3>النموذج الإلكتروني لطلبات الإجازة</h3><span class="verdict n">تحسين تشغيلي</span></div>
+  <div class="checks">
+    <div class="u"><b>؟</b>الجدة</div>
+    <div class="y"><b>✓</b>التطبيق</div>
+    <div class="y"><b>✓</b>التبني</div>
+    <div class="u"><b>؟</b>القيمة</div>
+  </div>
+  <p>حلّ النموذج الإلكتروني محل الورقي، واستخدمه الموظفون لكونه المسار الوحيد المتاح. غير أن مسار الاعتماد بقي على حاله بخمس موافقات متتالية، ولم يتغير متوسط زمن الإنجاز. فالجدة هنا شكلية، والقيمة مقتصرة على توفير الورق.</p>
+  <p class="shift"><strong>متى ترقى إلى الابتكار؟</strong> إذا أُعيد تصميم المسار ذاته، كاعتماد الإجازات القصيرة آليًا وفق قواعد واضحة، والاكتفاء بموافقة واحدة في الحالات الأخرى، ثم قيس انخفاض ملموس في الزمن والعبء.</p>
+</div>
+
+<div class="case">
+  <div class="case-head"><h3>المساعد الآلي للاستفسارات</h3><span class="verdict t">ابتكار محتمل لم يكتمل</span></div>
+  <div class="checks">
+    <div class="y"><b>✓</b>الجدة</div>
+    <div class="u"><b>؟</b>التطبيق</div>
+    <div class="u"><b>؟</b>التبني</div>
+    <div class="u"><b>؟</b>القيمة</div>
+  </div>
+  <p>الجدة متحققة على مستوى المؤسسة، غير أن المبادرة لا تزال في طور الفكرة، ولم تُدرس أسباب كثرة الاستفسارات، ولا جودة المعلومات التي سيعتمد عليها المساعد، ولا الجهة المسؤولة عن تحديثها. ومن ثم فإن وصفها بالابتكار سابق لأوانه.</p>
+  <p class="shift"><strong>متى ترقى إلى الابتكار؟</strong> إذا بدأت بفهم أسباب الاستفسارات، ثم جُرّبت على نطاق محدود، وقيس انخفاض الاستفسارات المتكررة ورضا المستخدمين، وحُددت جهة مسؤولة عن تحديث المحتوى.</p>
+</div>
+
+<div class="case">
+  <div class="case-head"><h3>مسابقة الأفكار للموظفين</h3><span class="verdict t">نشاط ممهِّد للابتكار</span></div>
+  <div class="checks">
+    <div class="u"><b>—</b>الجدة</div>
+    <div class="u"><b>—</b>التطبيق</div>
+    <div class="u"><b>—</b>التبني</div>
+    <div class="u"><b>—</b>القيمة</div>
+  </div>
+  <p>لا تُعد المسابقة ابتكارًا ولا نقيضه، فهي آلية لالتقاط الفرص، تتحدد قيمتها بما يليها: ارتباطها بتحديات ذات أولوية، وتوافر الوقت والموارد لتقييم المقترحات واختبار أفضلها، وتلقي المشاركين ردًا على مقترحاتهم.</p>
+  <p class="shift"><strong>متى تكون مجدية؟</strong> إذا صيغت حول تحدٍّ محدد، وأُعلن مسبقًا ما سيترتب على اختيار الأفكار، وخُصصت ميزانية محدودة لتجربة عدد منها.</p>
+</div>
+
+<div class="case">
+  <div class="case-head"><h3>خفض زمن معالجة الطلبات</h3><span class="verdict y">ابتكار على مستوى المؤسسة</span></div>
+  <div class="checks">
+    <div class="y"><b>✓</b>الجدة</div>
+    <div class="y"><b>✓</b>التطبيق</div>
+    <div class="y"><b>✓</b>التبني</div>
+    <div class="y"><b>✓</b>القيمة</div>
+  </div>
+  <p>أعادت إدارة الجودة ترتيب خطوات الإجراء بعد أن تبيّن أن الطلبات تنتظر أيامًا بين وحدتين دون معالجة، فدُمجت مرحلتا المراجعة، وأُنشئ عرض مشترك لحالة الطلبات. فانخفض الزمن من عشرة أيام إلى ستة، واستمر الانخفاض بعد ستة أشهر. وهذا ابتكار بنيوي جديد على المؤسسة، رغم أنه لم يستخدم أي تقنية جديدة.</p>
+  <p class="shift"><strong>ما الذي يعزز الحكم؟</strong> مقارنة الزمن بخط أساس موثق، والتحقق من أن الأخطاء لم تنتقل إلى مرحلة لاحقة.</p>
+</div>
+
+<div class="callout" data-k="key">
+  <div class="tag">دلالة الحالات</div>
+  <p>قد تكون المبادرة التي يوحي اسمها بالابتكار أبعد المبادرات عنه، وقد تكون المبادرة المتواضعة في مظهرها أقربها إليه. ويحدد تصنيف المبادرة أسلوب إدارتها: فالتحسين يُدار بالتنفيذ المنضبط، والابتكار المحتمل يُدار بالتجريب والقرار المرحلي، والنشاط الممهِّد يُدار بوضوح ما يترتب عليه.</p>
+</div>
+
+<h2 id="tool" class="unnum">أداة الفصل: بطاقة تصنيف المبادرة</h2>
+<p>استخدم هذه البطاقة لتحديد طبيعة أي مبادرة قبل اتخاذ القرار بشأنها، في مرحلة الاقتراح أو عند مراجعة المبادرات القائمة. ولا تبحث فيها عن درجة؛ فغايتها أن تطرح عليك الأسئلة الصحيحة.</p>
+
+<div class="toolcard">
+  <div class="th"><b>بطاقة تصنيف المبادرة</b><span>تُستكمل في نحو عشرين دقيقة</span></div>
+  <div class="tb">
+    <div class="row"><i>١</i><div><b>ما الحاجة أو الفرصة؟</b><span class="hint">تُوصف دون ذكر الحل. ما الدليل على أهميتها؟</span></div><div class="opts"><span>دليل قوي</span><span>دليل أولي</span><span>انطباع</span></div></div>
+    <div class="row"><i>٢</i><div><b>ما درجة الجدة؟</b><span class="hint">جديدة بالنسبة إلى من؟</span></div><div class="opts"><span>على المؤسسة</span><span>على القطاع</span><span>على العالم</span><span>لا جدة ذات دلالة</span></div></div>
+    <div class="row"><i>٣</i><div><b>ما مجال الابتكار؟</b><span class="hint">يجوز اختيار أكثر من مجال.</span></div><div class="opts"><span>منتج أو خدمة</span><span>عملية</span><span>تجربة المستفيد</span><span>نموذج العمل</span><span>تنظيم وإدارة</span><span>تقنية</span></div></div>
+    <div class="row"><i>٤</i><div><b>ما درجة عدم اليقين؟</b><span class="hint">هل الحل معروف؟ هل السبب مفهوم؟ هل التبني مضمون؟</span></div><div class="opts"><span>منخفضة: تحسين</span><span>متوسطة: ابتكار تحسيني أو مجاور</span><span>مرتفعة: ابتكار جذري</span></div></div>
+    <div class="row"><i>٥</i><div><b>ما القيمة المتوقعة، ولمن؟</b><span class="hint">ما المؤشر الذي سيتغير في حال نجاح المبادرة؟</span></div><div class="opts"><span>المستفيد</span><span>الموظف</span><span>المؤسسة</span><span>المجتمع</span></div></div>
+    <div class="row"><i>٦</i><div><b>من الجهة التي ستتبنى الحل وتشغّله؟</b><span class="hint">جهة محددة بعينها.</span></div><div class="opts"><span>محددة ومشاركة</span><span>محددة غير مشاركة</span><span>غير محددة</span></div></div>
+    <div class="row"><i>٧</i><div><b>ما أسلوب الإدارة المناسب؟</b><span class="hint">النتيجة المترتبة على الإجابات السابقة.</span></div><div class="opts"><span>تنفيذ وتحسين مستمر</span><span>مسار ابتكار بالتجريب والمراحل</span><span>استكشاف أولي قبل القرار</span></div></div>
+  </div>
+</div>
+
+<div class="readmap">
+  <div><b>جدة محدودة وعدم يقين منخفض</b>المبادرة تحسين، تُنفَّذ بإتقان دون تحميلها لغة الابتكار وأدواته.</div>
+  <div><b>جدة حقيقية وعدم يقين متوسط أو مرتفع</b>المبادرة تتطلب مسار ابتكار: افتراضات معلنة، وتجارب، وتمويل مرحلي، وبوابات قرار.</div>
+  <div><b>حاجة غير واضحة</b>الخطوة الأولى استكشاف قصير لفهم المشكلة قبل أي التزام بحل.</div>
+</div>
+
+<h2 id="summary" class="unnum">خلاصة الفصل</h2>
+<div class="summary">
+<ul>
+  <li>الابتكار تطبيق جديد أو محسّن بدرجة ذات دلالة، يعالج حاجة، ويتبناه مستخدمون، ويحقق قيمة قابلة للملاحظة. ويكفي غياب أحد العناصر الأربعة لبقاء المبادرة دون مستوى الابتكار.</li>
+  <li>تتفق التعريفات المرجعية (شومبيتر، ودليل أوسلو، و<span class="en">ISO 56000</span>، وروجرز) على أن الجدة وحدها لا تكفي، وتختلف في الزاوية التي تبرزها.</li>
+  <li>الجدة نسبية: على المؤسسة، أو على القطاع، أو على العالم. ونقل الحلول بين السياقات ابتكار حقيقي متى تطلّب تكييفًا وتغييرًا.</li>
+  <li>الإبداع ينتج أفكارًا، والاختراع ينتج معرفة أو تقنية، والتحسين يرفع أداء القائم، والتحول يغيّر النموذج بكامله. والمعيار العملي للتمييز بين التحسين والابتكار هو درجة عدم اليقين.</li>
+  <li>لا يقتصر النظر إلى الإبداع على ناتجه؛ فهو يشمل الشخص والعملية والبيئة، وهي جوانب تتوقف عليها قدرة المؤسسة على الابتكار.</li>
+  <li>يقع الابتكار في المنتجات والخدمات، وفي عمليات الأعمال، وفي الموقع والنموذج الذهني. والتقنية أحد الممكّنات، لا مرادف للابتكار.</li>
+  <li>تتدرج الابتكارات من التحسيني إلى الجذري، وللابتكار البنيوي أهمية خاصة في المؤسسات الخدمية، ولكل درجة أسلوب إدارة يناسبها.</li>
+  <li>للابتكار في القطاع العام منطق مختلف في القيمة والمخاطر والانتشار، ويتطلب أدوات مكيّفة.</li>
+  <li>تقوم إدارة الابتكار على ثمانية مبادئ، أولها تحقيق القيمة، وآخرها النظر إلى الابتكار بوصفه منظومة.</li>
+</ul>
+</div>
+
+<h3>مصطلحات الفصل</h3>
+<dl class="gloss">
+  <dt>الابتكار<span class="en">Innovation</span></dt><dd>تطبيق جديد أو محسّن بدرجة ذات دلالة، يتبناه مستخدمون ويحقق قيمة.</dd>
+  <dt>إدارة الابتكار<span class="en">Innovation management</span></dt><dd>الممارسات والقدرات التي توجه تدفق الفرص والأفكار والمبادرات، وتدير التجريب والقرارات والموارد حتى تحقيق القيمة.</dd>
+  <dt>الواجهة الأمامية للابتكار<span class="en">Front end of innovation</span></dt><dd>المرحلة السابقة لإطلاق المشروع رسميًا، وتشمل اكتشاف الاحتياجات واستكشاف الفرص وتوليد الأفكار.</dd>
+  <dt>الجدة النسبية<span class="en">Degree of novelty</span></dt><dd>جدة الحل بالنسبة إلى وحدة مرجعية: المؤسسة أو السوق أو العالم.</dd>
+  <dt>ابتكار عمليات الأعمال<span class="en">Business process innovation</span></dt><dd>تغيير جديد أو محسّن في أسلوب عمل المؤسسة في إحدى وظائفها.</dd>
+  <dt>الابتكار التحسيني<span class="en">Incremental innovation</span></dt><dd>ابتكار يبني على عرض أو قدرة قائمة دون تغيير طبيعتها الأساسية.</dd>
+  <dt>الابتكار البنيوي<span class="en">Architectural innovation</span></dt><dd>ربط مكونات معروفة بطريقة جديدة.</dd>
+  <dt>الابتكار المزعزِع<span class="en">Disruptive innovation</span></dt><dd>ابتكار يبدأ من الطرف الأدنى للسوق أو من سوق جديدة، ثم يتطور حتى ينافس الحلول السائدة.</dd>
+  <dt>الريادة الداخلية<span class="en">Intrapreneurship</span></dt><dd>السلوك الريادي الذي يمارسه الأفراد داخل مؤسسة قائمة لقيادة ابتكار جديد.</dd>
+  <dt>القيمة العامة<span class="en">Public value</span></dt><dd>ما يقدّره المجتمع وأفراده من نتائج الخدمات والسياسات العامة.</dd>
+  <dt>مسرح الابتكار<span class="en">Innovation theater</span></dt><dd>أنشطة تحاكي الابتكار في مظهرها دون أن تُحدث تغييرًا في المنتجات أو الخدمات أو أساليب العمل.</dd>
+</dl>
+
+<h3>أسئلة للمراجعة والمناقشة</h3>
+<ol class="questions">
+  <li>اذكر العناصر الأربعة في تعريف الابتكار، ووضّح بمثال ما يترتب على غياب عنصر التبني. <span class="lv">فهم</span></li>
+  <li>قارن بين تعريف دليل أوسلو وتعريف <span class="en">ISO 56000</span> من حيث العنصر الذي يبرزه كل منهما، وبيّن متى يكون أحدهما أنسب لغرض إداري محدد. <span class="lv">تحليل</span></li>
+  <li>طبّقت مؤسسة نظامًا معمولًا به منذ سنوات في مؤسسات مماثلة. هل يُعد ذلك ابتكارًا؟ حدد الشروط التي يكون فيها كذلك. <span class="lv">تطبيق</span></li>
+  <li>اختر ثلاث مبادرات من خطة مؤسستك، وصنّفها باستخدام بطاقة تصنيف المبادرة، ثم قارن أسلوب إدارتها الحالي بما يقتضيه التصنيف. <span class="lv">تطبيق</span></li>
+  <li>ما الذي يجعل الابتكار البنيوي صعبًا على المؤسسات القائمة؟ استشهد بخدمة تؤدي وحداتها أعمالها بكفاءة في حين تبقى الرحلة الكلية بطيئة. <span class="lv">تحليل</span></li>
+  <li>«المؤسسة التي تملك مختبرًا للابتكار وجائزة سنوية له مؤسسة مبتكرة». ناقش هذه العبارة في ضوء مفهوم مسرح الابتكار وجوانب الإبداع الأربعة. <span class="lv">تقويم</span></li>
+</ol>
+
+<div class="endmark" aria-hidden="true">✦ ✦ ✦</div>
+<nav class="pager"><span class="empty"></span><a class="next" href="ch02.html"><small>الفصل التالي</small><b>لماذا الابتكار الآن؟</b></a></nav>
+</div>
+</body>
+</html>
