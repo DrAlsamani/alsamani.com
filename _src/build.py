@@ -250,7 +250,6 @@ def contact_html():
     <div>
       <h3 class="ch">{bi('قنوات التواصل', 'Channels')}</h3>
       <ul class="channels">
-        <li><a href="mailto:contact@alsamani.com"><b>{bi('البريد الإلكتروني', 'Email')}</b><span>contact@alsamani.com</span></a></li>
         <li><a href="https://www.linkedin.com/in/alsamani/"><b>LinkedIn</b><span>linkedin.com/in/alsamani</span></a></li>
         <li><a href="https://www.x.com/Omar_ALsamani"><b>X</b><span>@Omar_ALsamani</span></a></li>
         <li><a href="https://scholar.google.com/citations?user=1tSLgBIAAAAJ"><b>Google Scholar</b><span>Omar A. Alsamani</span></a></li>
