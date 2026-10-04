@@ -42,16 +42,21 @@ def page(name, depth, title_ar, body, full, seo_html=''):
 '''
     content = f'''<div class="wrap">
 <header class="top"><div class="bar wrap">
-  <a class="brand" href="{href('index', depth)}">{bi('د. عمر عبدالله الصمعاني', 'Dr. Omar Abdullah Alsamani')}</a>
+  <a class="brand" href="{href('index', depth)}">{bi('د. عمر عبدالله الصمعاني', 'Dr. Omar A. Alsamani')}</a>
   <nav class="links" aria-label="Main">{nav}</nav>
-  <div class="bar-end"><button class="lang" id="langBtn" type="button">English</button><a class="brand-en ar" href="{href('index', depth)}" dir="ltr" lang="en">Dr. Omar Abdullah Alsamani</a></div>
+  <div class="bar-end"><button class="lang" id="langBtn" type="button">English</button><a class="brand-en ar" href="{href('index', depth)}" dir="ltr" lang="en">Dr. Omar A. Alsamani</a></div>
 </div>
 <nav class="links mobile" aria-label="Main">{nav}</nav>
 </header>
 <main data-base="{'../' * depth}">
 {body}
 </main>
-<footer><span>© {2026} alsamani.com</span><span><a href="https://www.linkedin.com/in/alsamani/">LinkedIn</a> · <a href="https://www.x.com/Omar_ALsamani">X</a> · <a href="https://scholar.google.com/citations?user=1tSLgBIAAAAJ">Google Scholar</a></span></footer>
+<footer class="site-foot">
+  <div class="sf-id"><span class="mono-mark" aria-hidden="true">OA</span><div><b>{bi('د. عمر عبدالله الصمعاني', 'Dr. Omar A. Alsamani')}</b><span>{bi('قسم التربية الخاصة · جامعة حائل', "Department of Special Education · University of Ha'il")}</span></div></div>
+  <nav class="sf-nav" aria-label="Footer">{nav}</nav>
+  <div class="sf-links"><a href="https://scholar.google.com/citations?user=1tSLgBIAAAAJ">Google Scholar</a><a href="https://www.linkedin.com/in/alsamani/">LinkedIn</a><a href="https://www.x.com/Omar_ALsamani">X</a></div>
+  <p class="sf-copy mono">© 2026 alsamani.com</p>
+</footer>
 </div>
 <div class="lb" id="lb" hidden><button class="x" id="lbx" aria-label="Close">×</button><button class="pv" id="lbp" aria-label="Previous">‹</button><img id="lbi" alt=""><button class="nx" id="lbn" aria-label="Next">›</button></div>
 <script>{js}</script>
@@ -294,11 +299,11 @@ PERSON = {"@type": "Person", "@id": SITE + "#person", "name": "Omar Abdullah Als
           "knowsAbout": ["Gifted education", "Twice-exceptionality", "Talent development", "Creativity", "Innovation and entrepreneurship", "Special education", "Artificial intelligence in education", "Identification and assessment"],
           "sameAs": ["https://www.linkedin.com/in/alsamani/", "https://www.x.com/Omar_ALsamani", "https://scholar.google.com/citations?user=1tSLgBIAAAAJ"]}
 DESCS = {
- 'index': "Research by Dr. Omar Abdullah Alsamani (University of Ha'il) on gifted education, twice-exceptionality, innovation and entrepreneurship, special education and AI in education — abstracts, findings and implications in English and Arabic.",
- 'publications': "Full list of publications by Dr. Omar Abdullah Alsamani: journal articles, book chapters and theses on gifted education, twice-exceptional students, autism, creativity, entrepreneurship and AI in education.",
+ 'index': "Research by Dr. Omar A. Alsamani (University of Ha'il) on gifted education, twice-exceptionality, innovation and entrepreneurship, special education and AI in education — abstracts, findings and implications in English and Arabic.",
+ 'publications': "Full list of publications by Dr. Omar A. Alsamani: journal articles, book chapters and theses on gifted education, twice-exceptional students, autism, creativity, entrepreneurship and AI in education.",
  'photography': "Landscape, wildlife and heritage photography by Omar Alsamani.",
- 'contact': "Contact Dr. Omar Abdullah Alsamani for research collaboration, training, consulting and media.",
- 'about': "Dr. Omar Abdullah Alsamani, Associate Professor of Special Education at the University of Ha'il: gifted education, twice-exceptionality, innovation and entrepreneurship, AI in education.",
+ 'contact': "Contact Dr. Omar A. Alsamani for research collaboration, training, consulting and media.",
+ 'about': "Dr. Omar A. Alsamani, Associate Professor of Special Education at the University of Ha'il: gifted education, twice-exceptionality, innovation and entrepreneurship, AI in education.",
 }
 def seo(name, title):
     path = '' if name == 'index' else name + '/'
@@ -327,14 +332,14 @@ def seo(name, title):
     elif name in ('index', 'about'):
         ld.append({"@context": "https://schema.org", **PERSON})
         if name == 'index':
-            ld.append({"@context": "https://schema.org", "@type": "WebSite", "name": "Dr. Omar Abdullah Alsamani", "url": SITE, "inLanguage": ["en", "ar"]})
+            ld.append({"@context": "https://schema.org", "@type": "WebSite", "name": "Dr. Omar A. Alsamani", "url": SITE, "inLanguage": ["en", "ar"]})
     elif name == 'publications':
         ld.append({"@context": "https://schema.org", "@type": "CollectionPage", "name": "Publications", "url": url, "about": {"@id": SITE + "#person"}})
     lds = ''.join(f'<script type="application/ld+json">{json.dumps(x, ensure_ascii=False)}</script>\n' for x in ld)
     return f'''<meta name="description" content="{e(desc)}">
 <link rel="canonical" href="{url}">
 <meta property="og:type" content="{og_type}">
-<meta property="og:site_name" content="Dr. Omar Abdullah Alsamani">
+<meta property="og:site_name" content="Dr. Omar A. Alsamani">
 <meta property="og:title" content="{e(title)}">
 <meta property="og:description" content="{e(desc)}">
 <meta property="og:url" content="{url}">
@@ -343,11 +348,11 @@ def seo(name, title):
 <meta name="author" content="Omar Abdullah Alsamani">
 {extra}{lds}'''
 
-PAGES = [('index', 0, 'Dr. Omar Abdullah Alsamani | د. عمر عبدالله الصمعاني — Gifted Education, Innovation and Entrepreneurship', feed_html),
-         ('publications', 1, 'Publications | Dr. Omar Abdullah Alsamani | المنشورات', pubs_html),
+PAGES = [('index', 0, 'Dr. Omar A. Alsamani | د. عمر عبدالله الصمعاني — Gifted Education, Innovation and Entrepreneurship', feed_html),
+         ('publications', 1, 'Publications | Dr. Omar A. Alsamani | المنشورات', pubs_html),
          ('photography', 1, 'Photography | Omar Alsamani | التصوير', photo_html),
-         ('about', 1, 'About | Dr. Omar Abdullah Alsamani | نبذة', about_html),
-         ('contact', 1, 'Contact | Dr. Omar Abdullah Alsamani | تواصل', contact_html),
+         ('about', 1, 'About | Dr. Omar A. Alsamani | نبذة', about_html),
+         ('contact', 1, 'Contact | Dr. Omar A. Alsamani | تواصل', contact_html),
          ('research/ai-visual-instruction-dyslexia', 2, 'AI-based visual instruction and reading comprehension in dyslexia | Alsamani', research_dys)]
 for _r in research:
     if not _r.get('custom'):

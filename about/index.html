@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>About | Dr. Omar Abdullah Alsamani | نبذة</title>
-<meta name="description" content="Dr. Omar Abdullah Alsamani, Associate Professor of Special Education at the University of Ha&#x27;il: gifted education, twice-exceptionality, innovation and entrepreneurship, AI in education.">
+<title>About | Dr. Omar A. Alsamani | نبذة</title>
+<meta name="description" content="Dr. Omar A. Alsamani, Associate Professor of Special Education at the University of Ha&#x27;il: gifted education, twice-exceptionality, innovation and entrepreneurship, AI in education.">
 <link rel="canonical" href="https://alsamani.com/about/">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="Dr. Omar Abdullah Alsamani">
-<meta property="og:title" content="About | Dr. Omar Abdullah Alsamani | نبذة">
-<meta property="og:description" content="Dr. Omar Abdullah Alsamani, Associate Professor of Special Education at the University of Ha&#x27;il: gifted education, twice-exceptionality, innovation and entrepreneurship, AI in education.">
+<meta property="og:site_name" content="Dr. Omar A. Alsamani">
+<meta property="og:title" content="About | Dr. Omar A. Alsamani | نبذة">
+<meta property="og:description" content="Dr. Omar A. Alsamani, Associate Professor of Special Education at the University of Ha&#x27;il: gifted education, twice-exceptionality, innovation and entrepreneurship, AI in education.">
 <meta property="og:url" content="https://alsamani.com/about/">
 <meta property="og:image" content="https://alsamani.com/img/ph15.webp">
 <meta name="twitter:card" content="summary_large_image">
@@ -393,18 +393,56 @@ select{font:inherit;color:var(--ink);background:var(--surface);border:1px solid 
 .bar-end{display:flex;align-items:center;gap:16px}
 .brand-en{font-family:var(--f-body);font-weight:600;font-size:.9375rem;color:var(--ink);text-decoration:none;white-space:nowrap;letter-spacing:.01em}
 @media (max-width:640px){.brand-en{display:none!important}}
+
+/* ---- formal refinements ---- */
+header.top{border-bottom:0;box-shadow:0 1px 0 var(--line)}
+header.top::after{content:"";position:absolute;inset-inline:0;bottom:-1px;height:1px;background:linear-gradient(90deg,transparent,var(--dune) 50%,transparent);opacity:.55}
+header.top{position:sticky}
+nav.links a{position:relative;padding-block:4px}
+nav.links a::after{content:"";position:absolute;inset-inline:0;bottom:-2px;height:2px;background:var(--dune);transform:scaleX(0);transition:transform .25s}
+nav.links a:hover::after,nav.links a[aria-current="page"]::after{transform:scaleX(1)}
+.eyebrow{display:flex;align-items:center;gap:10px}
+.eyebrow::before{content:"";width:22px;height:1px;background:var(--dune)}
+.sec-head h2{font-size:1.375rem}
+/* lead research card: quiet geometric motif */
+.rcard.lead{position:relative;overflow:hidden}
+.rcard.lead::after{content:"";position:absolute;inset-block:0;inset-inline-end:0;width:min(38%,340px);pointer-events:none;opacity:.5;
+  background:
+   repeating-linear-gradient(45deg,transparent 0 17px,color-mix(in srgb,var(--accent) 14%,transparent) 17px 18px),
+   repeating-linear-gradient(-45deg,transparent 0 17px,color-mix(in srgb,var(--accent) 14%,transparent) 17px 18px);
+  -webkit-mask-image:linear-gradient(to left,#000,transparent);mask-image:linear-gradient(to left,#000,transparent)}
+html[dir="rtl"] .rcard.lead::after{-webkit-mask-image:linear-gradient(to right,#000,transparent);mask-image:linear-gradient(to right,#000,transparent)}
+.rcard.lead>*{position:relative;z-index:1}
+/* gentle entrance from a visible resting state */
+@media (prefers-reduced-motion:no-preference){
+  main>section{animation:rise .6s ease both}
+  main>section:nth-child(2){animation-delay:.06s}main>section:nth-child(3){animation-delay:.12s}
+  @keyframes rise{from{transform:translateY(8px);opacity:.6}to{transform:none;opacity:1}}
+  .pb-grid a{transition:transform .5s ease,filter .5s ease}
+  .pb-grid a:hover{filter:brightness(1.06)}
+}
+/* footer */
+.site-foot{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:24px 32px;align-items:start;padding-block:40px 28px;border-top:1px solid var(--line);margin-top:24px;font-size:.875rem;color:var(--muted)}
+.sf-id{display:flex;gap:12px;align-items:center}
+.sf-id b{display:block;color:var(--ink);font-weight:600}
+.mono-mark{display:grid;place-items:center;width:40px;height:40px;border:1.5px solid var(--ink);border-radius:50%;font-family:var(--f-mono);font-size:.8125rem;color:var(--ink);flex:none}
+.sf-nav,.sf-links{display:flex;flex-direction:column;gap:6px}
+.sf-nav a,.sf-links a{color:var(--muted);text-decoration:none}
+.sf-nav a:hover,.sf-links a:hover{color:var(--accent)}
+.sf-copy{grid-column:1/-1;margin:8px 0 0;padding-top:16px;border-top:1px solid var(--line);font-size:.75rem}
+@media (max-width:700px){.site-foot{grid-template-columns:1fr 1fr}.sf-id{grid-column:1/-1}}
 </style>
 </head>
 <body>
 <div class="wrap">
 <header class="top"><div class="bar wrap">
-  <a class="brand" href="../index.html"><span class="ar">د. عمر عبدالله الصمعاني</span><span class="en">Dr. Omar Abdullah Alsamani</span></a>
+  <a class="brand" href="../index.html"><span class="ar">د. عمر عبدالله الصمعاني</span><span class="en">Dr. Omar A. Alsamani</span></a>
   <nav class="links" aria-label="Main"><a href="../index.html"><span class="ar">المستجدات</span><span class="en">Updates</span></a>
 <a href="../publications/index.html"><span class="ar">المنشورات</span><span class="en">Publications</span></a>
 <a href="../photography/index.html"><span class="ar">التصوير</span><span class="en">Photography</span></a>
 <a href="../about/index.html" aria-current="page"><span class="ar">نبذة</span><span class="en">About</span></a>
 <a href="../contact/index.html"><span class="ar">تواصل</span><span class="en">Contact</span></a></nav>
-  <div class="bar-end"><button class="lang" id="langBtn" type="button">English</button><a class="brand-en ar" href="../index.html" dir="ltr" lang="en">Dr. Omar Abdullah Alsamani</a></div>
+  <div class="bar-end"><button class="lang" id="langBtn" type="button">English</button><a class="brand-en ar" href="../index.html" dir="ltr" lang="en">Dr. Omar A. Alsamani</a></div>
 </div>
 <nav class="links mobile" aria-label="Main"><a href="../index.html"><span class="ar">المستجدات</span><span class="en">Updates</span></a>
 <a href="../publications/index.html"><span class="ar">المنشورات</span><span class="en">Publications</span></a>
@@ -417,7 +455,7 @@ select{font:inherit;color:var(--ink);background:var(--surface);border:1px solid 
   <div class="about">
     <div>
       <p class="eyebrow"><span class="ar">نبذة</span><span class="en">About</span></p>
-      <h2 style="font-size:var(--s5);margin-bottom:18px"><span class="ar">د. عمر عبدالله الصمعاني</span><span class="en">Dr. Omar Abdullah Alsamani</span></h2>
+      <h2 style="font-size:var(--s5);margin-bottom:18px"><span class="ar">د. عمر عبدالله الصمعاني</span><span class="en">Dr. Omar A. Alsamani</span></h2>
       <p><span class="ar">أستاذ مشارك بجامعة حائل، متخصص في التربية الخاصة وتعليم الموهوبين وتنمية الموهبة والإبداع والابتكار. تتناول أبحاثه التشخيص والتعرف، ومزدوجي الاستثنائية، وتوظيف الذكاء الاصطناعي في التعليم، والابتكار وريادة الأعمال، مع تركيز على السياق التعليمي السعودي.</span><span class="en">Associate Professor at the University of Ha'il, specializing in special education, gifted education and talent development, creativity and innovation. His work covers identification and assessment, twice-exceptionality, AI in education, and innovation and entrepreneurship, with a focus on the Saudi educational context.</span></p>
       <p><span class="ar">يعمل في البحث العلمي والتدريس والإشراف على طلاب الدراسات العليا وتقديم البرامج التدريبية، باللغتين العربية والإنجليزية.</span><span class="en">He works across research, teaching, graduate supervision and professional training, in Arabic and English.</span></p>
     </div>
@@ -448,7 +486,16 @@ select{font:inherit;color:var(--ink);background:var(--surface);border:1px solid 
 </section>
 
 </main>
-<footer><span>© 2026 alsamani.com</span><span><a href="https://www.linkedin.com/in/alsamani/">LinkedIn</a> · <a href="https://www.x.com/Omar_ALsamani">X</a> · <a href="https://scholar.google.com/citations?user=1tSLgBIAAAAJ">Google Scholar</a></span></footer>
+<footer class="site-foot">
+  <div class="sf-id"><span class="mono-mark" aria-hidden="true">OA</span><div><b><span class="ar">د. عمر عبدالله الصمعاني</span><span class="en">Dr. Omar A. Alsamani</span></b><span><span class="ar">قسم التربية الخاصة · جامعة حائل</span><span class="en">Department of Special Education · University of Ha'il</span></span></div></div>
+  <nav class="sf-nav" aria-label="Footer"><a href="../index.html"><span class="ar">المستجدات</span><span class="en">Updates</span></a>
+<a href="../publications/index.html"><span class="ar">المنشورات</span><span class="en">Publications</span></a>
+<a href="../photography/index.html"><span class="ar">التصوير</span><span class="en">Photography</span></a>
+<a href="../about/index.html" aria-current="page"><span class="ar">نبذة</span><span class="en">About</span></a>
+<a href="../contact/index.html"><span class="ar">تواصل</span><span class="en">Contact</span></a></nav>
+  <div class="sf-links"><a href="https://scholar.google.com/citations?user=1tSLgBIAAAAJ">Google Scholar</a><a href="https://www.linkedin.com/in/alsamani/">LinkedIn</a><a href="https://www.x.com/Omar_ALsamani">X</a></div>
+  <p class="sf-copy mono">© 2026 alsamani.com</p>
+</footer>
 </div>
 <div class="lb" id="lb" hidden><button class="x" id="lbx" aria-label="Close">×</button><button class="pv" id="lbp" aria-label="Previous">‹</button><img id="lbi" alt=""><button class="nx" id="lbn" aria-label="Next">›</button></div>
 <script>(function(){
