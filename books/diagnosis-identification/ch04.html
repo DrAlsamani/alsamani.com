@@ -1,0 +1,747 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>الفصل الرابع: الأساليب غير الرسمية</title>
+<link rel="stylesheet" href="assets/book.css">
+<style>
+.svgfig{direction:ltr}
+.svgfig text.lbs{direction:rtl;unicode-bidi:embed}
+.svgfig text{font-family:var(--f-ui)}
+.svgfig .ax{stroke:var(--ink-2);stroke-width:1.2}
+.svgfig .gr{stroke:var(--line);stroke-width:1}
+.svgfig .tk{fill:var(--ink-2);font-size:12.5px}
+.svgfig .lb{fill:var(--ink);font-size:13.5px;font-weight:700}
+.svgfig .lbs{fill:var(--ink-2);font-size:12px}
+.svgfig .beh{fill:var(--teacher)}
+.svgfig .on{fill:var(--accent)}
+.svgfig .off{fill:var(--paper-2);stroke:var(--line)}
+.svgfig .mom{stroke:var(--ink-2);stroke-width:1.2;stroke-dasharray:3 3}
+.svgfig .dotY{fill:var(--accent)}
+.svgfig .dotN{fill:var(--paper);stroke:var(--ink-2);stroke-width:1.5}
+.svgfig .aim{stroke:var(--example);stroke-width:2;stroke-dasharray:7 5;fill:none}
+.svgfig .dat{stroke:var(--ink);stroke-width:1.6;fill:none}
+.svgfig .pt{fill:var(--ink)}
+.svgfig .ptb{fill:var(--accent)}
+.svgfig .ph{stroke:var(--ink-2);stroke-width:1.2;stroke-dasharray:2 4}
+.svgfig .base{fill:var(--paper-2)}
+.svgfig .warnz{fill:var(--warn-soft)}
+.svgfig .wl{fill:var(--warn);font-size:12.5px;font-weight:700}
+.defs{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0;font-size:16.5px;line-height:1.9}
+.defs>div{border-radius:12px;padding:14px 18px;min-width:0}
+.defs .bad{background:var(--warn-soft);border:1px solid color-mix(in srgb,var(--warn) 30%,transparent)}
+.defs .good{background:var(--good-soft);border:1px solid color-mix(in srgb,var(--good) 30%,transparent)}
+.defs h6{font-family:var(--f-ui);font-size:13.5px;margin:0 0 6px;font-weight:700}
+.defs .bad h6{color:var(--warn)}.defs .good h6{color:var(--good)}
+@media (max-width:600px){.defs{grid-template-columns:1fr}}
+.work{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,16rem);gap:20px;align-items:start}
+.paper{background:#fff;color:#1b2326;border:1px solid #d5dcdd;border-radius:6px;padding:18px 22px;box-shadow:0 8px 20px -14px rgba(0,0,0,.25);font-family:var(--f-ui)}
+.paper .ttl{font-size:12.5px;color:#5b686c;border-bottom:1px solid #e1e7e8;padding-bottom:6px;margin-bottom:12px}
+.paper .probs{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.paper .pr{direction:ltr;font-family:"Courier New",ui-monospace,monospace;font-size:20px;line-height:1.35;text-align:right;padding:8px 12px;border:1px solid #e6ebec;border-radius:6px;position:relative}
+.paper .pr .ln{border-top:2px solid #1b2326;margin-top:2px}
+.paper .pr .ans{color:#b23a2c;font-family:"Segoe Print","Comic Sans MS",cursive;font-weight:700}
+.paper .pr .ok{color:#1f7a3f}
+.paper .pr sup{position:absolute;top:4px;left:6px;font-family:var(--f-ui);font-size:11px;color:#0d6b67;font-weight:700}
+.paper .sp{display:grid;gap:8px;direction:rtl;margin-top:14px}
+.paper .sp div{display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:17px;border-bottom:1px dashed #e1e7e8;padding-bottom:4px}
+.paper .sp .w{color:#b23a2c;font-family:var(--f-body)}
+.paper .sp .c{color:#1f7a3f;font-family:var(--f-body)}
+.work .notes{list-style:none;padding:0;margin:0;display:grid;gap:12px;font-family:var(--f-ui);font-size:14px;line-height:1.75}
+.work .notes li{display:grid;grid-template-columns:24px 1fr;gap:8px;margin:0}
+.work .notes b{width:22px;height:22px;border-radius:50%;background:var(--accent);color:var(--paper);display:grid;place-items:center;font-size:12px}
+@media (max-width:640px){.work{grid-template-columns:1fr}.paper .probs{grid-template-columns:1fr 1fr}}
+.rubric th:first-child,.rubric td:first-child{width:18%}
+.formula.ar{direction:rtl}
+.formula.ar small{direction:rtl}
+.obj{font-family:var(--f-ui);font-size:12.5px;color:var(--ink-2);white-space:nowrap}
+/* printable blank forms (4-8) */
+.form{background:#fff;color:#111a1e;border:1.5px solid #3a4448;border-radius:6px;padding:18px 20px 16px;margin:22px 0 30px;font-family:var(--f-ui);font-size:14px;line-height:1.8}
+.form .fh{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;border-bottom:2px solid #3a4448;padding-bottom:6px;margin-bottom:12px}
+.form .fh b{font-size:16.5px}
+.form .fh span{font-size:12.5px;color:#4b5c63}
+.form .fl{display:grid;grid-template-columns:repeat(auto-fit,minmax(13rem,1fr));gap:6px 18px;margin:8px 0 12px}
+.form .fl div{display:flex;gap:6px;align-items:flex-end;min-width:0}
+.form .fl div i{font-style:normal;white-space:nowrap;color:#33403f}
+.form .fl div u{flex:1;border-bottom:1px solid #6b777b;min-height:1.5em;text-decoration:none}
+.form .fl.one{grid-template-columns:1fr}
+@media (max-width:560px){.form .fl div{flex-wrap:wrap}.form .fl div i{white-space:normal}.form .fl div u{min-width:6rem}}
+.form .ln2{border-bottom:1px solid #6b777b;height:1.9em}
+.form .box{border:1px solid #9aa6a9;border-radius:4px;padding:8px 12px;margin:10px 0;font-size:13px;background:#f5f7f7}
+.form .box ul{margin:4px 0 0;padding-inline-start:18px}
+.form .box li{margin:0}
+.form .ck::before{content:"☐ ";font-size:15px}
+.form .fw{overflow-x:auto;margin:10px 0}
+.form table{font-size:13px;line-height:1.5;color:#111a1e;background:#fff}
+.form table caption{color:#33403f;padding:4px 2px 8px}
+.form th,.form td{border:1px solid #6b777b;padding:6px 6px;text-align:center;vertical-align:middle}
+.form th{background:#eef1f1;font-weight:700}
+.form td{height:34px}
+.form td.l{text-align:right}
+.form.abc td{height:64px}
+.form.riot td{height:58px}
+.form .sig{display:grid;grid-template-columns:repeat(auto-fit,minmax(11rem,1fr));gap:18px;margin-top:16px}
+.form .sig div{border-top:1px solid #6b777b;padding-top:4px;font-size:12.5px;color:#4b5c63;text-align:center}
+.form .note{font-size:12px;color:#4b5c63;margin-top:8px}
+@media print{
+  .form{break-before:page;page-break-before:always;border-color:#000;box-shadow:none;margin:0}
+  .form table{min-width:0}
+}
+</style>
+<meta name="robots" content="noindex,nofollow"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap"><link rel="stylesheet" href="assets/platform.css"><script>window.BOOK={slug:"diagnosis-identification",cur:"ch04.html"}</script><script src="assets/platform.js" defer></script>
+</head>
+<body>
+<div class="bp-bar" dir="rtl"><div class="bp-in">
+<a class="bp-home" href="../../index.html">د. عمر عبدالله الصمعاني</a><span class="bp-sep">/</span><a href="../index.html">الكتب</a><span class="bp-sep">/</span><a href="index.html" class="bp-book">المرجع في التشخيص والتعرف على ذوي الاستثنائية</a>
+<span class="bp-sp"></span><span class="bp-tools"><button class="bp-ic" type="button" data-rd="z-" aria-label="تصغير الخط" title="تصغير الخط">أ−</button><button class="bp-ic" type="button" data-rd="z+" aria-label="تكبير الخط" title="تكبير الخط">أ+</button><button class="bp-ic" type="button" data-rd="theme" aria-label="الوضع الليلي" title="الوضع الليلي/النهاري">ليلي</button></span><a class="bp-btn" href="pdf/ch04.pdf" download>تحميل الفصل PDF</a><button class="bp-btn" type="button" data-share>مشاركة</button><button class="bp-btn" type="button" data-bp="search">بحث</button><button class="bp-btn solid" type="button" data-bp="toc">المحتويات</button></div></div>
+<div class="bp-share" id="bpShare" hidden dir="rtl"><b>مشاركة هذه الصفحة</b><button type="button" data-sh="copy">نسخ الرابط</button><button type="button" data-sh="native" hidden>مشاركة…</button><a data-sh="wa" target="_blank" rel="noopener">واتساب</a><a data-sh="x" target="_blank" rel="noopener">X</a><a data-sh="li" target="_blank" rel="noopener">LinkedIn</a><a data-sh="tg" target="_blank" rel="noopener">تيليجرام</a><a data-sh="mail">البريد</a><small>لمشاركة قسم بعينه: مرّر المؤشر على عنوانه واضغط ¶</small></div>
+<div class="bp-drawer" id="bpDrawer" hidden dir="rtl"><div class="bp-panel" role="dialog" aria-label="المحتويات والبحث">
+<div class="bp-head"><b>المرجع في التشخيص والتعرف على ذوي الاستثنائية</b><button type="button" class="bp-x" data-bp="close" aria-label="إغلاق">×</button></div>
+<div class="bp-search"><input id="bpQ" type="search" placeholder="ابحث في نص الكتاب…" autocomplete="off"><div id="bpRes"></div></div>
+<nav class="bp-toc" id="bpToc"></nav>
+<div class="bp-links"><a href="elements.html">عناصر الكتاب: الأشكال والجداول والأدوات</a><a href="index.html#downloads">تحميل الكتاب</a></div>
+</div></div>
+<div class="page">
+
+<nav class="booknav"><a href="index.html">→ المرجع في التشخيص والتعرف على ذوي الاستثنائية</a><span>الباب الثاني: الأساليب</span></nav>
+
+<header class="opener">
+  <div class="num" aria-hidden="true">٤</div>
+  <div>
+    <div class="kicker">الفصل الرابع</div>
+    <h1>الأساليب غير الرسمية</h1>
+  </div>
+  <p class="sub">يلتقط الاختبار المقنن صورة للطالب في جلسة واحدة، أما الملاحظة المنتظمة والقياس الأسبوعي وتحليل الأخطاء في أعماله اليومية فترسم مسار أدائه عبر الزمن. ونتناول في هذا الفصل هذه الأساليب التي يملك المعلم زمامها أكثر من غيره، ونبين ما تقدمه من أدلة وما يحكم استعمالها من ضوابط.</p>
+</header>
+
+<nav class="toc" aria-label="محتويات الفصل">
+  <b>في هذا الفصل</b>
+  <ol>
+    <li class="u"><a href="#intro">مقدمة</a></li>
+    <li value="1"><a href="#s1">لماذا الأساليب غير الرسمية؟</a></li>
+    <li value="2"><a href="#s2">الملاحظة المنظمة</a></li>
+    <li value="3"><a href="#s3">المقابلة</a></li>
+    <li value="4"><a href="#s4">القياس المبني على المنهج</a></li>
+    <li value="5"><a href="#s5">تحليل الأخطاء</a></li>
+    <li value="6"><a href="#s6">ملف الإنجاز وسلالم التقدير اللفظية</a></li>
+    <li value="7"><a href="#s7">حدود الأساليب غير الرسمية</a></li>
+    <li value="8"><a href="#s8">استمارات للاستعمال</a></li>
+    <li class="u"><a href="#conclusion">خاتمة</a></li>
+    <li value="9"><a href="#s9">الخلاصة والمسرد والأنشطة</a></li>
+  </ol>
+</nav>
+
+<div class="scene">
+  <span class="lbl">مشهد من الصف الثاني</span>
+  <p>المعلمة حصة قلقة على طالبتها غدير. في كل مرة تطلب منها القراءة بصوت مرتفع، تتوقف غدير عند كل كلمة تقريبًا، وتقرأ «سافرَ» بدل «سفَر»، وتنتقل أحيانًا إلى سطر آخر دون أن تنتبه. تريد حصة أن تحيلها إلى التقييم، لكن الأخصائية سألتها: «كم كلمة تقرأ غدير في الدقيقة؟ وهل تتحسن؟ وما نوع أخطائها؟» ولم يكن لدى حصة إجابة سوى «قراءتها ضعيفة».</p>
+</div>
+<p>وأسئلة الأخصائية هي ما نسعى إلى الإجابة عنه في هذا الفصل؛ فالمعلمة التي تملك بيانات منظمة عن طالبتها قادرة على الحكم في حاجتها إلى الإحالة، وعلى أن تقدم لفريق التقييم أدلة يتعذر استخلاصها من اختبار يُطبق في جلسة واحدة.</p>
+
+<h3>أهداف الفصل</h3>
+<p>بعد دراسة هذا الفصل، يُتوقع أن يكون القارئ قادرًا على أن:</p>
+<ol class="objectives">
+  <li>يصوغ تعريفًا إجرائيًا لسلوك مستهدف يستطيع ملاحظ آخر أن يسجله بدقة.</li>
+  <li>يختار طريقة التسجيل المناسبة لسلوك معروض، ويعلل اختياره.</li>
+  <li>يحسب نسبة الاتفاق بين ملاحظين ومعامل كابا، ويحكم بهما على كفاية الملاحظة.</li>
+  <li>يصوغ أسئلة مقابلة شبه منظمة تستدعي مواقف محددة ومواطن قوة لدى الطالب.</li>
+  <li>يطبق قياسًا مبنيًا على المنهج، ويرسم بياناته، ويحدد القرار التعليمي الذي تسوّغه قواعد القرار.</li>
+  <li>يصنف أخطاء الطالب في القراءة والكتابة والحساب إلى أنماط، ويشتق من كل نمط هدفًا تعليميًا.</li>
+  <li>يبني سلم تقدير لفظيًا تحليليًا لمهمة كتابية، ويخطط للتحقق من اتساق تطبيقه.</li>
+  <li>يحكم على كفاية الأدلة غير الرسمية لقرار بعينه، تعليميًا كان أو تشخيصيًا، في حالة جديدة، ويعلل حكمه.</li>
+</ol>
+
+<h2 id="intro" class="unnum">مقدمة</h2>
+<p>يلتقط الاختبار المقنن صورة للطالب في جلسة واحدة، ويقارن أداءه بعينة التقنين. أما المعلم فيشهد أداء الطالب يومًا بعد يوم في مهام المنهج الفعلية، فيتاح له أن يجمع عنه بيانات متكررة لا تتوافر لغيره: ملاحظة منظمة لسلوكه، وقياسًا أسبوعيًا لطلاقته، وتحليلًا لأخطائه في أعماله الكتابية. وبهذه البيانات تتحول العبارة العامة من قبيل «قراءتها ضعيفة»، كما في حالة غدير، إلى أدلة تكشف مستوى الطالب، ومدى تحسنه مع التدريس، والقاعدة الخاطئة التي يطبقها. غير أن قرب هذه الأساليب من الصف يقابله في الغالب غياب المعايير الوطنية، فيلزم تحديد ما تصلح له من قرارات وما لا تصلح له.</p>
+<p>نستهل الفصل ببيان الحاجة إلى الأساليب غير الرسمية (القسم ٤-١)، ثم نعرض الملاحظة المنظمة بخطواتها، من التعريف الإجرائي إلى اختيار طريقة التسجيل والتحقق من الاتفاق بين الملاحظين (القسم ٤-٢)، فالمقابلة (القسم ٤-٣). ونتناول بعد ذلك القياس المبني على المنهج ورسم بياناته واتخاذ القرار في ضوئها (القسم ٤-٤)، وتحليل الأخطاء، ولا سيما أخطاء القراءة الجهرية (القسم ٤-٥)، وملف الإنجاز وسلالم التقدير اللفظية (القسم ٤-٦). ثم نقف عند حدود هذه الأساليب (القسم ٤-٧)، ونختم باستمارات معدّة للاستعمال (القسم ٤-٨).</p>
+
+
+<!-- 1 -->
+<h2 id="s1"><span class="sec">٤-١</span>لماذا الأساليب غير الرسمية؟</h2>
+<p>الأساليب غير الرسمية طرق لجمع المعلومات تستند إلى ما يحدث في الصف فعلًا، بدل المعايير المستخرجة من عينة تقنين (انظر الفصل الثاني): ملاحظة السلوك، ومقابلة من يعرفون الطالب، وقياس أدائه في مهام من منهجه، وتحليل أعماله. وهي تضاهي الأساليب الرسمية أهمية، وتكملها من جهات يتعذر على تلك الأساليب الوصول إليها:</p>
+<div class="tw"><table id="tab-1" id="tab-4-1">
+  <caption>جدول ٤-١: الأساليب الرسمية المقننة والأساليب غير الرسمية.</caption>
+  <thead><tr><th>الجانب</th><th>الأساليب الرسمية المقننة</th><th>الأساليب غير الرسمية</th></tr></thead>
+  <tbody>
+    <tr><td>السؤال الأساسي</td><td>أين يقع الطالب مقارنة بأقرانه؟</td><td>ماذا يفعل الطالب هنا والآن؟ وماذا نعلمه غدًا؟</td></tr>
+    <tr><td>التكرار</td><td>مرة واحدة، أو كل بضع سنوات</td><td>يوميًا أو أسبوعيًا</td></tr>
+    <tr><td>الصلة بالمنهج</td><td>عامة، وقد لا تطابق ما يدرسه الطالب</td><td>مأخوذة مباشرة مما يدرسه</td></tr>
+    <tr><td>من يطبقها</td><td>أخصائي مؤهل غالبًا</td><td>المعلم غالبًا</td></tr>
+    <tr><td>نقطة الضعف</td><td>صورة لحظية، وقد لا تناسب لغة الطالب وثقافته</td><td>لا معايير وطنية لها غالبًا، وجودتها تعتمد على دقة من يطبقها</td></tr>
+  </tbody>
+</table></div>
+
+<!-- 2 -->
+<h2 id="s2"><span class="sec">٤-٢</span>الملاحظة المنظمة</h2>
+<p>الملاحظة جزء من عمل كل معلم، غير أن الملاحظة التي تصلح دليلًا في التشخيص تفترق عن الانطباع اليومي في ثلاثة أمور: تبدأ بتعريف واضح للسلوك، وتستخدم طريقة تسجيل محددة، ويمكن أن يكررها شخص آخر فيصل إلى النتيجة نفسها.</p>
+
+<h3>الخطوة الأولى: التعريف الإجرائي</h3>
+<p>التعريف الإجرائي (operational definition) يصف السلوك بما يُرى ويُسمع، بحيث يتفق شخصان يقرآنه على وقوع السلوك أو عدم وقوعه. قارن بين تعريفين لسلوك واحد:</p>
+<div class="defs">
+  <div class="bad"><h6>تعريف غير إجرائي</h6>«مشعل عدواني مع زملائه.»<br><span style="font-size:14.5px;color:var(--ink-2)">ماذا تعني «عدواني»؟ صراخ؟ ضرب؟ نظرة غاضبة؟ كل ملاحظ سيفسرها بطريقته.</span></div>
+  <div class="good"><h6>تعريف إجرائي</h6>«العدوان الجسدي: أي تلامس بين يد مشعل أو قدمه أو أداة يمسكها وجسم زميل، بقوة تُحدث صوتًا أو تدفع الزميل من مكانه. لا يشمل التلامس أثناء اللعب المنظم.»</div>
+</div>
+<p>ويُختبر التعريف بسؤال بسيط: لو قرأه شخص لا يعرف مشعلًا، هل يستطيع أن يسجل السلوك بدقة؟</p>
+
+<h3>الخطوة الثانية: اختيار طريقة التسجيل</h3>
+<p>تختلف طريقة التسجيل بحسب طبيعة السلوك: هل له بداية ونهاية واضحتان؟ هل يتكرر كثيرًا؟ هل المهم عدد مراته أم مدته؟ وأشهر الطرق ما يلي (Cooper et al., 2020):</p>
+<div class="tw"><table id="tab-2" id="tab-4-2">
+  <caption>جدول ٤-٢: طرق تسجيل الملاحظة وما يناسب كلًّا منها.</caption>
+  <thead><tr><th>الطريقة</th><th>ما يُسجل</th><th>تناسب</th><th>مثال</th></tr></thead>
+  <tbody>
+    <tr><td>السجل القصصي</td><td>وصف حر لما حدث، بترتيبه</td><td>المرحلة الأولى، لفهم الصورة العامة</td><td>«في الحصة الثالثة، قام مشعل من مقعده وذهب إلى النافذة...»</td></tr>
+    <tr><td>تسجيل ما قبل السلوك وما بعده</td><td>الحدث السابق، والسلوك، والنتيجة التالية</td><td>فهم وظيفة السلوك، أي ما يحققه للطالب (ويتناوله الفصل الخامس)</td><td>قبل: طُلب منه حل ورقة عمل. السلوك: مزّق الورقة. بعد: أُخرج من الصف</td></tr>
+    <tr><td>تسجيل التكرار</td><td>عدد مرات حدوث السلوك في فترة محددة</td><td>السلوكيات القصيرة ذات البداية والنهاية الواضحة</td><td>عدد مرات رفع اليد للمشاركة في حصة</td></tr>
+    <tr><td>تسجيل المدة</td><td>كم يستمر السلوك</td><td>السلوكيات الممتدة</td><td>مدة بكاء الطفل بعد وصوله إلى الروضة</td></tr>
+    <tr><td>تسجيل الكمون</td><td>الزمن بين إعطاء التعليمات وبدء الاستجابة</td><td>التأخر في بدء المهام</td><td>كم يستغرق الطالب ليبدأ الكتابة بعد طلبها</td></tr>
+    <tr><td>تسجيل الفترات</td><td>هل حدث السلوك في كل فترة زمنية قصيرة؟</td><td>السلوكيات المتكررة جدًا أو غير واضحة البداية والنهاية</td><td>الانشغال بالمهمة خلال حصة كاملة</td></tr>
+  </tbody>
+</table></div>
+<p>وتجد في القسم ٤-٨ استمارتين فارغتين لأكثر هذه الطرق استعمالًا في المدرسة: استمارة تسجيل الفترات، واستمارة ما قبل السلوك وما بعده.</p>
+
+<h3>تسجيل الفترات: ثلاث طرق ونتائج مختلفة</h3>
+<p>في تسجيل الفترات، تُقسم مدة الملاحظة إلى فترات قصيرة متساوية، عشر ثوانٍ مثلًا، ويسجل الملاحظ في كل فترة هل حدث السلوك أم لا. وهناك ثلاث طرق لذلك، تعطي نتائج مختلفة للسلوك نفسه. تأمل الشكل ٤-١، وفيه دقيقة واحدة من ملاحظة طالب خارج مقعده:</p>
+<figure id="fig-4-1" class="fig-frame">
+  <svg class="svgfig" viewBox="0 0 760 290" role="img" aria-label="مقارنة بين طرق تسجيل الفترات الثلاث على دقيقة واحدة من الملاحظة: السلوك الفعلي يشغل نصف الدقيقة، والفترة الكاملة تقدره بثلث الدقيقة، والفترة الجزئية بخمسة أسداسها، والعينة اللحظية بنصفها" style="width:100%;height:auto">
+    <g>
+      <line class="gr" x1="20" y1="30" x2="20" y2="250"/><line class="gr" x1="120" y1="30" x2="120" y2="250"/><line class="gr" x1="220" y1="30" x2="220" y2="250"/><line class="gr" x1="320" y1="30" x2="320" y2="250"/><line class="gr" x1="420" y1="30" x2="420" y2="250"/><line class="gr" x1="520" y1="30" x2="520" y2="250"/><line class="gr" x1="620" y1="30" x2="620" y2="250"/>
+      <text class="tk" x="20" y="268" text-anchor="middle">٠</text><text class="tk" x="120" y="268" text-anchor="middle">١٠</text><text class="tk" x="220" y="268" text-anchor="middle">٢٠</text><text class="tk" x="320" y="268" text-anchor="middle">٣٠</text><text class="tk" x="420" y="268" text-anchor="middle">٤٠</text><text class="tk" x="520" y="268" text-anchor="middle">٥٠</text><text class="tk" x="620" y="268" text-anchor="middle">٦٠</text>
+      <text class="lbs" x="320" y="286" text-anchor="middle">الزمن بالثواني</text>
+    </g>
+    <rect class="beh" x="20" y="44" width="40" height="22" rx="3"/><rect class="beh" x="200" y="44" width="230" height="22" rx="3"/><rect class="beh" x="480" y="44" width="30" height="22" rx="3"/>
+    <text class="lb" x="690" y="54" text-anchor="middle">السلوك الفعلي</text><text class="lbs" x="690" y="70" text-anchor="middle">٣٠ ثانية = ٥٠٪</text>
+    <rect class="off" x="24" y="100" width="92" height="26" rx="4"/><rect class="off" x="124" y="100" width="92" height="26" rx="4"/><rect class="on" x="224" y="100" width="92" height="26" rx="4"/><rect class="on" x="324" y="100" width="92" height="26" rx="4"/><rect class="off" x="424" y="100" width="92" height="26" rx="4"/><rect class="off" x="524" y="100" width="92" height="26" rx="4"/>
+    <text class="lb" x="690" y="110" text-anchor="middle">الفترة الكاملة</text><text class="lbs" x="690" y="126" text-anchor="middle">٢ من ٦ = ٣٣٪</text>
+    <rect class="on" x="24" y="150" width="92" height="26" rx="4"/><rect class="on" x="124" y="150" width="92" height="26" rx="4"/><rect class="on" x="224" y="150" width="92" height="26" rx="4"/><rect class="on" x="324" y="150" width="92" height="26" rx="4"/><rect class="on" x="424" y="150" width="92" height="26" rx="4"/><rect class="off" x="524" y="150" width="92" height="26" rx="4"/>
+    <text class="lb" x="690" y="160" text-anchor="middle">الفترة الجزئية</text><text class="lbs" x="690" y="176" text-anchor="middle">٥ من ٦ = ٨٣٪</text>
+    <line class="mom" x1="120" y1="196" x2="120" y2="236"/><line class="mom" x1="220" y1="196" x2="220" y2="236"/><line class="mom" x1="320" y1="196" x2="320" y2="236"/><line class="mom" x1="420" y1="196" x2="420" y2="236"/><line class="mom" x1="520" y1="196" x2="520" y2="236"/><line class="mom" x1="620" y1="196" x2="620" y2="236"/>
+    <circle class="dotN" cx="120" cy="216" r="8"/><circle class="dotY" cx="220" cy="216" r="8"/><circle class="dotY" cx="320" cy="216" r="8"/><circle class="dotY" cx="420" cy="216" r="8"/><circle class="dotN" cx="520" cy="216" r="8"/><circle class="dotN" cx="620" cy="216" r="8"/>
+    <text class="lb" x="690" y="212" text-anchor="middle">العينة اللحظية</text><text class="lbs" x="690" y="228" text-anchor="middle">٣ من ٦ = ٥٠٪</text>
+  </svg>
+  <figcaption><b>شكل ٤-١:</b> دقيقة واحدة مقسمة إلى ست فترات. الشريط العلوي يبين متى كان الطالب خارج مقعده فعلًا. في <strong>الفترة الكاملة</strong> تُحسب الفترة إذا استمر السلوك طوالها، فتميل إلى تقدير السلوك بأقل من حجمه. وفي <strong>الفترة الجزئية</strong> تُحسب إذا حدث السلوك في أي جزء منها، فتميل إلى المبالغة في تقديره. وفي <strong>العينة اللحظية</strong> ينظر الملاحظ في نهاية كل فترة فقط، والدوائر المصمتة لحظات وجده فيها خارج مقعده، والمفرغة لحظات وجده فيها جالسًا. وتقترب نتيجتها من الحقيقة كلما طالت مدة الملاحظة وكثرت الفترات.</figcaption>
+</figure>
+<p>والقاعدة العملية: الفترة الجزئية تناسب السلوكيات التي نريد خفضها، لأنها لا تفوّت حدوثها. والفترة الكاملة تناسب السلوكيات التي نريد زيادتها، كالانشغال بالمهمة، لأنها لا تبالغ فيها. والعينة اللحظية مناسبة للمعلم الذي يدرّس ويلاحظ في الوقت نفسه، فهو لا يحتاج إلا إلى أن يرفع رأسه في نهاية كل فترة، كل دقيقة مثلًا.</p>
+
+<h3>الخطوة الثالثة: التحقق من الاتفاق بين ملاحظين</h3>
+<p>كيف نعرف أن ملاحظتنا دقيقة؟ نطلب من ملاحظ ثانٍ أن يلاحظ الطالب في الوقت نفسه باستقلال، ثم نحسب نسبة اتفاقهما. وأبسط طرق حسابها في تسجيل الفترات:</p>
+<div class="formula ar">نسبة الاتفاق = الاتفاقات ÷ (الاتفاقات + الاختلافات) × ١٠٠<small>تُعد النسبة ٨٠٪ فأكثر مقبولة عادة في البحوث والممارسة (Cooper et al., 2020)</small></div>
+<div class="worked">
+  <b class="h">مثال محلول</b>
+  <div class="step"><i>١</i><span>لاحظت المعلمة ومساعدتها طالبًا ٢٠ فترة، فاتفقتا في ١٧ فترة واختلفتا في ٣.</span></div>
+  <div class="step"><i>٢</i><span>نسبة الاتفاق = ١٧ ÷ (١٧ + ٣) × ١٠٠ = ٨٥٪.</span></div>
+  <div class="step"><i>٣</i><span>النسبة مقبولة في الظاهر، فالتعريف واضح بما يكفي. ولو كانت أقل من ٨٠٪، لراجعتا التعريف الإجرائي معًا قبل الاستمرار. لكن هذه النسبة قد تخدع إذا كان السلوك نادرًا جدًا أو كثير الحدوث جدًا، كما يبين المربع التالي.</span></div>
+</div>
+
+<div class="callout" data-k="pro">
+  <div class="tag"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>للمتخصص: حين تخدعك نسبة الاتفاق</div>
+  <p>افترض أن الفترات العشرين في المثال السابق توزعت كما في الجدول ٤-٣، وأن السلوك المسجل نادر، كأن يكون خروج الطالب من مقعده في حصة هادئة:</p>
+  <div class="tw"><table id="tab-3" id="tab-4-3">
+    <caption>جدول ٤-٣: توزيع تسجيلات الملاحظتين على عشرين فترة.</caption>
+    <thead><tr><th></th><th>المساعدة: حدث</th><th>المساعدة: لم يحدث</th><th>المجموع</th></tr></thead>
+    <tbody>
+      <tr><td>المعلمة: حدث</td><td>١</td><td>٢</td><td>٣</td></tr>
+      <tr><td>المعلمة: لم يحدث</td><td>١</td><td>١٦</td><td>١٧</td></tr>
+      <tr><td>المجموع</td><td>٢</td><td>١٨</td><td>٢٠</td></tr>
+    </tbody>
+  </table></div>
+  <p>نسبة الاتفاق ٨٥٪ كما حسبناها، لكن أغلب هذا الاتفاق على فترات لم يحدث فيها شيء. فالملاحظتان لم تتفقا على حدوث السلوك إلا في فترة واحدة من أربع فترات رأت فيها إحداهما السلوك، أي ٢٥٪ فقط. ولهذا يوصى في السلوك النادر بحساب الاتفاق على فترات الحدوث وحدها، وفي السلوك الكثير جدًا بحسابه على فترات عدم الحدوث وحدها (Cooper et al., 2020).</p>
+  <p>والحل الأعم هو معامل كابا لكوهين (<span class="en">Cohen's kappa</span>)، الذي يطرح من الاتفاق الملحوظ ما يُتوقع منه بالصدفة (Cohen, 1960):</p>
+  <div class="worked">
+    <b class="h">حساب كابا</b>
+    <div class="step"><i>١</i><span>الاتفاق الملحوظ = (١ + ١٦) ÷ ٢٠ = ٠.٨٥.</span></div>
+    <div class="step"><i>٢</i><span>سجلت المعلمة الحدوث في ١٥٪ من الفترات، والمساعدة في ١٠٪. فالاتفاق المتوقع بالصدفة = (٠.١٥ × ٠.١٠) + (٠.٨٥ × ٠.٩٠) = ٠.٠١٥ + ٠.٧٦٥ = ٠.٧٨.</span></div>
+    <div class="step"><i>٣</i><span>كابا = (٠.٨٥ − ٠.٧٨) ÷ (١ − ٠.٧٨) = ٠.٠٧ ÷ ٠.٢٢ ≈ ٠.٣٢.</span></div>
+  </div>
+  <p>فالاتفاق الذي بدا مقبولًا يقع، بعد استبعاد الصدفة، في الفئة التي يسميها التصنيف الشائع اتفاقًا «متواضعًا» (<span class="en">fair</span>)، وهو التصنيف الذي يعد القيم بين ٠.٦١ و٠.٨٠ اتفاقًا «جوهريًا» (Landis &amp; Koch, 1977). وهذه الحدود أعراف اصطلاحية مرنة، لكن الدرس ثابت: قبل أن تطمئن إلى نسبة اتفاق مرتفعة، انظر كم مرة حدث السلوك أصلًا.</p>
+</div>
+
+<!-- 3 -->
+<h2 id="s3"><span class="sec">٤-٣</span>المقابلة</h2>
+<p>المقابلة طريقة لجمع معلومات لا تُرى في الصف: التاريخ النمائي، وسلوك الطالب في البيت، وما جربته الأسرة، وما يراه الطالب نفسه. وتتدرج المقابلات في درجة تنظيمها:</p>
+<ul>
+  <li><strong>المقابلة المنظمة:</strong> أسئلة محددة بترتيب ثابت وصياغة ثابتة، كبعض المقابلات التشخيصية المقننة التي تُجرى مع الوالدين عند تقييم اضطراب طيف التوحد. وهي دقيقة ونتائجها قابلة للمقارنة، لكنها أقل مرونة.</li>
+  <li><strong>المقابلة شبه المنظمة:</strong> موضوعات محددة مسبقًا، مع حرية في الصياغة والمتابعة، كأن يسأل الأخصائي الأم: «حدثيني عن صباح طفلك في يوم دراسي»، ثم يتابع بأسئلة عن التفاصيل، كما في مقابلة مقاييس فاينلاند للسلوك التكيفي.</li>
+  <li><strong>المقابلة الحرة:</strong> حوار مفتوح يتبع ما يطرحه المُقابَل، وهي مفيدة لبناء العلاقة وفهم الصورة العامة.</li>
+</ul>
+<div class="callout" data-k="teacher">
+  <div class="tag"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l9-4 9 4-9 4-9-4Z"/><path d="M7 10v5c0 1.5 2.5 3 5 3s5-1.5 5-3v-5"/></svg>للمعلم: دليل مقابلة قصير مع الأسرة</div>
+  <ol>
+    <li>ما الذي يحبه طفلك ويبرع فيه؟</li>
+    <li>ما الذي يقلقك في تعلمه أو سلوكه؟ ومتى بدأت تلاحظه؟</li>
+    <li>صف لي آخر مرة حدث فيها ذلك: ماذا حدث قبله؟ وماذا فعل؟ وكيف انتهى الموقف؟</li>
+    <li>هل يختلف الأمر بين البيت والأماكن الأخرى؟</li>
+    <li>ما الذي جربتموه؟ وما الذي نجح ولو قليلًا؟</li>
+    <li>هل هناك أي معلومات صحية أو تغيرات في حياة الأسرة تفيدنا في فهمه؟</li>
+  </ol>
+  <p>لاحظ أن السؤالين الأول والخامس يبحثان عن القوة والنجاح إلى جانب المشكلة. والسؤال الثالث يطلب موقفًا محددًا، لأن المواقف تعطي معلومات أدق من الأوصاف العامة.</p>
+</div>
+<p>ولا تُغفل مقابلة الطالب نفسه. فطالب في العاشرة يستطيع أن يخبرك بما يصعب عليه، وما يساعده، ومتى يشعر بالملل أو القلق. وقد يقول لك ما لا يعرفه أحد: «لا أرى السبورة جيدًا من مكاني». ويزداد وزن هذه المقابلة مع المراهق، فهو أقدر على وصف ما يجري في داخله من أي مصدر آخر، وقد يرفض خطة لم يُسأل عن رأيه فيها.</p>
+
+<!-- 4 -->
+<h2 id="s4"><span class="sec">٤-٤</span>القياس المبني على المنهج</h2>
+<p>القياس المبني على المنهج (<span class="en">Curriculum-Based Measurement, CBM</span>) مجموعة من المقاييس القصيرة جدًا، يستغرق كل منها من دقيقة إلى بضع دقائق، يطبقها المعلم على الطالب بانتظام، أسبوعيًا غالبًا، ليتابع تقدمه في مهارات أساسية. وقد طوره ستانلي دينو وزملاؤه في جامعة مينيسوتا في سبعينيات القرن العشرين، ليعطي المعلمين طريقة سريعة وموثوقة لمعرفة هل ينجح تدريسهم (Deno, 1985).</p>
+<p>وفكرته الأساسية أن بعض المهام القصيرة تعمل مثل مقياس الحرارة: فكما تدل درجة الحرارة على الصحة العامة للجسم دون أن تشخص المرض، يرتبط عدد الكلمات التي يقرؤها الطالب قراءة صحيحة في دقيقة بمهارات القراءة كلها ارتباطًا قويًا، ويتغير حين تتحسن، مع أنه يقيس جانبًا واحدًا منها.</p>
+<p>ويقع هذا القياس بين الرسمي وغير الرسمي. فمادته من المنهج، لكن إجراءاته مقننة: تعليمات ثابتة، وتوقيت محدد، وقواعد تصحيح واحدة. ولبعض مقاييسه في الإنجليزية معايير واسعة بحسب الصف والفصل الدراسي. ولذلك تُفسر درجته بطريقتين معًا: معياريًا، بمقارنة الطالب بأقرانه في المسح الذي يُجرى في مواسم العام، وبالقياس إلى هدف نمو يُحدد له ويُتابَع أسبوعًا بعد أسبوع.</p>
+
+<h3>أشهر مقاييسه</h3>
+<div class="tw"><table id="tab-4" id="tab-4-4">
+  <caption>جدول ٤-٤: أشهر مقاييس القياس المبني على المنهج.</caption>
+  <thead><tr><th>المجال</th><th>المقياس</th><th>كيف يُطبق</th><th>ما يُحسب</th></tr></thead>
+  <tbody>
+    <tr><td>القراءة</td><td>الطلاقة القرائية الشفهية</td><td>يقرأ الطالب نصًا من مستوى صفه بصوت مرتفع دقيقة واحدة، ويتكرر ذلك مع ثلاثة نصوص</td><td>عدد الكلمات المقروءة صحيحة في الدقيقة، ويؤخذ الوسيط من النصوص الثلاثة</td></tr>
+    <tr><td>القراءة</td><td>اختيار الكلمة المحذوفة</td><td>نص حُذفت منه كلمة كل عدة كلمات، وأمام كل فراغ ثلاثة خيارات، في دقيقتين إلى ثلاث</td><td>عدد الاختيارات الصحيحة، ويرتبط بالفهم القرائي</td></tr>
+    <tr><td>الرياضيات</td><td>العمليات الحسابية</td><td>ورقة مسائل مختلطة من منهج الصف، في دقيقتين إلى أربع</td><td>عدد الأرقام الصحيحة في الإجابات، وهو أدق من عدد المسائل</td></tr>
+    <tr><td>الكتابة</td><td>التعبير الكتابي</td><td>يُعطى الطالب بداية قصة، ويكتب ثلاث دقائق</td><td>عدد الكلمات المكتوبة، أو عدد الكلمات المتتالية الصحيحة إملائيًا ونحويًا</td></tr>
+  </tbody>
+</table></div>
+
+<h3>مشهد من التطبيق: الطلاقة القرائية</h3>
+<p>تجلس المعلمة حصة مع غدير، وأمام غدير نسخة من نص لم تقرأه من قبل، وأمام حصة نسخة أخرى. تقول: «اقرئي هذه القصة بصوت مرتفع وبأفضل ما تستطيعين. إذا وصلت إلى كلمة لا تعرفينها سأقولها لك. ابدئي.» وتشغل ساعة الإيقاف. وبينما تقرأ غدير، تضع حصة خطًا مائلًا على كل كلمة أخطأت فيها أو حذفتها، وإذا توقفت غدير عند كلمة ثلاث ثوانٍ، تقولها لها وتحسبها خطأ. وبعد دقيقة تقول «توقفي»، وتضع علامة بعد آخر كلمة قرأتها. ثم تحسب: قرأت غدير ٤٦ كلمة، أخطأت في ١٢، فعدد الكلمات الصحيحة ٣٤ في الدقيقة. وتسجل ذلك كله في ورقة تسجيل كالاستمارة (أ) في القسم ٤-٨، ومعه نوع كل خطأ، لأنها ستحتاج إليه في تحليل الأخطاء.</p>
+
+<h3>رسم البيانات واتخاذ القرار</h3>
+<p>قوة هذا القياس في تكراره ورسمه. فالمعلم يرسم درجة الطالب كل أسبوع على رسم بياني، ويرسم عليه خطًا يمثل الهدف يُسمى خط الهدف (aimline)، ثم يقارن بين اتجاه نقاط الطالب واتجاه الخط. وتوجد قواعد شائعة للقرار، منها قاعدة النقاط الأربع: إذا وقعت أربع نقاط متتالية تحت خط الهدف، يُغيَّر أسلوب التدريس. وإذا وقعت أربع نقاط متتالية فوقه، يُرفع الهدف (Hosp et al., 2016). ومنها قاعدة خط الاتجاه: مقارنة ميل خط نقاط الطالب بميل خط الهدف، فإذا كان أقل منه تغير الأسلوب، وإذا كان أشد منه فالطالب في طريقه إلى الهدف.</p>
+<p>لكن هذه القواعد أدوات تقريبية، ويتوقف الاطمئنان إليها على أثر القرار الذي تُبنى عليه:</p>
+<ul>
+  <li><strong>القرار التعليمي منخفض الأثر</strong>، كتعديل أسلوب التدريس أو زيادة وقته: خطؤه يظهر ويُصحح بعد أسابيع، فتصلح فيه قاعدة النقاط أو خط الاتجاه دليلًا عمليًا. وتنصح أدلة التطبيق بألا يُحكم قبل جمع عدة قياسات بعد خط الأساس، لأن القياس الواحد يتذبذب. وهذه النصيحة مصدرها خبرة الممارسين أكثر من البحث التجريبي.</li>
+  <li><strong>القرار عالي الأثر</strong>، كالإحالة إلى تقييم الأهلية، أو الحكم بأن الطالب «لم يستجب» للتدخل، أو إيقاف خدمة: يحتاج إلى أكثر من بضعة أسابيع وقاعدة نقاط؛ إلى مدة متابعة أطول، ونصوص جُربت فعلًا وثبت تكافؤها، وتطبيق يلتزم بالتعليمات نفسها في كل مرة، ثم إلى أدلة من مصادر أخرى، كالملاحظة وتحليل الأخطاء، واختبار مقنن حين يلزم.</li>
+</ul>
+<figure id="fig-4-2" class="fig-frame">
+  <svg class="svgfig" viewBox="0 0 760 330" role="img" aria-label="رسم متابعة تقدم الطلاقة القرائية لطالبة عبر خمسة عشر قياسًا: ثلاثة قياسات لخط الأساس، ثم ستة قياسات تحت خط الهدف مع الأسلوب الأول، ثم ستة قياسات بميل أشد مع الأسلوب الثاني تبلغ الهدف" style="width:100%;height:auto">
+    <rect class="base" x="52" y="50" width="144" height="220"/>
+    <text class="lbs" x="124" y="42" text-anchor="middle">خط الأساس</text>
+    <text class="lbs" x="304" y="42" text-anchor="middle">الأسلوب الأول</text>
+    <text class="lbs" x="520" y="42" text-anchor="middle">الأسلوب الثاني</text>
+    <line class="gr" x1="52" y1="50" x2="620" y2="50"/><line class="gr" x1="52" y1="105" x2="620" y2="105"/><line class="gr" x1="52" y1="160" x2="620" y2="160"/><line class="gr" x1="52" y1="215" x2="620" y2="215"/>
+    <line class="ax" x1="52" y1="270" x2="620" y2="270"/><line class="ax" x1="52" y1="50" x2="52" y2="270"/>
+    <text class="tk" x="44" y="274" text-anchor="end">٢٠</text><text class="tk" x="44" y="219" text-anchor="end">٣٠</text><text class="tk" x="44" y="164" text-anchor="end">٤٠</text><text class="tk" x="44" y="109" text-anchor="end">٥٠</text><text class="tk" x="44" y="54" text-anchor="end">٦٠</text>
+    <text class="tk" x="178" y="290" text-anchor="middle">٠</text><text class="tk" x="286" y="290" text-anchor="middle">٣</text><text class="tk" x="394" y="290" text-anchor="middle">٦</text><text class="tk" x="502" y="290" text-anchor="middle">٩</text><text class="tk" x="610" y="290" text-anchor="middle">١٢</text>
+    <text class="lbs" x="340" y="316" text-anchor="middle">الأسبوع</text>
+    <text class="lbs" x="16" y="160" text-anchor="middle" transform="rotate(-90 16 160)">كلمة صحيحة في الدقيقة</text>
+    <line class="ph" x1="196" y1="50" x2="196" y2="270"/><line class="ph" x1="412" y1="50" x2="412" y2="270"/>
+    <line class="aim" x1="178" y1="204" x2="610" y2="105"/>
+    <text x="628" y="100" style="fill:var(--example);font-size:13px;font-weight:700">الهدف: ٥٠</text>
+    <polyline class="dat" points="70,204.0 106,215.0 142,193.0"/>
+    <polyline class="dat" points="214,198.5 250,193.0 286,198.5 322,187.5 358,193.0 394,187.5"/>
+    <polyline class="dat" points="430,171.0 466,154.5 502,143.5 538,127.0 574,116.0 610,99.5"/>
+    <circle class="pt" cx="70" cy="204" r="5"/><circle class="pt" cx="106" cy="215" r="5"/><circle class="pt" cx="142" cy="193" r="5"/>
+    <circle class="pt" cx="214" cy="198.5" r="5"/><circle class="pt" cx="250" cy="193" r="5"/><circle class="pt" cx="286" cy="198.5" r="5"/><circle class="pt" cx="322" cy="187.5" r="5"/><circle class="pt" cx="358" cy="193" r="5"/><circle class="pt" cx="394" cy="187.5" r="5"/>
+    <circle class="ptb" cx="430" cy="171" r="5"/><circle class="ptb" cx="466" cy="154.5" r="5"/><circle class="ptb" cx="502" cy="143.5" r="5"/><circle class="ptb" cx="538" cy="127" r="5"/><circle class="ptb" cx="574" cy="116" r="5"/><circle class="ptb" cx="610" cy="99.5" r="5"/>
+    <text class="wl" x="304" y="232" text-anchor="middle">ست نقاط تحت الهدف: تغيير الأسلوب</text>
+  </svg>
+  <figcaption><b>شكل ٤-٢:</b> رسم افتراضي لمتابعة الطلاقة القرائية لدى غدير. خط الأساس، أي القياسات التي تسبق بدء التدريس الجديد، ثلاثة قياسات وسيطها ٣٢ كلمة، وحُدد الهدف ٥٠ كلمة بعد ١٢ أسبوعًا، فرُسم خط الهدف المتقطع بينهما. مع الأسلوب الأول بقيت النقاط كلها تحت الخط، فانتظرت المعلمة حتى جمعت ستة قياسات ثم غيرت الأسلوب في الأسبوع السادس. ومع الأسلوب الثاني صار ميل النقاط أشد من ميل خط الهدف، فأخذت تقترب منه أسبوعًا بعد أسبوع حتى بلغت الهدف. وهذا ما تقيسه قاعدة خط الاتجاه. وتغيير الأسلوب هنا قرار تعليمي منخفض الأثر، ولو أُريد بناء قرار أهلية على هذه البيانات لاحتاج إلى مدة أطول وأدلة أخرى.</figcaption>
+</figure>
+
+<div class="callout" data-k="pro">
+  <div class="tag"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>للمتخصص: ما سند قواعد القرار؟</div>
+  <p>راجع أردوين وزملاؤه ما نُشر عن قواعد القرار في القياس المبني على المنهج في القراءة الجهرية، في ١٧١ وثيقة بين مقالات وفصول وأدلة تطبيق، استوفت ١٠٢ منها شروط المراجعة. وركزوا على عدد القياسات الموصى به قبل الحكم، وعلى إرشادات تفسير بيانات الطالب الفرد. وخلصوا إلى أن أغلب ممارسات القرار مبنية على رأي الخبراء، وأن سندها السيكومتري والتجريبي محدود جدًا (Ardoin et al., 2013). ولذلك لا نقدم في هذا الفصل عددًا من القياسات يصلح لكل حالة، إذ لا تحدد البحوث مثل هذا العدد. وأسباب الحذر معروفة في منطق القياس:</p>
+  <ul>
+    <li><strong>التذبذب:</strong> خطأ القياس في الجلسة الواحدة كبير إذا قورن بما يُتوقع من نمو في أسبوع، فقد يرفع تذبذب قياس واحد النقطة أو يخفضها بقدر نمو عدة أسابيع.</li>
+    <li><strong>تفاوت النصوص:</strong> النصوص التي تُعامل على أنها متكافئة قد تتفاوت صعوبتها فعلًا، فيتغير الميل بحسب ترتيبها، ويُنسب إلى تقدم الطالب ما هو في الحقيقة أثر النص. ويزيد هذا في العربية باختلاف النصوص في الشكل وطول الكلمات.</li>
+    <li><strong>عدم ثبات الميل في المدد القصيرة:</strong> خط الاتجاه المحسوب من أسابيع قليلة قد يتغير كثيرًا بإضافة نقطة واحدة أو حذفها.</li>
+  </ul>
+  <p>ويزداد الأمر تعقيدًا حين تُستعمل هذه البيانات لتحديد من «لم يستجب» للتدخل. فالمحكات الشائعة لذلك، كالمستوى المنخفض، والميل البطيء، والتباعد المزدوج الذي يجمعهما، تحدد مجموعات مختلفة من الطلاب، ويضعف الاتفاق بينها (Barth et al., 2008). ويعرض الفصل السادس هذه المحكات وعتباتها ونقدها بالتفصيل.</p>
+</div>
+
+<div class="callout" data-k="key">
+  <div class="tag"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9V16h7v-2.1A6 6 0 0 0 12 3Z"/></svg>ما الذي يقوله الرسم للتشخيص؟</div>
+  <p>لو لم تتحسن غدير حتى مع الأسلوب الثاني، على الرغم من تدريس جيد ومكثف طُبق كما خُطط له، لكان ذلك دليلًا مهمًا يسوّغ إحالتها إلى تقييم شامل. أما تحسنها فيرجّح أن ضعفها كان نتيجة تدريس لم يناسبها، فتتراجع فرضية صعوبة التعلم. وهذه الفكرة أساس نموذج الاستجابة للتدخل (<span class="en">RTI</span>)، الذي يعرضه الفصل السادس بالتفصيل.</p>
+</div>
+
+<div class="callout" data-k="warn">
+  <div class="tag"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3 2 20h20L12 3Z"/><path d="M12 10v4M12 17h.01"/></svg>المتابعة لا تؤخر حق الأسرة في التقييم</div>
+  <p>جمع بيانات التدخل لا يجوز أن يصير سببًا لتأجيل تقييم تطلبه الأسرة أو للحيلولة دونه. وقد نصت على ذلك صراحة مذكرة رسمية لمكتب برامج التربية الخاصة في وزارة التعليم الأمريكية (U.S. Department of Education, 2011). ولم نجد في التنظيمات السعودية المنشورة نصًا يتناول العلاقة بين التدخل المتدرج وطلب الأسرة للتقييم الأول. لكن القواعد التنظيمية تلزم بدعوة الأسرة إلى الاشتراك في التشخيص، وتعطيها حق طلب إعادة التشخيص إذا رأت أن ابنها لم يوضع في البرنامج المناسب (وزارة المعارف، ١٤٢٢هـ، المادة ٧٦). فالبيانات غير الرسمية تُرفق بالإحالة فتقويها وتسندها.</p>
+</div>
+
+<div class="callout" data-k="example">
+  <div class="tag"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="10" r="3"/><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11Z"/></svg>في السياق السعودي: من أين نأتي بالهدف؟</div>
+  <p>للقراءة بالإنجليزية في الولايات المتحدة معايير واسعة للطلاقة القرائية لكل صف وفصل دراسي، يعرف منها المعلم أين يقع طالبه وما الهدف المعقول له (Hasbrouck &amp; Tindal, 2017). أما بالعربية فالدراسات المنشورة قليلة، وحديثة، وأغلبها من خارج المملكة. ومنها دراسة تجريبية لتقنين مقياس الطلاقة القرائية الشفهية بالعربية، طُبق فيها على ٢٠٠ طالب في الصفوف من الأول إلى الثالث في الأردن (Abu-Hamour, 2014a). ودراسة ثانية للباحث نفسه استعملت طلاقة التعرف على الكلمات العربية في متابعة تقدم طلاب الصف الأول (Abu-Hamour, 2014b). ودراسة ثالثة استعملت مقاييس طلاقة قراءة الكلمات في متابعة تقدم ٧٠ طالبًا في الصف الثاني بمدينة العين في الإمارات (Mahfouz &amp; Mohamed, 2023). ولم نجد عند إعداد هذا الكتاب معايير سعودية منشورة للقياس المبني على المنهج.</p>
+  <p>والبديل العملي أن تبني المدرسة <strong>معايير محلية</strong>: تطبق المقياس نفسه على جميع طلاب الصف ثلاث مرات في العام، وتحسب الرتب المئينية لدرجاتهم، أي النسبة المئوية من زملاء الطالب في صفه الذين حصلوا على درجة أقل من درجته؛ فالرتبة ٨٤ تعني أن أداءه يفوق أداء ٨٤٪ منهم. وبذلك تعرف أين يقع كل طالب بين أقرانه في مدرستها. ويجب أن تكون النصوص مشكولة أو غير مشكولة بحسب ما يدرسه الطالب في صفه، لأن الحركات تغير صعوبة القراءة العربية كثيرًا. ويحسم الفريق مسبقًا هل تُعد أخطاء الحركات الإعرابية في أواخر الكلمات أخطاء، ثم يلتزم بقراره في كل القياسات، وإلا لم تعد الدرجات قابلة للمقارنة.</p>
+  <p><strong>سؤال للتأمل:</strong> لو أرادت مدرستك أن تبني معايير محلية للطلاقة القرائية في الصف الثاني هذا العام، فمن يطبق المقياس، ومن أين تأتي النصوص، وكيف تتحقق من تكافئها؟</p>
+</div>
+
+<!-- 5 -->
+<h2 id="s5"><span class="sec">٤-٥</span>تحليل الأخطاء</h2>
+<p>تكشف الدرجة عن عدد ما أخطأ فيه الطالب، أما تحليل الأخطاء فيكشف عن كيفية خطئه وأسبابه. فالأخطاء قلما تكون عشوائية، وكثيرًا ما تنم على قاعدة خاطئة يطبقها الطالب باطراد، فإذا اهتدينا إلى هذه القاعدة تحدد لنا ما ينبغي تعليمه.</p>
+<figure id="fig-4-3">
+  <div class="work">
+    <div class="paper">
+      <div class="ttl">ورقة عمل افتراضية لطالب في الصف الثالث</div>
+      <div class="probs">
+        <div class="pr"><sup>١</sup>٥٢<br>− ٣٧<div class="ln"></div><span class="ans">٢٥</span></div>
+        <div class="pr"><sup>١</sup>٦٣<br>− ٢٨<div class="ln"></div><span class="ans">٤٥</span></div>
+        <div class="pr"><sup>١</sup>٨٤<br>− ٢١<div class="ln"></div><span class="ans ok">٦٣</span></div>
+      </div>
+      <div class="sp">
+        <div><span class="w">مدرسه</span><span class="c">مدرسة</span></div>
+        <div><span class="w">الشمس ← الشّمس ← اشمس</span><span class="c">الشمس</span></div>
+        <div><span class="w">سئل</span><span class="c">سأل</span></div>
+      </div>
+    </div>
+    <ol class="notes">
+      <li><b>١</b><span><strong>نمط في الطرح:</strong> يطرح الرقم الأصغر من الأكبر في كل منزلة، بغض النظر عن موقعه؛ ففي المسألة الأولى طرح ٢ من ٧ فكتب ٥، بدل أن يستلف ويطرح ٧ من ١٢. وأصاب في المسألة الثالثة لأنها لا تحتاج إلى استلاف. فالخطأ إذن في مفهوم القيمة المنزلية، أما حقائق الطرح فيحفظها.</span></li>
+      <li><b>٢</b><span><strong>التاء المربوطة والهاء:</strong> يكتب ما يسمعه عند الوقف. والعلاج تعليم القاعدة الصرفية التي تميز التاء المربوطة من الهاء.</span></li>
+      <li><b>٣</b><span><strong>اللام الشمسية:</strong> يحذف اللام التي لا تُنطق. خطأ صوتي إملائي شائع يدل على اعتماده على السمع في الكتابة.</span></li>
+      <li><b>٤</b><span><strong>الهمزة:</strong> يخطئ في كرسي الهمزة المتوسطة. من أصعب قواعد الإملاء العربي، ويحتاج إلى تدريس منظم.</span></li>
+    </ol>
+  </div>
+  <figcaption><b>شكل ٤-٣:</b> تحليل أخطاء في الحساب والإملاء. كل خطأ يحمل معلومة عن القاعدة التي يطبقها الطالب، والعلاج يستهدف القاعدة التي أنتجت الإجابة.</figcaption>
+</figure>
+<p>ويُعرف النمط الأول في الأدبيات بخطأ «الأصغر من الأكبر»، وهو من أشهر أنماط الخطأ في الحساب (Ashlock, 2010).</p>
+
+<h3>أخطاء القراءة الجهرية: من «المعنى» إلى فك الرموز</h3>
+<p>شاع في تحليل أخطاء القراءة الجهرية ما يُسمى تحليل الانحرافات القرائية (miscue analysis)، الذي يسأل عن كل خطأ: هل حافظ على المعنى؟ هل يناسب تركيب الجملة؟ هل يشبه الكلمة المكتوبة في شكلها؟ (Goodman, 1969). لكن هذا التحليل يحتاج اليوم إلى قراءة نقدية. فهو قائم على تصور يرى القراءة استعمالًا متوازيًا لثلاث «إشارات»: المعنى، والتركيب، وشكل الكلمة. وقد تراجع علم القراءة المعاصر عن هذا التصور، إذ تبين أن القارئ الماهر يتعرف على الكلمة من حروفها تعرفًا دقيقًا سريعًا، وأن الاعتماد على السياق في التعرف على الكلمات سمة القارئ الضعيف الذي يعوّض به ضعف فك الرموز (Castles et al., 2018). والخطر العملي أن سؤال «هل حافظ على المعنى؟» قد يكافئ التخمين، فيغطي ضعف فك الرموز بدل أن يكشفه، وهذا ما يعني تشخيص عسر القراءة خاصة (ويتناوله الفصل الثامن).</p>
+<div class="callout" data-k="myth">
+  <div class="tag"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5V14M12 17h.01"/></svg>مفهوم خاطئ: «ما دام الخطأ لم يغير المعنى فلا بأس»</div>
+  <p>قرأ طالب «ذهب الطفلُ إلى المسجد» والمكتوب «ذهب الولدُ إلى المسجد». بمنطق «الإشارات الثلاث» هذا خطأ جيد، لأنه حافظ على المعنى والتركيب. لكن الطالب لم يقرأ الكلمة المكتوبة أصلًا: خمّنها من الجملة. ولو تكرر هذا النمط، فهو علامة على أنه لا يستطيع بعدُ فك رموز الكلمات غير المألوفة، ويستر ذلك بفهمه الجيد. فالسؤال التشخيصي الصحيح: هل قرأ ما هو مكتوب؟ لا: هل فهم ما يُقصد؟ أما الفهم فيُقاس بمهام أخرى.</p>
+</div>
+<p>والأجدى في العربية أن يُحلل الخطأ من جهتين: فك الرموز، والبنية الصرفية. خذ قراءة غدير «سافرَ» بدل «سفَر». الكلمتان من جذر واحد (س ف ر)، فالحروف الأصلية سليمة، والخطأ في الوزن: قرأت على وزن «فاعَلَ» كلمة على وزن «فَعَل»، فأضافت ألف مد لا وجود لها في المكتوب، وحولت الاسم إلى فعل مألوف لها. فالأسئلة التشخيصية هنا: هل تقرأ الحركات والمدود كما هي مكتوبة؟ هل تستبدل بالكلمة المكتوبة كلمة مألوفة من الجذر نفسه؟ هل يتكرر ذلك في النصوص المشكولة وغير المشكولة؟ فإن تكرر، كان الهدف التعليمي قراءة الحركات والمدود بدقة، وتمييز الأوزان الشائعة، مع تقديم قراءة الكلمة على حثها على «فهم الجملة». ويلخص الجدول ٤-٥ تصنيفًا عمليًا لهذه الأخطاء:</p>
+<div class="tw"><table id="tab-5" id="tab-4-5">
+  <caption>جدول ٤-٥: تصنيف أخطاء القراءة الجهرية بالعربية من جهة فك الرموز والبنية.</caption>
+  <thead><tr><th>نوع الخطأ</th><th>مثال (المكتوب ← المقروء)</th><th>ما قد يدل عليه</th></tr></thead>
+  <tbody>
+    <tr><td>خطأ في الحركة القصيرة</td><td>«كَتَبَ» ← «كُتِبَ»</td><td>ضعف في قراءة الحركات، أو قراءة صورة الكلمة دون حركاتها</td></tr>
+    <tr><td>إضافة حرف مد أو حذفه</td><td>«سفَر» ← «سافرَ»</td><td>عدم الانتباه إلى حروف المد، وخلط بين الأوزان</td></tr>
+    <tr><td>إبدال حرف بحرف يشبهه في الرسم</td><td>«بنت» ← «بيت»</td><td>ضعف في تمييز الإعجام، أي النقاط، وفي تحليل الكلمة إلى حروفها</td></tr>
+    <tr><td>إبدال حرف بحرف يقاربه في الصوت</td><td>«صار» ← «سار»</td><td>ضعف في التمييز الصوتي بين الأصوات المتقاربة</td></tr>
+    <tr><td>إبدال صيغة بصيغة من الجذر نفسه</td><td>«الطلاب» ← «الطالب»</td><td>قراءة الجذر وتخمين البنية، كالخلط بين المفرد وجمع التكسير</td></tr>
+    <tr><td>إبدال كلمة بكلمة تناسب السياق</td><td>«الولد» ← «الطفل»</td><td>تخمين من السياق لتعويض ضعف فك الرموز، ولا يُعد نجاحًا وإن حافظ على المعنى</td></tr>
+  </tbody>
+</table></div>
+<p>والحكم يحتاج إلى أكثر من خطأ واحد؛ فالنمط يظهر حين يتكرر النوع نفسه في أكثر من نص وأكثر من جلسة، ولذلك تخصص الاستمارة (أ) في القسم ٤-٨ أعمدة لعدّ أنواع الأخطاء في كل قياس للطلاقة.</p>
+
+<!-- 6 -->
+<h2 id="s6"><span class="sec">٤-٦</span>ملف الإنجاز وسلالم التقدير اللفظية</h2>
+<h3>ملف الإنجاز</h3>
+<p>ملف الإنجاز (portfolio) مجموعة مختارة من أعمال الطالب، تُجمع عبر مدة من الزمن وفق هدف محدد، ويشارك الطالب في اختيارها والتأمل فيها (Paulson et al., 1991). ويختلف عن مجرد تجميع الأوراق في أنه مبني على غرض، وله معايير تحدد ما يدخل فيه وكيف يُقيَّم. وله ثلاثة أنواع شائعة:</p>
+<ul>
+  <li><strong>ملف العمل:</strong> يضم الأعمال الجارية ومسوداتها، ويبين كيف يتقدم الطالب.</li>
+  <li><strong>ملف العرض:</strong> يضم أفضل الأعمال، ويبين أقصى ما يستطيعه الطالب.</li>
+  <li><strong>ملف التقييم:</strong> يضم أعمالًا محددة مقابل معايير محددة، ويُستخدم في اتخاذ القرارات.</li>
+</ul>
+<p>وفي التشخيص، يفيد ملف الإنجاز خاصة في مجالين: متابعة تقدم الطالب ذي الصعوبات عبر الزمن، وإظهار قدرات الطالب الموهوب التي لا تكشفها الاختبارات، كمشروع علمي، أو قصة كتبها، أو تصميم ابتكره. وهو لذلك أداة مهمة في التعرف على الموهوبين، وعلى مزدوجي الاستثنائية، أي الطلاب الذين يجمعون بين الموهبة وإعاقة أو اضطراب قد يخفي كل منهما الآخر (ويتناول الفصلان الثاني عشر والثالث عشر ذلك بالتفصيل).</p>
+
+<h3>سلالم التقدير اللفظية</h3>
+<p>لكي يصبح تقييم الأعمال أكثر اتساقًا، تُستخدم سلالم تقدير لفظية (rubrics) تحدد مستويات الأداء وتصف كل مستوى بالكلمات. وننبه هنا إلى فرق في المصطلح: سلم التقدير اللفظي يصف جودة عمل أنجزه الطالب، أما «مقياس التقدير» (rating scale) فيطلب من معلم أو والد أن يقدّر تكرار سلوكيات الطالب أو شدتها، كمقاييس السلوك التي يعرضها الفصل الثالث. والسلم التحليلي (analytic rubric) يقيّم كل جانب من العمل على حدة، والسلم الكلي (holistic rubric) يعطي تقديرًا واحدًا للعمل كاملًا. وهذا مثال لسلم تحليلي مختصر للتعبير الكتابي:</p>
+<div class="tw"><table id="tab-6" id="tab-4-6" class="rubric">
+  <caption>جدول ٤-٦: سلم تقدير لفظي تحليلي مختصر للتعبير الكتابي.</caption>
+  <thead><tr><th>المعيار</th><th>٤ متقن</th><th>٣ متمكن</th><th>٢ نامٍ</th><th>١ مبتدئ</th></tr></thead>
+  <tbody>
+    <tr><td>الفكرة والتنظيم</td><td>فكرة واضحة، وبداية ووسط ونهاية مترابطة</td><td>فكرة واضحة، مع ضعف بسيط في الترابط</td><td>فكرة غير مكتملة، وتنظيم ضعيف</td><td>جمل متفرقة بلا فكرة واضحة</td></tr>
+    <tr><td>اللغة والمفردات</td><td>مفردات متنوعة ودقيقة</td><td>مفردات مناسبة مع بعض التكرار</td><td>مفردات محدودة ومكررة</td><td>مفردات قليلة جدًا أو عامية</td></tr>
+    <tr><td>الإملاء والترقيم</td><td>أخطاء نادرة لا تعوق الفهم</td><td>أخطاء قليلة</td><td>أخطاء متكررة تعوق الفهم أحيانًا</td><td>أخطاء كثيرة تعوق الفهم</td></tr>
+  </tbody>
+</table></div>
+<p>ولكي يكون السلم موثوقًا، يُجرب على عدد من الأعمال، ويقيّمها معلمان باستقلال، ويُحسب اتفاقهما بالطريقة التي عرضناها في الملاحظة (٤-٢)، ثم يتناقشان في مواضع الاختلاف ويعدلان صياغة المستويات حتى يتفقا.</p>
+
+<h3>حدود الملف والتقييم الأدائي في القرارات عالية الأثر</h3>
+<p>ما ينفع التدريس لا يصلح بالضرورة لقرار مصيري. وأوضح شاهد على ذلك تجربة ولاية فيرمونت الأمريكية، التي بنت في أوائل التسعينيات نظام تقييم على مستوى الولاية كلها بملفات الإنجاز في الكتابة والرياضيات. فقد وجد تقويم البرنامج أن أثره في التدريس كان إيجابيًا، لكن جودة الدرجات التي أنتجها، ومنها اتفاق المقدِّرين، لم تكن كافية لاستعمالها في الحكم على الطلاب والمدارس (Koretz et al., 1994). والدرس أن ملف الإنجاز دليل قوي على ما يستطيعه الطالب، ويصلح سندًا لقرار أهلية أو قبول بعد تدريب المقدِّرين، وتوحيد المهام، وحساب الاتفاق بينهم، وإلى جانب أدلة أخرى.</p>
+<p>ويصدق هذا على التقييمات الأدائية المستعملة في التعرف على الموهوبين، كنموذج «اكتشاف» (<span class="en">DISCOVER</span>)، الذي يلاحظ فيه مقيّمون مدرَّبون الطلاب وهم يحلون مشكلات في مجالات مختلفة. ففي دراسة أجريت على ٢٤٨ طالبًا في الصفوف من الثالث إلى الخامس في مدرستين خاصتين في بيروت، ارتبطت تقديرات المجال المكاني بدرجات اختبار رافن للمصفوفات المتتابعة ارتباطًا مرتفعًا، في حين كان ارتباط تقديرات المجال اللغوي به منخفضًا. وخلصت الباحثة إلى أن النموذج يمكن أن يُستعمل في لبنان، مع حاجة إلى بحوث أخرى تدعم النتائج (Sarouphim, 2009). فالدليل من البيئة العربية واعد، لكنه محدود بعينة صغيرة ومدارس خاصة، ويحتاج إلى تحقق محلي قبل الاعتماد على الأداة في قرارات القبول.</p>
+
+<!-- 7 -->
+<h2 id="s7"><span class="sec">٤-٧</span>حدود الأساليب غير الرسمية</h2>
+<p>على ما لهذه الأساليب من قيمة كبيرة، فإن لها حدودًا ينبغي أن يعيها من يستعملها:</p>
+<ul>
+  <li><strong>لا معايير لها غالبًا:</strong> فلا تخبرنا وحدها هل أداء الطالب بعيد عن أقرانه بدرجة غير معتادة، إلا إذا بُنيت لها معايير محلية.</li>
+  <li><strong>جودتها في يد من يطبقها:</strong> تعريف غامض، أو نص قرائي أصعب من غيره، أو سلم غير واضح، كلها تجعل النتائج غير موثوقة.</li>
+  <li><strong>قد تحمل تحيز الملاحظ:</strong> المعلم الذي يتوقع مشكلة قد يراها أكثر مما هي. والتحقق من الاتفاق بين ملاحظين مستقلين من أهم ما يحد من هذا التحيز.</li>
+  <li><strong>قواعد القرار فيها تقريبية:</strong> تصلح للقرار التعليمي، أما القرار عالي الأثر فيحتاج معها إلى أدلة أخرى، كما رأينا في ٤-٤.</li>
+</ul>
+<p>ولذلك تُستخدم هذه الأساليب في مسار التشخيص قبل الإحالة وبعدها: قبلها لتوثيق المشكلة ومحاولة علاجها في الصف، وبعدها لتكمل صورة الاختبارات الرسمية ولتخطيط التدريس. ونادرًا ما تكفي وحدها لقرار تشخيصي. وحتى النماذج التي تبني قراراتها على بياناتها بطريقة منظمة، كنموذج الاستجابة للتدخل، تحتاج إلى مدة متابعة كافية، ونصوص متكافئة، وأدلة من مصادر أخرى.</p>
+
+<div class="callout" data-k="example">
+  <div class="tag"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="10" r="3"/><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11Z"/></svg>في السياق السعودي: أين تقع الأساليب غير الرسمية في التنظيم؟</div>
+  <p>تنص القواعد التنظيمية لمعاهد وبرامج التربية الخاصة على أن يستعمل القياس والتشخيص أساليب رسمية وغير رسمية، وألا يُكتفى بنتائج مقياس واحد عند تحديد أهلية التلميذ، وأن تُجمع المعلومات من مصادر متنوعة، وأن يوضع التلميذ عند الحاجة تحت الملاحظة مدة فصل دراسي كامل (وزارة المعارف، ١٤٢٢هـ، المادة ٨٠). وتذكر القواعد نفسها المقابلة والملاحظة وقوائم الشطب أمثلة على الأدوات غير الرسمية التي يستعملها الأخصائي النفسي (المادتان ٤٨ و٤٩). ومن شروط قبول التلميذ في برامج صعوبات التعلم «أن يثبت أن الخدمات التربوية العادية غير ملائمة أو قليلة الفاعلية» (المادة ٧)، وهذا بالضبط ما توثقه بيانات القياس المبني على المنهج حين تُجمع بانتظام. وقد أبقى الدليل التنظيمي للتربية الخاصة على هذه الشروط، ولم يذكر نموذج الاستجابة للتدخل بالاسم (وزارة التعليم، ١٤٣٦هـ).</p>
+  <p>وفي الممارسة، وصفت دراستان حديثتان تطبيق هذا النموذج في المدارس السعودية من منظور المعلمين. فذكرت ثماني معلمات لصعوبات التعلم عوائق منها ضيق الوقت، وضعف التعاون، ونقص البيانات والتدريب، وغياب الاعتماد الرسمي للنموذج (Altheiabi et al., 2025). ووجدت دراسة أخرى مع ثلاثة عشر معلمًا أن الممارسات القريبة منه غير رسمية إلى حد كبير، وتفتقر إلى المتابعة المنهجية للتقدم وإلى الأدوات التشخيصية والتوجيه التنظيمي (Almulla &amp; Mahama, 2026). والدراستان نوعيتان صغيرتا العينة، فهما تصفان تجارب، ويبقى مدى انتشارها بحاجة إلى قياس.</p>
+  <p><strong>سؤال للتأمل:</strong> كيف توثق «قلة فاعلية الخدمات التربوية العادية» لطالب في مدرستك توثيقًا يقبله فريق القياس والتشخيص؟</p>
+</div>
+
+<!-- 8 -->
+<h2 id="s8"><span class="sec">٤-٨</span>استمارات للاستعمال</h2>
+<p>يضم هذا القسم أربع استمارات فارغة من إعداد المؤلف، صُممت لتُطبع كل منها على صفحة مستقلة، ويجوز للقارئ نسخها لاستعماله التعليمي والمهني. ويسبق استعمالَ الاستمارة تدريبٌ على التطبيق. وتُجمع بها بيانات الطالب وفق الإجراءات المعتمدة في المدرسة، ويشترط الدليل التنظيمي للتربية الخاصة موافقة ولي الأمر الخطية بعد إشعاره رسميًا قبل إجراءات القياس والتشخيص (وزارة التعليم، ١٤٣٦هـ). وفي أنشطة التدريب يُكتب رمز بدل اسم الطالب، ولا يُبنى على نتائجها أي قرار.</p>
+<ul>
+  <li><strong>الاستمارة (أ):</strong> ورقة تسجيل الطلاقة القرائية الشفهية، وفيها أعمدة لتصنيف الأخطاء (٤-٤ و٤-٥).</li>
+  <li><strong>الاستمارة (ب):</strong> استمارة تسجيل الفترات، ومعها حساب الاتفاق بين ملاحظين (٤-٢).</li>
+  <li><strong>الاستمارة (ج):</strong> استمارة تسجيل ما قبل السلوك وما بعده (٤-٢).</li>
+  <li><strong>الاستمارة (د):</strong> نموذج إحالة مرفق بالأدلة، منظم وفق إطار <span class="en">RIOT/ICEL</span> (Christ, 2008). ويجمع هذا الإطار الأدلة بأربع طرق: مراجعة السجلات، والمقابلة، والملاحظة، والاختبار؛ في أربعة مجالات: التدريس، والمنهج، والبيئة، والمتعلم (ويعرضه الفصل الأول بالتفصيل). وفائدته هنا أنه يكشف للمحيل الخلايا الفارغة قبل أن يكشفها فريق التقييم.</li>
+</ul>
+
+<section class="form" aria-label="الاستمارة (أ): ورقة تسجيل الطلاقة القرائية الشفهية">
+  <div class="fh"><b>الاستمارة (أ): ورقة تسجيل الطلاقة القرائية الشفهية</b><span>القياس المبني على المنهج في القراءة</span></div>
+  <div class="fl">
+    <div><i>الطالب أو رمزه:</i><u></u></div>
+    <div><i>الصف:</i><u></u></div>
+    <div><i>التاريخ:</i><u></u></div>
+    <div><i>الفاحص:</i><u></u></div>
+  </div>
+  <div class="fl">
+    <div><i>الغرض:</i> <span class="ck">مسح</span> <span class="ck">خط أساس</span> <span class="ck">متابعة، الأسبوع:</span><u></u></div>
+    <div><i>النصوص:</i> <span class="ck">مشكولة</span> <span class="ck">غير مشكولة</span> <span class="ck">مشكولة جزئيًا</span></div>
+  </div>
+  <div class="box">
+    <b>التعليمات الثابتة (تُقرأ كما هي في كل مرة):</b> «اقرأ هذه القصة بصوت مرتفع وبأفضل ما تستطيع. إذا وصلت إلى كلمة لا تعرفها سأقولها لك. ابدأ.» يبدأ التوقيت عند نطق الكلمة الأولى، ويقول الفاحص «توقف» بعد ٦٠ ثانية، ويضع علامة بعد آخر كلمة قُرئت.
+    <ul>
+      <li><b>يُعد خطأ:</b> إبدال الكلمة، وحذفها، والكلمة التي يتوقف عندها الطالب ٣ ثوانٍ فيقولها الفاحص.</li>
+      <li><b>لا يُعد خطأ:</b> التصحيح الذاتي خلال ٣ ثوانٍ، وتكرار الكلمة، وإضافة كلمة غير مكتوبة (وتُدوَّن ملاحظة).</li>
+      <li><b>قرار مسبق للفريق:</b> هل تُعد أخطاء الحركة الإعرابية في آخر الكلمة أخطاء؟ <span class="ck">نعم</span> <span class="ck">لا</span> (يُلتزم به في كل القياسات).</li>
+    </ul>
+  </div>
+  <div class="fw"><table id="tab-7" id="tab-4-7">
+    <caption>جدول ٤-٧: الاستمارة (أ)، تسجيل ثلاثة نصوص وتصنيف أخطائها.</caption>
+    <thead>
+      <tr><th rowspan="2">النص (رقمه أو عنوانه)</th><th rowspan="2">الكلمات المقروءة</th><th rowspan="2">الأخطاء</th><th rowspan="2">الكلمات الصحيحة في الدقيقة</th><th colspan="5">عدد الأخطاء بحسب النوع (جدول ٤-٥)</th></tr>
+      <tr><th>حركة قصيرة</th><th>مد</th><th>حرف يشبهه رسمًا أو صوتًا</th><th>صيغة من الجذر نفسه</th><th>كلمة تناسب السياق</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="l">١.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td class="l">٢.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td class="l">٣.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><th>الوسيط</th><td></td><td></td><td></td><th colspan="5">المجموع في النصوص الثلاثة:</th></tr>
+    </tbody>
+  </table></div>
+  <div class="fl one"><div><i>ملاحظات نوعية (التعبير، والتوقفات، وتتبع السطر، وتخطي الأسطر):</i><u></u></div></div>
+  <div class="ln2"></div>
+  <p class="note">تُرسم قيمة الوسيط على رسم المتابعة. ولا يُحكم بتغير الأداء من قياس واحد.</p>
+</section>
+
+<section class="form" aria-label="الاستمارة (ب): استمارة تسجيل الفترات">
+  <div class="fh"><b>الاستمارة (ب): استمارة تسجيل الفترات</b><span>عشر دقائق، ست فترات في كل دقيقة</span></div>
+  <div class="fl">
+    <div><i>الطالب أو رمزه:</i><u></u></div>
+    <div><i>التاريخ:</i><u></u></div>
+    <div><i>الوقت: من</i><u></u><i>إلى</i><u></u></div>
+    <div><i>الحصة أو النشاط:</i><u></u></div>
+    <div><i>الملاحظ:</i><u></u></div>
+    <div><span class="ck">الملاحظ الأول</span> <span class="ck">الملاحظ الثاني</span></div>
+  </div>
+  <div class="fl one"><div><i>السلوك المستهدف:</i><u></u></div></div>
+  <div class="fl one"><div><i>التعريف الإجرائي (ما يُرى ويُسمع، وما يُستثنى):</i><u></u></div></div>
+  <div class="ln2"></div>
+  <div class="fl">
+    <div><i>الطريقة:</i> <span class="ck">الفترة الجزئية</span> <span class="ck">الفترة الكاملة</span> <span class="ck">العينة اللحظية</span></div>
+    <div><i>طول الفترة (بالثواني):</i><u></u></div>
+  </div>
+  <div class="fw"><table id="tab-8" id="tab-4-8">
+    <caption>جدول ٤-٨: الاستمارة (ب)، شبكة الفترات. يُكتب ✓ إذا سُجل السلوك وفق الطريقة المختارة، و− إذا لم يُسجل.</caption>
+    <thead><tr><th>الدقيقة</th><th>١</th><th>٢</th><th>٣</th><th>٤</th><th>٥</th><th>٦</th><th>فترات السلوك</th></tr></thead>
+    <tbody>
+      <tr><th>١</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><th>٢</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><th>٣</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><th>٤</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><th>٥</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><th>٦</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><th>٧</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><th>٨</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><th>٩</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><th>١٠</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    </tbody>
+  </table></div>
+  <div class="fl">
+    <div><i>فترات السلوك:</i><u></u><i>من</i><u></u><i>=</i><u></u><i>٪</i></div>
+  </div>
+  <div class="box">
+    <b>الاتفاق بين الملاحظين (تُقارن الاستمارتان فترة بفترة):</b>
+    <div class="fl">
+      <div><i>الاتفاقات:</i><u></u></div>
+      <div><i>الاختلافات:</i><u></u></div>
+      <div><i>نسبة الاتفاق:</i><u></u><i>٪</i></div>
+      <div><i>الاتفاق على فترات الحدوث وحدها:</i><u></u><i>٪</i></div>
+      <div><i>كابا (اختياري):</i><u></u></div>
+    </div>
+  </div>
+  <p class="note">الفترة الجزئية للسلوك المراد خفضه، والفترة الكاملة للسلوك المراد زيادته، والعينة اللحظية لمن يدرّس ويلاحظ معًا (٤-٢).</p>
+</section>
+
+<section class="form abc" aria-label="الاستمارة (ج): استمارة تسجيل ما قبل السلوك وما بعده">
+  <div class="fh"><b>الاستمارة (ج): استمارة تسجيل ما قبل السلوك وما بعده</b><span>تسجيل وصفي في المواقف الطبيعية</span></div>
+  <div class="fl">
+    <div><i>الطالب أو رمزه:</i><u></u></div>
+    <div><i>الملاحظ:</i><u></u></div>
+    <div><i>المدة: من</i><u></u><i>إلى</i><u></u></div>
+  </div>
+  <div class="fl one"><div><i>السلوك المستهدف وتعريفه الإجرائي:</i><u></u></div></div>
+  <div class="ln2"></div>
+  <div class="fw"><table id="tab-9" id="tab-4-9">
+    <caption>جدول ٤-٩: الاستمارة (ج)، سجل الأحداث. يُكتب ما حدث فعلًا، ويُرجأ التفسير.</caption>
+    <thead><tr><th>التاريخ والوقت</th><th>المكان والنشاط، ومن كان حاضرًا</th><th>ما قبل السلوك: ماذا حدث قبله مباشرة؟</th><th>السلوك: ماذا فعل الطالب؟ (كما يُرى ويُسمع)</th><th>ما بعد السلوك: ماذا حدث بعده مباشرة؟</th><th>ملاحظات</th></tr></thead>
+    <tbody>
+      <tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    </tbody>
+  </table></div>
+  <div class="box">
+    <b>بعد عدة أيام من التسجيل:</b>
+    <div class="fl one">
+      <div><i>ما قبل السلوك الأكثر تكرارًا:</i><u></u></div>
+      <div><i>ما بعد السلوك الأكثر تكرارًا:</i><u></u></div>
+      <div><i>فرضية مبدئية عن وظيفة السلوك:</i><u></u></div>
+    </div>
+  </div>
+  <p class="note">بيانات هذه الاستمارة وصفية ارتباطية: تقترح فرضية عن وظيفة السلوك تنتظر التحقق، ويتناول الفصل الخامس طرقه.</p>
+</section>
+
+<section class="form riot" aria-label="الاستمارة (د): نموذج إحالة مرفق بالأدلة وفق إطار RIOT/ICEL">
+  <div class="fh"><b>الاستمارة (د): نموذج إحالة مرفق بالأدلة</b><span>منظم وفق إطار RIOT/ICEL</span></div>
+  <div class="fl">
+    <div><i>الطالب:</i><u></u></div>
+    <div><i>الصف:</i><u></u></div>
+    <div><i>العمر:</i><u></u></div>
+    <div><i>المعلم المحيل:</i><u></u></div>
+    <div><i>تاريخ الإحالة:</i><u></u></div>
+  </div>
+  <div class="fl one"><div><i>سبب الإحالة بلغة سلوكية (ماذا يفعل الطالب أو لا يفعل، ومتى، وكم مرة):</i><u></u></div></div>
+  <div class="ln2"></div>
+  <div class="fl one"><div><i>مواطن القوة لدى الطالب:</i><u></u></div></div>
+  <div class="box">
+    <b>ما جُرب قبل الإحالة:</b>
+    <div class="fl one">
+      <div><i>١. التدخل:</i><u></u><i>المدة بالأسابيع:</i><u></u><i>الجلسات أسبوعيًا ومدتها:</i><u></u></div>
+      <div><i>٢. التدخل:</i><u></u><i>المدة بالأسابيع:</i><u></u><i>الجلسات أسبوعيًا ومدتها:</i><u></u></div>
+    </div>
+    <div class="fl">
+      <div><i>خط الأساس (الوسيط):</i><u></u></div>
+      <div><i>الهدف:</i><u></u></div>
+      <div><i>عدد القياسات بعد خط الأساس:</i><u></u></div>
+      <div><i>ميل الطالب مقارنة بميل خط الهدف:</i><u></u></div>
+    </div>
+    <div class="fl">
+      <div><span class="ck">رسم المتابعة مرفق</span></div>
+      <div><span class="ck">النصوص أو الأوراق من مستوى واحد ومجربة</span></div>
+      <div><span class="ck">طُبق التدخل كما خُطط له (يوجد ما يوثق ذلك)</span></div>
+    </div>
+  </div>
+  <div class="fl">
+    <div><i>آخر فحص للسمع، تاريخه ونتيجته:</i><u></u></div>
+    <div><i>آخر فحص للبصر، تاريخه ونتيجته:</i><u></u></div>
+    <div><i>الحضور والانتظام هذا العام:</i><u></u></div>
+  </div>
+  <div class="fw"><table id="tab-10" id="tab-4-10">
+    <caption>جدول ٤-١٠: الاستمارة (د)، مصفوفة الأدلة. يُكتب في كل خلية مصدر الدليل وتاريخه، وتُترك الخلية فارغة إن لم يتوافر دليل.</caption>
+    <thead><tr><th>المجال ↓ / الطريقة ←</th><th>المراجعة (R): سجلات وأعمال سابقة</th><th>المقابلة (I): المعلمون والأسرة والطالب</th><th>الملاحظة (O): في الصف ومواقف أخرى</th><th>الاختبار (T): قياس مبني على المنهج أو غيره</th></tr></thead>
+    <tbody>
+      <tr><th>التدريس (I)</th><td></td><td></td><td></td><td></td></tr>
+      <tr><th>المنهج (C)</th><td></td><td></td><td></td><td></td></tr>
+      <tr><th>البيئة (E)</th><td></td><td></td><td></td><td></td></tr>
+      <tr><th>المتعلم (L)</th><td></td><td></td><td></td><td></td></tr>
+    </tbody>
+  </table></div>
+  <div class="fl">
+    <div><i>تاريخ الإشعار الخطي لولي الأمر:</i><u></u></div>
+    <div><i>تاريخ الموافقة الخطية:</i><u></u></div>
+  </div>
+  <p class="note">يحدد الدليل التنظيمي للتربية الخاصة مدة رد ولي الأمر بما لا يتجاوز ١٤ يومًا من تاريخ الإشعار الخطي (وزارة التعليم، ١٤٣٦هـ). وتُراجع الإجراءات المعتمدة النافذة وقت الاستعمال.</p>
+  <div class="sig"><div>المعلم المحيل</div><div>معلم التربية الخاصة</div><div>قائد المدرسة</div></div>
+</section>
+
+<h2 id="conclusion" class="unnum">خاتمة</h2>
+<p>تبيّن لنا في هذا الفصل أن الأساليب غير الرسمية مصدر قائم بذاته لنوع آخر من الأدلة، يوازي الاختبار المقنن في قيمته: أدلة وثيقة الصلة بالمنهج، متكررة، تصف ما يجري في الصف وتخدم التدريس خدمة مباشرة. غير أن قيمتها مرهونة بانضباط إجراءاتها؛ فالملاحظة تتطلب تعريفًا إجرائيًا، وطريقة تسجيل تلائم السلوك، واتفاقًا بين الملاحظين لا تضخمه الصدفة، والقياس المبني على المنهج تكمن قوته في رسم بياناته عبر الزمن، وتحليل الأخطاء يبحث عن القاعدة التي يطبقها الطالب وراء عدد أخطائه. وفي الممارسة تُرفق هذه البيانات بالإحالة لتعززها، ولا يسوغ أن تتحول متابعة الاستجابة للتدخل إلى ذريعة لتأخير تقييم تطلبه الأسرة.</p>
+<p>ويظل السؤال المفتوح متعلقًا بحدود الاعتماد على هذه الأساليب في القرارات عالية الأثر؛ فقواعد القرار في القياس المبني على المنهج تستند إلى رأي الخبراء أكثر من استنادها إلى البحث، وملف الإنجاز وسلالم التقدير اللفظية تكشف ما لا تكشفه الاختبارات، ولا سيما لدى الموهوبين، لكنها تحتاج قبل اعتمادها منفردة إلى التحقق من اتفاق المقدِّرين. فهذه الأساليب تبلغ أقصى قوتها حين تُضم إلى غيرها من الأدلة.</p>
+
+<!-- 9 -->
+<h2 id="s9"><span class="sec">٤-٩</span>الخلاصة والمسرد والأنشطة</h2>
+<h3>خلاصة الفصل</h3>
+<div class="summary"><ul>
+  <li>الأساليب غير الرسمية قريبة من الصف والمنهج، وتتكرر، وتخدم التدريس، لكنها بلا معايير وطنية غالبًا.</li>
+  <li>الملاحظة المنظمة تبدأ بتعريف إجرائي، وتختار طريقة تسجيل تناسب السلوك، وتتحقق من الاتفاق بين ملاحظين. وفي السلوك النادر أو الكثير جدًا تتضخم نسبة الاتفاق البسيطة بالصدفة، فيُستعمل معامل كابا أو الاتفاق على فترات الحدوث.</li>
+  <li>طرق تسجيل الفترات الثلاث تعطي نتائج مختلفة للسلوك نفسه، ويُختار منها ما يناسب الهدف.</li>
+  <li>القياس المبني على المنهج قصير ومتكرر ومقنن الإجراءات، وقوته في رسم البيانات. وقواعد القرار فيه مبنية على رأي الخبراء أكثر من البحث، فتصلح للقرار التعليمي، أما القرار عالي الأثر فيحتاج إلى مدة أطول ونصوص متكافئة وأدلة أخرى.</li>
+  <li>تحليل الأخطاء يكشف القاعدة الخاطئة التي يطبقها الطالب. وفي القراءة يُحلل الخطأ من جهة فك الرموز والبنية الصرفية قبل جهة حفاظه على المعنى.</li>
+  <li>ملف الإنجاز وسلالم التقدير اللفظية يُظهران ما لا تُظهره الاختبارات، وخاصة لدى الموهوبين، ويحتاج استعمالهما وحدهما في قرار عالي الأثر إلى التحقق من اتفاق المقدِّرين أولًا.</li>
+  <li>الاستجابة للتدخل لا يجوز أن تؤخر تقييمًا تطلبه الأسرة، والبيانات غير الرسمية تُرفق بالإحالة لتقويها.</li>
+</ul></div>
+
+<h3>مسرد المصطلحات</h3>
+<dl class="gloss">
+  <dt>التعريف الإجرائي<span class="en">Operational definition</span></dt><dd>وصف السلوك بما يُرى ويُسمع، بحيث يتفق ملاحظان على وقوعه.</dd>
+  <dt>تسجيل الفترات<span class="en">Interval recording</span></dt><dd>تقسيم وقت الملاحظة إلى فترات قصيرة، وتسجيل حدوث السلوك في كل منها.</dd>
+  <dt>العينة اللحظية<span class="en">Momentary time sampling</span></dt><dd>تسجيل حدوث السلوك في لحظة نهاية كل فترة فقط.</dd>
+  <dt>الاتفاق بين الملاحظين<span class="en">Interobserver agreement</span></dt><dd>نسبة اتفاق ملاحظين مستقلين على تسجيل السلوك نفسه.</dd>
+  <dt>معامل كابا لكوهين<span class="en">Cohen's kappa</span></dt><dd>مؤشر للاتفاق بين ملاحظين يستبعد ما يُتوقع منه بالصدفة، وهو أدق من النسبة البسيطة حين يكون السلوك نادرًا أو كثيرًا جدًا.</dd>
+  <dt>القياس المبني على المنهج<span class="en">Curriculum-based measurement</span></dt><dd>مقاييس قصيرة متكررة مقننة الإجراءات، مادتها من المنهج، تتابع التقدم في مهارات أساسية.</dd>
+  <dt>خط الأساس<span class="en">Baseline</span></dt><dd>القياسات الأولى التي تُجمع قبل بدء التدريس الجديد، ويُقارن بها التقدم اللاحق.</dd>
+  <dt>خط الهدف<span class="en">Aimline</span></dt><dd>خط على رسم المتابعة يصل بين مستوى البداية والهدف، وتُقارن به نقاط الطالب.</dd>
+  <dt>تحليل الأخطاء<span class="en">Error analysis</span></dt><dd>فحص أنماط أخطاء الطالب لاكتشاف القواعد الخاطئة التي يطبقها.</dd>
+  <dt>تحليل الانحرافات القرائية<span class="en">Miscue analysis</span></dt><dd>تحليل أخطاء القراءة الجهرية من حيث حفاظها على المعنى، وملاءمتها لتركيب الجملة، وشبهها بالكلمة المكتوبة. وهو مبني على نموذج تراجع عنه علم القراءة المعاصر.</dd>
+  <dt>ملف الإنجاز<span class="en">Portfolio</span></dt><dd>مجموعة مختارة من أعمال الطالب تُجمع وفق هدف ومعايير عبر الزمن.</dd>
+  <dt>سلم التقدير اللفظي<span class="en">Rubric</span></dt><dd>أداة تحدد معايير تقييم عمل منجز، وتصف بالكلمات مستويات الأداء في كل معيار. ويختلف عن مقياس التقدير (<span class="en">Rating scale</span>) الذي يقدّر تكرار السلوك أو شدته.</dd>
+</dl>
+
+<h3>أسئلة للمراجعة</h3>
+<ol>
+  <li>اكتب تعريفًا إجرائيًا لسلوك «عدم الانتباه»، ثم اختبره بسؤال: هل يستطيع شخص غريب تسجيله بدقة؟ <span class="obj">(الهدف ١)</span></li>
+  <li>تريد متابعة مدة انشغال طالب بمهمته في حصة الرياضيات. أي طرق تسجيل الفترات تختار؟ ولماذا؟ <span class="obj">(الهدف ٢)</span></li>
+  <li>اتفق ملاحظان في ٢٢ فترة واختلفا في ٨. احسب نسبة الاتفاق، وقرر هل هي مقبولة. ثم افترض أن الملاحظ الأول سجل السلوك في ١٥ فترة، والثاني في ١٣، واتفقا على حدوثه في ١٠ منها: احسب معامل كابا، وفسره. <span class="obj">(الهدف ٣)</span></li>
+  <li>صغ ثلاثة أسئلة لمقابلة شبه منظمة مع والد طالب في المرحلة المتوسطة يتأخر في تسليم واجباته، بحيث يستدعي أحدها موقفًا محددًا، ويبحث آخر عن مواطن القوة. <span class="obj">(الهدف ٤)</span></li>
+  <li>في الشكل ٤-٢، لو استمرت النقاط تحت خط الهدف بعد تغيير الأسلوب، ماذا تستنتج؟ وما الخطوة التالية؟ <span class="obj">(الهدف ٥)</span></li>
+  <li>لماذا قد تكفي ستة قياسات أسبوعية لتعديل أسلوب التدريس، ولا تكفي لقرار بأن الطالب «لم يستجب» للتدخل؟ اذكر سببين قياسيين. <span class="obj">(الهدفان ٥ و٨)</span></li>
+  <li>كتب طالب: ٤٥ + ٣٨ = ٧١٣. ما القاعدة الخاطئة التي يطبقها؟ وما الهدف التعليمي الذي تشتقه منها؟ <span class="obj">(الهدف ٦)</span></li>
+  <li>قرأ طالب «يلعبون» بدل «لعبوا» في أكثر من نص، و«البحر» بدل «النهر» مرة واحدة. صنف كل خطأ وفق الجدول ٤-٥، وبيّن لماذا لا يصح أن يُعد الخطأ الثاني «جيدًا» لأنه حافظ على المعنى العام. <span class="obj">(الهدف ٦)</span></li>
+  <li>لماذا يُعد ملف الإنجاز مهمًا في التعرف على الطالب الموهوب الذي لا يتفوق في الاختبارات؟ وما الذي يجب التحقق منه قبل أن يُستعمل في قرار قبول؟ <span class="obj">(الهدف ٨)</span></li>
+</ol>
+<p><strong>إجابات مختصرة للأسئلة الحسابية:</strong> السؤال ٣: نسبة الاتفاق = ٢٢ ÷ ٣٠ × ١٠٠ ≈ ٧٣٪، وهي دون ٨٠٪ فلا تُقبل قبل مراجعة التعريف. والاتفاق المتوقع بالصدفة = (٠.٥٠ × ٠.٤٣) + (٠.٥٠ × ٠.٥٧) = ٠.٥٠ تقريبًا، فكابا = (٠.٧٣ − ٠.٥٠) ÷ (١ − ٠.٥٠) ≈ ٠.٤٧، أي اتفاق «متوسط» بالتصنيف الشائع. السؤال ٧: يجمع كل منزلة وحدها ويكتب الناتج كاملًا دون أن يحمل إلى المنزلة التالية (٥ + ٨ = ١٣، و٤ + ٣ = ٧)، فالهدف التعليمي مفهوم إعادة التجميع في القيمة المنزلية.</p>
+
+<h3>حالة للتطبيق</h3>
+<article class="case">
+  <div class="case-head"><h3>بندر، ١٣ سنة، الصف الأول المتوسط</h3></div>
+  <p><strong>القصة:</strong> يشكو معلم الرياضيات من أن بندر «مهمل»: لا يُكمل تمارين الحصة، وتكثر أخطاؤه في الاختبارات القصيرة، مع أن واجباته المنزلية كاملة غالبًا. جمع المعلم بالتعاون مع معلم صعوبات التعلم البيانات المعروضة في الجدول ٤-١١ خلال ثمانية أسابيع، بموافقة ولي أمره.</p>
+  <div class="tw"><table id="tab-11" id="tab-4-11">
+    <caption>جدول ٤-١١: بيانات بندر غير الرسمية.</caption>
+    <thead><tr><th>المصدر</th><th>النتيجة</th></tr></thead>
+    <tbody>
+      <tr><td>مسح بداية العام (العمليات الحسابية، دقيقتان)</td><td>وسيط أدائه يقع عند الرتبة المئينية ١٢ تقريبًا بين طلاب صفه في المدرسة</td></tr>
+      <tr><td>خط الأساس (ثلاثة أسابيع)</td><td>١٤، ١٢، ١٥ رقمًا صحيحًا، والوسيط ١٤. حُدد الهدف ٢٦ بعد ١٢ أسبوعًا، أي رقم واحد في الأسبوع</td></tr>
+      <tr><td>خمسة أسابيع من التدريس في مجموعة صغيرة، ثلاث جلسات أسبوعيًا</td><td>١٤، ١٥، ١٣، ١٦، ١٥. وكانت نقاط خط الهدف لهذه الأسابيع ١٥، ١٦، ١٧، ١٨، ١٩. ولم تُجرب الأوراق مسبقًا للتحقق من تكافئها</td></tr>
+      <tr><td>الملاحظة (العينة اللحظية كل ٣٠ ثانية)</td><td>الانشغال بالمهمة ٤٥٪ في ثلاث حصص رياضيات، و٨٠٪ في حصة علوم واحدة. وبلغت نسبة الاتفاق مع ملاحظ ثانٍ ٩٠٪ في حصة واحدة، ولم يُحسب كابا</td></tr>
+      <tr><td>تحليل ٣٠ مسألة من دفتره</td><td>أغلب الأخطاء في نقل الأرقام من السبورة، كأن يكتب ٦٨ بدل ٨٦، ثم أخطاء في الكسور. والضرب في مسائل الكتاب المطبوعة صحيح غالبًا</td></tr>
+      <tr><td>مقابلة بندر</td><td>يجلس في آخر الصف، ويقول إن الأرقام على السبورة «تتشابه» عليه، وإنه يستحي أن يطلب الاقتراب</td></tr>
+      <tr><td>مقابلة الأم</td><td>يذاكر مع أخيه الأكبر ويحل واجبه كاملًا. ولا تذكر متى فُحص بصره آخر مرة</td></tr>
+    </tbody>
+  </table></div>
+  <p><strong>المطلوب:</strong> (١) ما القرار التعليمي الذي تسوّغه قاعدة النقاط الأربع الآن؟ وما الذي يجعلك تتحفظ على الاعتماد عليها وحدها؟ (٢) هل تكفي هذه البيانات لإحالة بندر إلى تقييم شامل لصعوبات التعلم في الرياضيات؟ علّل حكمك. (٣) اذكر دليلين ناقصين على الأقل، وحدد موقع كل منهما في مصفوفة الاستمارة (د). <span class="obj">(الأهداف ٣ و٥ و٨)</span></p>
+</article>
+
+<h3>أنشطة التعلم</h3>
+<p>كل نشاط يُطبق مع طلاب يُنفذ بموافقة الأسرة وإدارة المدرسة، ودون أي بيانات تدل على الطالب، وتحت إشراف مختص، ولا تُستعمل نتائجه في أي قرار يخص الطالب.</p>
+<ol>
+  <li><strong>ملاحظة مزدوجة:</strong> لاحظ مع زميل طالبًا عشر دقائق بطريقة الفترة الجزئية، يسجل كل منكما في نسخة مستقلة من الاستمارة (ب). ثم احسبا نسبة الاتفاق، والاتفاق على فترات الحدوث، ومعامل كابا، وناقشا مواضع الاختلاف. <em>الناتج:</em> الاستمارتان، وجدول ٢ × ٢، وفقرة تفسر الفرق بين المؤشرات الثلاثة. <em>الزمن التقريبي:</em> ساعة. <em>بديل مكتبي:</em> لاحظا طالبًا في مقطع مصور منشور لأغراض تدريب المعلمين.</li>
+  <li><strong>قياس طلاقة:</strong> اختر ثلاثة نصوص من كتاب القراءة لصف معين، وطبقها على ثلاثة طلاب مستعملًا الاستمارة (أ)، واحسب الوسيط لكل منهم، وصنف أخطاءهم وفق الجدول ٤-٥. <em>الناتج:</em> الاستمارات الثلاث، وفقرة عن النمط الأبرز في الأخطاء. <em>الزمن التقريبي:</em> ساعة ونصف. <em>بديل مكتبي:</em> أعدّ ستة نصوص من مستوى صف واحد، وقارن بينها في عدد الكلمات وطولها وضبطها بالشكل، ثم اقترح أيها يصلح نصوصًا متكافئة للمتابعة وعلل اختيارك.</li>
+  <li><strong>تحليل دفتر:</strong> اجمع خمس أوراق عمل لطالب واحد في الحساب أو الإملاء، واستخرج منها نمطين للخطأ على الأقل، واقترح نشاطًا تعليميًا لكل نمط. <em>الناتج:</em> جدول بالأنماط وأمثلتها والنشاط المقترح لكل نمط. <em>الزمن التقريبي:</em> ٤٥ دقيقة. <em>بديل مكتبي:</em> حلل أخطاء الشكل ٤-٣ والسؤالين ٧ و٨.</li>
+  <li><strong>بناء سلم تقدير لفظي:</strong> ابن سلمًا تحليليًا بأربعة مستويات لمهمة كتابية من منهج صف تختاره، ثم قيّم به مع زميل خمسة نصوص كتبها طلاب، بعد حذف أسمائهم، واحسبا نسبة الاتفاق في كل معيار، وعدّلا صياغة المستويات التي اختلفتما فيها. <em>الناتج:</em> السلم قبل التعديل وبعده، وجدول الاتفاق. <em>الزمن التقريبي:</em> ساعة ونصف.</li>
+</ol>
+
+<h3>مراجع الفصل</h3>
+<ol class="refs">
+  <li>وزارة التعليم. (١٤٣٦هـ). <i>الدليل التنظيمي للتربية الخاصة</i> (الإصدار الأول للعام الدراسي ١٤٣٦–١٤٣٧هـ). https://moe.gov.sa/en/aboutus/aboutministry/RPRLibrary/الدليل%20التنظيمي%20للتربية%20الخاصة.pdf</li>
+  <li>وزارة المعارف. (١٤٢٢هـ). <i>القواعد التنظيمية لمعاهد وبرامج التربية الخاصة</i>. https://moe.gov.sa/en/aboutus/aboutministry/RPRLibrary/القواعد%20التنظيمية%20لمعاهد%20وبرامج%20التربية%20الخاصة%201422%20هـ.pdf</li>
+  <li>Abu-Hamour, B. (2014a). A pilot study for standardizing curriculum-based measurement oral reading fluency (CBM ORF) in Arabic. <i>Journal of the International Association of Special Education, 15</i>(1), 16–26.</li>
+  <li>Abu-Hamour, B. (2014b). Using Arabic word identification fluency to monitor first-grade reading progress. <i>Dyslexia, 20</i>(2), 167–174. https://doi.org/10.1002/dys.1472</li>
+  <li>Almulla, A. A., &amp; Mahama, I. (2026). Elementary teachers' perspectives on RTI programmes in supporting students with learning disabilities in Saudi Arabia. <i>Humanities and Social Sciences Communications, 13</i>(1), Article 974. https://doi.org/10.1057/s41599-026-07376-9</li>
+  <li>Altheiabi, A. S., Bagadood, N. H., &amp; Sulaimani, M. F. (2025). Perceptions of learning difficulty teachers regarding the barriers to applying the response to the intervention model in Saudi Arabia. <i>Australian Journal of Learning Difficulties, 30</i>(1), 75–92. https://doi.org/10.1080/19404158.2025.2473425</li>
+  <li>Ardoin, S. P., Christ, T. J., Morena, L. S., Cormier, D. C., &amp; Klingbeil, D. A. (2013). A systematic review and summarization of the recommendations and research surrounding curriculum-based measurement of oral reading fluency (CBM-R) decision rules. <i>Journal of School Psychology, 51</i>(1), 1–18. https://doi.org/10.1016/j.jsp.2012.09.004</li>
+  <li>Ashlock, R. B. (2010). <i>Error patterns in computation: Using error patterns to help each student learn</i> (10th ed.). Allyn &amp; Bacon.</li>
+  <li>Barth, A. E., Stuebing, K. K., Anthony, J. L., Denton, C. A., Mathes, P. G., Fletcher, J. M., &amp; Francis, D. J. (2008). Agreement among response to intervention criteria for identifying responder status. <i>Learning and Individual Differences, 18</i>(3), 296–307.</li>
+  <li>Castles, A., Rastle, K., &amp; Nation, K. (2018). Ending the reading wars: Reading acquisition from novice to expert. <i>Psychological Science in the Public Interest, 19</i>(1), 5–51. https://doi.org/10.1177/1529100618772271</li>
+  <li>Christ, T. J. (2008). Best practices in problem analysis. In A. Thomas &amp; J. Grimes (Eds.), <i>Best practices in school psychology V</i> (pp. 159–176). National Association of School Psychologists.</li>
+  <li>Cohen, J. (1960). A coefficient of agreement for nominal scales. <i>Educational and Psychological Measurement, 20</i>(1), 37–46. https://doi.org/10.1177/001316446002000104</li>
+  <li>Cooper, J. O., Heron, T. E., &amp; Heward, W. L. (2020). <i>Applied behavior analysis</i> (3rd ed.). Pearson.</li>
+  <li>Deno, S. L. (1985). Curriculum-based measurement: The emerging alternative. <i>Exceptional Children, 52</i>(3), 219–232.</li>
+  <li>Goodman, K. S. (1969). Analysis of oral reading miscues: Applied psycholinguistics. <i>Reading Research Quarterly, 5</i>(1), 9–30.</li>
+  <li>Hasbrouck, J., &amp; Tindal, G. (2017). <i>An update to compiled ORF norms</i> (Technical Report No. 1702). Behavioral Research and Teaching, University of Oregon.</li>
+  <li>Hosp, M. K., Hosp, J. L., &amp; Howell, K. W. (2016). <i>The ABCs of CBM: A practical guide to curriculum-based measurement</i> (2nd ed.). Guilford.</li>
+  <li>Koretz, D., Stecher, B., Klein, S., &amp; McCaffrey, D. (1994). The Vermont portfolio assessment program: Findings and implications. <i>Educational Measurement: Issues and Practice, 13</i>(3), 5–16. https://doi.org/10.1111/j.1745-3992.1994.tb00443.x</li>
+  <li>Landis, J. R., &amp; Koch, G. G. (1977). The measurement of observer agreement for categorical data. <i>Biometrics, 33</i>(1), 159–174. https://doi.org/10.2307/2529310</li>
+  <li>Mahfouz, M. A. S., &amp; Mohamed, A. H. H. (2023). Using word reading fluency curriculum-based measurements to monitor students' reading progress in grade 2. <i>Education Sciences, 13</i>(2), Article 217. https://doi.org/10.3390/educsci13020217</li>
+  <li>Paulson, F. L., Paulson, P. R., &amp; Meyer, C. A. (1991). What makes a portfolio a portfolio? <i>Educational Leadership, 48</i>(5), 60–63.</li>
+  <li>Sarouphim, K. M. (2009). The use of a performance assessment for identifying gifted Lebanese students: Is DISCOVER effective? <i>Journal for the Education of the Gifted, 33</i>(2), 275–295. https://doi.org/10.1177/016235320903300206</li>
+  <li>U.S. Department of Education, Office of Special Education Programs. (2011). <i>A response to intervention (RTI) process cannot be used to delay-deny an evaluation for eligibility under IDEA</i> (OSEP Memo 11-07).</li>
+</ol>
+
+<div class="endmark" aria-hidden="true">✦ ✦ ✦</div>
+<nav class="pager"><a href="ch03.html"><small>الفصل السابق</small><b>الأساليب الرسمية المقننة</b></a><a class="next" href="ch05.html"><small>الفصل التالي</small><b>الأساليب البديلة</b></a></nav>
+</div>
+</body>
+</html>

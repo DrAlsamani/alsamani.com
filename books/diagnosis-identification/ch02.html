@@ -1,0 +1,709 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>الفصل الثاني: أساسيات القياس</title>
+<link rel="stylesheet" href="assets/book.css">
+<style>
+.bell text{font-family:var(--f-ui)}
+.bell .curve{fill:none;stroke:var(--ink);stroke-width:2}
+.bell .a1{fill:var(--accent);opacity:.32}
+.bell .a2{fill:var(--accent);opacity:.18}
+.bell .a3{fill:var(--accent);opacity:.08}
+.bell .sd{stroke:var(--line);stroke-width:1}
+.bell .axis{stroke:var(--ink-2);stroke-width:1.2}
+.bell .pct{fill:var(--ink);font-size:14px;font-weight:700}
+.bell .pcts{fill:var(--ink-2);font-size:12px}
+.bell .row{fill:var(--ink);font-size:13.5px;font-variant-numeric:tabular-nums}
+.bell .row.hl{fill:var(--accent);font-weight:700}
+.bell .row.hl{direction:ltr;unicode-bidi:bidi-override}
+.bell .lbl{fill:var(--ink-2);font-size:12.5px;font-weight:600}
+.bell .band{fill:var(--paper-2)}
+.ci{direction:ltr;font-family:var(--f-ui);position:relative;padding-top:56px;margin:8px 4px}
+.ci .track{position:relative;height:36px;border-bottom:1.5px solid var(--ink-2)}
+.ci .bandci{position:absolute;top:6px;height:24px;background:var(--accent-soft);border:2px solid var(--accent);border-radius:6px}
+.ci .pt{position:absolute;top:10px;width:16px;height:16px;border-radius:50%;background:var(--accent);transform:translateX(-50%);box-shadow:0 0 0 3px var(--paper)}
+.ci .cut{position:absolute;top:-44px;bottom:-6px;border-left:2px dashed var(--warn)}
+.ci .cut span{position:absolute;top:0;left:6px;white-space:nowrap;font-size:12.5px;font-weight:700;color:var(--warn);direction:rtl}
+.ci .ticks{position:relative;height:28px}
+.ci .ticks span{position:absolute;top:6px;transform:translateX(-50%);font-size:12.5px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.ci .ticks span::before{content:"";position:absolute;left:50%;top:-10px;height:6px;width:1px;background:var(--ink-2)}
+.ci .lab{position:absolute;top:-22px;transform:translateX(-50%);font-size:13px;font-weight:700;color:var(--accent);white-space:nowrap;direction:rtl}
+.gap{display:grid;gap:14px;font-family:var(--f-ui)}
+.gap .g{display:grid;grid-template-columns:minmax(0,13rem) 1fr;gap:14px;align-items:center;font-size:14.5px}
+.gap .bar{height:26px;border-radius:6px;background:var(--example);opacity:.85;display:flex;align-items:center;justify-content:flex-end;padding-inline:10px;color:var(--paper);font-weight:700;font-size:13px;min-width:max-content}
+@media (max-width:560px){.gap .g{grid-template-columns:1fr}}
+.refkinds{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0}
+.refkinds>div{border:1.5px solid var(--line);border-radius:14px;padding:16px 18px;min-width:0}
+.refkinds h5{font-family:var(--f-display);font-size:19px;margin:0 0 4px;font-weight:700}
+.refkinds .q{font-family:var(--f-ui);font-weight:700;color:var(--accent);font-size:14.5px;margin-bottom:8px}
+.refkinds p{font-size:16px;line-height:1.9;margin:0 0 8px}
+.refkinds .ex{font-family:var(--f-ui);font-size:14px;color:var(--ink-2);background:var(--paper-2);border-radius:8px;padding:8px 12px;line-height:1.8}
+@media (max-width:600px){.refkinds{grid-template-columns:1fr}}
+.target{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;font-family:var(--f-ui);text-align:center}
+.target>div{min-width:0}
+.target svg{width:100%;max-width:170px;height:auto}
+.target b{display:block;font-size:15px;margin-top:6px}
+.target span{font-size:13px;color:var(--ink-2);line-height:1.7;display:block}
+.target .ring{fill:none;stroke:var(--line);stroke-width:1.5}
+.target .bull{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.5}
+.target .hit{fill:var(--ink)}
+@media (max-width:560px){.target{grid-template-columns:1fr}}
+.svgfig{direction:ltr}
+.svgfig text{font-family:var(--f-ui)}
+.svgfig .ax{stroke:var(--ink-2);stroke-width:1.2}
+.svgfig .gr{stroke:var(--line);stroke-width:1}
+.svgfig .tk{fill:var(--ink-2);font-size:12.5px}
+.svgfig .lb{fill:var(--ink);font-size:13.5px;font-weight:700}
+.svgfig .lbs{fill:var(--ink-2);font-size:12px}
+.svgfig .ca{fill:none;stroke:var(--accent);stroke-width:2.4}
+.svgfig .cb{fill:none;stroke:var(--example);stroke-width:2.4;stroke-dasharray:8 5}
+.svgfig .ta{fill:var(--accent);font-size:12.5px;font-weight:700}
+.svgfig .tb{fill:var(--example);font-size:12.5px;font-weight:700}
+.svgfig .ph{stroke:var(--ink-2);stroke-width:1;stroke-dasharray:2 4}
+</style>
+<meta name="robots" content="noindex,nofollow"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap"><link rel="stylesheet" href="assets/platform.css"><script>window.BOOK={slug:"diagnosis-identification",cur:"ch02.html"}</script><script src="assets/platform.js" defer></script>
+</head>
+<body>
+<div class="bp-bar" dir="rtl"><div class="bp-in">
+<a class="bp-home" href="../../index.html">د. عمر عبدالله الصمعاني</a><span class="bp-sep">/</span><a href="../index.html">الكتب</a><span class="bp-sep">/</span><a href="index.html" class="bp-book">المرجع في التشخيص والتعرف على ذوي الاستثنائية</a>
+<span class="bp-sp"></span><span class="bp-tools"><button class="bp-ic" type="button" data-rd="z-" aria-label="تصغير الخط" title="تصغير الخط">أ−</button><button class="bp-ic" type="button" data-rd="z+" aria-label="تكبير الخط" title="تكبير الخط">أ+</button><button class="bp-ic" type="button" data-rd="theme" aria-label="الوضع الليلي" title="الوضع الليلي/النهاري">ليلي</button></span><a class="bp-btn" href="pdf/ch02.pdf" download>تحميل الفصل PDF</a><button class="bp-btn" type="button" data-share>مشاركة</button><button class="bp-btn" type="button" data-bp="search">بحث</button><button class="bp-btn solid" type="button" data-bp="toc">المحتويات</button></div></div>
+<div class="bp-share" id="bpShare" hidden dir="rtl"><b>مشاركة هذه الصفحة</b><button type="button" data-sh="copy">نسخ الرابط</button><button type="button" data-sh="native" hidden>مشاركة…</button><a data-sh="wa" target="_blank" rel="noopener">واتساب</a><a data-sh="x" target="_blank" rel="noopener">X</a><a data-sh="li" target="_blank" rel="noopener">LinkedIn</a><a data-sh="tg" target="_blank" rel="noopener">تيليجرام</a><a data-sh="mail">البريد</a><small>لمشاركة قسم بعينه: مرّر المؤشر على عنوانه واضغط ¶</small></div>
+<div class="bp-drawer" id="bpDrawer" hidden dir="rtl"><div class="bp-panel" role="dialog" aria-label="المحتويات والبحث">
+<div class="bp-head"><b>المرجع في التشخيص والتعرف على ذوي الاستثنائية</b><button type="button" class="bp-x" data-bp="close" aria-label="إغلاق">×</button></div>
+<div class="bp-search"><input id="bpQ" type="search" placeholder="ابحث في نص الكتاب…" autocomplete="off"><div id="bpRes"></div></div>
+<nav class="bp-toc" id="bpToc"></nav>
+<div class="bp-links"><a href="elements.html">عناصر الكتاب: الأشكال والجداول والأدوات</a><a href="index.html#downloads">تحميل الكتاب</a></div>
+</div></div>
+<div class="page">
+
+<nav class="booknav"><a href="index.html">→ المرجع في التشخيص والتعرف على ذوي الاستثنائية</a><span>الباب الأول: الأسس</span></nav>
+
+<header class="opener">
+  <div class="num" aria-hidden="true">٢</div>
+  <div>
+    <div class="kicker">الفصل الثاني</div>
+    <h1>أساسيات القياس</h1>
+  </div>
+  <p class="sub">ماذا تعني درجة ٧٨؟ وما الفرق بين الرتبة المئينية والنسبة المئوية؟ ولماذا يكتب الأخصائي بجوار الدرجة رقمين آخرين يحيطان بها؟ نقدم في هذا الفصل المفاتيح التي تُقرأ بها تقارير القياس على اختلافها، ونبين ما يدل عليه الرقم وما يقصر عن الدلالة عليه.</p>
+</header>
+
+<nav class="toc" aria-label="محتويات الفصل">
+  <b>في هذا الفصل</b>
+  <ol>
+    <li class="u"><a href="#intro">مقدمة</a></li>
+    <li value="1"><a href="#s1">المقاييس معيارية المرجع ومحكية المرجع</a></li>
+    <li value="2"><a href="#s2">المتوسط والانحراف المعياري</a></li>
+    <li value="3"><a href="#s3">المنحنى الطبيعي والدرجات المعيارية</a></li>
+    <li value="4"><a href="#s4">الرتب المئينية ومزالقها</a></li>
+    <li value="5"><a href="#s5">الثبات/الدقة والخطأ المعياري للقياس</a> (ومنه: <a href="#s5-1">الفروق بين الدرجات</a>، و<a href="#s5-2">الارتداد نحو المتوسط</a>، و<a href="#s5-3">الأرضية والسقف وتدرج البنود</a>، و<a href="#s5-4">نظرية الاستجابة للمفردة</a>)</li>
+    <li value="6"><a href="#s6">الصدق</a> (ومنه: <a href="#s6-1">العدالة والتحيز في القياس</a>)</li>
+    <li value="7"><a href="#s7">المعايير والتقنين وتكييف المقياس</a></li>
+    <li value="8"><a href="#s8">قراءة جدول درجات حقيقي الشكل</a></li>
+    <li value="9"><a href="#s9">الأخلاقيات والمسؤولية المهنية</a></li>
+    <li class="u"><a href="#conclusion">خاتمة</a></li>
+    <li value="10"><a href="#s10">الخلاصة والمسرد والأنشطة</a></li>
+  </ol>
+</nav>
+
+<div class="scene">
+  <span class="lbl">مشهد من اجتماع الفريق</span>
+  <p>تجلس أم ماجد في اجتماع المدرسة، وأمامها تقرير من ست صفحات. تقرأ فيه: «الدرجة الكلية ٧٢، الرتبة المئينية ٣، فترة الثقة ٦٥ إلى ٧٩». ترفع رأسها وتسأل المعلم: «هل يعني هذا أن ابني نجح بثلاثة في المئة؟ وهل لديه إعاقة أم لا؟»</p>
+  <p>يتردد المعلم. هو يعرف أن الرقم ليس نسبة نجاح، لكنه لا يعرف كيف يشرح ذلك، ولا لماذا كُتب في التقرير رقمان إضافيان حول الدرجة.</p>
+</div>
+<p>وسنعود إلى أم ماجد في ختام الفصل لنجيب عن سؤاليها إجابة دقيقة. والمفاهيم التي نعرضها هنا تتردد في فصول الفئات جميعها، إذ هي اللغة المشتركة التي تُكتب بها تقارير التشخيص كافة.</p>
+
+<h3>أهداف الفصل</h3>
+<p>بعد دراسة هذا الفصل، يُتوقع أن يكون القارئ قادرًا على أن:</p>
+<ol class="objectives">
+  <li>يصنّف نتيجة قياس معروضة بأنها معيارية المرجع أو محكية المرجع، ويعلل تصنيفه بالسؤال الذي تجيب عنه.</li>
+  <li>يحوّل الدرجة بين أنواع الدرجات المعيارية الشائعة، ويحدد موقعها على المنحنى الطبيعي وتصنيفها الوصفي.</li>
+  <li>يفسر الرتبة المئينية تفسيرًا صحيحًا، ويصحح عبارة تخلط بينها وبين النسبة المئوية أو العمر المكافئ.</li>
+  <li>يحسب الخطأ المعياري للقياس وفترة الثقة والخطأ المعياري للفرق، ويستعملها في الحكم على درجة قريبة من درجة القطع أو على فرق بين درجتين.</li>
+  <li>يحسب القيمتين التنبؤيتين الموجبة والسالبة من الحساسية والنوعية ونسبة الانتشار، ويفسر اختلافهما بين المسح العام والمجموعة المحالة.</li>
+  <li>يقوّم صلاحية أداة لطالب بعينه في ضوء مصادر أدلة الصدق الخمسة، والثبات، والمعايير، واللغة، وأدلة العدالة.</li>
+  <li>يحدد المبدأ الأخلاقي أو المهني الذي يمسه موقف تقييمي معروض، ويقترح تصرفًا يتسق معه.</li>
+</ol>
+
+<h2 id="intro" class="unnum">مقدمة</h2>
+<p>تصل نتائج القياس إلى المعلم والأسرة في صورة أرقام: درجة معيارية، ورتبة مئينية، وفترة ثقة، وتصنيف وصفي. والرتبة المئينية هي النسبة المئوية من أقران الطالب في عينة التقنين (المجموعة الممثلة التي استُخرجت منها معايير المقياس) الذين حصلوا على درجة أقل من درجته؛ فالرتبة ٨٤ تعني أن أداءه يفوق أداء ٨٤٪ منهم. ولكل رقم منها دلالة محددة وحدود لا يتجاوزها، والخطأ في قراءته يفضي إلى خطأ في القرار؛ كأن تُفهم الرتبة المئينية نسبةً للإجابات الصحيحة، كما فهمتها أم ماجد في المشهد الافتتاحي، أو تُعامل الدرجة رقمًا دقيقًا لا يحيط به خطأ، أو يُقطع بقرار حين تعبر فترة الثقة درجة القطع. فالحكم التشخيصي يعتمد في أكثر الفئات على موقع الطالب من أقرانه، وعلى دقة تقدير هذا الموقع، وعلى صلاحية الأداة لغرضها وللطالب الذي طُبقت عليه.</p>
+<p>نستهل الفصل بالتمييز بين المقاييس معيارية المرجع ومحكية المرجع (القسم ٢-١)، ثم نعرض المتوسط والانحراف المعياري (القسم ٢-٢)، والمنحنى الطبيعي والدرجات المعيارية وتصنيفاتها الوصفية (القسم ٢-٣)، والرتب المئينية ومزالقها (القسم ٢-٤). ونتناول بعد ذلك الثبات/الدقة والخطأ المعياري للقياس، وما يتصل بهما من فروق بين الدرجات وارتداد نحو المتوسط وأثر للأرضية والسقف (القسم ٢-٥)، ثم الصدق والحساسية والنوعية والعدالة (القسم ٢-٦)، فالمعايير والتقنين وتكييف المقياس (القسم ٢-٧). ونطبق ذلك على قراءة جدول درجات حقيقي الشكل (القسم ٢-٨)، ونختم بالأخلاقيات والمسؤولية المهنية ومستويات التأهيل (القسم ٢-٩).</p>
+
+
+<!-- 1 -->
+<h2 id="s1"><span class="sec">٢-١</span>المقاييس معيارية المرجع ومحكية المرجع</h2>
+<p>قبل أن نسأل «كم حصل الطالب؟» يجب أن نسأل: «مقارنة بماذا؟» فالدرجة وحدها لا معنى لها. ثمانون درجة قد تكون ممتازة في اختبار صعب، وضعيفة في اختبار سهل. ولهذا تنقسم المقاييس بحسب ما تُقارن به الدرجة إلى نوعين رئيسين:</p>
+<div class="refkinds">
+  <div>
+    <h5>المقاييس معيارية المرجع <span class="en">Norm-referenced</span></h5>
+    <div class="q">أين يقع الطالب مقارنة بأقرانه؟</div>
+    <p>تُقارن درجة الطالب بدرجات مجموعة كبيرة من أقرانه في العمر أو الصف، تُسمى <strong>عينة التقنين</strong>. والنتيجة تخبرنا بموقعه بينهم: في المتوسط، أو أعلى منه، أو أدنى منه.</p>
+    <div class="ex">مثال: اختبارات الذكاء، ومقاييس السلوك التكيفي، ومقاييس التقدير مثل مقياس جيليام لتقدير التوحد، الإصدار الثالث (<span class="en">Gilliam Autism Rating Scale, GARS-3</span>).</div>
+  </div>
+  <div>
+    <h5>المقاييس محكية المرجع <span class="en">Criterion-referenced</span></h5>
+    <div class="q">هل أتقن الطالب المهارة المطلوبة؟</div>
+    <p>تُقارن درجة الطالب بمستوى أداء محدد مسبقًا. والنتيجة تخبرنا بما يستطيع فعله وما لا يستطيع، بغض النظر عن أقرانه.</p>
+    <div class="ex">مثال: «يقرأ ٤٠ كلمة في الدقيقة بدقة ٩٥٪»، أو «يجمع عددين من منزلتين مع الحمل في ٨ من ١٠ مسائل».</div>
+  </div>
+</div>
+<p>والنوعان يكمل أحدهما الآخر. فالتشخيص يحتاج غالبًا إلى المقاييس معيارية المرجع، لأن السؤال فيه «هل أداء الطالب بعيد عن أقرانه بدرجة غير معتادة؟». أما التخطيط للتدريس فيحتاج إلى المقاييس محكية المرجع، لأن السؤال فيه «ما المهارة التالية التي يجب أن نعلمها؟».</p>
+<p>وقد تجمع الأداة الواحدة بين المنطقين. ومثالها <strong>القياس المبني على المنهج</strong>، وهو مقاييس قصيرة متكررة تُتابع بها قراءة الطالب أو حسابه أسبوعًا بعد أسبوع (ويعرّفه الفصل الرابع ويفصّل فيه). فهو مؤشر عام للنمو، تُفسَّر درجته معياريًا حين تُقارن بمعايير موسمية لأقران الصف، كالرتب المئينية في الخريف والشتاء والربيع، وتُفسَّر في الوقت نفسه بمقارنتها بهدف نمو محدد للطالب. فهو يجمع بين المرجعين معًا.</p>
+
+<div class="callout" data-k="example">
+  <div class="tag"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5h16v11H8l-4 4V5Z"/></svg>مثال يوضح الفرق</div>
+  <p>حصل سعد في الصف الرابع على الرتبة المئينية ٥٠ في اختبار مقنن للقراءة، أي أنه في منتصف أقرانه تمامًا. هذه معلومة معيارية المرجع، ولا تدل على وجود مشكلة. لكن معلمه لاحظ في اختبار محكي المرجع أنه لا يميز بين الحروف المتشابهة في الرسم إذا اختلفت نقاطها، مثل ب وت وث. وهذه معلومة لا يكشفها الاختبار الأول، وهي التي يحتاج إليها المعلم ليعرف ماذا يدرّسه غدًا.</p>
+</div>
+
+<!-- 2 -->
+<h2 id="s2"><span class="sec">٢-٢</span>المتوسط والانحراف المعياري</h2>
+<p>كل درجة معيارية مبنية على رقمين: <strong>المتوسط</strong> (<span class="en">Mean</span>)، وهو مركز درجات عينة التقنين، و<strong>الانحراف المعياري</strong> (<span class="en">Standard deviation, SD</span>)، وهو مقدار تشتت الدرجات حول ذلك المركز. فإذا كان الانحراف المعياري صغيرًا كانت درجات الناس متقاربة، وإذا كان كبيرًا كانت متباعدة.</p>
+<p>ولتقريب فكرة الانحراف المعياري، تخيل صفين في كل منهما عشرون طالبًا، ومتوسط الطول في الصفين ١٤٠ سنتيمترًا. في الصف الأول تتراوح الأطوال بين ١٣٥ و١٤٥، وفي الثاني بين ١٢٠ و١٦٠. المتوسط واحد، لكن التشتت مختلف. وطالب طوله ١٥٠ يُعد طويلًا جدًا في الصف الأول، وعاديًا نسبيًا في الصف الثاني. الانحراف المعياري هو الذي يخبرنا بذلك.</p>
+<p>ومن هنا جاءت القاعدة التي يقوم عليها التشخيص: نقيس بُعد الطالب عن المتوسط بعدد الانحرافات المعيارية، بدل عدد النقاط. فالبعد بانحرافين معياريين عن المتوسط يعني الشيء نفسه في أي اختبار، مهما كانت طريقة حساب درجاته.</p>
+
+<!-- 3 -->
+<h2 id="s3"><span class="sec">٢-٣</span>المنحنى الطبيعي والدرجات المعيارية</h2>
+<p>حين نقيس صفة مثل الذكاء أو الطول لدى عدد كبير من الناس، تتوزع الدرجات غالبًا على شكل جرس: أغلب الناس قريبون من المتوسط، ويقل عددهم كلما ابتعدنا عنه في أي اتجاه. هذا الشكل هو <strong>المنحنى الطبيعي</strong> (<span class="en">Normal curve</span>)، ومن خصائصه نسب ثابتة لا تتغير:</p>
+<ul>
+  <li>نحو ٦٨٪ من الناس يقعون بين انحراف معياري واحد تحت المتوسط وانحراف معياري واحد فوقه.</li>
+  <li>نحو ٩٥٪ يقعون بين انحرافين معياريين تحت المتوسط وانحرافين فوقه.</li>
+  <li>نحو ٢٪ فقط يقعون دون المتوسط بأكثر من انحرافين معياريين، ومثلهم تقريبًا فوقه بأكثر من انحرافين معياريين.</li>
+</ul>
+<p>والنقطة الأخيرة هي أصل الحدود التي تتكرر في هذا الكتاب. فحد «انحرافين معياريين دون المتوسط» يُستخدم في الإعاقة الفكرية، وحد «انحرافين معياريين فوق المتوسط» يظهر في كثير من تعريفات الموهبة. أي أن الفئتين تمثلان، بحسب هذا المعيار الإحصائي وحده، نحو ٢٪ من الناس في كل طرف.</p>
+
+<figure id="fig-2-1" class="fig-frame">
+  <svg class="bell" viewBox="0 0 760 372" role="img" aria-label="المنحنى الطبيعي مع أنواع الدرجات المعيارية المقابلة لكل انحراف معياري" style="width:100%;height:auto">
+    <path class="a3" d="M61.4 220 L61.4 218.2 L65.6 217.9 L69.7 217.5 L73.9 217.2 L78.0 216.7 L82.1 216.2 L86.3 215.7 L90.4 215.1 L94.6 214.4 L98.7 213.6 L102.9 212.8 L107.0 211.8 L111.1 210.7 L115.3 209.6 L119.4 208.3 L123.6 206.9 L127.7 205.3 L131.9 203.6 L136.0 201.8 L140.1 199.8 L144.3 197.7 L144.3 220 Z"/>
+    <path class="a3" d="M475.7 220 L475.7 197.7 L479.9 199.8 L484.0 201.8 L488.1 203.6 L492.3 205.3 L496.4 206.9 L500.6 208.3 L504.7 209.6 L508.9 210.7 L513.0 211.8 L517.1 212.8 L521.3 213.6 L525.4 214.4 L529.6 215.1 L533.7 215.7 L537.9 216.2 L542.0 216.7 L546.1 217.2 L550.3 217.5 L554.4 217.9 L558.6 218.2 L558.6 220 Z"/>
+    <path class="a2" d="M144.3 220 L144.3 197.7 L148.4 195.4 L152.6 192.9 L156.7 190.2 L160.9 187.3 L165.0 184.3 L169.1 181.1 L173.3 177.7 L177.4 174.1 L181.6 170.4 L185.7 166.4 L189.9 162.3 L194.0 158.1 L198.1 153.7 L202.3 149.1 L206.4 144.5 L210.6 139.7 L214.7 134.8 L218.9 129.9 L223.0 124.9 L227.1 119.9 L227.1 220 Z"/>
+    <path class="a2" d="M392.9 220 L392.9 119.9 L397.0 124.9 L401.1 129.9 L405.3 134.8 L409.4 139.7 L413.6 144.5 L417.7 149.1 L421.9 153.7 L426.0 158.1 L430.1 162.3 L434.3 166.4 L438.4 170.4 L442.6 174.1 L446.7 177.7 L450.9 181.1 L455.0 184.3 L459.1 187.3 L463.3 190.2 L467.4 192.9 L471.6 195.4 L475.7 197.7 L475.7 220 Z"/>
+    <path class="a1" d="M227.1 220 L227.1 119.9 L231.3 114.9 L235.4 109.9 L239.6 105.0 L243.7 100.2 L247.9 95.5 L252.0 90.9 L256.1 86.4 L260.3 82.2 L264.4 78.2 L268.6 74.4 L272.7 70.9 L276.9 67.7 L281.0 64.8 L285.1 62.3 L289.3 60.1 L293.4 58.3 L297.6 56.8 L301.7 55.8 L305.9 55.2 L310.0 55.0 L310.0 220 Z"/>
+    <path class="a1" d="M310.0 220 L310.0 55.0 L314.1 55.2 L318.3 55.8 L322.4 56.8 L326.6 58.3 L330.7 60.1 L334.9 62.3 L339.0 64.8 L343.1 67.7 L347.3 70.9 L351.4 74.4 L355.6 78.2 L359.7 82.2 L363.9 86.4 L368.0 90.9 L372.1 95.5 L376.3 100.2 L380.4 105.0 L384.6 109.9 L388.7 114.9 L392.9 119.9 L392.9 220 Z"/>
+    <path class="curve" d="M20.0 219.6 L28.3 219.5 L36.6 219.3 L44.9 219.0 L53.1 218.6 L61.4 218.2 L69.7 217.5 L78.0 216.7 L86.3 215.7 L94.6 214.4 L102.9 212.8 L111.1 210.7 L119.4 208.3 L127.7 205.3 L136.0 201.8 L144.3 197.7 L152.6 192.9 L160.9 187.3 L169.1 181.1 L177.4 174.1 L185.7 166.4 L194.0 158.1 L202.3 149.1 L210.6 139.7 L218.9 129.9 L227.1 119.9 L235.4 109.9 L243.7 100.2 L252.0 90.9 L260.3 82.2 L268.6 74.4 L276.9 67.7 L285.1 62.3 L293.4 58.3 L301.7 55.8 L310.0 55.0 L318.3 55.8 L326.6 58.3 L334.9 62.3 L343.1 67.7 L351.4 74.4 L359.7 82.2 L368.0 90.9 L376.3 100.2 L384.6 109.9 L392.9 119.9 L401.1 129.9 L409.4 139.7 L417.7 149.1 L426.0 158.1 L434.3 166.4 L442.6 174.1 L450.9 181.1 L459.1 187.3 L467.4 192.9 L475.7 197.7 L484.0 201.8 L492.3 205.3 L500.6 208.3 L508.9 210.7 L517.1 212.8 L525.4 214.4 L533.7 215.7 L542.0 216.7 L550.3 217.5 L558.6 218.2 L566.9 218.6 L575.1 219.0 L583.4 219.3 L591.7 219.5 L600.0 219.6"/>
+    <line class="sd" x1="61.4" y1="40" x2="61.4" y2="344"/><line class="sd" x1="144.3" y1="40" x2="144.3" y2="344"/><line class="sd" x1="227.1" y1="40" x2="227.1" y2="344"/><line class="sd" x1="310" y1="40" x2="310" y2="344"/><line class="sd" x1="392.9" y1="40" x2="392.9" y2="344"/><line class="sd" x1="475.7" y1="40" x2="475.7" y2="344"/><line class="sd" x1="558.6" y1="40" x2="558.6" y2="344"/>
+    <line class="axis" x1="20" y1="220" x2="600" y2="220"/>
+    <text class="pct" x="270" y="160" text-anchor="middle">٣٤٪</text>
+    <text class="pct" x="350" y="160" text-anchor="middle">٣٤٪</text>
+    <text class="pct" x="187" y="200" text-anchor="middle">١٤٪</text>
+    <text class="pct" x="433" y="200" text-anchor="middle">١٤٪</text>
+    <text class="pct" x="103" y="190" text-anchor="middle">٢٪</text>
+    <text class="pct" x="517" y="190" text-anchor="middle">٢٪</text>
+    <text class="pcts" x="310" y="32" text-anchor="middle">المتوسط</text>
+    <rect class="band" x="14" y="230" width="592" height="24" rx="4"/>
+    <text class="row hl" x="61.4" y="247" text-anchor="middle">−٣</text><text class="row hl" x="144.3" y="247" text-anchor="middle">−٢</text><text class="row hl" x="227.1" y="247" text-anchor="middle">−١</text><text class="row hl" x="310" y="247" text-anchor="middle">٠</text><text class="row hl" x="392.9" y="247" text-anchor="middle">+١</text><text class="row hl" x="475.7" y="247" text-anchor="middle">+٢</text><text class="row hl" x="558.6" y="247" text-anchor="middle">+٣</text>
+    <text class="lbl" x="684" y="247" text-anchor="middle">الانحراف المعياري</text>
+    <text class="row" x="61.4" y="276" text-anchor="middle">٥٥</text><text class="row" x="144.3" y="276" text-anchor="middle">٧٠</text><text class="row" x="227.1" y="276" text-anchor="middle">٨٥</text><text class="row" x="310" y="276" text-anchor="middle">١٠٠</text><text class="row" x="392.9" y="276" text-anchor="middle">١١٥</text><text class="row" x="475.7" y="276" text-anchor="middle">١٣٠</text><text class="row" x="558.6" y="276" text-anchor="middle">١٤٥</text>
+    <text class="lbl" x="684" y="276" text-anchor="middle">الدرجة المعيارية (١٠٠، ١٥)</text>
+    <text class="row" x="61.4" y="302" text-anchor="middle">١</text><text class="row" x="144.3" y="302" text-anchor="middle">٤</text><text class="row" x="227.1" y="302" text-anchor="middle">٧</text><text class="row" x="310" y="302" text-anchor="middle">١٠</text><text class="row" x="392.9" y="302" text-anchor="middle">١٣</text><text class="row" x="475.7" y="302" text-anchor="middle">١٦</text><text class="row" x="558.6" y="302" text-anchor="middle">١٩</text>
+    <text class="lbl" x="684" y="302" text-anchor="middle">الدرجة الموزونة (١٠، ٣)</text>
+    <text class="row" x="61.4" y="328" text-anchor="middle">٢٠</text><text class="row" x="144.3" y="328" text-anchor="middle">٣٠</text><text class="row" x="227.1" y="328" text-anchor="middle">٤٠</text><text class="row" x="310" y="328" text-anchor="middle">٥٠</text><text class="row" x="392.9" y="328" text-anchor="middle">٦٠</text><text class="row" x="475.7" y="328" text-anchor="middle">٧٠</text><text class="row" x="558.6" y="328" text-anchor="middle">٨٠</text>
+    <text class="lbl" x="684" y="328" text-anchor="middle">الدرجة التائية (٥٠، ١٠)</text>
+    <text class="row" x="61.4" y="358" text-anchor="middle">٠.١</text><text class="row" x="144.3" y="358" text-anchor="middle">٢</text><text class="row" x="227.1" y="358" text-anchor="middle">١٦</text><text class="row" x="310" y="358" text-anchor="middle">٥٠</text><text class="row" x="392.9" y="358" text-anchor="middle">٨٤</text><text class="row" x="475.7" y="358" text-anchor="middle">٩٨</text><text class="row" x="558.6" y="358" text-anchor="middle">٩٩.٩</text>
+    <text class="lbl" x="684" y="358" text-anchor="middle">الرتبة المئينية</text>
+  </svg>
+  <figcaption><b>شكل ٢-١:</b> المنحنى الطبيعي، وتحته أنواع الدرجات الشائعة مصفوفة بحسب موقعها. كل عمود يمثل الموقع نفسه بلغات مختلفة: ٧٠ في الدرجة الكلية لاختبار ذكاء تعادل ٤ في اختبار فرعي، وتعادل ٣٠ في مقياس بالدرجة التائية، وكلها تعني انحرافين معياريين دون المتوسط.</figcaption>
+</figure>
+
+<h3>أنواع الدرجات المعيارية</h3>
+<p>تحوّل الاختبارات الدرجة الخام (<span class="en">Raw score</span>)، أي عدد الإجابات الصحيحة، إلى درجة معيارية (<span class="en">Standard score</span>) لها متوسط وانحراف معياري ثابتان. والفائدة أن الدرجات المعيارية قابلة للمقارنة بين الأعمار والاختبارات. وأشهر أنواعها:</p>
+<div class="tw"><table id="tab-1" id="tab-2-1">
+  <caption>جدول ٢-١: أنواع الدرجات المعيارية الشائعة.</caption>
+  <thead><tr><th>النوع</th><th>المتوسط</th><th>الانحراف المعياري</th><th>أين تصادفه؟</th></tr></thead>
+  <tbody>
+    <tr><td>الدرجة الزائية (<span class="en">z</span>)</td><td class="num">٠</td><td class="num">١</td><td>في الحسابات والبحوث، وهي الأساس الذي تُشتق منه بقية الأنواع</td></tr>
+    <tr><td>الدرجة المعيارية</td><td class="num">١٠٠</td><td class="num">١٥</td><td>الدرجات الكلية والمؤشرات في اختبارات الذكاء والتحصيل ومقاييس السلوك التكيفي</td></tr>
+    <tr><td>الدرجة الموزونة</td><td class="num">١٠</td><td class="num">٣</td><td>الاختبارات الفرعية في مقاييس الذكاء، والمقاييس الفرعية في <span class="en">GARS-3</span></td></tr>
+    <tr><td>الدرجة التائية (<span class="en">T</span>)</td><td class="num">٥٠</td><td class="num">١٠</td><td>مقاييس التقدير السلوكية والانفعالية، ومنها كثير من مقاييس اضطراب ضعف الانتباه وفرط الحركة (<span class="en">Attention-Deficit/Hyperactivity Disorder, ADHD</span>)</td></tr>
+  </tbody>
+</table></div>
+<p>ولتحويل أي درجة إلى أخرى، نحولها أولًا إلى درجة زائية، ثم منها إلى النوع المطلوب:</p>
+<div class="formula">z = (X − M) ÷ SD<small>الدرجة الزائية = (درجة الطالب − المتوسط) ÷ الانحراف المعياري</small></div>
+<div class="worked">
+  <b class="h">مثال محلول</b>
+  <div class="step"><i>١</i><span>حصلت هند على درجة معيارية ٨٢ في اختبار ذكاء متوسطه ١٠٠ وانحرافه ١٥.</span></div>
+  <div class="step"><i>٢</i><span>الدرجة الزائية: <span class="ltr">(٨٢ − ١٠٠) ÷ ١٥ = −١.٢</span>، أي أنها دون المتوسط بانحراف معياري وخُمس.</span></div>
+  <div class="step"><i>٣</i><span>لو عُبر عنها بالدرجة التائية لكانت: <span class="ltr">٥٠ + (−١.٢ × ١٠) = ٣٨</span>.</span></div>
+  <div class="step"><i>٤</i><span>ورتبتها المئينية نحو ١٢، أي أن أداءها أعلى من نحو ١٢٪ من أقرانها في عينة التقنين.</span></div>
+</div>
+
+<div class="callout" data-k="warn">
+  <div class="tag"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3 2 20h20L12 3Z"/><path d="M12 10v4M12 17h.01"/></svg>انتبه إلى اتجاه الدرجة</div>
+  <p>في اختبارات القدرة، الدرجة الأعلى تعني أداءً أفضل. أما في كثير من مقاييس التقدير السلوكية، فالدرجة الأعلى تعني مشكلات أكثر. فدرجة تائية ٧٠ في اختبار قراءة ممتازة، وفي مقياس لفرط الحركة مقلقة. لذلك اقرأ دائمًا في دليل المقياس أو في التقرير ماذا تعني الدرجة المرتفعة.</p>
+</div>
+
+<h3>التصنيفات الوصفية</h3>
+<p>تترجم الاختبارات الدرجة المعيارية إلى وصف لفظي يسهل فهمه. وهذا مثال من تصنيفات مقياس وكسلر لذكاء الأطفال، الإصدار الخامس (<span class="en">Wechsler Intelligence Scale for Children, Fifth Edition, WISC-V</span>)، مع التسمية الإنجليزية الرسمية لكل فئة، لأن الأخصائي يقرأ كثيرًا تقارير مكتوبة بها (Wechsler, 2014):</p>
+<div class="tw"><table id="tab-2" id="tab-2-2">
+  <caption>جدول ٢-٢: التصنيفات الوصفية للدرجات المركبة في مقياس وكسلر لذكاء الأطفال، الإصدار الخامس.</caption>
+  <thead><tr><th>مدى الدرجة المعيارية</th><th>التصنيف الوصفي</th><th>النسبة التقريبية من الناس</th></tr></thead>
+  <tbody>
+    <tr><td class="num">١٣٠ فأكثر</td><td>مرتفع للغاية (<span class="en">Extremely High</span>)</td><td class="num">٢٪</td></tr>
+    <tr><td class="num">١٢٠–١٢٩</td><td>مرتفع جدًا (<span class="en">Very High</span>)</td><td class="num">٧٪</td></tr>
+    <tr><td class="num">١١٠–١١٩</td><td>متوسط مرتفع (<span class="en">High Average</span>)</td><td class="num">١٦٪</td></tr>
+    <tr><td class="num">٩٠–١٠٩</td><td>متوسط (<span class="en">Average</span>)</td><td class="num">٥٠٪</td></tr>
+    <tr><td class="num">٨٠–٨٩</td><td>متوسط منخفض (<span class="en">Low Average</span>)</td><td class="num">١٦٪</td></tr>
+    <tr><td class="num">٧٠–٧٩</td><td>منخفض جدًا (<span class="en">Very Low</span>)</td><td class="num">٧٪</td></tr>
+    <tr><td class="num">٦٩ فأقل</td><td>منخفض للغاية (<span class="en">Extremely Low</span>)</td><td class="num">٢٪</td></tr>
+  </tbody>
+</table></div>
+<p>ولهذا الجدول ثلاثة تنبيهات. الأول أن التسميات تختلف بين الاختبارات، وحتى بين إصدارات الاختبار الواحد. فالإصدار الرابع من المقياس نفسه كان يسمي المدى ٧٠–٧٩ «حدّيًا» (<span class="en">Borderline</span>)، ويسمي ما فوق ١٣٠ «متفوقًا جدًا» (<span class="en">Very Superior</span>). فإذا قرأت في تقرير أجنبي عبارة <span class="en">Very High</span> عن درجة ١٢٥، فاعلم أن فوقها فئة أعلى. والثاني أن فئة «المتوسط» هنا (٩٠–١٠٩) تصنيف وصفي خاص بمقاييس وكسلر، وهي أضيق من المدى ٨٥–١١٥ الذي يمثل انحرافًا معياريًا واحدًا حول المتوسط، وهو المدى المعتمد في رسوم هذا الكتاب. والثالث، وهو أهمها، أن التصنيف الوصفي ليس تشخيصًا. فعبارة «منخفض للغاية» تصف موقع الدرجة وحده، والحكم بالإعاقة الفكرية يحتاج إلى محكات أخرى كالسلوك التكيفي، أي مهارات الحياة اليومية التي يمارسها الطالب فعلًا في البيت والمدرسة (ويتناول الفصل السابع ذلك بالتفصيل).</p>
+
+<!-- 4 -->
+<h2 id="s4"><span class="sec">٢-٤</span>الرتب المئينية ومزالقها</h2>
+<p>الرتبة المئينية (<span class="en">Percentile rank</span>) أسهل الدرجات فهمًا في ظاهرها لدى الأسر، وأكثرها عرضة لسوء الفهم أيضًا. وهي تعني <strong>نسبة الأقران الذين حصلوا على درجة أقل من درجة الطالب</strong> في عينة التقنين. فالرتبة المئينية ٣٠ تعني أن الطالب تفوق على نحو ٣٠٪ من أقرانه، وأن نحو ٧٠٪ منهم تفوقوا عليه.</p>
+
+<h3>المزلق الأول: الخلط بينها وبين النسبة المئوية</h3>
+<p>الرتبة المئينية لا علاقة لها بنسبة الإجابات الصحيحة. فطالب أجاب عن ٨٠٪ من الأسئلة قد تكون رتبته المئينية ٢٠ إذا كان الاختبار سهلًا وأجاب أغلب أقرانه عن أكثر من ذلك. وهذا ما وقعت فيه أم ماجد حين ظنت أن ابنها «نجح بثلاثة في المئة».</p>
+
+<h3>المزلق الثاني: المسافات بين الرتب غير متساوية</h3>
+<p>لأن أغلب الناس يتجمعون حول المتوسط، فإن الانتقال بضع رتب مئينية قرب المتوسط يحتاج إلى فرق صغير في الأداء، بينما يحتاج الانتقال بالعدد نفسه من الرتب في الأطراف إلى فرق كبير. قارن بين هذين الانتقالين، وكلاهما بمقدار رتب متقاربة:</p>
+<figure id="fig-2-2" class="fig-frame">
+  <div class="gap" role="img" aria-label="شريطان أفقيان: الانتقال من الرتبة المئينية ٥٠ إلى ٦٠ يعادل نحو ٤ درجات معيارية، والانتقال من الرتبة ٩٠ إلى ٩٩ يعادل نحو ١٦ درجة معيارية">
+    <div class="g"><span>من الرتبة ٥٠ إلى الرتبة ٦٠</span><div class="bar" style="width:24%">٤ درجات معيارية</div></div>
+    <div class="g"><span>من الرتبة ٩٠ إلى الرتبة ٩٩</span><div class="bar" style="width:100%">١٦ درجة معيارية</div></div>
+  </div>
+  <figcaption><b>شكل ٢-٢:</b> ما يعادل كل انتقال بالدرجة المعيارية التي متوسطها ١٠٠ وانحرافها ١٥. عشر رتب قرب المتوسط تعادل نحو ٤ درجات، وتسع رتب في الطرف تعادل نحو ١٦ درجة.</figcaption>
+</figure>
+<p>ولهذا لا يُطرح بعض الرتب المئينية من بعض، ولا يُحسب متوسطها، ولا يُقاس بها تقدم الطالب. فإذا انتقل طالب من الرتبة ٥ إلى الرتبة ١٠، فقد يكون تقدمه أكبر بكثير مما يوحي به الرقمان.</p>
+
+<h3>المزلق الثالث: العمر المكافئ والصف المكافئ</h3>
+<p>العمر المكافئ (<span class="en">Age equivalent</span>) والصف المكافئ (<span class="en">Grade equivalent</span>) درجتان تعبّران عن الأداء بعمر أو صف دراسي. فقد يقرأ المعلم في تقرير أن «عمر الطالب القرائي المكافئ ٧ سنوات و٣ أشهر» وعمره الفعلي عشر سنوات، فيظن أنه يقرأ مثل طفل في السابعة. وهذا فهم غير دقيق. فالعمر المكافئ يعني فقط أن درجته الخام تساوي متوسط درجات الأطفال في ذلك العمر، ولا يعني أن مهاراته أو أخطاءه تشبه مهاراتهم وأخطاءهم. كما أن هذه الدرجات لا تتوزع بانتظام، ولا يتبين منها هل الفرق كبير قياسًا إلى أقرانه أم لا. ولهذا توصي معايير الاختبار التربوي والنفسي بالحذر الشديد في استخدامها (AERA et al., 2014)، ويُفضل الاعتماد على الدرجة المعيارية والرتبة المئينية.</p>
+
+<!-- 5 -->
+<h2 id="s5"><span class="sec">٢-٥</span>الثبات/الدقة والخطأ المعياري للقياس</h2>
+<p><strong>الثبات</strong> (<span class="en">Reliability</span>) هو اتساق نتائج المقياس. فلو طُبق الاختبار على الطالب نفسه مرتين في ظروف متشابهة، هل يحصل على درجتين متقاربتين؟ والميزان الذي يعطي وزنًا مختلفًا في كل مرة لا فائدة منه مهما كان دقيقًا في المتوسط. وتستعمل معايير الاختبار التربوي والنفسي المصطلح المركب «الثبات/الدقة» (<span class="en">Reliability/precision</span>)، لتشمل معاملات الثبات التقليدية وكل مؤشر آخر لدقة الدرجة، كالخطأ المعياري للقياس ودالة المعلومات التي سنعرضها في آخر هذا القسم (AERA et al., 2014).</p>
+
+<h3>أنواع الثبات</h3>
+<div class="tw"><table id="tab-3" id="tab-2-3">
+  <caption>جدول ٢-٣: أنواع الثبات والسؤال الذي يجيب عنه كل منها.</caption>
+  <thead><tr><th>النوع</th><th>السؤال الذي يجيب عنه</th><th>كيف يُحسب</th></tr></thead>
+  <tbody>
+    <tr><td>ثبات الإعادة</td><td>هل تبقى الدرجة مستقرة عبر الزمن؟</td><td>يُطبق الاختبار مرتين بفاصل زمني قصير، ويُحسب الارتباط بين التطبيقين</td></tr>
+    <tr><td>الاتساق الداخلي</td><td>هل تقيس بنود الاختبار الشيء نفسه؟</td><td>يُحسب من ارتباطات البنود في تطبيق واحد، ومن أشهره معامل ألفا كرونباخ (<span class="en">Cronbach's alpha</span>)</td></tr>
+    <tr><td>الثبات بين المقدّرين</td><td>هل يعطي مقدّران مختلفان الدرجة نفسها؟</td><td>يقدّر شخصان الطالب نفسه، ويُقارن تقديرهما. وهو مهم جدًا في مقاييس الملاحظة والتقدير</td></tr>
+    <tr><td>ثبات الصور المتكافئة</td><td>هل تعطي صورتان من الاختبار نتائج متقاربة؟</td><td>تُطبق صورتان متكافئتان، ويُحسب الارتباط بينهما</td></tr>
+  </tbody>
+</table></div>
+<p>ويُعبَّر عن الثبات بمعامل تتراوح قيمته بين الصفر والواحد. وقد اقترح سالفيا وزملاؤه (Salvia et al., 2017) مستويات مرجعية شائعة الاستخدام: ٠.٦٠ على الأقل حين تُستخدم الدرجات لوصف مجموعات، و٠.٨٠ على الأقل لقرارات المسح، و٠.٩٠ على الأقل للقرارات المهمة المتعلقة بفرد، كالتشخيص والتصنيف.</p>
+
+<figure id="fig-2-3" class="fig-frame">
+  <div class="target" aria-hidden="false">
+    <div>
+      <svg viewBox="0 0 120 120" role="img" aria-label="رميات متقاربة في المركز"><circle class="ring" cx="60" cy="60" r="52"/><circle class="ring" cx="60" cy="60" r="36"/><circle class="bull" cx="60" cy="60" r="18"/><circle class="hit" cx="57" cy="58" r="4"/><circle class="hit" cx="63" cy="61" r="4"/><circle class="hit" cx="59" cy="65" r="4"/><circle class="hit" cx="64" cy="55" r="4"/><circle class="hit" cx="55" cy="63" r="4"/></svg>
+      <b>ثابت وصادق</b><span>النتائج متقاربة، وتصيب ما يُراد قياسه</span>
+    </div>
+    <div>
+      <svg viewBox="0 0 120 120" role="img" aria-label="رميات متقاربة بعيدة عن المركز"><circle class="ring" cx="60" cy="60" r="52"/><circle class="ring" cx="60" cy="60" r="36"/><circle class="bull" cx="60" cy="60" r="18"/><circle class="hit" cx="86" cy="32" r="4"/><circle class="hit" cx="92" cy="36" r="4"/><circle class="hit" cx="88" cy="40" r="4"/><circle class="hit" cx="94" cy="30" r="4"/><circle class="hit" cx="84" cy="36" r="4"/></svg>
+      <b>ثابت غير صادق</b><span>النتائج متقاربة، لكنها تقيس شيئًا آخر</span>
+    </div>
+    <div>
+      <svg viewBox="0 0 120 120" role="img" aria-label="رميات متناثرة"><circle class="ring" cx="60" cy="60" r="52"/><circle class="ring" cx="60" cy="60" r="36"/><circle class="bull" cx="60" cy="60" r="18"/><circle class="hit" cx="30" cy="40" r="4"/><circle class="hit" cx="88" cy="70" r="4"/><circle class="hit" cx="55" cy="95" r="4"/><circle class="hit" cx="75" cy="25" r="4"/><circle class="hit" cx="40" cy="78" r="4"/></svg>
+      <b>غير ثابت</b><span>النتائج متناثرة، فلا يمكن أن يكون صادقًا</span>
+    </div>
+  </div>
+  <figcaption><b>شكل ٢-٣:</b> العلاقة بين الثبات والصدق بتشبيه الرماية. الثبات شرط للصدق، لكنه لا يكفي وحده.</figcaption>
+</figure>
+
+<h3>الخطأ المعياري للقياس</h3>
+<p>لا يوجد مقياس ثابت ثباتًا تامًا. فدرجة الطالب في أي يوم تتأثر بتعبه، وانتباهه، وتخمينه، وظروف الغرفة. ولذلك تُعد الدرجة التي نحصل عليها <strong>تقديرًا</strong> للدرجة الحقيقية (<span class="en">True score</span>)، أي الدرجة التي كان سيحصل عليها لو قيس دون أي خطأ. والخطأ المعياري للقياس (<span class="en">Standard Error of Measurement, SEM</span>) رقم يخبرنا بمقدار التذبذب المتوقع في درجة الطالب لو أعدنا قياسه مرات كثيرة:</p>
+<div class="formula">SEM = SD × √(1 − r)<small>الخطأ المعياري للقياس = الانحراف المعياري × الجذر التربيعي لـ (١ − معامل الثبات)</small></div>
+<p>ومنه نبني <strong>فترة الثقة</strong> (<span class="en">Confidence interval</span>): مدى من الدرجات نثق بنسبة معينة بأن الدرجة الحقيقية تقع فيه. ولفترة ثقة ٩٥٪ نضرب الخطأ المعياري في ١.٩٦ تقريبًا، ثم نضيف الناتج إلى الدرجة ونطرحه منها.</p>
+
+<div class="worked">
+  <b class="h">مثال محلول: درجة ماجد</b>
+  <div class="step"><i>١</i><span>حصل ماجد على درجة كلية ٧٢ في اختبار ذكاء انحرافه المعياري ١٥ ومعامل ثباته ٠.٩٥.</span></div>
+  <div class="step"><i>٢</i><span>الخطأ المعياري للقياس: <span class="ltr">١٥ × √(١ − ٠.٩٥) = ١٥ × ٠.٢٢٤ ≈ ٣.٤</span></span></div>
+  <div class="step"><i>٣</i><span>فترة الثقة ٩٥٪: <span class="ltr">٧٢ ± (١.٩٦ × ٣.٤) = ٧٢ ± ٦.٦</span>، أي من نحو ٦٥ إلى نحو ٧٩.</span></div>
+  <div class="step"><i>٤</i><span>النتيجة: نثق بنسبة ٩٥٪ بأن درجة ماجد الحقيقية في هذا الاختبار تقع بين ٦٥ و٧٩. وهذا المدى <strong>يعبر درجة القطع ٧٠</strong>.</span></div>
+</div>
+<figure id="fig-2-4" class="fig-frame">
+  <div class="ci" role="img" aria-label="محور درجات من ٥٥ إلى ٩٠، عليه درجة ماجد ٧٢ وشريط فترة الثقة من ٦٥ إلى ٧٩، وخط متقطع عند درجة القطع ٧٠ يقطع الشريط">
+    <div class="track">
+      <div class="cut" style="left:42.86%"><span>درجة القطع التقليدية ٧٠</span></div>
+      <div class="bandci" style="left:29.71%;width:37.71%"></div>
+      <div class="pt" style="left:48.57%"></div>
+      <div class="lab" style="left:48.57%">درجة ماجد ٧٢</div>
+    </div>
+    <div class="ticks"><span style="left:0%">٥٥</span><span style="left:14.29%">٦٠</span><span style="left:28.57%">٦٥</span><span style="left:42.86%">٧٠</span><span style="left:57.14%">٧٥</span><span style="left:71.43%">٨٠</span><span style="left:85.71%">٨٥</span><span style="left:100%">٩٠</span></div>
+  </div>
+  <figcaption><b>شكل ٢-٤:</b> درجة ماجد وفترة الثقة حولها. النقطة فوق درجة القطع، لكن الشريط يمتد على جانبيها، فلا يصح أن نقول إنه «تجاوزها» أو «لم يبلغها» بناءً على الرقم وحده.</figcaption>
+</figure>
+<p>و<strong>درجة القطع</strong> (<span class="en">Cut-off score</span>) هي الدرجة التي تفصل في قرار ما بين فئتين، كأن تفصل بين «يُحال» و«لا يُحال» في أداة مسح، أو بين «يستوفي المحك» و«لا يستوفيه» في محك تشخيصي. وسنستعمل هذا المصطلح في الكتاب كله.</p>
+<p>ولهذا السبب بالذات تنص الجمعية الأمريكية للإعاقات الفكرية والنمائية (<span class="en">American Association on Intellectual and Developmental Disabilities, AAIDD</span>) على مراعاة الخطأ المعياري للقياس حين تحدد القصور الدال في القدرة العقلية، فلا يُعامل الرقم ٧٠ على أنه فاصل قاطع (Schalock et al., 2021). فدرجة مثل ٧٢ أو ٧٤ لا تستبعد الإعاقة الفكرية تلقائيًا، ودرجة مثل ٦٨ لا تثبتها تلقائيًا. والذي يحسم هو اجتماع الأدلة، ولا سيما أدلة السلوك التكيفي.</p>
+
+<div class="callout" data-k="key">
+  <div class="tag"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9V16h7v-2.1A6 6 0 0 0 12 3Z"/></svg>القاعدة التي تحملها معك</div>
+  <p>كل درجة في تقرير تشخيصي هي نقطة داخل شريط. وكلما كان المقياس أقل ثباتًا، اتسع الشريط. وحين يقع الشريط على جانبي درجة القطع، يصبح القرار قرارًا مهنيًا يستند إلى أدلة أخرى إلى جانب الرقم.</p>
+</div>
+
+<div class="callout" data-k="pro">
+  <div class="tag"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19V5M4 19h16M8 15l3-4 3 2 5-6"/></svg>للمتخصص: لماذا لا تكون فترات الثقة في التقارير متماثلة حول الدرجة؟</div>
+  <p>الطريقة التي حسبنا بها فترة ماجد طريقة مبسطة، تبني الفترة حول الدرجة الملاحظة نفسها. أما كثير من الاختبارات الحديثة، ومنها مقياس وكسلر لذكاء الأطفال، فتبني الفترة حول <strong>الدرجة الحقيقية المقدَّرة</strong> (<span class="en">Estimated true score</span>)، وتستعمل في ذلك <strong>الخطأ المعياري للتقدير</strong> (<span class="en">Standard error of estimation, SEE</span>) (Sattler, 2018):</p>
+  <div class="formula">T′ = M + r (X − M)<br>SEE = SD × √(r (1 − r))<small>الدرجة الحقيقية المقدَّرة = المتوسط + الثبات × (الدرجة الملاحظة − المتوسط)؛ والخطأ المعياري للتقدير = الانحراف المعياري × الجذر التربيعي لـ [الثبات × (١ − الثبات)]</small></div>
+  <p>ولأن الثبات أقل من الواحد، تقع الدرجة الحقيقية المقدَّرة دائمًا أقرب إلى المتوسط من الدرجة الملاحظة. فلو طبقنا ذلك على ماجد لكانت درجته الحقيقية المقدَّرة <bdi dir="ltr">١٠٠ + ٠.٩٥ × (٧٢ − ١٠٠) ≈ ٧٣.٤</bdi>، والخطأ المعياري للتقدير نحو ٣.٣، فتمتد الفترة من نحو ٦٧ إلى نحو ٨٠. الفترة إذن مائلة نحو المتوسط، ولا تتماثل حول ٧٢، لكنها تعبر درجة القطع ٧٠ في الطريقتين. ولهذا يرى القارئ في جداول التقارير فترات مثل «٨٤: ٧٨–٩٢»، فيظنها خطأً مطبعيًا وهي ليست كذلك (انظر الجدول ٢-٨). وحين تقرأ تقريرًا، ابحث في دليل الاختبار عن الطريقة التي بُنيت بها فتراته قبل أن تقارنها بفترات اختبار آخر.</p>
+</div>
+
+<div class="callout" data-k="example">
+  <div class="tag"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="10" r="3"/><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11Z"/></svg>في السياق السعودي: درجات القطع في التنظيمات</div>
+  <p>ينص الدليل التنظيمي للتربية الخاصة على أن من شروط أهلية الطالب لبرامج الإعاقة الفكرية «ألا تزيد درجة ذكاء الطالب عن ٧٥ درجة حسب اختبار وكسلر، أو ٦٩ على اختبار ستانفورد بينيه (الصورة الخامسة)، أو ما يعادل أيًا منهما»، مع قصور في مجالين على الأقل من مجالات المهارات التكيفية، ويشترط «عدم الاكتفاء بنتائج مقياس واحد» وأن تُطبق الأدوات وتُفسَّر «من قبل متخصصين مؤهلين» (وزارة التعليم، ١٤٣٦هـ). وكانت القواعد التنظيمية السابقة تحدد مدى «القابل للتعلم» بدرجة ذكاء بين ٥٥ و٧٥ على وكسلر، أو بين ٥٢ و٧٣ على ستانفورد بينيه (وزارة المعارف، ١٤٢٢هـ). ويُفهم اختلاف الرقمين في القواعد من اختلاف الانحراف المعياري للإصدارات القديمة من ستانفورد بينيه (١٦ بدل ١٥)، فكلاهما يقع على البعد نفسه تقريبًا من المتوسط. أما في الدليل الحالي، فللمقياسين في إصداريهما الحاليين انحراف معياري واحد (١٥)، ولم نجد في النص تعليلًا لاختلاف الرقمين (٧٥ و٦٩). ولم نجد فيه كذلك نصًا يوجه إلى مراعاة الخطأ المعياري للقياس أو فترة الثقة عند تطبيق هذه الأرقام.</p>
+  <p><strong>سؤال للتأمل:</strong> طالبة درجتها ٧٧ على مقياس وكسلر، وفترة الثقة حولها ٧٢–٨٣، ولديها قصور واضح في ثلاثة مجالات تكيفية. كيف يتعامل الفريق مع درجة القطع ٧٥ في ضوء ما تعلمته في هذا القسم؟</p>
+</div>
+
+<h3 id="s5-1">٢-٥-١ الفروق بين الدرجات</h3>
+<p>كثير من قرارات التشخيص تُبنى على <strong>فرق</strong> بين درجتين: بين القدرة والتحصيل في نموذج التباعد، أو بين مؤشرين في اختبار ذكاء، أو بين درجة الطالب قبل التدخل وبعده. وكل درجة من الدرجتين تحمل خطأها، فيجتمع الخطآن في الفرق. ولذلك يكون الفرق أقل دقة من كل درجة منهما، ويحتاج إلى أن يكون كبيرًا نسبيًا قبل أن نطمئن إلى أنه فرق حقيقي.</p>
+<p>وحين نجد فرقًا بين درجتين نسأل سؤالين مختلفين. الأول سؤال <strong>الدلالة الإحصائية</strong>: هل الفرق أكبر من أن يُعزى إلى خطأ القياس وحده؟ والثاني سؤال <strong>الندرة</strong> أو <strong>معدل الأساس</strong> (<span class="en">Base rate</span>): ما نسبة من لديهم فرق بهذا الحجم أو أكبر في عينة التقنين نفسها؟ فقد يكون الفرق دالًا، أي حقيقيًا غير ناتج عن الخطأ، ومع ذلك شائعًا بين الأطفال العاديين، فلا يصح أن يُعد علامة على اضطراب. وأدلة الاختبارات الجيدة تعرض الأمرين في جدولين منفصلين.</p>
+
+<div class="callout" data-k="pro">
+  <div class="tag"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19V5M4 19h16M8 15l3-4 3 2 5-6"/></svg>للمتخصص: الخطأ المعياري للفرق</div>
+  <p>إذا كان للدرجتين الانحراف المعياري نفسه، يُحسب <strong>الخطأ المعياري للفرق</strong> (<span class="en">Standard error of the difference, SE<sub>diff</sub></span>) هكذا:</p>
+  <div class="formula">SE<sub>diff</sub> = SD × √(2 − r₁ − r₂)<small>الخطأ المعياري للفرق = الانحراف المعياري × الجذر التربيعي لـ (٢ − ثبات الدرجة الأولى − ثبات الدرجة الثانية)</small></div>
+  <div class="worked">
+    <b class="h">مثال محلول: فرق بين مؤشرين (من الجدول ٢-٨)</b>
+    <div class="step"><i>١</i><span>مؤشر الفهم اللفظي ٨٤ وثباته ٠.٩٤، ومؤشر البصري المكاني ١٠٢ وثباته ٠.٩٢. الفرق ١٨ درجة.</span></div>
+    <div class="step"><i>٢</i><span>الخطأ المعياري للفرق: <span class="ltr">١٥ × √(٢ − ٠.٩٤ − ٠.٩٢) = ١٥ × √٠.١٤ ≈ ١٥ × ٠.٣٧ ≈ ٥.٦</span></span></div>
+    <div class="step"><i>٣</i><span>الفرق الحرج عند مستوى دلالة ٠.٠٥: <span class="ltr">١.٩٦ × ٥.٦ ≈ ١١</span>. والفرق الملاحظ (١٨) أكبر منه، فهو <strong>دال إحصائيًا</strong>.</span></div>
+    <div class="step"><i>٤</i><span>ثم نسأل عن الندرة. لنفترض، للتوضيح فقط، أن جدول معدل الأساس في الدليل يبين أن نحو ١٥٪ من أطفال عينة التقنين لديهم فرق بهذا الحجم أو أكبر بين هذين المؤشرين. فالفرق حقيقي، لكنه يظهر لدى طفل من كل سبعة تقريبًا، فهو <strong>غير نادر</strong>، ولا يصلح وحده دليلًا على اضطراب.</span></div>
+    <div class="step"><i>٥</i><span>قارن ذلك بالفرق بين الذاكرة العاملة (٧٦، وثباتها ٠.٩٣) وسرعة المعالجة (٨٠، وثباتها ٠.٩٠): الخطأ المعياري للفرق <span class="ltr">١٥ × √٠.١٧ ≈ ٦.٢</span>، والفرق الحرج نحو ١٢، والفرق الملاحظ ٤ فقط. فلا يصح أن نقول إن سرعة المعالجة «أقوى» من الذاكرة العاملة.</span></div>
+  </div>
+  <p>ولثبات درجة الفرق نفسها صيغة توضح المشكلة من زاوية أخرى: <bdi dir="ltr">r<sub>diff</sub> = [(r₁ + r₂) ÷ ٢ − r₁₂] ÷ (١ − r₁₂)</bdi>، حيث r₁₂ الارتباط بين الدرجتين. فلو كان ثبات المؤشرين ٠.٩٤ و٠.٩٢، والارتباط بينهما ٠.٦٠، لكان ثبات الفرق <bdi dir="ltr">(٠.٩٣ − ٠.٦٠) ÷ ٠.٤٠ ≈ ٠.٨٣</bdi>، وهو أدنى من ثبات كل منهما. وكلما ارتفع الارتباط بين الدرجتين انخفض ثبات الفرق بينهما. وهذا أصل النقد الموجه إلى القرارات المبنية على الفروق وحدها، كما في نموذج التباعد بين القدرة والتحصيل ونماذج أنماط القوة والضعف (ويعود إليها الفصل السادس).</p>
+</div>
+
+<h3 id="s5-2">٢-٥-٢ الارتداد نحو المتوسط</h3>
+<p>حين يُعاد قياس من حصلوا على درجات متطرفة، يميل متوسط درجاتهم في المرة الثانية إلى الاقتراب من متوسط المجتمع. وهذه ظاهرة إحصائية تُسمى <strong>الارتداد نحو المتوسط</strong> (<span class="en">Regression toward the mean</span>)، وسببها أن الدرجة المتطرفة تجمع غالبًا بين قدرة مرتفعة (أو منخفضة) فعلًا وخطأ قياس صادف أن جاء في الاتجاه نفسه، والخطأ لا يتكرر بالضرورة في المرة الثانية. والدرجة الحقيقية المقدَّرة التي رأيناها في مربع «للمتخصص» السابق تطبيق مباشر لهذه الفكرة.</p>
+<p>ولهذه الظاهرة أثر عملي في موضعين. الأول في الموهبة: لو اخترنا الطلاب الذين تجاوزوا ١٣٠ في اختبار ثباته ٠.٩٠، فإن الدرجة المتوقعة لطالب حصل على ١٣٥ في إعادة الاختبار نفسه نحو <bdi dir="ltr">١٠٠ + ٠.٩٠ × ٣٥ ≈ ١٣٢</bdi>، وتنخفض أكثر إن كان الاختبار الثاني مختلفًا لا يرتبط بالأول إلا بنحو ٠.٨٠ (نحو ١٢٨). فانخفاض درجات بعض من اختيروا عند إعادة التقييم متوقع، ولا يعني أن القرار الأول كان خطأ ولا أن الطالب «فقد» موهبته (Lohman &amp; Korb, 2006). والثاني في الإعاقة وصعوبات التعلم: من اختيروا لدرجاتهم المنخفضة جدًا سترتفع درجات بعضهم عند إعادة القياس ولو لم يتلقوا أي تدخل، فلا يصح أن يُنسب هذا الارتفاع كله إلى البرنامج دون مجموعة مقارنة.</p>
+
+<h3 id="s5-3">٢-٥-٣ الأرضية والسقف وتدرج البنود</h3>
+<p><strong>أرضية</strong> الاختبار (<span class="en">Floor</span>) هي قدرته على التمييز بين المستويات المنخفضة جدًا من الأداء، و<strong>سقفه</strong> (<span class="en">Ceiling</span>) قدرته على التمييز بين المستويات المرتفعة جدًا. فإذا كانت بنود الاختبار السهلة قليلة، حصل الطفل ذو الأداء المنخفض جدًا والطفل ذو الأداء المنخفض على الدرجة الدنيا نفسها، ولم يعد الاختبار يفرق بينهما. وكذلك إذا كانت البنود الصعبة قليلة، تجمع المتفوقون عند أعلى درجة ممكنة. ويقف أدنى مدى الدرجة الكلية في كثير من اختبارات الذكاء الفردية عند نحو ٤٠، وأعلاه عند نحو ١٦٠. وهذا يكفي أغلب الأطفال، لكنه لا يكفي في موضعين: التمييز بين مستويات الشدة في الحالات الشديدة من الإعاقة الفكرية، وهو ما يعود إليه الفصل السابع، والتمييز بين الموهوبين بدرجة استثنائية، وهو ما يعود إليه الفصل الثاني عشر. ولهذا أصدر بعض الناشرين <strong>معايير ممتدة</strong> (<span class="en">Extended norms</span>) لطرفي التوزيع.</p>
+<p>ويرتبط بذلك <strong>تدرج البنود</strong> (<span class="en">Item gradient</span>)، أي مقدار تغير الدرجة المعيارية حين تزيد الدرجة الخام نقطة واحدة. فإذا كانت إجابة صحيحة واحدة إضافية تنقل الطفل من درجة موزونة ٤ إلى ٧، فالاختبار خشن في هذا المدى، وخطأ صغير في التصحيح أو لحظة سهو تغير التصنيف كله. وقد اقترح براكن حدودًا دنيا للكفاية الفنية شاعت في الأدبيات بعده، منها أن تنزل الدرجة الخام «١» في الاختبار الفرعي بالطفل إلى ما دون المتوسط بأكثر من انحرافين معياريين حتى تكون الأرضية كافية، وألا تُحدث زيادة الدرجة الخام نقطة واحدة تغيرًا يتجاوز ثلث انحراف معياري (Bracken, 1987). وتظهر هذه المشكلة أكثر ما تظهر عند صغار السن، وعند الأطفال في أدنى الأعمار التي يغطيها الاختبار أو أعلاها. فإذا كان الطفل في طرف المدى العمري للاختبار، فافحص جداول المعايير قبل أن تثق بالدرجة.</p>
+
+<h3 id="s5-4">٢-٥-٤ نظرية الاستجابة للمفردة</h3>
+<p>كل ما عرضناه حتى الآن ينتمي إلى <strong>النظرية الكلاسيكية للقياس</strong>، وهي تفترض خطأً معياريًا واحدًا لكل درجات الاختبار. لكن أغلب الاختبارات الحديثة بُنيت، كلها أو بعضها، بإطار آخر هو <strong>نظرية الاستجابة للمفردة</strong> (<span class="en">Item Response Theory, IRT</span>). ويكفي المعلم أن يعرف منها فكرتين: أن دقة الاختبار تتفاوت بتفاوت مستويات القدرة، فتكون أعلى حيث تتركز بنوده؛ وأن هذا هو ما يسمح بالاختبارات التكيفية المحوسبة، التي يختار فيها الحاسوب لكل طالب البنود المناسبة لمستواه.</p>
+
+<div class="callout" data-k="pro">
+  <div class="tag"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19V5M4 19h16M8 15l3-4 3 2 5-6"/></svg>للمتخصص: منحنى خصائص المفردة ودالة المعلومات</div>
+  <p>تصف النظرية كل بند بـ<strong>منحنى خصائص المفردة</strong> (<span class="en">Item characteristic curve</span>)، وهو يربط قدرة الطالب، ويُرمز لها بـ θ وتُعرض على مقياس يشبه الدرجة الزائية، باحتمال أن يجيب عن البند إجابة صحيحة. وأهم معالم المنحنى معلمتان: <strong>الصعوبة</strong> (b)، وهي مستوى القدرة الذي يصبح عنده احتمال الإجابة الصحيحة ٥٠٪، و<strong>التمييز</strong> (a)، وهو انحدار المنحنى عند تلك النقطة. وقد تُضاف معلمة ثالثة للتخمين في أسئلة الاختيار من متعدد (Embretson &amp; Reise, 2000).</p>
+  <figure id="fig-2-5" class="fig-frame">
+    <svg class="svgfig" viewBox="0 0 760 300" role="img" aria-label="رسمان متجاوران. في الأيسر منحنيا خصائص مفردتين على شكل حرف S: المفردة أ سهلة ومنحدرها معتدل ويبلغ احتمال الإجابة الصحيحة عليها ٥٠٪ عند قدرة ناقص واحد، والمفردة ب صعبة وشديدة الانحدار ويبلغ الاحتمال عليها ٥٠٪ عند قدرة زائد واحد. وفي الأيمن دالتا المعلومات للمفردتين: المفردة أ تعطي معلومات قليلة منتشرة حول ناقص واحد، والمفردة ب تعطي معلومات كثيرة مركزة حول زائد واحد" style="width:100%;height:auto">
+      <text class="lb" x="205" y="22" text-anchor="middle">منحنى خصائص المفردة</text>
+      <text class="lb" x="585" y="22" text-anchor="middle">دالة المعلومات</text>
+      <line class="gr" x1="70" y1="145" x2="340" y2="145"/>
+      <line class="ph" x1="160" y1="145" x2="160" y2="240"/><line class="ph" x1="250" y1="145" x2="250" y2="240"/>
+      <line class="ax" x1="70" y1="240" x2="340" y2="240"/><line class="ax" x1="70" y1="50" x2="70" y2="240"/>
+      <text class="tk" x="62" y="244" text-anchor="end">٠</text><text class="tk" x="62" y="149" text-anchor="end">٠.٥</text><text class="tk" x="62" y="54" text-anchor="end">١</text>
+      <path class="ca" d="M70.0 217.4 L79.0 213.0 L88.0 208.1 L97.0 202.4 L106.0 196.0 L115.0 188.9 L124.0 181.1 L133.0 172.7 L142.0 163.8 L151.0 154.5 L160.0 145.0 L169.0 135.5 L178.0 126.2 L187.0 117.3 L196.0 108.9 L205.0 101.1 L214.0 94.0 L223.0 87.6 L232.0 81.9 L241.0 77.0 L250.0 72.6 L259.0 69.0 L268.0 65.8 L277.0 63.1 L286.0 60.9 L295.0 59.0 L304.0 57.4 L313.0 56.1 L322.0 55.1 L331.0 54.2 L340.0 53.4"/>
+      <path class="cb" d="M70.0 239.9 L88.0 239.9 L106.0 239.7 L124.0 239.3 L142.0 238.4 L151.0 237.7 L160.0 236.6 L169.0 234.9 L178.0 232.6 L187.0 229.1 L196.0 224.2 L205.0 217.4 L214.0 208.1 L223.0 196.0 L232.0 181.1 L241.0 163.8 L250.0 145.0 L259.0 126.2 L268.0 108.9 L277.0 94.0 L286.0 81.9 L295.0 72.6 L304.0 65.8 L313.0 60.9 L322.0 57.4 L331.0 55.1 L340.0 53.4"/>
+      <text class="ta" x="98" y="176" text-anchor="middle">أ</text>
+      <text class="tb" x="276" y="150" text-anchor="middle">ب</text>
+      <text class="tk" x="70" y="258" text-anchor="middle">−٣</text><text class="tk" x="115" y="258" text-anchor="middle">−٢</text><text class="tk" x="160" y="258" text-anchor="middle">−١</text><text class="tk" x="205" y="258" text-anchor="middle">٠</text><text class="tk" x="250" y="258" text-anchor="middle">+١</text><text class="tk" x="295" y="258" text-anchor="middle">+٢</text><text class="tk" x="340" y="258" text-anchor="middle">+٣</text>
+      <text class="lbs" x="205" y="278" text-anchor="middle">القدرة (θ) — والمحور الرأسي: احتمال الإجابة الصحيحة</text>
+      <line class="ax" x1="450" y1="240" x2="720" y2="240"/><line class="ax" x1="450" y1="50" x2="450" y2="240"/>
+      <path class="ca" d="M450.0 220.1 L459.0 216.9 L468.0 213.4 L477.0 209.8 L486.0 206.2 L495.0 202.6 L504.0 199.4 L513.0 196.5 L522.0 194.4 L531.0 193.0 L540.0 192.5 L549.0 193.0 L558.0 194.4 L567.0 196.5 L576.0 199.4 L585.0 202.6 L594.0 206.2 L603.0 209.8 L612.0 213.4 L621.0 216.9 L630.0 220.1 L639.0 222.9 L648.0 225.5 L657.0 227.8 L666.0 229.7 L675.0 231.4 L684.0 232.8 L693.0 234.1 L702.0 235.1 L711.0 235.9 L720.0 236.6"/>
+      <path class="cb" d="M450.0 239.7 L468.0 239.4 L486.0 238.7 L504.0 237.2 L522.0 233.8 L531.0 230.9 L540.0 226.6 L549.0 220.3 L558.0 211.4 L567.0 198.9 L576.0 182.0 L585.0 160.2 L594.0 133.8 L603.0 104.8 L612.0 77.4 L621.0 57.4 L630.0 50.0 L639.0 57.4 L648.0 77.4 L657.0 104.8 L666.0 133.8 L675.0 160.2 L684.0 182.0 L693.0 198.9 L702.0 211.4 L711.0 220.3 L720.0 226.6"/>
+      <text class="ta" x="540" y="182" text-anchor="middle">أ</text>
+      <text class="tb" x="646" y="60" text-anchor="middle">ب</text>
+      <text class="tk" x="450" y="258" text-anchor="middle">−٣</text><text class="tk" x="495" y="258" text-anchor="middle">−٢</text><text class="tk" x="540" y="258" text-anchor="middle">−١</text><text class="tk" x="585" y="258" text-anchor="middle">٠</text><text class="tk" x="630" y="258" text-anchor="middle">+١</text><text class="tk" x="675" y="258" text-anchor="middle">+٢</text><text class="tk" x="720" y="258" text-anchor="middle">+٣</text>
+      <text class="lbs" x="585" y="278" text-anchor="middle">القدرة (θ) — والمحور الرأسي: مقدار المعلومات</text>
+    </svg>
+    <figcaption><b>شكل ٢-٥:</b> مفردتان افتراضيتان. المفردة «أ» (الخط المتصل) سهلة ومعتدلة التمييز، والمفردة «ب» (الخط المتقطع) صعبة وعالية التمييز. في الرسم الأيسر يبلغ احتمال الإجابة الصحيحة ٥٠٪ عند θ = −١ للمفردة «أ» وعند θ = +١ للمفردة «ب». وفي الرسم الأيمن تعطي كل مفردة أكبر قدر من المعلومات قرب صعوبتها، والمفردة الأعلى تمييزًا أغزر معلومات وأضيق نطاقًا.</figcaption>
+  </figure>
+  <p>ومن المنحنى تُشتق <strong>دالة المعلومات</strong> (<span class="en">Information function</span>)، وهي تبين مقدار ما يسهم به البند في دقة تقدير القدرة عند كل مستوى. ويُجمع ما تعطيه البنود كلها في <strong>دالة معلومات الاختبار</strong>، ويساوي الخطأ المعياري لتقدير القدرة عند أي مستوى مقلوب الجذر التربيعي للمعلومات عنده. فالاختبار الذي تتركز بنوده حول المتوسط يقيس الطلاب المتوسطين بدقة عالية، ويقيس الطرفين بدقة أقل، وهذه صياغة أدق لمشكلة الأرضية والسقف السابقة. أما <strong>الاختبار التكيفي المحوسب</strong> (<span class="en">Computerized adaptive testing, CAT</span>)، فيبدأ ببند متوسط الصعوبة، ثم يقدّر قدرة الطالب بعد كل إجابة، ويختار البند التالي من بنك البنود بحيث يعطي أكبر قدر من المعلومات عند ذلك التقدير. فيصل إلى دقة مقبولة ببنود أقل، ويواجه كل طالب بنودًا قريبة من مستواه. لكن صدق هذه الطريقة مرهون بمعايرة بنك البنود على عينة تشبه الطلاب الذين نقيسهم، وهو شرط يعود بنا إلى القسم ٢-٧.</p>
+</div>
+
+<!-- 6 -->
+<h2 id="s6"><span class="sec">٢-٦</span>الصدق</h2>
+<p>إذا كان الثبات يسأل «هل يقيس المقياس باتساق؟»، فالصدق (<span class="en">Validity</span>) يسأل «هل يقيس ما يُراد قياسه فعلًا؟ وهل تصح القرارات التي نبنيها على درجاته؟». والصدق في الفهم الحديث صفة لتفسير درجات المقياس في غرض معين، تتغير بتغير الغرض والمفحوص. فمقياس صادق في مسح أطفال في الثالثة قد لا يكون صادقًا في تشخيص مراهق. وتعد معايير الاختبار التربوي والنفسي الصدق مفهومًا واحدًا جامعًا، يُسمى أحيانًا <strong>الصدق البنائي</strong>، أي مدى دعم الأدلة لتفسير الدرجة بأنها تمثل البناء المقصود. فالبناء هو ما تشهد له الأدلة كلها مجتمعة. وتجمع المعايير هذه الأدلة من <strong>خمسة مصادر</strong> (AERA et al., 2014):</p>
+<div class="tw"><table id="tab-4" id="tab-2-4">
+  <caption>جدول ٢-٤: المصادر الخمسة لأدلة الصدق في معايير الاختبار التربوي والنفسي، مع أمثلة من تكييف المقاييس للبيئة العربية.</caption>
+  <thead><tr><th>مصدر الأدلة</th><th>السؤال</th><th>مثال</th></tr></thead>
+  <tbody>
+    <tr><td>المحتوى</td><td>هل تغطي البنود جوانب البناء تغطية مناسبة، وهل تناسب البيئة التي تُطبق فيها؟</td><td>مقياس لاضطراب طيف التوحد تغطي بنوده جانبيه الأساسيين في الدليل التشخيصي: صعوبات التواصل والتفاعل الاجتماعي، والسلوك النمطي والاهتمامات المحدودة. وفي النسخة العربية يراجع خبراء محليون كل بند: هل يصف سلوكًا يُتوقع ظهوره في البيت أو المدرسة السعودية؟</td></tr>
+    <tr><td>عمليات الاستجابة</td><td>هل يستعمل المفحوص أو المقدِّر العمليات التي يفترضها البناء حين يجيب؟</td><td>يُطلب من أطفال سعوديين أن يفكروا بصوت مسموع وهم يحلون بنود اختبار استدلال، أو يُسأل آباء عن فهمهم لعبارة في مقياس تقدير. فإذا تبين أن الطفل يخفق لأنه لا يعرف كلمة فصيحة في السؤال، فالبند يقيس المفردات لا الاستدلال</td></tr>
+    <tr><td>البنية الداخلية</td><td>هل تترابط البنود والأبعاد على النحو الذي تفترضه النظرية؟</td><td>التحليل العاملي للنسخة العربية: هل تحتفظ ببنية الأصل؟ فقد انتهى تحليل عاملي للنسخة العربية من مقياس تقدير التوحد الطفولي إلى نموذج من ثلاثة عوامل يضم ١٤ بندًا (Alotaibi &amp; Alotaibi, 2021)، ودعمت دراسة عُمانية لنظام تقييم السلوك التكيفي (ABAS-3) نموذج العامل العام الواحد لدى أطفال ذوي إعاقة فكرية (Emam et al., 2020)</td></tr>
+    <tr><td>العلاقات بمتغيرات أخرى</td><td>هل ترتبط الدرجات بما يُتوقع أن ترتبط به، وتتنبأ بالمحك، وتميز بين المجموعات؟</td><td>ارتبطت الصورة السعودية من مقياس وكسلر لذكاء أطفال ما قبل المدرسة والمرحلة الابتدائية، الإصدار الثالث، بالصورة السعودية من مقياس ستانفورد بينيه بمعامل ٠.٨١ (Ejbara, 2024). وفي تحقق من النسخة العربية لقائمة التوحد المعدلة للأطفال الصغار في تسع دول عربية بلغت الحساسية ٠.٨٦ والنوعية ٠.٨٠ (Seif Eldin et al., 2008)</td></tr>
+    <tr><td>العواقب</td><td>ما آثار استعمال الدرجات في القرارات، مقصودة كانت أو غير مقصودة؟</td><td>هل يؤدي استعمال مقياس في الترشيح لبرامج الموهوبين إلى تمثيل أقل من المتوقع لطلاب القرى أو لفئة بعينها؟ (ويعود إلى ذلك الفصل الرابع عشر)</td></tr>
+  </tbody>
+</table></div>
+<p>والتقسيم القديم إلى «صدق المحتوى» و«صدق المحك» و«الصدق البنائي» ما زال يرد في كثير من أدلة المقاييس والكتب العربية. ويقابل «صدق المحك» فيه جزءًا من المصدر الرابع، ويقابل «الصدق البنائي» الصدق كله في الفهم الحديث. أما المصدران الثاني والثالث فهما أهم ما نسأل عنه حين نقوّم نسخة معربة: هل يفهم الطفل العربي البند كما يُراد له؟ وهل احتفظت النسخة ببنية الأصل؟</p>
+
+<h3>الحساسية والنوعية، ولماذا تتغير قيمة النتيجة الموجبة</h3>
+<p>في أدوات المسح والتشخيص، يُعرض الصدق غالبًا، ضمن العلاقات بمتغيرات أخرى، بمفهومين: <strong>الحساسية</strong> (<span class="en">Sensitivity</span>)، وهي نسبة من تكشفهم الأداة بحق ممن لديهم الحالة، و<strong>النوعية</strong> (<span class="en">Specificity</span>)، وهي نسبة من تستبعدهم الأداة بحق ممن ليس لديهم الحالة. لكن هناك رقمين يهمان المعلم والأسرة أكثر. الأول <strong>القيمة التنبؤية الموجبة</strong> (<span class="en">Positive predictive value</span>): إذا جاءت نتيجة الطالب موجبة، فما احتمال أن تكون لديه الحالة فعلًا؟ والثاني <strong>القيمة التنبؤية السالبة</strong> (<span class="en">Negative predictive value</span>): إذا جاءت نتيجته سالبة، فما احتمال أن تكون الحالة غائبة فعلًا؟ وهذا الثاني هو أهم ما يُسأل عنه في المسح، لأن السالب يعني أن الطالب لن يُتابع.</p>
+<p>وهذان الاحتمالان يعتمدان على الأداة وعلى مدى انتشار الحالة في المجموعة التي نفحصها معًا. ولنأخذ مثالًا افتراضيًا بأرقام توضيحية: أداة مسح حساسيتها ٨٥٪ ونوعيتها ٩٥٪، طُبقت مرة على ١٠٠٠ طفل في مسح عام تنتشر الحالة بينهم بنسبة ٢٪، ومرة على ٢٠٠ طفل أحيلوا لوجود مخاوف وتنتشر الحالة بينهم بنسبة ٣٠٪:</p>
+<div class="tw"><table id="tab-5" id="tab-2-5">
+  <caption>جدول ٢-٥: الأداة نفسها (الحساسية ٨٥٪، والنوعية ٩٥٪) في مجموعتين تختلف فيهما نسبة الانتشار. أرقام افتراضية.</caption>
+  <thead><tr><th></th><th>مسح عام (١٠٠٠ طفل، الانتشار ٢٪)</th><th>مجموعة محالة (٢٠٠ طفل، الانتشار ٣٠٪)</th></tr></thead>
+  <tbody>
+    <tr><td>لديهم الحالة</td><td class="num">٢٠</td><td class="num">٦٠</td></tr>
+    <tr><td>موجب صحيح (كشفتهم الأداة)</td><td class="num">١٧</td><td class="num">٥١</td></tr>
+    <tr><td>سالب خاطئ (فاتتهم الأداة)</td><td class="num">٣</td><td class="num">٩</td></tr>
+    <tr><td>ليست لديهم الحالة</td><td class="num">٩٨٠</td><td class="num">١٤٠</td></tr>
+    <tr><td>موجب خاطئ</td><td class="num">٤٩</td><td class="num">٧</td></tr>
+    <tr><td>سالب صحيح</td><td class="num">٩٣١</td><td class="num">١٣٣</td></tr>
+    <tr style="background:var(--paper-2)"><td>القيمة التنبؤية الموجبة</td><td class="num">١٧ ÷ ٦٦ ≈ ٢٦٪</td><td class="num">٥١ ÷ ٥٨ ≈ ٨٨٪</td></tr>
+    <tr style="background:var(--paper-2)"><td>القيمة التنبؤية السالبة</td><td class="num">٩٣١ ÷ ٩٣٤ ≈ ٩٩.٧٪</td><td class="num">١٣٣ ÷ ١٤٢ ≈ ٩٤٪</td></tr>
+  </tbody>
+</table></div>
+<p>في المسح العام تكون ثلاثة أرباع النتائج الموجبة تقريبًا خاطئة، لكن النتيجة السالبة موثوقة جدًا. وفي المجموعة المحالة ينقلب الأمر: أغلب النتائج الموجبة صحيحة، لكن نحو طفل من كل ستة عشر ممن جاءت نتائجهم سالبة لديه الحالة فعلًا. ولهذا لا تُعد نتيجة المسح الموجبة تشخيصًا، ولا تُعد نتيجته السالبة في مجموعة عالية الخطر سببًا كافيًا لإغلاق الملف.</p>
+
+<h3 id="s6-1">٢-٦-١ العدالة والتحيز في القياس</h3>
+<p>تجعل معايير الاختبار التربوي والنفسي <strong>العدالة</strong> (<span class="en">Fairness</span>) أساسًا ثالثًا للقياس بجوار الصدق والثبات/الدقة، وتفرد لها فصلها الثالث بعنوان «العدالة في الاختبار» (AERA et al., 2014). والعدالة بهذا المعنى مسألة صدق في جوهرها: هل تعني الدرجة الشيء نفسه لطالب من مجموعة لغوية أو ثقافية أو جغرافية مختلفة، أو لطالب ذي إعاقة؟ ويُسمى الخلل في ذلك <strong>تحيز القياس</strong>، ويظهر في صور متعددة:</p>
+<div class="tw"><table id="tab-6" id="tab-2-6">
+  <caption>جدول ٢-٦: صور تحيز القياس وكيف تُفحص.</caption>
+  <thead><tr><th>الصورة</th><th>معناها</th><th>كيف تُفحص؟</th></tr></thead>
+  <tbody>
+    <tr><td>تحيز البناء (<span class="en">Construct bias</span>)</td><td>البناء نفسه لا يُعرَّف أو لا يظهر بالطريقة نفسها في المجموعتين، كأن يُقاس «السلوك الاجتماعي المناسب» بمعايير ثقافة واحدة</td><td>مراجعة الخبراء من الثقافتين، ومقارنة البنية العاملية</td></tr>
+    <tr><td>الأداء التفاضلي للبند (<span class="en">Differential item functioning, DIF</span>)</td><td>طالبان متساويان في القدرة من مجموعتين مختلفتين لا يتساوى احتمال إجابتهما عن بند بعينه</td><td>مقارنة أداء المجموعتين على كل بند بعد مطابقتهما في الدرجة الكلية أو القدرة المقدَّرة، ثم يراجع الخبراء البنود التي يظهر فيها الفرق</td></tr>
+    <tr><td>عدم تكافؤ القياس (<span class="en">Measurement non-invariance</span>)</td><td>العلاقة بين البنود والبناء تختلف بين المجموعتين، فلا تصح مقارنة درجاتهما مباشرة</td><td>اختبارات متدرجة في التحليل العاملي التوكيدي متعدد المجموعات: تماثل البنية، ثم تماثل التشبعات، ثم تماثل المقاطع</td></tr>
+    <tr><td>التحيز التنبئي (<span class="en">Predictive bias</span>)</td><td>الدرجة نفسها تتنبأ بأداء لاحق مختلف في المجموعتين</td><td>مقارنة خطوط الانحدار بين الدرجة والمحك في المجموعتين: اختلاف الميل أو المقطع دليل على التحيز</td></tr>
+  </tbody>
+</table></div>
+<p>والفرق في متوسطات المجموعات قد يكون حقيقيًا؛ فقد تختلف المجموعتان فعلًا في المهارة المقيسة لأسباب تتعلق بفرص التعلم، والمقياس يصف هذا الفرق بدقة. والتحيز هو أن تعني الدرجة نفسها شيئًا مختلفًا باختلاف المجموعة. ولا يكفي فحص الأداة؛ فالعدالة تشمل أيضًا إتاحة البناء لكل مفحوص، كأن يُقدَّم للطالب ضعيف البصر الاختبار بخط مكبر ما دام ذلك لا يغير ما يقيسه. أما العدالة في مراحل الإحالة والتحديد، ومؤشرات التمثيل النسبي، فيعود إليها الفصل الرابع عشر.</p>
+
+<!-- 7 -->
+<h2 id="s7"><span class="sec">٢-٧</span>المعايير والتقنين وتكييف المقياس</h2>
+<p>الدرجة المعيارية تعني «موقع الطالب بين أقرانه في عينة التقنين». و<strong>عينة التقنين</strong> (<span class="en">Norm sample</span>) هي المجموعة التي طُبق عليها المقياس لاستخراج معاييره. فإذا كانت عينة التقنين لا تشبه الطالب، فقدت الدرجة معناها. ولذلك نسأل عن أي مقياس ثلاثة أسئلة قبل أن نستعمله:</p>
+<ol>
+  <li><strong>من في عينة التقنين؟</strong> هل تمثل الأطفال الذين نقيسهم في عمرهم وبيئتهم ولغتهم؟ اختبار قُنن على أطفال أمريكيين يقارن الطفل السعودي بأطفال أمريكيين بدل أقرانه في بيئته.</li>
+  <li><strong>متى قُنن؟</strong> ارتفعت متوسطات الأداء في اختبارات الذكاء عبر الأجيال في كثير من الدول، وتُعرف هذه الظاهرة بأثر فلين (<span class="en">Flynn effect</span>) (Flynn, 1984). وقد قدّرها تحليل بَعدي، أي دراسة تجمع نتائج دراسات كثيرة إحصائيًا، بنحو نقطتين إلى ثلاث نقاط معيارية في العقد (Trahan et al., 2014). لكن الظاهرة ليست كونية ولا ثابتة الاتجاه، فقد رُصد تباطؤها أو انعكاسها في بعض الدول في العقود الأخيرة (Bratsberg &amp; Rogeberg, 2018). وحيث يوجد الأثر، تضخم المعايير القديمة درجات الأطفال اليوم، فتخفي إعاقة موجودة في طرف، وتزيد في الطرف الآخر أعداد من يُحدَّدون موهوبين. والدرس العملي واحد في الحالتين: اعرف سنة جمع المعايير، وتعامل بحذر مع الدرجات القريبة من درجات القطع حين تكون المعايير قديمة.</li>
+  <li><strong>بأي لغة وثقافة؟</strong> الترجمة وحدها لا تكفي. فالسؤال عن «الثلج» أو «عيد الشكر» مألوف لطفل في بيئة وغريب في أخرى.</li>
+</ol>
+
+<h3>من الترجمة إلى التقنين</h3>
+<p>ولتبسيط الطريق الذي يقطعه المقياس من ثقافة إلى أخرى، نميز في هذا الكتاب بين ثلاثة مستويات. وهذا التقسيم تبسيط تعليمي من المؤلف، مبني على ما تطلبه الإرشادات الدولية (انظر المربع التالي):</p>
+<div class="tw"><table id="tab-7" id="tab-2-7">
+  <caption>جدول ٢-٧: ثلاثة مستويات لنقل المقياس من ثقافة إلى أخرى (تبسيط من المؤلف).</caption>
+  <thead><tr><th>المستوى</th><th>ما يحدث</th><th>ما يمكن فعله بالدرجات</th></tr></thead>
+  <tbody>
+    <tr><td>الترجمة</td><td>نقل البنود إلى العربية حرفيًا أو قريبًا من ذلك</td><td>لا يصح استعمال المعايير الأصلية للحكم على الطفل</td></tr>
+    <tr><td>تكييف المقياس</td><td>تعديل البنود والأمثلة لتناسب الثقافة، مع الترجمة العكسية (إعادة ترجمة النسخة العربية إلى اللغة الأصلية ومقارنتها بالأصل)، ومراجعة الخبراء، وتحليل البنود، والتحقق من <strong>تكافؤ القياس</strong> بين النسختين ومن خلو البنود من <strong>الأداء التفاضلي</strong> (انظر ٢-٦-١)</td><td>أفضل من الترجمة، لكن المعايير الأصلية تبقى غير مناسبة</td></tr>
+    <tr><td>التقنين المحلي</td><td>تطبيق النسخة المكيفة على عينة ممثلة من المجتمع المحلي، واستخراج معايير جديدة، ودراسة الثبات والصدق في ذلك المجتمع</td><td>تصبح الدرجات المعيارية ذات معنى لأطفال ذلك المجتمع</td></tr>
+  </tbody>
+</table></div>
+
+<div class="callout" data-k="pro">
+  <div class="tag"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19V5M4 19h16M8 15l3-4 3 2 5-6"/></svg>للمتخصص: ما الذي تقوله إرشادات الهيئة الدولية للاختبارات فعلًا؟</div>
+  <p>تتألف إرشادات الهيئة الدولية للاختبارات في ترجمة الاختبارات وتكييفها، في إصدارها الثاني، من ثماني عشرة إرشادة موزعة على ست مجموعات، تتبع مراحل العمل، على خلاف مستويات النقل في جدولنا (International Test Commission, 2017):</p>
+  <ol>
+    <li><strong>الشروط المسبقة:</strong> الحصول على إذن صاحب الحقوق، والتحقق من أن البناء المقيس له معنى في الثقافة الجديدة قبل البدء.</li>
+    <li><strong>التطوير:</strong> الترجمة وتكييف البنود بفريق مؤهل في اللغتين والموضوع، وتجربة البنود على عينات صغيرة.</li>
+    <li><strong>التأكيد:</strong> جمع الأدلة التجريبية على تكافؤ النسختين: تكافؤ القياس، وفحص الأداء التفاضلي للبنود، والثبات، والصدق في المجتمع الجديد.</li>
+    <li><strong>التطبيق:</strong> ضبط تعليمات التطبيق وظروفه بما يقلل مصادر التحيز في المجتمع الجديد.</li>
+    <li><strong>مقاييس الدرجات والتفسير:</strong> لا تُقارن الدرجات بين المجتمعين إلا بقدر ما يسمح به مستوى التكافؤ الذي ثبت.</li>
+    <li><strong>التوثيق:</strong> توثيق كل تغيير أُجري على الأصل، وتقديم إرشادات لمن يستعمل النسخة الجديدة.</li>
+  </ol>
+  <p>فالتقنين المحلي في جدولنا يقابل تقريبًا اكتمال مرحلتي «التأكيد» و«مقاييس الدرجات» مع استخراج معايير جديدة. أما نسخة لم تمر بمرحلة التأكيد، فلا يكفي أن تكون ترجمتها متقنة.</p>
+</div>
+
+<div class="callout" data-k="example">
+  <div class="tag"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="10" r="3"/><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11Z"/></svg>في السياق السعودي: أين تقف معايير المقاييس المستعملة؟</div>
+  <p>تتفاوت حالة المقاييس المستعملة في المملكة تفاوتًا كبيرًا بين المستويات الثلاثة. ومن أمثلة ما وجدناه منشورًا:</p>
+  <ul>
+    <li><strong>مقياس وكسلر لذكاء الأطفال:</strong> التقنين السعودي الذي تذكره الأدبيات هو تقنين الصورة المعدلة (<span class="en">WISC-R</span>) للأعمار ٦–١٦ ضمن مشروع برنامج الكشف عن الموهوبين ورعايتهم بمدينة الملك عبدالعزيز للعلوم والتقنية (النافع وآخرون، ٢٠٠٠، كما ورد في Ejbara, 2024). ولم نجد تقنينًا سعوديًا منشورًا للإصدارين الرابع أو الخامس عند إعداد الكتاب. ومعنى ذلك في ضوء ما سبق أن معايير الإصدار المقنن محليًا قديمة، وأن معايير الإصدار الحديث غير محلية.</li>
+    <li><strong>مقياس وكسلر لذكاء أطفال ما قبل المدرسة والمرحلة الابتدائية، الإصدار الثالث:</strong> صورة سعودية طُبقت على ٧٨٨ طفلًا من ٤ سنوات إلى ٧ سنوات و٣ أشهر من منطقة جدة التعليمية بين عامي ٢٠١٨ و٢٠٢٢، واشتُقت من الصورة الأردنية (Ejbara, 2024). وهي عينة كبيرة، لكنها من منطقة واحدة.</li>
+    <li><strong>مقياس ستانفورد بينيه، الصورة الخامسة:</strong> تُستعمل له نسختان خليجيتان قارنت بينهما دراسة في منطقة الحدود الشمالية (محمد، ٢٠١٦)، ولم نجد تفاصيل عينتي التقنين فيهما في مصدر منشور.</li>
+    <li><strong>مقياس جيليام لتقدير التوحد، الإصدار الثالث:</strong> نسخة عربية دُرست على ١٧٨ مشاركًا في أعمار ٣ إلى ٢٢ سنة من بيئات تعليمية وإكلينيكية في المملكة، وبلغ معامل ألفا كرونباخ فيها ٠.٩٧ (Alasmari et al., 2024). وهي دراسة لخصائص النسخة، والمعايير الوطنية خطوة لاحقة.</li>
+  </ul>
+  <p><strong>سؤال للتأمل:</strong> أي هذه الأمثلة يصل إلى مستوى «التقنين المحلي» في الجدول ٢-٧؟ وماذا ينقص كلًّا منها ليصلح لطالب في مدينتك؟</p>
+</div>
+
+<div class="callout" data-k="myth">
+  <div class="tag"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5V14M12 17h.01"/></svg>مفاهيم خاطئة شائعة</div>
+  <ul>
+    <li><strong>«النسخة المترجمة بدقة تحمل صدق الأصل وثباته ومعاييره.»</strong> الصدق والثبات والمعايير خصائص لاستعمال الدرجات في مجتمع بعينه، ولا تنتقل مع الترجمة. لا بد من أدلة جديدة من المجتمع الجديد.</li>
+    <li><strong>«ما دام معامل الثبات مرتفعًا فالمقياس صادق.»</strong> الثبات شرط للصدق لا دليل عليه (انظر الشكل ٢-٣). فالمقياس قد يقيس باتساق شيئًا غير ما نريد.</li>
+    <li><strong>«كل فرق كبير بين درجتين يدل على مشكلة.»</strong> الفرق قد لا يكون دالًا إحصائيًا، وقد يكون دالًا لكنه شائع في عينة التقنين (انظر ٢-٥-١).</li>
+  </ul>
+</div>
+
+<div class="callout" data-k="warn">
+  <div class="tag"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3 2 20h20L12 3Z"/><path d="M12 10v4M12 17h.01"/></svg>قبل أن تثق بمقياس معرب</div>
+  <ul>
+    <li>هل النسخة مرخصة من الناشر الأصلي؟</li>
+    <li>هل أُجريت لها دراسة تكييف منشورة، أم تُرجمت فقط؟ وهل فُحص فيها تكافؤ القياس والأداء التفاضلي للبنود؟</li>
+    <li>هل لها معايير محلية؟ ومتى استُخرجت؟ ومن أي مناطق كانت العينة؟</li>
+    <li>هل نُشرت معاملات ثباتها وأدلة صدقها في البيئة المحلية، ومن أي المصادر الخمسة جاءت هذه الأدلة؟</li>
+  </ul>
+  <p>إذا كانت الإجابة عن أغلب هذه الأسئلة بالنفي، فاستعمل نتائج المقياس بحذر شديد، واقصرها على الوصف دون التشخيص، واذكر ذلك صراحة في التقرير.</p>
+</div>
+
+<!-- 8 -->
+<h2 id="s8"><span class="sec">٢-٨</span>قراءة جدول درجات حقيقي الشكل</h2>
+<p>تعرض تقارير اختبارات الذكاء عادة جدولًا يلخص الدرجات المركبة. ونعرض في الجدول ٢-٨ قيمًا افتراضية لطالب في العاشرة، على نمط مؤشرات مقياس وكسلر لذكاء الأطفال، الإصدار الخامس:</p>
+<div class="tw"><table id="tab-8" id="tab-2-8">
+  <caption>جدول ٢-٨: درجات افتراضية لطالب في العاشرة على نمط مؤشرات مقياس وكسلر لذكاء الأطفال، الإصدار الخامس.</caption>
+  <thead><tr><th>المؤشر</th><th>الدرجة المعيارية</th><th>الرتبة المئينية</th><th>فترة الثقة ٩٥٪</th><th>التصنيف الوصفي</th></tr></thead>
+  <tbody>
+    <tr><td>الفهم اللفظي</td><td class="num">٨٤</td><td class="num">١٤</td><td class="num">٧٨–٩٢</td><td>متوسط منخفض</td></tr>
+    <tr><td>البصري المكاني</td><td class="num">١٠٢</td><td class="num">٥٥</td><td class="num">٩٤–١١٠</td><td>متوسط</td></tr>
+    <tr><td>الاستدلال السائل</td><td class="num">٩٨</td><td class="num">٤٥</td><td class="num">٩١–١٠٥</td><td>متوسط</td></tr>
+    <tr><td>الذاكرة العاملة</td><td class="num">٧٦</td><td class="num">٥</td><td class="num">٧٠–٨٥</td><td>منخفض جدًا</td></tr>
+    <tr><td>سرعة المعالجة</td><td class="num">٨٠</td><td class="num">٩</td><td class="num">٧٣–٩١</td><td>متوسط منخفض</td></tr>
+    <tr style="background:var(--paper-2)"><td>الدرجة الكلية للذكاء</td><td class="num">٨٦</td><td class="num">١٨</td><td class="num">٨١–٩٢</td><td>متوسط منخفض</td></tr>
+  </tbody>
+</table></div>
+<p>بُنيت فترات الثقة في الجدول حول الدرجة الحقيقية المقدَّرة، كما في المقياس الأصلي، ولذلك لا تتماثل حول الدرجة (انظر مربع «للمتخصص» في ٢-٥). وقد افترضنا لها معاملات ثبات هي: ٠.٩٤ للفهم اللفظي والاستدلال السائل، و٠.٩٢ للبصري المكاني، و٠.٩٣ للذاكرة العاملة، و٠.٩٠ لسرعة المعالجة، و٠.٩٦ للدرجة الكلية للذكاء (<span class="en">Full Scale IQ, FSIQ</span>). فكيف يقرأ المعلم هذا الجدول؟</p>
+<ol>
+  <li><strong>انظر في الدرجة الكلية وحدود دلالتها أولًا.</strong> الدرجة الكلية ٨٦، وفترتها ٨١–٩٢، في المدى المتوسط المنخفض. وهي أثبت درجات الجدول وأقواها تنبؤًا بالتحصيل.</li>
+  <li><strong>ثم افحص الفروق من حيث دلالتها وندرتها قبل تفسير النمط.</strong> الفرق بين أعلى مؤشر وأدناه ٢٦ درجة. والسؤال الذي يعنينا: هل هو دال إحصائيًا؟ وهل هو نادر في عينة التقنين؟ وقد رأينا في ٢-٥-١ أن الفرق بين الفهم اللفظي والبصري المكاني دال لكنه غير نادر، وأن الفرق بين الذاكرة العاملة وسرعة المعالجة غير دال أصلًا. فإذا تبين أن الفروق دالة ونادرة معًا، صار للحديث عن «نمط» معنى، ولم تعد الدرجة الكلية وحدها تصف الطالب وصفًا كافيًا.</li>
+  <li><strong>لاحظ نقاط القوة.</strong> قدرته على الاستدلال والتفكير البصري في المتوسط. وهذه معلومة تعليمية مهمة: يمكن تقديم المعلومات الجديدة بصريًا، والاعتماد على قدرته على الاستنتاج.</li>
+  <li><strong>لاحظ نقاط الضعف وما قد تعنيه في الصف.</strong> الذاكرة العاملة وسرعة المعالجة منخفضتان. فقد يفقد التعليمات الطويلة، ويحتاج إلى وقت أطول لإنهاء المهام، وقد يبدو غير منتبه وهو في الحقيقة لا يجاري إيقاع الصف. وهذه فرضيات تنتظر التحقق بالملاحظة في الصف.</li>
+  <li><strong>اقرأ فترات الثقة.</strong> فترة الذاكرة العاملة تمتد من ٧٠ إلى ٨٥، فالقول إنها «منخفضة جدًا» في تصنيف المقياس صحيح للدرجة الملاحظة، لكن الفترة تمتد إلى المدى المتوسط المنخفض، فمقدار الانخفاض غير محسوم.</li>
+  <li><strong>اسأل: ماذا يعني هذا للتشخيص؟</strong> هذا الجدول وحده لا يشخص شيئًا. لكنه يدعو إلى النظر في احتمال صعوبات التعلم أو اضطراب ضعف الانتباه وفرط الحركة، وإلى جمع أدلة أخرى من التحصيل والملاحظة ومقاييس الانتباه.</li>
+</ol>
+
+<div class="callout" data-k="pro">
+  <div class="tag"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19V5M4 19h16M8 15l3-4 3 2 5-6"/></svg>للمتخصص: جدل علمي حول تحليل ملف القدرات</div>
+  <p>يدور في علم النفس المدرسي جدل قائم حول قيمة <strong>تحليل ملف القدرات</strong>، أي تفسير نمط القوة والضعف بين المؤشرات. فمن جهة، يرى ناقدوه أن المؤشرات لا تضيف إلا قليلًا إلى الدرجة الكلية في التنبؤ بالتحصيل، وأن ثبات الفروق بينها أدنى كثيرًا من ثبات الدرجة الكلية، وأن الأنماط لم تثبت فائدتها في اختيار تدخل تعليمي بعينه (McGill et al., 2018). ومن جهة أخرى، يرى المدافعون عنه أن التفسير المنضبط للمؤشرات، حين يقوم على فروق دالة ونادرة وتدعمه أدلة من خارج الاختبار، يعين على فهم الطالب وتوجيه التقييم اللاحق، ولا سيما مع مزدوجي الاستثنائية الذين قد تخفي الدرجة الكلية تباين قدراتهم (Kaufman et al., 2016). والموقف الذي يأخذ به هذا الكتاب وسط بينهما: تبدأ بالدرجة الكلية وحدود دلالتها، ولا تنتقل إلى تفسير النمط إلا بعد فحص الفروق إحصائيًا، وتتعامل مع النمط بوصفه فرضية تحتاج إلى أدلة أخرى. ويعود الفصل السادس إلى هذا الجدل في نماذج أنماط القوة والضعف.</p>
+</div>
+
+<!-- 9 -->
+<h2 id="s9"><span class="sec">٢-٩</span>الأخلاقيات والمسؤولية المهنية</h2>
+<p>يحتكم من يقيس الأطفال إلى نوعين من المراجع ينبغي ألا يُخلط بينهما. الأول <strong>مرجع فني</strong>، أهمه معايير الاختبار التربوي والنفسي التي تصدرها ثلاث جمعيات أمريكية (AERA et al., 2014). وهي تحدد ما ينبغي أن تستوفيه الاختبارات واستعمالها من صدق وثبات/دقة وعدالة، ويخصص فصلها الثالث للعدالة في الاختبار. ويكملها في الاستعمال الدولي إرشادات الهيئة الدولية للاختبارات في استعمال الاختبارات، وهي تفصل الكفايات التي يحتاج إليها من يستعمل الاختبارات (International Test Commission, 2001). والثاني <strong>مواثيق أخلاقية</strong> تصدرها الهيئات المهنية لأعضائها، ومنها المبادئ الأخلاقية ومدونة السلوك للجمعية الأمريكية لعلم النفس (American Psychological Association, 2017)، والمعايير المهنية للرابطة الوطنية للأخصائيين النفسيين المدرسيين، وفيها مبادئها الأخلاقية (National Association of School Psychologists, 2020)، والأخلاقيات والمعايير المهنية لمجلس الأطفال غير العاديين (Council for Exceptional Children, 2015). ومن المبادئ التي تتفق عليها هذه المراجع ما يمس عمل المعلم مباشرة:</p>
+<ul>
+  <li><strong>الموافقة المستنيرة:</strong> تعرف الأسرة سبب التقييم، وما سيُطبق، ومن سيطلع على النتائج، وتوافق قبل البدء. وفي المملكة يشترط الدليل التنظيمي للتربية الخاصة موافقة ولي الأمر خطيًا بعد إشعاره رسميًا (وزارة التعليم، ١٤٣٦هـ)، وتنص القواعد التنظيمية على أخذ إذنه «لغرض التشخيص» وشرح حالة ابنه له «بلغة مفهومة» (وزارة المعارف، ١٤٢٢هـ).</li>
+  <li><strong>السرية:</strong> نتائج الطالب لا تُناقش في غرفة المعلمين، ولا تُرسل في مجموعات المراسلة، ولا يطلع عليها إلا من يحتاج إليها لخدمة الطالب. وفي المملكة يسري نظام حماية البيانات الشخصية الصادر بالمرسوم الملكي رقم (م/١٩) عام ١٤٤٣هـ، وتُعد البيانات الصحية فيه من البيانات الحساسة.</li>
+  <li><strong>أمن الاختبار:</strong> لا تُصور صفحات الاختبار، ولا يُدرب الطالب على بنوده، فذلك يُفسد صدق نتائجه ونتائج غيره.</li>
+  <li><strong>الاستعمال المناسب:</strong> لا يُستعمل مقياس لغرض لم يُصمم له، ولا يُبنى قرار مهم على درجة واحدة. وهذا ما ينص عليه الدليل التنظيمي بعبارة «عدم الاكتفاء بنتائج مقياس واحد».</li>
+  <li><strong>الإنصاف:</strong> يراعي المقيّم لغة الطالب وثقافته وإعاقاته الأخرى، فطالب ضعيف البصر لا يُحكم على ذكائه باختبار بصري (انظر ٢-٦-١).</li>
+  <li><strong>حدود الكفاءة:</strong> لا يطبق المقيّم أداة لم يُدرَّب عليها، ولا يفسر نتائج طالب من خلفية لغوية أو ثقافية لا يعرفها دون استشارة من يعرفها. والكفاءة الثقافية لا تُكتسب بقراءة دليل، ومن حدودها أن يعرف المقيّم متى يحتاج إلى مترجم مؤهل أو زميل من المجتمع نفسه.</li>
+  <li><strong>تعارض المصالح:</strong> حين يكون من يشخّص هو نفسه من يقدم الخدمة المدفوعة التي يوصي بها، أو حين يرتبط تقييم المعلم لطالبه بحوافز أو بعدد المقبولين في برنامجه، يتأثر الحكم ولو بغير قصد. فيُفصح عن ذلك، ويُطلب رأي مستقل حين يمكن.</li>
+</ul>
+<p>ويقع بين هذه المبادئ توتر يتكرر في الواقع: <strong>حق الأسرة في الاطلاع</strong> في مقابل <strong>أمن الاختبار</strong>. فللأسرة حق في أن تعرف كل ما يتعلق بتقييم ابنها وبرنامجه، وفي أن تطلب إعادة التشخيص إذا رأت أنه لم يوضع في البرنامج المناسب (وزارة المعارف، ١٤٢٢هـ). وفي المقابل، فإن نسخ بنود الاختبار وتسليمها يعرض الاختبار للانتشار، وقد يخالف حقوق الناشر. والحل الذي تميل إليه المواثيق المهنية أن تُشرح النتائج للأسرة تفصيلًا، وأن تُعرض عليها إجابات ابنها وطريقة تصحيحها في حضور المختص، دون تسليم كراسة الاختبار أو نسخ بنوده.</p>
+
+<h3>مستويات التأهيل: من يطبق ماذا؟</h3>
+<p>يصنف كثير من الناشرين مقاييسهم في مستويات تأهيل تحدد من يحق له شراؤها واستعمالها. ويختلف التفصيل بين ناشر وآخر، لكن الفكرة العامة واحدة: مستوى أول لأدوات يستطيع المعلمون وغيرهم تطبيقها بعد قراءة الدليل، ومستوى ثانٍ يتطلب تدريبًا في القياس أو ترخيصًا مهنيًا، ومستوى ثالث للأدوات المعقدة كاختبارات الذكاء الفردية وأدوات التشخيص، ويتطلب دراسات عليا في مجال متخصص أو ترخيصًا مهنيًا متقدمًا. ومن أمثلة هذا المستوى الأخير مقياس وكسلر لذكاء الأطفال. أما ما تنص عليه الوثائق السعودية التي اطلعنا عليها، فيلخصه الجدول التالي:</p>
+<div class="tw"><table id="tab-9" id="tab-2-9">
+  <caption>جدول ٢-٩: من يطبق ماذا في المملكة بحسب الوثائق المنشورة التي اطلعنا عليها عند إعداد الكتاب.</caption>
+  <thead><tr><th>الدور</th><th>ما تنص عليه الوثائق</th><th>ما لم نجد له نصًا</th></tr></thead>
+  <tbody>
+    <tr><td>معلم التعليم العام</td><td>عضو في فريق القياس والتشخيص بالمدرسة (وزارة التعليم، ١٤٣٦هـ)</td><td>الأدوات التي يحق له تطبيقها. ودوره العملي الإحالة والملاحظة والأدوات غير الرسمية</td></tr>
+    <tr><td>معلم التربية الخاصة</td><td>عضو في فريق القياس والتشخيص (وزارة المعارف، ١٤٢٢هـ؛ وزارة التعليم، ١٤٣٦هـ)</td><td>قائمة بالمقاييس المقننة التي يطبقها</td></tr>
+    <tr><td>الأخصائي النفسي في المدارس والمعاهد</td><td>تسند إليه القواعد التنظيمية، باسم «معلم التدريبات السلوكية (الأخصائي النفسي)»، القياس والتشخيص بمقاييس الذكاء المقننة ومقاييس السلوك التكيفي والأساليب غير الرسمية، وإعادة التشخيص عند الحاجة (وزارة المعارف، ١٤٢٢هـ). ويشترط الدليل أن يطبق الأدوات ويفسرها «متخصصون مؤهلون»، وأن تكون «معتمدة من قبل وزارة التعليم» (وزارة التعليم، ١٤٣٦هـ)</td><td>قائمة منشورة بالمقاييس المعتمدة، ومعايير التأهيل المطلوبة لكل مقياس</td></tr>
+    <tr><td>الأخصائي النفسي في القطاع الصحي</td><td>يُصنَّف ويُرخَّص لدى الهيئة السعودية للتخصصات الصحية. ففي الطبعة التي اطلعنا عليها من دليل التصنيف يُصنَّف حامل البكالوريوس «أخصائيًا مساعدًا» يعمل تحت إشراف، ويُصنَّف «أخصائي علم نفس» بعد خبرة إكلينيكية لا تقل عن ثلاث سنوات (الهيئة السعودية للتخصصات الصحية، ٢٠٠٩). ويقيس اختبار الترخيص في علم النفس، ضمن ما يقيسه، تطبيق المعرفة في التقييم النفسي والتشخيص (الهيئة السعودية للتخصصات الصحية، ٢٠٢٤)</td><td>الطبعة الحالية من دليل التصنيف</td></tr>
+    <tr><td>الطبيب</td><td>يشارك في فريق القياس والتشخيص بالمدرسة «إن وجد» (وزارة التعليم، ١٤٣٦هـ)</td><td>نص عام يحدد التشخيصات التي يختص بها الطبيب دون غيره في الأنظمة التعليمية</td></tr>
+  </tbody>
+</table></div>
+<p>ولم نجد نصًا منشورًا في المملكة يقابل مستويات التأهيل التي يعتمدها الناشرون في شراء الاختبارات النفسية المقننة وتطبيقها. وإلى أن يصدر مثل هذا النص، يبقى المرجع العملي هو اشتراطات الناشر نفسه، ومبدأ حدود الكفاءة السابق.</p>
+
+<div class="callout" data-k="example">
+  <div class="tag"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="10" r="3"/><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11Z"/></svg>في السياق السعودي: معضلتان أخلاقيتان</div>
+  <p><strong>المعضلة الأولى: الموافقة بالسكوت.</strong> ينص الدليل التنظيمي على أن ولي الأمر إذا لم يرد خلال مدة لا تتجاوز أربعة عشر يومًا من تاريخ الإشعار الخطي «يعتبر ذلك إذنًا بالموافقة» (وزارة التعليم، ١٤٣٦هـ). والنص يحمي حق الطالب في ألا يتأخر تقييمه بسبب إهمال الإشعار. لكن مبدأ الموافقة المستنيرة يفترض أن الأسرة فهمت ما ستوافق عليه. فماذا يفعل الفريق إذا علم أن الأب لا يقرأ، أو أن الإشعار أُرسل مع الطالب ولم يصل؟ يسمح النص بالبدء، وتقتضي الأخلاقيات محاولة الوصول إلى الأسرة بطريقة أخرى، وتوثيق هذه المحاولة، قبل الاكتفاء بالسكوت.</p>
+  <p><strong>المعضلة الثانية: الأم التي تطلب البنود.</strong> تطلب أم نسخة من كراسة اختبار الذكاء الذي طُبق على ابنها، لأنها تريد أن «تدربه على الأسئلة التي أخطأ فيها» قبل إعادة التقييم في العام القادم. للأم حق في الاطلاع والفهم، وللاختبار أمن يحمي صدق نتائج ابنها نفسه في المرة القادمة. كيف تصوغ ردًا يحترم الحقين؟</p>
+</div>
+
+<div class="callout" data-k="teacher">
+  <div class="tag"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l9-4 9 4-9 4-9-4Z"/><path d="M7 10v5c0 1.5 2.5 3 5 3s5-1.5 5-3v-5"/></svg>للمعلم: عودة إلى أم ماجد</div>
+  <p>يمكن أن يجيب المعلم الآن عن سؤالي أم ماجد بهذه الصيغة: «الرقم ٣ ليس درجة نجاح، بل يعني أن أداء ماجد في هذا الاختبار أعلى من نحو ٣٪ من أقرانه في العمر نفسه. أي أنه يحتاج إلى دعم واضح. أما سؤالك عن الإعاقة، فالاختبار وحده لا يجيب عنه. درجته قريبة من الدرجة التي يُعتمد عليها في القرار، والشريط حولها يمتد على جانبيها، ولذلك سيجمع الفريق معلومات عن مهاراته اليومية في البيت والمدرسة قبل أي حكم.»</p>
+</div>
+
+<h2 id="conclusion" class="unnum">خاتمة</h2>
+<p>ينهض ما عرضناه في هذا الفصل على فكرة جامعة: الدرجة تقدير تقريبي لموقع الطالب بين أقرانه. فالدرجات المعيارية على اختلافها لغات لموقع واحد على المنحنى الطبيعي، والرتبة المئينية نسبة من تفوق عليهم الطالب، وكل درجة يحيط بها خطأ تبين فترة الثقة مداه، والفرق بين درجتين أقل دقة من كل منهما. ويترتب على ذلك أن القرار الذي تعبر فيه فترة الثقة درجة القطع قرار مهني يحتاج إلى أدلة أخرى، وأن الفرق بين درجتين لا يُبنى عليه تفسير إلا إذا كان دالًا ونادرًا، وأن الدرجة المتطرفة يُتوقع أن ترتد نحو المتوسط عند إعادة القياس.</p>
+<p>ولا تكفي الدقة وحدها؛ فصلاحية الدرجة لغرضها مسألة صدق تُجمع أدلته من مصادر متعددة، وصلاحيتها للطالب مسألة معايير وعدالة، إذ لا تصلح المعايير إلا إذا شابهت عينتُها الطالب وكانت حديثة بما يكفي، ولا تنقل الترجمة الدقيقة صدق الأصل ولا معاييره. ويبقى أمام المقيّم كلما استعمل أداة مترجمة أو معايير من بيئة أخرى سؤال لا تحسمه الحسابات: هل تشبه عينة التقنين الطالب الذي أمامه؟ والإجابة عنه مرهونة بما يتوافر من أدلة فنية، وبما يصرح به التقرير من حدود.</p>
+
+<!-- 10 -->
+<h2 id="s10"><span class="sec">٢-١٠</span>الخلاصة والمسرد والأنشطة</h2>
+<h3>خلاصة الفصل</h3>
+<div class="summary"><ul>
+  <li>المقاييس معيارية المرجع تقارن الطالب بأقرانه وتخدم التشخيص، والمقاييس محكية المرجع تقارنه بمستوى إتقان وتخدم التدريس، وبعض الأدوات كالقياس المبني على المنهج تُفسَّر بالطريقتين.</li>
+  <li>الدرجات المعيارية كلها لغات مختلفة لموقع واحد على المنحنى الطبيعي، ويمكن التحويل بينها عبر الدرجة الزائية. والتسميات الوصفية تختلف بين الاختبارات وإصداراتها.</li>
+  <li>انحرافان معياريان دون المتوسط أو فوقه يحدان نحو ٢٪ من الناس في كل طرف، ومنهما تأتي درجات قطع كثيرة في التشخيص.</li>
+  <li>الرتبة المئينية نسبة من تفوق عليهم الطالب، لا نسبة إجاباته الصحيحة، ومسافاتها غير متساوية.</li>
+  <li>كل درجة تقدير يحيط به خطأ، وفترة الثقة تبين مداه. وحين تعبر الفترة درجة القطع يصبح القرار مهنيًا يستند إلى أدلة أخرى.</li>
+  <li>الفرق بين درجتين أقل دقة من كل منهما، ويُسأل عنه سؤالان: هل هو دال إحصائيًا؟ وهل هو نادر في عينة التقنين؟</li>
+  <li>الدرجات المتطرفة ترتد نحو المتوسط عند إعادة القياس، ودقة الاختبار تضعف قرب أرضيته وسقفه.</li>
+  <li>الصدق مفهوم واحد جامع تُجمع أدلته من خمسة مصادر، والعدالة أساس ثالث بجواره وجوار الثبات/الدقة. والقيمة التنبؤية للنتيجة تتغير بتغير نسبة الانتشار.</li>
+  <li>المعايير لا تصلح إلا إذا كانت عينتها تشبه الطالب وحديثة بما يكفي، والترجمة الدقيقة لا تنقل صدق الأصل ولا معاييره.</li>
+  <li>معايير الاختبار وثيقة فنية، والمواثيق الأخلاقية للهيئات المهنية مرجع مستقل عنها، والتنظيمات المحلية تضيف إليهما ما يلزم المقيّم في بلده.</li>
+</ul></div>
+
+<h3>مسرد المصطلحات</h3>
+<dl class="gloss">
+  <dt>عينة التقنين<span class="en">Norm sample</span></dt><dd>المجموعة التي طُبق عليها المقياس لاستخراج معاييره، وتُقارن بها درجة كل طالب لاحقًا.</dd>
+  <dt>الدرجة الخام<span class="en">Raw score</span></dt><dd>عدد الإجابات الصحيحة أو مجموع النقاط قبل تحويله، ولا معنى له وحده.</dd>
+  <dt>الدرجة المعيارية<span class="en">Standard score</span></dt><dd>درجة محولة لها متوسط وانحراف معياري ثابتان، أشهرها ما متوسطه ١٠٠ وانحرافه ١٥.</dd>
+  <dt>الرتبة المئينية<span class="en">Percentile rank</span></dt><dd>النسبة المئوية من أقران الطالب في عينة التقنين (من عمره أو صفه) الذين حصلوا على درجة أقل من درجته؛ فالرتبة المئينية ٨٤ تعني أن درجته أعلى من درجات ٨٤٪ منهم، وهي غير النسبة المئوية للإجابات الصحيحة.</dd>
+  <dt>الانحراف المعياري<span class="en">Standard deviation</span></dt><dd>مقياس لتشتت الدرجات حول متوسطها.</dd>
+  <dt>درجة القطع<span class="en">Cut-off score</span></dt><dd>الدرجة التي تفصل في قرار ما بين فئتين، كالإحالة وعدمها أو استيفاء المحك وعدمه.</dd>
+  <dt>الثبات/الدقة<span class="en">Reliability/precision</span></dt><dd>اتساق نتائج المقياس عبر الزمن أو البنود أو المقدّرين، ودقة الدرجة عمومًا.</dd>
+  <dt>الخطأ المعياري للقياس<span class="en">Standard Error of Measurement, SEM</span></dt><dd>تقدير لمقدار تذبذب درجة الفرد حول درجته الحقيقية بسبب عدم الثبات التام.</dd>
+  <dt>فترة الثقة<span class="en">Confidence interval</span></dt><dd>مدى من الدرجات يُتوقع بنسبة محددة أن تقع فيه الدرجة الحقيقية.</dd>
+  <dt>الخطأ المعياري للفرق<span class="en">Standard error of the difference</span></dt><dd>مقدار الخطأ المتوقع في الفرق بين درجتين، ومنه يُحسب أصغر فرق يُعد دالًا إحصائيًا.</dd>
+  <dt>معدل الأساس<span class="en">Base rate</span></dt><dd>نسبة من يظهر لديهم فرق أو نمط معين في عينة التقنين، ومنها يُعرف هل الفرق نادر أم شائع.</dd>
+  <dt>الارتداد نحو المتوسط<span class="en">Regression toward the mean</span></dt><dd>ميل الدرجات المتطرفة إلى الاقتراب من المتوسط عند إعادة القياس.</dd>
+  <dt>الأرضية والسقف<span class="en">Floor and ceiling</span></dt><dd>قدرة الاختبار على التمييز بين المستويات المنخفضة جدًا والمرتفعة جدًا من الأداء.</dd>
+  <dt>نظرية الاستجابة للمفردة<span class="en">Item Response Theory, IRT</span></dt><dd>إطار قياسي يصف كل بند بمنحنى يربط القدرة باحتمال الإجابة الصحيحة، وتختلف فيه دقة القياس باختلاف مستوى القدرة.</dd>
+  <dt>الصدق<span class="en">Validity</span></dt><dd>مدى دعم الأدلة لتفسير درجات المقياس في غرض معين، وتُجمع أدلته من خمسة مصادر.</dd>
+  <dt>الأداء التفاضلي للبند<span class="en">Differential item functioning, DIF</span></dt><dd>اختلاف احتمال الإجابة عن بند بين مجموعتين متساويتين في القدرة.</dd>
+  <dt>تكافؤ القياس<span class="en">Measurement invariance</span></dt><dd>أن يقيس المقياس البناء نفسه بالطريقة نفسها في مجموعتين، فتصح المقارنة بين درجاتهما.</dd>
+  <dt>أثر فلين<span class="en">Flynn effect</span></dt><dd>تغير متوسطات الأداء في اختبارات الذكاء عبر الأجيال، وقد كان ارتفاعًا في أغلب القرن العشرين، مما يجعل المعايير القديمة تضخم الدرجات حيث يوجد.</dd>
+  <dt>الاختبار معياري المرجع<span class="en">Norm-referenced test</span></dt><dd>اختبار تُفسر فيه درجة الطالب بمقارنتها بدرجات أقرانه في عينة التقنين.</dd>
+  <dt>الاختبار محكي المرجع<span class="en">Criterion-referenced test</span></dt><dd>اختبار تُفسر فيه درجة الطالب بمقارنتها بمستوى أداء أو إتقان محدد مسبقًا.</dd>
+  <dt>العمر المكافئ<span class="en">Age equivalent</span></dt><dd>العمر الذي يساوي متوسطُ الدرجات الخام لأطفاله درجةَ الطالب الخام، ولا يعني أن مهاراته تشبه مهارات أطفال ذلك العمر.</dd>
+  <dt>الحساسية<span class="en">Sensitivity</span></dt><dd>نسبة من تكشفهم الأداة بحق ممن لديهم الحالة.</dd>
+  <dt>النوعية<span class="en">Specificity</span></dt><dd>نسبة من تستبعدهم الأداة بحق ممن ليس لديهم الحالة.</dd>
+  <dt>القيمة التنبؤية الموجبة<span class="en">Positive predictive value</span></dt><dd>احتمال أن تكون الحالة موجودة فعلًا لدى من جاءت نتيجته موجبة، ويتأثر بمدى انتشار الحالة في المجموعة المفحوصة.</dd>
+  <dt>القيمة التنبؤية السالبة<span class="en">Negative predictive value</span></dt><dd>احتمال أن تكون الحالة غائبة فعلًا لدى من جاءت نتيجته سالبة.</dd>
+  <dt>تكييف المقياس<span class="en">Test adaptation</span></dt><dd>تعديل بنود المقياس وأمثلته لتناسب ثقافة جديدة مع دراسة ذلك علميًا، وهو أوسع من الترجمة وأضيق من التقنين المحلي. ويختلف عن «التكييف» بمعنى التسهيلات المقدمة للطالب أثناء الاختبار.</dd>
+</dl>
+
+<h3>أسئلة للمراجعة</h3>
+<ol>
+  <li>صنّف كل نتيجة مما يلي بأنها معيارية المرجع أو محكية المرجع، وعلل: (أ) «قرأ ٤٢ كلمة صحيحة في الدقيقة، وهدفه في نهاية الفصل ٥٠». (ب) «رتبته المئينية ٣٠ في اختبار مقنن للقراءة». (ج) «أتقن ٧ من ١٠ مهارات في قائمة مهارات الجمع». (الهدف ١)</li>
+  <li>حوّل الدرجة التائية ٣٥ إلى درجة معيارية متوسطها ١٠٠ وانحرافها ١٥، واذكر تصنيفها الوصفي في الجدول ٢-٢. (الهدف ٢)</li>
+  <li>حصلت طالبة على الرتبة المئينية ٩٨ في اختبار رياضيات. ماذا يعني ذلك؟ وماذا لا يعني؟ ولماذا لا يصح القول إن طالبًا انتقل من الرتبة ٤٥ إلى ٥٥ تقدم بقدر طالب انتقل من ٨٥ إلى ٩٥؟ (الهدف ٣)</li>
+  <li>مقياسان للانتباه: ثبات الأول ٠.٧٠ وثبات الثاني ٠.٩٢. أيهما تفضل لقرار تشخيصي؟ ولماذا؟ احسب الخطأ المعياري للقياس لكل منهما إذا كان الانحراف المعياري ١٠. (الهدف ٤)</li>
+  <li>في الجدول ٢-٨، احسب الخطأ المعياري للفرق بين الاستدلال السائل (ثباته ٠.٩٤) والذاكرة العاملة (ثباتها ٠.٩٣)، ثم احكم: هل الفرق بينهما دال عند مستوى ٠.٠٥؟ وما السؤال الذي يبقى قبل أن تفسره؟ (الهدف ٤)</li>
+  <li>أداة مسح حساسيتها ٩٠٪ ونوعيتها ٩٠٪، طُبقت على ٤٠٠ طفل تنتشر بينهم الحالة بنسبة ٥٪. احسب القيمتين التنبؤيتين الموجبة والسالبة، واشرح لأسرة ماذا تعني النتيجة الموجبة لابنها. (الهدف ٥)</li>
+  <li>نسخة عربية من مقياس تقدير سلوكي تُستعمل في مركز تشخيص بمعاييرها الأمريكية. اكتب لكل مصدر من مصادر أدلة الصدق الخمسة سؤالًا واحدًا تطرحه على من أعد النسخة، واذكر المخاطر المحتملة على طالب سعودي. (الهدف ٦)</li>
+  <li>أرسل زميل في مجموعة مراسلة المعلمين صورة لصفحة الملخص في تقرير تشخيصي لطالب، يسأل عن معنى إحدى الدرجات. ما المبادئ التي يمسها هذا التصرف؟ وكيف تجيبه؟ (الهدف ٧)</li>
+</ol>
+
+<h4>حالة للتطبيق</h4>
+<p>نورة في الثالثة عشرة، في الصف الأول المتوسط. أحالتها معلمتها لضعف واضح في التحصيل منذ سنوات. طُبق عليها اختبار ذكاء فردي معرب، جُمعت معاييره قبل نحو ثماني عشرة سنة على عينة من منطقة غير منطقتها. فكانت درجتها الكلية ٧٤، ومعامل ثبات الدرجة الكلية ٠.٩٦. وكان مؤشر الفهم اللفظي ٨٦ (ثباته ٠.٩٤)، ومؤشر الاستدلال ٧٢ (ثباته ٠.٩٠). وتشير استمارة سلوك تكيفي أجابت عنها المعلمة وحدها إلى قصور في مجال واحد. ويرى أحد أعضاء الفريق أن «الدرجة دون ٧٥، فالطالبة مؤهلة لبرنامج الإعاقة الفكرية».</p>
+<p>احسب فترة الثقة للدرجة الكلية، والخطأ المعياري للفرق بين المؤشرين. ثم احكم: هل تكفي الأدلة لقرار الأهلية؟ علل حكمك بثلاثة أمور على الأقل تعلمتها في هذا الفصل، واذكر الأدلة الناقصة التي تطلبها قبل القرار. (الأهداف ٤ و٦ و٧)</p>
+
+<h3>أنشطة التعلم</h3>
+<ol>
+  <li><strong>مسطرة الدرجات:</strong> ارسم على ورقة منحنى طبيعيًا، وضع عليه درجات خمسة طلاب افتراضيين من أنواع مختلفة: معيارية، وتائية، وموزونة، ورتبة مئينية. ثم رتبهم من الأدنى إلى الأعلى. <em>الناتج:</em> رسم واحد مع جدول تحويل. <em>الزمن:</em> نحو ٣٠ دقيقة. (الهدفان ٢ و٣)</li>
+  <li><strong>ترجمة للأسرة:</strong> أعد صياغة الجدول ٢-٨ في فقرة من خمس جمل تفهمها أسرة لم تدرس القياس، تذكر فيها فترة الثقة وما لا يعنيه الجدول. وإن أردت أن تتدرب على تقرير حقيقي، فليكن ذلك بموافقة الأسرة وإدارة المدرسة، وبعد إخفاء كل ما يدل على الطالب، وتحت إشراف مختص، ودون أن يُستعمل ناتج التدريب في أي قرار. <em>الناتج:</em> فقرة واحدة. <em>الزمن:</em> نحو ٢٠ دقيقة. (الأهداف ٣ و٤ و٧)</li>
+  <li><strong>فحص دليل مقياس:</strong> اختر مقياسًا يُتاح لك دليله الفني، أو دراسة منشورة عن نسخة عربية من مقياس، واستخرج منها: وصف عينة التقنين، وسنة جمع المعايير، ومعاملات الثبات، وأدلة الصدق مصنفة بحسب المصادر الخمسة، وأي فحص للأداء التفاضلي أو لتكافؤ القياس. ثم احكم: هل يصلح لطالب في مدينتك؟ <em>الناتج:</em> جدول من صفحة واحدة. <em>الزمن:</em> نحو ساعتين. (الهدف ٦)</li>
+</ol>
+
+<h3>مراجع الفصل</h3>
+<ol class="refs">
+  <li>محمد، ح. أ. ع. (٢٠١٦). الفروق بين النسختين الخليجيتين لمقياس ستانفورد بينيه الصورة الخامسة في تقييم وتشخيص الذكاء والقدرات العقلية لدى ذوي الإعاقة بمنطقة الحدود الشمالية. <i>مجلة جامعة جازان للعلوم الإنسانية، ٥</i>(ملحق)، ٢٣٦–٢٥٤. https://search.mandumah.com/Record/1103082</li>
+  <li>نظام حماية البيانات الشخصية، مرسوم ملكي رقم (م/١٩) (١٤٤٣/٢/٩هـ)، المعدل بالمرسوم الملكي رقم (م/١٤٨) (١٤٤٤/٩/٥هـ).</li>
+  <li>الهيئة السعودية للتخصصات الصحية. (٢٠٠٩). <i>دليل التصنيف المهني للممارسين الصحيين</i> (ط٥). https://cams.ksu.edu.sa/sites/cams.ksu.edu.sa/files/attach/Professional_Registration_Classification_Manual_vr.6.pdf</li>
+  <li>الهيئة السعودية للتخصصات الصحية. (٢٠٢٤). <i>Saudi Psychology Licensure Examination (SPSLE): Applicant guide</i>. https://scfhs.org.sa/sites/default/files/2024-03/SPSLE%20Applicant%20Guide%202024.pdf</li>
+  <li>وزارة التعليم. (١٤٣٦هـ). <i>الدليل التنظيمي للتربية الخاصة</i> (الإصدار الأول للعام الدراسي ١٤٣٦–١٤٣٧هـ). https://moe.gov.sa/en/aboutus/aboutministry/RPRLibrary/الدليل%20التنظيمي%20للتربية%20الخاصة.pdf</li>
+  <li>وزارة المعارف. (١٤٢٢هـ). <i>القواعد التنظيمية لمعاهد وبرامج التربية الخاصة</i>. https://moe.gov.sa/en/aboutus/aboutministry/RPRLibrary/القواعد%20التنظيمية%20لمعاهد%20وبرامج%20التربية%20الخاصة%201422%20هـ.pdf</li>
+  <li>Alasmari, M., Alduais, A., Qasem, F., Almaghlouth, S., &amp; AlAmri, L. (2024). Predicting language, cognition, and social skills in individuals with autism spectrum disorder using the Arabic validation of Gilliam Autism Rating Scale–Third Edition. <i>Applied Neuropsychology: Child</i>. Advance online publication. https://doi.org/10.1080/21622965.2024.2417812</li>
+  <li>Alotaibi, B. M., &amp; Alotaibi, A. A. (2021). Exploratory and confirmatory factor analyses of the Arabic version of the Childhood Autism Rating Scale. <i>Research in Autism Spectrum Disorders, 86</i>, Article 101827. https://doi.org/10.1016/j.rasd.2021.101827</li>
+  <li>American Educational Research Association, American Psychological Association, &amp; National Council on Measurement in Education. (2014). <i>Standards for educational and psychological testing</i>. American Educational Research Association.</li>
+  <li>American Psychological Association. (2017). <i>Ethical principles of psychologists and code of conduct</i> (2002, amended effective June 1, 2010, and January 1, 2017). https://www.apa.org/ethics/code</li>
+  <li>Bracken, B. A. (1987). Limitations of preschool instruments and standards for minimal levels of technical adequacy. <i>Journal of Psychoeducational Assessment, 5</i>(4), 313–326.</li>
+  <li>Bratsberg, B., &amp; Rogeberg, O. (2018). Flynn effect and its reversal are both environmentally caused. <i>Proceedings of the National Academy of Sciences, 115</i>(26), 6674–6678.</li>
+  <li>Council for Exceptional Children. (2015). <i>What every special educator must know: Professional ethics and standards</i> (7th ed.). CEC.</li>
+  <li>Ejbara, M. A. (2024). Psychometric characteristics of a Saudi version of Wechsler Intelligence Scale for Preschool and Young Children. <i>Dirasat: Educational Sciences, 51</i>(2), 35–52. https://doi.org/10.35516/edu.v51i2.6661</li>
+  <li>Emam, M. M., Al-Sulaimani, H., Omara, E., &amp; Al-Nabhany, R. (2020). Assessment of adaptive behaviour in children with intellectual disability in Oman: An examination of ABAS-3 factor structure and validation in the Arab context. <i>International Journal of Developmental Disabilities, 66</i>(4), 317–326. https://doi.org/10.1080/20473869.2019.1587939</li>
+  <li>Embretson, S. E., &amp; Reise, S. P. (2000). <i>Item response theory for psychologists</i>. Lawrence Erlbaum.</li>
+  <li>Flynn, J. R. (1984). The mean IQ of Americans: Massive gains 1932 to 1978. <i>Psychological Bulletin, 95</i>(1), 29–51.</li>
+  <li>International Test Commission. (2001). International guidelines for test use. <i>International Journal of Testing, 1</i>(2), 93–114.</li>
+  <li>International Test Commission. (2017). <i>The ITC guidelines for translating and adapting tests</i> (2nd ed.). <a href="https://www.intestcom.org">https://www.intestcom.org</a></li>
+  <li>Kaufman, A. S., Raiford, S. E., &amp; Coalson, D. L. (2016). <i>Intelligent testing with the WISC-V</i>. Wiley.</li>
+  <li>Lohman, D. F., &amp; Korb, K. A. (2006). Gifted today but not tomorrow? Longitudinal changes in ability and achievement during elementary school. <i>Journal for the Education of the Gifted, 29</i>(4), 451–484.</li>
+  <li>McGill, R. J., Dombrowski, S. C., &amp; Canivez, G. L. (2018). Cognitive profile analysis in school psychology: History, issues, and continued concerns. <i>Journal of School Psychology, 71</i>, 108–121.</li>
+  <li>National Association of School Psychologists. (2020). <i>The professional standards of the National Association of School Psychologists</i>. NASP.</li>
+  <li>Salvia, J., Ysseldyke, J. E., &amp; Witmer, S. (2017). <i>Assessment in special and inclusive education</i> (13th ed.). Cengage Learning.</li>
+  <li>Sattler, J. M. (2018). <i>Assessment of children: Cognitive foundations and applications</i> (6th ed.). Jerome M. Sattler, Publisher.</li>
+  <li>Schalock, R. L., Luckasson, R., &amp; Tassé, M. J. (2021). <i>Intellectual disability: Definition, diagnosis, classification, and systems of supports</i> (12th ed.). AAIDD.</li>
+  <li>Seif Eldin, A., Habib, D., Noufal, A., Farrag, S., Bazaid, K., Al-Sharbati, M., Badr, H., Moussa, S., Essali, A., &amp; Gaddour, N. (2008). Use of M-CHAT for a multinational screening of young children with autism in the Arab countries. <i>International Review of Psychiatry, 20</i>(3), 281–289. https://doi.org/10.1080/09540260801990324</li>
+  <li>Trahan, L. H., Stuebing, K. K., Fletcher, J. M., &amp; Hiscock, M. (2014). The Flynn effect: A meta-analysis. <i>Psychological Bulletin, 140</i>(5), 1332–1360.</li>
+  <li>Wechsler, D. (2014). <i>Wechsler Intelligence Scale for Children</i> (5th ed.). Pearson.</li>
+</ol>
+
+<div class="endmark" aria-hidden="true">✦ ✦ ✦</div>
+<nav class="pager"><a href="ch01.html"><small>الفصل السابق</small><b>مفاهيم التشخيص والتعرف</b></a><a class="next" href="ch03.html"><small>الفصل التالي</small><b>الأساليب الرسمية المقننة</b></a></nav>
+</div>
+</body>
+</html>

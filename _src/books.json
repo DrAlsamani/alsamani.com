@@ -12,5 +12,19 @@
   "description": "يتتبع الكتاب مسار الابتكار من رصد الإشارة الأولى إلى حل يُعتمد في العمل ويحقق قيمة، ويحلل مقوماته المؤسسية: الاستراتيجية، والنظام، والثقافة، والحوكمة، والفرق، والقياس، ويضع الإنسان في مركزها.",
   "description_en": "A guide to building innovation as an institutional capability: strategy, systems, culture, governance, teams and measurement, with people at the centre.",
   "accent": "#9c4318"
+ },
+ {
+  "slug": "diagnosis-identification",
+  "status": "draft",
+  "lang": "ar",
+  "title": "المرجع في التشخيص والتعرف على ذوي الاستثنائية",
+  "title_en": "Diagnosis and Identification of Exceptional Learners",
+  "subtitle": "من الملاحظة الأولية إلى القرار لذوي الإعاقة والموهوبين ومزدوجي الاستثنائية",
+  "subtitle_en": "From first observation to decision for learners with disabilities, the gifted and the twice-exceptional",
+  "author": "د. عمر عبدالله الصمعاني",
+  "author_en": "Dr. Omar A. Alsamani",
+  "description": "يتتبع الكتاب الطريق من الملاحظة الأولى إلى القرار، ويعرض المقاييس المعتمدة عالميًا كما تبدو وكما تُطبق فعلًا، ويقرأها في ضوء التنظيمات السعودية والأدوات العربية: أربعة أبواب، وخمسة عشر فصلًا، وخمسة ملاحق، وأكثر من أربعين حالة.",
+  "description_en": "A reference on diagnosis and identification across disabilities, giftedness and twice-exceptionality, read in light of Saudi regulations and Arabic instruments.",
+  "accent": "#0d6b67"
  }
 ]

@@ -438,6 +438,30 @@ html[dir="rtl"] .rcard.lead::after{-webkit-mask-image:linear-gradient(to right,#
 .sf-nav a:hover,.sf-links a:hover{color:var(--accent)}
 .sf-copy{grid-column:1/-1;margin:8px 0 0;padding-top:16px;border-top:1px solid var(--line);font-size:.75rem}
 @media (max-width:700px){.site-foot{grid-template-columns:1fr 1fr}.sf-id{grid-column:1/-1}}
+
+/* books band */
+.more-link{color:var(--accent);text-decoration:none;font-size:.9375rem;font-weight:500}
+.bkgrid{display:grid;gap:20px}
+.bkcard{display:grid;grid-template-columns:190px minmax(0,1fr);gap:30px;align-items:start;padding:28px;background:var(--surface);border:1px solid var(--line);border-radius:12px;position:relative;overflow:hidden}
+.bkcard::before{content:"";position:absolute;inset-block:0;inset-inline-start:0;width:4px;background:var(--bk)}
+.bk-cover{aspect-ratio:2/3;border-radius:3px 10px 10px 3px;background:linear-gradient(135deg,color-mix(in srgb,var(--bk) 88%,#fff),var(--bk));color:#fff;text-decoration:none;display:flex;flex-direction:column;justify-content:space-between;padding:18px 16px;box-shadow:inset 7px 0 0 rgba(0,0,0,.18),0 18px 30px -16px rgba(0,0,0,.45);transition:transform .3s}
+html[dir="rtl"] .bk-cover{border-radius:10px 3px 3px 10px;box-shadow:inset -7px 0 0 rgba(0,0,0,.18),0 18px 30px -16px rgba(0,0,0,.45)}
+.bkcard:hover .bk-cover{transform:translateY(-3px) rotate(-1deg)}
+.bk-cover b{font-family:"Noto Naskh Arabic","IBM Plex Sans Arabic",serif;font-size:1.35rem;line-height:1.45;direction:rtl;text-align:right}
+.bk-cover span{font-size:.75rem;opacity:.85;direction:rtl;text-align:right}
+.bk-kind{font-size:var(--s1);color:var(--bk);font-weight:600}
+.bkcard h3{font-size:1.375rem;margin:6px 0 4px}
+.bkcard h3 a{color:var(--ink);text-decoration:none}
+.bkcard h3 small{display:block;font-size:.95rem;color:var(--muted);font-weight:500;margin-top:2px}
+.bk-sub{color:var(--dune);margin:0 0 10px;font-size:.9375rem}
+.bk-desc{color:var(--muted);margin:0 0 16px;font-size:.9375rem;line-height:1.8;max-width:70ch}
+.bk-facts{display:flex;gap:22px;flex-wrap:wrap;margin-bottom:18px;padding-block:12px;border-block:1px solid var(--line)}
+.bk-facts span{display:flex;align-items:baseline;gap:6px;font-size:var(--s1);color:var(--muted)}
+.bk-facts b{font-size:1.25rem;color:var(--bk)}
+.bk-actions{display:flex;gap:10px;flex-wrap:wrap}
+.bkcard .btn.solid{background:var(--bk);border-color:var(--bk)}
+.bkcard .btn.ghost{color:var(--bk);border-color:var(--bk)}
+@media (max-width:700px){.bkcard{grid-template-columns:1fr;gap:18px;padding:22px}.bk-cover{max-width:150px}}
 </style>
 </head>
 <body>
@@ -445,6 +469,7 @@ html[dir="rtl"] .rcard.lead::after{-webkit-mask-image:linear-gradient(to right,#
 <header class="top"><div class="bar wrap">
   <a class="brand" href="../../index.html"><span class="ar">د. عمر عبدالله الصمعاني</span><span class="en">Dr. Omar A. Alsamani</span></a>
   <nav class="links" aria-label="Main"><a href="../../index.html"><span class="ar">المستجدات</span><span class="en">Updates</span></a>
+<a href="../../books/index.html"><span class="ar">الكتب</span><span class="en">Books</span></a>
 <a href="../../publications/index.html"><span class="ar">المنشورات</span><span class="en">Publications</span></a>
 <a href="../../photography/index.html"><span class="ar">التصوير</span><span class="en">Photography</span></a>
 <a href="../../about/index.html"><span class="ar">نبذة</span><span class="en">About</span></a>
@@ -452,6 +477,7 @@ html[dir="rtl"] .rcard.lead::after{-webkit-mask-image:linear-gradient(to right,#
   <div class="bar-end"><button class="lang" id="langBtn" type="button">English</button><a class="brand-en ar" href="../../index.html" dir="ltr" lang="en">Dr. Omar A. Alsamani</a></div>
 </div>
 <nav class="links mobile" aria-label="Main"><a href="../../index.html"><span class="ar">المستجدات</span><span class="en">Updates</span></a>
+<a href="../../books/index.html"><span class="ar">الكتب</span><span class="en">Books</span></a>
 <a href="../../publications/index.html"><span class="ar">المنشورات</span><span class="en">Publications</span></a>
 <a href="../../photography/index.html"><span class="ar">التصوير</span><span class="en">Photography</span></a>
 <a href="../../about/index.html"><span class="ar">نبذة</span><span class="en">About</span></a>
@@ -526,6 +552,7 @@ html[dir="rtl"] .rcard.lead::after{-webkit-mask-image:linear-gradient(to right,#
 <footer class="site-foot">
   <div class="sf-id"><span class="mono-mark" aria-hidden="true">OA</span><div><b><span class="ar">د. عمر عبدالله الصمعاني</span><span class="en">Dr. Omar A. Alsamani</span></b></div></div>
   <nav class="sf-nav" aria-label="Footer"><a href="../../index.html"><span class="ar">المستجدات</span><span class="en">Updates</span></a>
+<a href="../../books/index.html"><span class="ar">الكتب</span><span class="en">Books</span></a>
 <a href="../../publications/index.html"><span class="ar">المنشورات</span><span class="en">Publications</span></a>
 <a href="../../photography/index.html"><span class="ar">التصوير</span><span class="en">Photography</span></a>
 <a href="../../about/index.html"><span class="ar">نبذة</span><span class="en">About</span></a>

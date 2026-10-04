@@ -110,7 +110,7 @@ def build_book(b, make_pdf):
     chap_dl = ''.join(f'<li><a href="pdf/{t["f"][:-5]}.pdf" download><span>{e(t["kicker"] or "")}</span><b>{e(t["h1"])}</b><i>PDF</i></a></li>' for t in toc)
     dl = f'''<section class="bp-dl" id="downloads"><h2><span class="sec">التحميل</span>الكتاب للقراءة والتحميل</h2>
 <p>الكتاب متاح مجانًا. اقرأه على الموقع فصلًا فصلًا، أو حمّل النسخة الورقية كاملة بصيغة PDF، أو حمّل الفصل الذي تحتاجه.</p>
-<div class="bp-dl-main"><a class="bp-big" href="pdf/{slug}-full.pdf" download><b>الكتاب كاملًا</b><span>PDF · النسخة الورقية</span></a><a class="bp-big ghost" href="{toc[0]["f"]}"><b>ابدأ القراءة</b><span>{e(toc[0]["h1"])}</span></a><a class="bp-big ghost" href="elements.html"><b>عناصر الكتاب</b><span>{len(elements["fig"])} شكلًا · {len(elements["tab"])} جدولًا · {len(elements["tool"])} أداة</span></a></div>
+<div class="bp-dl-main"><a class="bp-big" href="pdf/{slug}-full.pdf" download><b>الكتاب كاملًا</b><span>PDF · النسخة الورقية</span></a><a class="bp-big ghost" href="{toc[0]["f"]}"><b>ابدأ القراءة</b><span>{e(toc[0]["h1"])}</span></a><a class="bp-big ghost" href="elements.html"><b>عناصر الكتاب</b><span>{" · ".join(x for x in [f'{len(elements["tool"])} أداة' if elements["tool"] else '', f'{len(elements["fig"])} شكلًا', f'{len(elements["tab"])} جدولًا'] if x)}</span></a></div>
 <p class="bp-resume" id="bpResume" hidden></p>
 <details class="bp-chaps"><summary>تحميل الفصول منفردة</summary><ol>{chap_dl}</ol></details>
 <p class="bp-lic">{e(b.get('license_note','نشر مفتوح. الحقوق محفوظة للمؤلف، ويُسمح بالقراءة والتحميل والاقتباس مع ذكر المصدر.'))}</p></section>'''
@@ -158,7 +158,7 @@ def make_pdfs(b, src, dst, order, toc):
 def library(results):
     cards = ''
     for b in books:
-        st = '' if b['status'] == 'published' else '<span class="lib-badge">مسودة · غير منشور</span>'
+        st = '' if b['status'] == 'published' else '<span class="lib-badge">إصدار أولي</span>'
         cards += f'''<a class="lib-card" href="{b["slug"]}/index.html" style="--bk:{b.get("accent","#2C3E8F")}"><div class="lib-spine"><b>{e(b["title"])}</b><span>{e(b["author"])}</span></div><div class="lib-meta">{st}<h3>{e(b["title"])}</h3><p class="lib-sub">{e(b.get("subtitle",""))}</p><p>{e(b["description"])}</p><span class="lib-go">القراءة والتحميل ←</span></div></a>'''
     any_pub = any(b['status'] == 'published' for b in books)
     page = f'''<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>الكتب | د. عمر عبدالله الصمعاني</title>{'' if any_pub else '<meta name="robots" content="noindex,nofollow">'}{FONTS}<link rel="stylesheet" href="library.css"></head><body>
@@ -170,5 +170,11 @@ def library(results):
 if __name__ == '__main__':
     os.makedirs(OUT, exist_ok=True)
     res = [build_book(b, '--pdf' in sys.argv) for b in books]
+    for r in res:
+        pdf = os.path.join(OUT, r['slug'], 'pdf', r['slug'] + '-full.pdf')
+        try: r['pages'] = int(re.search(r'Pages:\s+(\d+)', subprocess.run(['pdfinfo', pdf], capture_output=True, text=True).stdout).group(1))
+        except Exception: r['pages'] = None
+        r['mb'] = round(os.path.getsize(pdf) / 1e6, 1) if os.path.exists(pdf) else None
+    json.dump(res, open(os.path.join(OUT, 'stats.json'), 'w'))
     library(res)
     print(res)

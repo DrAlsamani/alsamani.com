@@ -21,7 +21,7 @@ TYPES = {'publication': ('نشر', 'Publication'), 'training': ('تدريب', 'T
          'article': ('مقال', 'Article'), 'news': ('خبر', 'News'), 'talk': ('مشاركة علمية', 'Talk')}
 PTYPES = {'article': ('مقال محكّم', 'Journal article'), 'chapter': ('فصل في كتاب', 'Book chapter'),
           'thesis': ('رسالة علمية', 'Thesis'), 'book': ('كتاب', 'Book')}
-NAV = [('index', 'المستجدات', 'Updates'), ('publications', 'المنشورات', 'Publications'),
+NAV = [('index', 'المستجدات', 'Updates'), ('books', 'الكتب', 'Books'), ('publications', 'المنشورات', 'Publications'),
        ('photography', 'التصوير', 'Photography'), ('about', 'نبذة', 'About'), ('contact', 'تواصل', 'Contact')]
 
 def href(page, depth):
@@ -97,6 +97,7 @@ def feed_html():
   <ol class="feed">{''.join(rows)}</ol>
 </section>'''
     return f'''{research_cards()}
+{books_band()}
 {photo_band()}
 {upd}
 <section class="index-links one">
@@ -158,6 +159,35 @@ def research_cards():
     return f'''<section id="research" class="first">
   <div class="sec-head"><div><p class="eyebrow">{bi('أحدث الأبحاث', 'Recent research')}</p><h2>{bi('أبحاث منشورة', 'Published research')}</h2></div></div>
   <div class="rgrid">{''.join(cards)}</div>
+</section>'''
+
+
+def books_band():
+    try:
+        books = json.load(open(P('books', 'books.json')))
+        stats = {x['slug']: x for x in json.load(open(P('dist', 'books', 'stats.json')))}
+    except Exception:
+        return ''
+    cards = []
+    for b in books:
+        st = stats.get(b['slug'], {})
+        facts = [f"<span><b class='mono'>{st.get('chapters','')}</b>{bi('فصلًا وملحقًا', 'chapters and appendices')}</span>" if st.get('chapters') else '',
+                 f"<span><b class='mono'>{st.get('pages','')}</b>{bi('صفحة', 'pages')}</span>" if st.get('pages') else '',
+                 f"<span><b class='mono'>{st.get('figs',0)+st.get('tabs',0)+st.get('tools',0)}</b>{bi('شكلًا وجدولًا وأداة', 'figures, tables and tools')}</span>"]
+        cards.append(f'''<article class="bkcard" style="--bk:{b.get('accent','#2C3E8F')}">
+  <a class="bk-cover" href="books/{b['slug']}/index.html" aria-hidden="true" tabindex="-1"><b>{e(b['title'])}</b><span>{e(b['author'])}</span></a>
+  <div class="bk-body">
+    <span class="bk-kind">{bi('كتاب · نشر مفتوح', 'Book · open access')}</span>
+    <h3><a href="books/{b['slug']}/index.html"><span class="ar">{e(b['title'])}</span><span class="en">{e(b['title_en'])} <small lang="ar">{e(b['title'])}</small></span></a></h3>
+    <p class="bk-sub">{bi(e(b['subtitle']), e(b['subtitle_en']))}</p>
+    <p class="bk-desc">{bi(e(b['description']), e(b['description_en']))}</p>
+    <div class="bk-facts">{''.join(facts)}</div>
+    <div class="bk-actions"><a class="btn solid" href="books/{b['slug']}/index.html">{bi('اقرأ على الموقع', 'Read online')}</a><a class="btn ghost" href="books/{b['slug']}/pdf/{b['slug']}-full.pdf">{bi('تحميل PDF', 'Download PDF')}{(' · ' + str(st['mb']) + ' MB') if st.get('mb') else ''}</a></div>
+  </div>
+</article>''')
+    return f'''<section id="books">
+  <div class="sec-head"><div><p class="eyebrow">{bi('الكتب', 'Books')}</p><h2>{bi('كتب مفتوحة للقراءة والتحميل', 'Open books to read and download')}</h2></div><a class="more-link" href="books/index.html">{bi('كل الكتب', 'All books')} <i class="arr"></i></a></div>
+  <div class="bkgrid">{''.join(cards)}</div>
 </section>'''
 
 def photo_band():
@@ -362,7 +392,7 @@ for target, full in (('dist', True), ('preview', False)):
     for name, depth, title, fn in PAGES:
         body = fn()
         if depth == 1:
-            body = body.replace('href="publications/', 'href="../publications/').replace('href="photography/', 'href="../photography/').replace('url(img/', 'url(../img/').replace('href="research/', 'href="../research/')
+            body = body.replace('href="books/', 'href="../books/').replace('href="publications/', 'href="../publications/').replace('href="photography/', 'href="../photography/').replace('url(img/', 'url(../img/').replace('href="research/', 'href="../research/')
         out = P(target, 'index.html' if name == 'index' else f'{name}/index.html')
         t = title if full else ('Alsamani.com' if name == 'index' else title)
         write(out, page(name, depth, t, body, full or depth > 0, seo(name, title) if full else ''))

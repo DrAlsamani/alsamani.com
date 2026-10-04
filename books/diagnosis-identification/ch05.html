@@ -1,0 +1,576 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>الفصل الثالث: الأساليب الرسمية المقننة</title>
+<link rel="stylesheet" href="assets/book.css">
+<style>
+.basal{font-family:var(--f-ui)}
+.basal .row{display:grid;grid-template-columns:repeat(20,1fr);gap:4px;direction:ltr}
+.basal .it{aspect-ratio:1/1;border-radius:6px;display:grid;place-items:center;font-size:12px;font-weight:700;border:1.5px solid var(--line);background:var(--paper);color:var(--ink-2)}
+.basal .cr{background:var(--good-soft);border-color:var(--good);color:var(--good)}
+.basal .ok{background:var(--good);border-color:var(--good);color:var(--paper)}
+.basal .no{background:var(--warn);border-color:var(--warn);color:var(--paper)}
+.basal .na{background:var(--paper-2);border-style:dashed;color:var(--line)}
+.basal .marks{display:grid;grid-template-columns:repeat(20,1fr);gap:4px;direction:ltr;margin-top:6px;min-height:40px;font-size:12px;font-weight:700}
+.basal .marks span{text-align:center;line-height:1.4}
+.basal .key{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:14px;font-size:13.5px;color:var(--ink-2)}
+.basal .key i{display:inline-block;width:14px;height:14px;border-radius:4px;vertical-align:-2px;margin-left:6px;border:1.5px solid var(--line)}
+@media (max-width:560px){.basal .it{font-size:9px;border-radius:4px}.basal .marks{font-size:10px}}
+.chc{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;font-family:var(--f-ui)}
+.chc>div{border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;min-width:0;display:grid;gap:4px}
+.chc b{font-size:15.5px}
+.chc .code{font-size:12.5px;color:var(--ink-2);direction:ltr;text-align:right}
+.chc span{font-size:13.5px;line-height:1.7;color:var(--ink-2)}
+.chc .idx{justify-self:start;font-size:12px;font-weight:700;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 10px}
+.chc .none{background:var(--paper-2);color:var(--ink-2)}
+.ab3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;font-family:var(--f-ui)}
+.ab3>div{border-radius:14px;padding:16px;min-width:0;background:var(--c-soft);border:1.5px solid var(--c)}
+.ab3 h5{font-family:var(--f-display);font-size:19px;margin:0 0 4px;color:var(--c);font-weight:700}
+.ab3 p{font-size:13.5px;color:var(--ink-2);margin:0 0 8px;line-height:1.7}
+.ab3 ul{margin:0;padding-inline-start:1.1em;font-size:14px;line-height:1.8}
+.ab3 .c1{--c:var(--example);--c-soft:var(--example-soft)}
+.ab3 .c2{--c:var(--teacher);--c-soft:var(--teacher-soft)}
+.ab3 .c3{--c:var(--accent);--c-soft:var(--accent-soft)}
+@media (max-width:640px){.ab3{grid-template-columns:1fr}}
+.tband{direction:ltr;font-family:var(--f-ui)}
+.tband .lbl{direction:rtl;font-size:13.5px;font-weight:700;margin:10px 0 6px}
+.tband .bar{display:flex;height:40px;border-radius:8px;overflow:hidden;border:1px solid var(--line)}
+.tband .bar div{display:grid;place-items:center;font-size:12.5px;font-weight:700;direction:rtl;text-align:center;line-height:1.25}
+.tband .g{background:var(--good-soft);color:var(--good)}
+.tband .m{background:var(--mid-soft);color:var(--mid)}
+.tband .s{background:var(--sev-soft);color:var(--sev)}
+.tband .p{background:var(--paper-2);color:var(--ink-2)}
+.tband .ticks{position:relative;height:24px}
+.tband .ticks span{position:absolute;top:4px;transform:translateX(-50%);font-size:12px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.inf{display:grid;gap:12px;font-family:var(--f-ui)}
+.inf .r{display:grid;grid-template-columns:minmax(0,15rem) 1fr;gap:14px;align-items:center;font-size:14.5px}
+.inf .track{height:26px;background:var(--paper-2);border-radius:6px;direction:ltr;position:relative}
+.inf .fill{height:100%;border-radius:6px;background:var(--example);display:flex;align-items:center;justify-content:flex-end;padding-inline:10px;color:var(--paper);font-weight:700;font-size:13px;font-variant-numeric:tabular-nums}
+@media (max-width:560px){.inf .r{grid-template-columns:1fr}}
+.choose{display:grid;gap:10px;font-family:var(--f-ui)}
+.choose .c{display:grid;grid-template-columns:minmax(0,1fr) 28px minmax(0,1fr);gap:10px;align-items:center}
+.choose .if{border:1.5px solid var(--line);border-radius:10px;padding:10px 14px;font-size:14.5px;line-height:1.7}
+.choose .then{border:1.5px solid var(--accent);background:var(--accent-soft);border-radius:10px;padding:10px 14px;font-size:14.5px;line-height:1.7}
+.choose .ar{text-align:center;color:var(--ink-2);font-size:20px}
+@media (max-width:600px){.choose .c{grid-template-columns:1fr}.choose .ar{transform:rotate(-90deg)}}
+
+/* restored ch05 figure styles */
+
+.ttr{display:grid;grid-template-columns:1fr 40px 1fr 40px 1fr;align-items:stretch;gap:0;font-family:var(--f-ui)}
+.ttr .b{border:1.5px solid var(--line);border-radius:12px;padding:14px;text-align:center;min-width:0}
+.ttr .b.mid{border-color:var(--accent);background:var(--accent-soft)}
+.ttr .b b{display:block;font-size:16px}
+.ttr .b span{font-size:13.5px;color:var(--ink-2);line-height:1.7;display:block;margin-top:4px}
+.ttr .a{display:grid;place-items:center;color:var(--ink-2);font-size:22px}
+@media (max-width:620px){.ttr{grid-template-columns:1fr}.ttr .a{transform:rotate(-90deg);height:34px}}
+.slope{direction:ltr}
+.slope text{font-family:var(--f-ui)}
+.slope .ax{stroke:var(--ink-2);stroke-width:1.2}
+.slope .gr{stroke:var(--line)}
+.slope .tk{fill:var(--ink-2);font-size:12.5px}
+.slope .lA{stroke:var(--accent);stroke-width:3}
+.slope .lB{stroke:var(--teacher);stroke-width:3}
+.slope .pA{fill:var(--accent)}
+.slope .pB{fill:var(--teacher)}
+.slope .tA{fill:var(--accent);font-size:13.5px;font-weight:700}
+.slope .tB{fill:var(--teacher);font-size:13.5px;font-weight:700}
+.slope .lb{fill:var(--ink);font-size:13.5px;font-weight:700}
+.ladder{list-style:none;padding:0;margin:0;display:grid;gap:6px;font-family:var(--f-ui);counter-reset:l}
+.ladder li{counter-increment:l;display:grid;grid-template-columns:36px 1fr;gap:10px;align-items:center;margin:0;border-radius:10px;padding:10px 12px;font-size:14.5px;line-height:1.7;background:color-mix(in srgb,var(--accent) calc(var(--k) * 1%),var(--paper));border:1px solid var(--line)}
+.ladder li::before{content:counter(l,arabic-indic);width:30px;height:30px;border-radius:8px;background:var(--paper);display:grid;place-items:center;font-weight:700;color:var(--accent);border:1.5px solid var(--accent)}
+.fn{display:grid;grid-template-columns:auto 1fr 1fr;gap:8px;font-family:var(--f-ui)}
+.fn>div{border-radius:10px;padding:12px 14px;min-width:0}
+.fn .h{background:transparent;font-weight:700;color:var(--ink-2);font-size:13.5px;text-align:center;align-self:end}
+.fn .rh{background:var(--paper-2);font-weight:700;font-size:15px;display:grid;place-items:center;text-align:center}
+.fn .c{border:1.5px solid var(--line)}
+.fn .c b{display:block;font-size:15.5px;color:var(--accent);margin-bottom:4px}
+.fn .c span{font-size:13.5px;line-height:1.75;color:var(--ink-2)}
+@media (max-width:600px){.fn{grid-template-columns:1fr}.fn .h{display:none}}
+.hyp{border:2px solid var(--accent);border-radius:14px;padding:16px 20px;background:var(--accent-soft);font-size:17.5px;line-height:2.1}
+.hyp .slot{display:inline-block;border-bottom:2px dashed var(--accent);padding:0 6px;font-family:var(--f-ui);font-size:14.5px;color:var(--accent);font-weight:700}
+.tally{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;font-family:var(--f-ui);margin-top:12px}
+.tally>div{border-radius:10px;padding:10px;text-align:center;border:1.5px solid var(--line);font-size:13.5px}
+.tally b{display:block;font-size:24px;font-variant-numeric:tabular-nums}
+.tally .hi{border-color:var(--warn);background:var(--warn-soft);color:var(--warn)}
+@media (max-width:560px){.tally{grid-template-columns:1fr 1fr}}
+.domains{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;font-family:var(--f-ui)}
+.domains>div{border-radius:12px;padding:14px;min-width:0;border:1.5px solid var(--line)}
+.domains b{display:block;font-size:15.5px;margin-bottom:4px;color:var(--accent)}
+.domains span{font-size:13.5px;line-height:1.75;color:var(--ink-2)}
+@media (max-width:680px){.domains{grid-template-columns:1fr 1fr}}
+</style>
+<meta name="robots" content="noindex,nofollow"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap"><link rel="stylesheet" href="assets/platform.css"><script>window.BOOK={slug:"diagnosis-identification",cur:"ch05.html"}</script><script src="assets/platform.js" defer></script>
+</head>
+<body>
+<div class="bp-bar" dir="rtl"><div class="bp-in">
+<a class="bp-home" href="../../index.html">د. عمر عبدالله الصمعاني</a><span class="bp-sep">/</span><a href="../index.html">الكتب</a><span class="bp-sep">/</span><a href="index.html" class="bp-book">المرجع في التشخيص والتعرف على ذوي الاستثنائية</a>
+<span class="bp-sp"></span><span class="bp-tools"><button class="bp-ic" type="button" data-rd="z-" aria-label="تصغير الخط" title="تصغير الخط">أ−</button><button class="bp-ic" type="button" data-rd="z+" aria-label="تكبير الخط" title="تكبير الخط">أ+</button><button class="bp-ic" type="button" data-rd="theme" aria-label="الوضع الليلي" title="الوضع الليلي/النهاري">ليلي</button></span><a class="bp-btn" href="pdf/ch05.pdf" download>تحميل الفصل PDF</a><button class="bp-btn" type="button" data-share>مشاركة</button><button class="bp-btn" type="button" data-bp="search">بحث</button><button class="bp-btn solid" type="button" data-bp="toc">المحتويات</button></div></div>
+<div class="bp-share" id="bpShare" hidden dir="rtl"><b>مشاركة هذه الصفحة</b><button type="button" data-sh="copy">نسخ الرابط</button><button type="button" data-sh="native" hidden>مشاركة…</button><a data-sh="wa" target="_blank" rel="noopener">واتساب</a><a data-sh="x" target="_blank" rel="noopener">X</a><a data-sh="li" target="_blank" rel="noopener">LinkedIn</a><a data-sh="tg" target="_blank" rel="noopener">تيليجرام</a><a data-sh="mail">البريد</a><small>لمشاركة قسم بعينه: مرّر المؤشر على عنوانه واضغط ¶</small></div>
+<div class="bp-drawer" id="bpDrawer" hidden dir="rtl"><div class="bp-panel" role="dialog" aria-label="المحتويات والبحث">
+<div class="bp-head"><b>المرجع في التشخيص والتعرف على ذوي الاستثنائية</b><button type="button" class="bp-x" data-bp="close" aria-label="إغلاق">×</button></div>
+<div class="bp-search"><input id="bpQ" type="search" placeholder="ابحث في نص الكتاب…" autocomplete="off"><div id="bpRes"></div></div>
+<nav class="bp-toc" id="bpToc"></nav>
+<div class="bp-links"><a href="elements.html">عناصر الكتاب: الأشكال والجداول والأدوات</a><a href="index.html#downloads">تحميل الكتاب</a></div>
+</div></div>
+<div class="page">
+
+<nav class="booknav"><a href="index.html">→ المرجع في التشخيص والتعرف على ذوي الاستثنائية</a><span>الباب الثاني: الأساليب</span></nav>
+
+<header class="opener">
+  <div class="num" aria-hidden="true">٥</div>
+  <div>
+    <div class="kicker">الفصل الخامس</div>
+    <h1>الأساليب البديلة</h1>
+  </div>
+  <p class="sub">يتجاوز التقييم أحيانًا سؤال «ماذا يعرف الطالب الآن؟» إلى أسئلة أهم منه: «كيف يتعلم إذا قُدمت له المساعدة؟» و«لماذا يسلك هذا السلوك؟» و«ماذا يستطيع أن ينتج في مهمة حقيقية؟». وهي أسئلة تقصر عنها الاختبارات التقليدية، ونعرض في هذا الفصل الأساليب التي وُضعت للإجابة عنها.</p>
+</header>
+
+<nav class="toc" aria-label="محتويات الفصل">
+  <b>في هذا الفصل</b>
+  <ol>
+    <li class="u"><a href="#intro">مقدمة</a></li>
+    <li value="1"><a href="#s1">لماذا نحتاج إلى أساليب بديلة؟</a></li>
+    <li value="2"><a href="#s2">التقييم الدينامي</a></li>
+    <li value="3"><a href="#s3">التقييم الوظيفي للسلوك</a></li>
+    <li value="4"><a href="#s4">التقييم الأصيل وتقييم الأداء</a></li>
+    <li value="5"><a href="#s5">التقييم القائم على اللعب والتقييم في الطفولة المبكرة</a></li>
+    <li value="6"><a href="#s6">تقييم ذوي الإعاقات الشديدة والمتعددة</a></li>
+    <li class="u"><a href="#conclusion">خاتمة</a></li>
+    <li value="7"><a href="#s7">الخلاصة والمسرد والأنشطة</a></li>
+  </ol>
+</nav>
+
+<div class="scene">
+  <span class="lbl">ثلاثة مشاهد في مدرسة واحدة</span>
+  <p>في الصف الأول، نزار طالب انتقل حديثًا من بلد آخر، وجاءت درجته منخفضة في اختبار للمفردات العربية. هل لديه اضطراب لغوي، أم أنه لم يتعرض للعربية بعد بما يكفي؟</p>
+  <p>في الصف الرابع، طالب يرمي كتابه على الأرض في كل حصة رياضيات تقريبًا. وكلما عوقب ازداد الأمر سوءًا.</p>
+  <p>في الصف السادس، تالا طالبة درجاتها في الاختبارات متوسطة، لكنها صممت وحدها نموذجًا لنظام ري يعمل بالطاقة الشمسية لحديقة المدرسة.</p>
+</div>
+<p>يطرح كل مشهد من هذه المشاهد سؤالًا لا يجيب عنه اختبار تقليدي، والأساليب التي نتناولها في هذا الفصل وُضعت للإجابة عن هذه الأسئلة الثلاثة تحديدًا. غير أنها، شأنها شأن سائر أساليب التقييم، محكومة بحدود ينبغي أن يعيها من يبني عليها قرارًا، ولذا نقف عند هذه الحدود في كل أسلوب منها.</p>
+
+<h3>أهداف الفصل</h3>
+<p>بعد دراسة هذا الفصل، يُتوقع أن يكون القارئ قادرًا على أن:</p>
+<ol class="objectives">
+  <li>يطبق نموذج الاختبار ثم التعليم ثم إعادة الاختبار على مهمة محددة، ويسجل استجابة الطالب بسلم تلميحات متدرج.</li>
+  <li>يفسر نتائج تقييم دينامي لطالب من خلفية لغوية مختلفة، مميزًا بين ما يرجح نقص الفرص وما يستدعي تقييمًا لاضطراب محتمل.</li>
+  <li>يصوغ من بيانات السوابق والسلوك والنتائج فرضية عن وظيفة السلوك، ويحدد الدليل اللازم لتأكيدها.</li>
+  <li>يصمم مهمة أداء أصيلة بمحكات تصحيح واضحة، وينقد ثبات تقديرها إذا استُعملت في قرار عالي الأثر.</li>
+  <li>يختار بين التقييم القائم على اللعب والاختبار النمائي المقنن لطفل دون الثالثة، ويعلل اختياره.</li>
+  <li>يقترح مصادر أدلة لتقييم طالب ذي إعاقات شديدة ومتعددة لا تصلح له الأدوات المقننة.</li>
+  <li>يحكم على كفاية الأدلة التي يقدمها أسلوب بديل لقرار بعينه في حالة جديدة، ويعلل حكمه.</li>
+</ol>
+
+<h2 id="intro" class="unnum">مقدمة</h2>
+<p>تجيب الاختبارات التقليدية في الغالب عن سؤال واحد: ماذا يعرف الطالب الآن مقارنة بأقرانه؟ غير أن قرارات تشخيصية كثيرة تتوقف على أسئلة أخرى: هل الدرجة المنخفضة علامة اضطراب أم أثر لنقص فرص التعلم؟ ولماذا يستمر سلوك لم ينفع معه العقاب؟ وما الذي يستطيع الطالب إنتاجه في مهمة حقيقية لا يكشفها اختبار قصير؟ وماذا يفعل الطفل الصغير أو الطالب ذو الإعاقة الشديدة في حياته اليومية حين لا تصلح المقارنة بالأقران؟ والمشاهد الثلاثة في مستهل الفصل شواهد على هذه الأسئلة، ولكل منها أسلوب تقييم يلائمه، وحدود ينبغي استيعابها قبل أن يُبنى عليه قرار.</p>
+<p>نستهل الفصل ببيان الحاجة إلى الأساليب البديلة وتمييزها من «التقييم البديل» بمعناه النظامي (القسم ٥-١)، ثم نعرض التقييم الدينامي بنماذجه وصيغتيه وصلته بالاستجابة للتدخل (القسم ٥-٢). ونتناول بعد ذلك التقييم الوظيفي للسلوك ووظائفه الشائعة وخطواته (القسم ٥-٣)، ثم التقييم الأصيل وتقييم الأداء وموقعهما في التعرف على الموهوبين (القسم ٥-٤)، فالتقييم القائم على اللعب والتقييم في الطفولة المبكرة (القسم ٥-٥). ونختم بتقييم ذوي الإعاقات الشديدة والمتعددة (القسم ٥-٦).</p>
+
+
+<!-- 1 -->
+<h2 id="s1"><span class="sec">٥-١</span>لماذا نحتاج إلى أساليب بديلة؟</h2>
+<p>الاختبارات التقليدية، الرسمية منها وغير الرسمية، تقيس غالبًا <strong>ناتج</strong> التعلم في لحظة معينة: ماذا يعرف الطالب الآن؟ وهذا مفيد، لكنه يفترض أن كل الطلاب حصلوا على فرص تعلم متكافئة، وأن الأداء في موقف الاختبار يعكس الأداء في الحياة. وحين لا يصح هذا الافتراض، نحتاج إلى أسئلة أخرى:</p>
+<div class="tw"><table id="tab-1" id="tab-5-1">
+  <caption>جدول ٥-١: الأساليب البديلة والسؤال الذي يطرحه كل منها.</caption>
+  <thead><tr><th>الأسلوب</th><th>السؤال الذي يطرحه</th><th>أين يفيد أكثر</th></tr></thead>
+  <tbody>
+    <tr><td>التقييم الدينامي</td><td>كيف يتعلم الطالب حين نعلمه؟ وكم يستفيد من المساعدة؟</td><td>الطلاب من خلفيات لغوية وثقافية مختلفة، والتمييز بين نقص الفرص والاضطراب</td></tr>
+    <tr><td>التقييم الوظيفي للسلوك</td><td>ما الذي يدفع الطالب إلى هذا السلوك؟ وما الذي يحافظ عليه؟</td><td>المشكلات السلوكية، وبناء خطط التدخل السلوكي</td></tr>
+    <tr><td>التقييم الأصيل</td><td>ماذا يستطيع الطالب أن ينتج في مهمة حقيقية ذات معنى؟</td><td>الموهبة والإبداع، والمهارات التي لا تظهر في الاختبارات القصيرة</td></tr>
+    <tr><td>التقييم القائم على اللعب</td><td>كيف يتصرف الطفل الصغير في نشاطه الطبيعي؟</td><td>الطفولة المبكرة، والأطفال الذين لا يستجيبون لمواقف الاختبار</td></tr>
+    <tr><td>التقييم في الروتين والبيئة</td><td>ماذا يفعل الطالب فعلًا، وبأي مساعدة، في مواقف حياته اليومية؟</td><td>ذوو الإعاقات الشديدة والمتعددة الذين لا تناسبهم الأدوات المقننة</td></tr>
+  </tbody>
+</table></div>
+<p>ولهذه الأساليب سند في التنظيم السعودي. فالقواعد التنظيمية لمعاهد وبرامج التربية الخاصة تنص في باب القياس والتشخيص على استعمال «أساليب رسمية وغير رسمية»، وعلى «عدم الاكتفاء بنتائج مقياس واحد عند تحديد أهلية التلميذ»، وتجيز وضع التلميذ تحت الملاحظة «لمدة فصل دراسي كامل» عند الحاجة (وزارة المعارف، ١٤٢٢هـ، المادة ٨٠). والأساليب البديلة هي ما يملأ هذه المساحة بأدلة منظمة، بدل أن تبقى الملاحظة انطباعًا عامًا.</p>
+
+<div class="callout" data-k="warn">
+  <div class="tag"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3 2 20h20L12 3Z"/><path d="M12 10v4M12 17h.01"/></svg>تنبيه اصطلاحي: «الأساليب البديلة» غير «التقييم البديل»</div>
+  <p>نستعمل في هذا الفصل «الأساليب البديلة» بمعنى أساليب تكمل الاختبار التقليدي بأسئلة أخرى. أما في الأدبيات الأمريكية فمصطلح <strong>التقييم البديل</strong> (Alternate assessment) له معنى نظامي محدد: اختبار تحصيلي على مستوى الولاية يؤديه الطلاب ذوو الإعاقات المعرفية الأشد، ويُقاس فيه أداؤهم بمعايير تحصيل بديلة لا بمعايير الصف. ويحدد قانون «كل طالب ينجح» سقفًا لنسبة من يُقيَّمون بهذا التقييم، هو ١٪ من مجموع الطلاب الذين يُختبرون في الولاية في المادة الواحدة (Every Student Succeeds Act, 2015). فإذا صادف القارئ المصطلح في تقرير أو دراسة أجنبية، فالمقصود غالبًا هذا المعنى النظامي الضيق. ونعرض تقييم هذه الفئة من الطلاب في القسم ٥-٦.</p>
+</div>
+
+<!-- 2 -->
+<h2 id="s2"><span class="sec">٥-٢</span>التقييم الدينامي</h2>
+<p>يستند <strong>التقييم الدينامي</strong> (Dynamic assessment) إلى فكرة للعالم الروسي ليف فيغوتسكي تُسمى <strong>منطقة النمو القريبة</strong> (Zone of proximal development)، وهي المسافة بين ما يستطيع الطفل فعله وحده، وما يستطيع فعله بمساعدة من هو أكثر منه خبرة (Vygotsky, 1978). فقد يحصل طفلان على الدرجة نفسها حين يعمل كل منهما وحده، لكن أحدهما يتقدم بسرعة بعد تلميح بسيط، والآخر لا يتقدم إلا بمساعدة كبيرة. والفرق بينهما لا يظهر في اختبار تقليدي، لكنه يكشف الكثير عن قدرتهما على التعلم.</p>
+<p>ولهذا يختلف التقييم الدينامي عن التقليدي في أن الفاحص يتخلى عن الحياد، فيتدخل ويعلّم عمدًا، ثم يقيس أثر تعليمه. وقد طوّر رؤفين فيورشتاين وزملاؤه هذه الفكرة في أداة تُسمى <strong>أداة تقييم إمكانية التعلم</strong> (Learning Potential Assessment Device, LPAD)، تعتمد على ما سمّاه فيورشتاين <strong>خبرة التعلم الموسَّطة</strong> (Mediated learning experience)، أي أن يقف شخص راشد وسيطًا بين الطفل والمهمة، فيوجه انتباهه، وينظم له المعلومات، ويساعده على فهم الاستراتيجية ونقلها إلى مواقف أخرى (Feuerstein et al., 1979).</p>
+
+<h3>النموذج الأشهر: اختبار ثم تعليم ثم إعادة اختبار</h3>
+<figure id="fig-5-1" class="fig-frame">
+  <div class="ttr">
+    <div class="b"><b>اختبار قبلي</b><span>قياس أداء الطالب وحده في مهمة محددة</span></div>
+    <div class="a" aria-hidden="true">←</div>
+    <div class="b mid"><b>تعليم موسط</b><span>جلسة أو جلستان يعلم فيها الفاحص استراتيجية المهمة، ويلاحظ كيف يستجيب الطالب</span></div>
+    <div class="a" aria-hidden="true">←</div>
+    <div class="b"><b>اختبار بعدي</b><span>قياس الأداء مرة أخرى في مهمة مماثلة، ومقارنته بالأول</span></div>
+  </div>
+  <figcaption><b>شكل ٥-١:</b> نموذج الاختبار ثم التعليم ثم إعادة الاختبار. والأهم من الدرجة الأخيرة مقدار التحسن وطريقة الاستجابة أثناء التعليم.</figcaption>
+</figure>
+<p>ويسجل الفاحص أثناء التعليم الموسط ملاحظات عن <strong>القابلية للتعديل</strong> (Modifiability)، أي مدى استفادة الطالب من التعليم: هل انتبه الطالب؟ هل طبق الاستراتيجية الجديدة؟ هل احتاج إلى تكرار كثير؟ هل نقلها إلى مهمة مختلفة قليلًا؟</p>
+
+<h3>التمييز بين الاختلاف والاضطراب</h3>
+<p>من أهم استخدامات التقييم الدينامي التمييز بين طالب منخفض الأداء لأنه لم يتعرض للغة أو للمهارة بما يكفي، وطالب منخفض الأداء لأن لديه اضطرابًا فعليًا. وقد أظهرت دراسة على أطفال من خلفيات لغوية متنوعة أن الأطفال ذوي النمو اللغوي الطبيعي تحسنوا بوضوح بعد جلستين قصيرتين عن استراتيجيات تسمية الأشياء، بينما تحسن الأطفال ذوو الاضطراب اللغوي قليلًا، رغم أن المجموعتين بدأتا بدرجات منخفضة متقاربة (Peña et al., 2001).</p>
+<figure id="fig-5-2" class="fig-frame">
+  <svg class="slope" viewBox="0 0 760 290" role="img" aria-label="رسم خطي لأداء طفلين قبل التعليم الموسط وبعده على مقياس من صفر إلى عشرين: الطفل (أ) ارتفع من ٨ إلى ١٧، والطفل (ب) ارتفع من ٧ إلى ٩ فقط" style="width:100%;height:auto">
+    <line class="gr" x1="170" y1="40" x2="170" y2="240"/><line class="gr" x1="470" y1="40" x2="470" y2="240"/>
+    <line class="ax" x1="120" y1="240" x2="520" y2="240"/>
+    <text class="tk" x="112" y="244" text-anchor="end">٠</text><text class="tk" x="112" y="144" text-anchor="end">١٠</text><text class="tk" x="112" y="44" text-anchor="end">٢٠</text>
+    <line class="gr" x1="120" y1="140" x2="520" y2="140"/><line class="gr" x1="120" y1="40" x2="520" y2="40"/>
+    <text class="lb" x="170" y="264" text-anchor="middle">قبل التعليم</text><text class="lb" x="470" y="264" text-anchor="middle">بعد التعليم</text>
+    <line class="lA" x1="170" y1="160" x2="470" y2="70"/><line class="lB" x1="170" y1="170" x2="470" y2="150" stroke-dasharray="8 5"/>
+    <circle class="pA" cx="170" cy="160" r="7"/><circle class="pA" cx="470" cy="70" r="7"/>
+    <rect class="pB" x="163" y="170" width="14" height="14"/><rect class="pB" x="463" y="143" width="14" height="14"/>
+    <text class="tA" x="150" y="160" text-anchor="end">٨</text><text class="tA" x="490" y="74">١٧</text>
+    <text class="tB" x="150" y="187" text-anchor="end">٧</text><text class="tB" x="490" y="154">٩</text>
+    <text class="tA" x="610" y="74" text-anchor="middle">الطفل (أ)</text><text class="tk" x="610" y="94" text-anchor="middle">استفاد كثيرًا</text>
+    <text class="tB" x="610" y="154" text-anchor="middle">الطفل (ب)</text><text class="tk" x="610" y="174" text-anchor="middle">استفاد قليلًا</text>
+  </svg>
+  <figcaption><b>شكل ٥-٢:</b> مثال افتراضي لطفلين بدأ كلاهما بدرجة منخفضة (٨ و٧ من ٢٠). الطفل (أ)، بالخط المتصل والنقاط الدائرية، قفز إلى ١٧ بعد جلستين، مما يرجح أن انخفاض درجته الأولى سببه نقص الفرص. أما الطفل (ب)، بالخط المتقطع والنقاط المربعة، فبقي منخفضًا رغم التعليم نفسه، مما يستدعي تقييمًا أعمق لاحتمال وجود اضطراب.</figcaption>
+</figure>
+<p>لنعد إلى نزار في المشهد الافتتاحي. درجته المنخفضة في اختبار المفردات لا تقول شيئًا عن سببها. فيعلّمه الفاحص في جلستين قصيرتين أسماء مجموعة جديدة من الأشياء، ويعلّمه معها استراتيجية: أن يسأل عن اسم ما لا يعرفه، وأن يربط الاسم الجديد بفئته (هذا من الفواكه، وهذا من أدوات المطبخ). ثم يقيس تعلمه مجموعة مماثلة لم يُعلَّمها. فإن جاء أداؤه على هيئة الطفل (أ) في الشكل ٥-٢، فتعلم بسرعة، ونقل الاستراتيجية، واحتاج إلى تلميحات قليلة، رجّح ذلك أن انخفاض درجته يعكس قلة تعرضه للعربية، فيكون الإجراء المناسب دعمًا لغويًا مكثفًا ومتابعة. وإن جاء على هيئة الطفل (ب)، فالخطوة التالية استكمال التقييم قبل أي حكم باضطراب لغوي، ومن أهم أسئلته: كيف نمت لغته الأم؟ فالاضطراب اللغوي الحقيقي يظهر في اللغتين، أما صعوبة اكتساب لغة ثانية فتقتصر على اللغة الجديدة.</p>
+
+<h3>التلميحات المتدرجة</h3>
+<p>من صور التقييم الدينامي أن يقدم الفاحص <strong>تلميحات متدرجة</strong> (Graduated prompts) من العام إلى الخاص، ويحسب عدد التلميحات التي احتاجها الطالب حتى يصل إلى الإجابة. فالطالب الذي يحتاج إلى تلميح واحد عام يختلف كثيرًا عن الطالب الذي يحتاج إلى أن يُعطى الحل خطوة خطوة.</p>
+<figure id="fig-5-3" class="fig-frame">
+  <ol class="ladder">
+    <li style="--k:4">«فكر مرة أخرى في المسألة.»</li>
+    <li style="--k:9">«ما المطلوب في السؤال؟ أعد قراءته.»</li>
+    <li style="--k:14">«هل تذكر مسألة مشابهة حللناها قبل قليل؟»</li>
+    <li style="--k:20">«انظر إلى هذين الرقمين، ما العلاقة بينهما؟»</li>
+    <li style="--k:27">عرض الخطوة الأولى من الحل، وطلب إكمال الباقي.</li>
+    <li style="--k:34">عرض الحل كاملًا مع الشرح، ثم إعطاء مسألة مماثلة.</li>
+  </ol>
+  <figcaption><b>شكل ٥-٣:</b> سلم تلميحات متدرج من الأعم إلى الأخص. يسجل الفاحص رقم التلميح الذي وصل عنده الطالب إلى الحل، ثم هل نقل ما تعلمه إلى مسألة جديدة.</figcaption>
+</figure>
+
+<h3>صيغتان للتقييم الدينامي</h3>
+<p>يميز ستيرنبرغ وغريغورينكو بين صيغتين رئيستين يُبنى عليهما أغلب ما يُطبق من التقييم الدينامي (Sternberg &amp; Grigorenko, 2002). الأولى تضع التعليم كله بين اختبارين، والثانية توزعه على البنود نفسها، كما في سلم التلميحات السابق:</p>
+<div class="tw"><table id="tab-2" id="tab-5-2">
+  <caption>جدول ٥-٢: صيغتا التقييم الدينامي وما تقيسه كل منهما.</caption>
+  <thead><tr><th>الصيغة</th><th>كيف تُطبق</th><th>ما الذي يُسجل</th><th>متى تناسب</th></tr></thead>
+  <tbody>
+    <tr><td>صيغة «الشطيرة» (Sandwich format)</td><td>اختبار قبلي، ثم جلسة تعليم أو أكثر، ثم اختبار بعدي بمهمة مماثلة</td><td>الفرق بين الاختبارين، ونقل التعلم إلى مهمة جديدة</td><td>حين يُراد معرفة أثر تعليم مكثف في مهارة محددة، كتعلم مفردات جديدة</td></tr>
+    <tr><td>صيغة «الكعكة» (Cake format)</td><td>يُقدَّم كل بند، فإن أخطأ الطالب قُدمت له تلميحات متدرجة في البند نفسه حتى يصل إلى الحل</td><td>عدد التلميحات ونوعها في كل بند، وتناقصها مع تقدم البنود</td><td>حين يُراد رسم صورة دقيقة لمقدار المساعدة التي يحتاج إليها الطالب ونوعها</td></tr>
+  </tbody>
+</table></div>
+<p>ويختلف التقييم الدينامي أيضًا في درجة تقنينه. فبعض صوره مرنة إكلينيكية، يكيف فيها الفاحص وساطته بحسب ما يراه من الطالب، كما في أسلوب فيورشتاين. وبعضها مقنن، يقدم فيه الفاحص التلميحات نفسها بالترتيب نفسه لكل طالب. والصور المرنة أغنى بالمعلومات عن طريقة تعلم الطالب، لكن المقننة أيسر في المقارنة بين الطلاب وأقرب إلى متطلبات الثبات.</p>
+
+<h3>التقييم الدينامي والاستجابة للتدخل</h3>
+<p>يلتقي التقييم الدينامي في فكرته مع نموذج <strong>الاستجابة للتدخل</strong> (Response to intervention, RTI) الذي يتناوله الفصل السادس: كلاهما يتجاوز مستوى الطالب إلى السؤال عن استجابته حين يُعلَّم. وقد رأت غريغورينكو أنهما ينتميان إلى عائلة واحدة من المنهجيات، سمتها الجوهرية الدمج بين التقييم والتدخل في نشاط واحد، ودعت أنصار الاستجابة للتدخل إلى الإفادة مما تراكم في التقييم الدينامي من نجاحات وإخفاقات، لأنه أقدم منه بعقود (Grigorenko, 2009). والفرق العملي بينهما في المدى الزمني ومكان التطبيق: فالاستجابة للتدخل تُرصد في الصف على مدى أسابيع بقياسات متكررة، أما التقييم الدينامي فيضغط السؤال نفسه في جلسة أو جلستين يديرهما فاحص. ولذلك يصلح التقييم الدينامي مؤشرًا أوليًا سريعًا، ولا يغني عن متابعة الاستجابة لتدخل حقيقي في الصف.</p>
+
+<div class="callout" data-k="warn">
+  <div class="tag"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3 2 20h20L12 3Z"/><path d="M12 10v4M12 17h.01"/></svg>حدود التقييم الدينامي</div>
+  <p>يستغرق وقتًا أطول من الاختبار التقليدي، ويعتمد كثيرًا على مهارة الفاحص، ولا تتوافر له معايير في الغالب. ولذلك يُستخدم مكملًا للتقييم التقليدي، وتُعرض نتائجه في التقرير عرضًا وصفيًا يبين كيف استجاب الطالب للتعليم، بدل اختزالها في درجة معيارية (Haywood &amp; Lidz, 2007).</p>
+  <p>أما ما تقوله المراجعات عن صدقه التنبئي فمتفاوت. فقد راجع كافري وزميلاه أربعًا وعشرين دراسة، ووجدوا أن قدرته على التنبؤ بالتحصيل اللاحق تختلف باختلاف صورته وفئة الطلاب ونوع المحك: فقد كانت أفضل حين لا تتوقف المساعدة على استجابة الطالب، وحين طُبق على طلاب ذوي إعاقة لا على طلاب معرضين للخطر أو عاديين، وحين كان المحك اختبارًا محكي المرجع أو تقييمًا ديناميًا مستقلًا لا اختبارًا معياريًا أو تقدير المعلم (Caffrey et al., 2008). وفي مراجعة منهجية أحدث لأربع عشرة دراسة في التعرف على عسر القراءة، فسر التقييم الدينامي تباينًا في التنبؤ لا تفسره الاختبارات التقليدية، لكن دقة التصنيف تحسنت حين جُمع مع مقاييس تقليدية، وكانت أعلى حين استهدف مهارات قريبة من القراءة كفك الرموز، وتراجعت قوته التنبئية مع تقدم العمر (Dixon et al., 2023). الخلاصة: التقييم الدينامي يضيف معلومة حقيقية، لكنه لا يصلح وحده أساسًا لقرار أهلية.</p>
+</div>
+
+<div class="callout" data-k="pro">
+  <div class="tag"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19h16"/><path d="M6 15l4-6 4 4 4-7"/></svg>للمتخصص: كيف تُقاس الاستفادة من التعليم؟</div>
+  <p>أبسط طريقة لقياس الاستفادة أن تُطرح درجة الاختبار القبلي من درجة البعدي. لكن درجة الفرق أقل ثباتًا من كل من الدرجتين، وكلما ارتفع الارتباط بين الاختبارين انخفض ثبات الفرق، لأن الخطأ في القياسين يجتمع فيه بينما يتقلص فيه التباين الحقيقي. ويتأثر الفرق كذلك بالارتداد نحو المتوسط، فالطالب الذي جاءت درجته القبلية منخفضة جدًا بسبب خطأ القياس سيبدو «مستفيدًا» حتى دون تعليم. ولهذا يلجأ المصممون إلى بدائل: الاعتماد على عدد التلميحات اللازمة (صيغة الكعكة)، أو على الدرجة البعدية بعد ضبط القبلية إحصائيًا، أو على بنود نقل التعلم إلى مهمة لم تُعلَّم. والقاعدة العملية لمن يقرأ تقريرًا ديناميًا: اقرأ «ارتفاع الدرجة ٥ نقاط» مقرونًا بنوع المساعدة التي احتاجها الطالب، وبقدرته على النقل.</p>
+</div>
+
+<!-- 3 -->
+<h2 id="s3"><span class="sec">٥-٣</span>التقييم الوظيفي للسلوك</h2>
+<p>حين يتكرر سلوك مُشكِل، يميل الناس إلى تفسيره بصفة في الطالب: «عنيد»، «مشاغب»، «يريد لفت الانتباه». أما <strong>التقييم الوظيفي للسلوك</strong> (Functional behavioral assessment, FBA) فيبدأ من افتراض مختلف: <strong>كل سلوك يستمر لأنه يحقق للطالب شيئًا</strong>. ومهمتنا أن نعرف ماذا يحقق، أي ما <strong>وظيفته</strong>. فإذا عرفنا الوظيفة، علمنا الطالب طريقة أنسب لتحقيقها، فيقل السلوك المشكل.</p>
+
+<h3>أربع وظائف شائعة للسلوك</h3>
+<p>تُصنف وظائف السلوك وفق بعدين: هل يحصل الطالب على شيء أم يهرب من شيء؟ وهل مصدر ذلك الآخرون أم إحساسه الداخلي (Iwata et al., 1994)؟ وقد يحافظ على السلوك الواحد أكثر من وظيفة لدى الطالب نفسه.</p>
+<figure id="fig-5-4" class="fig-frame">
+  <div class="fn">
+    <div class="h"></div><div class="h">من الآخرين أو البيئة</div><div class="h">من داخل الجسم أو الحواس</div>
+    <div class="rh">الحصول<br>على</div>
+    <div class="c"><b>انتباه أو شيء مادي</b><span>يصرخ فيأتي المعلم ويتحدث معه. يبكي فيُعطى الجهاز اللوحي.</span></div>
+    <div class="c"><b>إثارة حسية</b><span>يهز جسمه أو يصدر أصواتًا لأن الإحساس نفسه ممتع له، ويفعله حتى وهو وحده.</span></div>
+    <div class="rh">الهروب<br>من</div>
+    <div class="c"><b>مهمة أو موقف</b><span>يرمي الكتاب فيُخرج من الحصة، فيتجنب المهمة الصعبة.</span></div>
+    <div class="c"><b>إحساس مزعج</b><span>يسد أذنيه ويخرج من القاعة المزدحمة ليهرب من الضجيج، أو يضرب رأسه حين يشعر بألم.</span></div>
+  </div>
+  <figcaption><b>شكل ٥-٤:</b> أربع وظائف شائعة للسلوك. السلوك نفسه قد يؤدي وظائف مختلفة لدى طلاب مختلفين، ولذلك تُبنى معالجته على وظيفته قبل شكله.</figcaption>
+</figure>
+
+<div class="callout" data-k="myth">
+  <div class="tag"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5V14M12 17h.01"/></svg>مفهوم خاطئ: «يفعل ذلك ليلفت الانتباه»</div>
+  <p>هذا أكثر التفسيرات شيوعًا في المدارس، وأكثرها خداعًا. فالمعلم يلتفت إلى الطالب بعد أغلب السلوكيات المزعجة، فيبدو الانتباه دائمًا «نتيجة» للسلوك. لكن حضور الانتباه بعد السلوك لا يعني أنه ما يحافظ عليه. فقد يكون الطالب يهرب من المهمة، والانتباه مجرد أثر جانبي. وسنرى في حدود التقييم الوصفي أدناه أن هذا الخلط موثق بحثيًا.</p>
+</div>
+
+<h3>خطوات التقييم الوظيفي</h3>
+<ol>
+  <li><strong>تعريف السلوك تعريفًا إجرائيًا،</strong> أي وصفه بأفعال يمكن ملاحظتها وعدّها، مثل «يرمي الكتاب على الأرض» بدل «عدواني» أو «غير متعاون».</li>
+  <li><strong>جمع معلومات غير مباشرة:</strong> مقابلات مع المعلمين والأسرة، واستبانات عن وقت حدوث السلوك ومكانه ومن يكون حاضرًا.</li>
+  <li><strong>الملاحظة المباشرة الوصفية:</strong> تسجيل ما يسبق السلوك وما يليه في مواقفه الطبيعية على مدى عدة أيام، ويُعرف هذا بتسجيل «السوابق والسلوك والنتائج» (Antecedent-behavior-consequence, ABC).</li>
+  <li><strong>صياغة فرضية</strong> عن الوظيفة، بناءً على النمط الذي يظهر في البيانات.</li>
+  <li><strong>التحقق من الفرضية،</strong> إما بتجربة تدخل مبني عليها وملاحظة أثره، أو بـ<strong>التحليل الوظيفي</strong> (Functional analysis) التجريبي الذي يغير الظروف بطريقة منظمة، ويتولاه متخصص في تحليل السلوك (Hanley et al., 2003).</li>
+  <li><strong>بناء خطة تدخل سلوكي</strong> (Behavior intervention plan) تعلم الطالب سلوكًا بديلًا مقبولًا يحقق الوظيفة نفسها.</li>
+</ol>
+<p>وتختلف مصادر المعلومات في هذه الخطوات في قوة ما تقدمه من دليل على الوظيفة، كما يبين الجدول ٥-٣:</p>
+<div class="tw"><table id="tab-3" id="tab-5-3">
+  <caption>جدول ٥-٣: مستويات الدليل في التقييم الوظيفي للسلوك.</caption>
+  <thead><tr><th>المستوى</th><th>ما يقدمه</th><th>حدوده</th><th>من ينفذه عادة</th></tr></thead>
+  <tbody>
+    <tr><td>غير مباشر (مقابلات واستبانات)</td><td>صورة سريعة عن ظروف السلوك، وفرضيات أولية</td><td>يعتمد على ذاكرة المجيب وتفسيره، وقد يختلف المجيبون</td><td>المعلم، والأخصائي، والمرشد</td></tr>
+    <tr><td>وصفي (تسجيل السوابق والسلوك والنتائج)</td><td>نمط فعلي من الموقف الطبيعي</td><td>ارتباطي: يبين ما يصاحب السلوك لا ما يسببه</td><td>المعلم بعد تدريب، والأخصائي</td></tr>
+    <tr><td>تجريبي (التحليل الوظيفي)</td><td>دليل سببي: يُغيَّر ظرف واحد ويُلاحظ أثره في السلوك</td><td>يثير السلوك عمدًا، فيحتاج إلى متخصص وموافقة الأسرة وضوابط أمان</td><td>متخصص في تحليل السلوك</td></tr>
+    <tr><td>تجربة تدخل مبني على الفرضية</td><td>دليل عملي: هل يقل السلوك حين تُلبى الوظيفة بطريقة مقبولة؟</td><td>أبطأ، وقد يتحسن السلوك لأسباب أخرى تصادف التدخل</td><td>الفريق المدرسي بإشراف مختص</td></tr>
+  </tbody>
+</table></div>
+
+<h3>مثال: بدر وكتاب الرياضيات</h3>
+<p>بدر هو طالب الصف الرابع في المشهد الافتتاحي، الذي يرمي كتابه في حصص الرياضيات. سجلت معلمته ما يسبق سلوكه وما يليه على مدى عشرة أيام، ثم صنفت ما يحدث بعد السلوك، لأن النتيجة التي تعقب السلوك هي ما يحافظ عليه. وهذه أمثلة من سجلها:</p>
+<div class="tw"><table id="tab-4" id="tab-5-4">
+  <caption>جدول ٥-٤: أمثلة من سجل السوابق والسلوك والنتائج لبدر.</caption>
+  <thead><tr><th>ما حدث قبل السلوك</th><th>السلوك</th><th>ما حدث بعده</th></tr></thead>
+  <tbody>
+    <tr><td>وُزعت ورقة مسائل القسمة</td><td>رمى الكتاب وقال: «لا أريد»</td><td>أُرسل إلى مكتب الوكيل</td></tr>
+    <tr><td>طُلب منه الحل على السبورة</td><td>رمى الكتاب</td><td>أُجلس في آخر الصف دون مهمة</td></tr>
+    <tr><td>بدأ نشاط جماعي في الحساب الذهني</td><td>رمى الكتاب وضرب الطاولة</td><td>أُرسل إلى المرشد الطلابي</td></tr>
+    <tr><td>حصة فنية حرة</td><td>لم يحدث السلوك</td><td>عمل بهدوء</td></tr>
+  </tbody>
+</table></div>
+<div class="tally">
+  <div class="hi"><b>٨</b>انتهت بإبعاده عن المهمة</div>
+  <div><b>١</b>انتهت بانتباه المعلم</div>
+  <div><b>١</b>انتهت بلا تغيير</div>
+  <div><b>٠</b>في الحصص غير الأكاديمية</div>
+</div>
+<p style="margin-top:14px">النمط واضح: يحدث السلوك حين تُطلب منه مهمة حسابية، وينتهي غالبًا بإبعاده عنها. فإرساله إلى الوكيل، الذي عُدّ عقابًا، كان في الحقيقة يحقق لبدر ما يريده تمامًا، وهذا ما يفسر زيادة السلوك. وتُصاغ الفرضية على هذا النحو:</p>
+<div class="hyp">عندما <span class="slot">تُطلب من بدر مهمة حسابية مكتوبة أو علنية</span>، <span class="slot">يرمي الكتاب ويرفض العمل</span>، ويؤدي ذلك إلى <span class="slot">إبعاده عن المهمة</span>. لذا فوظيفة السلوك على الأرجح <span class="slot">الهروب من المهمة</span>.</div>
+<p style="margin-top:14px">لكن هذه الفرضية تبقى <strong>مبدئية</strong>، لأنها مبنية على سجل وصفي يبين ما صاحب السلوك لا ما سببه. ولا تتأكد إلا بتجربة تدخل مبني عليها، كأن يُعلَّم بدر طلب استراحة قصيرة فيُستجاب له ويقل الرمي، أو بتحليل وظيفي يجريه متخصص.</p>
+<p>والسؤال الذي يطرحه التقييم بعد ذلك مهم للتشخيص: لماذا يهرب بدر من الحساب تحديدًا؟ قد تكشف الإجابة عن صعوبة تعلم في الرياضيات لم تُكتشف بعد، فيصبح السلوك عرضًا لا مشكلة مستقلة. ولذلك يُوصى بتقييم مهاراته الحسابية إلى جانب خطة التدخل السلوكي التي تعلمه أن يطلب المساعدة أو استراحة قصيرة بدل رمي الكتاب (O'Neill et al., 2015).</p>
+
+<div class="callout" data-k="warn">
+  <div class="tag"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3 2 20h20L12 3Z"/><path d="M12 10v4M12 17h.01"/></svg>حدود التقييم الوصفي</div>
+  <p>بيانات السوابق والسلوك والنتائج ارتباطية، فهي تسجل ما يحدث بعد السلوك، لا ما يحافظ عليه. وقد قارن طومسون وإيواتا نتائج التقييم الوصفي بنتائج التحليل الوظيفي لدى اثني عشر مشاركًا، فلم تطابق النتيجة الأكثر تكرارًا في السجل الوصفي الوظيفة الفعلية إلا في ثلاث حالات. وكان الانتباه أكثر النتائج تكرارًا بعد السلوك لدى ثمانية منهم، لكن التحليل الوظيفي لم يُثبت أن الانتباه يحافظ على السلوك إلا لدى اثنين من هؤلاء الثمانية (Thompson &amp; Iwata, 2007). أي أن السجل الوصفي يميل إلى تضخيم وظيفة الانتباه، لأن الكبار يلتفتون إلى السلوك المزعج أيًّا كانت وظيفته.</p>
+  <p>ولأن التحليل الوظيفي التقليدي طويل ويحتاج إلى ظروف مضبوطة، طُورت صيغ أقصر تناسب المدارس والعيادات. ومن أشهرها <strong>التحليل الوظيفي المركب المبني على المقابلة</strong> (Interview-informed synthesized contingency analysis, IISCA)، وفيه تُستخلص من مقابلة مفتوحة مع الأسرة أو المعلم الظروف التي يُرجح أنها تثير السلوك وتحافظ عليه، ثم تُجمع في موقف اختبار واحد يُقارن بموقف ضابط تتاح فيه هذه المعززات بلا شرط (Hanley et al., 2014). وقد بلغ متوسط زمن التحليل في ثلاثين تطبيقًا لهذه الصيغة نحو خمس وعشرين دقيقة (Jessel et al., 2016). وتُظهر مراجعة حديثة لعقد كامل من دراسات التحليل الوظيفي (٢٠١٢–٢٠٢٢) اتجاهًا إلى جلسات أقصر، وإلى مزيد من التطبيق في العيادات الخارجية، وإلى الجمع بين التحليل وتقييمات مكملة (Melanson &amp; Fahmie, 2023). ويُؤخذ على الصيغة المركبة أنها تبين ما يحافظ على السلوك مجتمعًا، ولا تعزل كل وظيفة على حدة.</p>
+  <p>وفي كل صيغه يثير التحليل الوظيفي السلوك المشكل عمدًا، فلا يجريه إلا متخصص مؤهل، بموافقة مكتوبة من الأسرة، وبمعايير معلنة لإيقاف الجلسة إذا صار السلوك خطرًا.</p>
+</div>
+
+<div class="callout" data-k="example">
+  <div class="tag"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="10" r="3"/><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11Z"/></svg>في السياق السعودي: من يجري التقييم الوظيفي؟</div>
+  <p>تسند القواعد التنظيمية القياس والتشخيص إلى فريق متعدد التخصصات، ومن أعضائه «معلم التدريبات السلوكية (أخصائي نفسي)»، وتذكر من مهامه استعمال أدوات القياس الرسمية وغير الرسمية «مثل المقابلة والملاحظة وقوائم الشطب» (وزارة المعارف، ١٤٢٢هـ، المواد ٤٨–٤٩ و٨١). فالمقابلة والملاحظة الوصفية، وهما عماد المستويين الأول والثاني في الجدول ٥-٣، من صميم دور هذا العضو في الفريق. أما التحليل الوظيفي التجريبي، فلم نجد نصًا تنظيميًا منشورًا يحدد من يجريه في المدارس أو يشترط له تأهيلًا بعينه.</p>
+  <p><em>سؤال للتأمل:</em> إن لم يكن في مدرستك متخصص في تحليل السلوك، فما الذي يمكن للفريق أن يفعله بأمان للتحقق من فرضية مثل فرضية بدر؟</p>
+</div>
+
+<div class="callout" data-k="key">
+  <div class="tag"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9V16h7v-2.1A6 6 0 0 0 12 3Z"/></svg>التقييم الوظيفي والتشخيص</div>
+  <p>التقييم الوظيفي لا يشخص اضطرابًا، لكنه يكمل التشخيص من جهتين: يمنع تفسير سلوك له وظيفة واضحة على أنه دليل على اضطراب انفعالي، ويكشف أحيانًا عن حاجة خفية، كصعوبة تعلم أو حساسية حسية أو ضعف في التواصل.</p>
+</div>
+
+<!-- 4 -->
+<h2 id="s4"><span class="sec">٥-٤</span>التقييم الأصيل وتقييم الأداء</h2>
+<p><strong>التقييم الأصيل</strong> (Authentic assessment)، ويقرب منه <strong>تقييم الأداء</strong> (Performance assessment)، يطلب من الطالب أن يؤدي مهمة تشبه ما يفعله الناس في الحياة الحقيقية، بدل الإجابة عن أسئلة منفصلة. فبدل أن يختار الطالب الإجابة الصحيحة في سؤال عن مساحة المستطيل، يُطلب منه أن يخطط حديقة صغيرة بميزانية محددة ويحسب ما تحتاجه من عشب وسياج (Wiggins, 1990). ويُصحح الأداء بـ<strong>سلم تقدير لفظي</strong> (Rubric)، وهو غير «مقاييس التقدير» التي يملؤها المعلم أو الوالد عن سلوك الطالب: فسلم التقدير اللفظي يحدد <strong>محكات التصحيح</strong> ويصف مستويات الإتقان في كل محك.</p>
+<div class="tw"><table id="tab-5" id="tab-5-5">
+  <caption>جدول ٥-٥: الاختبار التقليدي والتقييم الأصيل.</caption>
+  <thead><tr><th>الجانب</th><th>الاختبار التقليدي</th><th>التقييم الأصيل</th></tr></thead>
+  <tbody>
+    <tr><td>المهمة</td><td>أسئلة قصيرة منفصلة</td><td>مهمة متكاملة في سياق حقيقي</td></tr>
+    <tr><td>ما يقيسه</td><td>المعرفة والتذكر غالبًا</td><td>التطبيق والتخطيط والإبداع والتواصل</td></tr>
+    <tr><td>الإجابة</td><td>واحدة صحيحة غالبًا</td><td>قد تتعدد الحلول الجيدة</td></tr>
+    <tr><td>التصحيح</td><td>مفتاح إجابة</td><td>سلم تقدير لفظي بمحكات تصحيح واضحة</td></tr>
+    <tr><td>نقطة الضعف</td><td>قد لا يعكس القدرة على التطبيق</td><td>يستغرق وقتًا، ويتأثر بالمصحح وباختيار المهمة، فيحتاج ثباته إلى عناية خاصة</td></tr>
+  </tbody>
+</table></div>
+
+<h3>التقييم الأصيل في التعرف على الموهوبين</h3>
+<p>للتقييم الأصيل مكانة خاصة في التعرف على الموهبة، لأن كثيرًا من الموهوبين لا تظهر قدراتهم في الاختبارات المقننة، خصوصًا من ينتمون إلى خلفيات لغوية أو اقتصادية أقل حظًا، أو من لديهم إعاقة تخفي قدراتهم، وهم مزدوجو الاستثنائية (ويتناولهم الفصل الثالث عشر). ومن أشهر النماذج في ذلك مشروع «اكتشاف» (DISCOVER) الذي طورته الباحثة جون ميكر، وفيه يلاحظ مقيّمون مدربون الأطفال وهم يحلون مشكلات متدرجة من المغلقة إلى المفتوحة تمامًا، في مجالات متعددة، ويسجلون طريقة تفكيرهم وحلولهم (Maker, 1996).</p>
+<p>ولهذا النموذج أدلة من بيئة عربية. ففي دراسة على ٢٤٨ طالبًا وطالبة من الصفوف الثالث إلى الخامس في مدرستين خاصتين في بيروت، ارتبطت تقديرات «اكتشاف» في الذكاء المكاني ارتباطًا مرتفعًا بدرجات مصفوفات رافن المتتابعة، بينما جاء ارتباط تقديراته في الذكاء اللغوي بها منخفضًا، وهو نمط متوقع لأن رافن اختبار غير لفظي. وحُدد ١٤.٥٪ من العينة دون فروق بين الجنسين، وأيدت مقابلات الأسر والمعلمين النتائج في أغلبها. وخلصت الباحثة إلى صلاحية النموذج للتعرف في لبنان، مع الحاجة إلى مزيد من البحث (Sarouphim, 2009). ويُلاحظ أن العينة من مدارس خاصة في عاصمة واحدة، فلا تُعمم نتائجها على المدارس الحكومية أو الريفية، ولم نقف عند إعداد الكتاب على دراسة منشورة لصدق النموذج في المدارس السعودية.</p>
+<p>وتالا في المشهد الافتتاحي مثال على ما يكشفه هذا النوع من التقييم. فدرجاتها المتوسطة في الاختبارات لا تكشف ما أظهرته المهمة الحقيقية من قدرة على حل المشكلات والتصميم والمثابرة. وهذا لا يعني أنها موهوبة بالضرورة، لكنه يعني أنها تستحق تقييمًا أوسع يضم أدلة أخرى (ويتناول الفصل الثاني عشر التعرف على الموهوبين بالتفصيل).</p>
+
+<h3>ثبات التقدير وصدقه حين يرتفع أثر القرار</h3>
+<p>جاذبية التقييم الأصيل تجعل أسئلة القياس أشد إلحاحًا حين تُبنى عليه قرارات عالية الأثر، كالقبول في برنامج أو الحرمان منه. وقد وثقت التجارب الواسعة ثلاث مشكلات:</p>
+<ul>
+  <li><strong>ثبات المصححين:</strong> في برنامج ولاية فيرمونت الأمريكية لتقييم الكتابة والرياضيات بملفات الإنجاز، جاء اتفاق المصححين منخفضًا إلى حد لم يسمح باستعمال الدرجات في مقارنات موثوقة بين المدارس والطلاب، مع أن المعلمين أفادوا بأثر إيجابي له في ممارساتهم التدريسية (Koretz et al., 1994).</li>
+  <li><strong>تباين المهام:</strong> أداء الطالب في مهمة أداء واحدة يختلف كثيرًا عن أدائه في مهمة أخرى من المجال نفسه، وكان هذا المصدر من الخطأ أكبر من اختلاف المصححين في دراسات شافلسون وزملائه. فالحكم الموثوق يحتاج إلى عدد من المهام، مهما بلغ غنى المهمة الواحدة (Shavelson et al., 1993).</li>
+  <li><strong>صدق يتجاوز المظهر:</strong> كون المهمة «حقيقية» لا يثبت صدقها. ولذلك اقترح لين وزميلاه محكات للتحقق من صدق التقييمات المعقدة، منها العواقب، والعدالة، وقابلية التعميم والنقل، والتعقيد المعرفي، وجودة المحتوى وتغطيته، والكلفة (Linn et al., 1991).</li>
+</ul>
+<p>والنتيجة العملية: يدخل التقييم الأصيل قرار الموهبة دليلًا من بين أدلة، لا بوابة وحيدة. ويُقوى بتدريب المصححين على سلم التقدير اللفظي بأمثلة محلولة، وبأن يصحح كل منتج مصححان مستقلان يُحسب اتفاقهما، وبأن يُبنى الحكم على أكثر من مهمة.</p>
+
+<!-- 5 -->
+<h2 id="s5"><span class="sec">٥-٥</span>التقييم القائم على اللعب والتقييم في الطفولة المبكرة</h2>
+<p>لا يقوى الأطفال الصغار، ولا سيما قبل سن المدرسة، على الجلوس بهدوء أمام فاحص غريب يطرح عليهم الأسئلة، وإذا أُلزموا بذلك قاس الاختبار خوفهم أو مللهم أكثر مما يقيس قدراتهم. والسبيل إلى تجاوز ذلك أن يُلاحظ الطفل في النشاط الذي يألفه: اللعب.</p>
+<p>وفي <strong>التقييم القائم على اللعب</strong> (Play-based assessment)، يلعب الطفل في غرفة فيها ألعاب مختارة بعناية، مع أحد والديه ثم مع ميسّر مدرب، بينما يلاحظه فريق متعدد التخصصات، كأخصائي التخاطب والمعالج الوظيفي والأخصائي النفسي ومعلم التربية الخاصة. ويعطي هذا النموذج معلومات عن أربعة مجالات نمائية في وقت واحد (Linder, 2008):</p>
+<figure id="fig-5-5" class="fig-frame">
+  <div class="domains">
+    <div><b>الحسي الحركي</b><span>كيف يتحرك، ويمسك الأشياء، ويستجيب للأصوات والملمس.</span></div>
+    <div><b>الانفعالي الاجتماعي</b><span>كيف يتفاعل مع والديه ومع الغريب، ويعبر عن مشاعره، وينظمها.</span></div>
+    <div><b>التواصل واللغة</b><span>كيف يطلب ويعلق ويفهم، بالكلمات أو الإشارات.</span></div>
+    <div><b>المعرفي</b><span>كيف يحل المشكلات، ويقلد، ويلعب لعبًا تخيليًا.</span></div>
+  </div>
+  <figcaption><b>شكل ٥-٥:</b> المجالات النمائية الأربعة التي يلاحظها الفريق في التقييم القائم على اللعب في جلسة واحدة.</figcaption>
+</figure>
+<p>وتقوم بعض الأدوات المقننة على الفكرة نفسها، مثل جدول الملاحظة التشخيصي للتوحد (ADOS-2)، الذي يستخدم أنشطة لعب مقننة لاستثارة سلوكيات التواصل والتفاعل الاجتماعي وملاحظتها. والفرق أن التقييم القائم على اللعب أكثر مرونة وشمولًا لجوانب النمو كلها، بينما الجدول مقنن ومركز على سمات اضطراب طيف التوحد (ويتناوله الفصل التاسع بالتفصيل).</p>
+
+<div class="callout" data-k="teacher">
+  <div class="tag"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l9-4 9 4-9 4-9-4Z"/><path d="M7 10v5c0 1.5 2.5 3 5 3s5-1.5 5-3v-5"/></svg>لمعلمة الطفولة المبكرة</div>
+  <p>وقت اللعب الحر في الروضة فرصة يومية لتقييم لا يشعر به الطفل. لاحظي: مع من يلعب؟ هل يقلد الأطفال الآخرين؟ هل يلعب لعبًا تخيليًا، كأن يطعم الدمية؟ كيف يتصرف حين يأخذ منه طفل لعبته؟ وسجلي ملاحظاتك بطريقة منظمة: التاريخ والوقت، والموقف، وما فعله الطفل وقاله بالضبط، بعبارات تصف ما رأيتِه لا ما تستنتجينه.</p>
+</div>
+
+<h3>التقييم من الولادة إلى الثالثة: ما الذي يختلف؟</h3>
+<p>تقييم الرضيع والطفل الذي لم يبلغ الثالثة ليس تقييمًا لطفل أكبر بأدوات أصغر. فالنمو في هذه السنوات سريع ومتفاوت، والطفل لا يُقيَّم بمعزل عن أسرته، والغاية الأولى تحديد من يحتاج إلى <strong>التدخل المبكر</strong> (Early intervention) وما الذي يحتاج إليه، ويأتي التصنيف بعد ذلك. ففي الولايات المتحدة مثلًا يغطي هذه المرحلةَ الجزءُ (ج) من قانون تعليم الأفراد ذوي الإعاقة (IDEA)، وتُبنى الأهلية فيه على تأخر نمائي تحدده كل ولاية أو على حالة مشخصة يُرجح أن تؤدي إلى تأخر، وتُكتب للطفل خطة خدمات أسرية فردية لا خطة تربوية فردية (Individuals with Disabilities Education Act, 2004). ويلخص الجدول ٥-٦ ما يترتب على خصائص هذه المرحلة:</p>
+<div class="tw"><table id="tab-6" id="tab-5-6">
+  <caption>جدول ٥-٦: خصائص التقييم من الولادة إلى الثالثة وما تعنيه للمقيّم.</caption>
+  <thead><tr><th>خاصية المرحلة</th><th>ما تعنيه للمقيّم</th></tr></thead>
+  <tbody>
+    <tr><td>النمو سريع وغير منتظم، وتتأثر الأداءات بالنوم والجوع والمرض والألفة</td><td>الدرجة في هذا العمر أقل استقرارًا وأضعف تنبؤًا بالمستقبل منها في سن المدرسة. فلا يُبنى على جلسة واحدة حكم دائم، ويُعاد التقييم على فترات قصيرة</td></tr>
+    <tr><td>كثير من أدوات الصغار يفتقر إلى أرضية كافية وتدرج مناسب في البنود</td><td>قد يحصل طفلان مختلفان في قدرتهما على الدرجة الدنيا نفسها. فيُفحص في الدليل الفني مدى الأرضية وتدرج البنود في عمر الطفل قبل اختيار الأداة (Bracken, 1987)</td></tr>
+    <tr><td>الأسرة هي المصدر الأهم للمعلومات والشريك الأول في الخدمة</td><td>تُشرك الأسرة في التخطيط للتقييم وفي تنفيذه وفي تفسير نتائجه، ويُسأل عن أولوياتها ومخاوفها وروتين يومها</td></tr>
+    <tr><td>الطفل يُظهر أفضل ما لديه في بيئته المألوفة</td><td>تُفضَّل الملاحظة في البيت أو الحضانة أثناء الروتين اليومي، كالأكل واللبس واللعب، على غرفة الاختبار وحدها</td></tr>
+    <tr><td>المجالات النمائية متشابكة</td><td>يُقيَّم الطفل بفريق متعدد التخصصات، وبأساليب متعددة تجمع تقرير الوالدين والملاحظة والأداة المقننة</td></tr>
+  </tbody>
+</table></div>
+<p>وتؤكد الممارسات الموصى بها في التدخل المبكر هذه المبادئ: إشراك الأسرة، وتعدد الأساليب والمصادر، والتقييم في البيئات الطبيعية، ومناسبة الأدوات للغة الطفل وثقافته (Division for Early Childhood, 2014). ولا يعني ذلك الاستغناء عن الأدوات المقننة. فحين يُطلب تحديد مقدار التأخر لقرار أهلية، تُستعمل أداة نمائية مقننة فرديًا، مثل مقياس بايلي لنمو الرضع والأطفال الصغار في إصداره الرابع (<span class="en">Bayley-4</span>)، الذي يغطي من عمر ستة عشر يومًا إلى اثنين وأربعين شهرًا في المجالات المعرفية واللغوية والحركية، ويُكمَّل بمقاييس للسلوك الانفعالي الاجتماعي والتكيفي (Bayley &amp; Aylward, 2019). والأداة المقننة واللعب لا يتنافسان: الأولى تجيب عن «كم التأخر؟» مقارنة بالأقران، والثاني يجيب عن «كيف يعمل الطفل؟» في حياته.</p>
+
+<div class="callout" data-k="example">
+  <div class="tag"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="10" r="3"/><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11Z"/></svg>في السياق السعودي: التدخل المبكر والكشف المبكر</div>
+  <p><strong>الإطار النظامي:</strong> ينص نظام حقوق الأشخاص ذوي الإعاقة في مادته الثامنة على «تصميم وتنفيذ برامج التدخل المبكر للأطفال من ذوي الإعاقة»، وعلى توفير «أدوات القياس والتشخيص الحديثة» وتكييفها (نظام حقوق الأشخاص ذوي الإعاقة، ١٤٤٥هـ). ويحدد الدليل التنظيمي للتربية الخاصة فئتين في التدخل المبكر: الأطفال <strong>المتأخرون نمائيًا</strong>، وهم من لديهم تأخر «بواقع انحرافين معياريين دون المتوسط في اثنين أو أكثر من المجالات» أو «بنسبة مقدارها ٢٥٪»، والأطفال <strong>في حالة خطر</strong>، وهم من تعرضوا لثلاثة عوامل خطر بيئية على الأقل، على ألا يزيد العمر على ست سنوات (وزارة التعليم، ١٤٣٦هـ).</p>
+  <p><strong>مثال على نسبة التأخر:</strong> غيث في الثانية والنصف (٣٢ شهرًا)، وأداؤه في التواصل يعادل أداء طفل في الرابعة والعشرين من عمره. فالتأخر ٨ أشهر من ٣٢، أي ٢٥٪، فيبلغ الحد المذكور في هذا المجال. لكن ينبغي الحذر من هذه الطريقة: فالأعمار المكافئة ليست وحدات متساوية، وتأخر ثمانية أشهر في الثانية غيره في الخامسة، والعمر المكافئ أقل ثباتًا من الدرجة المعيارية. ولذلك يحسن أن يُقرن حساب النسبة بدرجة معيارية من أداة مقننة، وبملاحظة للطفل في روتينه.</p>
+  <p><strong>الكشف عند الولادة:</strong> يعمل «البرنامج الوطني للفحص المبكر لحديثي الولادة للحد من الإعاقة» منذ عام ٢٠٠٥م، ويفحص المولود خلال أول ٢٤–٧٢ ساعة، وبلغ عدد الأمراض المشمولة سبعة عشر مرضًا منذ ١٤٣٥هـ (وزارة الصحة، ٢٠١٦). ويعمل برنامج وطني لفحص سمع المواليد منذ عام ٢٠١٦م، وقد بلغت تغطيته في عام ٢٠٢١م نحو ٩٢.٦٪ من المواليد (Alothman et al., 2024). غير أن مراجعة منهجية حديثة رصدت تحديات، منها ضعف الوعي، وفقدان المتابعة بعد الإحالة، وضعف أنظمة تتبع البيانات (Alanazi &amp; Nicholson, 2025). فالكشف عند الولادة لا يغني عن متابعة النمو بعدها، وأكثر حالات التأخر النمائي لا تكشفها فحوص المواليد.</p>
+  <p><em>سؤال للتأمل:</em> إذا أحيلت إليك طفلة في الثانية لتأخر في الكلام، فما المصادر التي تجمع منها الأدلة قبل أن تقرر أنها تبلغ حد «التأخر النمائي» في الدليل؟</p>
+</div>
+
+<!-- 6 -->
+<h2 id="s6"><span class="sec">٥-٦</span>تقييم ذوي الإعاقات الشديدة والمتعددة</h2>
+<p>يضم الدليل التنظيمي للتربية الخاصة في المملكة بين فئاته «تعدد العوق» و«الصم المكفوفين» (وزارة التعليم، ١٤٣٦هـ). والطلاب في هاتين الفئتين، ومعهم ذوو الإعاقة الفكرية الشديدة، هم أكثر من تخذلهم الأدوات المقننة. فأغلب الاختبارات تفترض أن الطالب يرى المادة، ويسمع التعليمات، ويشير أو يتكلم ليجيب، ويحافظ على انتباهه دقائق متصلة. فإذا غاب شرط من هذه الشروط، لم يعد الاختبار يقيس ما وُضع لقياسه. وحتى حين يمكن تطبيقه، تقع درجة الطالب غالبًا عند أرضية الاختبار، فلا تميز بين طالب وآخر، ولا تقول شيئًا عما يستطيعه فعلًا. وتكييف طريقة التطبيق قد يمكّن الطالب من الإجابة، لكنه يخرج بالاختبار عن ظروف تقنينه، فلا تصح مقارنة درجته بالمعايير.</p>
+<p>لذلك ينتقل السؤال في هذه الفئة من «أين يقع الطالب مقارنة بأقرانه؟» إلى «ماذا يفعل الآن، وبأي مساعدة، وما الخطوة التالية التي يمكن تعليمها؟». وتتضافر الأساليب البديلة كلها في الإجابة:</p>
+<div class="tw"><table id="tab-7" id="tab-5-7">
+  <caption>جدول ٥-٧: مصادر الأدلة حين لا تصلح الأدوات المقننة.</caption>
+  <thead><tr><th>المصدر</th><th>ما يجيب عنه</th><th>مثال</th></tr></thead>
+  <tbody>
+    <tr><td>الملاحظة في الروتين اليومي على فترات متكررة</td><td>ما يفعله الطالب فعلًا، ومقدار المساعدة التي يحتاجها في كل خطوة</td><td>في وجبة الإفطار: هل يمد يده نحو الكوب؟ هل يفتح فمه حين تقترب الملعقة؟</td></tr>
+    <tr><td>مقابلة الأسرة ومن يعملون معه يوميًا</td><td>أفضل أداء للطالب، وكيف يعبر عن الرغبة والرفض والانزعاج</td><td>«يهدأ حين يسمع صوت أخيه»، «يدير رأسه حين لا يريد الطعام»</td></tr>
+    <tr><td>تقييم التواصل في المرحلة ما قبل الرمزية</td><td>بأي وسيلة يتواصل: حركة الجسم، أو الصوت، أو الإيماءة، أو الشيء الملموس، أو الصورة</td><td>يلمس الكوب ليطلب الماء، فيصبح الكوب رمزًا لمسيًا يُبنى عليه</td></tr>
+    <tr><td>التقييم الوظيفي للبصر والسمع</td><td>كيف يستعمل ما لديه من بصر وسمع في مواقف الحياة، إلى جانب حدته في العيادة</td><td>من أي مسافة وفي أي جهة يلتفت إلى لعبة مضيئة؟</td></tr>
+    <tr><td>تقييم التفضيلات</td><td>ما الذي يحبه ويمكن أن يكون معززًا في التعليم</td><td>تقديم شيئين معًا وتسجيل ما يختاره عبر عدة محاولات</td></tr>
+    <tr><td>الاستجابة للتعليم المنظم</td><td>هل يتعلم مهارة محددة حين تُعلَّم بخطوات ثابتة، وبأي سرعة؟</td><td>بيانات يومية عن عدد المحاولات التي نجح فيها في مهارة واحدة، وهو منطق التقييم الدينامي نفسه</td></tr>
+  </tbody>
+</table></div>
+<p>ولحالة الطالب الصحية أثر كبير في أدائه في هذه الفئة، فالتعب ونوبات الصرع والأدوية والوضعية الجسمية قد تغير الصورة من يوم إلى يوم. ولذلك يُجمع الدليل على عدة أيام وفي أوقات مختلفة، ويُسجل مع كل ملاحظة ما يؤثر في حالة الطالب يومها. ويشارك في التقييم فريق يضم الأسرة ومعلم التربية الخاصة ومختصين في الحركة والتواصل والبصر والسمع بحسب الحالة، وهذا ما يقتضيه أيضًا شرط الدليل التنظيمي بـ«عدم الاكتفاء بنتائج مقياس واحد» (وزارة التعليم، ١٤٣٦هـ). وتعرض فصول الفئات تقييم الإعاقة الفكرية الشديدة والإعاقات الحسية والمتعددة بتفصيل أكبر.</p>
+
+<h2 id="conclusion" class="unnum">خاتمة</h2>
+<p>يجمع بين الأساليب التي تناولناها في هذا الفصل أنها تنقل السؤال من موقع الطالب بين أقرانه إلى ما يكشفه أداؤه في ظروف محددة: استجابته للتعليم في التقييم الدينامي، ووظيفة سلوكه في التقييم الوظيفي، وإنتاجه في مهمة حقيقية في التقييم الأصيل، وما يفعله في روتينه اليومي لدى الأطفال الصغار وذوي الإعاقات الشديدة. ويترتب على ذلك أن يُفهم السلوك قبل التدخل فيه، إذ قد يكون ما يُعد عقابًا هو عينه ما يحافظ على السلوك إذا كانت وظيفته الهروب، وأن تُعامل الدرجة المنخفضة لطالب قليل التعرض للغة التعليم سؤالًا عن الفرص قبل أن تكون دليلًا على اضطراب.</p>
+<p>غير أن لهذه الأساليب حدودها كذلك؛ فالقيمة التنبئية للتقييم الدينامي متفاوتة، فلا يصلح وحده أساسًا لقرار أهلية، والفرضية المبنية على السجل الوصفي تبقى مبدئية حتى تؤكدها تجربة تدخل أو تحليل وظيفي، وثبات المصححين وتباين المهام يجعلان التقييم الأصيل دليلًا من بين أدلة، والدرجات في السنوات الأولى غير مستقرة. فقيمة هذه الأساليب كامنة في أنها تستكمل الصورة التي ترسمها الاختبارات التقليدية وتثريها.</p>
+
+<!-- 7 -->
+<h2 id="s7"><span class="sec">٥-٧</span>الخلاصة والمسرد والأنشطة</h2>
+<h3>خلاصة الفصل</h3>
+<div class="summary"><ul>
+  <li>الأساليب البديلة تطرح أسئلة لا تجيب عنها الاختبارات التقليدية: كيف يتعلم الطالب؟ ولماذا يتصرف هكذا؟ وماذا ينتج في مهمة حقيقية؟ وماذا يفعل في حياته اليومية؟ وهي غير «التقييم البديل» بمعناه النظامي الأمريكي.</li>
+  <li>التقييم الدينامي يقيس الاستجابة للتعليم بصيغة «الشطيرة» أو «الكعكة»، ويساعد في التمييز بين نقص الفرص والاضطراب الفعلي. وله قيمة تنبئية تضاف إلى الاختبارات التقليدية، لكنها متفاوتة، فلا يصلح وحده أساسًا لقرار أهلية.</li>
+  <li>التقييم الدينامي والاستجابة للتدخل من عائلة واحدة: الأول يضغط السؤال في جلسة، والثاني يرصده في الصف على مدى أسابيع.</li>
+  <li>التقييم الوظيفي يبحث عن وظيفة السلوك، والوظائف الشائعة أربع: الحصول على شيء أو الهروب منه، من الآخرين أو من الحواس. وما يُعد عقابًا قد يكون هو ما يحافظ على السلوك إذا كانت وظيفته الهروب.</li>
+  <li>السجل الوصفي ارتباطي ويميل إلى تضخيم وظيفة الانتباه، فالفرضية المبنية عليه مبدئية حتى تؤكدها تجربة تدخل أو تحليل وظيفي يجريه متخصص.</li>
+  <li>التقييم الأصيل يكشف قدرات لا تظهر في الاختبارات القصيرة، وهو مهم في التعرف على الموهوبين. لكن ثبات المصححين وتباين المهام يفرضان أن يكون دليلًا من بين أدلة، مبنيًا على أكثر من مهمة ومصححَين مستقلين.</li>
+  <li>التقييم القائم على اللعب يناسب الأطفال الصغار. وتقييم ما دون الثالثة يقوم على الأسرة والبيئة الطبيعية والفريق، ويجمع بين اللعب والأداة النمائية المقننة، مع الحذر من عدم استقرار الدرجات في هذا العمر.</li>
+  <li>مع ذوي الإعاقات الشديدة والمتعددة ينتقل السؤال من المقارنة بالأقران إلى ما يفعله الطالب الآن وبأي مساعدة، ويُجمع الدليل من الروتين والأسرة وتقييم التواصل والتفضيلات والاستجابة للتعليم المنظم.</li>
+</ul></div>
+
+<h3>مسرد المصطلحات</h3>
+<dl class="gloss">
+  <dt>التقييم البديل<span class="en">Alternate assessment</span></dt><dd>في النظام الأمريكي: اختبار تحصيلي بمعايير تحصيل بديلة لذوي الإعاقات المعرفية الأشد، ولا يُقصد به «الأساليب البديلة» في هذا الفصل.</dd>
+  <dt>منطقة النمو القريبة<span class="en">Zone of proximal development</span></dt><dd>المسافة بين ما يستطيعه الطفل وحده، وما يستطيعه بمساعدة من هو أكثر خبرة.</dd>
+  <dt>التقييم الدينامي<span class="en">Dynamic assessment</span></dt><dd>تقييم يتدخل فيه الفاحص ويعلّم عمدًا، ثم يقيس أثر التعليم وطريقة الاستجابة له.</dd>
+  <dt>خبرة التعلم الموسَّطة<span class="en">Mediated learning experience</span></dt><dd>تعلّم يقف فيه راشد وسيطًا بين الطفل والمهمة، فيوجه انتباهه وينظم له المعلومات ويساعده على نقل ما تعلمه.</dd>
+  <dt>التلميحات المتدرجة<span class="en">Graduated prompts</span></dt><dd>مساعدات يقدمها الفاحص من الأعم إلى الأخص، ويُسجل عدد ما احتاجه الطالب منها للوصول إلى الحل.</dd>
+  <dt>صيغة الشطيرة وصيغة الكعكة<span class="en">Sandwich and cake formats</span></dt><dd>صيغتان للتقييم الدينامي: الأولى تضع التعليم بين اختبار قبلي وبعدي، والثانية تقدم التلميحات داخل كل بند.</dd>
+  <dt>القابلية للتعديل<span class="en">Modifiability</span></dt><dd>مدى استفادة الطالب من التعليم الموسط وقدرته على نقل ما تعلمه.</dd>
+  <dt>التقييم الوظيفي للسلوك<span class="en">Functional behavioral assessment</span></dt><dd>عملية لتحديد وظيفة السلوك المشكل والظروف التي تثيره وتحافظ عليه.</dd>
+  <dt>وظيفة السلوك<span class="en">Behavior function</span></dt><dd>ما يحققه السلوك للشخص، كالحصول على انتباه أو الهروب من مهمة.</dd>
+  <dt>التقييم الوصفي<span class="en">Descriptive assessment</span></dt><dd>تسجيل ما يسبق السلوك وما يليه في مواقفه الطبيعية دون تغيير الظروف، وهو يبين ما يصاحب السلوك لا ما يسببه.</dd>
+  <dt>التحليل الوظيفي<span class="en">Functional analysis</span></dt><dd>تغيير الظروف بطريقة منظمة لاختبار الفرضية عن وظيفة السلوك تجريبيًا.</dd>
+  <dt>التحليل الوظيفي المركب المبني على المقابلة<span class="en">Interview-informed synthesized contingency analysis</span></dt><dd>صيغة مختصرة من التحليل الوظيفي تجمع الظروف المستخلصة من مقابلة مفتوحة في موقف اختبار واحد يقارن بموقف ضابط.</dd>
+  <dt>خطة التدخل السلوكي<span class="en">Behavior intervention plan</span></dt><dd>خطة مبنية على نتائج التقييم الوظيفي، تعلم الطالب سلوكًا بديلًا يحقق الوظيفة نفسها وتغير الظروف التي تثير السلوك المشكل.</dd>
+  <dt>التقييم الأصيل<span class="en">Authentic assessment</span></dt><dd>تقييم يطلب أداء مهام تشبه مهام الحياة الحقيقية، ويُصحح بسلالم تقدير لفظية.</dd>
+  <dt>سلم التقدير اللفظي<span class="en">Rubric</span></dt><dd>أداة تصحيح تحدد محكات التصحيح ومستويات الإتقان في كل محك، وتُستخدم في تقييم المهام المفتوحة. وتختلف عن «مقاييس التقدير» (Rating scales) التي يقدّر بها المعلم أو الوالد سلوك الطالب.</dd>
+  <dt>التقييم القائم على اللعب<span class="en">Play-based assessment</span></dt><dd>ملاحظة الطفل الصغير أثناء اللعب لتقييم مجالات نموه المختلفة.</dd>
+  <dt>التدخل المبكر<span class="en">Early intervention</span></dt><dd>خدمات تقدم للأطفال الصغار المتأخرين نمائيًا أو المعرضين لخطر التأخر ولأسرهم، ويحدد النظام في كل بلد العمر ومحكات الأهلية.</dd>
+</dl>
+
+<h3>أسئلة للمراجعة</h3>
+<ol>
+  <li>كيف يختلف دور الفاحص في التقييم الدينامي عنه في الاختبار المقنن؟ ولماذا لا يكفي ارتفاع الدرجة بين الاختبارين القبلي والبعدي وحده دليلًا على الاستفادة؟</li>
+  <li>طالبان قادمان حديثًا من بلد آخر حصلا على درجة منخفضة في اختبار مفردات. صمم تقييمًا ديناميًا بسيطًا يساعد في التمييز بين من يرجع انخفاض درجته إلى قلة تعرضه للعربية، ومن قد يكون لديه اضطراب لغوي، وحدد ما تحتاج إلى معرفته عن لغتهما الأم قبل الحكم.</li>
+  <li>صواب أم خطأ، مع التعليل: «ما دام التقييم الدينامي يقيس القدرة على التعلم مباشرة، فهو يكفي وحده لتقرير أهلية طالب لخدمات صعوبات التعلم».</li>
+  <li>طالبة تصرخ في الفسحة حين يقترب منها الأطفال. اقترح وظيفتين محتملتين لهذا السلوك، وحدد البيانات التي تميز بينهما.</li>
+  <li>لماذا زاد سلوك بدر رغم العقاب؟ ولماذا تبقى الفرضية عن وظيفة سلوكه مبدئية؟ وما الذي يؤكدها؟</li>
+  <li>صمم مهمة أداء أصيلة في العلوم لطلاب الصف الخامس، وضع لها ثلاثة محكات للتصحيح بمستويات أداء واضحة. ثم بيّن ما الذي يلزم لتصلح نتائجها دليلًا في قرار قبول ببرنامج للموهوبين.</li>
+  <li>متى تفضل التقييم القائم على اللعب على اختبار نمائي مقنن لطفل في الثانية من عمره؟ ومتى تحتاج إلى الاختبار المقنن مع ذلك؟</li>
+  <li>طفلة في السادسة لديها إعاقة حركية شديدة وضعف بصري شديد ولا تتكلم. اذكر أربعة مصادر للأدلة تبني عليها تقييمها، وبيّن ما يضيفه كل مصدر.</li>
+</ol>
+
+<article class="case">
+  <div class="case-head"><h3>حالة للتطبيق: هتان، ١٤ سنة، الصف الثاني المتوسط</h3></div>
+  <p><strong>القصة:</strong> أحال معلمو هتان سلوكه إلى فريق المدرسة لأنه «يستفز المعلم حتى يُطرد من الحصة»، ويرون أنه «يحب أن يضحك عليه زملاؤه». سجل أحد أعضاء الفريق ما يسبق سلوكه وما يليه في حصص اللغة الإنجليزية والعلوم ثمانية أيام، ولم تُسجل حصص الرياضيات والتربية البدنية. ودرجات هتان في الرياضيات جيدة، ويشارك فيها شفهيًا، أما درجاته في المواد التي تعتمد على القراءة فمنخفضة، ولم يسبق أن قُيمت قراءته.</p>
+  <div class="tw"><table id="tab-8" id="tab-5-8">
+    <caption>جدول ٥-٨: ملخص سجل السوابق والسلوك والنتائج لهتان (ثماني حوادث في ثمانية أيام).</caption>
+    <thead><tr><th>ما حدث قبل السلوك</th><th>عدد المرات</th><th>ما حدث بعده</th></tr></thead>
+    <tbody>
+      <tr><td>طُلب منه قراءة نص أو سؤال بصوت مرتفع أمام الصف</td><td>٥</td><td>أُخرج من الحصة (٤)، ووبخه المعلم أمام زملائه فضحكوا (١)</td></tr>
+      <tr><td>بدأ عمل في مجموعة يتبادل فيه الطلاب قراءة التعليمات</td><td>٢</td><td>ضحك زملاؤه وأعفاه المعلم من دوره في القراءة (١)، ووبخه المعلم (١)</td></tr>
+      <tr><td>شرح المعلم الدرس شفهيًا</td><td>١</td><td>لم يتغير شيء</td></tr>
+    </tbody>
+  </table></div>
+  <p><strong>المطلوب:</strong> (أ) صُغ فرضيتين متنافستين عن وظيفة السلوك، وبيّن أي البيانات يؤيد كلًا منهما. (ب) هل تكفي هذه الأدلة لفرضية واثقة؟ علل حكمك، وحدد الدليل الناقص وكيف تجمعه. (ج) ما الذي تقترح تقييمه إلى جانب السلوك، ولماذا؟</p>
+</article>
+
+<div class="tw"><table id="tab-9" id="tab-5-9">
+  <caption>جدول ٥-٩: مطابقة أهداف الفصل بالأسئلة والأنشطة.</caption>
+  <thead><tr><th>الهدف</th><th>الأسئلة</th><th>الأنشطة</th></tr></thead>
+  <tbody>
+    <tr><td>١ تطبيق نموذج الاختبار ثم التعليم ثم إعادة الاختبار</td><td>١، ٢</td><td>١</td></tr>
+    <tr><td>٢ تفسير تقييم دينامي لطالب من خلفية لغوية مختلفة</td><td>٢</td><td>١</td></tr>
+    <tr><td>٣ صياغة فرضية عن وظيفة السلوك وتحديد دليل تأكيدها</td><td>٤، ٥، حالة هتان</td><td>٢</td></tr>
+    <tr><td>٤ تصميم مهمة أصيلة ونقد ثبات تقديرها</td><td>٦</td><td>٣</td></tr>
+    <tr><td>٥ الاختيار بين اللعب والاختبار النمائي المقنن</td><td>٧</td><td>—</td></tr>
+    <tr><td>٦ مصادر الأدلة لذوي الإعاقات الشديدة والمتعددة</td><td>٨</td><td>٤</td></tr>
+    <tr><td>٧ الحكم على كفاية أدلة أسلوب بديل</td><td>٣، حالة هتان</td><td>٣</td></tr>
+  </tbody>
+</table></div>
+
+<h3>أنشطة التعلم</h3>
+<p>في كل نشاط يُطبق مع طالب أو طفل: يُنفذ بموافقة الأسرة وإدارة المدرسة، ودون أي بيانات تدل على الطالب، وتحت إشراف مختص، ولا يُبنى على نتائجه أي قرار، ولا تُبلغ إلا عبر القنوات الرسمية.</p>
+<ol>
+  <li><strong>جلسة دينامية</strong> (نحو ساعتين): اختر مهمة، كتصنيف صور أو حل ألغاز أشكال، وطبق عليها نموذج الاختبار ثم التعليم ثم إعادة الاختبار مع طفل، وسجل رقم التلميح الذي احتاجه في كل بند على سلم كالشكل ٥-٣. <em>الناتج:</em> جدول بالتلميحات، وفقرة تفسر القابلية للتعديل وحدود ما تستنتجه. <em>بديل مكتبي:</em> طبق الجلسة على زميل راشد في مهمة غير مألوفة له، كتعلم رموز كتابة لا يعرفها.</li>
+  <li><strong>تقييم وظيفي</strong> (خمسة أيام من التسجيل، وساعة للتحليل): اختر سلوكًا متكررًا لطالب، وسجل ما قبله وما بعده، ثم صنف النتائج وصغ فرضية على نمط فرضية بدر. <em>الناتج:</em> جدول السجل، والفرضية، وخطة من خطوتين لتأكيدها بتجربة تدخل. <em>بديل مكتبي:</em> سجل على النحو نفسه سلوكًا لك أنت، كتأجيل مهمة أو تصفح الهاتف أثناء المذاكرة.</li>
+  <li><strong>مهمة أصيلة وثبات تقديرها</strong> (نحو ثلاث ساعات): صمم مهمة مفتوحة لحل مشكلة من بيئة المدرسة بسلم تقدير لفظي من ثلاثة محكات، وجربها على مجموعة صغيرة. ثم يصحح زميلك المنتجات نفسها مستقلًا عنك. <em>الناتج:</em> المهمة وسلمها، ونسبة الاتفاق بينكما في كل محك، وفقرة عن أسباب الاختلاف وما يلزم لتحسين السلم.</li>
+  <li><strong>خطة تقييم لطالب ذي إعاقات متعددة</strong> (نشاط مكتبي، نحو ساعة): اعتمادًا على الجدول ٥-٧، اكتب خطة تقييم للطفلة في السؤال ٨: من يشارك، وأين وكم مرة تُلاحظ، وما الأسئلة التي تُطرح على الأسرة، وكيف تُسجل الأدلة. <em>الناتج:</em> خطة في صفحة واحدة.</li>
+</ol>
+
+<h3>مراجع الفصل</h3>
+<ol class="refs">
+  <li>نظام حقوق الأشخاص ذوي الإعاقة، مرسوم ملكي رقم (م/٢٧) (١٤٤٥/٢/١١هـ). https://ymplatform.com/sdys/</li>
+  <li>وزارة التعليم. (١٤٣٦هـ). <i>الدليل التنظيمي للتربية الخاصة</i> (الإصدار الأول للعام الدراسي ١٤٣٦–١٤٣٧هـ). https://moe.gov.sa/en/aboutus/aboutministry/RPRLibrary/الدليل%20التنظيمي%20للتربية%20الخاصة.pdf</li>
+  <li>وزارة الصحة. (٢٠١٦). <i>البرنامج الوطني للفحص المبكر لحديثي الولادة للحد من الإعاقة: دليل عمل</i>. https://www.moh.gov.sa/en/Ministry/About/Health%20Policies/019.pdf</li>
+  <li>وزارة المعارف. (١٤٢٢هـ). <i>القواعد التنظيمية لمعاهد وبرامج التربية الخاصة</i>. https://moe.gov.sa/en/aboutus/aboutministry/RPRLibrary/القواعد%20التنظيمية%20لمعاهد%20وبرامج%20التربية%20الخاصة%201422%20هـ.pdf</li>
+  <li>Alanazi, A. A., &amp; Nicholson, N. (2025). Challenges of newborn hearing screening programs in Saudi Arabia: A systematic review. <i>Audiology Research, 15</i>(2), Article 34. https://doi.org/10.3390/audiolres15020034</li>
+  <li>Alothman, N., Elbeltagy, R., &amp; Mulla, R. (2024). Universal newborn hearing screening program in Saudi Arabia: Current insight. <i>Journal of Otology, 19</i>(1), 35–39. https://doi.org/10.1016/j.joto.2024.01.002</li>
+  <li>Bayley, N., &amp; Aylward, G. P. (2019). <i>Bayley Scales of Infant and Toddler Development</i> (4th ed.). Pearson.</li>
+  <li>Bracken, B. A. (1987). Limitations of preschool instruments and standards for minimal levels of technical adequacy. <i>Journal of Psychoeducational Assessment, 5</i>(4), 313–326.</li>
+  <li>Caffrey, E., Fuchs, D., &amp; Fuchs, L. S. (2008). The predictive validity of dynamic assessment: A review. <i>The Journal of Special Education, 41</i>(4), 254–270.</li>
+  <li>Division for Early Childhood. (2014). <i>DEC recommended practices in early intervention/early childhood special education 2014</i>. http://www.dec-sped.org/recommendedpractices</li>
+  <li>Dixon, C., Oxley, E., Nash, H., &amp; Gellert, A. S. (2023). Does dynamic assessment offer an alternative approach to identifying reading disorder? A systematic review. <i>Journal of Learning Disabilities, 56</i>(6), 423–439. https://doi.org/10.1177/00222194221117510</li>
+  <li>Every Student Succeeds Act, 20 U.S.C. § 6301 et seq. (2015).</li>
+  <li>Feuerstein, R., Rand, Y., &amp; Hoffman, M. B. (1979). <i>The dynamic assessment of retarded performers: The learning potential assessment device</i>. University Park Press.</li>
+  <li>Grigorenko, E. L. (2009). Dynamic assessment and response to intervention: Two sides of one coin. <i>Journal of Learning Disabilities, 42</i>(2), 111–132.</li>
+  <li>Hanley, G. P., Iwata, B. A., &amp; McCord, B. E. (2003). Functional analysis of problem behavior: A review. <i>Journal of Applied Behavior Analysis, 36</i>(2), 147–185.</li>
+  <li>Hanley, G. P., Jin, C. S., Vanselow, N. R., &amp; Hanratty, L. A. (2014). Producing meaningful improvements in problem behavior of children with autism via synthesized analyses and treatments. <i>Journal of Applied Behavior Analysis, 47</i>(1), 16–36.</li>
+  <li>Haywood, H. C., &amp; Lidz, C. S. (2007). <i>Dynamic assessment in practice: Clinical and educational applications</i>. Cambridge University Press.</li>
+  <li>Individuals with Disabilities Education Act, 20 U.S.C. § 1400 et seq. (2004); implementing regulations for infants and toddlers (Part C) 34 CFR Part 303.</li>
+  <li>Iwata, B. A., Dorsey, M. F., Slifer, K. J., Bauman, K. E., &amp; Richman, G. S. (1994). Toward a functional analysis of self-injury. <i>Journal of Applied Behavior Analysis, 27</i>(2), 197–209. (Original work published 1982)</li>
+  <li>Jessel, J., Hanley, G. P., &amp; Ghaemmaghami, M. (2016). Interview-informed synthesized contingency analyses: Thirty replications and reanalysis. <i>Journal of Applied Behavior Analysis, 49</i>(3), 576–595.</li>
+  <li>Koretz, D., Stecher, B., Klein, S., &amp; McCaffrey, D. (1994). The Vermont portfolio assessment program: Findings and implications. <i>Educational Measurement: Issues and Practice, 13</i>(3), 5–16. https://doi.org/10.1111/j.1745-3992.1994.tb00443.x</li>
+  <li>Linder, T. (2008). <i>Transdisciplinary play-based assessment</i> (2nd ed.). Paul H. Brookes.</li>
+  <li>Linn, R. L., Baker, E. L., &amp; Dunbar, S. B. (1991). Complex, performance-based assessment: Expectations and validation criteria. <i>Educational Researcher, 20</i>(8), 15–21.</li>
+  <li>Maker, C. J. (1996). Identification of gifted minority students: A national problem, needed changes and a promising solution. <i>Gifted Child Quarterly, 40</i>(1), 41–50.</li>
+  <li>Melanson, I. J., &amp; Fahmie, T. A. (2023). Functional analysis of problem behavior: A 40-year review. <i>Journal of Applied Behavior Analysis, 56</i>(2), 262–281. https://doi.org/10.1002/jaba.983</li>
+  <li>O'Neill, R. E., Albin, R. W., Storey, K., Horner, R. H., &amp; Sprague, J. R. (2015). <i>Functional assessment and program development for problem behavior: A practical handbook</i> (3rd ed.). Cengage Learning.</li>
+  <li>Peña, E., Iglesias, A., &amp; Lidz, C. S. (2001). Reducing test bias through dynamic assessment of children's word learning ability. <i>American Journal of Speech-Language Pathology, 10</i>(2), 138–154.</li>
+  <li>Sarouphim, K. M. (2009). The use of a performance assessment for identifying gifted Lebanese students: Is DISCOVER effective? <i>Journal for the Education of the Gifted, 33</i>(2), 275–295. https://doi.org/10.1177/016235320903300206</li>
+  <li>Shavelson, R. J., Baxter, G. P., &amp; Gao, X. (1993). Sampling variability of performance assessments. <i>Journal of Educational Measurement, 30</i>(3), 215–232.</li>
+  <li>Sternberg, R. J., &amp; Grigorenko, E. L. (2002). <i>Dynamic testing: The nature and measurement of learning potential</i>. Cambridge University Press.</li>
+  <li>Thompson, R. H., &amp; Iwata, B. A. (2007). A comparison of outcomes from descriptive and functional analyses of problem behavior. <i>Journal of Applied Behavior Analysis, 40</i>(2), 333–338.</li>
+  <li>Vygotsky, L. S. (1978). <i>Mind in society: The development of higher psychological processes</i>. Harvard University Press.</li>
+  <li>Wiggins, G. (1990). The case for authentic assessment. <i>Practical Assessment, Research, and Evaluation, 2</i>(2), Article 2.</li>
+</ol>
+
+<div class="endmark" aria-hidden="true">✦ ✦ ✦</div>
+<nav class="pager"><a href="ch04.html"><small>الفصل السابق</small><b>الأساليب غير الرسمية</b></a><a class="next" href="ch06.html"><small>الفصل التالي</small><b>نماذج التعرف</b></a></nav>
+</div>
+</body>
+</html>
