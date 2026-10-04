@@ -1,10 +1,10 @@
 (function(){
-  const B=window.BOOK||{};const $=s=>document.querySelector(s);
+  const B=window.BOOK||{};const $=s=>document.querySelector(s);const EN=B.lang==='en';
   const dr=$('#bpDrawer'),q=$('#bpQ'),res=$('#bpRes'),tocEl=$('#bpToc');
   let data=null;
   const load=()=>data?Promise.resolve(data):fetch('book-index.json').then(r=>r.json()).then(d=>(data=d));
-  const ar=n=>String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]);
-  function renderToc(){load().then(d=>{tocEl.innerHTML=d.toc.map(c=>`<details${c.f===B.cur?' open class="cur"':''}><summary>${c.kicker?`<small>${c.kicker}</small>`:''}<a href="${c.f}" style="color:inherit;text-decoration:none">${c.h1}</a></summary>${c.secs.length?`<ol>${c.secs.map(s=>`<li><a href="${c.f}#${s[0]}">${s[1]}</a></li>`).join('')}</ol>`:''}</details>`).join('')}).catch(()=>{tocEl.textContent='تعذّر تحميل المحتويات.'})}
+  const ar=n=>EN?String(n):String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]);
+  function renderToc(){load().then(d=>{tocEl.innerHTML=d.toc.map(c=>`<details${c.f===B.cur?' open class="cur"':''}><summary>${c.kicker?`<small>${c.kicker}</small>`:''}<a href="${c.f}" style="color:inherit;text-decoration:none">${c.h1}</a></summary>${c.secs.length?`<ol>${c.secs.map(s=>`<li><a href="${c.f}#${s[0]}">${s[1]}</a></li>`).join('')}</ol>`:''}</details>`).join('')}).catch(()=>{tocEl.textContent=EN?'Could not load the contents.':'تعذّر تحميل المحتويات.'})}
   function open(mode){dr.hidden=false;renderToc();if(mode==='search')setTimeout(()=>q.focus(),50)}
   function close(){dr.hidden=true}
   document.addEventListener('click',ev=>{const t=ev.target.closest('[data-bp]');if(!t)return;const m=t.dataset.bp;if(m==='close')close();else open(m)});
@@ -17,7 +17,7 @@
       for(const it of d.search){const n=norm(it.t);if(words.every(w=>n.includes(w))){const i=n.indexOf(words[0]);const a=Math.max(0,i-60);let snip=it.t.slice(a,a+200);
         const re=new RegExp('('+v.split(/\s+/).map(w=>w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|')+')','g');snip=snip.replace(/[<>&]/g,'').replace(re,'<mark>$1</mark>');
         out.push(`<a href="${it.f}${it.id?'#'+it.id:''}"><small>${it.c}${it.s&&it.s!==it.c?' · '+it.s:''}</small><span>${a?'…':''}${snip}…</span></a>`);if(out.length>=40)break}}
-      res.innerHTML=out.length?`<p style="font-size:12px;color:var(--ink-2);margin:8px 0 0">${ar(out.length)}${out.length>=40?'+':''} نتيجة</p>`+out.join(''):'<p style="font-size:13px;color:var(--ink-2)">لا نتائج. جرّب كلمة أخرى.</p>'})},180)});
+      res.innerHTML=out.length?`<p style="font-size:12px;color:var(--ink-2);margin:8px 0 0">${ar(out.length)}${out.length>=40?'+':''} نتيجة</p>`+out.join(''):'<p style="font-size:13px;color:var(--ink-2)">'+(EN?'No results. Try another word.':'لا نتائج. جرّب كلمة أخرى.')+'</p>'})},180)});
   // reading progress + resume position
   const bar=document.createElement('div');bar.className='bp-progress';bar.innerHTML='<i></i>';document.body.appendChild(bar);
   const key='bp:'+B.slug+':'+B.cur;
@@ -28,8 +28,8 @@
 })();
 (function(){
   const $=s=>document.querySelector(s),root=document.documentElement,B=window.BOOK||{};
-  const toast=t=>{const d=document.createElement('div');d.className='bp-toast';d.textContent=t;document.body.appendChild(d);setTimeout(()=>d.remove(),1800)};
-  const copy=(u)=>{(navigator.clipboard?navigator.clipboard.writeText(u):Promise.reject()).then(()=>toast('نُسخ الرابط')).catch(()=>toast('انسخ الرابط من شريط العنوان'))};
+  const EN2=(window.BOOK||{}).lang==='en';const toast=t=>{const d=document.createElement('div');d.className='bp-toast';d.textContent=t;document.body.appendChild(d);setTimeout(()=>d.remove(),1800)};
+  const copy=(u)=>{(navigator.clipboard?navigator.clipboard.writeText(u):Promise.reject()).then(()=>toast(EN2?'Link copied':'نُسخ الرابط')).catch(()=>toast(EN2?'Copy the link from the address bar':'انسخ الرابط من شريط العنوان'))};
   // reader prefs
   let z=1,th=null;try{z=+localStorage.getItem('bp:z')||1;th=localStorage.getItem('bp:theme')}catch(e){}
   const applyZ=()=>root.style.setProperty('--bp-z',z);applyZ();if(th)root.dataset.theme=th;
@@ -48,12 +48,12 @@
       const a=ev.target.closest('[data-sh]');if(a){if(a.dataset.sh==='copy')copy(location.href);if(a.dataset.sh==='native')navigator.share({title:document.title,url:location.href}).catch(()=>{});return}
       if(!sh.hidden&&!ev.target.closest('#bpShare'))sh.hidden=true})}
   // section anchors
-  document.querySelectorAll('.page h2[id],.page h3[id]').forEach(h=>{const a=document.createElement('a');a.className='bp-anchor';a.href='#'+h.id;a.textContent='¶';a.title='نسخ رابط هذا القسم';
+  document.querySelectorAll('.page h2[id],.page h3[id]').forEach(h=>{const a=document.createElement('a');a.className='bp-anchor';a.href='#'+h.id;a.textContent='¶';a.title=EN2?'Copy link to this section':'نسخ رابط هذا القسم';
     a.onclick=ev=>{ev.preventDefault();history.replaceState(null,'','#'+h.id);copy(location.href)};h.appendChild(a)});
   // continue reading on the book home
-  const r=$('#bpResume');if(r){try{const last=localStorage.getItem('bp:'+B.slug+':last');if(last&&last!=='index.html'&&last!=='elements.html'){fetch('book-index.json').then(x=>x.json()).then(d=>{const c=d.toc.find(t=>t.f===last);if(c){r.innerHTML='تابع القراءة من حيث توقفت: <a href="'+c.f+'">'+(c.kicker?c.kicker+' — ':'')+c.h1+'</a>';r.hidden=false}})}}catch(e){}}
+  const r=$('#bpResume');if(r){try{const last=localStorage.getItem('bp:'+B.slug+':last');if(last&&last!=='index.html'&&last!=='elements.html'){fetch('book-index.json').then(x=>x.json()).then(d=>{const c=d.toc.find(t=>t.f===last);if(c){r.innerHTML=(EN2?'Continue where you left off: ':'تابع القراءة من حيث توقفت: ')+'<a href="'+c.f+'">'+(c.kicker?c.kicker+' — ':'')+c.h1+'</a>';r.hidden=false}})}}catch(e){}}
 })();
 // keep attribution with copied passages
 document.addEventListener('copy',ev=>{const sel=String(getSelection());if(sel.length<120||ev.target.closest&&ev.target.closest('input,textarea'))return;
-  const t=document.title,u=location.href.split('#')[0];const src='\n\n— المصدر: '+t+'، د. عمر عبدالله الصمعاني. '+u;
+  const t=document.title,u=location.href.split('#')[0];const en=document.documentElement.lang==='en';const src=en?'\n\n— Source: '+t+', Dr. Omar A. Alsamani. '+u:'\n\n— المصدر: '+t+'، د. عمر عبدالله الصمعاني. '+u;
   ev.clipboardData.setData('text/plain',sel+src);ev.preventDefault()});

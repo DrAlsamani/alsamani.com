@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+
+<html dir="ltr" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
+<title>Chapter 1: What is innovation?</title>
+<link href="../assets/book.css" rel="stylesheet"/>
+<link href="../assets/innov.css" rel="stylesheet"/>
+<style>
+/* chain: idea → innovation */
+.chain{display:grid;grid-template-columns:auto repeat(4,minmax(0,1fr)) auto;gap:8px;align-items:stretch;font-family:var(--f-ui)}
+.chain .end{display:grid;place-items:center;border-radius:12px;padding:12px 10px;text-align:center;font-weight:700;font-size:15px;writing-mode:horizontal-tb}
+.chain .start{background:var(--paper-2);border:1.5px dashed var(--line);color:var(--ink-2)}
+.chain .goal{background:var(--accent);color:var(--paper)}
+.chain .el{border:1.5px solid var(--line);border-radius:12px;padding:12px 12px 10px;background:var(--paper);position:relative;min-width:0}
+.chain .el b{display:block;font-size:16px;color:var(--accent)}
+.chain .el span{display:block;font-size:13.5px;line-height:1.7;color:var(--ink-2)}
+.chain .el i{font-style:normal;font-size:12px;font-weight:700;color:var(--ink-2);display:block;margin-bottom:2px}
+.chain .el small{display:block;margin-top:8px;font-size:12.5px;line-height:1.6;color:var(--warn);border-top:1px dashed var(--line);padding-top:6px}
+@media (max-width:760px){.chain{grid-template-columns:1fr 1fr}.chain .end{grid-column:1/-1}}
+/* definitions table tweaks */
+table.defs td:first-child{width:24%}
+/* rings */
+.rings{display:grid;grid-template-columns:minmax(0,300px) 1fr;gap:26px;align-items:center}
+.rings svg{width:100%;height:auto}
+.rings .r1{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.5}
+.rings .r2{fill:color-mix(in srgb,var(--accent) 22%,var(--paper));stroke:var(--accent);stroke-width:1.5}
+.rings .r3{fill:var(--accent);stroke:var(--accent)}
+.rings text{font-family:var(--f-ui);font-size:13px;font-weight:700;fill:var(--ink);text-anchor:middle}
+.rings text.w{fill:var(--paper)}
+.rings ul{list-style:none;padding:0;margin:0;display:grid;gap:10px;font-family:var(--f-ui);font-size:14.5px;line-height:1.75}
+.rings ul li{margin:0;display:grid;grid-template-columns:16px 1fr;gap:10px}
+.rings ul li::before{content:"";width:14px;height:14px;border-radius:50%;margin-top:6px;border:1.5px solid var(--accent)}
+.rings ul li.a::before{background:var(--accent-soft)} .rings ul li.b::before{background:color-mix(in srgb,var(--accent) 22%,var(--paper))} .rings ul li.c::before{background:var(--accent)}
+@media (max-width:620px){.rings{grid-template-columns:1fr}.rings svg{max-width:280px;margin-inline:auto}}
+/* neighbours */
+.nb{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;font-family:var(--f-ui)}
+.nb>div{border-radius:12px;padding:12px;border:1.5px solid var(--line);background:var(--paper);min-width:0}
+.nb b{display:block;font-size:16px}
+.nb .q{display:block;font-size:13px;font-weight:700;color:var(--accent);margin:4px 0 6px;line-height:1.6}
+.nb span{display:block;font-size:13px;line-height:1.7;color:var(--ink-2)}
+.nb .core{border-color:var(--accent);background:var(--accent-soft)}
+@media (max-width:760px){.nb{grid-template-columns:1fr 1fr}.nb .core{grid-column:1/-1}}
+/* oslo domains */
+.dom{display:grid;grid-template-columns:1fr 2fr;gap:14px;font-family:var(--f-ui)}
+.dom .col{border:1.5px solid var(--line);border-radius:14px;padding:14px;min-width:0}
+.dom h5{font-family:var(--f-display);font-size:18px;margin:0 0 2px;font-weight:700}
+.dom .tag{font-size:12.5px;color:var(--ink-2);display:block;margin-bottom:10px}
+.dom .cells{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+.dom .cell{background:var(--paper-2);border-radius:10px;padding:9px 11px;font-size:13.5px;line-height:1.65}
+.dom .cell b{display:block;font-size:14.5px;color:var(--accent)}
+@media (max-width:640px){.dom{grid-template-columns:1fr}}
+/* henderson-clark */
+.hc{display:grid;grid-template-columns:96px 1fr 1fr;gap:8px;font-family:var(--f-ui);max-width:640px;margin-inline:auto}
+.hc .ax{font-size:12.5px;font-weight:700;color:var(--ink-2);display:grid;place-items:center;text-align:center;line-height:1.55;padding:4px}
+.hc .ax.v{background:var(--paper-2);border-radius:10px}
+.hc .q{border-radius:12px;padding:14px;min-height:118px;border:1.5px solid var(--line);background:var(--paper);min-width:0}
+.hc .q b{display:block;font-size:16px;font-family:var(--f-display)}
+.hc .q span{font-size:13px;line-height:1.7;color:var(--ink-2);display:block;margin-top:4px}
+.hc .q.inc{background:var(--good-soft);border-color:color-mix(in srgb,var(--good) 40%,transparent)}
+.hc .q.rad{background:var(--accent-soft);border-color:color-mix(in srgb,var(--accent) 50%,transparent)}
+.hc .q.arc{background:var(--example-soft);border-color:color-mix(in srgb,var(--example) 40%,transparent)}
+.hc .q.mod{background:var(--teacher-soft);border-color:color-mix(in srgb,var(--teacher) 40%,transparent)}
+.hc .cap{grid-column:1/-1;font-size:12.5px;color:var(--ink-2);text-align:center}
+@media (max-width:520px){.hc{grid-template-columns:62px 1fr 1fr;gap:6px}.hc .ax{font-size:11.5px;padding:2px}.hc .q{padding:10px}.hc .q span{font-size:12.5px}}
+/* principles */
+.prin{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;font-family:var(--f-ui);counter-reset:p}
+.prin>div{counter-increment:p;border:1.5px solid var(--line);border-radius:12px;padding:12px;min-width:0;background:var(--paper)}
+.prin>div::before{content:counter(p,arabic-indic);display:grid;place-items:center;width:28px;height:28px;border-radius:8px;background:var(--accent-soft);color:var(--accent);font-weight:700;font-size:14px;margin-bottom:6px}
+.prin b{display:block;font-size:15px;line-height:1.5}
+.prin .en{display:block;font-size:11.5px;color:var(--ink-2);font-weight:500;margin:2px 0 4px}
+.prin span.d{display:block;font-size:13px;line-height:1.7;color:var(--ink-2)}
+.prin .ch{display:block;font-size:12px;font-weight:700;color:var(--accent);margin-top:6px}
+@media (max-width:760px){.prin{grid-template-columns:1fr 1fr}}
+@media (max-width:420px){.prin{grid-template-columns:1fr}}
+/* case checks: four criteria */
+.case .checks{grid-template-columns:repeat(4,1fr)}
+@media (max-width:560px){.case .checks{grid-template-columns:repeat(2,1fr)}}
+/* tool card */
+.toolcard{border:2px solid var(--accent);border-radius:16px;overflow:hidden;margin:24px 0;font-family:var(--f-ui)}
+.toolcard .th{background:var(--accent);color:var(--paper);padding:12px 18px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:baseline}
+.toolcard .th b{font-family:var(--f-display);font-size:19px}
+.toolcard .th span{font-size:13px;opacity:.9}
+.toolcard .tb{padding:6px 18px 16px}
+.toolcard .row{display:grid;grid-template-columns:30px minmax(0,1fr) minmax(0,1.1fr);gap:12px;padding:12px 0;border-bottom:1px dashed var(--line);align-items:start}
+.toolcard .row:last-child{border-bottom:0}
+.toolcard .row i{font-style:normal;width:26px;height:26px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;font-weight:700;font-size:13px}
+.toolcard .row b{font-size:15px;display:block;line-height:1.6}
+.toolcard .row .hint{font-size:13px;color:var(--ink-2);line-height:1.7}
+.toolcard .row .opts{display:flex;flex-wrap:wrap;gap:6px}
+.toolcard .row .opts span{border:1px solid var(--line);border-radius:999px;padding:1px 10px;font-size:12.5px;background:var(--paper)}
+@media (max-width:600px){.toolcard .row{grid-template-columns:30px 1fr}.toolcard .row .opts{grid-column:2}}
+.readmap{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;font-family:var(--f-ui);margin:14px 0}
+.readmap>div{border-radius:12px;padding:12px 14px;background:var(--paper-2);font-size:14px;line-height:1.75;min-width:0}
+.readmap b{display:block;font-size:15px;color:var(--accent);margin-bottom:2px}
+@media (max-width:640px){.readmap{grid-template-columns:1fr}}
+</style>
+<meta name="robots" content="noindex,nofollow"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"><style>:root{--f-body:"Source Serif 4",Georgia,serif;--f-display:"Source Serif 4",Georgia,serif;--f-ui:"IBM Plex Sans",system-ui,sans-serif}.questions li::before{content:counter(q)}html{direction:ltr!important}body{letter-spacing:0;text-align:left}caption{text-align:left!important}.formula small{direction:ltr}.cover svg{left:auto!important;right:0}</style><link rel="alternate" hreflang="ar" href="https://alsamani.com/books/innovation-management/ch01.html"><link rel="stylesheet" href="../assets/platform.css"><script>window.BOOK={slug:"innovation-management-en",cur:"ch01.html",lang:"en"}</script><script src="../assets/platform.js" defer></script>
+</head>
+<body>
+<div class="bp-bar" dir="ltr"><div class="bp-in">
+<a class="bp-home" href="../../../index.html">Dr. Omar A. Alsamani</a><span class="bp-sep">/</span><a href="../../index.html">Open Library</a><span class="bp-sep">/</span><a href="index.html" class="bp-book">Innovation Management</a>
+<span class="bp-sp"></span><span class="bp-tools"><button class="bp-ic" type="button" data-rd="z-" aria-label="Smaller text" title="Smaller text">A−</button><button class="bp-ic" type="button" data-rd="z+" aria-label="Larger text" title="Larger text">A+</button><button class="bp-ic" type="button" data-rd="theme" aria-label="Dark mode" title="Dark/light mode">Dark</button></span><a class="bp-btn" href="../ch01.html" hreflang="ar" lang="ar">العربية</a><button class="bp-btn" type="button" data-share>Share</button><button class="bp-btn" type="button" data-bp="search">Search</button><button class="bp-btn solid" type="button" data-bp="toc">Contents</button></div></div>
+<div class="bp-share" id="bpShare" hidden dir="ltr"><b>Share this page</b><button type="button" data-sh="copy">Copy link</button><button type="button" data-sh="native" hidden>Share…</button><a data-sh="wa" target="_blank" rel="noopener">WhatsApp</a><a data-sh="x" target="_blank" rel="noopener">X</a><a data-sh="li" target="_blank" rel="noopener">LinkedIn</a><a data-sh="tg" target="_blank" rel="noopener">Telegram</a><a data-sh="mail">Email</a><small>To share a specific section, hover over its heading and click ¶</small></div>
+<div class="bp-drawer" id="bpDrawer" hidden dir="ltr"><div class="bp-panel" role="dialog" aria-label="Contents and search">
+<div class="bp-head"><b>Innovation Management</b><button type="button" class="bp-x" data-bp="close" aria-label="Close">×</button></div>
+<div class="bp-search"><input id="bpQ" type="search" placeholder="Search the text of the book…" autocomplete="off"><div id="bpRes"></div></div>
+<nav class="bp-toc" id="bpToc"></nav>
+<div class="bp-links"><a href="../index.html#downloads">Download the Arabic edition (PDF)</a></div>
+</div></div>
+<div class="page">
+<nav class="booknav"><a href="index.html">← Innovation Management</a><span>Part One: Foundations</span></nav>
+<header class="opener">
+<div aria-hidden="true" class="num">1</div>
+<div>
+<div class="kicker">Chapter 1</div>
+<h1>What is innovation?</h1>
+</div>
+<p class="sub">This chapter examines the concept of innovation through four elements drawn from the reference definitions: novelty, implementation, adoption and value. It aims to build a shared language that distinguishes innovation from creativity, invention and improvement, and that sets out its types and degrees, on the view that agreeing on the concept is a precondition for managing it.</p>
+</header>
+<nav aria-label="محتويات الفصل" class="toc">
+<b>In this chapter</b>
+<ol>
+<li class="u"><a href="#intro">Introduction</a></li>
+<li value="1"><a href="#s1">The need for a shared definition</a></li>
+<li><a href="#s2">Innovation in the reference definitions</a></li>
+<li><a href="#s3">Relative novelty</a></li>
+<li><a href="#s4">Innovation and neighbouring concepts</a></li>
+<li><a href="#s5">Types of innovation</a></li>
+<li><a href="#s6">Degrees of innovation</a></li>
+<li><a href="#s7">Innovation in the public and non-profit sectors</a></li>
+<li><a href="#s8">Principles of innovation management</a></li>
+<li><a href="#s9">Common misconceptions</a></li>
+<li class="u"><a href="#cases">Applied cases</a></li>
+<li class="u"><a href="#tool">Chapter tool</a></li>
+<li class="u"><a href="#summary">Summary and questions</a></li>
+</ol>
+</nav>
+<h2 class="unnum" id="intro">Introduction</h2>
+<div class="scene">
+<span class="lbl">Opening case: the annual planning meeting (composite case)</span>
+<p>At a meeting to prepare an organization’s annual plan, each department was asked to present its “innovative initiatives”. Human Resources presented an electronic leave-request form to replace the paper one; IT presented a project to pilot an AI assistant to answer enquiries; Services proposed an ideas competition for staff; and Quality showed how it had cut request processing time from ten days to six by reordering the steps of the procedure.</p>
+<p style="margin-bottom:0">The meeting ended with a list of initiatives, all labelled “innovation”, without anyone asking the essential question: which of these is innovation in the strict sense? Which is an operational improvement that simply needs to be done well? Which is an activity that prepares the ground for innovation without being innovation itself? And what does this distinction imply for how each should be managed?</p>
+</div>
+<p>Versions of this case recur in many organizations. Some of these initiatives may be of high value, but without a shared definition the organization ends up managing initiatives of very different kinds in the same way: a highly uncertain initiative is asked for a detailed implementation plan, a well-understood improvement is treated as a bet that needs experimentation, and a motivational activity is counted as an innovation achievement before any of its outputs has become reality.</p>
+<h3>Chapter objectives</h3>
+<p>After studying this chapter, the reader should be able to:</p>
+<ol class="objectives">
+<li>Define innovation in practical terms that bring together its four elements, and compare its main reference definitions.</li>
+<li>Determine the degree of novelty of an initiative: new to the organization, new to the sector, or new to the world.</li>
+<li>Distinguish innovation from creativity, invention, improvement, transformation and entrepreneurship.</li>
+<li>Classify an initiative by type and degree, and infer the management approach that suits it.</li>
+<li>Explain the eight principles of innovation management in the international <span class="en">ISO 56000</span> series of standards.</li>
+<li>Identify inaccurate notions of innovation in an organization’s discourse and practice.</li>
+</ol>
+<h2 id="s1"><span class="sec">1.1</span>The need for a shared definition</h2>
+<p>Attention to definition may look like an academic concern, but in innovation management it is a practical decision with direct consequences: the definition an organization adopts, explicitly or implicitly, determines what it funds, what it measures and what it rewards. Organizations usually fall into one of two opposite errors.</p>
+<p><strong>The first error: defining too broadly.</strong> When every change is called innovation, it becomes impossible to distinguish initiatives that require exploration, experimentation and learning from improvements that can be managed with quality and continuous-improvement tools. The result is reports full of “innovative” initiatives while what the organization delivers to those it serves stays much the same. <span class="en">Blank</span> called this phenomenon “innovation theater”: activities that imitate innovation in appearance, such as workshops, competitions and labs, without changing products, services or ways of working <span class="cite">(<span class="en">Blank, 2019</span>)</span>.</p>
+<p><strong>The second error: defining too narrowly.</strong> When innovation is restricted to inventions, advanced technologies and patents, wide opportunities are neglected in services, procedures, the user experience, the operating model and the relationships between organizational units. Many of the highest-impact innovations in government and service organizations required no new technology; they rested on rethinking how the service is delivered.</p>
+<p>A good definition avoids both errors: broad enough to include every area where value is created, and precise enough to distinguish innovation from what it is not.</p>
+<h2 id="s2"><span class="sec">1.2</span>Innovation in the reference definitions</h2>
+<p>The modern economic use of the concept of innovation goes back to Joseph Schumpeter, who held that economic development comes from carrying out “new combinations” of resources and knowledge, and identified five forms: introducing a new good or a new quality of an existing good, introducing a new method of production, opening a new market, securing a new source of raw materials, and reorganizing an industry <span class="cite">(<span class="en">Schumpeter, 1934</span>)</span>. Two points in this early view deserve attention: innovation goes beyond the product to methods, markets and organization, and it is tied to implementation rather than completed by discovery alone.</p>
+<p>Later definitions built on this foundation. This section looks at three of them, as they are the most widely used in public policy, standards and measurement tools.</p>
+<h3>The Oslo Manual</h3>
+<p>The Oslo Manual, published by the OECD and Eurostat, is the international reference for measuring innovation in national surveys. Its fourth edition defines an innovation as a new or improved product or process (or combination thereof) that differs significantly from the unit’s previous products or processes and that has been made available to potential users (product) or brought into use by the unit (process) <span class="cite">(<span class="en">OECD/Eurostat, 2018</span>)</span>.</p>
+<p>The decisive condition in this definition is <strong>implementation</strong>: an idea that never left the document, a prototype that was never launched, or a system that was purchased but never switched on is not an innovation by the Oslo standard, however novel it is. The Manual adds a second condition, “significant difference”, so that a routine minor adjustment does not count as innovation.</p>
+<h3>The international <span class="en">ISO 56000</span> series</h3>
+<p>The International Organization for Standardization defines innovation as a new or changed entity that realizes or redistributes value <span class="cite">(<span class="en">ISO, 2025</span>)</span>. The notion of an entity here is deliberately broad: it may be a product, a service, a process, a model or a method. The definition places <strong>value</strong> at its centre, since novelty is not enough unless it brings benefit, whether financial, social, environmental or otherwise. The phrase “redistributes” allows the inclusion of innovations that change who benefits from value without necessarily increasing its total, as when a service reaches a group that was previously excluded from it.</p>
+<h3>Innovation as what is perceived as new</h3>
+<p>In the literature on the diffusion of innovations, Rogers defined an innovation as an idea, practice or object that is perceived as new by an individual or other unit of adoption <span class="cite">(<span class="en">Rogers, 2003</span>)</span>. Damanpour’s definition of organizational innovation is close to this: the adoption of an idea or behaviour that is new to the adopting organization <span class="cite">(<span class="en">Damanpour, 1991</span>)</span>. The value of this perspective is that it shifts the question from “is this new to the world?” to “is it new in this context, and does it require the people in it to change what they are used to?”.</p>
+<div class="tw">
+<table class="defs">
+<caption><b>Table 1.1</b> Comparison of reference definitions of innovation</caption>
+<thead><tr><th>Source</th><th>Core of the definition</th><th>Element it highlights</th><th>Management implication</th></tr></thead>
+<tbody>
+<tr><td>Schumpeter <span class="en">(1934)</span></td><td>Carrying out new combinations of resources and knowledge</td><td>Breadth of types; implementation</td><td>Innovation may occur in the market or the organization as well as the product</td></tr>
+<tr><td>Oslo Manual <span class="en">(2018)</span></td><td>A new or significantly improved product or process, made available or brought into use</td><td>Actual implementation</td><td>An idea or prototype does not count as innovation until it reaches use</td></tr>
+<tr><td><span class="en">ISO 56000 (2025)</span></td><td>A new or changed entity that realizes or redistributes value</td><td>Value</td><td>The first question about any initiative: what value is expected, and for whom?</td></tr>
+<tr><td>Rogers <span class="en">(2003)</span></td><td>An idea, practice or object perceived as new by those who adopt it</td><td>Relative novelty; adoption</td><td>A solution known elsewhere may be an innovation in this context, and adoption must be managed</td></tr>
+</tbody>
+</table>
+</div>
+<h3>The working definition used in this book</h3>
+<p>From these definitions the book derives a working definition that it uses in the chapters that follow:</p>
+<div class="callout" data-k="key">
+<div class="tag">Definition used in this book</div>
+<p><strong>Innovation</strong> is a new or significantly improved application that addresses a need or seizes an opportunity, is adopted by users or an operating unit, and creates observable value.</p>
+</div>
+<p>This definition has four elements, and the absence of any one of them is enough to keep an initiative short of innovation:</p>
+<figure>
+<div class="fig-frame">
+<div class="chain">
+<div class="end start">Idea</div>
+<div class="el"><i>Element 1</i><b>Novelty</b><span>A meaningful difference from the adopter’s previous practice.</span><small>Without it: a repetition of what exists.</small></div>
+<div class="el"><i>Element 2</i><b>Implementation</b><span>The solution moves into actual use or is made available to users.</span><small>Without it: an idea or a model on paper.</small></div>
+<div class="el"><i>Element 3</i><b>Adoption</b><span>The people concerned use the solution and keep using it.</span><small>Without it: a solution launched but not used.</small></div>
+<div class="el"><i>Element 4</i><b>Value</b><span>A noticeable benefit to the beneficiary, the organization or society.</span><small>Without it: change without effect.</small></div>
+<div class="end goal">Innovation</div>
+</div>
+</div>
+<figcaption><b>Figure 1.1</b> The four elements that turn an idea into an innovation, and what follows from the absence of each.</figcaption>
+</figure>
+<p><strong>Novelty</strong> is a relative concept, discussed in the next section. <strong>Implementation</strong> is what separates innovation from ideas and inventions. <strong>Adoption</strong> is an element that is often overlooked, even though a good number of systems and platforms are officially launched and then left unused, or are used by staff at a bare minimum while they keep their old methods alongside. <strong>Value</strong> may be economic, social, operational, epistemic or environmental, and may accrue to the beneficiary, the employee, the organization or society.</p>
+<p>The order of the elements has a temporal meaning: adoption and value come after implementation, so an initiative cannot be judged an innovation on the day it is launched. Launch day proves that a new application exists; innovation is proven only once its use and its effect have been verified. The book’s definition is therefore stricter than the minimum the Oslo Manual adopts for statistical measurement, which requires only that the new product be made available to users or the new process brought into use <span class="cite">(<span class="en">OECD/Eurostat, 2018</span>)</span>, because the book’s purpose is managerial: judging whether an initiative has done what it was launched to do.</p>
+<h2 id="s3"><span class="sec">1.3</span>Relative novelty</h2>
+<p>A recurring question in management discussions is whether applying a solution that already exists elsewhere counts as innovation. The answer on which the measurement literature agrees is that novelty is measured relative to a reference unit, and the Oslo Manual distinguishes three degrees <span class="cite">(<span class="en">OECD/Eurostat, 2018</span>)</span>:</p>
+<figure>
+<div class="fig-frame">
+<div class="rings">
+<svg aria-label="ثلاث دوائر متداخلة لدرجات الجدة" role="img" viewbox="0 0 300 300">
+<circle class="r1" cx="150" cy="150" r="140"></circle>
+<circle class="r2" cx="150" cy="185" r="96"></circle>
+<circle class="r3" cx="150" cy="222" r="52"></circle>
+<text x="150" y="44">New to the organization</text>
+<text x="150" y="136">New to the sector or market</text>
+<text class="w" x="150" y="220">New to</text>
+<text class="w" x="150" y="238">the world</text>
+</svg>
+<ul>
+<li class="a"><span><b>New to the organization:</b> already applied in other organizations, but new to this one. This is the broadest and most common degree, and often the quickest to show results because the solution has been tested in another context.</span></li>
+<li class="b"><span><b>New to the sector or market:</b> not previously applied in the sector, geographical area or market in which the organization operates.</span></li>
+<li class="c"><span><b>New to the world:</b> not previously applied anywhere; the rarest and the riskiest.</span></li>
+</ul>
+</div>
+</div>
+<figcaption><b>Figure 1.2</b> Degrees of novelty: every innovation new to the world is necessarily new to the market and to the organization, but not the reverse.</figcaption>
+</figure>
+<p>Two practical consequences follow from this distinction:</p>
+<p><strong>First,</strong> transferring a successful solution from one context to another can be a genuine innovation, provided it requires meaningful adaptation and change in the adopting organization.</p>
+<p><strong>Second,</strong> the degree of novelty affects how the initiative should be managed. A solution new only to the organization can draw on others’ experience, and its uncertainty lies mainly in fit, adaptation and adoption. A solution new to the world is uncertain in almost every respect: whether it works, whether it is needed, and what it will cost.</p>
+<div class="callout" data-k="example">
+<div class="tag">Example</div>
+<p>When a government agency adopts an appointment-booking system that other agencies introduced before it, it invents nothing new. But it may need to redistribute staff across time slots, change how walk-in visitors are received, and replace performance indicators that counted daily transactions. These changes are what make the application an innovation at the level of the organization, and they are also what determines its success.</p>
+</div>
+<h2 id="s4"><span class="sec">1.4</span>Innovation and neighbouring concepts</h2>
+<p>In general usage the term innovation is used as a synonym for several related concepts. Distinguishing between them matters, because each has its own management logic, even if they overlap in practice.</p>
+<figure>
+<div class="fig-frame">
+<div class="nb">
+<div><b>Creativity</b><span class="q">Is the idea original and appropriate?</span><span>Generating new and useful ideas. A main source of innovation, but no guarantee of implementation.</span></div>
+<div><b>Invention</b><span class="q">Has new knowledge or technology been produced?</span><span>May remain a scientific achievement without use, or may become an innovation.</span></div>
+<div class="core"><b>Innovation</b><span class="q">Has something new been implemented, adopted and created value?</span><span>The focus of this book. It draws on the neighbouring concepts and differs from them.</span></div>
+<div><b>Improvement</b><span class="q">Has the performance of what exists increased?</span><span>May rise to innovation if the difference is substantial, or remain routine development.</span></div>
+<div><b>Transformation</b><span class="q">Has the whole model changed?</span><span>Broader than a single initiative; requires a portfolio of innovations and changes.</span></div>
+</div>
+</div>
+<figcaption><b>Figure 1.3</b> Innovation and its neighbouring concepts, with the question that distinguishes each.</figcaption>
+</figure>
+<h3>Creativity and innovation</h3>
+<p>Researchers in the psychology of creativity agree that a creative product combines originality and appropriateness: it is new and unusual, and useful or suited to a given purpose <span class="cite">(<span class="en">Amabile, 1996; Runco &amp; Jaeger, 2012</span>)</span>. Creativity in this sense is a main source of innovation, but there is a wide gap between them: a creative idea may stay in its author’s head or in the minutes of a meeting, whereas innovation requires what creativity does not: resources, organization, experimentation, decisions and adoption.</p>
+<p>Rhodes proposed early on that creativity be viewed from four interrelated aspects: the creative <strong>person</strong>, with their abilities and motivation; the <strong>process</strong> by which ideas are generated and developed; the surrounding <strong>press</strong> or environment, with the pressures it imposes and the opportunities it offers; and the <strong>product</strong> in which creativity is embodied <span class="cite">(<span class="en">Rhodes, 1961</span>)</span>. The value of this view for innovation management becomes clear when it is set against the common practice of focusing on the product alone, such as the number of ideas, projects or patents, without attention to the people expected to innovate, the environment in which they work, and the processes that take up their ideas. Amabile showed that organizational innovation depends on the interaction between the creativity of individuals and teams and the work environment, including its resources, management practices and organizational motivation to innovate <span class="cite">(<span class="en">Amabile, 1988</span>)</span>. The book devotes Chapter 7 to this relationship.</p>
+<h3>Invention and innovation</h3>
+<p>Invention is the production of new knowledge, technology or combination, often documented by a patent. An invention becomes an innovation when it finds use and is incorporated into a product, service or process that creates value. A well-known example: in 1975 a Kodak engineer built an early prototype of the digital camera, yet the company was very slow to make digital photography central to its business, while the same technology became, in other companies’ hands, an innovation that transformed the industry. Not every invention is therefore an innovation, and not every innovation is an invention; many innovations, especially in services and business models, involve no new technology at all.</p>
+<h3>Improvement and innovation</h3>
+<p>Improvement raises the performance of what already exists: shortening the time a procedure takes, removing an unnecessary step, or raising the quality of a service. There is no conflict between improvement and innovation. An improvement rises to innovation when it differs substantially from previous practice, is brought into use and creates value. It remains operational development when it is a limited adjustment whose method is already known.</p>
+<p>The most useful criterion for telling them apart is the <strong>degree of uncertainty</strong>, not the size of the change. If the solution is known, the cause understood and what is required is disciplined execution, continuous-improvement tools are sufficient. If the solution is unknown, or there are essential untested assumptions about the user, the implementation or the value, the initiative requires the logic of innovation: experimentation, learning and staged decisions.</p>
+<h3>Transformation and innovation</h3>
+<p>Transformation is a fundamental change in the business or operating model, in the relationship with those served, or in organizational capabilities. It requires a portfolio of integrated innovations and changes, and leadership and change management that extend over years. “Digital transformation” thus includes many innovations, but also work that involves no innovation, such as data migration, system consolidation and staff training.</p>
+<h3>Entrepreneurship and innovation</h3>
+<p>Entrepreneurship is concerned with discovering an opportunity and organizing resources around it to create a sustainable venture or activity. It may rely on innovation without being synonymous with it: innovation can take place within an existing organization without creating a new venture, and an entrepreneurial venture may apply a known model in a new market with little innovation. The term <strong>intrapreneurship</strong> <span class="cite">(<span class="en">Intrapreneurship</span>)</span> describes entrepreneurial behaviour within established organizations, and it is closely related to the subject of this book.</p>
+<div class="tw">
+<table>
+<caption><b>Table 1.2</b> Differences between innovation and neighbouring concepts</caption>
+<thead><tr><th>Concept</th><th>Output</th><th>Criterion of success</th><th>Management logic</th></tr></thead>
+<tbody>
+<tr><td>Creativity</td><td>Ideas</td><td>Originality and appropriateness</td><td>Widening the options and deferring judgement</td></tr>
+<tr><td>Invention</td><td>New knowledge or technology</td><td>Technical novelty and scientific proof</td><td>Research and development; protecting intellectual property</td></tr>
+<tr><td>Improvement</td><td>Better performance of what exists</td><td>Efficiency, quality and reliability</td><td>Analysis, disciplined execution and continuous improvement</td></tr>
+<tr><td>Innovation</td><td>A new solution, implemented and adopted</td><td>Value realized</td><td>Experimentation, learning and staged decisions</td></tr>
+<tr><td>Transformation</td><td>A new business or operating model</td><td>Change in capabilities and results across the organization</td><td>An integrated portfolio and long-term change leadership</td></tr>
+<tr><td>Entrepreneurship</td><td>A sustainable venture or activity</td><td>Survival and growth</td><td>Seizing the opportunity and organizing resources around it</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="s5"><span class="sec">1.5</span>Types of innovation</h2>
+<p>Innovation can occur in any element that contributes to creating or delivering value. The literature offers several classifications of its types; this section presents two that complement each other.</p>
+<h3>The Oslo Manual classification</h3>
+<p>The Oslo Manual groups innovation into two main types: <strong>product innovation</strong>, whether a good or a service, and <strong>business process innovation</strong>, which it subdivides into six functions <span class="cite">(<span class="en">OECD/Eurostat, 2018</span>)</span>.</p>
+<figure>
+<div class="fig-frame">
+<div class="dom">
+<div class="col">
+<h5>Product innovation</h5>
+<span class="tag">What the organization offers to those it serves</span>
+<div class="cells">
+<div class="cell"><b>Goods</b>New or improved tangible products.</div>
+<div class="cell"><b>Services</b>New or improved services in their features, ease of use or quality.</div>
+</div>
+</div>
+<div class="col">
+<h5>Business process innovation</h5>
+<span class="tag">How the organization works</span>
+<div class="cells">
+<div class="cell"><b>Production and delivery</b>Methods of producing goods or delivering services.</div>
+<div class="cell"><b>Distribution and logistics</b>Logistics services and delivery.</div>
+<div class="cell"><b>Marketing and sales</b>Channels, pricing and promotion.</div>
+<div class="cell"><b>Information and communication</b>Data and technology systems.</div>
+<div class="cell"><b>Administration and management</b>Structures, roles and decision-making methods.</div>
+<div class="cell"><b>Product and process development</b>The way of innovating itself.</div>
+</div>
+</div>
+</div>
+</div>
+<figcaption><b>Figure 1.4</b> Types of innovation according to the Oslo Manual (2018). Source: adapted from <span class="en">OECD/Eurostat (2018)</span>.</figcaption>
+</figure>
+<p>Note that in this classification “product and process development” is itself a type of innovation: an organization that improves the way it explores opportunities and tests solutions is innovating in its very capacity to innovate, which is the subject of Part Two of the book.</p>
+<h3>The four Ps of Tidd and Bessant</h3>
+<p>Tidd and Bessant suggest looking at “innovation space” through four dimensions: <strong>product</strong>, what the organization offers; <strong>process</strong>, the way it is produced and delivered; <strong>position</strong>, the context in which it is offered and to whom; and <strong>paradigm</strong>, the underlying mental model of what the organization does <span class="cite">(<span class="en">Tidd &amp; Bessant, 2021</span>)</span>. The last two dimensions are useful because they draw attention to innovations that change neither the product nor the process, such as offering an existing service to a new group, or redefining what the organization provides: a product, an outcome, or an integrated solution.</p>
+<div class="callout" data-k="teacher">
+<div class="tag">Professional application</div>
+<p>Map your organization’s list of initiatives onto these two classifications. If the initiatives cluster in a single cell, such as technology or product, your organization’s view of innovation is narrower than the opportunities open to it. The largest opportunities often lie in the neglected areas: structure, networks, channels and the way decisions are made.</p>
+</div>
+<p>These types are complementary: an influential solution may combine a change in service, process, technology and operating model at the same time. Technology in particular is an enabler, and it counts as innovation only when it substantially changes value, experience or performance; digitizing a flawed procedure may speed up the problem rather than solve it.</p>
+<h2 id="s6"><span class="sec">1.6</span>Degrees of innovation</h2>
+<p>Innovations differ in the amount of change they bring. The literature uses several classifications of these degrees, each with a different point of view.</p>
+<h3>Core, adjacent and transformational innovation</h3>
+<p><strong>Incremental innovation</strong> builds on a known product, service, capability or group of beneficiaries, so its uncertainty is relatively low. <strong>Adjacent innovation</strong> takes an existing capability to a new group or market, or adds a new capability to a familiar field. <strong>Radical</strong> or transformational innovation changes the underlying assumptions, or offers substantially different value and a different model <span class="cite">(<span class="en">Nagji &amp; Tuff, 2012</span>)</span>.</p>
+<p>These degrees carry no value judgement: radical is not better in every case, and incremental is not minor. Successive improvements can accumulate into a large effect, and a radical idea may be unsuitable or impossible to adopt. What matters is that the organization identifies the uncertainty, risks and capabilities each initiative involves, and manages it accordingly. The book returns to this balance in the context of strategy and portfolio management in Chapters 4 and 10.</p>
+<h3>Components and architecture</h3>
+<p>Henderson and Clark observed that the binary classification (incremental/radical) hides two important types of innovation, because every product or service consists of <strong>components</strong> and an <strong>architecture</strong> that links them. Crossing these two dimensions gives four types <span class="cite">(<span class="en">Henderson &amp; Clark, 1990</span>)</span>:</p>
+<figure>
+<div class="fig-frame">
+<div class="hc">
+<div></div>
+<div class="ax">Core concepts reinforced</div>
+<div class="ax">Core concepts overturned</div>
+<div class="ax v">Linkages unchanged</div>
+<div class="q inc"><b>Incremental</b><span>Improving components within the same architecture, such as making one step of an existing procedure more efficient.</span></div>
+<div class="q mod"><b>Modular</b><span>Replacing a component with a new technology or method without changing the architecture, such as an e-signature instead of a paper one.</span></div>
+<div class="ax v">Linkages changed</div>
+<div class="q arc"><b>Architectural</b><span>Linking known components in a new way, such as combining scattered services into a single journey.</span></div>
+<div class="q rad"><b>Radical</b><span>New concepts and new linkages together, such as an unprecedented service model.</span></div>
+<div class="cap">Adapted from <span class="en">Henderson &amp; Clark (1990)</span>; examples by the author.</div>
+</div>
+</div>
+<figcaption><b>Figure 1.5</b> The innovation matrix by components and architecture.</figcaption>
+</figure>
+<p><strong>Architectural innovation</strong> is particularly important in service and government organizations, because many service problems stem from how the components are linked rather than from their weakness. Each department may do its work efficiently while the problem lies in how they connect: hand-offs between units, repeated requests for the same information, and fragmented ownership of the journey. Henderson and Clark showed that this type is especially challenging for established organizations, because it looks limited on the surface while requiring knowledge of the architecture of the whole system, knowledge that is usually embedded in structures and habitual communication channels.</p>
+<h3>Sustaining and disruptive innovation</h3>
+<p>Christensen distinguished between <strong>sustaining innovation</strong>, which improves product performance on the dimensions that existing customers value, and <strong>disruptive innovation</strong>, which often starts with lower performance on those dimensions but is simpler, cheaper or more accessible, attracts neglected or new groups, and then improves until it competes with the prevailing solutions <span class="cite">(<span class="en">Christensen, 1997</span>)</span>. The “dilemma” of successful organizations is that their very good practices, such as listening to their best customers and investing in the most profitable opportunities, lead them to ignore this type until it is too late.</p>
+<h2 id="s7"><span class="sec">1.7</span>Innovation in the public and non-profit sectors</h2>
+<p>The innovation literature grew up in the context of firms and markets and carried many of their assumptions, such as competition, profit and a customer free to choose. Yet innovation in government bodies and non-profit organizations is just as important, and may be more so, because its effects reach large groups of beneficiaries who usually have no alternative to the service.</p>
+<p>Mulgan and Albury defined successful public-sector innovation as the creation and implementation of new processes, products, services and methods of delivery that result in significant improvements in outcomes, efficiency, effectiveness or quality <span class="cite">(<span class="en">Mulgan &amp; Albury, 2003</span>)</span>. Value in this context is what Moore called “public value”: what society and its members value, not merely what generates a financial return <span class="cite">(<span class="en">Moore, 1995</span>)</span>.</p>
+<div class="tw">
+<table>
+<caption><b>Table 1.3</b> How innovation differs between the two sectors</caption>
+<thead><tr><th>Dimension</th><th>Firms</th><th>Public bodies and non-profit organizations</th></tr></thead>
+<tbody>
+<tr><td>Measure of value</td><td>Return, market share and customer satisfaction</td><td>Social outcomes, equity of access, trust and efficiency</td></tr>
+<tr><td>Driver of innovation</td><td>Competition and growth</td><td>National priorities, beneficiaries’ expectations, limited resources and crises</td></tr>
+<tr><td>Beneficiary</td><td>A customer who chooses and pays</td><td>A beneficiary who may have no alternative and may differ from the funder</td></tr>
+<tr><td>Risk-taking</td><td>Acceptable within the expected return</td><td>More sensitive, owing to public accountability and the effect of errors on trust</td></tr>
+<tr><td>Diffusion</td><td>Innovation is a competitive advantage to be protected</td><td>Innovation should preferably be shared across bodies and scaled</td></tr>
+</tbody>
+</table>
+</div>
+<p>These differences mean that business tools cannot be transferred to the public sector without adaptation: return on investment alone is not enough to evaluate an initiative that aims to bring a service to an underserved group. The book uses the term “beneficiary” to include the customer, the citizen and the internal user, and the term “value” to include both economic and public value.</p>
+<h2 id="s8"><span class="sec">1.8</span>Principles of innovation management</h2>
+<p>If innovation is the outcome, innovation management is the set of practices and capabilities that make that outcome possible and repeatable. It includes directing opportunities, ideas and initiatives, and managing their flow from the <strong>front end of innovation</strong>, where needs are explored and ideas generated, to implementation and the realization of value. The international <span class="en">ISO 56000</span> series rests on eight principles that summarize accumulated experience in the field <span class="cite">(<span class="en">ISO, 2025; Fernandez &amp; Swart, 2025</span>)</span>; this section presents them because they offer a concise map of the book’s topics.</p>
+<figure>
+<div class="prin">
+<div><b>Realization of value</b><span class="en">Realization of value</span><span class="d">The goal is value realized; the number of ideas and activities is an intermediate indicator.</span><span class="ch">Chapters 16, 17</span></div>
+<div><b>Future-focused leaders</b><span class="en">Future-focused leaders</span><span class="d">Leadership that combines managing the present with exploring the future.</span><span class="ch">Chapter 3</span></div>
+<div><b>Strategic direction</b><span class="en">Strategic direction</span><span class="d">Innovation directed by clear goals and stated priorities.</span><span class="ch">Chapter 4</span></div>
+<div><b>Culture</b><span class="en">Culture</span><span class="d">Values and behaviours that combine creativity with disciplined execution.</span><span class="ch">Chapters 7, 8</span></div>
+<div><b>Exploiting insights</b><span class="en">Exploiting insights</span><span class="d">Drawing on diverse sources of knowledge inside and outside the organization.</span><span class="ch">Chapters 11, 18</span></div>
+<div><b>Managing uncertainty</b><span class="en">Managing uncertainty</span><span class="d">Dealing with risk through learning and calculated experimentation.</span><span class="ch">Chapter 14</span></div>
+<div><b>Adaptability</b><span class="en">Adaptability</span><span class="d">Adjusting structures and processes in response to change.</span><span class="ch">Chapters 6, 10</span></div>
+<div><b>Systems approach</b><span class="en">Systems approach</span><span class="d">Viewing innovation as a system of interrelated elements.</span><span class="ch">Chapter 5</span></div>
+</div>
+<figcaption><b>Figure 1.6</b> The eight principles of innovation management in the <span class="en">ISO 56000</span> series, and the chapters of this book that address each.</figcaption>
+</figure>
+<p>These principles do not prescribe particular tools such as design thinking or hackathons. Tools change; the principles determine when a tool is useful and when it becomes a formality.</p>
+<h2 id="s9"><span class="sec">1.9</span>Common misconceptions</h2>
+<p>The conceptual part of the chapter closes with five inaccurate notions that recur in how organizations talk about innovation. Each leads to specific management decisions, so correcting them is not a matter of wording but of correcting practice.</p>
+<div class="callout" data-k="myth">
+<div class="tag">Innovation starts with ideas</div>
+<p>The more accurate starting point is a need, problem, opportunity or change that calls for a response; the idea comes later as a hypothesis for a solution. An organization that starts by collecting ideas without direction receives a large number of scattered proposals that are hard to evaluate, and few of them ever reach implementation. Chapter 11 discusses this in detail.</p>
+</div>
+<div class="callout" data-k="myth">
+<div class="tag">Innovation is technology</div>
+<p>Technology is an important enabler, but many of the highest-impact innovations lie in services, procedures, business models and structures. Large technology projects have failed to deliver value because they were built for a problem that was not sufficiently understood.</p>
+</div>
+<div class="callout" data-k="myth">
+<div class="tag">Innovation is for creative people only</div>
+<p>An organization needs people who spot problems, analyse evidence, design experiments, implement, sponsor and bring operational expertise. The person not known for a wealth of ideas may be the one who makes an idea workable.</p>
+</div>
+<div class="callout" data-k="myth">
+<div class="tag">Having a lab or platform proves innovative capacity</div>
+<p>Labs, platforms and awards are tools, and they may become part of innovation theater if they are not linked to priorities, resources, decisions and an operating owner, or if they remain isolated from the daily work of units and their people. The test of innovative capacity is an organized flow of opportunities, learning from experiments, evidence-based decisions and results achieved.</p>
+</div>
+<div class="callout" data-k="myth">
+<div class="tag">Launch is the end of the road</div>
+<p>Launch proves that a new application exists; innovation is proven only after it has been adopted and its effect realized. An organization that is content to celebrate the launch and then move on usually loses the hardest and most important part of the journey.</p>
+</div>
+<h2 class="unnum" id="cases">Applied cases: is this initiative an innovation?</h2>
+<p>This section returns to the initiatives in the opening case and applies the four elements to them. The cases are illustrative, and their details have been shaped to show the method of analysis.</p>
+<div class="case">
+<div class="case-head"><h3>The electronic leave-request form</h3><span class="verdict n">Operational improvement</span></div>
+<div class="checks">
+<div class="u"><b>?</b>Novelty</div>
+<div class="y"><b>✓</b>Implementation</div>
+<div class="y"><b>✓</b>Adoption</div>
+<div class="u"><b>?</b>Value</div>
+</div>
+<p>The electronic form replaced the paper one, and staff used it because it was the only route available. But the approval path stayed the same, with five successive sign-offs, and the average completion time did not change. The novelty here is formal, and the value is limited to saving paper.</p>
+<p class="shift"><strong>When would it rise to innovation?</strong> If the path itself were redesigned, for example by approving short leave automatically under clear rules and requiring a single approval in other cases, and a substantial reduction in time and workload were then measured.</p>
+</div>
+<div class="case">
+<div class="case-head"><h3>The enquiries assistant</h3><span class="verdict t">A potential innovation, not yet complete</span></div>
+<div class="checks">
+<div class="y"><b>✓</b>Novelty</div>
+<div class="u"><b>?</b>Implementation</div>
+<div class="u"><b>?</b>Adoption</div>
+<div class="u"><b>?</b>Value</div>
+</div>
+<p>Novelty is present at the level of the organization, but the initiative is still an idea: the reasons for the high volume of enquiries have not been studied, nor the quality of the information the assistant would rely on, nor who would be responsible for updating it. Calling it an innovation is therefore premature.</p>
+<p class="shift"><strong>When would it rise to innovation?</strong> If it began by understanding why the enquiries arise, was then piloted on a limited scale, the reduction in repeated enquiries and user satisfaction were measured, and an owner were named to keep the content up to date.</p>
+</div>
+<div class="case">
+<div class="case-head"><h3>The staff ideas competition</h3><span class="verdict t">An activity that prepares for innovation</span></div>
+<div class="checks">
+<div class="u"><b>—</b>Novelty</div>
+<div class="u"><b>—</b>Implementation</div>
+<div class="u"><b>—</b>Adoption</div>
+<div class="u"><b>—</b>Value</div>
+</div>
+<p>The competition is neither an innovation nor its opposite; it is a mechanism for capturing opportunities, and its value depends on what follows it: whether it is linked to priority challenges, whether time and resources are available to evaluate the proposals and test the best of them, and whether participants receive a response to their proposals.</p>
+<p class="shift"><strong>When would it be worthwhile?</strong> If it were framed around a specific challenge, if what would follow from selecting ideas were announced in advance, and if a modest budget were set aside to test some of them.</p>
+</div>
+<div class="case">
+<div class="case-head"><h3>Reducing request processing time</h3><span class="verdict y">An innovation at the level of the organization</span></div>
+<div class="checks">
+<div class="y"><b>✓</b>Novelty</div>
+<div class="y"><b>✓</b>Implementation</div>
+<div class="y"><b>✓</b>Adoption</div>
+<div class="y"><b>✓</b>Value</div>
+</div>
+<p>Quality reordered the steps of the procedure after finding that requests waited for days between two units without being processed. The two review stages were merged and a shared view of request status was created. Processing time fell from ten days to six, and the reduction held six months later. This is an architectural innovation new to the organization, even though it used no new technology.</p>
+<p class="shift"><strong>What would strengthen the judgement?</strong> Comparing the time against a documented baseline, and checking that errors have not simply moved to a later stage.</p>
+</div>
+<div class="callout" data-k="key">
+<div class="tag">What the cases show</div>
+<p>The initiative whose name suggests innovation may be the furthest from it, and the initiative that looks modest may be the closest. Classifying an initiative determines how it is managed: improvement is managed through disciplined execution, a potential innovation through experimentation and staged decisions, and a preparatory activity through clarity about what will follow from it.</p>
+</div>
+<h2 class="unnum" id="tool">Chapter tool: the initiative classification card</h2>
+<p>Use this card to establish the nature of any initiative before deciding on it, at the proposal stage or when reviewing existing initiatives. Do not look for a score; its purpose is to put the right questions to you.</p>
+<div class="toolcard">
+<div class="th"><b>Initiative classification card</b><span>Takes about twenty minutes to complete</span></div>
+<div class="tb">
+<div class="row"><i>1</i><div><b>What is the need or opportunity?</b><span class="hint">Describe it without mentioning the solution. What evidence shows it matters?</span></div><div class="opts"><span>Strong evidence</span><span>Initial evidence</span><span>Impression</span></div></div>
+<div class="row"><i>2</i><div><b>What is the degree of novelty?</b><span class="hint">New to whom?</span></div><div class="opts"><span>To the organization</span><span>To the sector</span><span>To the world</span><span>No meaningful novelty</span></div></div>
+<div class="row"><i>3</i><div><b>What type of innovation?</b><span class="hint">More than one type may apply.</span></div><div class="opts"><span>Product or service</span><span>Process</span><span>User experience</span><span>Business model</span><span>Organization and management</span><span>Technology</span></div></div>
+<div class="row"><i>4</i><div><b>What is the degree of uncertainty?</b><span class="hint">Is the solution known? Is the cause understood? Is adoption assured?</span></div><div class="opts"><span>Low: improvement</span><span>Medium: incremental or adjacent innovation</span><span>High: radical innovation</span></div></div>
+<div class="row"><i>5</i><div><b>What value is expected, and for whom?</b><span class="hint">Which indicator will change if the initiative succeeds?</span></div><div class="opts"><span>Beneficiary</span><span>Employee</span><span>Organization</span><span>Society</span></div></div>
+<div class="row"><i>6</i><div><b>Who will adopt and operate the solution?</b><span class="hint">A specific, named unit.</span></div><div class="opts"><span>Named and involved</span><span>Named but not involved</span><span>Not named</span></div></div>
+<div class="row"><i>7</i><div><b>What management approach fits?</b><span class="hint">The conclusion from the answers above.</span></div><div class="opts"><span>Execution and continuous improvement</span><span>Innovation path with experiments and stages</span><span>Initial exploration before deciding</span></div></div>
+</div>
+</div>
+<div class="readmap">
+<div><b>Limited novelty and low uncertainty</b>The initiative is an improvement: carry it out well, without loading it with the language and tools of innovation.</div>
+<div><b>Real novelty and medium or high uncertainty</b>The initiative needs an innovation path: stated assumptions, experiments, staged funding and decision gates.</div>
+<div><b>Unclear need</b>The first step is a short exploration to understand the problem before committing to any solution.</div>
+</div>
+<h2 class="unnum" id="summary">Chapter summary</h2>
+<div class="summary">
+<ul>
+<li>Innovation is a new or significantly improved application that addresses a need, is adopted by users and creates observable value. The absence of any of the four elements is enough to keep an initiative short of innovation.</li>
+<li>The reference definitions (Schumpeter, the Oslo Manual, <span class="en">ISO 56000</span> and Rogers) agree that novelty alone is not enough, and differ in the aspect they emphasize.</li>
+<li>Novelty is relative: to the organization, the sector or the world. Transferring solutions between contexts is genuine innovation when it requires adaptation and change.</li>
+<li>Creativity produces ideas, invention produces knowledge or technology, improvement raises the performance of what exists, and transformation changes the whole model. The practical criterion for distinguishing improvement from innovation is the degree of uncertainty.</li>
+<li>Creativity is not only about its product; it includes the person, the process and the environment, aspects on which an organization’s capacity to innovate depends.</li>
+<li>Innovation occurs in products and services, in business processes, and in position and paradigm. Technology is one enabler, not a synonym for innovation.</li>
+<li>Innovations range from incremental to radical; architectural innovation matters particularly in service organizations; and each degree has a management approach that suits it.</li>
+<li>Public-sector innovation has a different logic of value, risk and diffusion, and requires adapted tools.</li>
+<li>Innovation management rests on eight principles, the first of which is the realization of value and the last viewing innovation as a system.</li>
+</ul>
+</div>
+<h3>Key terms</h3>
+<dl class="gloss">
+<dt>Innovation<span class="en">Innovation</span></dt><dd>A new or significantly improved application, adopted by users, that creates value.</dd>
+<dt>Innovation management<span class="en">Innovation management</span></dt><dd>The practices and capabilities that direct the flow of opportunities, ideas and initiatives, and manage experimentation, decisions and resources through to the realization of value.</dd>
+<dt>Front end of innovation<span class="en">Front end of innovation</span></dt><dd>The stage before a project is formally launched, including discovering needs, exploring opportunities and generating ideas.</dd>
+<dt>Degree of novelty<span class="en">Degree of novelty</span></dt><dd>The novelty of a solution relative to a reference unit: the organization, the market or the world.</dd>
+<dt>Business process innovation<span class="en">Business process innovation</span></dt><dd>A new or improved change in how the organization performs one of its functions.</dd>
+<dt>Incremental innovation<span class="en">Incremental innovation</span></dt><dd>Innovation that builds on an existing offer or capability without changing its basic nature.</dd>
+<dt>Architectural innovation<span class="en">Architectural innovation</span></dt><dd>Linking known components in a new way.</dd>
+<dt>Disruptive innovation<span class="en">Disruptive innovation</span></dt><dd>Innovation that starts at the low end of a market or in a new market, then improves until it competes with prevailing solutions.</dd>
+<dt>Intrapreneurship<span class="en">Intrapreneurship</span></dt><dd>Entrepreneurial behaviour by individuals within an established organization to lead a new innovation.</dd>
+<dt>Public value<span class="en">Public value</span></dt><dd>What society and its members value in the outcomes of public services and policies.</dd>
+<dt>Innovation theater<span class="en">Innovation theater</span></dt><dd>Activities that imitate innovation in appearance without changing products, services or ways of working.</dd>
+</dl>
+<h3>Review and discussion questions</h3>
+<ol class="questions">
+<li>State the four elements of the definition of innovation, and illustrate with an example what follows from the absence of adoption. <span class="lv">Understanding</span></li>
+<li>Compare the Oslo Manual definition with the <span class="en">ISO 56000</span> definition in terms of the element each emphasizes, and explain when one is more suitable than the other for a specific management purpose. <span class="lv">Analysis</span></li>
+<li>An organization implemented a system that similar organizations have used for years. Is this an innovation? Specify the conditions under which it would be. <span class="lv">Application</span></li>
+<li>Choose three initiatives from your organization’s plan, classify them with the initiative classification card, and compare how they are currently managed with what the classification implies. <span class="lv">Application</span></li>
+<li>What makes architectural innovation difficult for established organizations? Give the example of a service whose units each do their work efficiently while the overall journey remains slow. <span class="lv">Analysis</span></li>
+<li>“An organization that has an innovation lab and an annual innovation award is an innovative organization.” Discuss this statement in light of the concept of innovation theater and the four aspects of creativity. <span class="lv">Evaluation</span></li>
+</ol>
+<div aria-hidden="true" class="endmark">✦ ✦ ✦</div>
+<aside class="bp-cite" dir="ltr"><b>How to cite this section</b><p class="bp-ref">Alsamani, O. A. (2026). Chapter 1: What is innovation?. In <i>Innovation Management</i>. alsamani.com. https://alsamani.com/books/innovation-management/en/ch01.html</p><p class="bp-lic2">© 2026 Dr. Omar A. Alsamani. English translation of the Arabic original. Free to read, download, share and quote for non-commercial purposes with attribution to the author and source.</p></aside>
+<nav class="pager"><span class="empty"></span><a class="next" href="../ch02.html"><small>Next chapter</small><b>Why innovation now?</b></a></nav>
+</div>
+</body>
+</html>

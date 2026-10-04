@@ -95,8 +95,9 @@ def build_book(b, make_pdf):
 
     def chrome(s, f, is_index=False):
         pdf_btn = '' if is_index else f'<a class="bp-btn" href="pdf/{f[:-5]}.pdf" download>تحميل الفصل PDF</a>'
+        if os.path.exists(os.path.join(src, 'en', f)): pdf_btn = f'<a class="bp-btn" href="en/{f}" hreflang="en" lang="en">English</a>' + pdf_btn
         bar = f'''<div class="bp-bar" dir="rtl"><div class="bp-in">
-<a class="bp-home" href="../../index.html">د. عمر عبدالله الصمعاني</a><span class="bp-sep">/</span><a href="../index.html">الكتب</a><span class="bp-sep">/</span><a href="index.html" class="bp-book">{e(b['title'])}</a>
+<a class="bp-home" href="../../index.html">د. عمر عبدالله الصمعاني</a><span class="bp-sep">/</span><a href="../index.html">المكتبة المفتوحة</a><span class="bp-sep">/</span><a href="index.html" class="bp-book">{e(b['title'])}</a>
 <span class="bp-sp"></span><span class="bp-tools"><button class="bp-ic" type="button" data-rd="z-" aria-label="تصغير الخط" title="تصغير الخط">أ−</button><button class="bp-ic" type="button" data-rd="z+" aria-label="تكبير الخط" title="تكبير الخط">أ+</button><button class="bp-ic" type="button" data-rd="theme" aria-label="الوضع الليلي" title="الوضع الليلي/النهاري">ليلي</button></span>{pdf_btn}<button class="bp-btn" type="button" data-share>مشاركة</button><button class="bp-btn" type="button" data-bp="search">بحث</button><button class="bp-btn solid" type="button" data-bp="toc">المحتويات</button></div></div>
 <div class="bp-share" id="bpShare" hidden dir="rtl"><b>مشاركة هذه الصفحة</b><button type="button" data-sh="copy">نسخ الرابط</button><button type="button" data-sh="native" hidden>مشاركة…</button><a data-sh="wa" target="_blank" rel="noopener">واتساب</a><a data-sh="x" target="_blank" rel="noopener">X</a><a data-sh="li" target="_blank" rel="noopener">LinkedIn</a><a data-sh="tg" target="_blank" rel="noopener">تيليجرام</a><a data-sh="mail">البريد</a><small>لمشاركة قسم بعينه: مرّر المؤشر على عنوانه واضغط ¶</small></div>
 <div class="bp-drawer" id="bpDrawer" hidden dir="rtl"><div class="bp-panel" role="dialog" aria-label="المحتويات والبحث">
@@ -124,6 +125,8 @@ def build_book(b, make_pdf):
 <details class="bp-chaps"><summary>تحميل الفصول منفردة</summary><ol>{chap_dl}</ol></details>
 <p class="bp-lic">{e(b.get('license_note','نشر مفتوح. الحقوق محفوظة للمؤلف، ويُسمح بالقراءة والتحميل والاقتباس مع ذكر المصدر.'))}</p></section>'''
     home = idx.replace('<h2 id="contents">', dl + '\n<h2 id="contents">', 1)
+    if os.path.exists(os.path.join(src, 'en', 'index.html')):
+        home = home.replace('<section class="bp-dl" id="downloads">', '<p class="bp-ednote"><a href="en/index.html" lang="en">English edition</a> · قيد الترجمة فصلًا فصلًا</p>\n<section class="bp-dl" id="downloads">', 1)
     open(os.path.join(dst, 'index.html'), 'w').write(chrome(home, 'index.html', True))
 
     # elements page
@@ -141,7 +144,63 @@ def build_book(b, make_pdf):
 
     if make_pdf:
         make_pdfs(b, src, dst, order, toc)
+    build_en(b, order, draft)
     return {'slug': slug, 'chapters': len(toc), 'figs': len(elements['fig']), 'tabs': len(elements['tab']), 'tools': len(elements['tool'])}
+
+
+EN_FONTS = '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">'
+EN_CSS = '<style>:root{--f-body:"Source Serif 4",Georgia,serif;--f-display:"Source Serif 4",Georgia,serif;--f-ui:"IBM Plex Sans",system-ui,sans-serif}.questions li::before{content:counter(q)}html{direction:ltr!important}body{letter-spacing:0;text-align:left}caption{text-align:left!important}.formula small{direction:ltr}.cover svg{left:auto!important;right:0}</style>'
+
+def build_en(b, order, draft):
+    slug = b['slug']; src = P('books', slug, 'en')
+    if not os.path.isdir(src): return
+    dst = os.path.join(OUT, slug, 'en'); os.makedirs(dst, exist_ok=True)
+    have = [f for f in order if os.path.exists(os.path.join(src, f))]
+    title_en = b.get('title_en', b['title'])
+    toc, search = [], []
+    def chrome(s, f, is_index=False):
+        ar_link = f'<a class="bp-btn" href="../{f}" hreflang="ar" lang="ar">العربية</a>'
+        bar = f'''<div class="bp-bar" dir="ltr"><div class="bp-in">
+<a class="bp-home" href="../../../index.html">Dr. Omar A. Alsamani</a><span class="bp-sep">/</span><a href="../../index.html">Open Library</a><span class="bp-sep">/</span><a href="index.html" class="bp-book">{e(title_en)}</a>
+<span class="bp-sp"></span><span class="bp-tools"><button class="bp-ic" type="button" data-rd="z-" aria-label="Smaller text" title="Smaller text">A−</button><button class="bp-ic" type="button" data-rd="z+" aria-label="Larger text" title="Larger text">A+</button><button class="bp-ic" type="button" data-rd="theme" aria-label="Dark mode" title="Dark/light mode">Dark</button></span>{ar_link}<button class="bp-btn" type="button" data-share>Share</button><button class="bp-btn" type="button" data-bp="search">Search</button><button class="bp-btn solid" type="button" data-bp="toc">Contents</button></div></div>
+<div class="bp-share" id="bpShare" hidden dir="ltr"><b>Share this page</b><button type="button" data-sh="copy">Copy link</button><button type="button" data-sh="native" hidden>Share…</button><a data-sh="wa" target="_blank" rel="noopener">WhatsApp</a><a data-sh="x" target="_blank" rel="noopener">X</a><a data-sh="li" target="_blank" rel="noopener">LinkedIn</a><a data-sh="tg" target="_blank" rel="noopener">Telegram</a><a data-sh="mail">Email</a><small>To share a specific section, hover over its heading and click ¶</small></div>
+<div class="bp-drawer" id="bpDrawer" hidden dir="ltr"><div class="bp-panel" role="dialog" aria-label="Contents and search">
+<div class="bp-head"><b>{e(title_en)}</b><button type="button" class="bp-x" data-bp="close" aria-label="Close">×</button></div>
+<div class="bp-search"><input id="bpQ" type="search" placeholder="Search the text of the book…" autocomplete="off"><div id="bpRes"></div></div>
+<nav class="bp-toc" id="bpToc"></nav>
+<div class="bp-links"><a href="../index.html#downloads">Download the Arabic edition (PDF)</a></div>
+</div></div>'''
+        head = (('<meta name="robots" content="noindex,nofollow">' if draft else '') + EN_FONTS + EN_CSS +
+                f'<link rel="alternate" hreflang="ar" href="https://alsamani.com/books/{slug}/{f}">' +
+                '<link rel="stylesheet" href="../assets/platform.css">' +
+                f'<script>window.BOOK={{slug:"{slug}-en",cur:"{f}",lang:"en"}}</script><script src="../assets/platform.js" defer></script>')
+        s = s.replace('</head>', head + '\n</head>', 1)
+        return re.sub(r'<body>', '<body>\n' + bar, s, count=1)
+    for f in have:
+        s = open(os.path.join(src, f)).read()
+        title = text(re.search(r'<title>(.*?)</title>', s, re.S).group(1))
+        h1 = re.search(r'<h1[^>]*>(.*?)</h1>', s, re.S); kicker = re.search(r'class="kicker">(.*?)<', s)
+        secs = [(i, text(t)) for i, t in re.findall(r'<h2[^>]*id="([^"]+)"[^>]*>(.*?)</h2>', s, re.S)]
+        body = s[s.find('<body'):]
+        cur_id, cur_t = '', title
+        for p in re.split(r'(<h2[^>]*id="[^"]+"[^>]*>.*?</h2>)', body, flags=re.S):
+            hm = re.match(r'<h2[^>]*id="([^"]+)"[^>]*>(.*?)</h2>', p, re.S)
+            if hm: cur_id, cur_t = hm.group(1), text(hm.group(2)); continue
+            t = text(re.sub(r'<(script|style|nav)[\s\S]*?</\1>', '', p))
+            if len(t) > 40: search.append({'f': f, 'id': cur_id, 'c': title, 's': cur_t, 't': t[:4000]})
+        url = f"https://alsamani.com/books/{slug}/en/{f}"
+        cite = f'''<aside class="bp-cite" dir="ltr"><b>How to cite this section</b><p class="bp-ref">Alsamani, O. A. (2026). {e(title)}. In <i>{e(title_en)}</i>. alsamani.com. {url}</p><p class="bp-lic2">© 2026 {e(b.get('author_en',''))}. English translation of the Arabic original. Free to read, download, share and quote for non-commercial purposes with attribution to the author and source.</p></aside>'''
+        s = s.replace('<nav class="pager"', cite + '\n<nav class="pager"', 1)
+        # links to chapters not yet translated go to the Arabic edition
+        s = re.sub(r'href="([a-z0-9_-]+\.html)"', lambda m: m.group(0) if m.group(1) in have or m.group(1) == 'index.html' else f'href="../{m.group(1)}"', s)
+        toc.append({'f': f, 'title': title, 'h1': text(h1.group(1)) if h1 else title, 'kicker': text(kicker.group(1)) if kicker else '', 'secs': secs})
+        open(os.path.join(dst, f), 'w').write(chrome(s, f))
+    idx = open(os.path.join(src, 'index.html')).read()
+    idx = re.sub(r'(<a href=")([a-z0-9_-]+\.html)(">)([\s\S]*?)(</a>)', lambda m: m.group(0) if m.group(2) in have else f'{m.group(1)}../{m.group(2)}{m.group(3)}{m.group(4)}<span class="bp-aronly">Arabic · translation in progress</span>{m.group(5)}', idx)
+    note = '<p class="bp-ednote">This English edition is being translated chapter by chapter from the Arabic original. Chapters not yet translated open in Arabic.</p>'
+    idx = idx.replace('<h2 id="contents">', note + '\n<h2 id="contents">', 1)
+    open(os.path.join(dst, 'index.html'), 'w').write(chrome(idx, 'index.html', True))
+    json.dump({'toc': toc, 'search': search}, open(os.path.join(dst, 'book-index.json'), 'w'), ensure_ascii=False)
 
 def make_pdfs(b, src, dst, order, toc):
     """Print with the book's original typography (fonts embedded in the PDF)."""
@@ -181,9 +240,9 @@ def library(results):
         st = '' if b['status'] == 'published' else '<span class="lib-badge">إصدار أولي</span>'
         cards += f'''<a class="lib-card" href="{b["slug"]}/index.html" style="--bk:{b.get("accent","#2C3E8F")}"><div class="lib-spine"><b>{e(b["title"])}</b><span>{e(b["author"])}</span></div><div class="lib-meta">{st}<h3>{e(b["title"])}</h3><p class="lib-sub">{e(b.get("subtitle",""))}</p><p>{e(b["description"])}</p><span class="lib-go">القراءة والتحميل ←</span></div></a>'''
     any_pub = any(b['status'] == 'published' for b in books)
-    page = f'''<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>الكتب | د. عمر عبدالله الصمعاني</title>{'' if any_pub else '<meta name="robots" content="noindex,nofollow">'}{FONTS}<link rel="stylesheet" href="library.css"></head><body>
-<header class="lib-top"><a href="../index.html">د. عمر عبدالله الصمعاني</a><span>الكتب</span></header>
-<main class="lib"><p class="lib-eyebrow">مكتبة مفتوحة</p><h1>الكتب</h1><p class="lib-lead">كتب منشورة نشرًا مفتوحًا: تُقرأ على الموقع فصلًا فصلًا، ويُبحث في نصها، وتُحمَّل كاملة أو مجزأة.</p><div class="lib-grid">{cards}</div></main></body></html>'''
+    page = f'''<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>المكتبة المفتوحة | د. عمر عبدالله الصمعاني</title>{'' if any_pub else '<meta name="robots" content="noindex,nofollow">'}{FONTS}<link rel="stylesheet" href="library.css"></head><body>
+<header class="lib-top"><a href="../index.html">د. عمر عبدالله الصمعاني</a><span>المكتبة المفتوحة</span></header>
+<main class="lib"><p class="lib-eyebrow">د. عمر عبدالله الصمعاني</p><h1>المكتبة المفتوحة</h1><p class="lib-lead">كتب منشورة نشرًا مفتوحًا: تُقرأ على الموقع فصلًا فصلًا، ويُبحث في نصها، وتُحمَّل كاملة أو مجزأة.</p><div class="lib-grid">{cards}</div></main></body></html>'''
     open(os.path.join(OUT, 'index.html'), 'w').write(page)
     shutil.copy(P('src', 'books', 'library.css'), os.path.join(OUT, 'library.css'))
 
