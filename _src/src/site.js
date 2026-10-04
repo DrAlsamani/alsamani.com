@@ -1,9 +1,9 @@
 (function(){
   const root=document.documentElement, $=id=>document.getElementById(id);
-  function setLang(l){root.lang=l;root.dir=l==='ar'?'rtl':'ltr';$('langBtn').textContent=l==='ar'?'English':'العربية';try{localStorage.setItem('lang',l)}catch(e){}}
-  let saved='en';try{saved=localStorage.getItem('lang')||'en'}catch(e){}
+  function setLang(l,save){root.lang=l;root.dir=l==='ar'?'rtl':'ltr';$('langBtn').textContent=l==='ar'?'English':'العربية';if(save)try{localStorage.setItem('siteLang',l)}catch(e){}}
+  let saved='en';try{saved=localStorage.getItem('siteLang')||'en'}catch(e){}
   setLang(saved);
-  $('langBtn').onclick=()=>setLang(root.lang==='ar'?'en':'ar');
+  $('langBtn').onclick=()=>setLang(root.lang==='ar'?'en':'ar',true);
 
   // research tabs
   const tabs=[...document.querySelectorAll('.tab')];
