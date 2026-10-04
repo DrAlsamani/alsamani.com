@@ -268,7 +268,7 @@ def research_page(r):
     q = QUART.get(r['journal'])
     qrow = f'<dt>{bi("تصنيف المجلة", "Journal rank")}</dt><dd><span class="qb">{q}</span> <span class="qnote">{bi("تقارير الاستشهاد بالمجلات (JCR 2025)", "Journal Citation Reports, 2025")}</span></dd>' if q else ''
     doi = f'<dt>DOI</dt><dd class="mono" dir="ltr"><a href="https://doi.org/{r["doi"]}">{r["doi"]}</a></dd>' if r.get('doi') else ''
-    full = f'<a class="btn ghost" style="align-self:flex-start" href="{e(r["url"])}">{bi("النص الكامل في موقع المجلة", "Full text on the journal site")}</a>' if r.get('url') else ''
+    full = f'<a class="btn ghost" style="align-self:flex-start" href="{e(r["url"])}">{bi("النص الكامل في موقع الناشر", "Full text on the publisher site") if r.get("chapter") else bi("النص الكامل في موقع المجلة", "Full text on the journal site")}</a>' if r.get('url') else ''
     tabs, panels = [], []
     def add(pid, ar, en, html):
         tabs.append(f'<button class="tab" role="tab" aria-selected="{"true" if not tabs else "false"}" data-p="{pid}">{bi(ar, en)}</button>')
@@ -294,7 +294,7 @@ def research_page(r):
     {title}
     <dl class="facts">
       <dt>{bi('الباحثون', 'Authors')}</dt><dd dir="ltr">{e(r['authors_en'])}<span class="ar" dir="rtl"><br>{e(r['authors_ar'])}</span></dd>
-      <dt>{bi('المجلة', 'Journal')}</dt><dd>{venue}</dd>
+      <dt>{bi('المصدر', 'Source') if r.get('chapter') else bi('المجلة', 'Journal')}</dt><dd>{venue}</dd>
       {qrow}
       <dt>{bi('تاريخ النشر', 'Published')}</dt><dd class="mono">{r['date']}</dd>
       {facts}
