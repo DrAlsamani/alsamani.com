@@ -167,9 +167,10 @@ def photo_html():
 
 RIB_TOP = open(P('src', 'ribbons-top.svg')).read() if os.path.exists(P('src', 'ribbons-top.svg')) else ''
 RIB_FOOT = open(P('src', 'ribbons-foot.svg')).read() if os.path.exists(P('src', 'ribbons-foot.svg')) else ''
+RIB_FALL = open(P('src', 'ribbons-fall.svg')).read() if os.path.exists(P('src', 'ribbons-fall.svg')) else ''
 
 def hero():
-    return f'''<section class="hero2">
+    return f'''<section class="hero2">{RIB_FALL}
   <p class="h2-role">{bi('أستاذ مشارك · رئيس ابتكار معتمد (<bdi>CCInO®</bdi>)', 'Associate Professor · Certified Chief Innovation Officer (CCInO®)')}</p>
   <h1>{bi('د. عمر عبدالله الصمعاني', 'Dr. Omar A. Alsamani')}</h1>
   <p class="h2-line">{bi('استراتيجية الابتكار ومنظوماته · الموهبة وتنميتها · التربية الخاصة ومزدوجو الاستثنائية', 'Innovation strategy and ecosystems · Giftedness and talent development · Special education and twice-exceptionality')}</p>
