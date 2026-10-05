@@ -291,3 +291,8 @@ html[lang="en"] .ft-quote p::before{content:"“"}html[lang="en"] .ft-quote p::a
 .rb-band{height:clamp(130px,17vw,250px);margin-top:28px}
 .pband2{padding-block:112px 104px}
 @media (max-width:640px){.pband2{padding-block:64px 64px}}
+/* ribbons keep their proportions; on narrow screens the band is cropped, never squeezed */
+.rb-band{height:auto;aspect-ratio:1440/240;max-height:300px;display:flex;justify-content:center}
+.rb-band .ribbons{flex:0 0 auto;width:max(100%,780px);height:auto;aspect-ratio:1440/240;max-height:300px}
+.ribbons-foot{height:auto;aspect-ratio:1440/92;max-height:110px;min-height:46px}
+@media (max-width:640px){.rb-band{aspect-ratio:auto;height:130px}.rb-band .ribbons{width:780px;max-width:none;height:130px;max-height:none}}
