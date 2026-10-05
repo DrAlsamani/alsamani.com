@@ -289,7 +289,7 @@ def library(results):
         cards_en += f'''<a class="lib-card" href="{b["slug"]}/en/index.html" hreflang="en" style="--bk:{b.get("accent","#2C3E8F")}"><div class="lib-spine"><b>{e(b.get("title_en",b["title"]))}</b><span>{e(b.get("author_en",""))}</span></div><div class="lib-meta">{st_en}<h3>{e(b.get("title_en",b["title"]))}</h3><p class="lib-sub">{e(b.get("subtitle_en",""))}</p><p>{e(b.get("description_en",""))}</p>{en_note}<span class="lib-go">Read and download →</span></div></a>'''
     any_pub = any(b['status'] == 'published' for b in books)
     LIBNAV = ''.join(f'<a href="../{h}"{' aria-current="page"' if h.startswith('books/') else ''}><span class="ar">{a}</span><span class="en">{b}</span></a>' for h, a, b in NAVL)
-    page = f'''<!doctype html><html lang="en" dir="ltr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Open Library | Dr. Omar A. Alsamani</title><script>try{{var t=localStorage.getItem('siteTheme');if(t)document.documentElement.dataset.theme=t}}catch(e){{}}</script>{'' if any_pub else '<meta name="robots" content="noindex,nofollow">'}{FONTS}{EN_FONTS}<link rel="stylesheet" href="library.css">
+    page = f'''<!doctype html><html lang="en" dir="ltr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Open Library | Dr. Omar A. Alsamani</title><meta name="description" content="Open-access books by Dr. Omar A. Alsamani: Innovation Management, and Diagnosis and Identification of Exceptional Learners. كتب د. عمر عبدالله الصمعاني: إدارة الابتكار، والمرجع في التشخيص والتعرف على ذوي الاستثنائية."><script>try{{var t=localStorage.getItem('siteTheme');if(t)document.documentElement.dataset.theme=t}}catch(e){{}}</script>{'' if any_pub else '<meta name="robots" content="noindex,nofollow">'}{FONTS}{EN_FONTS}<link rel="stylesheet" href="library.css">
 <style>html[lang="ar"] .en,html[lang="en"] .ar{{display:none!important}}.lib-ednote{{font-size:.85em;opacity:.75;margin:.4em 0}}.lib-lang{{background:none;cursor:pointer;font:inherit}}</style>
 <script>(function(){{var l='en';try{{l=localStorage.getItem('siteLang')||'en'}}catch(e){{}}document.documentElement.lang=l;document.documentElement.dir=l==='ar'?'rtl':'ltr';if(l==='ar')document.title='المكتبة المفتوحة | د. عمر عبدالله الصمعاني'}})();
 function libLang(){{var l=document.documentElement.lang==='ar'?'en':'ar';try{{localStorage.setItem('siteLang',l)}}catch(e){{}}location.reload()}}</script></head><body>
@@ -308,6 +308,41 @@ if __name__ == '__main__':
         r['mb'] = round(os.path.getsize(pdf) / 1e6, 1) if os.path.exists(pdf) else None
     json.dump(res, open(os.path.join(OUT, 'stats.json'), 'w'))
     library(res)
+    # search engines: every library, book and chapter page is indexable, with its own title, description and canonical address
+    import html as _h, glob as _g0
+    bk = {x['slug']: x for x in books}
+    for h in _g0.glob(os.path.join(OUT, '**', '*.html'), recursive=True):
+        rel = os.path.relpath(h, OUT).replace(os.sep, '/')
+        if rel.startswith(('assets/', 'pdf/')) or '/assets/' in rel or '/pdf/' in rel: continue
+        t = open(h).read()
+        t = re.sub(r'<meta name="robots" content="noindex,nofollow">', '', t)
+        url = 'https://alsamani.com/books/' + (rel[:-10] if rel.endswith('index.html') else rel)
+        lang = (re.search(r'<html[^>]*lang="(\w+)"', t) or [None, 'ar'])[1]
+        b0 = bk.get(rel.split('/')[0])
+        add = ''
+        if '<link rel="canonical"' not in t:
+            add += f'<link rel="canonical" href="{url}">'
+        if '<meta name="description"' not in t:
+            body = re.sub(r'<(script|style|nav|header|footer)[^>]*>.*?</\1>', ' ', t, flags=re.S)
+            ps = [re.sub(r'\s+', ' ', _h.unescape(re.sub(r'<[^>]+>', '', p))).strip() for p in re.findall(r'<p[^>]*>(.*?)</p>', body, re.S)]
+            d = next((p for p in ps if len(p) > 60), b0.get('description', '') if b0 else '')
+            if d:
+                add += f'<meta name="description" content="{_h.escape(d[:300] if len(d) <= 300 else d[:297] + "…")}">'
+                add += f'<meta property="og:description" content="{_h.escape(d[:300])}">'
+        m = re.search(r'<title>(.*?)</title>', t, re.S)
+        if m and b0:
+            ttl = m.group(1).strip(); en = lang == 'en'
+            bt = b0.get('title_en', b0['title']) if en else b0['title']
+            who = 'Dr. Omar A. Alsamani' if en else 'د. عمر عبدالله الصمعاني'
+            if who not in ttl:
+                new = ttl if bt in ttl else f'{ttl} | {bt}'
+                new += f' | {who}'
+                t = t.replace(m.group(0), f'<title>{_h.escape(_h.unescape(new), quote=False)}</title>', 1)
+                add += f'<meta property="og:title" content="{_h.escape(_h.unescape(new))}">'
+        if add:
+            add += f'<meta property="og:type" content="book"><meta property="og:url" content="{url}"><meta property="og:site_name" content="Dr. Omar A. Alsamani"><meta name="author" content="Omar Abdullah Alsamani">'
+            t = t.replace('</head>', add + '</head>', 1)
+        open(h, 'w').write(t)
     # cache-busting: every page asks for the current version of shared css/js
     import hashlib, glob as _g
     for h in _g.glob(os.path.join(OUT, '**', '*.html'), recursive=True):

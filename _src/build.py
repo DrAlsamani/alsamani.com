@@ -619,6 +619,12 @@ for target, full in (('dist', True), ('preview', False)):
         shutil.copytree(P('img', 'research'), P(target, 'img', 'research'), dirs_exist_ok=True)
 from datetime import date
 urls = [SITE] + [SITE + n + '/' for n, *_ in PAGES if n != 'index']
+import glob as _gs
+for _h in sorted(_gs.glob(P('dist', 'books', '**', '*.html'), recursive=True)):
+    _r = os.path.relpath(_h, P('dist')).replace(os.sep, '/')
+    if '/assets/' in _r or '/pdf/' in _r: continue
+    if 'noindex' in open(_h).read(1500): continue
+    urls.append(SITE + (_r[:-10] if _r.endswith('index.html') else _r))
 write(P('dist', 'sitemap.xml'), '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + ''.join(f'<url><loc>{u}</loc><lastmod>{date.today()}</lastmod></url>\n' for u in urls) + '</urlset>\n')
 write(P('dist', 'robots.txt'), 'User-agent: *\nAllow: /\nDisallow: /_src/\nSitemap: https://alsamani.com/sitemap.xml\n')
 print('built', len(feed), 'feed items,', len(pubs), 'publications')
