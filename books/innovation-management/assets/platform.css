@@ -119,3 +119,4 @@ mark.bp-hl.flash{background:rgba(255,159,10,.7);transition:background .6s}
 /* mobile: keep a way back to the site */
 @media (max-width:640px){.bp-in .bp-home{display:inline-grid!important;place-items:center;width:30px;height:30px;border:1px solid var(--line);border-radius:50%;font-size:0!important;flex:0 0 auto}
 .bp-in .bp-home::before{content:"OA";font:600 11px var(--f-ui);letter-spacing:.04em;color:var(--ink)}}
+body{padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px)}

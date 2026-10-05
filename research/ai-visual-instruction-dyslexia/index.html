@@ -794,6 +794,10 @@ header.top.on-dark .lang{color:#2997ff!important}
 header.top .brand,header.top nav.links a{transition:color .4s}
 @media (max-width:860px){header.top.open{position:fixed;top:0;left:0;right:0;height:100dvh;overflow-y:auto;margin:0;padding-inline:20px}
   header.top.open::before{background:var(--bg);left:0;width:100%}}
+/* keep content clear of the notch / Dynamic Island in landscape */
+body{padding-left:max(20px,env(safe-area-inset-left));padding-right:max(20px,env(safe-area-inset-right))}
+header.top{margin-inline:0!important;padding-inline:0!important}
+@media (max-width:860px){header.top.open{padding-left:max(20px,env(safe-area-inset-left))!important;padding-right:max(20px,env(safe-area-inset-right))!important}}
 /* article blocks: each study gets the visual that suits it */
 .bk{margin:40px 0;background:var(--alt);border-radius:20px;padding:clamp(20px,4vw,32px)}
 .bk .ft-h{margin:0 0 20px!important}

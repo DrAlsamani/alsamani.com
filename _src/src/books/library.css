@@ -38,3 +38,4 @@ html[lang="ar"] .lib-meta h3{letter-spacing:0;line-height:1.4}
 .rb-mark .rb1{animation-duration:17s;animation-delay:-4s}.rb-mark .rb2{animation-duration:12s;animation-delay:-7s}.rb-mark .rb3{animation-duration:19s;animation-delay:-2s}
 @keyframes rbSway{from{transform:translateY(-5%) scaleY(.94)}to{transform:translateY(5%) scaleY(1.06)}}
 @media (prefers-reduced-motion:reduce){.rb-mark .rb{animation:none}}
+body{padding-left:max(20px,env(safe-area-inset-left));padding-right:max(20px,env(safe-area-inset-right))}
