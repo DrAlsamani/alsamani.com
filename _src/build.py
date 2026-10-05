@@ -389,11 +389,57 @@ def research_page(r):
   </div>
   {right}
 </article>{('<p class="ft-jump"><a href="#feat">' + bi('اقرأ عرض البحث', 'Read the illustrated summary') + ' <i class="chev"></i></a></p>') if r.get('article') else ''}</section>
-<div id="feat"></div>{article_html(r)}'''
+<div id="feat"></div>{article_html(r)}{comments_html(r['slug'])}'''
 
 def research_dys():
     return f'''<section class="first"><p class="crumb"><a href="../../index.html">{bi('الرئيسية', 'Home')}</a> / <a href="../index.html">{bi('الأبحاث', 'Research')}</a></p>
-{featured}<div class="share-wrap">{share_bar(next(x for x in research if x['slug']=='ai-visual-instruction-dyslexia'))}</div></section>'''
+{featured}<div class="share-wrap">{share_bar(next(x for x in research if x['slug']=='ai-visual-instruction-dyslexia'))}</div></section>
+{comments_html('ai-visual-instruction-dyslexia')}'''
+
+GUEST = json.load(open(P('data/guestbook.json')))
+COMMENTS = json.load(open(P('data/comments.json')))
+FS = 'https://formsubmit.co/ajax/o.alsamani@uoh.edu.sa'
+
+def note_form(kind, ref, ask_ar, ask_en):
+    """Reader note form. Submissions go to the author's inbox; nothing is published until he approves."""
+    return f'''<form class="contact nform" data-endpoint="{FS}" data-kind="{kind}" data-ref="{e(ref)}">
+  <div class="row2">
+    <label>{bi('الاسم', 'Name')}<input name="name" required autocomplete="name"></label>
+    <label>{bi('الصفة أو جهة العمل (اختياري)', 'Role or affiliation (optional)')}<input name="role" autocomplete="organization-title"></label>
+  </div>
+  <label>{bi(ask_ar, ask_en)}<textarea name="message" required maxlength="1500"></textarea></label>
+  <label>{bi('البريد الإلكتروني (اختياري، لا يُنشر، للرد عليك فقط)', 'Email (optional, never published; only for a reply)')}<input name="email" type="email" autocomplete="email"></label>
+  <label class="consent"><input type="checkbox" name="publish_ok" value="yes"> {bi('أوافق على نشر كلمتي مع اسمي وصفتي إن اختيرت للنشر', 'I agree that my note may be published with my name and role if selected')}</label>
+  <input type="text" name="_honey" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+  <button class="btn solid" type="submit" style="justify-self:start">{bi('إرسال', 'Send')}</button>
+  <p class="note" role="status"></p>
+</form>'''
+
+def notes_list(items, with_reply=True):
+    if not items:
+        return ''
+    out = []
+    for c in items:
+        role = f'<span>{e(c.get("role", ""))}</span>' if c.get('role') else ''
+        rep = f'<div class="nt-reply"><b>{bi("ردّ د. عمر الصمعاني", "Reply from Dr. Alsamani")}</b><p>{e(c["reply"])}</p></div>' if with_reply and c.get('reply') else ''
+        out.append(f'<figure class="nt"><blockquote dir="auto">{e(c["text"])}</blockquote><figcaption><b>{e(c["name"])}</b>{role}</figcaption>{rep}</figure>')
+    return '<div class="nt-list">' + ''.join(out) + '</div>'
+
+def guestbook_html():
+    return f'''<section class="alt" id="guestbook">
+  <div class="sec-head"><div><p class="eyebrow">{bi('سجل الزوار', 'Guestbook')}</p><h2>{bi('كلمة زائر', 'Leave a note')}</h2>
+  <p>{bi('إن أفادك بحث أو كتاب أو صورة في هذا الموقع، أو لديك ملاحظة تثري العمل، فاترك كلمتك هنا. تُقرأ الكلمات كلها، ويُنشر بعضها بعد المراجعة.', 'If a paper, book or photograph here was useful to you, or you have a thought that could improve the work, leave a note. Every note is read; some are published after review.')}</p></div></div>
+  {notes_list(GUEST, False)}
+  <div class="cform-wrap">{note_form('guestbook', 'guestbook', 'كلمتك', 'Your note')}</div>
+</section>'''
+
+def comments_html(slug, what_ar='هذا البحث', what_en='this study'):
+    return f'''<section class="alt rcomments" id="comments">
+  <div class="sec-head"><div><p class="eyebrow">{bi('النقاش', 'Discussion')}</p><h2>{bi('تعليق أو سؤال عن ' + what_ar, 'A comment or question about ' + what_en)}</h2>
+  <p>{bi('هل طبّقت شيئًا من نتائجه في عملك، أو لديك سؤال عنه أو ملاحظة عليه؟ تُقرأ التعليقات كلها، ويُنشر المفيد منها مع ردّ.', 'Have you applied any of its findings in your work, or do you have a question or an observation? Every comment is read; useful ones are published with a reply.')}</p></div></div>
+  {notes_list(COMMENTS.get(slug, []))}
+  <div class="cform-wrap">{note_form('comment', slug, 'تعليقك أو سؤالك', 'Your comment or question')}</div>
+</section>'''
 
 def contact_html():
     return f'''<div class="ph-banner page-banner" style="background-image:url(../img/ph04.webp)" role="img" aria-label="Desert tent at night"></div>
@@ -429,7 +475,8 @@ def contact_html():
       <p class="note" id="cnote" role="status"></p>
     </form>
   </div>
-</section>'''
+</section>
+{guestbook_html()}'''
 
 def about_html():
     s = open(P('src/about.html')).read()

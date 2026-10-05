@@ -771,6 +771,18 @@ html[dir="rtl"] .bk-st button{padding:6px 6px 6px 14px}
 .bk-st button>span:not(:first-child){display:inline}
 .bk-st button span.ar,.bk-st button span.en{width:auto;height:auto;background:none;border-radius:0;display:inline;font-weight:500;font-size:.875rem}
 html[lang="ar"] .bk-st button span.en,html[lang="en"] .bk-st button span.ar{display:none!important}
+/* reader notes */
+.nt-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr));gap:16px;margin:0 0 40px}
+.nt{margin:0;background:var(--bg);border-radius:18px;padding:24px;display:flex;flex-direction:column;gap:14px}
+.nt blockquote{margin:0;font-size:1.0625rem;line-height:1.7}
+.nt figcaption{display:flex;flex-direction:column;font-size:.875rem;color:var(--muted)}
+.nt figcaption b{color:var(--ink)}
+.nt-reply{border-top:1px solid var(--line);padding-top:12px;font-size:.9375rem}
+.nt-reply b{color:var(--accent);font-size:.8125rem}
+.nt-reply p{margin:4px 0 0}
+.nform .consent{display:flex;gap:10px;align-items:flex-start;font-size:.875rem;color:var(--muted);line-height:1.5}
+.nform .consent input{margin-top:3px;width:auto}
+.rcomments .sec-head p,#guestbook .sec-head p{max-width:40em;margin-inline:auto}
 </style>
 </head>
 <body>
@@ -903,6 +915,23 @@ html[lang="ar"] .bk-st button span.en,html[lang="en"] .bk-st button span.ar{disp
   <a class="sb" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A//alsamani.com/research/ai-visual-instruction-dyslexia/">LinkedIn</a>
   <a class="sb" href="mailto:?subject=The%20effects%20of%20AI-based%20visual%20instruction%20on%20the%20reading%20comprehension%20of%20students%20with%20dyslexia%20in%20Saudi%20Arabia%3A%20a%20single-case%20experimental%20study&body=https%3A//alsamani.com/research/ai-visual-instruction-dyslexia/"><span class="ar">بريد</span><span class="en">Email</span></a>
 </div></div></section>
+<section class="alt rcomments" id="comments">
+  <div class="sec-head"><div><p class="eyebrow"><span class="ar">النقاش</span><span class="en">Discussion</span></p><h2><span class="ar">تعليق أو سؤال عن هذا البحث</span><span class="en">A comment or question about this study</span></h2>
+  <p><span class="ar">هل طبّقت شيئًا من نتائجه في عملك، أو لديك سؤال عنه أو ملاحظة عليه؟ تُقرأ التعليقات كلها، ويُنشر المفيد منها مع ردّ.</span><span class="en">Have you applied any of its findings in your work, or do you have a question or an observation? Every comment is read; useful ones are published with a reply.</span></p></div></div>
+  
+  <div class="cform-wrap"><form class="contact nform" data-endpoint="https://formsubmit.co/ajax/o.alsamani@uoh.edu.sa" data-kind="comment" data-ref="ai-visual-instruction-dyslexia">
+  <div class="row2">
+    <label><span class="ar">الاسم</span><span class="en">Name</span><input name="name" required autocomplete="name"></label>
+    <label><span class="ar">الصفة أو جهة العمل (اختياري)</span><span class="en">Role or affiliation (optional)</span><input name="role" autocomplete="organization-title"></label>
+  </div>
+  <label><span class="ar">تعليقك أو سؤالك</span><span class="en">Your comment or question</span><textarea name="message" required maxlength="1500"></textarea></label>
+  <label><span class="ar">البريد الإلكتروني (اختياري، لا يُنشر، للرد عليك فقط)</span><span class="en">Email (optional, never published; only for a reply)</span><input name="email" type="email" autocomplete="email"></label>
+  <label class="consent"><input type="checkbox" name="publish_ok" value="yes"> <span class="ar">أوافق على نشر كلمتي مع اسمي وصفتي إن اختيرت للنشر</span><span class="en">I agree that my note may be published with my name and role if selected</span></label>
+  <input type="text" name="_honey" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+  <button class="btn solid" type="submit" style="justify-self:start"><span class="ar">إرسال</span><span class="en">Send</span></button>
+  <p class="note" role="status"></p>
+</form></div>
+</section>
 </main>
 <footer class="site-foot">
   <div class="sf-id"><span class="mono-mark" aria-hidden="true">OA</span><div><b><span class="ar">د. عمر عبدالله الصمعاني</span><span class="en">Dr. Omar A. Alsamani</span></b></div></div>
@@ -1017,6 +1046,16 @@ h.querySelectorAll('nav.links.mobile a').forEach(function(a){a.addEventListener(
 if(els.length){if(!('IntersectionObserver' in window)){els.forEach(function(e){e.classList.add('in')})}else{
 var io=new IntersectionObserver(function(es){es.forEach(function(x){if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target)}})},{threshold:.3});els.forEach(function(e){io.observe(e)})}}
 document.querySelectorAll('.bk-steps').forEach(function(w){w.querySelectorAll('[data-st]').forEach(function(b){b.onclick=function(){w.querySelectorAll('[data-st]').forEach(function(x){x.setAttribute('aria-selected',x===b)});w.querySelectorAll('[data-sp]').forEach(function(p){p.hidden=p.dataset.sp!==b.dataset.st})}})})})();
+// reader notes: guestbook and study comments (sent to the author; published only after review)
+document.querySelectorAll('form.nform').forEach(function(f){f.addEventListener('submit',async function(ev){ev.preventDefault();
+  if(f._honey.value)return;var en=document.documentElement.lang==='en',note=f.querySelector('.note'),btn=f.querySelector('button');
+  var kind=f.dataset.kind,ref=f.dataset.ref;
+  var d={name:f.name.value,role:f.role.value,email:f.email.value||'—',message:f.message.value,publish_ok:f.publish_ok.checked?'yes':'no',page:location.href,
+    _subject:(kind==='guestbook'?'[سجل الزوار] ':'[تعليق على بحث] ')+ref+' — '+f.name.value,_template:'table',_captcha:'false'};
+  btn.disabled=true;note.textContent=en?'Sending…':'جارٍ الإرسال…';
+  try{var r=await fetch(f.dataset.endpoint,{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify(d)});var j=await r.json();
+    if(r.ok&&String(j.success)==='true'){f.reset();note.textContent=en?'Thank you. Your note has been received and will be read.':'شكرًا لك. وصلت كلمتك وستُقرأ.'}else throw 0}
+  catch(e){note.textContent=en?'Could not send right now. Please try again later.':'تعذّر الإرسال الآن. حاول لاحقًا.'}btn.disabled=false})});
 </script>
 </body>
 </html>

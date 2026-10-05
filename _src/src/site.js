@@ -98,3 +98,13 @@ h.querySelectorAll('nav.links.mobile a').forEach(function(a){a.addEventListener(
 if(els.length){if(!('IntersectionObserver' in window)){els.forEach(function(e){e.classList.add('in')})}else{
 var io=new IntersectionObserver(function(es){es.forEach(function(x){if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target)}})},{threshold:.3});els.forEach(function(e){io.observe(e)})}}
 document.querySelectorAll('.bk-steps').forEach(function(w){w.querySelectorAll('[data-st]').forEach(function(b){b.onclick=function(){w.querySelectorAll('[data-st]').forEach(function(x){x.setAttribute('aria-selected',x===b)});w.querySelectorAll('[data-sp]').forEach(function(p){p.hidden=p.dataset.sp!==b.dataset.st})}})})})();
+// reader notes: guestbook and study comments (sent to the author; published only after review)
+document.querySelectorAll('form.nform').forEach(function(f){f.addEventListener('submit',async function(ev){ev.preventDefault();
+  if(f._honey.value)return;var en=document.documentElement.lang==='en',note=f.querySelector('.note'),btn=f.querySelector('button');
+  var kind=f.dataset.kind,ref=f.dataset.ref;
+  var d={name:f.name.value,role:f.role.value,email:f.email.value||'—',message:f.message.value,publish_ok:f.publish_ok.checked?'yes':'no',page:location.href,
+    _subject:(kind==='guestbook'?'[سجل الزوار] ':'[تعليق على بحث] ')+ref+' — '+f.name.value,_template:'table',_captcha:'false'};
+  btn.disabled=true;note.textContent=en?'Sending…':'جارٍ الإرسال…';
+  try{var r=await fetch(f.dataset.endpoint,{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify(d)});var j=await r.json();
+    if(r.ok&&String(j.success)==='true'){f.reset();note.textContent=en?'Thank you. Your note has been received and will be read.':'شكرًا لك. وصلت كلمتك وستُقرأ.'}else throw 0}
+  catch(e){note.textContent=en?'Could not send right now. Please try again later.':'تعذّر الإرسال الآن. حاول لاحقًا.'}btn.disabled=false})});
