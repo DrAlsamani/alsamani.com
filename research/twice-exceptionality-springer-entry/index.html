@@ -763,10 +763,10 @@ html[lang="en"] .ft-quote p::before{content:"“"}html[lang="en"] .ft-quote p::a
 /* a few threads fall from the top, pass faintly behind the name, and gather into the ribbons */
 .hero2>*{position:relative;z-index:1}
 .hero2>.rb-fall{position:absolute;z-index:0;top:0;height:100%;width:100vw;left:50%;transform:translateX(-50%);pointer-events:none}
-.rb-fall path{stroke-dasharray:1;stroke-dashoffset:1;animation:rbFall 2.8s cubic-bezier(.3,.6,.2,1) forwards}
-@keyframes rbFall{to{stroke-dashoffset:0}}
-@media (prefers-reduced-motion:reduce){.rb-fall path{animation:none;stroke-dashoffset:0}}
-@media (max-width:640px){.hero2>.rb-fall{opacity:.55}}
+.rb-fall path{transform-box:view-box;transform-origin:50% 0;animation:rbDrift 15s ease-in-out infinite alternate}
+@keyframes rbDrift{from{transform:translateX(-1.6%) skewX(-1.2deg)}to{transform:translateX(1.6%) skewX(1.2deg)}}
+@media (prefers-reduced-motion:reduce){.rb-fall path{animation:none}}
+@media (max-width:640px){.hero2>.rb-fall{opacity:.7}}
 /* article blocks: each study gets the visual that suits it */
 .bk{margin:40px 0;background:var(--alt);border-radius:20px;padding:clamp(20px,4vw,32px)}
 .bk .ft-h{margin:0 0 20px!important}
