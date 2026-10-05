@@ -797,6 +797,23 @@ header.top .brand,header.top nav.links a{transition:color .4s}
 body{padding-left:max(20px,env(safe-area-inset-left));padding-right:max(20px,env(safe-area-inset-right))}
 header.top{margin-inline:0!important;padding-inline:0!important}
 @media (max-width:860px){header.top.open{padding-left:max(20px,env(safe-area-inset-left))!important;padding-right:max(20px,env(safe-area-inset-right))!important}}
+/* home research: first cards, then a fade and a quiet "more" control */
+.rj-ar{font-size:.875rem;color:var(--muted)}
+.rfold:not(.open)>.rcard:nth-child(n+7){display:none}
+.rfold:not(.open)>.rcard:nth-child(6){max-height:150px;overflow:hidden;-webkit-mask-image:linear-gradient(#000,transparent);mask-image:linear-gradient(#000,transparent);pointer-events:none}
+@media (min-width:821px){.rfold:not(.open)>.rcard:nth-child(6),.rfold:not(.open)>.rcard:nth-child(7){display:block;max-height:150px;overflow:hidden;-webkit-mask-image:linear-gradient(#000,transparent);mask-image:linear-gradient(#000,transparent);pointer-events:none}}
+.rmore{display:flex;justify-content:center;margin-top:8px}
+.rfold:not(.open)+.rmore{margin-top:-56px;position:relative}
+.rmore button{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:99px;padding:10px 22px;font:500 .9375rem/1.2 inherit;cursor:pointer;transition:background .2s,border-color .2s}
+.rmore button:hover{border-color:var(--ink)}
+.rmore .chev{transform:rotate(135deg);transition:transform .3s;vertical-align:.2em}
+html[dir="rtl"] .rmore .chev{transform:rotate(-135deg)}
+.rmore button[aria-expanded="true"] .chev{transform:rotate(-45deg);vertical-align:-.05em}
+html[dir="rtl"] .rmore button[aria-expanded="true"] .chev{transform:rotate(45deg)}
+.rmore .m-close{display:none}.rmore button[aria-expanded="true"] .m-close{display:inline}.rmore button[aria-expanded="true"] .m-open{display:none}
+.rfold.open>.rcard{animation:rcIn .5s ease both}
+@keyframes rcIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.rfold.open+.rmore{margin-top:36px}
 /* article blocks: each study gets the visual that suits it */
 .bk{margin:40px 0;background:var(--alt);border-radius:20px;padding:clamp(20px,4vw,32px)}
 .bk .ft-h{margin:0 0 20px!important}
@@ -940,6 +957,9 @@ html[lang="ar"] .bk-st button span.en,html[lang="en"] .bk-st button span.ar{disp
   const hdr=document.querySelector('header.top');
   if(hdr&&document.querySelector('.pband2,.photo-sec')){let tick=false;const chk=()=>{tick=false;if(hdr.classList.contains('open'))return;const y=hdr.getBoundingClientRect().bottom+1;const dark=[...document.querySelectorAll('.pband2,.photo-sec')].some(s=>{const r=s.getBoundingClientRect();return r.top<=y&&r.bottom>=y});hdr.classList.toggle('on-dark',dark)};
     addEventListener('scroll',()=>{if(!tick){tick=true;requestAnimationFrame(chk)}},{passive:true});addEventListener('resize',chk);chk()}
+  // home research: reveal the rest in place
+  const rf=$('rfold'),rb=$('rmoreBtn');
+  if(rf&&rb)rb.onclick=()=>{const o=rf.classList.toggle('open');rb.setAttribute('aria-expanded',o);if(!o)$('research').scrollIntoView({behavior:'smooth'})};
   // the ribbons double as the light / dark switch
   const isDark=()=>root.dataset.theme?root.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches;
   document.querySelectorAll('.rb-band,.rb-mark,.ribbons-foot').forEach(el=>{

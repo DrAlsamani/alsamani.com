@@ -8,6 +8,9 @@
   const hdr=document.querySelector('header.top');
   if(hdr&&document.querySelector('.pband2,.photo-sec')){let tick=false;const chk=()=>{tick=false;if(hdr.classList.contains('open'))return;const y=hdr.getBoundingClientRect().bottom+1;const dark=[...document.querySelectorAll('.pband2,.photo-sec')].some(s=>{const r=s.getBoundingClientRect();return r.top<=y&&r.bottom>=y});hdr.classList.toggle('on-dark',dark)};
     addEventListener('scroll',()=>{if(!tick){tick=true;requestAnimationFrame(chk)}},{passive:true});addEventListener('resize',chk);chk()}
+  // home research: reveal the rest in place
+  const rf=$('rfold'),rb=$('rmoreBtn');
+  if(rf&&rb)rb.onclick=()=>{const o=rf.classList.toggle('open');rb.setAttribute('aria-expanded',o);if(!o)$('research').scrollIntoView({behavior:'smooth'})};
   // the ribbons double as the light / dark switch
   const isDark=()=>root.dataset.theme?root.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches;
   document.querySelectorAll('.rb-band,.rb-mark,.ribbons-foot').forEach(el=>{

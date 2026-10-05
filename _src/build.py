@@ -216,7 +216,7 @@ def rcard(r, lead=False, up=''):
     teaser = f'<p class="teaser">{bi(e(r["teaser_ar"]), e(r["teaser_en"]))}</p>' if r.get('teaser_ar') else ''
     return f'''<a class="{'rcard lead' if lead else 'rcard'}" href="{up}research/{r['slug']}/index.html">
   <span class="rk">{bi(e(r['kind_ar']), e(r['kind_en']))}</span>
-  <span class="rj"><span class="mono">{j} · {r['date'][:4]}</span>{qbadge_t(r['journal'])}</span>
+  <span class="rj">{(f'<span class="rj-ar">{j}</span><span class="mono"> · {r["date"][:4]}</span>') if re.search(r'[\u0600-\u06FF]', j) else f'<span class="mono">{j} · {r["date"][:4]}</span>'}{qbadge_t(r['journal'])}</span>
   {rtitle_html(r)}
   {teaser}
   <span class="go">{bi('قراءة البحث', 'Read the research')} <i class="arr"></i></span>
@@ -231,10 +231,11 @@ def research_index():
 </section>'''
 
 def research_cards():
-    cards = [rcard(r, k == 0) for k, r in enumerate(research[:HOME_RESEARCH])]
+    cards = [rcard(r, k == 0) for k, r in enumerate(research)]
     return f'''<section id="research" class="alt">
   <div class="sec-head"><div><p class="eyebrow">{bi('أحدث الأبحاث', 'Recent research')}</p><h2>{bi('أبحاث منشورة', 'Published research')}</h2></div><a class="more-link" href="publications/index.html">{bi('كل المنشورات', 'All publications')} ({len(pubs)}) <i class="chev"></i></a></div>
-  <div class="rgrid">{''.join(cards)}</div>
+  <div class="rgrid rfold" id="rfold" data-show="{HOME_RESEARCH}">{''.join(cards)}</div>
+  {f'<div class="rmore"><button type="button" id="rmoreBtn" aria-expanded="false" aria-controls="rfold"><span class="m-open">{bi('المزيد من الأبحاث', 'More research')}</span><span class="m-close">{bi('عرض أقل', 'Show less')}</span><i class="chev"></i></button></div>' if len(research) > HOME_RESEARCH else ''}
 </section>'''
 
 def books_band():
