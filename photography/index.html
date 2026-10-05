@@ -1036,7 +1036,7 @@ document.querySelectorAll('form.nform').forEach(function(f){f.addEventListener('
   try{var r=await fetch(f.dataset.endpoint,{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify(d)});var j=await r.json();
     if(r.ok&&String(j.success)==='true'){f.reset();note.textContent=en?'Thank you. Your note has been received and will be read.':'شكرًا لك. وصلت كلمتك وستُقرأ.'}else throw 0}
   catch(e){note.textContent=en?'Could not send right now. Please try again later.':'تعذّر الإرسال الآن. حاول لاحقًا.'}btn.disabled=false})});
-(function(){var el=document.getElementById('pv');if(!el)return;var live=/(^|\.)alsamani\.com$/.test(location.hostname);
+(function(){var el=document.getElementById('pv');if(!el)return;var live=/(^|\.)alsamani\.com$/.test(location.hostname);if(navigator.webdriver||/bot|crawl|spider|slurp|bing|yandex|baidu|duckduck|facebookexternal|preview|lighthouse|headless/i.test(navigator.userAgent))live=false;
 fetch('https://abacus.jasoncameron.dev/'+(live?'hit':'get')+'/alsamani-com/views').then(function(r){return r.json()}).then(function(d){
 if(typeof d.value!=='number')return;var s=String(d.value);while(s.length<4)s='0'+s;
 el.innerHTML=s.split('').map(function(){return '<span class="pv-d"><span class="pv-s">0<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9</span></span>'}).join('');
