@@ -344,3 +344,4 @@ html[dir="rtl"] .rmore button[aria-expanded="true"] .chev{transform:rotate(45deg
 @keyframes rcIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 .rfold.open+.rmore{margin-top:36px}
 .cv>li>.mono{direction:ltr;unicode-bidi:isolate}
+.sf-copy .pv{margin-inline-start:.9em;padding-inline-start:.9em;border-inline-start:1px solid var(--line);font-variant-numeric:tabular-nums;opacity:.8}

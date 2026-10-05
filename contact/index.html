@@ -807,6 +807,7 @@ html[dir="rtl"] .rmore button[aria-expanded="true"] .chev{transform:rotate(45deg
 @keyframes rcIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 .rfold.open+.rmore{margin-top:36px}
 .cv>li>.mono{direction:ltr;unicode-bidi:isolate}
+.sf-copy .pv{margin-inline-start:.9em;padding-inline-start:.9em;border-inline-start:1px solid var(--line);font-variant-numeric:tabular-nums;opacity:.8}
 /* article blocks: each study gets the visual that suits it */
 .bk{margin:40px 0;background:var(--alt);border-radius:20px;padding:clamp(20px,4vw,32px)}
 .bk .ft-h{margin:0 0 20px!important}
@@ -944,7 +945,7 @@ html[lang="ar"] .bk-st button span.en,html[lang="en"] .bk-st button span.ar{disp
 <a href="../about/index.html"><span class="ar">نبذة</span><span class="en">About</span></a>
 <a href="../contact/index.html" aria-current="page"><span class="ar">تواصل</span><span class="en">Contact</span></a></nav>
   <div class="sf-links"><a href="https://scholar.google.com/citations?user=1tSLgBIAAAAJ">Google Scholar</a><a href="https://www.linkedin.com/in/alsamani/">LinkedIn</a><a href="https://www.x.com/Omar_ALsamani">X</a><a href="../contact/#guestbook"><span class="ar">سجل الزوار</span><span class="en">Guestbook</span></a></div>
-  <p class="sf-copy mono">© 2026 alsamani.com</p>
+  <p class="sf-copy mono">© 2026 alsamani.com<span class="pv" id="pv" hidden></span></p>
 </footer>
 </div>
 <div class="lb" id="lb" hidden><button class="x" id="lbx" aria-label="Close">×</button><button class="pv" id="lbp" aria-label="Previous">‹</button><img id="lbi" alt=""><span class="lb-cr">© Omar A. Alsamani</span><button class="nx" id="lbn" aria-label="Next">›</button></div>
@@ -1072,6 +1073,9 @@ document.querySelectorAll('form.nform').forEach(function(f){f.addEventListener('
   try{var r=await fetch(f.dataset.endpoint,{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify(d)});var j=await r.json();
     if(r.ok&&String(j.success)==='true'){f.reset();note.textContent=en?'Thank you. Your note has been received and will be read.':'شكرًا لك. وصلت كلمتك وستُقرأ.'}else throw 0}
   catch(e){note.textContent=en?'Could not send right now. Please try again later.':'تعذّر الإرسال الآن. حاول لاحقًا.'}btn.disabled=false})});
+// page views (every page load counts); shown quietly in the footer
+(function(){var el=document.getElementById('pv');if(!el)return;var live=/(^|\.)alsamani\.com$/.test(location.hostname);
+fetch('https://abacus.jasoncameron.dev/'+(live?'hit':'get')+'/alsamani-com/views').then(function(r){return r.json()}).then(function(d){if(typeof d.value==='number'){el.textContent=d.value.toLocaleString('en-US');el.hidden=false}}).catch(function(){})})();
 </script>
 </body>
 </html>
