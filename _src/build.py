@@ -560,19 +560,20 @@ def seo(name, title):
     extra = ''
     if rr:
         og_type = 'article'
-        desc = (rr.get('summary_en') or rr.get('teaser_en', ''))[:300]
+        _en = rr.get('summary_en') or rr.get('teaser_en', ''); _ar = rr.get('summary_ar') or rr.get('teaser_ar', '')
+        desc = (_en[:200].rsplit(' ', 1)[0] + '… ' if len(_en) > 200 else _en + ' ') + (_ar[:150].rsplit(' ', 1)[0] + '…' if len(_ar) > 150 else _ar)
         authors = [a.strip() for a in rr['authors_en'].split(',')]
         abstract = rr.get('abstract_plain') or ' '.join(x[3] for x in rr.get('abstract', []))
         ld.append({"@context": "https://schema.org", "@type": "ScholarlyArticle", "headline": rr['orig_title'][:110], "name": rr['orig_title'],
                    "alternativeHeadline": rr.get('title_en') if rr.get('orig_lang') == 'ar' else rr['title_ar'], "author": [PERSON if 'Alsamani' in a else {"@type": "Person", "name": a} for a in authors],
-                   "datePublished": rr['date'], "isPartOf": {"@type": "Periodical", "name": rr['journal']}, "url": url, "abstract": abstract, "keywords": rr.get('keywords_en', ''), "inLanguage": rr.get('orig_lang', 'en'), "image": og_img_for(rr), **({"sameAs": "https://doi.org/" + rr["doi"]} if rr.get("doi") else {})})
+                   "datePublished": rr['date'], "isPartOf": {"@type": "Periodical", "name": rr['journal']}, "url": url, "abstract": abstract, "keywords": "; ".join(x for x in (rr.get('keywords_en', ''), rr.get('keywords_ar', '')) if x), "inLanguage": rr.get('orig_lang', 'en'), "image": og_img_for(rr), **({"sameAs": "https://doi.org/" + rr["doi"]} if rr.get("doi") else {})})
         extra += f'<meta name="citation_title" content="{e(rr["orig_title"])}">\n'
         for a in authors:
             extra += f'<meta name="citation_author" content="{e(a)}">\n'
         extra += f'<meta name="citation_publication_date" content="{rr["date"].replace("-", "/")}">\n<meta name="citation_journal_title" content="{e(rr["journal"])}">\n' + (f'<meta name="citation_doi" content="{rr["doi"]}">\n' if rr.get('doi') else '')
         if rr.get('pdf'):
             extra += f'<meta name="citation_pdf_url" content="{e(rr["pdf"])}">\n'
-        extra += f'<meta name="keywords" content="{e(rr.get("keywords_en", ""))}">\n'
+        extra += f'<meta name="keywords" content="{e("; ".join(x for x in (rr.get("keywords_en", ""), rr.get("keywords_ar", "")) if x))}">\n'
     elif name in ('index', 'about'):
         ld.append({"@context": "https://schema.org", **PERSON})
         if name == 'index':
@@ -601,7 +602,7 @@ PAGES = [('index', 0, 'Dr. Omar A. Alsamani | د. عمر عبدالله الصم
          ('research/ai-visual-instruction-dyslexia', 2, 'AI-based visual instruction and reading comprehension in dyslexia | Alsamani', research_dys)]
 for _r in research:
     if not _r.get('custom'):
-        PAGES.append((f"research/{_r['slug']}", 2, _r['orig_title'][:80] + ' | Alsamani', (lambda rr: (lambda: research_page(rr)))(_r)))
+        PAGES.append((f"research/{_r['slug']}", 2, _r['orig_title'] + ' | ' + ((_r.get('title_en') or '') if _r.get('orig_lang') == 'ar' else _r.get('title_ar', '')) + ' | Alsamani', (lambda rr: (lambda: research_page(rr)))(_r)))
 
 for target, full in (('dist', True), ('preview', False)):
     for name, depth, title, fn in PAGES:
