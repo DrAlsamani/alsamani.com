@@ -17,8 +17,8 @@
   "type": "training",
   "title_ar": "معسكر «تحليل الأعمال – من البيانات إلى القرار»",
   "title_en": "“Business Analysis: From Data to Decision” camp",
-  "body_ar": "المشاركة مدربًا في المعسكر الذي نظمته جمعية نماء للاستشارات والأبحاث بالتعاون مع جادة 30 وبنك التنمية الاجتماعية، خلال الفترة 28–30 سبتمبر 2026، بمشاركة 74 متدربًا ومتدربة.",
-  "body_en": "Trainer at the camp organised by Namaa Association for Consulting and Research with Jada 30 and the Social Development Bank, 28–30 September 2026, with 74 participants."
+  "body_ar": "المشاركة في المعسكر الذي نظمته جمعية نماء للاستشارات والأبحاث بالتعاون مع جادة 30 وبنك التنمية الاجتماعية، خلال الفترة 28–30 سبتمبر 2026، بمشاركة 74 متدربًا ومتدربة.",
+  "body_en": "Took part in the camp organised by Namaa Association for Consulting and Research with Jada 30 and the Social Development Bank, 28–30 September 2026, with 74 participants."
  },
  {
   "date": "2026-07-29",
@@ -125,5 +125,13 @@
   "title_en": "Open Innovation, Harvard Online",
   "body_ar": "إتمام برنامج الابتكار المفتوح من هارفارد أونلاين بالتعاون مع كلية هارفارد للأعمال أونلاين.",
   "body_en": "Completed Open Innovation, Harvard Online in collaboration with Harvard Business School Online."
+ },
+ {
+  "date": "2026-07-11",
+  "type": "event",
+  "title_ar": "هاكاثون «إبداعثون»",
+  "title_en": "“Ibdaathon” hackathon",
+  "body_ar": "تحكيم مشاريع هاكاثون إبداعثون الذي نظمته جمعية سماء للإبداع والابتكار خلال الفترة 9–11 يوليو 2026، وتقديم ورشة تطبيقية عن التعاون المنظم مع الذكاء الاصطناعي في تطوير المشاريع الريادية.",
+  "body_en": "Judge at the Ibdaathon hackathon organised by Sama Association for Creativity and Innovation, 9–11 July 2026, and a hands-on workshop on structured collaboration with AI in developing entrepreneurial projects."
  }
 ]

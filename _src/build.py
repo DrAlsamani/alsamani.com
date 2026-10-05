@@ -31,7 +31,7 @@ def bi(ar, en, tag='span'):
     return f'<{tag} class="ar">{ar}</{tag}><{tag} class="en">{en}</{tag}>' if tag != 'span' else f'<span class="ar">{ar}</span><span class="en">{en}</span>'
 
 TYPES = {'publication': ('نشر', 'Publication'), 'training': ('تدريب', 'Training'),
-         'article': ('مقال', 'Article'), 'news': ('خبر', 'News'), 'talk': ('مشاركة علمية', 'Talk'), 'credential': ('شهادة مهنية', 'Credential')}
+         'article': ('مقال', 'Article'), 'news': ('خبر', 'News'), 'talk': ('مشاركة علمية', 'Talk'), 'credential': ('شهادة مهنية', 'Credential'), 'event': ('فعالية', 'Event')}
 PTYPES = {'article': ('مقال محكّم', 'Journal article'), 'chapter': ('فصل في كتاب', 'Book chapter'),
           'thesis': ('رسالة علمية', 'Thesis'), 'book': ('كتاب', 'Book')}
 NAV = [('index', 'المستجدات', 'Updates'), ('books', 'المكتبة المفتوحة', 'Open Library'), ('publications', 'المنشورات', 'Publications'),
