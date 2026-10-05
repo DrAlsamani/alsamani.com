@@ -438,7 +438,7 @@ def comments_html(slug, what_ar='هذا البحث', what_en='this study'):
   <div class="sec-head"><div><p class="eyebrow">{bi('النقاش', 'Discussion')}</p><h2>{bi('تعليق أو سؤال عن ' + what_ar, 'A comment or question about ' + what_en)}</h2>
   <p>{bi('هل طبّقت شيئًا من نتائجه في عملك، أو لديك سؤال عنه أو ملاحظة عليه؟ تُقرأ التعليقات كلها، ويُنشر المفيد منها مع ردّ.', 'Have you applied any of its findings in your work, or do you have a question or an observation? Every comment is read; useful ones are published with a reply.')}</p></div></div>
   {notes_list(COMMENTS.get(slug, []))}
-  <div class="cform-wrap">{note_form('comment', slug, 'تعليقك أو سؤالك', 'Your comment or question')}</div>
+  <div class="cform-wrap">{note_form('comment', slug, 'أضف تعليقًا', 'Add a comment')}</div>
 </section>'''
 
 def contact_html():
