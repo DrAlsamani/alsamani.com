@@ -39,3 +39,19 @@ html[lang="ar"] .lib-meta h3{letter-spacing:0;line-height:1.4}
 @keyframes rbSway{from{transform:translateY(-5%) scaleY(.94)}to{transform:translateY(5%) scaleY(1.06)}}
 @media (prefers-reduced-motion:reduce){.rb-mark .rb{animation:none}}
 body{padding-left:max(20px,env(safe-area-inset-left));padding-right:max(20px,env(safe-area-inset-right))}
+/* full site navigation on the library page */
+.lib-top{flex-wrap:wrap}
+.lib-nav{display:flex;gap:26px;align-items:center}
+.lib-nav a{font-size:13px!important;font-weight:400!important;color:var(--ink)!important;opacity:.8;padding:14px 0;border-bottom:2px solid transparent}
+.lib-nav a:hover{opacity:1}
+.lib-nav a[aria-current]{opacity:1;font-weight:600!important;border-bottom-color:var(--dune)}
+.lib-end{display:flex;align-items:center;gap:8px}
+.lib-menu{display:none;width:36px;height:36px;border:0;background:none;position:relative;cursor:pointer}
+.lib-menu i{position:absolute;left:8px;right:8px;height:1.5px;background:var(--ink);transition:transform .3s,top .3s}
+.lib-menu i:first-child{top:13px}.lib-menu i:last-child{top:21px}
+.lib-top.open .lib-menu i:first-child{top:17px;transform:rotate(45deg)}.lib-top.open .lib-menu i:last-child{top:17px;transform:rotate(-45deg)}
+@media (max-width:820px){.lib-nav{display:none}.lib-menu{display:block}
+  .lib-top.open{min-height:100dvh;align-content:flex-start;background:var(--bg)}
+  .lib-top.open .lib-nav{display:flex;flex-direction:column;align-items:flex-start;gap:0;width:100%;order:3;padding:8px 0 28px}
+  .lib-top.open .lib-nav a{font-size:1.5rem!important;font-weight:600!important;opacity:1;padding:10px 0;width:100%}}
+@media (max-width:820px){.lib-top.open{position:fixed;inset:0;height:100dvh;max-width:none;margin:0;padding-inline:max(20px,env(safe-area-inset-left));overflow-y:auto;z-index:50}}
