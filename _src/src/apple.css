@@ -311,3 +311,5 @@ html[lang="en"] .ft-quote p::before{content:"“"}html[lang="en"] .ft-quote p::a
 .rb-switch svg{transition:filter .4s}
 html{transition:background-color .5s}
 body,header.top,section.alt,footer.site-foot{transition:background-color .5s,color .5s,box-shadow .5s}
+.rb-band .ribbons .rb{transform-box:view-box;transform-origin:50% 50%}
+@keyframes rbSway{from{transform:translateY(-3%) scaleY(.96)}to{transform:translateY(3%) scaleY(1.04)}}
