@@ -4,6 +4,13 @@
   let saved='en';try{saved=localStorage.getItem('siteLang')||'en'}catch(e){}
   setLang(saved);
   $('langBtn').onclick=()=>setLang(root.lang==='ar'?'en':'ar',true);
+  // the ribbons double as the light / dark switch
+  const isDark=()=>root.dataset.theme?root.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches;
+  document.querySelectorAll('.rb-band,.rb-mark,.ribbons-foot').forEach(el=>{
+    el.setAttribute('role','button');el.tabIndex=0;el.classList.add('rb-switch');
+    const label=()=>{const d=isDark();el.setAttribute('aria-label',d?'Light mode · الوضع الفاتح':'Dark mode · الوضع الداكن');el.title=d?'الوضع الفاتح · Light mode':'الوضع الداكن · Dark mode'};label();
+    const flip=()=>{const t=isDark()?'light':'dark';root.dataset.theme=t;try{localStorage.setItem('siteTheme',t)}catch(e){}document.querySelectorAll('.rb-switch').forEach(x=>x.dispatchEvent(new Event('rblabel')))};
+    el.addEventListener('rblabel',label);el.onclick=flip;el.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();flip()}}});
 
   // research tabs
   const tabs=[...document.querySelectorAll('.tab')];

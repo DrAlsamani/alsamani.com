@@ -1,5 +1,7 @@
 :root{--bg:#fff;--alt:#F5F5F7;--ink:#1D1D1F;--muted:#6E6E73;--line:#D2D2D7;--accent:#0066CC;--dune:#B64400;--btn:#0071E3}
-@media (prefers-color-scheme:dark){:root{--bg:#000;--alt:#161617;--ink:#F5F5F7;--muted:#A1A1A6;--line:#424245;--accent:#2997FF;--dune:#FF9F0A;color-scheme:dark}}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#000;--alt:#161617;--ink:#F5F5F7;--muted:#A1A1A6;--line:#424245;--accent:#2997FF;--dune:#FF9F0A;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#000;--alt:#161617;--ink:#F5F5F7;--muted:#A1A1A6;--line:#424245;--accent:#2997FF;--dune:#FF9F0A;color-scheme:dark}
+.rb-switch{pointer-events:auto!important;cursor:pointer;outline:none}.rb-switch:focus-visible{outline:2px solid var(--accent);outline-offset:6px;border-radius:12px}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"SF Arabic","IBM Plex Sans Arabic",system-ui,sans-serif;line-height:1.6;padding-inline:20px;-webkit-font-smoothing:antialiased}
 html[lang="en"] body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Inter","Helvetica Neue",Arial,sans-serif!important;letter-spacing:-.011em}

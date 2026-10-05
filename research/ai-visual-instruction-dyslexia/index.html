@@ -27,6 +27,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<script>try{var t=localStorage.getItem('siteTheme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
 <style>
 /* Layout: an academic's study lit by desert dusk — RTL-first, a narrow reading column, wide photographic plates */
 :root{
@@ -776,6 +777,13 @@ html[lang="en"] .ft-quote p::before{content:"“"}html[lang="en"] .ft-quote p::a
 .rb-mark .rb1{animation-duration:17s;animation-delay:-4s}.rb-mark .rb2{animation-duration:12s;animation-delay:-7s}.rb-mark .rb3{animation-duration:19s;animation-delay:-2s}
 @keyframes rbSway{from{transform:translateY(-5%) scaleY(.94)}to{transform:translateY(5%) scaleY(1.06)}}
 @media (prefers-reduced-motion:reduce){.rb-mark .rb{animation:none}}
+/* ribbons as the theme switch */
+.rb-switch{pointer-events:auto!important;cursor:pointer;-webkit-tap-highlight-color:transparent;outline:none}
+.rb-switch:focus-visible{outline:2px solid var(--accent);outline-offset:6px;border-radius:12px}
+.rb-switch svg{transition:filter .4s}
+.rb-switch:hover svg{filter:saturate(1.25) brightness(1.05)}
+html{transition:background-color .5s}
+body,header.top,section.alt,footer.site-foot{transition:background-color .5s,color .5s,box-shadow .5s}
 /* article blocks: each study gets the visual that suits it */
 .bk{margin:40px 0;background:var(--alt);border-radius:20px;padding:clamp(20px,4vw,32px)}
 .bk .ft-h{margin:0 0 20px!important}
@@ -999,6 +1007,13 @@ html[lang="ar"] .bk-st button span.en,html[lang="en"] .bk-st button span.ar{disp
   let saved='en';try{saved=localStorage.getItem('siteLang')||'en'}catch(e){}
   setLang(saved);
   $('langBtn').onclick=()=>setLang(root.lang==='ar'?'en':'ar',true);
+  // the ribbons double as the light / dark switch
+  const isDark=()=>root.dataset.theme?root.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches;
+  document.querySelectorAll('.rb-band,.rb-mark,.ribbons-foot').forEach(el=>{
+    el.setAttribute('role','button');el.tabIndex=0;el.classList.add('rb-switch');
+    const label=()=>{const d=isDark();el.setAttribute('aria-label',d?'Light mode · الوضع الفاتح':'Dark mode · الوضع الداكن');el.title=d?'الوضع الفاتح · Light mode':'الوضع الداكن · Dark mode'};label();
+    const flip=()=>{const t=isDark()?'light':'dark';root.dataset.theme=t;try{localStorage.setItem('siteTheme',t)}catch(e){}document.querySelectorAll('.rb-switch').forEach(x=>x.dispatchEvent(new Event('rblabel')))};
+    el.addEventListener('rblabel',label);el.onclick=flip;el.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();flip()}}});
 
   // research tabs
   const tabs=[...document.querySelectorAll('.tab')];

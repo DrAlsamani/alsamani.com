@@ -51,6 +51,7 @@ def page(name, depth, title_ar, body, full, seo_html=''):
 {head_meta}<link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<script>try{{var t=localStorage.getItem('siteTheme');if(t)document.documentElement.dataset.theme=t}}catch(e){{}}</script>
 <style>{css}</style>
 '''
     content = f'''<div class="wrap">
