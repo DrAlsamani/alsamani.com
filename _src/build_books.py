@@ -56,7 +56,7 @@ def order_of(index_html):
 YEAR = '٢٠٢٦'
 def cite_box(b, f, title, h1):
     url = f"https://alsamani.com/books/{b['slug']}/{f}"
-    lic = b.get('license', 'جميع الحقوق محفوظة للمؤلف. يُسمح بالقراءة والتحميل والمشاركة والاقتباس لأغراض غير تجارية، بشرط ذكر اسم المؤلف والمصدر.')
+    lic = b.get('license', 'الحقوق محفوظة للمؤلف. القراءة والتحميل والمشاركة والاقتباس متاحة لغير الأغراض التجارية، مع ذكر اسم المؤلف والمصدر.')
     return f'''<aside class="bp-cite" dir="rtl"><b>للاستشهاد بهذا الجزء</b>
 <p class="bp-ref">الصمعاني، عمر عبدالله. ({YEAR}). {e(title)}. في <i>{e(b['title'])}</i>. alsamani.com. <span dir="ltr">{url}</span></p>
 <p class="bp-lic2">© {YEAR} {e(b['author'])}. {e(lic)}</p></aside>'''
@@ -142,10 +142,10 @@ def build_book(b, make_pdf):
     # book home = original cover/TOC + downloads + elements entry
     chap_dl = ''.join(f'<li><a href="pdf/{t["f"][:-5]}.pdf" download><span>{e(t["kicker"] or "")}</span><b>{e(t["h1"])}</b><i>PDF</i></a></li>' for t in toc)
     dl = f'''<section class="bp-dl" id="downloads"><h2><span class="sec">التحميل</span>تحميل الكتاب</h2>
-<p>لمن أراد نسخة للقراءة خارج الموقع: الكتاب كاملًا بصيغة PDF، أو أي فصل منفردًا.</p>
+<p>للقراءة خارج الموقع: الكتاب كاملًا بصيغة PDF، أو كل فصل على حدة.</p>
 <div class="bp-dl-main"><a class="bp-big" href="pdf/{slug}-full.pdf" download><b>الكتاب كاملًا</b><span>PDF · النسخة الورقية</span></a><a class="bp-big ghost" href="{toc[0]["f"]}"><b>ابدأ القراءة</b><span>{e(toc[0]["h1"])}</span></a><a class="bp-big ghost" href="elements.html"><b>عناصر الكتاب</b><span>{" · ".join(x for x in [f'{len(elements["tool"])} أداة' if elements["tool"] else '', f'{len(elements["fig"])} شكلًا', f'{len(elements["tab"])} جدولًا'] if x)}</span></a></div>
 <details class="bp-chaps"><summary>تحميل الفصول منفردة</summary><ol>{chap_dl}</ol></details>
-<p class="bp-lic">{e(b.get('license_note','نشر مفتوح. الحقوق محفوظة للمؤلف، ويُسمح بالقراءة والتحميل والاقتباس مع ذكر المصدر.'))}</p></section>'''
+<p class="bp-lic">{e(b.get('license_note','الحقوق محفوظة للمؤلف، والقراءة والتحميل والاقتباس متاحة مع ذكر المصدر.'))}</p></section>'''
     idx = idx.replace('<h2 id="contents">', '<p class="bp-resume" id="bpResume" hidden></p>\n<h2 id="contents">', 1)
     k = idx.rfind('<div class="endmark"')
     home = idx[:k] + dl + '\n' + idx[k:] if k > -1 else idx.replace('</body>', dl + '\n</body>', 1)
@@ -289,7 +289,7 @@ def library(results):
 <script>(function(){{var l='en';try{{l=localStorage.getItem('siteLang')||'en'}}catch(e){{}}document.documentElement.lang=l;document.documentElement.dir=l==='ar'?'rtl':'ltr';if(l==='ar')document.title='المكتبة المفتوحة | د. عمر عبدالله الصمعاني'}})();
 function libLang(){{var l=document.documentElement.lang==='ar'?'en':'ar';try{{localStorage.setItem('siteLang',l)}}catch(e){{}}location.reload()}}</script></head><body>
 <header class="lib-top"><a href="../index.html"><span class="ar">د. عمر عبدالله الصمعاني</span><span class="en">Dr. Omar A. Alsamani</span></a><span><span class="ar">المكتبة المفتوحة</span><span class="en">Open Library</span><button type="button" class="lib-lang" onclick="libLang()"><span class="ar">English</span><span class="en">العربية</span></button></span></header>
-<main class="lib"><p class="lib-eyebrow"><span class="ar">د. عمر عبدالله الصمعاني</span><span class="en">Dr. Omar A. Alsamani</span></p><h1><span class="ar">المكتبة المفتوحة</span><span class="en">Open Library</span></h1>{MARK_LIB}<p class="lib-lead"><span class="ar">كتب منشورة نشرًا مفتوحًا: تُقرأ على الموقع فصلًا فصلًا، ويُبحث في نصها، وتُحمَّل كاملة أو مجزأة.</span><span class="en">Open-access books: read online chapter by chapter, search the full text, and download each book in full or by chapter.</span></p><div class="lib-grid ar">{cards}</div><div class="lib-grid en">{cards_en}</div></main>{site_footer('../', 'bi')}{FOOT_CSS}<script>(function(){{var r=document.documentElement,d=function(){{return r.dataset.theme?r.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches}};document.querySelectorAll('.rb-mark').forEach(function(el){{el.setAttribute('role','button');el.tabIndex=0;el.classList.add('rb-switch');var f=function(){{var t=d()?'light':'dark';r.dataset.theme=t;try{{localStorage.setItem('siteTheme',t)}}catch(e){{}}}};el.onclick=f;el.onkeydown=function(e){{if(e.key==='Enter'||e.key===' '){{e.preventDefault();f()}}}}}})}})()</script></body></html>'''
+<main class="lib"><p class="lib-eyebrow"><span class="ar">د. عمر عبدالله الصمعاني</span><span class="en">Dr. Omar A. Alsamani</span></p><h1><span class="ar">المكتبة المفتوحة</span><span class="en">Open Library</span></h1>{MARK_LIB}<p class="lib-lead"><span class="ar">كتب مفتوحة المصدر.</span><span class="en">Open-access books.</span></p><div class="lib-grid ar">{cards}</div><div class="lib-grid en">{cards_en}</div></main>{site_footer('../', 'bi')}{FOOT_CSS}<script>(function(){{var r=document.documentElement,d=function(){{return r.dataset.theme?r.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches}};document.querySelectorAll('.rb-mark').forEach(function(el){{el.setAttribute('role','button');el.tabIndex=0;el.classList.add('rb-switch');var f=function(){{var t=d()?'light':'dark';r.dataset.theme=t;try{{localStorage.setItem('siteTheme',t)}}catch(e){{}}}};el.onclick=f;el.onkeydown=function(e){{if(e.key==='Enter'||e.key===' '){{e.preventDefault();f()}}}}}})}})()</script></body></html>'''
     open(os.path.join(OUT, 'index.html'), 'w').write(page)
     shutil.copy(P('src', 'books', 'library.css'), os.path.join(OUT, 'library.css'))
 

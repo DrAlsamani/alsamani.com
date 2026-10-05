@@ -364,7 +364,7 @@ def article_html(r):
         out.append(f'<h3 class="ft-h">{B(a["take_h"])}</h3><ul class="ft-take">' + ''.join(f'<li>{B(x)}</li>' for x in a['take']) + '</ul>')
     if a.get('close'):
         out.append(f'<p class="ft-close">{B(a["close"])}</p>')
-    out.append(f'<p class="ft-src">{bi("مبني على البحث المنشور؛ النص المعتمد هو المنشور في المجلة.", "Based on the published article; the journal version is authoritative.")}</p></div></section>')
+    out.append(f'<p class="ft-src">{bi("مبني على البحث المنشور، والنص المعتمد هو نسخة المجلة.", "Based on the published article; the journal version is authoritative.")}</p></div></section>')
     return ''.join(out)
 
 def research_page(r):
@@ -389,7 +389,7 @@ def research_page(r):
         glance = ('<p>' + bi(e(r["summary_ar"]), e(r["summary_en"])) + '</p>') if r.get('article') else (explainer(r["slug"]) or '<p>' + bi(e(r["summary_ar"]), e(r["summary_en"])) + '</p>')
         add('qx', 'بإيجاز', 'At a glance', f'<button type="button" class="listen" data-say-ar="{e(r["summary_ar"])}" data-say-en="{e(r["summary_en"])}">{bi("استمع إلى الملخص", "Listen to the summary")}</button>{glance}')
     if absd:
-        note = '' if ar_orig else '<p class="note ar">ترجمة المستخلص إلى العربية غير رسمية؛ النص المعتمد هو المنشور في المجلة.</p>'
+        note = '' if ar_orig else '<p class="note ar">الترجمة العربية للمستخلص غير رسمية، والنص المعتمد هو نسخة المجلة.</p>'
         note = note if not ar_orig else '<p class="note en">The English text is an informal translation; the published Arabic text is authoritative.</p>'
         add('q0', 'المستخلص', 'Abstract', f'<dl>{absd}</dl><p class="kw"><b>{bi("الكلمات المفتاحية:", "Keywords:")}</b> {bi(e(r.get("keywords_ar","")), e(r.get("keywords_en","")))}</p>{note}{cite}')
     if finds:
@@ -456,7 +456,7 @@ def notes_list(items, with_reply=True):
 def guestbook_html():
     return f'''<section class="alt" id="guestbook">
   <div class="sec-head"><div><p class="eyebrow">{bi('سجل الزوار', 'Guestbook')}</p><h2>{bi('كلمة زائر', 'Leave a note')}</h2>
-  <p>{bi('إن أفادك بحث أو كتاب أو صورة في هذا الموقع، أو لديك ملاحظة تثري العمل، فاترك كلمتك هنا. تُقرأ الكلمات كلها، ويُنشر بعضها بعد المراجعة.', 'If a paper, book or photograph here was useful to you, or you have a thought that could improve the work, leave a note. Every note is read; some are published after review.')}</p></div></div>
+  <p>{bi('إن أفادك بحث أو كتاب أو صورة في هذا الموقع، أو لديك ملاحظة، فاترك كلمتك هنا. أقرأ كل ما يصلني، وأنشر بعضه بعد المراجعة.', 'If a paper, book or photograph here was useful to you, or you have a thought on it, leave a note. I read every note and publish some after review.')}</p></div></div>
   {notes_list(GUEST, False)}
   <div class="cform-wrap">{note_form('guestbook', 'guestbook', 'كلمتك', 'Your note')}</div>
 </section>'''
@@ -464,7 +464,7 @@ def guestbook_html():
 def comments_html(slug, what_ar='هذا البحث', what_en='this study'):
     return f'''<section class="alt rcomments" id="comments">
   <div class="sec-head"><div><p class="eyebrow">{bi('النقاش', 'Discussion')}</p><h2>{bi('تعليق أو سؤال عن ' + what_ar, 'A comment or question about ' + what_en)}</h2>
-  <p>{bi('هل طبّقت شيئًا من نتائجه في عملك، أو لديك سؤال عنه أو ملاحظة عليه؟ تُقرأ التعليقات كلها، ويُنشر المفيد منها مع ردّ.', 'Have you applied any of its findings in your work, or do you have a question or an observation? Every comment is read; useful ones are published with a reply.')}</p></div></div>
+  <p>{bi('هل طبّقت شيئًا من نتائجه في عملك، أو لديك سؤال أو ملاحظة؟ أقرأ التعليقات كلها، وأنشر المفيد منها مع الرد.', 'Have you applied any of its findings in your work, or do you have a question or an observation? I read every comment and publish the useful ones with a reply.')}</p></div></div>
   {notes_list(COMMENTS.get(slug, []))}
   <div class="cform-wrap">{note_form('comment', slug, 'أضف تعليقًا', 'Add a comment')}</div>
 </section>'''
