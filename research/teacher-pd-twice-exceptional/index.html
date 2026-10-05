@@ -783,6 +783,17 @@ html[lang="en"] .ft-quote p::before{content:"“"}html[lang="en"] .ft-quote p::a
 .rb-switch svg{transition:filter .4s}
 html{transition:background-color .5s}
 body,header.top,section.alt,footer.site-foot{transition:background-color .5s,color .5s,box-shadow .5s}
+/* header: full-width translucent bar; turns dark over the black photo stage */
+header.top{background:transparent!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;box-shadow:none!important;border-bottom:0!important}
+header.top::before{content:"";position:absolute;z-index:-1;top:0;bottom:0;left:calc(50% - 50vw);width:100vw;background:color-mix(in srgb,var(--bg) 78%,transparent);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);box-shadow:0 1px 0 color-mix(in srgb,var(--line) 70%,transparent);transition:background-color .4s,box-shadow .4s}
+header.top.on-dark::before{background:rgba(0,0,0,.72);box-shadow:0 1px 0 rgba(255,255,255,.08)}
+header.top.on-dark .brand,header.top.on-dark .brand-en,header.top.on-dark nav.links a{color:#f5f5f7!important}
+header.top.on-dark nav.links a:not([aria-current]){opacity:.78}
+header.top.on-dark .menu-btn i{background:#f5f5f7}
+header.top.on-dark .lang{color:#2997ff!important}
+header.top .brand,header.top nav.links a{transition:color .4s}
+@media (max-width:860px){header.top.open{position:fixed;top:0;left:0;right:0;height:100dvh;overflow-y:auto;margin:0;padding-inline:20px}
+  header.top.open::before{background:var(--bg);left:0;width:100%}}
 /* article blocks: each study gets the visual that suits it */
 .bk{margin:40px 0;background:var(--alt);border-radius:20px;padding:clamp(20px,4vw,32px)}
 .bk .ft-h{margin:0 0 20px!important}
@@ -922,6 +933,10 @@ html[lang="ar"] .bk-st button span.en,html[lang="en"] .bk-st button span.ar{disp
   let saved='en';try{saved=localStorage.getItem('siteLang')||'en'}catch(e){}
   setLang(saved);
   $('langBtn').onclick=()=>setLang(root.lang==='ar'?'en':'ar',true);
+  // header turns dark while it sits over the black photo stage
+  const hdr=document.querySelector('header.top');
+  if(hdr&&document.querySelector('.pband2,.photo-sec')){let tick=false;const chk=()=>{tick=false;if(hdr.classList.contains('open'))return;const y=hdr.getBoundingClientRect().bottom+1;const dark=[...document.querySelectorAll('.pband2,.photo-sec')].some(s=>{const r=s.getBoundingClientRect();return r.top<=y&&r.bottom>=y});hdr.classList.toggle('on-dark',dark)};
+    addEventListener('scroll',()=>{if(!tick){tick=true;requestAnimationFrame(chk)}},{passive:true});addEventListener('resize',chk);chk()}
   // the ribbons double as the light / dark switch
   const isDark=()=>root.dataset.theme?root.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches;
   document.querySelectorAll('.rb-band,.rb-mark,.ribbons-foot').forEach(el=>{

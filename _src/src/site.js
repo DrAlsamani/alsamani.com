@@ -4,6 +4,10 @@
   let saved='en';try{saved=localStorage.getItem('siteLang')||'en'}catch(e){}
   setLang(saved);
   $('langBtn').onclick=()=>setLang(root.lang==='ar'?'en':'ar',true);
+  // header turns dark while it sits over the black photo stage
+  const hdr=document.querySelector('header.top');
+  if(hdr&&document.querySelector('.pband2,.photo-sec')){let tick=false;const chk=()=>{tick=false;if(hdr.classList.contains('open'))return;const y=hdr.getBoundingClientRect().bottom+1;const dark=[...document.querySelectorAll('.pband2,.photo-sec')].some(s=>{const r=s.getBoundingClientRect();return r.top<=y&&r.bottom>=y});hdr.classList.toggle('on-dark',dark)};
+    addEventListener('scroll',()=>{if(!tick){tick=true;requestAnimationFrame(chk)}},{passive:true});addEventListener('resize',chk);chk()}
   // the ribbons double as the light / dark switch
   const isDark=()=>root.dataset.theme?root.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches;
   document.querySelectorAll('.rb-band,.rb-mark,.ribbons-foot').forEach(el=>{
