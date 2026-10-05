@@ -289,7 +289,7 @@ def library(results):
 <style>html[lang="ar"] .en,html[lang="en"] .ar{{display:none!important}}.lib-ednote{{font-size:.85em;opacity:.75;margin:.4em 0}}.lib-lang{{background:none;cursor:pointer;font:inherit}}</style>
 <script>(function(){{var l='en';try{{l=localStorage.getItem('siteLang')||'en'}}catch(e){{}}document.documentElement.lang=l;document.documentElement.dir=l==='ar'?'rtl':'ltr';if(l==='ar')document.title='المكتبة المفتوحة | د. عمر عبدالله الصمعاني'}})();
 function libLang(){{var l=document.documentElement.lang==='ar'?'en':'ar';try{{localStorage.setItem('siteLang',l)}}catch(e){{}}location.reload()}}</script></head><body>
-<header class="lib-top"><a class="lib-brand" href="../index.html"><span class="ar">د. عمر عبدالله الصمعاني</span><span class="en">Dr. Omar A. Alsamani</span></a><nav class="lib-nav" aria-label="Main">{LIBNAV}</nav><span class="lib-end"><button type="button" class="lib-lang" onclick="libLang()"><span class="ar">English</span><span class="en">العربية</span></button><button type="button" class="lib-menu" aria-label="Menu" aria-expanded="false" onclick="var h=this.closest('header');var o=h.classList.toggle('open');this.setAttribute('aria-expanded',o)"><i></i><i></i></button></span></header>
+<header class="lib-top"><a class="lib-brand" href="../index.html"><span class="ar">د. عمر عبدالله الصمعاني</span><span class="en">Dr. Omar A. Alsamani</span></a><nav class="lib-nav" aria-label="Main">{LIBNAV}</nav><span class="lib-end"><button type="button" class="lib-lang" onclick="libLang()"><span class="ar">English</span><span class="en">العربية</span></button><a class="lib-brand-en ar" href="../index.html" dir="ltr" lang="en">Dr. Omar A. Alsamani</a><button type="button" class="lib-menu" aria-label="Menu" aria-expanded="false" onclick="var h=this.closest('header');var o=h.classList.toggle('open');this.setAttribute('aria-expanded',o)"><i></i><i></i></button></span></header>
 <main class="lib"><p class="lib-eyebrow"><span class="ar">د. عمر عبدالله الصمعاني</span><span class="en">Dr. Omar A. Alsamani</span></p><h1><span class="ar">المكتبة المفتوحة</span><span class="en">Open Library</span></h1>{MARK_LIB}<p class="lib-lead"><span class="ar">كتب مفتوحة المصدر.</span><span class="en">Open-access books.</span></p><div class="lib-grid ar">{cards}</div><div class="lib-grid en">{cards_en}</div></main>{site_footer('../', 'bi')}{FOOT_CSS}<script>(function(){{var r=document.documentElement,d=function(){{return r.dataset.theme?r.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches}};document.querySelectorAll('.rb-mark').forEach(function(el){{el.setAttribute('role','button');el.tabIndex=0;el.classList.add('rb-switch');var f=function(){{var t=d()?'light':'dark';r.dataset.theme=t;try{{localStorage.setItem('siteTheme',t)}}catch(e){{}}}};el.onclick=f;el.onkeydown=function(e){{if(e.key==='Enter'||e.key===' '){{e.preventDefault();f()}}}}}})}})()</script></body></html>'''
     open(os.path.join(OUT, 'index.html'), 'w').write(page)
     shutil.copy(P('src', 'books', 'library.css'), os.path.join(OUT, 'library.css'))
@@ -304,4 +304,14 @@ if __name__ == '__main__':
         r['mb'] = round(os.path.getsize(pdf) / 1e6, 1) if os.path.exists(pdf) else None
     json.dump(res, open(os.path.join(OUT, 'stats.json'), 'w'))
     library(res)
+    # cache-busting: every page asks for the current version of shared css/js
+    import hashlib, glob as _g
+    for h in _g.glob(os.path.join(OUT, '**', '*.html'), recursive=True):
+        t = open(h).read()
+        def _v(m):
+            ref = m.group(2); fp = os.path.normpath(os.path.join(os.path.dirname(h), ref))
+            if not os.path.exists(fp): return m.group(0)
+            return m.group(1) + ref + '?v=' + hashlib.md5(open(fp, 'rb').read()).hexdigest()[:8] + m.group(3)
+        t2 = re.sub(r'((?:href|src)=")([^"?#]+\.(?:css|js))(")', _v, t)
+        if t2 != t: open(h, 'w').write(t2)
     print(res)
