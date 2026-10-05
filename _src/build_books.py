@@ -273,6 +273,8 @@ def make_pdfs(b, src, dst, order, toc):
                         '/Keywords': 'alsamani.com', '/Creator': 'alsamani.com', '/Rights': f"© {b['author']}"})
         w.write(pth)
 
+MARK_LIB = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'src/marks/library.svg')).read() if os.path.exists(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'src/marks/library.svg')) else ''
+
 def library(results):
     cards, cards_en = '', ''
     for b in books:
@@ -287,7 +289,7 @@ def library(results):
 <script>(function(){{var l='en';try{{l=localStorage.getItem('siteLang')||'en'}}catch(e){{}}document.documentElement.lang=l;document.documentElement.dir=l==='ar'?'rtl':'ltr';if(l==='ar')document.title='المكتبة المفتوحة | د. عمر عبدالله الصمعاني'}})();
 function libLang(){{var l=document.documentElement.lang==='ar'?'en':'ar';try{{localStorage.setItem('siteLang',l)}}catch(e){{}}location.reload()}}</script></head><body>
 <header class="lib-top"><a href="../index.html"><span class="ar">د. عمر عبدالله الصمعاني</span><span class="en">Dr. Omar A. Alsamani</span></a><span><span class="ar">المكتبة المفتوحة</span><span class="en">Open Library</span><button type="button" class="lib-lang" onclick="libLang()"><span class="ar">English</span><span class="en">العربية</span></button></span></header>
-<main class="lib"><p class="lib-eyebrow"><span class="ar">د. عمر عبدالله الصمعاني</span><span class="en">Dr. Omar A. Alsamani</span></p><h1><span class="ar">المكتبة المفتوحة</span><span class="en">Open Library</span></h1><p class="lib-lead"><span class="ar">كتب منشورة نشرًا مفتوحًا: تُقرأ على الموقع فصلًا فصلًا، ويُبحث في نصها، وتُحمَّل كاملة أو مجزأة.</span><span class="en">Open-access books: read online chapter by chapter, search the full text, and download each book in full or by chapter.</span></p><div class="lib-grid ar">{cards}</div><div class="lib-grid en">{cards_en}</div></main>{site_footer('../', 'bi')}{FOOT_CSS}</body></html>'''
+<main class="lib"><p class="lib-eyebrow"><span class="ar">د. عمر عبدالله الصمعاني</span><span class="en">Dr. Omar A. Alsamani</span></p><h1><span class="ar">المكتبة المفتوحة</span><span class="en">Open Library</span></h1>{MARK_LIB}<p class="lib-lead"><span class="ar">كتب منشورة نشرًا مفتوحًا: تُقرأ على الموقع فصلًا فصلًا، ويُبحث في نصها، وتُحمَّل كاملة أو مجزأة.</span><span class="en">Open-access books: read online chapter by chapter, search the full text, and download each book in full or by chapter.</span></p><div class="lib-grid ar">{cards}</div><div class="lib-grid en">{cards_en}</div></main>{site_footer('../', 'bi')}{FOOT_CSS}</body></html>'''
     open(os.path.join(OUT, 'index.html'), 'w').write(page)
     shutil.copy(P('src', 'books', 'library.css'), os.path.join(OUT, 'library.css'))
 

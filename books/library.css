@@ -28,3 +28,11 @@ html[lang="ar"] .lib-meta h3{letter-spacing:0;line-height:1.4}
 .lib-go{color:#fff;background:var(--btn);border-radius:980px;padding:9px 20px;font-size:15px;margin-top:8px}
 .lib-badge{color:var(--dune);font-size:13px;font-weight:600}
 @media (max-width:820px){.lib-grid{grid-template-columns:minmax(0,1fr)}.lib{padding-block:56px 72px}}
+/* identity mark under section titles */
+.rb-mark{width:min(360px,72%);margin:20px auto 8px;pointer-events:none}
+.rb-mark.start{margin-inline:0;margin-block:6px 22px;width:min(300px,80%)}
+.rb-mark svg{display:block;width:100%;height:auto;overflow:visible}
+.rb-mark .rb{transform-box:fill-box;transform-origin:center;animation:rbSway 14s ease-in-out infinite alternate}
+.rb-mark .rb1{animation-duration:17s;animation-delay:-4s}.rb-mark .rb2{animation-duration:12s;animation-delay:-7s}.rb-mark .rb3{animation-duration:19s;animation-delay:-2s}
+@keyframes rbSway{from{transform:translateY(-5%) scaleY(.94)}to{transform:translateY(5%) scaleY(1.06)}}
+@media (prefers-reduced-motion:reduce){.rb-mark .rb{animation:none}}

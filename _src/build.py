@@ -151,7 +151,7 @@ def pubs_html():
             lis.append(f'''<li class="pub2" data-t="{p['type']}" dir="{dirr}"><p class="au">{bold_me(p['authors'])} ({y})</p><h3>{e(p['title'])}</h3><p class="v">{e(p['venue'])}.{d}</p><span class="kind">{bi(*PTYPES[p['type']])}</span></li>''')
         out.append(f'<div class="yr-group"><h2 class="yr mono">{y}</h2><ol class="plist">{"".join(lis)}</ol></div>')
     return f'''<section class="first">
-  <div class="sec-head"><div><p class="eyebrow">{bi('المنشورات', 'Publications')}</p><h2>{bi('قائمة المنشورات', 'List of publications')} <span class="mono count">({len(pubs)})</span></h2></div></div>
+  <div class="sec-head"><div><p class="eyebrow">{bi('المنشورات', 'Publications')}</p><h2>{bi('قائمة المنشورات', 'List of publications')} <span class="mono count">({len(pubs)})</span></h2></div>{mark('publications')}</div>
   <div class="ptools"><label for="q" class="sr">{bi('بحث', 'Search')}</label><input id="q" type="search" placeholder="بحث في العناوين والمجلات / Search titles and journals"><div class="filters" role="group">{chips}</div></div>
   <div id="plist">{''.join(out)}</div>
   <p class="note" id="pempty" hidden>{bi('لا توجد نتائج مطابقة.', 'No matching results.')}</p>
@@ -168,6 +168,27 @@ def photo_html():
 RIB_TOP = open(P('src', 'ribbons-top.svg')).read() if os.path.exists(P('src', 'ribbons-top.svg')) else ''
 RIB_FOOT = open(P('src', 'ribbons-foot.svg')).read() if os.path.exists(P('src', 'ribbons-foot.svg')) else ''
 RIB_FALL = open(P('src', 'ribbons-fall.svg')).read() if os.path.exists(P('src', 'ribbons-fall.svg')) else ''
+
+# identity mark: a short braid of threads in one page's photo colours
+import sys as _sys
+_sys.path.insert(0, P('tools'))
+from ribbons import palette as _pal, ribbon as _rib
+MARK_SET = {'publications': (17, 15, 18), 'research': (18, 4, 24), 'library': (15, 25, 12),
+            'about': (24, 15, 14), 'contact': (4, 17, 25)}
+def mark(key, cls=''):
+    W, H = 600, 60
+    lay = [(30, 10, 520, 0.3, 9.0, .95, .02, .96), (31, 12, 460, 1.4, 6.5, .92, .12, .9), (29, 9, 560, 2.5, 4.0, .9, .0, .76),
+           (31, 11, 500, 3.6, 2.4, .85, .28, 1.0)]
+    defs, paths = [], []
+    for k, (cy, amp, wl, ph, t, op, x0, x1) in enumerate(lay):
+        c = _pal(MARK_SET[key][k % 3])
+        gid = f'mk{key[:3]}{k}'
+        defs.append(f'<linearGradient id="{gid}" gradientUnits="userSpaceOnUse" x1="{W*x0:.0f}" x2="{W*x1:.0f}" y1="0" y2="0">' + ''.join(f'<stop offset="{i/(len(c)-1):.2f}" stop-color="{v}"/>' for i, v in enumerate(c)) + '</linearGradient>')
+        paths.append(f'<path class="rb rb{k}" fill="url(#{gid})" opacity="{op}" d="{_rib(W, cy, amp, wl, ph, t, .3, x0, x1)}"/>')
+    svg = f'<svg class="ribbons" viewBox="0 0 {W} {H}" aria-hidden="true" focusable="false" style="direction:ltr"><defs>{"".join(defs)}</defs>{"".join(paths)}</svg>'
+    return f'<div class="rb-mark {cls}">{svg}</div>'
+os.makedirs(P('src/marks'), exist_ok=True)
+open(P('src/marks/library.svg'), 'w').write(mark('library'))
 
 def hero():
     return f'''<section class="hero2">{RIB_FALL}
@@ -203,7 +224,7 @@ def rcard(r, lead=False, up=''):
 HOME_RESEARCH = 5
 def research_index():
     return f'''<section class="first alt">
-  <div class="sec-head"><div><p class="eyebrow">{bi('الأبحاث', 'Research')}</p><h2>{bi('أبحاث منشورة', 'Published research')}</h2></div></div>
+  <div class="sec-head"><div><p class="eyebrow">{bi('الأبحاث', 'Research')}</p><h2>{bi('أبحاث منشورة', 'Published research')}</h2></div>{mark('research')}</div>
   <div class="rgrid">{''.join(rcard(r, k == 0, '../') for k, r in enumerate(research))}</div>
   <p class="all-pubs"><a href="../publications/index.html">{bi('القائمة الكاملة للمنشورات', 'Full list of publications')} <i class="chev"></i></a></p>
 </section>'''
@@ -449,7 +470,7 @@ def comments_html(slug, what_ar='هذا البحث', what_en='this study'):
 def contact_html():
     return f'''<div class="ph-banner page-banner" style="background-image:url(../img/ph04.webp)" role="img" aria-label="Desert tent at night"></div>
 <section class="first">
-  <div class="sec-head"><div><p class="eyebrow">{bi('تواصل', 'Contact')}</p><h2>{bi('التواصل', 'Get in touch')}</h2></div></div>
+  <div class="sec-head"><div><p class="eyebrow">{bi('تواصل', 'Contact')}</p><h2>{bi('التواصل', 'Get in touch')}</h2></div>{mark('contact')}</div>
   <div class="contact-grid one">
     <div>
       <h3 class="ch">{bi('قنوات التواصل', 'Channels')}</h3>
@@ -485,7 +506,8 @@ def contact_html():
 
 def about_html():
     s = open(P('src/about.html')).read()
-    return s
+    i = s.index('</p>', s.index('ab-line')) + 4
+    return s[:i] + mark('about', 'start') + s[i:]
 
 def write(path, content):
     os.makedirs(os.path.dirname(path), exist_ok=True)

@@ -765,6 +765,14 @@ html[lang="en"] .ft-quote p::before{content:"“"}html[lang="en"] .ft-quote p::a
 @keyframes rbDrift{from{transform:translateX(-1.6%) skewX(-1.2deg)}to{transform:translateX(1.6%) skewX(1.2deg)}}
 @media (prefers-reduced-motion:reduce){.rb-fall path{animation:none}}
 @media (max-width:640px){.hero2>.rb-fall{opacity:.7}}
+/* identity mark under section titles */
+.rb-mark{width:min(360px,72%);margin:20px auto 8px;pointer-events:none}
+.rb-mark.start{margin-inline:0;margin-block:6px 22px;width:min(300px,80%)}
+.rb-mark svg{display:block;width:100%;height:auto;overflow:visible}
+.rb-mark .rb{transform-box:fill-box;transform-origin:center;animation:rbSway 14s ease-in-out infinite alternate}
+.rb-mark .rb1{animation-duration:17s;animation-delay:-4s}.rb-mark .rb2{animation-duration:12s;animation-delay:-7s}.rb-mark .rb3{animation-duration:19s;animation-delay:-2s}
+@keyframes rbSway{from{transform:translateY(-5%) scaleY(.94)}to{transform:translateY(5%) scaleY(1.06)}}
+@media (prefers-reduced-motion:reduce){.rb-mark .rb{animation:none}}
 /* article blocks: each study gets the visual that suits it */
 .bk{margin:40px 0;background:var(--alt);border-radius:20px;padding:clamp(20px,4vw,32px)}
 .bk .ft-h{margin:0 0 20px!important}
