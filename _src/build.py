@@ -519,9 +519,9 @@ def write(path, content):
 
 SITE = 'https://alsamani.com/'
 PERSON = {"@type": "Person", "@id": SITE + "#person", "name": "Omar Abdullah Alsamani", "alternateName": ["عمر عبدالله الصمعاني", "Omar A. Alsamani", "Omar Alsamani"],
-          "jobTitle": "Associate Professor", "affiliation": {"@type": "CollegeOrUniversity", "name": "University of Ha'il"}, "url": SITE,
+          "jobTitle": ["Associate Professor", "Certified Chief Innovation Officer"], "affiliation": {"@type": "CollegeOrUniversity", "name": "University of Ha'il"}, "url": SITE,
           "alumniOf": [{"@type": "CollegeOrUniversity", "name": "University of Northern Colorado"}, {"@type": "CollegeOrUniversity", "name": "University of Exeter"}],
-          "knowsAbout": ["Gifted education", "Twice-exceptionality", "Talent development", "Creativity", "Innovation and entrepreneurship", "Special education", "Artificial intelligence in education", "Identification and assessment"],
+          "knowsAbout": ["Innovation strategy", "Innovation ecosystems", "Open innovation", "Gifted education", "Twice-exceptionality", "Talent development", "Creativity", "Innovation and entrepreneurship", "Special education", "Artificial intelligence in education", "Identification and assessment"],
           "sameAs": ["https://www.linkedin.com/in/alsamani/", "https://www.x.com/Omar_ALsamani", "https://scholar.google.com/citations?user=1tSLgBIAAAAJ"]}
 DESCS = {
  'index': "Research by Dr. Omar A. Alsamani (University of Ha'il) on gifted education, twice-exceptionality, innovation and entrepreneurship, special education and AI in education — abstracts, findings and implications in English and Arabic.",
@@ -531,6 +531,25 @@ DESCS = {
  'about': "Dr. Omar A. Alsamani, Associate Professor (PhD) and Certified Chief Innovation Officer: innovation strategy and ecosystems, giftedness and talent development, special education and twice-exceptionality.",
  'research': "Published research by Dr. Omar A. Alsamani on giftedness, twice-exceptionality, innovation, entrepreneurship and AI in education.",
 }
+def og_img_for(rr):
+    d = P('img', 'research', rr['slug'])
+    if os.path.isdir(d):
+        figs = sorted(f for f in os.listdir(d) if f.startswith('fig') and f.endswith('.webp'))
+        if figs:
+            return SITE + 'img/research/' + rr['slug'] + '/' + figs[0]
+    return SITE + 'img/ph15.webp'
+
+# old addresses from the previous site -> the matching page here
+LEGACY = {'f/mothers’-experiences-of-recognizing-and-nurturing-talents-in-asd': 'research/mothers-talents-autism/',
+          'f/structured-collaboration-with-generative-artificial-intelligence': 'research/genai-entrepreneurship-education/',
+          'f/the-effects-of-ai-based-visual-instruction-on-the-reading-compreh': 'research/ai-visual-instruction-dyslexia/',
+          'f/المجتمع-الداعم-للابتكار-وريادة-الأعمال-للأفراد-الموهوبين': 'research/supportive-community-gifted-entrepreneurs/',
+          'contact-تواصل': 'contact/', 'innovation-strategy': 'books/innovation-management/'}
+def write_legacy():
+    for old, new in LEGACY.items():
+        p = P('dist', old, 'index.html'); os.makedirs(os.path.dirname(p), exist_ok=True)
+        open(p, 'w').write(f'<!doctype html><html><head><meta charset="utf-8"><meta name="robots" content="noindex"><meta http-equiv="refresh" content="0; url=/{new}"><link rel="canonical" href="{SITE}{new}"><title>alsamani.com</title></head><body><a href="/{new}">alsamani.com/{new}</a></body></html>')
+
 def seo(name, title):
     path = '' if name == 'index' else name + '/'
     url = SITE + path
@@ -546,7 +565,7 @@ def seo(name, title):
         abstract = rr.get('abstract_plain') or ' '.join(x[3] for x in rr.get('abstract', []))
         ld.append({"@context": "https://schema.org", "@type": "ScholarlyArticle", "headline": rr['orig_title'][:110], "name": rr['orig_title'],
                    "alternativeHeadline": rr.get('title_en') if rr.get('orig_lang') == 'ar' else rr['title_ar'], "author": [PERSON if 'Alsamani' in a else {"@type": "Person", "name": a} for a in authors],
-                   "datePublished": rr['date'], "isPartOf": {"@type": "Periodical", "name": rr['journal']}, "url": url, "abstract": abstract, "keywords": rr.get('keywords_en', ''), "inLanguage": rr.get('orig_lang', 'en'), "image": SITE + "img/ph15.webp"})
+                   "datePublished": rr['date'], "isPartOf": {"@type": "Periodical", "name": rr['journal']}, "url": url, "abstract": abstract, "keywords": rr.get('keywords_en', ''), "inLanguage": rr.get('orig_lang', 'en'), "image": og_img_for(rr), **({"sameAs": "https://doi.org/" + rr["doi"]} if rr.get("doi") else {})})
         extra += f'<meta name="citation_title" content="{e(rr["orig_title"])}">\n'
         for a in authors:
             extra += f'<meta name="citation_author" content="{e(a)}">\n'
@@ -568,7 +587,7 @@ def seo(name, title):
 <meta property="og:title" content="{e(title)}">
 <meta property="og:description" content="{e(desc)}">
 <meta property="og:url" content="{url}">
-<meta property="og:image" content="{SITE}img/ph15.webp">
+<meta property="og:image" content="{og_img_for(rr) if rr else SITE + 'img/ph15.webp'}">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="author" content="Omar Abdullah Alsamani">
 {extra}{lds}'''
@@ -603,3 +622,4 @@ urls = [SITE] + [SITE + n + '/' for n, *_ in PAGES if n != 'index']
 write(P('dist', 'sitemap.xml'), '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + ''.join(f'<url><loc>{u}</loc><lastmod>{date.today()}</lastmod></url>\n' for u in urls) + '</urlset>\n')
 write(P('dist', 'robots.txt'), 'User-agent: *\nAllow: /\nDisallow: /_src/\nSitemap: https://alsamani.com/sitemap.xml\n')
 print('built', len(feed), 'feed items,', len(pubs), 'publications')
+write_legacy()
