@@ -677,6 +677,22 @@ html,body{overflow-x:clip}@media (max-width:640px){.cr-dots{gap:5px;padding:8px 
 @media (max-width:640px){.st-item{height:130px;border-radius:10px}.st-track{gap:10px}.strip{margin-top:10px}}
 @media (prefers-reduced-motion:reduce){.st-track{animation:none}.strip{overflow-x:auto}}
 .cr-ui{margin-top:18px}
+/* no counter between the rows; a small pause control sits quietly with the credit line */
+.cr-credit{display:flex;justify-content:center;align-items:center;gap:6px;flex-wrap:wrap;margin-top:18px}
+.cr-credit .cr-play{width:24px;height:24px;flex:0 0 auto;margin-inline-end:6px;background:transparent;opacity:.6;transition:opacity .2s}
+.cr-credit .cr-play:hover,.cr-credit .cr-play:focus-visible{opacity:1}
+.cr-credit .cr-play::before,.cr-credit .cr-play::after{top:7px;width:2px;height:10px;background:currentColor}
+.cr-credit .cr-play::before{left:8px}.cr-credit .cr-play::after{left:13px}
+.cr-credit .cr-play.paused::before{left:9px;width:0;height:0;background:none;border-width:5px 0 5px 8px;border-color:transparent transparent transparent currentColor}
+.photo-sec .cr-credit .cr-play{background:transparent;color:#a1a1a6}
+.photo-sec .cr-credit .cr-play::before,.photo-sec .cr-credit .cr-play::after{background:currentColor}
+.photo-sec .cr-credit .cr-play.paused::before{background:none;border-color:transparent transparent transparent currentColor}
+.cr-credit .cr-play{color:var(--muted)}
+/* home photo band: black stage like the gallery */
+.pband2{background:#000;box-shadow:0 0 0 100vmax #000;clip-path:inset(0 -100vmax);padding-block:56px 48px}
+.pband2 .cr-credit,.pband2 .cr-credit .cr-play{color:#a1a1a6}
+.pband2 .cr-credit a{color:#2997ff}
+@media (max-width:640px){.pband2{padding-block:32px 32px}}
 /* journal quartile badge */
 .qb{display:inline-block;font:600 11px/1 -apple-system,"Inter",sans-serif;letter-spacing:.02em;color:#fff;background:#1d1d1f;border-radius:5px;padding:3px 6px;margin-inline-start:8px;vertical-align:.1em}
 :root[data-theme="dark"] .qb{background:#f5f5f7;color:#1d1d1f}
@@ -934,14 +950,14 @@ html[lang="ar"] .bk-st button span.en,html[lang="en"] .bk-st button span.ar{disp
     const seq=list.concat(list,list);
     seq.forEach((n,k)=>{const b=document.createElement('button');b.type='button';b.className='cr-slide';b.setAttribute('aria-label','Open photograph');
       b.style.backgroundImage='url('+base+'img/ph'+pad(n)+'.webp)';b.onclick=()=>{if(!moved)open(list,k%N)};track.appendChild(b)});
-    const dots=box.querySelector('.cr-dots');list.forEach((_,i)=>{const d=document.createElement('button');d.type='button';d.setAttribute('aria-label',String(i+1));d.onclick=()=>{go(N+i);restart()};dots.appendChild(d)});
+    const dots=box.querySelector('.cr-dots')||document.createElement('div');
     let idx=N,timer=null,moved=false;
     function place(anim){const s=track.children[idx];track.style.transition=anim?'transform .9s cubic-bezier(.65,0,.35,1)':'none';
       track.style.transform='translateX('+(box.clientWidth/2-(s.offsetLeft+s.offsetWidth/2))+'px)';
       [...track.children].forEach((c,k)=>c.classList.toggle('on',k===idx));[...dots.children].forEach((d,i)=>d.classList.toggle('on',i===idx%N))}
     function go(i){idx=i;place(true)}
     track.addEventListener('transitionend',()=>{if(idx>=2*N){idx-=N;place(false)}else if(idx<N){idx+=N;place(false)}});
-    const playBtn=box.querySelector('.cr-play');let playing=!matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const playBtn=box.querySelector('.cr-play')||(box.parentElement.querySelector('.cr-play'))||document.createElement('button');let playing=!matchMedia('(prefers-reduced-motion: reduce)').matches;
     function restart(){clearInterval(timer);if(playing)timer=setInterval(()=>{if(!document.hidden&&lb.hidden)go(idx+1)},5000);playBtn.classList.toggle('paused',!playing)}
     playBtn.onclick=()=>{playing=!playing;restart()};
     let x0=null;track.addEventListener('pointerdown',e=>{x0=e.clientX;moved=false});

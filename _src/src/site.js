@@ -71,14 +71,14 @@
     const seq=list.concat(list,list);
     seq.forEach((n,k)=>{const b=document.createElement('button');b.type='button';b.className='cr-slide';b.setAttribute('aria-label','Open photograph');
       b.style.backgroundImage='url('+base+'img/ph'+pad(n)+'.webp)';b.onclick=()=>{if(!moved)open(list,k%N)};track.appendChild(b)});
-    const dots=box.querySelector('.cr-dots');list.forEach((_,i)=>{const d=document.createElement('button');d.type='button';d.setAttribute('aria-label',String(i+1));d.onclick=()=>{go(N+i);restart()};dots.appendChild(d)});
+    const dots=box.querySelector('.cr-dots')||document.createElement('div');
     let idx=N,timer=null,moved=false;
     function place(anim){const s=track.children[idx];track.style.transition=anim?'transform .9s cubic-bezier(.65,0,.35,1)':'none';
       track.style.transform='translateX('+(box.clientWidth/2-(s.offsetLeft+s.offsetWidth/2))+'px)';
       [...track.children].forEach((c,k)=>c.classList.toggle('on',k===idx));[...dots.children].forEach((d,i)=>d.classList.toggle('on',i===idx%N))}
     function go(i){idx=i;place(true)}
     track.addEventListener('transitionend',()=>{if(idx>=2*N){idx-=N;place(false)}else if(idx<N){idx+=N;place(false)}});
-    const playBtn=box.querySelector('.cr-play');let playing=!matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const playBtn=box.querySelector('.cr-play')||(box.parentElement.querySelector('.cr-play'))||document.createElement('button');let playing=!matchMedia('(prefers-reduced-motion: reduce)').matches;
     function restart(){clearInterval(timer);if(playing)timer=setInterval(()=>{if(!document.hidden&&lb.hidden)go(idx+1)},5000);playBtn.classList.toggle('paused',!playing)}
     playBtn.onclick=()=>{playing=!playing;restart()};
     let x0=null;track.addEventListener('pointerdown',e=>{x0=e.clientX;moved=false});
