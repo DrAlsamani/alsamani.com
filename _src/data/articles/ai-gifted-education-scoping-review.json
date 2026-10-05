@@ -59,6 +59,9 @@
       ]
     }
   ],
+  "blocks": [{"type": "balance", "at": "themes", "h": ["الفرص والمخاطر كما رصدتها المراجعة", "Opportunities and risks reported in the literature"],
+    "left": {"t": ["الفرص", "Opportunities"], "items": [["إعداد تعليمي متمايز", "Differentiated preparation"], ["تعلم متقدم", "Advanced learning"], ["إنتاج إبداعي", "Creative production"], ["التعرف على الملفات المعقدة للمتعلمين", "Recognizing complex learner profiles"]]},
+    "right": {"t": ["المخاطر", "Risks"], "items": [["تحيّز في بيانات التعرف", "Bias in identification data"], ["الاعتماد المفرط", "Overreliance"], ["تهديد الأصالة", "Threats to originality"], ["الخصوصية", "Privacy"], ["محدودية الشفافية", "Limited transparency"], ["ضعف إعداد المعلمين والمؤسسات", "Insufficient preparation of educators and institutions"]]}}],
   "themes_h": ["ماذا وجدت الدراسة؟", "What the study found"],
   "themes": [
     {

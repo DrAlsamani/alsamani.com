@@ -721,6 +721,47 @@ html[lang="en"] .ft-quote p::before{content:"“"}html[lang="en"] .ft-quote p::a
 .ft-paper{background:#fff!important}
 .ft-paper img{width:100%;height:auto;display:block;border-radius:10px;cursor:zoom-in}
 :root[data-theme="dark"] .ft-paper{background:#f5f5f7!important}
+/* article blocks: each study gets the visual that suits it */
+.bk{margin:40px 0;background:var(--alt);border-radius:20px;padding:clamp(20px,4vw,32px)}
+.bk .ft-h{margin:0 0 20px!important}
+.bk-note{color:var(--muted);font-size:.875rem!important;margin:16px 0 0!important}
+.bk-bars ul,.bk-gauges ul{list-style:none;margin:0;padding:0;display:grid;gap:16px}
+.bk-bars li{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,2fr) 3.6em;gap:12px;align-items:center}
+.bk-l{font-size:.9375rem;line-height:1.4}
+.bk-bar{height:14px;background:var(--bg);border-radius:99px;overflow:hidden}
+.bk-bar i,.bk-gauge i{display:block;height:100%;width:0;background:var(--accent);border-radius:99px;transition:width 1.1s cubic-bezier(.2,.8,.2,1)}
+.bk.in .bk-bar i,.bk.in .bk-gauge i{width:var(--w)}
+.bk-bars b{font-variant-numeric:tabular-nums;font-size:.9375rem;text-align:end}
+.bk-sbar{display:flex;height:24px;border-radius:99px;overflow:hidden;background:var(--bg)}
+.bk-sbar i{display:block;height:100%;width:0;transition:width 1.1s cubic-bezier(.2,.8,.2,1)}
+.bk.in .bk-sbar i{width:var(--w)}
+.bk-leg{list-style:none;margin:16px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:10px 22px;font-size:.9375rem}
+.bk-leg span{display:inline-block;width:11px;height:11px;border-radius:3px;margin-inline-end:7px;vertical-align:-.05em}
+.bk-gauges li{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,2fr);gap:14px;align-items:center;padding-top:6px}
+.bk-gauge{position:relative;height:10px;background:var(--bg);border-radius:99px}
+.bk-gauge i{background:var(--accent)}
+.bk-gauge em{position:absolute;top:-22px;inset-inline-start:calc(var(--w) - 1.4em);font-style:normal;font-weight:700;font-size:.875rem;opacity:0;transition:opacity .4s .9s}
+.bk.in .bk-gauge em{opacity:1}
+.bk-st{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;scrollbar-width:none}
+.bk-st button{flex:0 0 auto;display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:99px;padding:6px 14px 6px 6px;font:500 .875rem/1.2 inherit;cursor:pointer}
+html[dir="rtl"] .bk-st button{padding:6px 6px 6px 14px}
+.bk-st button span{width:26px;height:26px;border-radius:50%;background:var(--alt);display:grid;place-items:center;font-weight:700;font-size:.8125rem}
+.bk-st button[aria-selected="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.bk-st button[aria-selected="true"] span{background:var(--accent);color:#fff}
+.bk-sp{display:grid;grid-template-columns:56px minmax(0,1fr);gap:16px;margin-top:20px;align-items:start;min-height:7em}
+.bk-sp>b{font-size:2.75rem;line-height:1;color:var(--accent);font-weight:700}
+.bk-sp p{margin:0!important;line-height:1.75}
+.bk-bal{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.bk-side{background:var(--bg);border-radius:16px;padding:20px}
+.bk-side h4{margin:0 0 12px;font-size:1.0625rem}
+.bk-side.pos h4{color:var(--accent)}.bk-side.neg h4{color:var(--dune)}
+.bk-side ul{margin:0;padding-inline-start:18px;display:grid;gap:6px;line-height:1.55}
+@media (max-width:640px){.bk-bars li{grid-template-columns:1fr 3.4em}.bk-bars .bk-l{grid-column:1/-1}.bk-gauges li{grid-template-columns:1fr}.bk-bal{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){.bk-bar i,.bk-gauge i,.bk-sbar i{transition:none}}
+.bk-st button,.bk-leg li{white-space:nowrap}
+.bk-st button>span:not(:first-child){display:inline}
+.bk-st button span.ar,.bk-st button span.en{width:auto;height:auto;background:none;border-radius:0;display:inline;font-weight:500;font-size:.875rem}
+html[lang="ar"] .bk-st button span.en,html[lang="en"] .bk-st button span.ar{display:none!important}
 </style>
 </head>
 <body>
@@ -859,6 +900,11 @@ html[lang="en"] .ft-quote p::before{content:"“"}html[lang="en"] .ft-quote p::a
 (function(){var b=document.getElementById('menuBtn');if(!b)return;var h=document.querySelector('header.top');
 b.onclick=function(){var o=h.classList.toggle('open');b.setAttribute('aria-expanded',o);document.body.style.overflow=o?'hidden':''};
 h.querySelectorAll('nav.links.mobile a').forEach(function(a){a.addEventListener('click',function(){h.classList.remove('open');document.body.style.overflow=''})})})();
+// article blocks: animate charts into view; step-through panels
+(function(){var els=document.querySelectorAll('[data-reveal]');
+if(els.length){if(!('IntersectionObserver' in window)){els.forEach(function(e){e.classList.add('in')})}else{
+var io=new IntersectionObserver(function(es){es.forEach(function(x){if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target)}})},{threshold:.3});els.forEach(function(e){io.observe(e)})}}
+document.querySelectorAll('.bk-steps').forEach(function(w){w.querySelectorAll('[data-st]').forEach(function(b){b.onclick=function(){w.querySelectorAll('[data-st]').forEach(function(x){x.setAttribute('aria-selected',x===b)});w.querySelectorAll('[data-sp]').forEach(function(p){p.hidden=p.dataset.sp!==b.dataset.st})}})})})();
 </script>
 </body>
 </html>

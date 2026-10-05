@@ -93,3 +93,8 @@
 (function(){var b=document.getElementById('menuBtn');if(!b)return;var h=document.querySelector('header.top');
 b.onclick=function(){var o=h.classList.toggle('open');b.setAttribute('aria-expanded',o);document.body.style.overflow=o?'hidden':''};
 h.querySelectorAll('nav.links.mobile a').forEach(function(a){a.addEventListener('click',function(){h.classList.remove('open');document.body.style.overflow=''})})})();
+// article blocks: animate charts into view; step-through panels
+(function(){var els=document.querySelectorAll('[data-reveal]');
+if(els.length){if(!('IntersectionObserver' in window)){els.forEach(function(e){e.classList.add('in')})}else{
+var io=new IntersectionObserver(function(es){es.forEach(function(x){if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target)}})},{threshold:.3});els.forEach(function(e){io.observe(e)})}}
+document.querySelectorAll('.bk-steps').forEach(function(w){w.querySelectorAll('[data-st]').forEach(function(b){b.onclick=function(){w.querySelectorAll('[data-st]').forEach(function(x){x.setAttribute('aria-selected',x===b)});w.querySelectorAll('[data-sp]').forEach(function(p){p.hidden=p.dataset.sp!==b.dataset.st})}})})})();

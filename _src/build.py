@@ -22,7 +22,7 @@ for _r in research:   # feature articles and paper-derived metadata (data/articl
                 _r[_k] = _meta[_k]
         if _meta.get('url'):
             _r['url'] = _meta['url']
-css = open(P('src/site.css')).read() + open(P('src/extra.css')).read() + open(P('src/apple.css')).read()
+css = open(P('src/site.css')).read() + open(P('src/extra.css')).read() + open(P('src/apple.css')).read() + open(P('src/blocks.css')).read()
 js = open(P('src/site.js')).read()
 featured = open(P('src/featured.html')).read()
 e = html.escape
@@ -273,6 +273,34 @@ def figure(slug):
     f = P('src/figures', slug + '.html')
     return open(f).read() if os.path.exists(f) else ''
 
+def block_html(b):
+    """Study-specific visual blocks: bars, stack, gauge, steps, balance."""
+    B = lambda x: bi(e(x[0]), e(x[1]))
+    h = f'<h3 class="ft-h">{B(b["h"])}</h3>' if b.get('h') else ''
+    note = f'<p class="bk-note">{B(b["note"])}</p>' if b.get('note') else ''
+    t = b['type']
+    if t == 'bars':
+        mx = b.get('max', 100); unit = b.get('unit', '%')
+        rows = ''.join(f'<li><span class="bk-l">{bi(e(a), e(c))}</span><span class="bk-bar"><i style="--w:{float(v) / mx * 100:.1f}%"></i></span><b>{e(str(v))}{unit}</b></li>' for v, a, c in b['items'])
+        return f'<div class="bk bk-bars" data-reveal>{h}<ul>{rows}</ul>{note}</div>'
+    if t == 'stack':
+        cols = ['var(--accent)', 'var(--ink)', 'var(--dune)', 'var(--muted)', 'var(--line)']
+        segs = ''.join(f'<i style="--w:{v}%;background:{cols[k % 5]}" title="{v}%"></i>' for k, (v, a, c) in enumerate(b['items']))
+        leg = ''.join(f'<li><span style="background:{cols[k % 5]}"></span>{bi(e(a), e(c))} <b>{v}%</b></li>' for k, (v, a, c) in enumerate(b['items']))
+        return f'<div class="bk bk-stack" data-reveal>{h}<div class="bk-sbar">{segs}</div><ul class="bk-leg">{leg}</ul>{note}</div>'
+    if t == 'gauge':
+        mx = b.get('max', 4)
+        rows = ''.join(f'<li><span class="bk-l">{bi(e(a), e(c))}</span><span class="bk-gauge"><i style="--w:{float(v) / mx * 100:.1f}%"></i><em style="--w:{float(v) / mx * 100:.1f}%">{v}</em></span></li>' for v, a, c in b['items'])
+        return f'<div class="bk bk-gauges" data-reveal>{h}<ul>{rows}</ul>{note}</div>'
+    if t == 'steps':
+        btns = ''.join(f'<button type="button" role="tab" aria-selected="{"true" if k == 0 else "false"}" data-st="{k}"><span>{k + 1}</span>{bi(e(it[0]), e(it[1]))}</button>' for k, it in enumerate(b['items']))
+        pans = ''.join(f'<div class="bk-sp" data-sp="{k}"{"" if k == 0 else " hidden"}><b>{k + 1}</b><p>{bi(e(it[2]), e(it[3]))}</p></div>' for k, it in enumerate(b['items']))
+        return f'<div class="bk bk-steps">{h}<div class="bk-st" role="tablist">{btns}</div>{pans}{note}</div>'
+    if t == 'balance':
+        side = lambda sd, cls: f'<div class="bk-side {cls}"><h4>{B(sd["t"])}</h4><ul>' + ''.join(f'<li>{B(x)}</li>' for x in sd['items']) + '</ul></div>'
+        return f'<div class="bk bk-balance">{h}<div class="bk-bal">{side(b["left"], "pos")}{side(b["right"], "neg")}</div>{note}</div>'
+    return ''
+
 def article_html(r):
     a = r.get('article')
     if not a:
@@ -282,8 +310,12 @@ def article_html(r):
     out.append(f'<p class="ft-kick">{bi("قراءة في البحث", "The study in brief")}</p><h2 class="ft-q">{B(a["q"])}</h2><p class="ft-lede">{B(a["lede"])}</p>')
     if a.get('stats'):
         out.append('<div class="ft-stats">' + ''.join(f'<div><b>{e(n)}</b><span>{bi(e(x), e(y))}</span></div>' for n, x, y in a['stats']) + '</div>')
+    out += [block_html(b) for b in a.get('blocks', []) if b.get('at') == 'stats']
     for sec in a.get('sections', []):
+        if sec.get('skip'):
+            continue
         out.append(f'<h3 class="ft-h">{B(sec["h"])}</h3><p>{B(sec["p"])}</p>')
+    out += [block_html(b) for b in a.get('blocks', []) if b.get('at', 'sections') == 'sections']
     for pf in a.get('paper_figs', []):
         src = f'../../img/research/{r["slug"]}/{pf["file"]}'
         out.append(f'<figure class="ft-fig ft-paper"><a href="{src}" target="_blank" rel="noopener"><img src="{src}" alt="" loading="lazy"></a><figcaption>{B(pf["cap"])}</figcaption></figure>')
@@ -299,6 +331,7 @@ def article_html(r):
             q = f'<blockquote class="ft-quote"><p>{B(t["quote"])}</p><cite>{bi("من أقوال المشاركين", "A participant")}</cite></blockquote>' if t.get('quote') else ''
             out.append(f'<li><span class="ft-n">{i}</span><div><h4>{B(t["t"])}</h4><p>{B(t["p"])}</p>{"<ul>" + subs + "</ul>" if subs else ""}{q}</div></li>')
         out.append('</ol>')
+    out += [block_html(b) for b in a.get('blocks', []) if b.get('at') == 'themes']
     if a.get('take'):
         out.append(f'<h3 class="ft-h">{B(a["take_h"])}</h3><ul class="ft-take">' + ''.join(f'<li>{B(x)}</li>' for x in a['take']) + '</ul>')
     if a.get('close'):

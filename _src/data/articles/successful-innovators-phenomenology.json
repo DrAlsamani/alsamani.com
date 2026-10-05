@@ -27,6 +27,9 @@
     }
   ],
   "paper_figs": [],
+  "blocks": [{"type": "bars", "at": "sections", "h": ["ما الذي ذكره المبتكرون؟", "What the innovators named"],
+    "items": [[100, "عادات يومية منتجة", "Productive daily habits"], [100, "التعلّم الذاتي", "Self-directed learning"], [100, "الأقران", "Peers"], [82, "الثقة بالنفس", "Self-confidence"], [82, "فريق داعم", "A supportive team"], [73, "شبكة العلاقات", "Networking"], [73, "تسويق الذات والسمعة", "Marketing oneself"], [73, "الابتكار مصدرًا للدخل", "Innovation as income"]],
+    "note": ["نسبة من ذكر كل عامل من المبتكرين الأحد عشر.", "Share of the eleven innovators who named each factor."]}],
   "themes_h": ["ماذا وجدت الدراسة؟", "What the study found"],
   "themes": [
     {

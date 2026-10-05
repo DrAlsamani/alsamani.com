@@ -60,6 +60,9 @@
    ]
   }
  ],
+ "blocks": [{"type": "gauge", "at": "sections", "max": 4, "h": ["أهمية الأبعاد الثلاثة في نظر أعضاء هيئة التدريس", "How faculty rated the three dimensions"],
+   "items": [[3.44, "تطوير الشخصية الإبداعية", "Developing the creative person"], [3.37, "عمليات الإبداع والمنتج الابتكاري", "Creative process and product"], [3.35, "البيئة الجامعية المحفزة", "A stimulating university environment"]],
+   "note": ["متوسط الأهمية على مقياس من 0 إلى 4؛ والأبعاد الثلاثة كلها بدرجة «عالية جدًا».", "Mean importance on a 0–4 scale; all three dimensions were rated very highly important."]}],
  "themes_h": [
   "ماذا وجدت الدراسة؟",
   "What the study found"
