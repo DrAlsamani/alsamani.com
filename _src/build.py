@@ -67,7 +67,7 @@ def page(name, depth, title_ar, body, full, seo_html=''):
 <footer class="site-foot">
   <div class="sf-id"><span class="mono-mark" aria-hidden="true">OA</span><div><b>{bi('د. عمر عبدالله الصمعاني', 'Dr. Omar A. Alsamani')}</b></div></div>
   <nav class="sf-nav" aria-label="Footer">{nav}</nav>
-  <div class="sf-links"><a href="https://scholar.google.com/citations?user=1tSLgBIAAAAJ">Google Scholar</a><a href="https://www.linkedin.com/in/alsamani/">LinkedIn</a><a href="https://www.x.com/Omar_ALsamani">X</a></div>
+  <div class="sf-links"><a href="https://scholar.google.com/citations?user=1tSLgBIAAAAJ">Google Scholar</a><a href="https://www.linkedin.com/in/alsamani/">LinkedIn</a><a href="https://www.x.com/Omar_ALsamani">X</a><a href="{href('contact', depth).replace('index.html', '')}#guestbook">{bi('سجل الزوار', 'Guestbook')}</a></div>
   <p class="sf-copy mono">© 2026 alsamani.com</p>
 </footer>
 </div>
