@@ -15,6 +15,9 @@ FONTS = '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="p
 
 NAVL = [('index.html', 'المستجدات', 'Updates'), ('books/index.html', 'المكتبة المفتوحة', 'Open Library'), ('publications/index.html', 'المنشورات', 'Publications'),
         ('photography/index.html', 'التصوير', 'Photography'), ('about/index.html', 'نبذة', 'About'), ('contact/index.html', 'تواصل', 'Contact')]
+PV_JS = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'src', 'pv.js')).read().replace('{', '{{').replace('}', '}}')
+PV_CSS = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'src', 'pv.css')).read()
+
 def site_footer(up, lang):
     """Site footer for book pages. up = path prefix to site root; lang = 'ar' | 'en' | 'bi' (both, switched by CSS)."""
     def t(a, b):
@@ -22,7 +25,7 @@ def site_footer(up, lang):
     links = ''.join(f'<a href="{up}{h}">{t(a, b)}</a>' for h, a, b in NAVL)
     d = 'rtl' if lang == 'ar' else 'ltr' if lang == 'en' else 'auto'
     return f'''<footer class="bp-foot" dir="{d}"><div class="bp-fin"><a class="bp-fid" href="{up}index.html"><span class="bp-fmark">OA</span><b>{t('د. عمر عبدالله الصمعاني', 'Dr. Omar A. Alsamani')}</b></a>
-<nav>{links}</nav><p>© 2007–2026 alsamani.com<span class="pv" id="pv" hidden style="margin-inline-start:.9em;padding-inline-start:.9em;border-inline-start:1px solid currentColor;opacity:.75;font-variant-numeric:tabular-nums"></span></p></div></footer><script>(function(){{var el=document.getElementById('pv');if(!el)return;var live=/(^|\\.)alsamani\\.com$/.test(location.hostname);fetch('https://abacus.jasoncameron.dev/'+(live?'hit':'get')+'/alsamani-com/views').then(function(r){{return r.json()}}).then(function(d){{if(typeof d.value==='number'){{el.textContent=d.value.toLocaleString('en-US');el.hidden=false}}}}).catch(function(){{}})}})()</script>'''
+<nav>{links}</nav><p><bdi dir="ltr">© 2007–2026 alsamani.com</bdi></p><div class="pv" id="pv" dir="ltr" hidden></div></div></footer><script>{PV_JS}</script>'''
 
 FOOT_CSS = '''<style>.bp-foot{box-shadow:0 0 0 100vmax var(--bpf,#F5F5F7);clip-path:inset(0 -100vmax);background:#F5F5F7;color:#6E6E73;font:13px/1.6 -apple-system,BlinkMacSystemFont,"IBM Plex Sans Arabic","Inter",sans-serif;margin-top:56px;padding:36px 20px calc(36px + env(safe-area-inset-bottom))}
 .bp-fin{max-width:1120px;margin:0 auto;display:flex;flex-wrap:wrap;gap:18px 40px;align-items:center;justify-content:space-between}
@@ -33,6 +36,7 @@ FOOT_CSS = '''<style>.bp-foot{box-shadow:0 0 0 100vmax var(--bpf,#F5F5F7);clip-p
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .bp-foot{--bpf:#161617;background:#161617;color:#A1A1A6}:root:not([data-theme="light"]) .bp-fid{color:#F5F5F7!important}}
 :root[data-theme="dark"] .bp-foot{--bpf:#161617;background:#161617;color:#A1A1A6}:root[data-theme="dark"] .bp-fid{color:#F5F5F7!important}
 @media print{.bp-foot{display:none}}</style>'''
+FOOT_CSS += '<style>' + PV_CSS + '.bp-foot .pv-d{background:#fff;box-shadow:inset 0 0 0 1px #d2d2d7;color:#1d1d1f}</style>'
 
 def strip_fonts(css):
     css = re.sub(r'@font-face\{[^}]*\}', '', css)

@@ -22,8 +22,8 @@ for _r in research:   # feature articles and paper-derived metadata (data/articl
                 _r[_k] = _meta[_k]
         if _meta.get('url'):
             _r['url'] = _meta['url']
-css = open(P('src/site.css')).read() + open(P('src/extra.css')).read() + open(P('src/apple.css')).read() + open(P('src/blocks.css')).read()
-js = open(P('src/site.js')).read()
+css = open(P('src/site.css')).read() + open(P('src/extra.css')).read() + open(P('src/apple.css')).read() + open(P('src/blocks.css')).read() + open(P('src/pv.css')).read()
+js = open(P('src/site.js')).read() + open(P('src/pv.js')).read()
 featured = open(P('src/featured.html')).read()
 e = html.escape
 
@@ -70,7 +70,8 @@ def page(name, depth, title_ar, body, full, seo_html=''):
   <div class="sf-id"><span class="mono-mark" aria-hidden="true">OA</span><div><b>{bi('د. عمر عبدالله الصمعاني', 'Dr. Omar A. Alsamani')}</b></div></div>
   <nav class="sf-nav" aria-label="Footer">{nav}</nav>
   <div class="sf-links"><a href="https://scholar.google.com/citations?user=1tSLgBIAAAAJ">Google Scholar</a><a href="https://www.linkedin.com/in/alsamani/">LinkedIn</a><a href="https://www.x.com/Omar_ALsamani">X</a><a href="{href('contact', depth).replace('index.html', '')}#guestbook">{bi('سجل الزوار', 'Guestbook')}</a></div>
-  <p class="sf-copy mono">© 2007–2026 alsamani.com<span class="pv" id="pv" hidden></span></p>
+  <p class="sf-copy mono"><bdi dir="ltr">© 2007–2026 alsamani.com</bdi></p>
+  <div class="pv" id="pv" dir="ltr" hidden></div>
 </footer>
 </div>
 <div class="lb" id="lb" hidden><button class="x" id="lbx" aria-label="Close">×</button><button class="pv" id="lbp" aria-label="Previous">‹</button><img id="lbi" alt=""><span class="lb-cr">© Omar A. Alsamani</span><button class="nx" id="lbn" aria-label="Next">›</button></div>

@@ -122,6 +122,3 @@ document.querySelectorAll('form.nform').forEach(function(f){f.addEventListener('
   try{var r=await fetch(f.dataset.endpoint,{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify(d)});var j=await r.json();
     if(r.ok&&String(j.success)==='true'){f.reset();note.textContent=en?'Thank you. Your note has been received and will be read.':'شكرًا لك. وصلت كلمتك وستُقرأ.'}else throw 0}
   catch(e){note.textContent=en?'Could not send right now. Please try again later.':'تعذّر الإرسال الآن. حاول لاحقًا.'}btn.disabled=false})});
-// page views (every page load counts); shown quietly in the footer
-(function(){var el=document.getElementById('pv');if(!el)return;var live=/(^|\.)alsamani\.com$/.test(location.hostname);
-fetch('https://abacus.jasoncameron.dev/'+(live?'hit':'get')+'/alsamani-com/views').then(function(r){return r.json()}).then(function(d){if(typeof d.value==='number'){el.textContent=d.value.toLocaleString('en-US');el.hidden=false}}).catch(function(){})})();
