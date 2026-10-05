@@ -64,6 +64,7 @@ def page(name, depth, title_ar, body, full, seo_html=''):
 <main data-base="{'../' * depth}">
 {body}
 </main>
+{RIB_FOOT}
 <footer class="site-foot">
   <div class="sf-id"><span class="mono-mark" aria-hidden="true">OA</span><div><b>{bi('د. عمر عبدالله الصمعاني', 'Dr. Omar A. Alsamani')}</b></div></div>
   <nav class="sf-nav" aria-label="Footer">{nav}</nav>
@@ -164,12 +165,16 @@ def photo_html():
 </section>'''
 
 
+RIB_TOP = open(P('src', 'ribbons-top.svg')).read() if os.path.exists(P('src', 'ribbons-top.svg')) else ''
+RIB_FOOT = open(P('src', 'ribbons-foot.svg')).read() if os.path.exists(P('src', 'ribbons-foot.svg')) else ''
+
 def hero():
     return f'''<section class="hero2">
   <p class="h2-role">{bi('أستاذ مشارك · رئيس ابتكار معتمد (<bdi>CCInO®</bdi>)', 'Associate Professor · Certified Chief Innovation Officer (CCInO®)')}</p>
   <h1>{bi('د. عمر عبدالله الصمعاني', 'Dr. Omar A. Alsamani')}</h1>
   <p class="h2-line">{bi('استراتيجية الابتكار ومنظوماته · الموهبة وتنميتها · التربية الخاصة ومزدوجو الاستثنائية', 'Innovation strategy and ecosystems · Giftedness and talent development · Special education and twice-exceptionality')}</p>
   <p class="h2-cta"><a href="#research">{bi('أحدث الأبحاث', 'Recent research')} <i class="chev"></i></a><a href="books/index.html">{bi('المكتبة المفتوحة', 'Open Library')} <i class="chev"></i></a></p>
+  <div class="rb-band">{RIB_TOP}</div>
 </section>'''
 
 # Journal quartile (Clarivate JCR, 2025 edition) — only Q1/Q2 are shown
