@@ -22,8 +22,8 @@ for _r in research:   # feature articles and paper-derived metadata (data/articl
                 _r[_k] = _meta[_k]
         if _meta.get('url'):
             _r['url'] = _meta['url']
-css = open(P('src/site.css')).read() + open(P('src/extra.css')).read() + open(P('src/apple.css')).read() + open(P('src/blocks.css')).read() + open(P('src/pv.css')).read() + open(P('src/tools.css')).read()
-js = open(P('src/site.js')).read() + open(P('src/pv.js')).read() + open(P('src/tools.js')).read()
+css = open(P('src/site.css')).read() + open(P('src/extra.css')).read() + open(P('src/apple.css')).read() + open(P('src/blocks.css')).read() + open(P('src/pv.css')).read() + open(P('src/tools.css')).read() + open(P('src/journey.css')).read()
+js = open(P('src/site.js')).read() + open(P('src/pv.js')).read() + open(P('src/tools.js')).read() + open(P('src/journey.js')).read()
 featured = open(P('src/featured.html')).read()
 e = html.escape
 
@@ -608,6 +608,8 @@ import tools_pages as _tp
 PAGES.append(('tools', 1, 'Interactive tools | Innovation Management | Dr. Omar A. Alsamani | أدوات تفاعلية', _tp.tools_index))
 for _t in _tp.TOOLS:
     PAGES.append((f"tools/{_t['slug']}", 2, f"{_t['t_ar']} | {_t['t_en']} | Dr. Omar A. Alsamani", (lambda tt: (lambda: _tp.tool_body(tt)))(_t)))
+PAGES.append(('tools/research-journey', 2, 'رحلة البحث | The research journey | Dr. Omar A. Alsamani', _tp.journey_body))
+DESCS['tools/research-journey'] = 'A guided research journey for graduate students: from the first idea to the problem, questions and approach, with quality checks, a live Chapter One draft and supervisor review. رحلة البحث للطالب الباحث.'
 DESCS['tools'] = "Interactive tools from the book Innovation Management by Dr. Omar A. Alsamani: initiative classification, leader's mirror, system health, scale readiness and university innovation ecosystem diagnosis."
 for _t in _tp.TOOLS:
     DESCS['tools/' + _t['slug']] = _t['q_en'] + ' ' + _t['q_ar'] + ' — ' + _t['intro_en']
