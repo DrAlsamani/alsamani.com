@@ -1,8 +1,8 @@
 {
  "M": {
   "desc": {
-   "ar": "وصفي مسحي",
-   "en": "Descriptive survey",
+   "ar": "وصفي",
+   "en": "Descriptive",
    "hyp": "opt",
    "kind": "q"
   },
@@ -24,6 +24,12 @@
    "hyp": "req",
    "kind": "q"
   },
+  "psy": {
+   "ar": "قياسي (بناء الأدوات وتقنينها)",
+   "en": "Psychometric (instrument development)",
+   "hyp": "no",
+   "kind": "ps"
+  },
   "qual": {
    "ar": "نوعي",
    "en": "Qualitative",
@@ -36,9 +42,15 @@
    "hyp": "opt",
    "kind": "q"
   },
+  "appl": {
+   "ar": "بحث تطبيقي (إجرائي أو قائم على التصميم)",
+   "en": "Applied (action or design-based research)",
+   "hyp": "opt",
+   "kind": "ap"
+  },
   "review": {
-   "ar": "مراجعة منهجية أو نطاقية",
-   "en": "Systematic or scoping review",
+   "ar": "مراجعات منهجية",
+   "en": "Systematic reviews",
    "hyp": "no",
    "kind": "rv"
   }
@@ -193,6 +205,54 @@
     "التوليف",
     "Synthesis"
    ]
+  ],
+  "psy": [
+   [
+    "الإطار النظري للسمة وأبعادها",
+    "Theoretical framework of the trait and its dimensions"
+   ],
+   [
+    "إعداد البنود وتحكيمها",
+    "Item writing and expert review"
+   ],
+   [
+    "العينة الاستطلاعية وعينة التقنين",
+    "Pilot and norming samples"
+   ],
+   [
+    "دلالات الصدق",
+    "Validity evidence"
+   ],
+   [
+    "دلالات الثبات",
+    "Reliability evidence"
+   ],
+   [
+    "اشتقاق المعايير",
+    "Deriving norms"
+   ]
+  ],
+  "appl": [
+   [
+    "السياق ودور الباحث فيه",
+    "The setting and the researcher’s role"
+   ],
+   [
+    "دورات البحث وخطواتها",
+    "Research cycles and steps"
+   ],
+   [
+    "أدوات جمع البيانات في كل دورة",
+    "Data collection in each cycle"
+   ],
+   [
+    "التحليل والتأمل",
+    "Analysis and reflection"
+   ],
+   [
+    "الموثوقية",
+    "Trustworthiness"
+   ]
   ]
  },
  "ETH": [
@@ -342,6 +402,76 @@
      [
       "ضبط المتغيرات الدخيلة",
       "Control of extraneous variables"
+     ],
+     [
+      "الأساليب الإحصائية وحجم الأثر",
+      "Statistical analysis and effect size"
+     ]
+    ]
+   },
+   "pre": {
+    "ar": "ما قبل التجريبي (مجموعة واحدة)",
+    "en": "Pre-experimental (one group)",
+    "g": [
+     [
+      "مجموعة واحدة تُقاس قبل المعالجة وبعدها، حين يتعذر وجود مجموعة ضابطة.",
+      "One group measured before and after treatment, when no comparison group is possible."
+     ],
+     [
+      "ما أثر [المعالجة] في [المتغير التابع] لدى [الفئة]؟",
+      "What is the effect of [treatment] on [outcome] among [population]?"
+     ],
+     [
+      "مجموعة واحدة.",
+      "A single group."
+     ],
+     [
+      "قياس قبلي وبعدي.",
+      "Pre- and post-tests."
+     ],
+     [
+      "اختبار (ت) للعينات المرتبطة أو ويلكوكسن، وحجم الأثر.",
+      "Paired t-test or Wilcoxon, with effect size."
+     ],
+     [
+      "تغير في القياس لا يثبت وحده أن المعالجة سببه.",
+      "A change that does not on its own show the treatment caused it."
+     ],
+     [
+      "TREND",
+      "TREND"
+     ]
+    ],
+    "pit": [
+     [
+      "نسبة التحسن إلى المعالجة وحدها.",
+      "Attributing improvement to the treatment alone."
+     ],
+     [
+      "إغفال أثر النضج والتعلم من القياس القبلي.",
+      "Ignoring maturation and testing effects."
+     ],
+     [
+      "عدم ذكر هذا القيد في حدود الدراسة.",
+      "Not stating this limitation."
+     ]
+    ],
+    "needs": [
+     [
+      "التصميم وقيوده",
+      "The design and its limitations"
+     ],
+     [
+      "المشاركون",
+      "Participants"
+     ],
+     [
+      "المعالجة: البرنامج وتحكيمه ومدته",
+      "The treatment: programme, review, duration"
+     ],
+     [
+      "أدوات القياس وصدقها وثباتها",
+      "Measures, validity and reliability"
      ],
      [
       "الأساليب الإحصائية وحجم الأثر",
@@ -500,20 +630,20 @@
     ]
    },
    "case": {
-    "ar": "دراسة حالة",
-    "en": "Case study",
+    "ar": "دراسة حالة مفردة",
+    "en": "Single case study",
     "g": [
      [
-      "فهم معمّق لحالة محددة (برنامج، أو مدرسة، أو فرد) في سياقها الواقعي.",
-      "In-depth understanding of a bounded case (a programme, school or person) in its real context."
+      "فهم معمّق لحالة واحدة محددة (برنامج، أو مدرسة، أو فرد) في سياقها الواقعي. تكون جوهرية إذا قُصدت الحالة لذاتها، وأداتية إذا دُرست لفهم قضية أوسع (Stake).",
+      "In-depth understanding of one bounded case (a programme, school or person) in its real context. Intrinsic if the case matters in itself, instrumental if it is studied to understand a wider issue (Stake)."
      ],
      [
       "كيف [تحدث الظاهرة] في [الحالة]؟ ولماذا؟",
       "How and why does [phenomenon] occur in [case]?"
      ],
      [
-      "حالة واحدة أو حالات متعددة، محددة الحدود في المكان والزمن والمشاركين.",
-      "One or several cases, bounded by place, time and participants."
+      "حالة واحدة محددة الحدود في المكان والزمن والمشاركين.",
+      "One case bounded in place, time and participants."
      ],
      [
       "مصادر متعددة: مقابلات، وملاحظة، ووثائق.",
@@ -570,6 +700,72 @@
      [
       "دور الباحث",
       "The researcher’s role"
+     ]
+    ]
+   },
+   "case_multi": {
+    "ar": "دراسة حالات متعددة",
+    "en": "Multiple-case study",
+    "g": [
+     [
+      "مقارنة حالتين أو أكثر لمعرفة ما يتكرر بينها وما يختلف (منطق التكرار عند Yin).",
+      "Comparing two or more cases to see what recurs and what differs (Yin’s replication logic)."
+     ],
+     [
+      "كيف [تحدث الظاهرة] في [الحالات]؟ وبمَ تتشابه وتختلف؟",
+      "How does [phenomenon] occur across [cases], and how do they compare?"
+     ],
+     [
+      "حالتان فأكثر تُختار قصدًا لتتشابه أو تتباين.",
+      "Two or more cases chosen purposefully to be similar or contrasting."
+     ],
+     [
+      "مصادر متعددة لكل حالة، وبروتوكول موحد.",
+      "Multiple sources per case, with a common protocol."
+     ],
+     [
+      "تحليل كل حالة على حدة، ثم التحليل عبر الحالات.",
+      "Within-case analysis, then cross-case analysis."
+     ],
+     [
+      "أنماط مشتركة وفروق مفسَّرة.",
+      "Shared patterns and explained differences."
+     ],
+     [
+      "معايير SRQR، وCOREQ للمقابلات ومجموعات التركيز",
+      "SRQR; COREQ for interviews and focus groups"
+     ]
+    ],
+    "pit": [
+     [
+      "حالات كثيرة على حساب العمق.",
+      "Too many cases at the expense of depth."
+     ],
+     [
+      "اختلاف إجراءات جمع البيانات بين الحالات.",
+      "Different data-collection procedures across cases."
+     ]
+    ],
+    "needs": [
+     [
+      "الحالات ومنطق اختيارها",
+      "The cases and the logic of selection"
+     ],
+     [
+      "بروتوكول دراسة الحالة",
+      "The case-study protocol"
+     ],
+     [
+      "مصادر البيانات وأدواتها",
+      "Data sources and instruments"
+     ],
+     [
+      "التحليل داخل الحالات وعبرها",
+      "Within- and cross-case analysis"
+     ],
+     [
+      "الموثوقية: المصداقية، وقابلية النقل، والاعتمادية، والتأكيدية (Lincoln & Guba)",
+      "Trustworthiness: credibility, transferability, dependability, confirmability (Lincoln & Guba)"
      ]
     ]
    },
@@ -783,6 +979,130 @@
      ]
     ]
    },
+   "doc": {
+    "ar": "تحليل المحتوى النوعي والوثائق",
+    "en": "Qualitative content and document analysis",
+    "g": [
+     [
+      "استخلاص المعاني والموضوعات من وثائق أو نصوص: سياسات، أو خطط، أو تقارير، أو منشورات.",
+      "Drawing meanings and themes from documents or texts: policies, plans, reports, posts."
+     ],
+     [
+      "كيف تتناول [الوثائق] [الموضوع]؟",
+      "How do [documents] address [topic]?"
+     ],
+     [
+      "وثائق تُختار بمعايير واضحة.",
+      "Documents selected by explicit criteria."
+     ],
+     [
+      "الوثائق نفسها، وقد تُضاف مقابلات.",
+      "The documents themselves, sometimes with interviews."
+     ],
+     [
+      "ترميز استقرائي أو استنباطي وبناء الفئات (Mayring، Bowen).",
+      "Inductive or deductive coding and category building (Mayring, Bowen)."
+     ],
+     [
+      "فئات وموضوعات تصف المحتوى.",
+      "Categories and themes describing the content."
+     ],
+     [
+      "معايير SRQR، وCOREQ للمقابلات ومجموعات التركيز",
+      "SRQR; COREQ for interviews and focus groups"
+     ]
+    ],
+    "pit": [
+     [
+      "اختيار الوثائق انتقائيًا.",
+      "Selecting documents selectively."
+     ],
+     [
+      "وصف الوثائق دون تحليلها.",
+      "Describing documents without analysing them."
+     ]
+    ],
+    "needs": [
+     [
+      "الوثائق ومعايير اختيارها",
+      "Documents and selection criteria"
+     ],
+     [
+      "إطار الترميز",
+      "The coding frame"
+     ],
+     [
+      "خطوات التحليل",
+      "Analysis steps"
+     ],
+     [
+      "الموثوقية: المصداقية، وقابلية النقل، والاعتمادية، والتأكيدية (Lincoln & Guba)",
+      "Trustworthiness: credibility, transferability, dependability, confirmability (Lincoln & Guba)"
+     ]
+    ]
+   },
+   "compar": {
+    "ar": "دراسة مقارنة",
+    "en": "Comparative study",
+    "g": [
+     [
+      "مقارنة نظم أو برامج أو سياسات بين دول أو مؤسسات للإفادة منها في سياق محدد.",
+      "Comparing systems, programmes or policies across countries or institutions to inform a given context."
+     ],
+     [
+      "ما أوجه الشبه والاختلاف بين [البرامج] في [الدول]؟ وما الذي يمكن الإفادة منه في [السياق]؟",
+      "How do [programmes] in [countries] compare, and what can [context] learn from them?"
+     ],
+     [
+      "الحالات المقارنة ومبرر اختيارها.",
+      "The cases compared and why they were chosen."
+     ],
+     [
+      "وثائق رسمية وتقارير، وقد تُضاف مقابلات.",
+      "Official documents and reports, sometimes with interviews."
+     ],
+     [
+      "الوصف، ثم التفسير، ثم المقارنة (مدخل بيريداي).",
+      "Description, interpretation, then comparison (Bereday’s approach)."
+     ],
+     [
+      "أوجه شبه واختلاف، وما يناسب السياق المحلي منها.",
+      "Similarities, differences and what suits the local context."
+     ],
+     [
+      "لا معيار خاص؛ تُوضَّح محاور المقارنة ومصادرها.",
+      "No dedicated standard; state the axes of comparison and sources."
+     ]
+    ],
+    "pit": [
+     [
+      "وصف كل دولة منفصلة دون مقارنة فعلية.",
+      "Describing each country separately without real comparison."
+     ],
+     [
+      "نقل التجربة دون مراعاة السياق.",
+      "Transferring practice without regard to context."
+     ]
+    ],
+    "needs": [
+     [
+      "الدول أو المؤسسات ومعايير اختيارها",
+      "Countries or institutions and selection criteria"
+     ],
+     [
+      "محاور المقارنة",
+      "Axes of comparison"
+     ],
+     [
+      "المصادر",
+      "Sources"
+     ],
+     [
+      "خطوات التحليل المقارن",
+      "Steps of the comparative analysis"
+     ]
+    ]
+   },
    "gq": {
     "ar": "وصفي نوعي",
     "en": "Qualitative descriptive",
@@ -978,6 +1298,46 @@
       "An instrument not actually built from the qualitative findings."
      ]
     ]
+   },
+   "embed": {
+    "ar": "مضمَّن في تجربة",
+    "en": "Embedded in an experiment",
+    "g": [
+     [
+      "جمع بيانات نوعية داخل دراسة تجريبية لفهم كيف عملت المعالجة ولماذا.",
+      "Collecting qualitative data within an experiment to understand how and why the treatment worked."
+     ],
+     [
+      "ما أثر [المعالجة] في [النتيجة]؟ وكيف يصف المشاركون خبرتهم بها؟",
+      "What is the effect of [treatment] on [outcome], and how do participants describe their experience of it?"
+     ],
+     [
+      "المجموعة التجريبية وجزء منها للمقابلات.",
+      "The experimental group, with a subset interviewed."
+     ],
+     [
+      "قياس قبلي وبعدي، ومقابلات أو ملاحظة أثناء التطبيق أو بعده.",
+      "Pre- and post-tests, with interviews or observation during or after."
+     ],
+     [
+      "تحليل كمي للأثر، ونوعي للخبرة، ثم الربط بينهما.",
+      "Quantitative analysis of effect, qualitative analysis of experience, then linking them."
+     ],
+     [
+      "أثر مقيس مع فهم لآليته.",
+      "A measured effect with an understanding of how it worked."
+     ],
+     [
+      "GRAMMS، وJARS-Mixed",
+      "GRAMMS; JARS-Mixed"
+     ]
+    ],
+    "pit": [
+     [
+      "بيانات نوعية لا تُستخدم في تفسير النتائج.",
+      "Qualitative data never used to explain the results."
+     ]
+    ]
    }
   },
   "review": {
@@ -1029,6 +1389,54 @@
      ]
     ]
    },
+   "meta": {
+    "ar": "تحليل بعدي",
+    "en": "Meta-analysis",
+    "g": [
+     [
+      "دمج أحجام الأثر من دراسات كمية متعددة إحصائيًا للوصول إلى تقدير عام.",
+      "Statistically combining effect sizes from several quantitative studies into an overall estimate."
+     ],
+     [
+      "ما حجم أثر [التدخل] في [النتيجة] لدى [الفئة] عبر الدراسات؟ وما العوامل المعدِّلة له؟",
+      "What is the effect of [intervention] on [outcome] among [population] across studies, and what moderates it?"
+     ],
+     [
+      "دراسات كمية تقدم بيانات كافية لحساب حجم الأثر.",
+      "Quantitative studies reporting enough data to compute effect sizes."
+     ],
+     [
+      "بحث منهجي، وترميز خصائص الدراسات.",
+      "A systematic search and coding of study characteristics."
+     ],
+     [
+      "حساب أحجام الأثر، ونموذج الآثار العشوائية، والتباين بين الدراسات (I²)، والمتغيرات المعدِّلة، وفحص تحيز النشر.",
+      "Effect sizes, random-effects model, heterogeneity (I²), moderators and publication-bias checks."
+     ],
+     [
+      "حجم أثر عام وعوامل تفسر اختلافه.",
+      "An overall effect and factors explaining its variation."
+     ],
+     [
+      "PRISMA 2020، وMARS (APA)",
+      "PRISMA 2020; MARS (APA)"
+     ]
+    ],
+    "pit": [
+     [
+      "دمج دراسات غير متجانسة دون تحليل المعدِّلات.",
+      "Pooling heterogeneous studies without moderator analysis."
+     ],
+     [
+      "إغفال تحيز النشر.",
+      "Ignoring publication bias."
+     ],
+     [
+      "احتساب الدراسة الواحدة أكثر من مرة.",
+      "Counting one study more than once."
+     ]
+    ]
+   },
    "scop": {
     "ar": "مراجعة نطاقية",
     "en": "Scoping review",
@@ -1073,101 +1481,709 @@
      ]
     ]
    }
+  },
+  "desc": {
+   "cross": {
+    "ar": "مسحي مقطعي",
+    "en": "Cross-sectional survey",
+    "g": [
+     [
+      "جمع البيانات من عينة في وقت واحد لوصف الواقع أو مقارنته بين فئات.",
+      "Collecting data from a sample at one point in time to describe a situation or compare groups."
+     ],
+     [
+      "ما مستوى [الظاهرة] لدى [الفئة]؟ وهل يختلف باختلاف [الخصائص]؟",
+      "What is the level of [phenomenon] among [population], and does it differ by [characteristics]?"
+     ],
+     [
+      "عينة ممثلة (عشوائية طبقية غالبًا)، وحجم محسوب.",
+      "A representative sample (often stratified random) of calculated size."
+     ],
+     [
+      "استبانة أو مقياس صادق وثابت.",
+      "A valid and reliable questionnaire or scale."
+     ],
+     [
+      "إحصاء وصفي، واختبار (ت) أو تحليل التباين للمقارنات.",
+      "Descriptive statistics; t-tests or ANOVA for comparisons."
+     ],
+     [
+      "صورة للواقع في لحظة زمنية.",
+      "A snapshot of the situation at one point in time."
+     ],
+     [
+      "JARS-Quant، وCHERRIES للاستبانات الإلكترونية",
+      "JARS-Quant; CHERRIES for online surveys"
+     ]
+    ],
+    "pit": [
+     [
+      "نسبة استجابة منخفضة دون معالجة.",
+      "A low response rate left unaddressed."
+     ],
+     [
+      "عينة متاحة تُعمَّم نتائجها على المجتمع كله.",
+      "A convenience sample generalised to the whole population."
+     ],
+     [
+      "أداة دون إثبات صدقها وثباتها.",
+      "An instrument without evidence of validity and reliability."
+     ]
+    ],
+    "needs": [
+     [
+      "مجتمع الدراسة وعينتها وطريقة اختيارها",
+      "Population, sample and sampling"
+     ],
+     [
+      "أداة الدراسة: بناؤها وصدقها وثباتها",
+      "Instrument: development, validity and reliability"
+     ],
+     [
+      "إجراءات التطبيق ونسبة الاستجابة",
+      "Procedures and response rate"
+     ],
+     [
+      "الأساليب الإحصائية",
+      "Statistical analysis"
+     ]
+    ]
+   },
+   "long": {
+    "ar": "طولي",
+    "en": "Longitudinal",
+    "g": [
+     [
+      "تتبع التغير عبر الزمن: في الأفراد أنفسهم (لوحة)، أو في أفواج، أو في اتجاهات المجتمع.",
+      "Tracking change over time: in the same individuals (panel), in cohorts, or in population trends."
+     ],
+     [
+      "كيف يتغير [المتغير] لدى [الفئة] عبر [المدة]؟",
+      "How does [variable] change among [population] over [period]?"
+     ],
+     [
+      "العينة نفسها أو أفواج متتابعة، مع خطة لتقليل التسرب.",
+      "The same sample or successive cohorts, with a plan to limit attrition."
+     ],
+     [
+      "قياسات متكررة بالأداة نفسها.",
+      "Repeated measurements with the same instrument."
+     ],
+     [
+      "تحليل التباين للقياسات المتكررة، أو النماذج متعددة المستويات ومنحنيات النمو.",
+      "Repeated-measures ANOVA, or multilevel and growth-curve models."
+     ],
+     [
+      "مسار التغير والعوامل المرتبطة به.",
+      "The trajectory of change and its correlates."
+     ],
+     [
+      "JARS-Quant",
+      "JARS-Quant"
+     ]
+    ],
+    "pit": [
+     [
+      "تسرب المشاركين دون معالجة.",
+      "Attrition left unaddressed."
+     ],
+     [
+      "تغيير الأداة بين القياسات.",
+      "Changing the instrument between waves."
+     ],
+     [
+      "مدة أقصر من أن يظهر فيها التغير.",
+      "A period too short for change to appear."
+     ]
+    ],
+    "needs": [
+     [
+      "التصميم الطولي ونوعه",
+      "The longitudinal design and its type"
+     ],
+     [
+      "العينة وخطة متابعتها",
+      "Sample and follow-up plan"
+     ],
+     [
+      "مواعيد القياس وأدواته",
+      "Measurement waves and instruments"
+     ],
+     [
+      "معالجة البيانات المفقودة",
+      "Handling missing data"
+     ],
+     [
+      "الأساليب الإحصائية",
+      "Statistical analysis"
+     ]
+    ]
+   },
+   "content": {
+    "ar": "تحليل المحتوى الكمي",
+    "en": "Quantitative content analysis",
+    "g": [
+     [
+      "وصف ما تتضمنه نصوص أو مواد (كتب مدرسية، أو مناهج، أو خطط) بعدّ فئات محددة.",
+      "Describing what texts or materials (textbooks, curricula, plans) contain by counting defined categories."
+     ],
+     [
+      "ما درجة تضمين [المفهوم] في [المادة]؟",
+      "To what degree does [material] include [concept]?"
+     ],
+     [
+      "المواد المحللة (كلها أو عينة منها)، لا الأفراد.",
+      "The materials analysed (all or a sample), not people."
+     ],
+     [
+      "بطاقة تحليل بفئات ووحدات تحليل معرّفة.",
+      "An analysis form with defined categories and units."
+     ],
+     [
+      "تكرارات ونسب، مع ثبات التحليل بين محللَين (هولستي أو كابا).",
+      "Frequencies and percentages, with inter-coder reliability (Holsti, kappa)."
+     ],
+     [
+      "صورة كمية لمحتوى المادة.",
+      "A quantitative picture of the material’s content."
+     ],
+     [
+      "لا معيار خاص؛ يوصف الإجراء بما يسمح بتكراره.",
+      "No dedicated standard; describe the procedure so it can be replicated."
+     ]
+    ],
+    "pit": [
+     [
+      "فئات تحليل غير معرّفة إجرائيًا.",
+      "Categories without operational definitions."
+     ],
+     [
+      "محلل واحد دون حساب الثبات.",
+      "A single coder with no reliability check."
+     ],
+     [
+      "الحكم على جودة المادة من التكرارات وحدها.",
+      "Judging quality from frequencies alone."
+     ]
+    ],
+    "needs": [
+     [
+      "المواد المحللة وسبب اختيارها",
+      "Materials analysed and why"
+     ],
+     [
+      "فئات التحليل ووحدته",
+      "Categories and unit of analysis"
+     ],
+     [
+      "بطاقة التحليل وصدقها",
+      "The analysis form and its validity"
+     ],
+     [
+      "ثبات التحليل",
+      "Reliability of the analysis"
+     ],
+     [
+      "المعالجة الإحصائية",
+      "Statistical treatment"
+     ]
+    ]
+   }
+  },
+  "corr": {
+   "rel": {
+    "ar": "علاقي",
+    "en": "Relational",
+    "g": [
+     [
+      "معرفة قوة العلاقة واتجاهها بين متغيرين أو أكثر.",
+      "Establishing the strength and direction of relationships between variables."
+     ],
+     [
+      "ما العلاقة بين [س] و[ص] لدى [الفئة]؟",
+      "What is the relationship between [X] and [Y] among [population]?"
+     ],
+     [
+      "عينة يُحسب حجمها بتحليل القوة.",
+      "A sample sized by power analysis."
+     ],
+     [
+      "مقاييس صادقة وثابتة لكل متغير.",
+      "Valid and reliable measures of each variable."
+     ],
+     [
+      "معامل بيرسون أو سبيرمان، والارتباط الجزئي.",
+      "Pearson or Spearman correlation; partial correlation."
+     ],
+     [
+      "معاملات الارتباط ودلالتها.",
+      "Correlation coefficients and their significance."
+     ],
+     [
+      "JARS-Quant",
+      "JARS-Quant"
+     ]
+    ],
+    "pit": [
+     [
+      "تفسير الارتباط تفسيرًا سببيًا.",
+      "Interpreting correlation as causation."
+     ],
+     [
+      "إغفال العلاقات غير الخطية والقيم المتطرفة.",
+      "Ignoring non-linear relations and outliers."
+     ]
+    ],
+    "needs": [
+     [
+      "مجتمع الدراسة وعينتها وحجمها",
+      "Population, sample and sample size"
+     ],
+     [
+      "المتغيرات وأدوات قياسها",
+      "Variables and their measures"
+     ],
+     [
+      "صدق الأدوات وثباتها",
+      "Validity and reliability"
+     ],
+     [
+      "الأساليب الإحصائية",
+      "Statistical analysis"
+     ]
+    ]
+   },
+   "pred": {
+    "ar": "تنبؤي",
+    "en": "Predictive",
+    "g": [
+     [
+      "معرفة مدى إسهام متغيرات في التنبؤ بمتغير آخر.",
+      "Determining how far variables predict another variable."
+     ],
+     [
+      "إلى أي مدى يتنبأ [س١] و[س٢] بـ[ص] لدى [الفئة]؟",
+      "To what extent do [X1] and [X2] predict [Y] among [population]?"
+     ],
+     [
+      "عينة كافية لعدد المتنبئات (تحليل القوة).",
+      "A sample adequate for the number of predictors (power analysis)."
+     ],
+     [
+      "مقاييس صادقة وثابتة.",
+      "Valid and reliable measures."
+     ],
+     [
+      "الانحدار المتعدد أو اللوجستي، مع فحص الافتراضات والتداخل الخطي.",
+      "Multiple or logistic regression, checking assumptions and multicollinearity."
+     ],
+     [
+      "نسبة التباين المفسَّر وإسهام كل متنبئ.",
+      "Variance explained and each predictor’s contribution."
+     ],
+     [
+      "JARS-Quant",
+      "JARS-Quant"
+     ]
+    ],
+    "pit": [
+     [
+      "متنبئات كثيرة مع عينة صغيرة.",
+      "Many predictors with a small sample."
+     ],
+     [
+      "إغفال افتراضات الانحدار.",
+      "Ignoring regression assumptions."
+     ],
+     [
+      "الخلط بين التنبؤ والسببية.",
+      "Confusing prediction with causation."
+     ]
+    ],
+    "needs": [
+     [
+      "مجتمع الدراسة وعينتها وحجمها",
+      "Population, sample and sample size"
+     ],
+     [
+      "المتنبئات والمتغير المتنبأ به وأدوات قياسها",
+      "Predictors, outcome and their measures"
+     ],
+     [
+      "صدق الأدوات وثباتها",
+      "Validity and reliability"
+     ],
+     [
+      "افتراضات الانحدار وفحصها",
+      "Regression assumptions and checks"
+     ],
+     [
+      "الأساليب الإحصائية",
+      "Statistical analysis"
+     ]
+    ]
+   },
+   "sem": {
+    "ar": "نمذجة بنائية وتحليل مسار",
+    "en": "Structural equation modelling",
+    "g": [
+     [
+      "اختبار نموذج نظري لعلاقات متعددة مباشرة وغير مباشرة، كالوساطة والاعتدال.",
+      "Testing a theoretical model of multiple direct and indirect relations, such as mediation and moderation."
+     ],
+     [
+      "هل يتوسط [م] العلاقة بين [س] و[ص] لدى [الفئة]؟",
+      "Does [M] mediate the relationship between [X] and [Y] among [population]?"
+     ],
+     [
+      "عينة كبيرة يحددها تعقيد النموذج (غالبًا ٢٠٠ فأكثر).",
+      "A large sample set by model complexity (often 200 or more)."
+     ],
+     [
+      "مقاييس متعددة المؤشرات لكل متغير كامن.",
+      "Multi-indicator measures of each latent variable."
+     ],
+     [
+      "تحليل عاملي توكيدي لنموذج القياس، ثم النموذج البنائي ومؤشرات المطابقة، والـbootstrap للأثر غير المباشر.",
+      "CFA for the measurement model, then the structural model and fit indices, with bootstrapped indirect effects."
+     ],
+     [
+      "نموذج مطابق بمسارات مقدَّرة.",
+      "A fitting model with estimated paths."
+     ],
+     [
+      "JARS-Quant (قسم النمذجة البنائية)",
+      "JARS-Quant (SEM module)"
+     ]
+    ],
+    "pit": [
+     [
+      "نموذج بلا أساس نظري.",
+      "A model without theoretical grounding."
+     ],
+     [
+      "تعديل النموذج بحسب مؤشرات المطابقة وحدها.",
+      "Modifying the model on fit indices alone."
+     ],
+     [
+      "تفسير بيانات مقطعية تفسيرًا سببيًا.",
+      "Reading cross-sectional data causally."
+     ]
+    ],
+    "needs": [
+     [
+      "النموذج النظري وفرضياته",
+      "The theoretical model and hypotheses"
+     ],
+     [
+      "العينة وحجمها",
+      "Sample and size"
+     ],
+     [
+      "المقاييس وصدقها البنائي",
+      "Measures and construct validity"
+     ],
+     [
+      "نموذج القياس",
+      "The measurement model"
+     ],
+     [
+      "النموذج البنائي ومؤشرات المطابقة",
+      "Structural model and fit indices"
+     ],
+     [
+      "اختبار الآثار غير المباشرة",
+      "Testing indirect effects"
+     ]
+    ]
+   }
+  },
+  "psy": {
+   "dev": {
+    "ar": "بناء مقياس وتقنينه",
+    "en": "Instrument development",
+    "g": [
+     [
+      "بناء أداة جديدة لقياس سمة أو قدرة لا توجد لها أداة مناسبة.",
+      "Building a new instrument for a trait or ability with no suitable measure."
+     ],
+     [
+      "ما دلالات صدق [المقياس] وثباته لدى [الفئة]؟",
+      "What evidence supports the validity and reliability of [instrument] among [population]?"
+     ],
+     [
+      "عينة استطلاعية، ثم عينة تقنين كبيرة ممثلة.",
+      "A pilot sample, then a large representative norming sample."
+     ],
+     [
+      "بنود تُبنى من الأدب والميدان، وتحكيم خبراء.",
+      "Items drawn from the literature and the field, reviewed by experts."
+     ],
+     [
+      "صدق المحتوى، والتحليل العاملي الاستكشافي ثم التوكيدي على عينتين مختلفتين، وثبات ألفا وأوميغا وإعادة التطبيق، والمعايير؛ وقد يُستخدم نموذج راش.",
+      "Content validity; EFA then CFA on separate samples; alpha, omega and test–retest reliability; norms; Rasch modelling where suitable."
+     ],
+     [
+      "مقياس بدلالات صدق وثبات ومعايير.",
+      "An instrument with validity, reliability and norms."
+     ],
+     [
+      "معايير الاختبارات التربوية والنفسية (AERA، APA، NCME)",
+      "Standards for Educational and Psychological Testing (AERA, APA, NCME)"
+     ]
+    ],
+    "pit": [
+     [
+      "التحليل العاملي الاستكشافي والتوكيدي على العينة نفسها.",
+      "Running EFA and CFA on the same sample."
+     ],
+     [
+      "الاكتفاء بالتحكيم دليلًا على الصدق.",
+      "Treating expert review as sufficient validity evidence."
+     ],
+     [
+      "معايير مشتقة من عينة غير ممثلة.",
+      "Norms from an unrepresentative sample."
+     ]
+    ],
+    "needs": [
+     [
+      "الإطار النظري للسمة وأبعادها",
+      "Theoretical framework of the trait and its dimensions"
+     ],
+     [
+      "إعداد البنود وتحكيمها",
+      "Item writing and expert review"
+     ],
+     [
+      "العينة الاستطلاعية وعينة التقنين",
+      "Pilot and norming samples"
+     ],
+     [
+      "دلالات الصدق",
+      "Validity evidence"
+     ],
+     [
+      "دلالات الثبات",
+      "Reliability evidence"
+     ],
+     [
+      "اشتقاق المعايير",
+      "Deriving norms"
+     ]
+    ]
+   },
+   "adapt": {
+    "ar": "تكييف مقياس وتقنينه",
+    "en": "Instrument adaptation",
+    "g": [
+     [
+      "نقل مقياس قائم إلى لغة أو بيئة أخرى، كالبيئة السعودية، والتحقق من صلاحيته فيها.",
+      "Adapting an existing instrument to another language or setting, such as Saudi Arabia, and checking it works there."
+     ],
+     [
+      "ما دلالات صدق النسخة العربية من [المقياس] وثباتها لدى [الفئة]؟",
+      "What evidence supports the validity and reliability of the Arabic version of [instrument] among [population]?"
+     ],
+     [
+      "عينة من البيئة الجديدة، وقد يُضاف ثنائيو اللغة.",
+      "A sample from the new setting, sometimes with bilinguals."
+     ],
+     [
+      "ترجمة وترجمة عكسية، ومراجعة ثقافية، ثم التطبيق.",
+      "Translation and back-translation, cultural review, then administration."
+     ],
+     [
+      "التحليل العاملي التوكيدي للبنية الأصلية، وتكافؤ القياس، والثبات.",
+      "CFA of the original structure, measurement invariance, reliability."
+     ],
+     [
+      "نسخة مكيفة بدلالات صدق وثبات ومعايير محلية.",
+      "An adapted version with validity, reliability and local norms."
+     ],
+     [
+      "إرشادات ITC لتكييف الاختبارات",
+      "ITC Guidelines for Translating and Adapting Tests"
+     ]
+    ],
+    "pit": [
+     [
+      "ترجمة حرفية دون مراجعة ثقافية.",
+      "Literal translation without cultural review."
+     ],
+     [
+      "استخدام معايير النسخة الأصلية.",
+      "Using the original norms."
+     ],
+     [
+      "إغفال إذن مؤلف المقياس.",
+      "Not obtaining the author’s permission."
+     ]
+    ],
+    "needs": [
+     [
+      "المقياس الأصلي وإذن استخدامه",
+      "The original instrument and permission"
+     ],
+     [
+      "الترجمة والتكييف الثقافي",
+      "Translation and cultural adaptation"
+     ],
+     [
+      "العينة",
+      "Sample"
+     ],
+     [
+      "دلالات الصدق والثبات",
+      "Validity and reliability evidence"
+     ],
+     [
+      "المعايير المحلية",
+      "Local norms"
+     ]
+    ]
+   }
+  },
+  "appl": {
+   "action": {
+    "ar": "بحث إجرائي",
+    "en": "Action research",
+    "g": [
+     [
+      "يدرس الممارس مشكلة في ميدان عمله ويحسّنها عبر دورات: تخطيط، فتنفيذ، فملاحظة، فتأمل.",
+      "A practitioner studies and improves a problem in their own setting through cycles of planning, acting, observing and reflecting."
+     ],
+     [
+      "كيف يمكن تحسين [الممارسة] في [السياق] باستخدام [الإجراء]؟",
+      "How can [practice] in [setting] be improved through [action]?"
+     ],
+     [
+      "الباحث وزملاؤه أو طلابه في الميدان نفسه.",
+      "The researcher and colleagues or students in the same setting."
+     ],
+     [
+      "ملاحظات، ويوميات تأملية، وأعمال الطلاب، واستبانات أو اختبارات قصيرة.",
+      "Observation, reflective journals, student work, short surveys or tests."
+     ],
+     [
+      "تحليل كل دورة لتوجيه الدورة التالية، وقد يجمع الكمي والنوعي.",
+      "Analysing each cycle to shape the next, often combining numbers and words."
+     ],
+     [
+      "ممارسة محسَّنة ومعرفة محلية موثقة.",
+      "Improved practice and documented local knowledge."
+     ],
+     [
+      "لا معيار موحد؛ تُوثَّق كل دورة بتفصيل.",
+      "No single standard; document each cycle in detail."
+     ]
+    ],
+    "pit": [
+     [
+      "دورة واحدة فقط.",
+      "Only one cycle."
+     ],
+     [
+      "غياب التأمل في دور الباحث بوصفه ممارسًا.",
+      "No reflection on the researcher’s dual role."
+     ],
+     [
+      "تعميم النتائج خارج السياق.",
+      "Generalising beyond the setting."
+     ]
+    ],
+    "needs": [
+     [
+      "السياق ودور الباحث فيه",
+      "The setting and the researcher’s role"
+     ],
+     [
+      "دورات البحث وخطواتها",
+      "Research cycles and steps"
+     ],
+     [
+      "أدوات جمع البيانات في كل دورة",
+      "Data collection in each cycle"
+     ],
+     [
+      "التحليل والتأمل",
+      "Analysis and reflection"
+     ],
+     [
+      "الموثوقية",
+      "Trustworthiness"
+     ]
+    ]
+   },
+   "dbr": {
+    "ar": "بحث قائم على التصميم",
+    "en": "Design-based research",
+    "g": [
+     [
+      "تصميم تدخل تعليمي (برنامج، أو بيئة رقمية) وتطويره عبر دورات في الميدان، مع استخلاص مبادئ تصميم.",
+      "Designing an educational intervention (a programme, a digital environment) and refining it through cycles in real settings, deriving design principles."
+     ],
+     [
+      "ما مبادئ تصميم [التدخل] التي تحقق [الهدف] في [السياق]؟",
+      "What design principles for [intervention] achieve [goal] in [setting]?"
+     ],
+     [
+      "معلمون وطلاب في سياق حقيقي، عبر دورات.",
+      "Teachers and students in a real setting, across cycles."
+     ],
+     [
+      "مصادر متعددة: ملاحظة، ومقابلات، واختبارات، وسجلات الاستخدام.",
+      "Multiple sources: observation, interviews, tests, usage logs."
+     ],
+     [
+      "تحليل كل دورة وتعديل التصميم، ثم استخلاص المبادئ.",
+      "Analysing each cycle, revising the design, then deriving principles."
+     ],
+     [
+      "تدخل محسَّن ومبادئ تصميم.",
+      "An improved intervention and design principles."
+     ],
+     [
+      "لا معيار موحد؛ تُوثَّق أسباب كل تعديل.",
+      "No single standard; document the reasons for each revision."
+     ]
+    ],
+    "pit": [
+     [
+      "تقييم نهائي دون دورات تحسين.",
+      "A final evaluation with no cycles of improvement."
+     ],
+     [
+      "عدم توثيق أسباب تعديل التصميم.",
+      "Not documenting why the design changed."
+     ]
+    ],
+    "needs": [
+     [
+      "المشكلة والإطار النظري للتصميم",
+      "The problem and the design’s theoretical basis"
+     ],
+     [
+      "التدخل في صورته الأولى",
+      "The initial intervention"
+     ],
+     [
+      "الدورات وإجراءاتها",
+      "Cycles and procedures"
+     ],
+     [
+      "جمع البيانات وتحليلها في كل دورة",
+      "Data collection and analysis per cycle"
+     ],
+     [
+      "مبادئ التصميم المستخلصة",
+      "Derived design principles"
+     ]
+    ]
+   }
   }
  },
  "AG": {
-  "desc": {
-   "g": [
-    [
-     "وصف واقع ظاهرة أو مستواها لدى فئة كما هي، دون تدخل.",
-     "Describing a phenomenon or its level in a population as it is, without intervention."
-    ],
-    [
-     "ما مستوى [الظاهرة] لدى [الفئة] في [السياق]؟",
-     "What is the level of [phenomenon] among [population] in [context]?"
-    ],
-    [
-     "عينة ممثلة لمجتمع محدد.",
-     "A representative sample of a defined population."
-    ],
-    [
-     "استبانة أو مقياس صادق وثابت.",
-     "A valid and reliable questionnaire or scale."
-    ],
-    [
-     "إحصاء وصفي، ومقارنات بحسب الخصائص.",
-     "Descriptive statistics and comparisons by characteristics."
-    ],
-    [
-     "صورة كمية للواقع.",
-     "A quantitative picture of the situation."
-    ],
-    [
-     "JARS-Quant",
-     "JARS-Quant"
-    ]
-   ],
-   "pit": [
-    [
-     "تعميم النتائج على غير المجتمع المدروس.",
-     "Generalising beyond the population studied."
-    ],
-    [
-     "أداة دون إثبات صدقها وثباتها.",
-     "An instrument without evidence of validity and reliability."
-    ],
-    [
-     "أسئلة عن الأثر في منهج وصفي.",
-     "Asking about effects in a descriptive design."
-    ]
-   ]
-  },
-  "corr": {
-   "g": [
-    [
-     "معرفة العلاقة بين متغيرين أو أكثر، أو التنبؤ بأحدهما.",
-     "Examining relationships between variables, or predicting one from others."
-    ],
-    [
-     "ما العلاقة بين [س] و[ص] لدى [الفئة]؟",
-     "What is the relationship between [X] and [Y] among [population]?"
-    ],
-    [
-     "عينة يُحسب حجمها بتحليل القوة.",
-     "A sample sized by power analysis."
-    ],
-    [
-     "مقاييس صادقة وثابتة لكل متغير.",
-     "Valid and reliable measures of each variable."
-    ],
-    [
-     "معامل الارتباط، والانحدار، أو النمذجة البنائية.",
-     "Correlation, regression or structural equation modelling."
-    ],
-    [
-     "قوة العلاقة واتجاهها.",
-     "The strength and direction of relationships."
-    ],
-    [
-     "JARS-Quant",
-     "JARS-Quant"
-    ]
-   ],
-   "pit": [
-    [
-     "تفسير الارتباط تفسيرًا سببيًا.",
-     "Interpreting correlation as causation."
-    ],
-    [
-     "عينة صغيرة لا تكفي.",
-     "A sample too small."
-    ],
-    [
-     "إغفال المتغيرات الضابطة.",
-     "Ignoring control variables."
-    ]
-   ]
-  },
   "causal": {
    "g": [
     [
@@ -1263,6 +2279,11 @@
    "exp"
   ],
   [
+   "تبني أداة قياس أو تكيّفها وتقننها",
+   "You build or adapt and validate an instrument",
+   "psy"
+  ],
+  [
    "تفهم خبرة أو عملية أو حالة فهمًا معمقًا",
    "You seek in-depth understanding of an experience, process or case",
    "qual"
@@ -1271,6 +2292,11 @@
    "تحتاج الأرقام وتفسيرها معًا",
    "You need numbers and their explanation together",
    "mixed"
+  ],
+  [
+   "تحسّن ممارستك أو تطوّر حلًا في الميدان عبر دورات",
+   "You improve your practice or refine a solution in the field through cycles",
+   "appl"
   ],
   [
    "تجمع ما كُتب في موضوع وتقيّمه أو ترسم خريطته",
@@ -1306,6 +2332,14 @@
   "review": [
    "يجمع الدراسات السابقة بطريقة منهجية قابلة للتكرار.",
    "Gathers prior studies in a systematic, reproducible way."
+  ],
+  "psy": [
+   "يبني أدوات القياس أو يكيّفها ويتحقق من صدقها وثباتها.",
+   "Builds or adapts measures and gathers validity and reliability evidence."
+  ],
+  "appl": [
+   "يحسّن الممارسة أو يطوّر تدخلًا في الميدان عبر دورات متتابعة.",
+   "Improves practice or refines an intervention in the field through successive cycles."
   ]
  }
 }
