@@ -294,7 +294,7 @@ def library(results):
 <script>(function(){{var l='en';try{{l=localStorage.getItem('siteLang')||'en'}}catch(e){{}}document.documentElement.lang=l;document.documentElement.dir=l==='ar'?'rtl':'ltr';if(l==='ar')document.title='المكتبة المفتوحة | د. عمر عبدالله الصمعاني'}})();
 function libLang(){{var l=document.documentElement.lang==='ar'?'en':'ar';try{{localStorage.setItem('siteLang',l)}}catch(e){{}}location.reload()}}</script></head><body>
 <header class="lib-top"><a class="lib-brand" href="../index.html"><span class="ar">د. عمر عبدالله الصمعاني</span><span class="en">Dr. Omar A. Alsamani</span></a><nav class="lib-nav" aria-label="Main">{LIBNAV}</nav><span class="lib-end"><button type="button" class="lib-lang" onclick="libLang()"><span class="ar">English</span><span class="en">العربية</span></button><a class="lib-brand-en ar" href="../index.html" dir="ltr" lang="en">Dr. Omar A. Alsamani</a><button type="button" class="lib-menu" aria-label="Menu" aria-expanded="false" onclick="var h=this.closest('header');var o=h.classList.toggle('open');this.setAttribute('aria-expanded',o)"><i></i><i></i></button></span></header>
-<main class="lib"><p class="lib-eyebrow"><span class="ar">د. عمر عبدالله الصمعاني</span><span class="en">Dr. Omar A. Alsamani</span></p><h1><span class="ar">المكتبة المفتوحة</span><span class="en">Open Library</span></h1>{MARK_LIB}<p class="lib-lead"><span class="ar">كتب مفتوحة المصدر.</span><span class="en">Open-access books.</span></p><div class="lib-grid ar">{cards}</div><div class="lib-grid en">{cards_en}</div></main>{site_footer('../', 'bi')}{FOOT_CSS}<script>(function(){{var r=document.documentElement,d=function(){{return r.dataset.theme?r.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches}};document.querySelectorAll('.rb-mark').forEach(function(el){{el.setAttribute('role','button');el.tabIndex=0;el.classList.add('rb-switch');var f=function(){{var t=d()?'light':'dark';r.dataset.theme=t;try{{localStorage.setItem('siteTheme',t)}}catch(e){{}}}};el.onclick=f;el.onkeydown=function(e){{if(e.key==='Enter'||e.key===' '){{e.preventDefault();f()}}}}}})}})()</script></body></html>'''
+<main class="lib"><p class="lib-eyebrow"><span class="ar">د. عمر عبدالله الصمعاني</span><span class="en">Dr. Omar A. Alsamani</span></p><h1><span class="ar">المكتبة المفتوحة</span><span class="en">Open Library</span></h1>{MARK_LIB}<p class="lib-lead"><span class="ar">كتب مفتوحة المصدر.</span><span class="en">Open-access books.</span></p><div class="lib-grid ar">{cards}</div><div class="lib-grid en">{cards_en}</div><a class="lib-tools" href="../tools/index.html"><span class="ar">أدوات تفاعلية من كتاب «إدارة الابتكار»</span><span class="en">Interactive tools from <i>Innovation Management</i></span><b><span class="ar">خمس أدوات تُستخدم على الموقع وتعطيك نتيجة تُنسخ أو تُطبع</span><span class="en">Five tools to use here, with a result you can copy or print</span></b></a></main>{site_footer('../', 'bi')}{FOOT_CSS}<script>(function(){{var r=document.documentElement,d=function(){{return r.dataset.theme?r.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches}};document.querySelectorAll('.rb-mark').forEach(function(el){{el.setAttribute('role','button');el.tabIndex=0;el.classList.add('rb-switch');var f=function(){{var t=d()?'light':'dark';r.dataset.theme=t;try{{localStorage.setItem('siteTheme',t)}}catch(e){{}}}};el.onclick=f;el.onkeydown=function(e){{if(e.key==='Enter'||e.key===' '){{e.preventDefault();f()}}}}}})}})()</script></body></html>'''
     open(os.path.join(OUT, 'index.html'), 'w').write(page)
     shutil.copy(P('src', 'books', 'library.css'), os.path.join(OUT, 'library.css'))
 
@@ -343,6 +343,17 @@ if __name__ == '__main__':
             add += f'<meta property="og:type" content="book"><meta property="og:url" content="{url}"><meta property="og:site_name" content="Dr. Omar A. Alsamani"><meta name="author" content="Omar Abdullah Alsamani">'
             t = t.replace('</head>', add + '</head>', 1)
         open(h, 'w').write(t)
+    # chapters whose tool can be used interactively on the site
+    _TL = {'ch01': 'initiative-card', 'ch03': 'leader-mirror', 'ch05': 'system-health', 'ch15': 'scale-readiness', 'ch20': 'university-ecosystem'}
+    for _c, _sl in _TL.items():
+        _h = os.path.join(OUT, 'innovation-management', _c + '.html')
+        if not os.path.exists(_h): continue
+        _t = open(_h).read()
+        if 'bp-tool-live' in _t: continue
+        _end = _t.find('<h2 id="summary"')
+        if _end < 0: continue
+        _t = _t[:_end] + f'<p class="bp-tool-live"><a href="../../tools/{_sl}/index.html">استخدم هذه الأداة تفاعليًا على الموقع ←</a></p>\n' + _t[_end:]
+        open(_h, 'w').write(_t)
     # cache-busting: every page asks for the current version of shared css/js
     import hashlib, glob as _g
     for h in _g.glob(os.path.join(OUT, '**', '*.html'), recursive=True):

@@ -22,8 +22,8 @@ for _r in research:   # feature articles and paper-derived metadata (data/articl
                 _r[_k] = _meta[_k]
         if _meta.get('url'):
             _r['url'] = _meta['url']
-css = open(P('src/site.css')).read() + open(P('src/extra.css')).read() + open(P('src/apple.css')).read() + open(P('src/blocks.css')).read() + open(P('src/pv.css')).read()
-js = open(P('src/site.js')).read() + open(P('src/pv.js')).read()
+css = open(P('src/site.css')).read() + open(P('src/extra.css')).read() + open(P('src/apple.css')).read() + open(P('src/blocks.css')).read() + open(P('src/pv.css')).read() + open(P('src/tools.css')).read()
+js = open(P('src/site.js')).read() + open(P('src/pv.js')).read() + open(P('src/tools.js')).read()
 featured = open(P('src/featured.html')).read()
 e = html.escape
 
@@ -604,6 +604,13 @@ for _r in research:
     if not _r.get('custom'):
         PAGES.append((f"research/{_r['slug']}", 2, _r['orig_title'] + ' | ' + ((_r.get('title_en') or '') if _r.get('orig_lang') == 'ar' else _r.get('title_ar', '')) + ' | Alsamani', (lambda rr: (lambda: research_page(rr)))(_r)))
 
+import tools_pages as _tp
+PAGES.append(('tools', 1, 'Interactive tools | Innovation Management | Dr. Omar A. Alsamani | أدوات تفاعلية', _tp.tools_index))
+for _t in _tp.TOOLS:
+    PAGES.append((f"tools/{_t['slug']}", 2, f"{_t['t_ar']} | {_t['t_en']} | Dr. Omar A. Alsamani", (lambda tt: (lambda: _tp.tool_body(tt)))(_t)))
+DESCS['tools'] = "Interactive tools from the book Innovation Management by Dr. Omar A. Alsamani: initiative classification, leader's mirror, system health, scale readiness and university innovation ecosystem diagnosis."
+for _t in _tp.TOOLS:
+    DESCS['tools/' + _t['slug']] = _t['q_en'] + ' ' + _t['q_ar'] + ' — ' + _t['intro_en']
 for target, full in (('dist', True), ('preview', False)):
     for name, depth, title, fn in PAGES:
         body = fn()
