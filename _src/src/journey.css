@@ -203,3 +203,12 @@ textarea.jr-in{resize:vertical}
 .jr-rs2 summary b{min-width:11em}
 .jr-rc{font-size:.8125rem;color:var(--muted)}.jr-rc .m{font-style:normal;color:var(--tl-bad)}.jr-rc .w{font-style:normal;color:#b7791f}
 .jr-rs2 .jr-checks{margin:10px 0 8px}
+.jr-st.out b{opacity:.5}.jr-st.out span{color:var(--muted)}
+.jr-defer{grid-column:1/-1;border-top:1px dashed var(--line);padding-top:12px}
+.jr-defer>summary{cursor:pointer;color:var(--muted);font-size:.9375rem}.jr-defer>summary span{font-size:.8125rem}
+.jr-defer>.jr-fields{margin-top:14px}
+.jr-prh{margin:16px 0 8px;font-size:.9375rem}
+.jr-pri{margin:0;padding-inline-start:22px;display:grid;gap:10px}
+.jr-pri li{line-height:1.6}.jr-pri small{display:block;color:var(--muted);font-size:.8125rem}
+.jr-pri .jr-sm{margin-top:4px}
+html[lang=ar] .jr-pri{list-style:arabic-indic}
