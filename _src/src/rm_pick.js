@@ -1,0 +1,27 @@
+// methods guide: a short question path that points to an approach and design
+(function(){
+  var box=document.getElementById('rmPick');if(!box)return;
+  var root=document.documentElement,L=function(a,b){return root.lang==='ar'?a:b};
+  var Q={
+    start:[['مِن أين تأتي بياناتك؟','Where will your data come from?'],[['من أشخاص أو ميدان أو مواد أجمعها','People, a setting or materials I collect','aim'],['من دراسات منشورة','Published studies','rev']]],
+    rev:[['ماذا تريد من الدراسات؟','What do you want from the studies?'],[['حكمًا على الدليل في سؤال محدد','A judgement on the evidence for a focused question','review-sys'],['حجم أثر مجمَّعًا إحصائيًا','A pooled effect size','review-meta'],['خريطة لما كُتب وفجواته','A map of what exists and its gaps','review-scop']]],
+    aim:[['ما الذي يسعى إليه بحثك؟','What is your study after?'],[['بناء أداة قياس أو تكييفها','Building or adapting an instrument','psy'],['اختبار أثر تدخل أطبقه','Testing the effect of an intervention I apply','int'],['تحسين ممارستي أو تطوير حل في الميدان عبر دورات','Improving my practice or refining a solution through cycles','appl'],['فهم الواقع أو تفسيره دون تدخل','Understanding or explaining things without intervening','kind']]],
+    psy:[['هل الأداة جديدة؟','Is the instrument new?'],[['أبنيها من البداية','I am building it from scratch','psy-dev'],['مقياس قائم أنقله إلى لغة أو بيئة أخرى','An existing measure I am adapting','psy-adapt']]],
+    appl:[['ما محور الدورات؟','What do the cycles centre on?'],[['ممارستي في ميدان عملي','My own practice in my setting','appl-action'],['تدخل أو منتج تعليمي أصممه','An educational intervention or product I design','appl-dbr']]],
+    int:[['كيف تتكون المجموعات؟','How are the groups formed?'],[['أوزع المشاركين عشوائيًا','I assign participants randomly','exp-true'],['مجموعات قائمة كالفصول','Intact groups such as classes','exp-quasi'],['مجموعة واحدة فقط','Only one group','exp-pre'],['أفراد قليلون أقيس سلوكهم مرارًا','A few individuals measured repeatedly','exp-scd'],['أريد أيضًا فهم خبرة المشاركين بالتدخل','I also want to understand participants’ experience of it','mixed-embed']]],
+    kind:[['ما نوع الإجابة التي تحتاجها؟','What kind of answer do you need?'],[['أرقام','Numbers','num'],['فهم معمّق بالكلمات','In-depth understanding in words','words'],['الاثنان معًا','Both','both']]],
+    num:[['ماذا تريد أن تعرف؟','What do you want to know?'],[['مستوى ظاهرة أو واقعها الآن','The level or state of something now','desc-cross'],['كيف يتغير شيء عبر الزمن','How something changes over time','desc-long'],['ما تتضمنه نصوص أو مواد','What texts or materials contain','desc-content'],['علاقة بين متغيرات','A relationship between variables','corr-rel'],['ما يتنبأ بمتغير','What predicts an outcome','corr-pred'],['نموذجًا لعلاقات متعددة أو وساطة','A model of several relations or mediation','corr-sem'],['فروقًا بين مجموعات قائمة أصلًا','Differences between existing groups','causal-main']]],
+    words:[['ما الذي تريد فهمه؟','What do you want to understand?'],[['خبرة عاشها الناس','An experience people have lived','qual-phen'],['حالة واحدة محددة','One bounded case','qual-case'],['عدة حالات للمقارنة','Several cases to compare','qual-case_multi'],['عملية لم تُفسَّر بعد','A process not yet explained','qual-gt'],['ثقافة جماعة','The culture of a group','qual-ethno'],['قصة فرد أو أفراد قليلين','The story of one or a few people','qual-narr'],['وثائق أو نصوص','Documents or texts','qual-doc'],['نظمًا أو برامج بين دول','Systems or programmes across countries','qual-compar'],['آراء أو تحديات بوصف مباشر','Views or challenges, described directly','qual-gq']]],
+    both:[['كيف يرتبط الجزآن؟','How do the two parts relate?'],[['في الوقت نفسه ثم أقارن','At the same time, then compared','mixed-conv'],['أرقام أولًا ثم أفسرها بالمقابلات','Numbers first, then interviews to explain them','mixed-expl'],['مقابلات أولًا ثم أعمم أو أبني أداة','Interviews first, then generalise or build a tool','mixed-explo']]]
+  };
+  var path=['start'];
+  function name(id){var el=document.getElementById(id);if(!el)return id;var s=el.querySelector('summary b');var h=document.getElementById(id.split('-')[0]).querySelector('h2');return (h?h.innerText:'')+(s&&!el.classList.contains('rm-one')?' — '+s.innerText:'')}
+  function render(){var cur=path[path.length-1],h='';
+    if(Q[cur]){var q=Q[cur];h='<p class="rm-pq">'+L(q[0][0],q[0][1])+'</p><div class="rm-po">'+q[1].map(function(o){return '<button type="button" data-go="'+o[2]+'">'+L(o[0],o[1])+'</button>'}).join('')+'</div>'}
+    else h='<p class="rm-pq">'+L('الأقرب إلى سؤالك:','Closest to your question:')+'</p><p class="rm-pr"><a href="#'+cur+'" data-open="'+cur+'">'+name(cur)+'</a></p><p class="rm-pn">'+L('هذا ترشيح أولي؛ اقرأ دليل التصميم وناقشه مع مشرفك.','A first suggestion; read the guide and discuss it with your supervisor.')+'</p>';
+    h+='<div class="rm-pb">'+(path.length>1?'<button type="button" data-back>'+L('رجوع','Back')+'</button><button type="button" data-reset>'+L('من البداية','Start over')+'</button>':'')+'</div>';box.innerHTML=h}
+  box.addEventListener('click',function(e){var t=e.target.closest('button,a');if(!t)return;
+    if(t.dataset.go){path.push(t.dataset.go);render()}else if(t.hasAttribute('data-back')){path.pop();render()}else if(t.hasAttribute('data-reset')){path=['start'];render()}
+    else if(t.dataset.open){var el=document.getElementById(t.dataset.open);if(el&&el.tagName==='DETAILS')el.open=true}});
+  new MutationObserver(render).observe(root,{attributes:true,attributeFilter:['lang']});render();
+})();
