@@ -81,3 +81,16 @@
 .tl-shared{background:var(--alt);border-radius:12px;padding:10px 14px;font-size:.9375rem}
 .tl-link{background:none;border:0;color:var(--accent);font:inherit;cursor:pointer;padding:0;text-decoration:underline}
 @media print{.tl-intro-card,.tl-shared,.tl-more,.tl-read,.tl-head .tl-q,.tl-intro,.tl-scale{display:none!important}.tl-result{max-width:none}}
+.tl-crumb{display:flex;align-items:center;justify-content:center;gap:8px;font-size:.875rem;color:var(--muted);margin:0 0 18px}
+.tl-crumb a{color:var(--accent);text-decoration:none}.tl-crumb a:hover{text-decoration:underline}
+.tl-crumb .chev{width:.4em;height:.4em;opacity:.6}
+.tl-source{margin:18px 0 0;padding-top:12px;border-top:1px solid var(--line);color:var(--muted);font-size:.8125rem;line-height:1.6}
+.tl-gnav{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:18px 0 8px}
+.tl-gnav a{padding:7px 16px;border-radius:99px;border:1px solid var(--line);color:var(--ink);text-decoration:none;font-size:.9375rem}
+.tl-gnav a:hover{border-color:var(--ink)}
+.tl-group{margin-top:44px;scroll-margin-top:80px}
+.tl-gh{display:grid;grid-template-columns:1fr auto;gap:2px 16px;align-items:end;border-bottom:1px solid var(--line);padding-bottom:12px}
+.tl-gh h3{margin:0;font-size:1.375rem}.tl-gh p{margin:0;color:var(--muted);grid-column:1}.tl-gn{grid-row:1/3;grid-column:2;font-size:2rem;font-weight:700;color:var(--line)}
+.tl-group .tl-cards{margin-top:18px}
+@media print{.tl-source{display:block!important;border-top:1px solid #ccc}.tl-result::after{content:"alsamani.com";display:block;margin-top:6px;font-size:11px;color:#888}}
+.tl-head .eyebrow{justify-content:center;text-align:center;display:block}

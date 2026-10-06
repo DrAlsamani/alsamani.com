@@ -14,7 +14,7 @@ AR_DIG = str.maketrans('0123456789', '٠١٢٣٤٥٦٧٨٩')
 FONTS = '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap">'
 
 NAVL = [('index.html', 'المستجدات', 'Updates'), ('books/index.html', 'المكتبة المفتوحة', 'Open Library'), ('publications/index.html', 'المنشورات', 'Publications'),
-        ('photography/index.html', 'التصوير', 'Photography'), ('about/index.html', 'نبذة', 'About'), ('contact/index.html', 'تواصل', 'Contact')]
+        ('tools/index.html', 'الأدوات', 'Tools'), ('photography/index.html', 'التصوير', 'Photography'), ('about/index.html', 'نبذة', 'About'), ('contact/index.html', 'تواصل', 'Contact')]
 PV_JS = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'src', 'pv.js')).read().replace('{', '{{').replace('}', '}}')
 PV_CSS = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'src', 'pv.css')).read()
 

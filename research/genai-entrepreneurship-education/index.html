@@ -960,6 +960,19 @@ html[lang="ar"] .bk-st button span.en,html[lang="en"] .bk-st button span.ar{disp
 .tl-shared{background:var(--alt);border-radius:12px;padding:10px 14px;font-size:.9375rem}
 .tl-link{background:none;border:0;color:var(--accent);font:inherit;cursor:pointer;padding:0;text-decoration:underline}
 @media print{.tl-intro-card,.tl-shared,.tl-more,.tl-read,.tl-head .tl-q,.tl-intro,.tl-scale{display:none!important}.tl-result{max-width:none}}
+.tl-crumb{display:flex;align-items:center;justify-content:center;gap:8px;font-size:.875rem;color:var(--muted);margin:0 0 18px}
+.tl-crumb a{color:var(--accent);text-decoration:none}.tl-crumb a:hover{text-decoration:underline}
+.tl-crumb .chev{width:.4em;height:.4em;opacity:.6}
+.tl-source{margin:18px 0 0;padding-top:12px;border-top:1px solid var(--line);color:var(--muted);font-size:.8125rem;line-height:1.6}
+.tl-gnav{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:18px 0 8px}
+.tl-gnav a{padding:7px 16px;border-radius:99px;border:1px solid var(--line);color:var(--ink);text-decoration:none;font-size:.9375rem}
+.tl-gnav a:hover{border-color:var(--ink)}
+.tl-group{margin-top:44px;scroll-margin-top:80px}
+.tl-gh{display:grid;grid-template-columns:1fr auto;gap:2px 16px;align-items:end;border-bottom:1px solid var(--line);padding-bottom:12px}
+.tl-gh h3{margin:0;font-size:1.375rem}.tl-gh p{margin:0;color:var(--muted);grid-column:1}.tl-gn{grid-row:1/3;grid-column:2;font-size:2rem;font-weight:700;color:var(--line)}
+.tl-group .tl-cards{margin-top:18px}
+@media print{.tl-source{display:block!important;border-top:1px solid #ccc}.tl-result::after{content:"alsamani.com";display:block;margin-top:6px;font-size:11px;color:#888}}
+.tl-head .eyebrow{justify-content:center;text-align:center;display:block}
 </style>
 </head>
 <body>
@@ -969,6 +982,7 @@ html[lang="ar"] .bk-st button span.en,html[lang="en"] .bk-st button span.ar{disp
   <nav class="links" aria-label="Main"><a href="../../index.html"><span class="ar">المستجدات</span><span class="en">Updates</span></a>
 <a href="../../books/index.html"><span class="ar">المكتبة المفتوحة</span><span class="en">Open Library</span></a>
 <a href="../../publications/index.html"><span class="ar">المنشورات</span><span class="en">Publications</span></a>
+<a href="../../tools/index.html"><span class="ar">الأدوات</span><span class="en">Tools</span></a>
 <a href="../../photography/index.html"><span class="ar">التصوير</span><span class="en">Photography</span></a>
 <a href="../../about/index.html"><span class="ar">نبذة</span><span class="en">About</span></a>
 <a href="../../contact/index.html"><span class="ar">تواصل</span><span class="en">Contact</span></a></nav>
@@ -977,6 +991,7 @@ html[lang="ar"] .bk-st button span.en,html[lang="en"] .bk-st button span.ar{disp
 <nav class="links mobile" aria-label="Main"><a href="../../index.html"><span class="ar">المستجدات</span><span class="en">Updates</span></a>
 <a href="../../books/index.html"><span class="ar">المكتبة المفتوحة</span><span class="en">Open Library</span></a>
 <a href="../../publications/index.html"><span class="ar">المنشورات</span><span class="en">Publications</span></a>
+<a href="../../tools/index.html"><span class="ar">الأدوات</span><span class="en">Tools</span></a>
 <a href="../../photography/index.html"><span class="ar">التصوير</span><span class="en">Photography</span></a>
 <a href="../../about/index.html"><span class="ar">نبذة</span><span class="en">About</span></a>
 <a href="../../contact/index.html"><span class="ar">تواصل</span><span class="en">Contact</span></a></nav>
@@ -1032,6 +1047,7 @@ html[lang="ar"] .bk-st button span.en,html[lang="en"] .bk-st button span.ar{disp
   <nav class="sf-nav" aria-label="Footer"><a href="../../index.html"><span class="ar">المستجدات</span><span class="en">Updates</span></a>
 <a href="../../books/index.html"><span class="ar">المكتبة المفتوحة</span><span class="en">Open Library</span></a>
 <a href="../../publications/index.html"><span class="ar">المنشورات</span><span class="en">Publications</span></a>
+<a href="../../tools/index.html"><span class="ar">الأدوات</span><span class="en">Tools</span></a>
 <a href="../../photography/index.html"><span class="ar">التصوير</span><span class="en">Photography</span></a>
 <a href="../../about/index.html"><span class="ar">نبذة</span><span class="en">About</span></a>
 <a href="../../contact/index.html"><span class="ar">تواصل</span><span class="en">Contact</span></a></nav>
@@ -1297,14 +1313,15 @@ requestAnimationFrame(function(){requestAnimationFrame(function(){s.split('').fo
     if(next.length){html+=block(L('ما الذي تفعله بعد ذلك','What to do next'),list(next));plain.push(L('الخطوة التالية:','Next:'));next.forEach(function(x){plain.push('- '+x.replace(/<[^>]+>/g,''))})}
     html+='<p class="tl-more">'+L('شرح الأداة وما وراءها في ','The ideas behind this tool are in ')+'<a href="'+chap+'">'+L(T.chn_ar+' من كتاب «إدارة الابتكار»',T.chn_en+' of Innovation Management')+'</a>.</p>';
     var link=location.href.split('#')[0]+'#r='+enc(s);
-    plain.push('','— '+L('من كتاب «إدارة الابتكار»، د. عمر عبدالله الصمعاني','From Innovation Management, Dr. Omar A. Alsamani'));
+    var src=L('المصدر: أداة «'+T.t_ar+'» من كتاب «إدارة الابتكار»، '+T.chn_ar+'، د. عمر عبدالله الصمعاني · ','Source: “'+T.t_en+'”, from Innovation Management, '+T.chn_en+', Dr. Omar A. Alsamani · ')+'alsamani.com/tools/'+T.slug+'/';
+    plain.push('',src);
     out.innerHTML=(shared?'<p class="tl-shared">'+L('هذه نتيجة شاركها معك أحدهم.','Someone shared this result with you.')+' <button type="button" class="tl-link" id="tlMine">'+L('ابدأ تقييمك','Do your own')+'</button></p>':'')+
       '<div class="tl-rhead"><span class="eyebrow">'+L(T.t_ar,T.t_en)+'</span><span class="tl-date">'+new Date().toLocaleDateString(ar()?'ar-SA-u-ca-gregory-nu-latn':'en-GB')+'</span></div>'+html+
-      '<div class="tl-out"><button type="button" class="btn solid" id="tlShare">'+L('مشاركة النتيجة','Share the result')+'</button><button type="button" class="btn" id="tlCopy">'+L('نسخ النص','Copy as text')+'</button><button type="button" class="btn" onclick="print()">'+L('طباعة أو PDF','Print or PDF')+'</button>'+(shared?'':'<button type="button" class="btn" id="tlEdit">'+L('عدّل إجاباتك','Edit answers')+'</button>')+'</div>';
+      '<p class="tl-source">'+esc(src)+'</p><div class="tl-out"><button type="button" class="btn solid" id="tlShare">'+L('مشاركة النتيجة','Share the result')+'</button><button type="button" class="btn" id="tlCopy">'+L('نسخ النص','Copy as text')+'</button><button type="button" class="btn" onclick="print()">'+L('طباعة أو PDF','Print or PDF')+'</button>'+(shared?'':'<button type="button" class="btn" id="tlEdit">'+L('عدّل إجاباتك','Edit answers')+'</button>')+'</div>';
     out.hidden=false;form.hidden=true;intro.hidden=true;var rd=document.querySelector('.tl-read');if(rd)rd.hidden=true;out.classList.remove('in');void out.offsetWidth;out.classList.add('in');
     var cp=function(t,b,ok){(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){b.textContent=ok}).catch(function(){var a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy');b.textContent=ok}catch(e){}a.remove()})};
     document.getElementById('tlCopy').onclick=function(){cp(plain.join('\n')+'\n'+link,this,L('نُسخ','Copied'))};
-    document.getElementById('tlShare').onclick=function(){var b=this;if(navigator.share)navigator.share({title:L(T.t_ar,T.t_en),url:link}).catch(function(){});else cp(link,b,L('نُسخ الرابط','Link copied'))};
+    document.getElementById('tlShare').onclick=function(){var b=this;if(navigator.share)navigator.share({title:L(T.t_ar,T.t_en)+' | alsamani.com',text:L('نتيجتي في أداة «'+T.t_ar+'» من كتاب «إدارة الابتكار» للدكتور عمر عبدالله الصمعاني','My result on “'+T.t_en+'”, a tool from Innovation Management by Dr. Omar A. Alsamani'),url:link}).catch(function(){});else cp(link,b,L('نُسخ الرابط','Link copied'))};
     var ed=document.getElementById('tlEdit');if(ed)ed.onclick=function(){out.hidden=true;form.hidden=false;show(0);form.scrollIntoView({behavior:'smooth'})};
     var mn=document.getElementById('tlMine');if(mn)mn.onclick=function(){history.replaceState(null,'',location.pathname);out.hidden=true;intro.hidden=false;write({});form.hidden=true;intro.scrollIntoView({behavior:'smooth'})};
     if(!shared)out.scrollIntoView({behavior:'smooth',block:'start'})}

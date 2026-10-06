@@ -35,7 +35,7 @@ TYPES = {'publication': ('نشر', 'Publication'), 'training': ('تدريب', 'T
 PTYPES = {'article': ('مقال محكّم', 'Journal article'), 'chapter': ('فصل في كتاب', 'Book chapter'),
           'thesis': ('رسالة علمية', 'Thesis'), 'book': ('كتاب', 'Book')}
 NAV = [('index', 'المستجدات', 'Updates'), ('books', 'المكتبة المفتوحة', 'Open Library'), ('publications', 'المنشورات', 'Publications'),
-       ('photography', 'التصوير', 'Photography'), ('about', 'نبذة', 'About'), ('contact', 'تواصل', 'Contact')]
+       ('tools', 'الأدوات', 'Tools'), ('photography', 'التصوير', 'Photography'), ('about', 'نبذة', 'About'), ('contact', 'تواصل', 'Contact')]
 
 def href(page, depth):
     up = '../' * depth
