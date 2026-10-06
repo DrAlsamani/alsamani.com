@@ -38,7 +38,8 @@
       {id:'origin',t:'chips',multi:1,req:1,l:['من أين جاءت الفكرة؟','Where did the idea come from?'],o:[['exp','خبرة ميدانية','Field experience'],['lit','قراءة في الأدبيات','Reading the literature'],['rec','توصية دراسة سابقة','A recommendation in a prior study'],['pri','أولوية وطنية أو مؤسسية','A national or institutional priority'],['obs','مشكلة لاحظتها','A problem I observed']]},
       {id:'idea',t:'area',rows:4,req:1,l:['الفكرة في ثلاثة إلى خمسة أسطر','The idea in three to five lines'],h:['ماذا تريد أن تعرف؟ عن مَن؟ وأين؟','What do you want to find out, about whom, and where?']},
       {id:'why',t:'area',rows:3,req:1,l:['لماذا يستحق البحث؟','Why is it worth studying?'],h:['مَن يستفيد من نتائجه، وما الذي يمكن أن يتغير؟','Who would use the findings, and what could change?']},
-      {id:'feas',t:'chips',multi:1,l:['هل البحث ممكن؟','Is it feasible?'],h:['اختر ما يتحقق لديك الآن.','Select what is true for you now.'],o:[['acc','أستطيع الوصول إلى المشاركين أو البيانات','I can reach the participants or data'],['time','يتسع له وقت البرنامج','It fits the time of my programme'],['skill','أملك المهارات والأدوات اللازمة أو أستطيع تعلّمها','I have, or can learn, the skills and tools'],['eth','لا عوائق أخلاقية ظاهرة','No evident ethical obstacles']]}
+      {id:'feas',t:'chips',multi:1,l:['هل البحث ممكن؟','Is it feasible?'],h:['اختر ما يتحقق لديك الآن.','Select what is true for you now.'],o:[['acc','أستطيع الوصول إلى المشاركين أو البيانات','I can reach the participants or data'],['time','يتسع له وقت البرنامج','It fits the time of my programme'],['skill','أملك المهارات والأدوات اللازمة أو أستطيع تعلّمها','I have, or can learn, the skills and tools'],['eth','لا عوائق أخلاقية ظاهرة','No evident ethical obstacles']]},
+      {id:'intro',t:'area',rows:6,l:['مقدمة مكتوبة (إن وجدت)','Written introduction (if any)'],h:['إن كانت لديك مقدمة مكتوبة فضعها هنا؛ وتحل في المسودة محل الإجابتين السابقتين.','If you have a written introduction, put it here; in the draft it replaces the two answers above.']}
     ]},
     {id:'problem',ar:'المشكلة',en:'The problem',goal:['صِف الواقع الذي يحتاج إلى دراسة، بشواهد موثقة، دون اقتراح حل.','Describe the situation that needs study, with documented evidence, without proposing a solution.'],fields:[
       {id:'who',t:'text',req:1,l:['مَن يعيش المشكلة؟ وأين؟','Who experiences the problem, and where?']},
@@ -159,7 +160,7 @@
     var by=[];if(meta.student)by.push(T('إعداد: ','Prepared by: ')+esc(meta.student));if(meta.supervisor)by.push(T('إشراف: ','Supervised by: ')+esc(meta.supervisor));if(meta.degree)by.push(esc(meta.degree==='ma'?T('رسالة ماجستير','Master’s thesis'):meta.degree==='phd'?T('أطروحة دكتوراه','Doctoral dissertation'):meta.degree));
     if(by.length)h+='<p>'+by.join(' · ')+'</p>';h+='</header>';
     h+='<h2>'+T('الفصل الأول: الإطار العام للدراسة','Chapter One: Introduction')+'</h2>';
-    h+='<h3>'+T('المقدمة','Background')+'</h3>'+(tx('why')||tx('idea')?(tx('why')?para('why','',''):'')+(tx('idea')?para('idea','',''):''):'<p>'+ph('[ المقدمة — من إجاباتك في المرحلة ١، وتُوسَّع بعد مراجعة الأدبيات ]','[ Background — from stage 1, expanded after the literature review ]')+'</p>');
+    h+='<h3>'+T('المقدمة','Background')+'</h3>'+(tx('intro')?para('intro','',''):tx('why')||tx('idea')?(tx('why')?para('why','',''):'')+(tx('idea')?para('idea','',''):''):'<p>'+ph('[ المقدمة — من إجاباتك في المرحلة ١، وتُوسَّع بعد مراجعة الأدبيات ]','[ Background — from stage 1, expanded after the literature review ]')+'</p>');
     h+='<h3>'+T('مشكلة الدراسة','Statement of the problem')+'</h3>'+para('stmt','[ نص المشكلة — المرحلة ٢ ]','[ Problem statement — stage 2 ]');
     h+='<h3>'+T('أسئلة الدراسة','Research questions')+'</h3>';
     if(tx('mainq')){h+='<p>'+T('تسعى الدراسة إلى الإجابة عن السؤال الرئيس الآتي:','The study addresses the following main question:')+'</p><p class="jr-q">'+esc(tx('mainq'))+'</p>';if(lines('subq').length)h+='<p>'+T('ويتفرع عنه الأسئلة الآتية:','It branches into the following questions:')+'</p>'+ol('subq','','')}else h+='<p>'+ph('[ الأسئلة — المرحلة ٣ ]','[ Questions — stage 3 ]')+'</p>';
@@ -211,13 +212,13 @@
   function stageH(){var s=st(S.cur),i=ACTIVE.indexOf(s);
     var h='<div class="jr-stage" data-stage="'+s.id+'"><p class="eyebrow">'+L('المرحلة ','Stage ')+num(STAGES.indexOf(s)+1)+'</p><h2>'+esc(L(s.ar,s.en))+'</h2><p class="jr-goal">'+esc(L(s.goal[0],s.goal[1]))+'</p>'+rvNote(s);
     h+='<div class="jr-fields">'+s.fields.map(fieldH).join('')+'</div>';
-    h+='<div class="jr-qc"><h4>'+L('مراجعة الجودة','Quality check')+'</h4><div data-checks>'+checksH(s)+'</div></div>';
+    h+=restH();h+='<div class="jr-qc"><h4>'+L('مراجعة الجودة','Quality check')+'</h4><div data-checks>'+checksH(s)+'</div></div>';
     h+='<div class="jr-nav">'+(i>0?'<button type="button" class="btn" data-act="go" data-s="'+ACTIVE[i-1].id+'">'+L('السابقة','Previous')+'</button>':'<span></span>')+(i<ACTIVE.length-1?'<button type="button" class="btn solid" data-act="go" data-s="'+ACTIVE[i+1].id+'">'+L('المرحلة التالية','Next stage')+'</button>':'<button type="button" class="btn solid" data-act="send">'+L('أرسل للمشرف','Send to supervisor')+'</button>')+'</div></div>';
     return h}
   function draftPanel(){var p=total();return '<div class="jr-dh"><div><h3>'+L('المسودة','The draft')+'</h3><p class="jr-pc"><span class="jr-bar"><i style="width:'+p+'%"></i></span><b data-pct>'+num(p)+'٪'.replace('٪',ar()?'٪':'%')+'</b> '+L('من الفصل الأول','of Chapter One')+'</p></div>'+
     '<div class="jr-dact"><button type="button" class="btn" data-act="word">Word</button><button type="button" class="btn" data-act="print">'+L('طباعة','Print')+'</button></div></div><article class="jr-doc" data-doc dir="'+(DL()==='ar'?'rtl':'ltr')+'" lang="'+DL()+'">'+draft()+'</article>'}
   function sendBox(){return '<div class="jr-send" data-sendbox hidden><h4>'+L('رابط المراجعة','Review link')+'</h4><p>'+L('أرسل هذا الرابط لمشرفك. يحمل نسخة من عملك الآن؛ يكتب ملاحظاته ورأيه في كل مرحلة، ثم يعيد إليك رابطًا تفتحه هنا.','Send this link to your supervisor. It carries a copy of your work as it is now; they comment and decide on each stage, then send you back a link to open here.')+'</p><div class="jr-link"><input readonly data-link dir="ltr"><button type="button" class="btn solid" data-act="copy">'+L('نسخ','Copy')+'</button></div></div>'}
-  function tools(){return '<div class="jr-tools"><button type="button" class="btn" data-act="send">'+L('أرسل للمشرف','Send to supervisor')+'</button><button type="button" class="btn" data-act="meta">'+L('بيانات المشروع','Project details')+'</button><button type="button" class="btn" data-act="backup">'+L('حفظ نسخة','Save a copy')+'</button><label class="btn">'+L('استعادة نسخة','Restore a copy')+'<input type="file" accept=".json,application/json" data-act="restore" hidden></label><button type="button" class="btn jr-quiet" data-act="reset">'+L('مشروع جديد','New project')+'</button></div>'}
+  function tools(){return '<div class="jr-tools"><button type="button" class="btn" data-act="imp">'+L('استيراد من مسودة','Import from a draft')+'</button><button type="button" class="btn" data-act="send">'+L('أرسل للمشرف','Send to supervisor')+'</button><button type="button" class="btn" data-act="meta">'+L('بيانات المشروع','Project details')+'</button><button type="button" class="btn" data-act="backup">'+L('حفظ نسخة','Save a copy')+'</button><label class="btn">'+L('استعادة نسخة','Restore a copy')+'<input type="file" accept=".json,application/json" data-act="restore" hidden></label><button type="button" class="btn jr-quiet" data-act="reset">'+L('مشروع جديد','New project')+'</button></div>'}
 
   // ---------- setup ----------
   function metaH(m,first){var deg=[['ma','ماجستير','Master’s'],['phd','دكتوراه','Doctorate']],lg=[['ar','العربية','Arabic'],['en','الإنجليزية','English']];
@@ -232,9 +233,9 @@
   // ---------- render ----------
   function render(){
     if(mode==='review')return renderReview();
-    if(!S){host.innerHTML='<div class="jr-card"><h2>'+L('ابدأ مشروعك','Start your project')+'</h2>'+metaH(blank().meta,true)+'<div class="jr-nav"><span></span><button type="button" class="btn solid" data-act="start">'+L('ابدأ','Start')+'</button></div><p class="jr-priv">'+L('يُحفظ عملك في هذا المتصفح فقط، ولا يُرسل إلى أي جهة إلا ما تشاركه أنت برابط.','Your work is saved in this browser only, and nothing is sent anywhere unless you share a link.')+' <label class="jr-lnk">'+L('استعادة نسخة محفوظة','Restore a saved copy')+'<input type="file" accept=".json,application/json" data-act="restore" hidden></label></p></div>';return}
+    if(!S){host.innerHTML='<div class="jr-card"><h2>'+L('ابدأ مشروعك','Start your project')+'</h2>'+metaH(blank().meta,true)+'<div class="jr-nav"><button type="button" class="btn" data-act="imp">'+L('ابدأ من مسودة لديك','Start from a draft you have')+'</button><button type="button" class="btn solid" data-act="start">'+L('ابدأ','Start')+'</button></div><p class="jr-priv">'+L('يُحفظ عملك في هذا المتصفح فقط، ولا يُرسل إلى أي جهة إلا ما تشاركه أنت برابط.','Your work is saved in this browser only, and nothing is sent anywhere unless you share a link.')+' <label class="jr-lnk">'+L('استعادة نسخة محفوظة','Restore a saved copy')+'<input type="file" accept=".json,application/json" data-act="restore" hidden></label></p></div><div data-impbox hidden></div>';return}
     host.innerHTML=(notice?'<div class="jr-notice">'+notice+'</div>':'')+mapH()+'<div class="jr-tabs" role="tablist"><button type="button" data-act="tab" data-t="work" aria-selected="'+(tab==='work')+'">'+L('العمل','Work')+'</button><button type="button" data-act="tab" data-t="draft" aria-selected="'+(tab==='draft')+'">'+L('المسودة','Draft')+'</button></div>'+
-      '<div class="jr-grid t-'+tab+'"><div class="jr-main">'+stageH()+'</div><aside class="jr-side">'+sendBox()+draftPanel()+'</aside></div>'+tools()+'<p class="jr-priv">'+L('يُحفظ عملك في هذا المتصفح فقط. احفظ نسخة من حين لآخر.','Your work is saved in this browser only. Save a copy from time to time.')+'</p><div class="jr-meta" data-metabox hidden></div>';
+      '<div class="jr-grid t-'+tab+'"><div class="jr-main">'+stageH()+'</div><aside class="jr-side">'+sendBox()+draftPanel()+'</aside></div>'+tools()+'<p class="jr-priv">'+L('يُحفظ عملك في هذا المتصفح فقط. احفظ نسخة من حين لآخر.','Your work is saved in this browser only. Save a copy from time to time.')+'</p><div class="jr-meta" data-metabox hidden></div><div data-impbox hidden></div>';
   }
   function refresh(){var s=st(S.cur),c=host.querySelector('[data-checks]');if(c)c.innerHTML=checksH(s);
     var d=host.querySelector('[data-doc]');if(d)d.innerHTML=draft();var p=total(),b=host.querySelector('.jr-bar i');if(b)b.style.width=p+'%';var pc=host.querySelector('[data-pct]');if(pc)pc.textContent=num(p)+(ar()?'٪':'%');
@@ -267,6 +268,9 @@
     var rv=S.rv[S.cur];if(rv&&rv.d)rv.edited=1;save();refresh()}
   host.addEventListener('input',function(e){if(mode==='work'&&S&&e.target.matches('.jr-in[data-f]'))setVal(e.target)});
   host.addEventListener('change',function(e){var t=e.target;
+    if(t.matches('[data-act="impfile"]')){var fi=t.files[0];if(!fi)return;var msg=host.querySelector('[data-impmsg]');
+      (/\.docx$/i.test(fi.name)?fi.arrayBuffer().then(docxText):fi.text().then(function(x){return x.split(/\n+/).map(function(y){return {t:y.trim(),h:/^#+\s/.test(y)}}).map(function(p){p.t=p.t.replace(/^#+\s*/,'');return p}).filter(function(p){return p.t})}))
+        .then(impRead).catch(function(){if(msg)msg.textContent=L('تعذّرت قراءة الملف. جرّب حفظه بصيغة docx، أو الصق النص.','The file could not be read. Try saving it as .docx, or paste the text.')});return}
     if(t.matches('[data-act="restore"]')){var fl=t.files[0];if(!fl)return;fl.text().then(function(x){var o=JSON.parse(x);if(o&&o.v===1&&o.d){S=o;save();notice='';render()}}).catch(function(){alertless(L('تعذّرت قراءة الملف.','Could not read the file.'))});return}
     if(mode==='work'&&S&&t.closest('[data-f]')&&t.type!=='text')setVal(t)});
   function alertless(msg){notice=esc(msg);render()}
@@ -285,6 +289,11 @@
       pack({k:'rv',v:1,id:S.id,meta:S.meta,d:S.d,rv:S.rv,sent:Date.now()}).then(function(z){box.hidden=false;box.querySelector('[data-link]').value=base()+'#review='+z;box.scrollIntoView({behavior:'smooth',block:'center'})});return}
     if(a==='reply'){var out={k:'ret',v:1,id:R.id,at:Date.now(),rv:{}};ACTIVE.forEach(function(s){var d=host.querySelector('input[name="rd-'+s.id+'"]:checked'),c=host.querySelector('[data-rc="'+s.id+'"]').value.trim();if(d||c)out.rv[s.id]={d:d?d.value:'',c:c}});
       pack(out).then(function(z){var box=host.querySelector('[data-sendbox]');box.hidden=false;box.querySelector('[data-link]').value=base()+'#return='+z});return}
+    if(a==='imp'){IMP=null;impBox();return}
+    if(a==='impclose'){IMP=null;var ib=host.querySelector('[data-impbox]');ib.hidden=true;ib.innerHTML='';return}
+    if(a==='impread'){var tt=host.querySelector('[data-imptext]').value;if(!tt.trim())return;impRead(tt.split(/\n+/).map(function(x){return {t:x.trim(),h:false}}).filter(function(x){return x.t}));return}
+    if(a==='impapply'){impApply();return}
+    if(a==='restdel'){if(!confirmless(b))return;S.d._rest.splice(+b.getAttribute('data-i'),1);save();render();return}
     if(a==='copy'){copyLink(b);return}
     if(a==='word'){word();return}
     if(a==='print'){document.body.classList.add('jr-printing');setTimeout(function(){print()},50);return}
@@ -299,6 +308,88 @@
   // supervisor review: keep decisions while typing so a language switch does not lose them
   host.addEventListener('input',function(e){if(mode!=='review')return;var c=e.target.getAttribute('data-rc');if(c)(RV[c]=RV[c]||{}).c=e.target.value});
   host.addEventListener('change',function(e){if(mode!=='review')return;var n=e.target.name||'';if(n.indexOf('rd-')===0)(RV[n.slice(3)]=RV[n.slice(3)]||{}).d=e.target.value});
+
+  // ---------- import from an existing draft (.docx / .txt / pasted text), all in the browser ----------
+  var IMP=null;
+  function u16(b,o){return b[o]|(b[o+1]<<8)}function u32(b,o){return (b[o]|(b[o+1]<<8)|(b[o+2]<<16)|(b[o+3]<<24))>>>0}
+  function inflate(u){return new Response(new Blob([u]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).text()}
+  function docxText(buf){var b=new Uint8Array(buf),e=-1;for(var i=b.length-22;i>=Math.max(0,b.length-66000);i--)if(u32(b,i)===0x06054b50){e=i;break}
+    if(e<0)return Promise.reject('zip');var n=u16(b,e+10),o=u32(b,e+16);
+    for(var k=0;k<n;k++){var m=u16(b,o+10),cs=u32(b,o+20),nl=u16(b,o+28),xl=u16(b,o+30),cl=u16(b,o+32),lo=u32(b,o+42),name=new TextDecoder().decode(b.subarray(o+46,o+46+nl));
+      if(name==='word/document.xml'){var st=lo+30+u16(b,lo+26)+u16(b,lo+28),data=b.subarray(st,st+cs);return (m===8?inflate(data):Promise.resolve(new TextDecoder().decode(data))).then(xmlParas)}
+      o+=46+nl+xl+cl}
+    return Promise.reject('doc')}
+  function xmlParas(x){var d=new DOMParser().parseFromString(x,'application/xml'),ps=d.getElementsByTagName('w:p'),out=[];
+    for(var i=0;i<ps.length;i++){var p=ps[i],sty=p.getElementsByTagName('w:pStyle')[0],t='';var r=p.getElementsByTagName('*');
+      for(var j=0;j<r.length;j++){var nm=r[j].nodeName;if(nm==='w:t')t+=r[j].textContent;else if(nm==='w:tab')t+=' ';else if(nm==='w:br')t+='\n'}
+      t=t.replace(/[  ]+/g,' ').trim();if(t)out.push({t:t,h:sty?/^(heading|title|عنوان)/i.test(sty.getAttribute('w:val')||''):false})}
+    return out}
+  // section headings → targets
+  var HEADS=[
+    ['intro',/^(ال)?مقدمة(\s+الدراسة|\s+البحث)?$|^(introduction|background)$/i],
+    ['stmt',/^(مشكلة|مشكله)\s+(الدراسة|البحث)(\s+وأسئلتها)?$|^(statement of the problem|problem statement|the problem)$/i],
+    ['q',/^(أسئلة|اسئلة|تساؤلات)\s+(الدراسة|البحث)$|^(research questions|questions of the study)$/i],
+    ['hyp',/^(فرضيات|فروض)\s+(الدراسة|البحث)$|^(research )?hypothes[ie]s$/i],
+    ['obj',/^(أهداف|اهداف)\s+(الدراسة|البحث)$|^(objectives|aims|purpose of the study|research objectives)$/i],
+    ['sig',/^(أهمية|اهمية)\s+(الدراسة|البحث)$|^significance( of the study)?$/i],
+    ['sigT',/^(ال)?أهمية\s+(النظرية|العلمية)$|^theoretical significance$/i],
+    ['sigP',/^(ال)?أهمية\s+(التطبيقية|العملية)$|^practical significance$/i],
+    ['lim',/^(حدود|محددات)\s+(الدراسة|البحث)$|^(delimitations|limitations)( of the study)?$/i],
+    ['terms',/^(مصطلحات|تعريف(ات)?\s+مصطلحات|التعريفات\s+الإجرائية\s+ل?مصطلحات)\s*(الدراسة|البحث)?$|^(definition of terms|key terms|operational definitions)$/i],
+    ['method',/^(منهج|منهجية|إجراءات)\s+(الدراسة|البحث)(\s+وإجراءاتها)?$|^(methodology|method|research design)$/i],
+    ['lit',/^(الإطار النظري|الأدب النظري|الدراسات السابقة|أدبيات الدراسة|الإطار النظري والدراسات السابقة)$|^(literature review|theoretical framework|related studies)$/i],
+    ['vars',/^(متغيرات)\s+(الدراسة|البحث)$|^variables$/i]
+  ];
+  function clean(t){return t.replace(/^[\s\-–•▪●·*]*(\(?[0-9٠-٩]+[\-.)]|\(?[أ-ي][\-.)]|أولاً|أولا|ثانياً|ثانيا|ثالثاً|ثالثا|رابعاً|رابعا|خامساً|خامسا|سادساً|سادسا|سابعاً|سابعا)?\s*[:：\-–]?\s*/,'').replace(/[:：.]\s*$/,'').trim()}
+  function headOf(t){var c=clean(t).replace(/^الفصل\s+\S+\s*[:：\-–]?\s*/,'');if(c.split(/\s+/).length>7)return null;for(var i=0;i<HEADS.length;i++)if(HEADS[i][1].test(c))return HEADS[i][0];return null}
+  function splitInline(t){var m=t.match(/^(.{4,45}?)\s*[:：]\s*(.+)$/);if(m){var h=headOf(m[1]);if(h)return [h,m[2]]}return null}
+  function parse(paras){var sec=[],cur={k:'_pre',h:'',ps:[]};sec.push(cur);
+    paras.forEach(function(p){if(/^(الفصل|الباب|chapter)\s+\S+/i.test(p.t)&&p.t.split(/\s+/).length<=9&&!headOf(p.t))return;var h=headOf(p.t),inl=h?null:splitInline(p.t);
+      if(h){cur={k:h,h:clean(p.t),ps:[]};sec.push(cur)}
+      else if(inl){cur={k:inl[0],h:'',ps:[inl[1]]};sec.push(cur)}
+      else if(p.h&&p.t.split(/\s+/).length<=10&&sec.length>1){cur={k:'_other',h:p.t,ps:[]};sec.push(cur)}
+      else cur.ps.push(p.t)});
+    var r={},rest=[],put=function(k,v){if(!v)return;r[k]=r[k]?r[k]+'\n'+v:v};
+    sec.forEach(function(s){var txt=s.ps.join('\n').trim();if(!txt&&s.k!=='_pre')return;
+      if(s.k==='_pre'){var f=s.ps[0];if(f&&f.split(/\s+/).length<=22&&!/[.؟?]$/.test(f)){r.topic=f;txt=s.ps.slice(1).join('\n').trim()}if(txt)rest.push({h:L('بداية المسودة','Start of the draft'),t:txt});return}
+      if(s.k==='intro'||s.k==='stmt'||s.k==='sigT'||s.k==='sigP'){put(s.k,txt);return}
+      if(s.k==='sig'){var t2='',p2='',mode2='';s.ps.forEach(function(x){var c=clean(x);if(/^(ال)?أهمية\s+(النظرية|العلمية)|^theoretical/i.test(c)){mode2='t';var y=x.split(/[:：]/).slice(1).join(':').trim();if(y)t2+=y+'\n';return}if(/^(ال)?أهمية\s+(التطبيقية|العملية)|^practical/i.test(c)){mode2='p';var z=x.split(/[:：]/).slice(1).join(':').trim();if(z)p2+=z+'\n';return}if(mode2==='p')p2+=x+'\n';else t2+=x+'\n'});put('sigT',t2.trim());put('sigP',p2.trim());return}
+      if(s.k==='q'){var qs=[],main='';s.ps.forEach(function(x,i){if(/[؟?]\s*$/.test(x)){var c=clean(x);if(!main&&(/الرئيس|main|central/i.test(s.ps[i-1]||'')||/الرئيس|main/i.test(x)))main=c.replace(/^.*?(الرئيس|main question)\s*[:：]?\s*/i,'');else qs.push(c)}});
+        if(!main&&qs.length===1){main=qs.shift()}if(main)r.mainq=main;if(qs.length)put('subq',qs.join('\n'));
+        var nonq=s.ps.filter(function(x){return !/[؟?]\s*$/.test(x)&&!/الرئيس|main/i.test(x)}).join('\n').trim();if(nonq.split(/\s+/).length>12)rest.push({h:s.h||L('أسئلة الدراسة','Research questions'),t:nonq});return}
+      if(s.k==='hyp'||s.k==='obj'||s.k==='vars'){var ls=s.ps.map(clean).filter(function(x){return x&&!/^(تهدف|تسعى|هدفت|تحاول)\s+(الدراسة|هذه الدراسة)|^(the study|this study) (aims|seeks)/i.test(x)||s.ps.length===1});
+        if(s.k==='obj'){var lead=s.ps.filter(function(x){return /^(تهدف|تسعى|هدفت)\s+(الدراسة|هذه الدراسة)|^(the study|this study) (aims|seeks)/i.test(clean(x))});if(lead.length&&ls.length)put('purpose',clean(lead[0]))}
+        put(s.k,ls.join('\n'));return}
+      if(s.k==='lim'){var any=false;s.ps.forEach(function(x){var c=clean(x),mm=c.match(/^(ال)?(حدود|حد)\s+(ال)?(موضوعية|مكانية|زمانية|زمنية|بشرية)\s*[:：\-–]?\s*(.*)$/)||c.match(/^(topic|subject|place|spatial|time|temporal|human|participants?)\s*(delimitation)?s?\s*[:：]\s*(.*)$/i);
+          if(mm){any=true;var w=(mm[4]||mm[1]||'').toLowerCase(),val=(mm[5]!=null?mm[5]:mm[3])||'';var key=/موضوع|topic|subject/.test(w)?'limT':/مكان|place|spatial/.test(w)?'limP':/زمان|زمني|time|temporal/.test(w)?'limZ':'limH';put(key,val.trim())}});
+        if(!any)put('limT',txt);return}
+      if(s.k==='terms'){var rows=[];s.ps.forEach(function(x){var c=clean(x),mm=c.match(/^(.{2,60}?)\s*[:：(]\s*(.+)$/);if(mm){rows.push([mm[1].replace(/\)\s*$/,'').trim(),mm[2],''])}else if(rows.length){var last=rows[rows.length-1];if(/إجرائي|operational/i.test(c))last[2]=(last[2]?last[2]+' ':'')+c.replace(/^.*?(إجرائيًا|إجرائياً|إجرائيا|operationally)\s*(بأنه|بأنها|as)?\s*[:：]?\s*/i,'');else last[1]+=' '+c}});
+        rows.forEach(function(rw){var mm=rw[1].match(/^(.*?)(ويُ?عرّ?ف|وتُ?عرّ?ف|ويعرف|وتعرف|ويقصد به|operationally)\s*(.*?)(إجرائيًا|إجرائياً|إجرائيا)?\s*(بأنه|بأنها|as)?\s*[:：]?\s*(.+)$/i);if(mm&&/إجرائي|operational/i.test(rw[1])){rw[1]=mm[1].trim();rw[2]=(mm[6]||'').trim()}});
+        if(rows.length)r.terms=rows;else rest.push({h:s.h,t:txt});return}
+      if(s.k==='method'){var ap=/شبه\s*تجريبي|تجريبي|experimental/i.test(txt)?'exp':/سببي\s*مقارن|causal.comparative/i.test(txt)?'causal':/مراجعة\s+(منهجية|نطاقية)|systematic review|scoping review/i.test(txt)?'review':/مختلط|mixed.method/i.test(txt)?'mixed':/ارتباطي|correlational/i.test(txt)?'corr':/نوعي|ظاهراتي|دراسة حالة|qualitative|phenomenolog|case study/i.test(txt)?'qual':/وصفي|مسحي|descriptive|survey/i.test(txt)?'desc':'';if(ap)r.approach=ap;rest.push({h:s.h||L('منهج الدراسة','Methodology'),t:txt,k:'design'});return}
+      if(s.k==='lit'){rest.push({h:s.h,t:txt,k:'lit'});return}
+      rest.push({h:s.h,t:txt})});
+    if(!r.approach&&r.hyp){/* hypotheses suggest a quantitative design; leave the choice to the student */}
+    return {r:r,rest:rest}}
+  var TGT={topic:['موضوع البحث','Research topic','idea'],intro:['المقدمة','Introduction','idea'],stmt:['نص مشكلة الدراسة','Statement of the problem','problem'],mainq:['السؤال الرئيس','Main question','questions'],subq:['الأسئلة الفرعية','Sub-questions','questions'],hyp:['الفرضيات','Hypotheses','questions'],vars:['المتغيرات','Variables','questions'],purpose:['الهدف العام','Overall aim','questions'],obj:['الأهداف','Objectives','questions'],sigT:['الأهمية النظرية','Theoretical significance','questions'],sigP:['الأهمية التطبيقية','Practical significance','questions'],limT:['الحدود الموضوعية','Topic delimitation','questions'],limP:['الحدود المكانية','Place','questions'],limZ:['الحدود الزمانية','Time','questions'],limH:['الحدود البشرية','Participants','questions'],terms:['المصطلحات','Key terms','questions'],approach:['المنهج','Approach','questions']};
+  function prevVal(k,x){if(k==='terms')return x.map(function(r){return r[0]+(r[1]?': '+r[1]:'')+(r[2]?' — '+r[2]:'')}).join('\n');if(k==='approach')return L(M[x].ar,M[x].en);return x}
+  function impBox(){var b=host.querySelector('[data-impbox]');if(!b)return;b.hidden=false;
+    if(!IMP){b.innerHTML='<div class="jr-card jr-imp"><h3>'+L('ابدأ من مسودتك','Start from your draft')+'</h3><p class="jr-help">'+L('ارفع ملف Word أو نصًا، أو الصق المسودة كاملة. تُقرأ داخل متصفحك ولا تُرسل إلى أي جهة. توزَّع الأجزاء على حقولها بحسب عناوينها المعتادة (مشكلة الدراسة، أسئلة الدراسة، الأهداف…)، وتراجع التوزيع قبل اعتماده.','Upload a Word or text file, or paste the whole draft. It is read in your browser and sent nowhere. Parts are placed by their usual headings (statement of the problem, research questions, objectives…), and you review the result before it is applied.')+'</p>'+
+      '<label class="btn">'+L('اختر ملفًا (docx أو txt)','Choose a file (.docx or .txt)')+'<input type="file" accept=".docx,.txt,.md,text/plain,application/vnd.openxmlformats-officedocument.wordprocessingml.document" data-act="impfile" hidden></label>'+
+      '<p class="jr-help" style="margin-top:14px">'+L('أو الصق النص:','Or paste the text:')+'</p><textarea class="jr-in" rows="7" data-imptext dir="auto"></textarea><div class="jr-nav"><button type="button" class="btn jr-quiet" data-act="impclose">'+L('إلغاء','Cancel')+'</button><button type="button" class="btn solid" data-act="impread">'+L('اقرأ النص','Read the text')+'</button></div><p class="jr-help" data-impmsg></p></div>';
+    } else {var d=(S&&S.d)||{},items=Object.keys(TGT).filter(function(k){return IMP.r[k]!=null&&IMP.r[k]!==''});
+      b.innerHTML='<div class="jr-card jr-imp"><h3>'+L('ما وُجد في مسودتك','What was found in your draft')+'</h3><p class="jr-help">'+L('اختر ما يُنقل إلى حقوله. الحقول التي فيها كتابة لن تتغير إلا إن اخترتها.','Choose what goes into the fields. Fields that already have text change only if you select them.')+'</p>'+
+        (items.length?'<ul class="jr-implist">'+items.map(function(k){var has=d[k]&&(Array.isArray(d[k])?d[k].length:String(d[k]).trim());return '<li><label><input type="checkbox" data-impk="'+k+'"'+(has?'':' checked')+'> <b>'+esc(L(TGT[k][0],TGT[k][1]))+'</b>'+(has?' <em>'+L('(فيه كتابة الآن)','(has text now)')+'</em>':'')+'</label><div class="jr-impv" dir="auto">'+esc(prevVal(k,IMP.r[k])).slice(0,600).replace(/\n/g,'<br>')+'</div></li>'}).join('')+'</ul>':'<p>'+L('لم تُعرف عناوين الأقسام. اكتب في المسودة عناوين مثل «مشكلة الدراسة» و«أسئلة الدراسة» كلٌّ في سطر مستقل، ثم أعد المحاولة.','No section headings were recognised. Put headings such as “Statement of the problem” and “Research questions” on their own lines, then try again.')+'</p>')+
+        (IMP.rest.length?'<p class="jr-help">'+L('وأجزاء أخرى ('+num(IMP.rest.length)+') تُحفظ كما هي في «أجزاء من مسودتك» لتستفيد منها في مراحلها:','Other parts ('+IMP.rest.length+') are kept as they are under “Parts of your draft”, for use at their stages:')+' '+IMP.rest.map(function(x){return esc(x.h||'—')}).join('، ')+'</p>':'')+
+        '<div class="jr-nav"><button type="button" class="btn jr-quiet" data-act="impclose">'+L('إلغاء','Cancel')+'</button><button type="button" class="btn solid" data-act="impapply">'+L('انقل المختار','Apply the selection')+'</button></div></div>'}
+    b.scrollIntoView({behavior:'smooth',block:'start'})}
+  function impRead(paras){IMP=parse(paras);impBox()}
+  function impApply(){if(!S){S=blank();readMeta(host,S.meta)}var b=host.querySelector('[data-impbox]');
+    [].forEach.call(b.querySelectorAll('[data-impk]:checked'),function(c){var k=c.getAttribute('data-impk');S.d[k]=IMP.r[k]});
+    S.d._rest=(S.d._rest||[]).concat(IMP.rest);var first=null;['idea','problem','questions'].forEach(function(id){if(!first&&st(id).fields.some(function(f){return f.t!=='needs'&&filled(f)}))first=id});
+    var lastQ='idea';['idea','problem','questions'].forEach(function(id){if(st(id).fields.some(function(f){return f.t!=='needs'&&filled(f)}))lastQ=id});
+    S.cur=first||'idea';IMP=null;save();notice=L('نُقلت أجزاء مسودتك. راجع كل مرحلة، ومراجعة الجودة تبيّن ما ينقص.','Your draft has been placed. Review each stage; the quality check shows what is missing.');render()}
+  function restH(){var r=(S.d._rest||[]);if(!r.length)return '';return '<details class="jr-rest"><summary>'+L('أجزاء من مسودتك لم توزَّع على الحقول','Parts of your draft not placed in fields')+' ('+num(r.length)+')</summary>'+r.map(function(x,i){return '<div class="jr-restp"><div class="jr-rh"><b dir="auto">'+esc(x.h||'—')+'</b><button type="button" class="jr-x" data-act="restdel" data-i="'+i+'" aria-label="'+L('حذف','Remove')+'">×</button></div><div dir="auto">'+esc(x.t).slice(0,4000).replace(/\n/g,'<br>')+'</div></div>'}).join('')+'</details>'}
 
   // ---------- start ----------
   function boot(){S=load();var h=location.hash;
