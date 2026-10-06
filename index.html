@@ -1144,6 +1144,16 @@ textarea.jr-in{resize:vertical}
 .rm-pn{color:var(--muted);font-size:.875rem;margin:0}
 .rm-pb{display:flex;gap:14px;margin-top:12px}.rm-pb button{background:none;border:0;padding:0;color:var(--accent);font:inherit;font-size:.875rem;cursor:pointer}
 .rm-tbl summary{cursor:pointer;color:var(--muted);font-size:.875rem;margin:4px 0 8px}
+.jr-row.stack{grid-template-columns:1fr 1fr;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px 10px 10px 10px;position:relative}
+.jr-row.stack .jr-in{grid-column:1/-1}
+.jr-row.stack .jr-in:first-child{grid-column:1}.jr-row.stack .jr-in:nth-last-child(2){grid-column:2;grid-row:1}
+.jr-row.stack .jr-x{position:absolute;top:-10px;inset-inline-end:-8px;background:var(--bg);border:1px solid var(--line);border-radius:50%;width:24px;height:24px;font-size:1rem}
+.jr-row.stack textarea.jr-in{font-size:.875rem}
+.jr-vf{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:8px;font-size:.875rem;line-height:1.6}
+.jr-vf span::before{font-weight:700;margin-inline-end:6px}
+.vf-ok::before{content:"✓";color:var(--tl-ok)}.vf-no::before{content:"✕";color:var(--tl-bad)}.vf-q::before{content:"?";color:#b7791f}
+.vf-no{color:var(--tl-bad)}
+.jr-row.stack textarea.jr-in{min-height:0;height:auto}
 </style>
 </head>
 <body>
@@ -1651,7 +1661,14 @@ requestAnimationFrame(function(){requestAnimationFrame(function(){s.split('').fo
       {id:'limZ',t:'text',half:1,l:['الحدود الزمانية','Time']},
       {id:'limH',t:'text',half:1,l:['الحدود البشرية','Participants']}
     ]},
-    {id:'lit',ar:'الأدبيات',en:'Literature',soon:1},
+    {id:'lit',ar:'الأدبيات',en:'Literature',tips:[['ابحث في قواعد بيانات علمية (ERIC، وScopus، ودار المنظومة، والمكتبة الرقمية السعودية) لا في محركات البحث العامة وحدها.','Search scholarly databases (ERIC, Scopus, Dar Almandumah, the Saudi Digital Library), not general search engines alone.'],['لا تضف دراسة لم تقرأها أو لم تتحقق من وجودها؛ أدوات الذكاء الاصطناعي قد تقترح دراسات غير موجودة.','Do not add a study you have not read or verified; AI tools can suggest studies that do not exist.'],['نظّم الدراسات بحسب محاور دراستك، لا بحسب سنة نشرها.','Organise studies by your study\u2019s themes, not by year.'],['التعقيب ليس تلخيصًا؛ بيّن ما تتفق فيه الدراسات وتختلف، وما تضيفه دراستك.','The commentary is not a summary; show agreement, disagreement and what your study adds.']],
+      goal:['ابنِ الأساس النظري لدراستك، وحدّد موقعها بين الدراسات السابقة.','Build your study\u2019s theoretical basis and locate it among prior studies.'],fields:[
+      {id:'framework',t:'area',rows:4,reqf:function(){return v('design')!=='gt'},l:['الإطار النظري','Theoretical framework'],h:['النظرية أو النموذج الذي تستند إليه، ولماذا يناسب سؤالك.','The theory or model your study rests on, and why it fits your question.']},
+      {id:'themes',t:'lines',rows:3,l:['محاور الإطار النظري','Themes of the framework'],h:['سطر لكل محور؛ تصير عناوين في الفصل الثاني.','One per line; they become headings in Chapter Two.']},
+      {id:'search',t:'area',rows:2,l:['كيف بحثت؟','How did you search?'],h:['قواعد البيانات، والكلمات المفتاحية، والمدة الزمنية، ومعايير اختيار الدراسات.','Databases, keywords, time span and criteria for selecting studies.']},
+      {id:'studies',t:'rows',stack:1,ta:[1,2,3],req:1,add:['دراسة','Study'],l:['الدراسات السابقة','Prior studies'],h:['لكل دراسة: المؤلف والسنة، وما فعلته، وما وجدته، وصلتها بدراستك، ورقم DOI أو رابطها.','For each study: author and year, what it did, what it found, how it relates to yours, and its DOI or link.'],c:[['المؤلف والسنة','Author and year'],['الهدف والمنهج والعينة','Aim, method and sample'],['أبرز النتائج','Main findings'],['صلتها بدراستك','Relevance to your study'],['DOI أو رابط','DOI or link']]},
+      {id:'comment',t:'area',rows:5,req:1,l:['التعقيب على الدراسات السابقة','Commentary on prior studies'],h:['ما تتفق فيه الدراسات وما تختلف، وما الذي لم تتناوله، وما تضيفه دراستك. اربطه بالفجوة التي حددتها في المرحلة الثانية.','Where studies agree and differ, what they leave out, and what your study adds. Link it to the gap from stage 2.']}
+    ]},
     {id:'design',ar:'التصميم والأدوات',en:'Design and instruments',soon:1},
     {id:'data',ar:'الأخلاقيات وجمع البيانات',en:'Ethics and data collection',soon:1},
     {id:'analysis',ar:'التحليل',en:'Analysis',soon:1},
@@ -1738,6 +1755,20 @@ requestAnimationFrame(function(){requestAnimationFrame(function(){s.split('').fo
       var lm=[['limT','الموضوعية','topic'],['limP','المكانية','place'],['limZ','الزمانية','time'],['limH','البشرية','participants']].filter(function(x){return !tx(x[0])});
       if(lm.length)W('حدود لم تُحدَّد: '+lm.map(function(x){return x[1]}).join('، ')+'.','Delimitations not stated: '+lm.map(function(x){return x[2]}).join(', ')+'.');
     }
+    if(s.id==='lit'){
+      if(!tx('framework')){if(v('design')==='gt')out.push(['info','في النظرية المجذّرة يُكتفى هنا بالمفاهيم الموجِّهة، ويُبنى الإطار من البيانات.','In grounded theory, list sensitising concepts here; the framework emerges from the data.']);else X('اكتب الإطار النظري.','Write the theoretical framework.')}
+      var ss=(v('studies')||[]).filter(function(r){return r[0]&&r[0].trim()});
+      if(!ss.length)X('أضف الدراسات السابقة.','Add prior studies.');else{
+        if(ss.length<5)W('الدراسات قليلة ('+num(ss.length)+')؛ وسّع البحث.','Few studies ('+ss.length+'); widen the search.');
+        var ny=ss.filter(function(r){return !/\d{4}/.test(r[0])}).length;if(ny)W(num(ny)+' من الدراسات بلا سنة نشر.',ny+' stud(ies) without a year.');
+        var yr=new Date().getFullYear(),old=ss.filter(function(r){var m=r[0].match(/(19|20)\d{2}/);return m&&yr-(+m[0])>10}).length;if(old*2>ss.length)W('أكثر من نصف الدراسات أقدم من عشر سنوات؛ أضف دراسات حديثة.','More than half the studies are over ten years old; add recent ones.');
+        var nd=ss.filter(function(r){return !(r[4]||'').trim()}).length;if(nd)W(num(nd)+' من الدراسات بلا DOI أو رابط؛ وثّق كل دراسة بما يثبت وجودها.',nd+' stud(ies) without a DOI or link; document each so it can be verified.');
+        var nr=ss.filter(function(r){return !(r[3]||'').trim()}).length;if(nr)W('بيّن صلة كل دراسة بدراستك ('+num(nr)+' بلا صلة مكتوبة).','State how each study relates to yours ('+nr+' without).');
+        if(!tx('search'))out.push(['info','وثّق طريقة بحثك؛ يسأل عنها المشرف والمناقشون.','Document how you searched; supervisors and examiners ask.']);
+      }
+      var cm=tx('comment');if(!cm)X('اكتب التعقيب على الدراسات السابقة.','Write the commentary on prior studies.');else{if(words(cm)<60)W('التعقيب مختصر؛ بيّن الاتفاق والاختلاف وما تضيفه دراستك.','The commentary is brief; show agreement, difference and your contribution.');
+        var gw=tx('gap').split(/\s+/).filter(function(x){return x.length>3});if(gw.length&&!gw.some(function(x){return cm.indexOf(x)>-1}))out.push(['info','اربط التعقيب بالفجوة التي حددتها في المرحلة الثانية.','Link the commentary to the gap you stated in stage 2.'])}
+    }
     if(!out.length)out.push(['ok','لا نواقص ظاهرة في هذه المرحلة.','Nothing missing at this stage.']);
     return out;
   }
@@ -1779,16 +1810,22 @@ requestAnimationFrame(function(){requestAnimationFrame(function(){s.split('').fo
     h+=tr.length?tr.map(function(r){return '<p><b>'+esc(r[0])+':</b> '+(r[1]?esc(r[1]):ph('[ التعريف المفاهيمي ]','[ Conceptual definition ]'))+(r[2]?' '+T('ويُعرّف إجرائيًا بأنه: ','Operationally, ')+esc(r[2]):'')+'</p>'}).join(''):'<p>'+ph('[ المصطلحات — المرحلة ٣ ]','[ Terms — stage 3 ]')+'</p>';
     // later chapters: placeholders shaped by the approach
     var k=m?m.kind:'q',need=needsList(),dd=curDes();
-    var ch=[[T('الفصل الثاني: الإطار النظري والدراسات السابقة','Chapter Two: Literature review'),[T('الإطار النظري','Theoretical framework'),T('الدراسات السابقة','Prior studies'),T('التعقيب على الدراسات السابقة وموقع الدراسة منها','Commentary and the place of this study')]],
+    var ss2=(v('studies')||[]).filter(function(r){return r[0]&&r[0].trim()}),hasLit=tx('framework')||lines('themes').length||ss2.length||tx('comment');
+    if(hasLit){h+='<h2>'+T('الفصل الثاني: الإطار النظري والدراسات السابقة','Chapter Two: Literature review')+'</h2><h3>'+T('الإطار النظري','Theoretical framework')+'</h3>'+para('framework','[ الإطار النظري — المرحلة ٤ ]','[ Theoretical framework — stage 4 ]')+lines('themes').map(function(t){return '<h4>'+esc(t)+'</h4><p>'+ph('[ يُكتب هذا المحور ]','[ To be written ]')+'</p>'}).join('');
+      h+='<h3>'+T('الدراسات السابقة','Prior studies')+'</h3>'+(ss2.length?ss2.map(function(r){return '<p><b>'+esc(r[0])+'</b>'+(r[1]?': '+esc(r[1]):'')+(r[2]?' '+T('وتوصلت إلى: ','Findings: ')+esc(r[2]):'')+'</p>'}).join(''):'<p>'+ph('[ الدراسات السابقة ]','[ Prior studies ]')+'</p>');
+      h+='<h3>'+T('التعقيب على الدراسات السابقة','Commentary on prior studies')+'</h3>'+para('comment','[ التعقيب ]','[ Commentary ]')}
+    var ch=[hasLit?null:[T('الفصل الثاني: الإطار النظري والدراسات السابقة','Chapter Two: Literature review'),[T('الإطار النظري','Theoretical framework'),T('الدراسات السابقة','Prior studies'),T('التعقيب على الدراسات السابقة وموقع الدراسة منها','Commentary and the place of this study')]],
       [T('الفصل الثالث: منهجية الدراسة وإجراءاتها','Chapter Three: Methodology'),[T('منهج الدراسة','Research design')+(m?' ('+T(m.ar,m.en)+(dd?' — '+T(dd.ar,dd.en):'')+')':'')+(tx('just')?': '+esc(tx('just')):'')].concat(m?need.map(function(n){return T(n[0],n[1])}):[T('تتحدد أقسامه بعد اختيار المنهج','Sections follow once the approach is chosen')])],
       [k==='ql'?T('الفصل الرابع: نتائج الدراسة (المحاور والموضوعات)','Chapter Four: Findings (themes)'):k==='rv'?T('الفصل الرابع: نتائج المراجعة','Chapter Four: Results of the review'):T('الفصل الرابع: نتائج الدراسة ومناقشتها','Chapter Four: Results and discussion'),[]],
       [T('الفصل الخامس: ملخص النتائج والتوصيات','Chapter Five: Summary and recommendations'),[]]];
-    h+=ch.map(function(c){return '<h2 class="jr-later">'+c[0]+'</h2>'+(c[1].length?'<ul class="jr-later">'+c[1].map(function(x){return '<li>'+x+'</li>'}).join('')+'</ul>':'')}).join('');
-    h+='<h2 class="jr-later">'+T('المراجع','References')+'</h2>';
+    h+=ch.filter(Boolean).map(function(c){return '<h2 class="jr-later">'+c[0]+'</h2>'+(c[1].length?'<ul class="jr-later">'+c[1].map(function(x){return '<li>'+x+'</li>'}).join('')+'</ul>':'')}).join('');
+    h+='<h2'+(ss2.length?'':' class="jr-later"')+'>'+T('المراجع','References')+'</h2>'+(ss2.length?'<p>'+ph('[ تُكتب المراجع كاملة بصيغة APA ]','[ Complete the references in APA style ]')+'</p><ul>'+ss2.map(function(r){return '<li>'+esc(r[0])+(r[4]?' <span dir="ltr">'+esc(r[4])+'</span>':'')+'</li>'}).join('')+'</ul>':'');
     return h;
   }
 
   // ---------- fields ----------
+  function blankRow(f){return f.c.map(function(){return ''})}
+  function fieldById(id){var r;STAGES.forEach(function(s){(s.fields||[]).forEach(function(x){if(x.id===id)r=x})});return r}
   function chipsH(f,name,val,dis){var multi=!!f.multi,oo=typeof f.o==='function'?f.o():f.o;return '<div class="tl-chips">'+oo.map(function(o){var on=multi?(val||[]).indexOf(o[0])>-1:val===o[0];return '<label class="tl-chip"><input type="'+(multi?'checkbox':'radio')+'" name="'+name+'" value="'+o[0]+'"'+(on?' checked':'')+(dis?' disabled':'')+'><span>'+esc(L(o[1],o[2]))+'</span></label>'}).join('')+'</div>'}
   function needsList(){var d=curDes();return ((d&&d.needs)||NEEDS[v('approach')]||[]).concat([ETH])}
   function needsH(){var k=v('approach');if(!M[k])return '';var d=curDes(),g=curGuide(),h='<details class="jr-guide"><summary>'+L('دليل: ','Guide: ')+esc(L(M[k].ar,M[k].en))+(d?' — '+esc(L(d.ar,d.en)):'')+'</summary>';
@@ -1805,7 +1842,7 @@ requestAnimationFrame(function(){requestAnimationFrame(function(){s.split('').fo
     if(f.t==='text')h+='<input class="jr-in" id="'+id+'" data-f="'+f.id+'" type="text"'+dir+' value="'+esc(val)+'">';
     else if(f.t==='area'||f.t==='lines')h+='<textarea class="jr-in" id="'+id+'" data-f="'+f.id+'" rows="'+(f.rows||3)+'"'+dir+'>'+esc(val)+'</textarea>';
     else if(f.t==='chips')h+='<div data-f="'+f.id+'" data-multi="'+(f.multi?1:0)+'">'+chipsH(f,'jc-'+f.id,val)+'</div>';
-    else if(f.t==='rows'){var rows=(val&&val.length)?val:[['','','']];h+='<div class="jr-rows">'+rows.map(function(r,i){return '<div class="jr-row">'+f.c.map(function(c,j){return '<input class="jr-in" data-f="'+f.id+'" data-r="'+i+'" data-c="'+j+'"'+dir+' placeholder="'+esc(L(c[0],c[1]))+'" value="'+esc(r[j]||'')+'">'}).join('')+'<button type="button" class="jr-x" data-act="delrow" data-f="'+f.id+'" data-r="'+i+'" aria-label="'+L('حذف','Remove')+'">×</button></div>'}).join('')+'</div><button type="button" class="btn jr-sm" data-act="addrow" data-f="'+f.id+'">+ '+L('مصطلح','Term')+'</button>'}
+    else if(f.t==='rows'){var rows=(val&&val.length)?val:[blankRow(f)];h+='<div class="jr-rows">'+rows.map(function(r,i){return '<div class="jr-row'+(f.stack?' stack':'')+'">'+f.c.map(function(c,j){var at=' class="jr-in" data-f="'+f.id+'" data-r="'+i+'" data-c="'+j+'"'+dir+' placeholder="'+esc(L(c[0],c[1]))+'"';return f.ta&&f.ta.indexOf(j)>-1?'<textarea rows="2"'+at+'>'+esc(r[j]||'')+'</textarea>':'<input'+at+' value="'+esc(r[j]||'')+'"'+(j===f.c.length-1&&f.stack?' dir="ltr"':'')+'>'}).join('')+'<button type="button" class="jr-x" data-act="delrow" data-f="'+f.id+'" data-r="'+i+'" aria-label="'+L('حذف','Remove')+'">×</button></div>'}).join('')+'</div><button type="button" class="btn jr-sm" data-act="addrow" data-f="'+f.id+'">+ '+(f.add?L(f.add[0],f.add[1]):L('مصطلح','Term'))+'</button>'+(f.id==='studies'?' <button type="button" class="btn jr-sm" data-act="verify">'+L('تحقق من وجود الدراسات','Check that the studies exist')+'</button><div data-verify></div>':'')}
     if(f.act==='assemble')h+='<button type="button" class="btn jr-sm" data-act="assemble">'+L('ابنِ هيكل الفقرة من إجاباتي','Build a skeleton from my answers')+'</button>';
     if(f.act==='derive')h+='<button type="button" class="btn jr-sm" data-act="derive">'+L('ابدأ الأهداف من الأسئلة الفرعية','Start objectives from the sub-questions')+'</button>';
     return h+'</div>';
@@ -1823,7 +1860,7 @@ requestAnimationFrame(function(){requestAnimationFrame(function(){s.split('').fo
     h+=restH();h+='<div class="jr-qc"><h4>'+L('مراجعة الجودة','Quality check')+'</h4><div data-checks>'+checksH(s)+'</div></div>';
     h+='<div class="jr-nav">'+(i>0?'<button type="button" class="btn" data-act="go" data-s="'+ACTIVE[i-1].id+'">'+L('السابقة','Previous')+'</button>':'<span></span>')+(i<ACTIVE.length-1?'<button type="button" class="btn solid" data-act="go" data-s="'+ACTIVE[i+1].id+'">'+L('المرحلة التالية','Next stage')+'</button>':'<button type="button" class="btn solid" data-act="send">'+L('أرسل للمشرف','Send to supervisor')+'</button>')+'</div></div>';
     return h}
-  function draftPanel(){var p=total();return '<div class="jr-dh"><div><h3>'+L('المسودة','The draft')+'</h3><p class="jr-pc"><span class="jr-bar"><i style="width:'+p+'%"></i></span><b data-pct>'+num(p)+'٪'.replace('٪',ar()?'٪':'%')+'</b> '+L('من الفصل الأول','of Chapter One')+'</p></div>'+
+  function draftPanel(){var p=total();return '<div class="jr-dh"><div><h3>'+L('المسودة','The draft')+'</h3><p class="jr-pc"><span class="jr-bar"><i style="width:'+p+'%"></i></span><b data-pct>'+num(p)+'٪'.replace('٪',ar()?'٪':'%')+'</b> '+L('من المسودة','of the draft')+'</p></div>'+
     '<div class="jr-dact"><button type="button" class="btn" data-act="word">Word</button><button type="button" class="btn" data-act="print">'+L('طباعة','Print')+'</button></div></div><article class="jr-doc" data-doc dir="'+(DL()==='ar'?'rtl':'ltr')+'" lang="'+DL()+'">'+draft()+'</article>'}
   function sendBox(){return '<div class="jr-send" data-sendbox hidden><h4>'+L('رابط المراجعة','Review link')+'</h4><p>'+L('أرسل هذا الرابط لمشرفك. يحمل نسخة من عملك الآن؛ يكتب ملاحظاته ورأيه في كل مرحلة، ثم يعيد إليك رابطًا تفتحه هنا.','Send this link to your supervisor. It carries a copy of your work as it is now; they comment and decide on each stage, then send you back a link to open here.')+'</p><div class="jr-link"><input readonly data-link dir="ltr"><button type="button" class="btn solid" data-act="copy">'+L('نسخ','Copy')+'</button></div></div>'}
   function tools(){return '<div class="jr-tools"><button type="button" class="btn" data-act="imp">'+L('استيراد من مسودة','Import from a draft')+'</button><button type="button" class="btn" data-act="send">'+L('أرسل للمشرف','Send to supervisor')+'</button><button type="button" class="btn" data-act="meta">'+L('بيانات المشروع','Project details')+'</button><button type="button" class="btn" data-act="backup">'+L('حفظ نسخة','Save a copy')+'</button><label class="btn">'+L('استعادة نسخة','Restore a copy')+'<input type="file" accept=".json,application/json" data-act="restore" hidden></label><button type="button" class="btn jr-quiet" data-act="reset">'+L('مشروع جديد','New project')+'</button></div>'}
@@ -1871,7 +1908,7 @@ requestAnimationFrame(function(){requestAnimationFrame(function(){s.split('').fo
   // ---------- events ----------
   function setVal(el){var w=el.closest('[data-f]'),id=w&&w.getAttribute('data-f');if(!id)return;var f;ACTIVE.forEach(function(s){s.fields.forEach(function(x){if(x.id===id)f=x})});if(!f)return;
     if(f.t==='chips'){var box=el.closest('[data-f]');var c=[].map.call(box.querySelectorAll('input:checked'),function(i){return i.value});S.d[id]=f.multi?c:(c[0]||'')}
-    else if(f.t==='rows'){var r=+el.getAttribute('data-r'),c2=+el.getAttribute('data-c'),a=S.d[id]||[['','','']];while(a.length<=r)a.push(['','','']);a[r][c2]=el.value;S.d[id]=a}
+    else if(f.t==='rows'){var r=+el.getAttribute('data-r'),c2=+el.getAttribute('data-c'),a=S.d[id]||[blankRow(f)];while(a.length<=r)a.push(blankRow(f));a[r][c2]=el.value;S.d[id]=a}
     else S.d[id]=el.value;
     var rv=S.rv[S.cur];if(rv&&rv.d)rv.edited=1;
     if(id==='approach'){if(!(DES[S.d.approach]&&DES[S.d.approach][S.d.design]))delete S.d.design;save();render();return}
@@ -1890,8 +1927,9 @@ requestAnimationFrame(function(){requestAnimationFrame(function(){s.split('').fo
     if(a==='start'){S=blank();var st0=readMeta(host,S.meta);S.cur=st0||'idea';save();render();return}
     if(a==='go'){notice='';S.cur=b.getAttribute('data-s');save();tab='work';render();var top=host.querySelector('.jr-stage');if(top)top.scrollIntoView({behavior:'smooth',block:'start'});return}
     if(a==='tab'){tab=b.getAttribute('data-t');render();return}
-    if(a==='addrow'){var id=b.getAttribute('data-f');(S.d[id]=S.d[id]||[['','','']]).push(['','','']);save();render();return}
+    if(a==='addrow'){var id=b.getAttribute('data-f'),ff=fieldById(id);(S.d[id]=S.d[id]||[blankRow(ff)]).push(blankRow(ff));save();render();return}
     if(a==='delrow'){var id2=b.getAttribute('data-f'),r=+b.getAttribute('data-r');if(S.d[id2]){S.d[id2].splice(r,1);save();render()}return}
+    if(a==='verify'){verify();return}
     if(a==='tpl'){var g=curGuide();if(g&&!tx('mainq')){S.d.mainq=T(g.g[1][0],g.g[1][1]).replace(/\s*\((PICO|PCC)\)$/,'');save();render();var mq=host.querySelector('#jf-mainq');if(mq){mq.focus();mq.scrollIntoView({block:'center'})}}return}
     if(a==='assemble'){var cur=tx('stmt');if(cur&&!confirmless(b))return;var ev=lines('evid');
       S.d.stmt=[(tx('who')?L('[السياق] ','[Context] ')+tx('who'):''),(ev.length?L('[الشواهد] ','[Evidence] ')+ev.join(' '):''),(tx('gap')?L('[الفجوة] ','[Gap] ')+tx('gap'):''),(tx('conseq')?L('[الأثر] ','[Consequence] ')+tx('conseq'):''),L('[السؤال الرئيس] ','[Main question] ')+(tx('mainq')||'…')].filter(Boolean).join('\n');save();render();var t=host.querySelector('#jf-stmt');if(t)t.focus();return}
@@ -1921,6 +1959,14 @@ requestAnimationFrame(function(){requestAnimationFrame(function(){s.split('').fo
   host.addEventListener('input',function(e){if(mode!=='review')return;var c=e.target.getAttribute('data-rc');if(c)(RV[c]=RV[c]||{}).c=e.target.value});
   host.addEventListener('change',function(e){if(mode!=='review')return;var n=e.target.name||'';if(n.indexOf('rd-')===0)(RV[n.slice(3)]=RV[n.slice(3)]||{}).d=e.target.value});
 
+  // ---------- check that studies exist (Crossref, by DOI) ----------
+  function verify(){var box=host.querySelector('[data-verify]');if(!box)return;var ss=(S.d.studies||[]).filter(function(r){return r[0]&&r[0].trim()});if(!ss.length)return;
+    box.innerHTML='<ul class="jr-vf">'+ss.map(function(r,i){return '<li data-vi="'+i+'"><b dir="auto">'+esc(r[0])+'</b> <span>…</span></li>'}).join('')+'</ul>';
+    ss.forEach(function(r,i){var li=box.querySelector('[data-vi="'+i+'"] span'),m=(r[4]||'').match(/10\.\d{4,9}\/[^\s"<>]+/);
+      if(!m){li.className='vf-q';li.innerHTML=/^https?:/.test((r[4]||'').trim())?L('رابط — افتحه وتأكد أنه يقود إلى الدراسة نفسها.','Link — open it and confirm it leads to this study.'):L('بلا DOI — ابحث عنها في Google Scholar أو قاعدة البيانات وتأكد من وجودها.','No DOI — find it in Google Scholar or a database to confirm it exists.');return}
+      fetch('https://api.crossref.org/works/'+encodeURIComponent(m[0].replace(/[.,;]+$/,''))).then(function(x){if(!x.ok)throw 0;return x.json()}).then(function(j){var w=j.message,t=(w.title||[''])[0],y=((w.issued||{})['date-parts']||[[0]])[0][0],a=((w.author||[])[0]||{}).family||'';
+        var ok=String(r[0]).indexOf(String(y))>-1;li.className=ok?'vf-ok':'vf-q';li.innerHTML=(ok?L('موجودة: ','Found: '):L('موجودة، لكن السنة لا تطابق ما كتبته: ','Found, but the year differs from yours: '))+'<i dir="auto">'+esc(t)+'</i> — '+esc(a)+' ('+y+')'})
+      .catch(function(){li.className='vf-no';li.innerHTML=L('لم يُعثر على هذا الرقم؛ تأكد من صحته ومن وجود الدراسة.','This DOI was not found; check it and that the study exists.')})})}
   // ---------- import from an existing draft (.docx / .txt / pasted text), all in the browser ----------
   var IMP=null;
   function u16(b,o){return b[o]|(b[o+1]<<8)}function u32(b,o){return (b[o]|(b[o+1]<<8)|(b[o+2]<<16)|(b[o+3]<<24))>>>0}
