@@ -1753,7 +1753,7 @@ requestAnimationFrame(function(){requestAnimationFrame(function(){s.split('').fo
   // ---------- fields ----------
   function chipsH(f,name,val,dis){var multi=!!f.multi,oo=typeof f.o==='function'?f.o():f.o;return '<div class="tl-chips">'+oo.map(function(o){var on=multi?(val||[]).indexOf(o[0])>-1:val===o[0];return '<label class="tl-chip"><input type="'+(multi?'checkbox':'radio')+'" name="'+name+'" value="'+o[0]+'"'+(on?' checked':'')+(dis?' disabled':'')+'><span>'+esc(L(o[1],o[2]))+'</span></label>'}).join('')+'</div>'}
   function needsList(){var d=curDes();return ((d&&d.needs)||NEEDS[v('approach')]||[]).concat([ETH])}
-  function needsH(){var k=v('approach');if(!M[k])return '';var d=curDes(),g=curGuide(),h='<details class="jr-guide" open><summary>'+L('دليل: ','Guide: ')+esc(L(M[k].ar,M[k].en))+(d?' — '+esc(L(d.ar,d.en)):'')+'</summary>';
+  function needsH(){var k=v('approach');if(!M[k])return '';var d=curDes(),g=curGuide(),h='<details class="jr-guide"><summary>'+L('دليل: ','Guide: ')+esc(L(M[k].ar,M[k].en))+(d?' — '+esc(L(d.ar,d.en)):'')+'</summary>';
     if(DES[k]&&!d)h+='<p class="jr-help">'+L('اختر التصميم ليظهر دليله.','Choose the design to see its guide.')+'</p>';
     if(g){h+='<dl>'+GL.map(function(t,i){return '<div><dt>'+L(t[0],t[1])+'</dt><dd>'+esc(L(g.g[i][0],g.g[i][1]))+(i===1&&!tx('mainq')?' <button type="button" class="btn jr-sm" data-act="tpl">'+L('ضعه قالبًا للسؤال الرئيس','Use as a template for the main question')+'</button>':'')+'</dd></div>'}).join('')+'</dl>';
       if(g.pit)h+='<h5>'+L('أخطاء شائعة','Common mistakes')+'</h5><ul>'+g.pit.map(function(x){return '<li>'+esc(L(x[0],x[1]))+'</li>'}).join('')+'</ul>'}
