@@ -195,3 +195,11 @@ textarea.jr-in{resize:vertical}
 .jr-checks details summary{cursor:pointer;list-style:none}.jr-checks details summary::-webkit-details-marker{display:none}
 .jr-why{color:var(--accent);font-size:.75rem;margin-inline-start:4px}
 .jr-checks details p{margin:4px 0 2px;color:var(--muted);font-size:.8125rem}
+.jr-row.stack.nopair .jr-in{grid-column:1/-1;grid-row:auto}
+.jr-report{max-width:1180px}
+.jr-rs2{border-top:1px solid var(--line);padding:10px 0}
+.jr-rs2 summary{cursor:pointer;display:flex;align-items:center;gap:10px;flex-wrap:wrap;list-style:none}
+.jr-rs2 summary::-webkit-details-marker{display:none}
+.jr-rs2 summary b{min-width:11em}
+.jr-rc{font-size:.8125rem;color:var(--muted)}.jr-rc .m{font-style:normal;color:var(--tl-bad)}.jr-rc .w{font-style:normal;color:#b7791f}
+.jr-rs2 .jr-checks{margin:10px 0 8px}
