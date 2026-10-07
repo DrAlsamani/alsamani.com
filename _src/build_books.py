@@ -352,7 +352,7 @@ if __name__ == '__main__':
         if 'bp-tool-live' in _t: continue
         _end = _t.find('<h2 id="summary"')
         if _end < 0: continue
-        _t = _t[:_end] + f'<p class="bp-tool-live"><a href="../../tools/{_sl}/index.html">استخدم هذه الأداة تفاعليًا على الموقع ←</a></p>\n' + _t[_end:]
+        _t = _t[:_end] + f'<p class="bp-tool-live"><a href="../../tools/{_sl}/index.html">الأداة على الموقع ←</a></p>\n' + _t[_end:]
         open(_h, 'w').write(_t)
     # cache-busting: every page asks for the current version of shared css/js
     import hashlib, glob as _g
