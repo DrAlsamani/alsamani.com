@@ -308,3 +308,14 @@ html[lang=ar] .jr-pri{list-style:arabic-indic}
 .jr-acts{flex-wrap:wrap}
 @media (max-width:900px){.jr-dtitle .jr-in{font-size:1.125rem!important}.jr-paper .jr-dch{font-size:1.0625rem;margin-top:30px}}
 .jr-dch [contenteditable]{outline:none;border-radius:4px;padding:0 4px}.jr-dch [contenteditable]:hover,.jr-dch [contenteditable]:focus{background:rgba(0,0,0,.035)}
+.jr-dch{display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap}
+.jr-fold{width:26px;height:26px;border:0;border-radius:50%;background:transparent;cursor:pointer;display:inline-grid;place-items:center;color:#8a8a8e;flex:none}
+.jr-fold::before{content:"";width:8px;height:8px;border-inline-end:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg);margin-top:-4px;transition:transform .2s}
+.jr-dch.fd .jr-fold::before{transform:rotate(135deg);margin-top:0}
+html[dir=ltr] .jr-dch.fd .jr-fold::before{transform:rotate(-45deg)}
+.jr-fold:hover{background:rgba(0,0,0,.05);color:#1d1d1f}
+.jr-fsum{flex-basis:100%;text-align:center;font-family:var(--sans,system-ui);font-size:.75rem;font-weight:400;color:#8a8a8e}
+.jr-dch.fd{margin-bottom:6px;opacity:.85}
+.jr-fold::before{border-inline-end:0;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg);margin-top:-4px}
+.jr-dch.fd .jr-fold::before{transform:rotate(-45deg);margin-top:0}
+.jr-paper[dir=rtl] .jr-dch.fd .jr-fold::before{transform:rotate(135deg)}
