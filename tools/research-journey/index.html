@@ -2112,7 +2112,7 @@ requestAnimationFrame(function(){requestAnimationFrame(function(){s.split('').fo
   function secF(sec){return sec.f.map(fieldById).filter(function(f){return f&&shown(f)})}
   function secHas(sec){return secF(sec).some(filled)||(sec.pick||[]).map(fieldById).some(function(f){return f&&filled(f)})||customOf(sec.id).length>0}
   function secOn(sec){if((S.meta.hidden||[]).indexOf(sec.id)>-1)return false;if(!secF(sec).length)return false;if(sec.id==='hyp'){var m=M[v('approach')];if(!m||m.hyp==='no')return false}
-    return inScope(st(sec.stage))||secHas(sec)||S.meta.showAll}
+    return true}
   function secTitle(sec){var t=(S.meta.titles||{})[sec.id];return t||L(sec.h[0],sec.h[1])}
   function customOf(after){return (S.d.custom||[]).filter(function(c){return c.after===after})}
   // which section a quality note belongs to
@@ -2185,8 +2185,8 @@ requestAnimationFrame(function(){requestAnimationFrame(function(){s.split('').fo
     if(!secOn(SECS.filter(function(x){return x.id==='refs'})[0])){var rl=refsList();if(rl.length)h+='<h2>'+T('المراجع','References')+'</h2>'+rl.map(function(r){return '<p>'+esc(r)+'</p>'}).join('')}
     return h}
   // ---------- next step: the single most useful thing to do now ----------
-  function nextStep(){var best=null;SECS.forEach(function(sec){if(best||!secOn(sec))return;var ns=(NOTES[sec.id]||[]);var m=ns.filter(function(c){return c[0]==='miss'})[0];if(m)best=[sec,m]});
-    if(!best)SECS.forEach(function(sec){if(best||!secOn(sec)||!secHas(sec))return;var w=(NOTES[sec.id]||[]).filter(function(c){return c[0]==='warn'})[0];if(w)best=[sec,w]});return best}
+  function nextStep(){var best=null,ord=SECS.filter(function(x){return inScope(st(x.stage))}).concat(SECS.filter(function(x){return !inScope(st(x.stage))}));ord.forEach(function(sec){if(best||!secOn(sec))return;var ns=(NOTES[sec.id]||[]);var m=ns.filter(function(c){return c[0]==='miss'})[0];if(m)best=[sec,m]});
+    if(!best)ord.forEach(function(sec){if(best||!secOn(sec)||!secHas(sec))return;var w=(NOTES[sec.id]||[]).filter(function(c){return c[0]==='warn'})[0];if(w)best=[sec,w]});return best}
   function nextH(){var n=nextStep();return n?'<button type="button" class="jr-next" data-act="tosec" data-goto="'+n[0].id+'"><span>'+L('التالي: ','Next: ')+'</span>'+esc(L(n[1][1],n[1][2]))+'</button>':'<span class="jr-next ok">'+L('لا نواقص ظاهرة في الأقسام التي تعمل عليها.','Nothing evident is missing in your sections.')+'</span>'}
 
   // ---------- consistency map: each question across the thesis ----------
