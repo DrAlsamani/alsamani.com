@@ -336,3 +336,9 @@ html[dir=ltr] .jr-dch.fd .jr-fold::before{transform:rotate(-45deg)}
 .jr-amw td.gap button{background:none;border:0;color:var(--tl-bad);font:inherit;cursor:pointer;padding:0}
 .jr-wc{font-size:.75rem;color:var(--muted);margin:-4px 0 10px}.jr-wc.lo,.jr-wc.hi{color:#b7791f}
 .jr-amw td.txt button{background:none;border:0;color:var(--muted);font:inherit;font-size:.75rem;cursor:pointer;padding:0;text-align:start}
+.jr-sg{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:10px 0;margin:0 0 10px;font-size:.8125rem}
+.jr-sg h5{margin:0 0 4px;font-size:.8125rem}
+.jr-sg ul{margin:0;padding-inline-start:18px;display:grid;gap:2px}
+.jr-sg li.d{color:var(--accent)}
+.jr-sg details{margin-top:6px}.jr-sg summary{cursor:pointer;color:var(--accent)}
+.jr-sgk{margin:6px 0 0;font-size:.6875rem;color:var(--accent)}

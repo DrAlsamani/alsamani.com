@@ -1303,6 +1303,12 @@ html[dir=ltr] .jr-dch.fd .jr-fold::before{transform:rotate(-45deg)}
 .jr-amw td.gap button{background:none;border:0;color:var(--tl-bad);font:inherit;cursor:pointer;padding:0}
 .jr-wc{font-size:.75rem;color:var(--muted);margin:-4px 0 10px}.jr-wc.lo,.jr-wc.hi{color:#b7791f}
 .jr-amw td.txt button{background:none;border:0;color:var(--muted);font:inherit;font-size:.75rem;cursor:pointer;padding:0;text-align:start}
+.jr-sg{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:10px 0;margin:0 0 10px;font-size:.8125rem}
+.jr-sg h5{margin:0 0 4px;font-size:.8125rem}
+.jr-sg ul{margin:0;padding-inline-start:18px;display:grid;gap:2px}
+.jr-sg li.d{color:var(--accent)}
+.jr-sg details{margin-top:6px}.jr-sg summary{cursor:pointer;color:var(--accent)}
+.jr-sgk{margin:6px 0 0;font-size:.6875rem;color:var(--accent)}
 </style>
 </head>
 <body>
@@ -2176,7 +2182,7 @@ requestAnimationFrame(function(){requestAnimationFrame(function(){s.split('').fo
     if(gi!=null&&gd&&mk)h+='<div class="jr-mg-d"><span>'+L('في تصميمك: ','For your design: ')+esc(L(mk.ar,mk.en))+(dz?' — '+esc(L(dz.ar,dz.en)):'')+'</span><p>'+esc(L(gd.g[gi][0],gd.g[gi][1]))+'</p>'+(gi===1&&!tx('mainq')?'<button type="button" class="jr-edit" data-act="tpl">'+L('استخدمه قالبًا للسؤال الرئيس','Use it as a template for the main question')+'</button>':'')+'</div>';
     else if(gi!=null&&!mk&&sec.id!=='abstract')h+='<div class="jr-mg-d"><p>'+L('حدّد منهجك وتصميمك في قسم «منهج الدراسة» لتظهر هنا إرشادات تخص تصميمك.','Set your approach and design under “Research design” to see guidance for it here.')+'</p><button type="button" class="jr-edit" data-act="tosec" data-goto="method">'+L('منهج الدراسة','Research design')+'</button></div>';
     if(sec.id==='framework'&&v('design')==='gt')h+='<div class="jr-mg-d"><p>'+L('في النظرية المجذّرة يُكتفى هنا بالمفاهيم الموجِّهة، ويُبنى الإطار من البيانات.','In grounded theory, list sensitising concepts only; the framework emerges from the data.')+'</p></div>';
-    var ns=secHas(sec)?(NOTES[sec.id]||[]):[];h+='<div data-mgnotes>'+(ns.length?'<ul class="jr-checks">'+ns.map(function(c){return '<li class="c-'+c[0]+'">'+(c[3]?'<details><summary>'+esc(L(c[1],c[2]))+' <span class="jr-why">'+L('لماذا؟','Why?')+'</span></summary><p>'+esc(L(c[3][0],c[3][1]))+'</p></details>':esc(L(c[1],c[2])))+'</li>'}).join('')+'</ul>':(secHas(sec)?'<p class="jr-okm">'+L('لا ملاحظات على هذا القسم.','Nothing to flag here.')+'</p>':''))+'</div>';
+    var ns=secHas(sec)?(NOTES[sec.id]||[]):[];h+=sgH(sec);h+='<div data-mgnotes>'+(ns.length?'<ul class="jr-checks">'+ns.map(function(c){return '<li class="c-'+c[0]+'">'+(c[3]?'<details><summary>'+esc(L(c[1],c[2]))+' <span class="jr-why">'+L('لماذا؟','Why?')+'</span></summary><p>'+esc(L(c[3][0],c[3][1]))+'</p></details>':esc(L(c[1],c[2])))+'</li>'}).join('')+'</ul>':(secHas(sec)?'<p class="jr-okm">'+L('لا ملاحظات على هذا القسم.','Nothing to flag here.')+'</p>':''))+'</div>';
     var cf=sec.cmp&&fieldById(sec.cmp);if(cf&&cf.cmp)h+='<details class="jr-cmp"><summary>'+L('مثال ضعيف ومثال أفضل','A weak and a better example')+'</summary><div class="jr-cw"><span>'+L('ضعيف','Weak')+'</span><p dir="auto">'+esc(L(cf.cmp[0][0],cf.cmp[0][1]))+'</p></div><div class="jr-cg"><span>'+L('أفضل','Better')+'</span><p dir="auto">'+esc(L(cf.cmp[1][0],cf.cmp[1][1]))+'</p></div><p class="jr-cy">'+esc(L(cf.cmp[2][0],cf.cmp[2][1]))+'</p></details>';
     if(sec.act){var af=null;secF(sec).forEach(function(f){if(f.act)af=f});if(sec.act==='verify'||!secF(sec).some(function(f){return f.act}))h+=sec.act==='verify'?'<button type="button" class="btn jr-sm" data-act="verify">'+L('تحقق من وجود الدراسات','Check that the studies exist')+'</button><div data-verify></div>':'';else if(af)h+=actH(af)}
     if(sec.pick)h+='<div class="jr-mg-pick">'+sec.pick.map(fieldById).filter(function(f){return f&&shown(f)}).map(fieldH).join('')+'</div>';
@@ -2184,6 +2190,11 @@ requestAnimationFrame(function(){requestAnimationFrame(function(){s.split('').fo
     var hp=(sec.help||[]).map(fieldById).filter(function(f){return f&&shown(f)});hpSingle=hp.length===1;if(hp.length)h+='<details class="jr-help2"'+(secHas(sec)&&!sec.helpLabel?'':' open')+'><summary>'+(sec.helpLabel?L(sec.helpLabel[0],sec.helpLabel[1]):L('أسئلة تساعدك على الكتابة','Questions to help you write'))+'</summary><div class="jr-fields">'+hp.map(helperH).join('')+'</div></details>';
     h+='<details class="jr-secopt"><summary>'+L('خيارات القسم','Section options')+'</summary><div><button type="button" class="jr-edit" data-act="secren" data-goto="'+sec.id+'">'+L('تغيير العنوان','Rename')+'</button><button type="button" class="jr-edit" data-act="secadd" data-goto="'+sec.id+'">'+L('إضافة قسم بعده','Add a section after it')+'</button>'+(sec.id==='title'?'':'<button type="button" class="jr-edit" data-act="sechide" data-goto="'+sec.id+'">'+L('إخفاء القسم','Hide this section')+'</button>')+'</div></details>';
     return h}
+  var SG=window.JSG||{};
+  function sgH(sec){var g=SG[sec.id];if(!g)return '';var ap=v('approach'),dz=v('design'),by=g.by||{},xs=[by[ap],by[ap+'.'+dz]].filter(Boolean),el=(g.el||[]).map(function(x){return [x,0]}),how=(g.how||[]).map(function(x){return [x,0]});
+    xs.forEach(function(x){(x.el||[]).forEach(function(e){el.push([e,1])});(x.how||[]).forEach(function(e){how.push([e,1])})});
+    var li=function(x){return '<li'+(x[1]?' class="d"':'')+'>'+esc(L(x[0][0],x[0][1]))+'</li>'};
+    return '<div class="jr-sg"><h5>'+L('ما يحويه هذا القسم','What this section contains')+'</h5><ul>'+el.map(li).join('')+'</ul>'+(how.length?'<details><summary>'+L('كيف تكتبه','How to write it')+'</summary><ul>'+how.map(li).join('')+'</ul></details>':'')+(xs.length?'<p class="jr-sgk">'+L('● خاص بمنهجك وتصميمك','● Specific to your approach and design')+'</p>':'')+'</div>'}
   function helperH(f){return '<div class="jr-f" data-fw="'+f.id+'">'+(f.t==='rows'&&hpSingle?'':'<label class="jr-l" for="jf-'+f.id+'">'+esc(L(f.l[0],f.l[1]))+'</label>')+(f.t!=='rows'&&f.h?'<p class="jr-help">'+esc(L(f.h[0],f.h[1]))+'</p>':'')+inputH(f)+actH(f)+'</div>'}
   var hpSingle=false;
   function docLayout(){return '<div class="jr-docw"><div class="jr-docm">'+docH()+((S.meta.hidden||[]).length?'<p class="jr-hidn"><button type="button" class="jr-edit" data-act="secshow">'+L('إظهار الأقسام المخفية','Show hidden sections')+' ('+num(S.meta.hidden.length)+')</button></p>':'')+'</div><aside class="jr-mg" data-mg>'+marginH(ACTIVE_SEC)+'</aside></div>'}

@@ -1,0 +1,1484 @@
+{
+ "title": {
+  "el": [
+   [
+    "الظاهرة أو المتغيرات الأساسية",
+    "The phenomenon or main variables"
+   ],
+   [
+    "الفئة المدروسة",
+    "The population"
+   ],
+   [
+    "السياق: المكان أو المرحلة",
+    "The context: place or level"
+   ],
+   [
+    "ما يدل على المنهج حين يلزم (أثر، علاقة، خبرات…)",
+    "A cue to the design where useful (effect, relationship, experiences…)"
+   ]
+  ],
+  "how": [
+   [
+    "نحو خمس عشرة كلمة، بلا اختصارات.",
+    "About fifteen words, no abbreviations."
+   ],
+   [
+    "تجنّب العبارات العامة مثل «دراسة تحليلية» أو «رؤية مقترحة».",
+    "Avoid vague phrases such as “an analytical study”."
+   ],
+   [
+    "العنوان يُراجَع في النهاية ليطابق ما دُرس فعلًا.",
+    "Revisit the title at the end so it matches what was actually studied."
+   ]
+  ],
+  "by": {
+   "exp": {
+    "el": [
+     [
+      "المعالجة والمتغير التابع: «أثر [البرنامج] في [المتغير]…»",
+      "Treatment and outcome: “The effect of [programme] on [outcome]…”"
+     ]
+    ]
+   },
+   "corr": {
+    "el": [
+     [
+      "المتغيرات التي تُدرس علاقتها",
+      "The variables whose relationship is studied"
+     ]
+    ]
+   },
+   "qual": {
+    "el": [
+     [
+      "الخبرة أو الظاهرة كما يعيشها المشاركون",
+      "The experience or phenomenon as participants live it"
+     ]
+    ]
+   },
+   "review": {
+    "el": [
+     [
+      "نوع المراجعة: «مراجعة منهجية» أو «نطاقية»",
+      "The review type: “a systematic review” or “a scoping review”"
+     ]
+    ]
+   }
+  }
+ },
+ "abstract": {
+  "el": [
+   [
+    "الهدف",
+    "Aim"
+   ],
+   [
+    "المنهج والتصميم",
+    "Approach and design"
+   ],
+   [
+    "العينة أو المشاركون",
+    "Sample or participants"
+   ],
+   [
+    "الأدوات",
+    "Instruments"
+   ],
+   [
+    "أبرز النتائج بأرقامها أو محاورها",
+    "Main results, with figures or themes"
+   ],
+   [
+    "أهم توصية",
+    "The key recommendation"
+   ],
+   [
+    "الكلمات المفتاحية",
+    "Keywords"
+   ]
+  ],
+  "how": [
+   [
+    "فقرة واحدة في نحو ٢٠٠–٢٥٠ كلمة.",
+    "One paragraph of about 200–250 words."
+   ],
+   [
+    "بصيغة الماضي، بلا إحالات ولا اختصارات.",
+    "In the past tense, without citations or abbreviations."
+   ],
+   [
+    "يُكتب بعد اكتمال الرسالة، ويُفهم وحده دون الرجوع إليها.",
+    "Written last, and understandable on its own."
+   ]
+  ]
+ },
+ "intro": {
+  "el": [
+   [
+    "مدخل عام إلى الموضوع وأهميته في المجال",
+    "A broad entry to the topic and its importance"
+   ],
+   [
+    "ما تقوله الأدبيات باختصار، موثقًا",
+    "What the literature says, briefly and cited"
+   ],
+   [
+    "التضييق التدريجي حتى الفئة والسياق",
+    "Gradual narrowing to the population and context"
+   ],
+   [
+    "الإشارة إلى الحاجة التي تمهّد للمشكلة",
+    "A pointer to the need that leads into the problem"
+   ]
+  ],
+  "how": [
+   [
+    "من العام إلى الخاص، كالقمع.",
+    "From general to specific, like a funnel."
+   ],
+   [
+    "لا تبدأ بتعريفات القاموس ولا بعبارات مثل «في ظل التطورات المتسارعة».",
+    "Do not open with dictionary definitions or clichés about rapid change."
+   ],
+   [
+    "كل فكرة رئيسة موثقة.",
+    "Cite every main claim."
+   ],
+   [
+    "صفحتان إلى ثلاث غالبًا.",
+    "Usually two to three pages."
+   ]
+  ]
+ },
+ "stmt": {
+  "el": [
+   [
+    "الواقع: ما الذي يحدث، ولدى مَن، وأين",
+    "The situation: what happens, to whom, where"
+   ],
+   [
+    "الشواهد: أرقام، أو نتائج دراسات، أو تقارير، موثقة",
+    "Evidence: figures, findings or reports, cited"
+   ],
+   [
+    "الفجوة: ما لم تتناوله الدراسات السابقة",
+    "The gap: what prior studies have not addressed"
+   ],
+   [
+    "الأثر إن بقيت المشكلة",
+    "The consequence if it remains"
+   ],
+   [
+    "السؤال الرئيس في الختام",
+    "The main question at the end"
+   ]
+  ],
+  "how": [
+   [
+    "لا يتضمن حلًا ولا توصية.",
+    "No solution or recommendation."
+   ],
+   [
+    "«قلة الدراسات» فجوة وليست مشكلة؛ المشكلة واقع له أثر.",
+    "A lack of studies is a gap, not a problem."
+   ],
+   [
+    "الشاهد الحديث أقوى، والمحلي يضيف وزنًا.",
+    "Recent and local evidence is stronger."
+   ],
+   [
+    "فقرة أو فقرتان، في نحو ٣٠٠–٦٠٠ كلمة.",
+    "One or two paragraphs, about 300–600 words."
+   ]
+  ]
+ },
+ "questions": {
+  "el": [
+   [
+    "سؤال رئيس يحمل متغيرات العنوان",
+    "A main question carrying the title’s variables"
+   ],
+   [
+    "أسئلة فرعية تغطي جوانبه",
+    "Sub-questions covering its parts"
+   ]
+  ],
+  "how": [
+   [
+    "السؤال يُجاب عنه ببيانات تستطيع جمعها.",
+    "Each question is answerable with data you can collect."
+   ],
+   [
+    "سؤال واحد لكل متغير تابع أو جانب.",
+    "One question per outcome or aspect."
+   ],
+   [
+    "بصيغة استفهام صريحة تنتهي بعلامة استفهام.",
+    "A direct question ending with a question mark."
+   ]
+  ],
+  "by": {
+   "desc": {
+    "el": [
+     [
+      "أسئلة المستوى: «ما مستوى…؟»",
+      "Level questions: “What is the level of…?”"
+     ],
+     [
+      "أسئلة الفروق بحسب الخصائص إن لزم",
+      "Difference questions by characteristics where needed"
+     ]
+    ]
+   },
+   "corr": {
+    "el": [
+     [
+      "«ما العلاقة بين…؟» أو «إلى أي مدى يتنبأ…؟»",
+      "“What is the relationship between…?” or “To what extent does … predict…?”"
+     ]
+    ]
+   },
+   "causal": {
+    "el": [
+     [
+      "«هل يختلف [ص] باختلاف [س]؟»",
+      "“Does [Y] differ by [X]?”"
+     ]
+    ]
+   },
+   "exp": {
+    "el": [
+     [
+      "«ما أثر [المعالجة] في [المتغير التابع]؟» لكل متغير تابع",
+      "“What is the effect of [treatment] on [outcome]?” for each outcome"
+     ]
+    ]
+   },
+   "qual": {
+    "el": [
+     [
+      "سؤال رئيس مفتوح بـ«كيف» أو «ما»",
+      "An open main question with “how” or “what”"
+     ],
+     [
+      "أسئلة فرعية قليلة توجّه دون أن تقيّد",
+      "A few guiding sub-questions"
+     ]
+    ],
+    "how": [
+     [
+      "لا أسئلة بـ«هل» ولا فرضيات.",
+      "No yes/no questions and no hypotheses."
+     ]
+    ]
+   },
+   "mixed": {
+    "el": [
+     [
+      "سؤال كمي، وسؤال نوعي، وسؤال دمج",
+      "A quantitative, a qualitative and an integration question"
+     ]
+    ]
+   },
+   "review": {
+    "el": [
+     [
+      "سؤال بصيغة PICO للمراجعة المنهجية، أو PCC للنطاقية",
+      "A PICO question for a systematic review, or PCC for a scoping review"
+     ]
+    ]
+   }
+  }
+ },
+ "hyp": {
+  "el": [
+   [
+    "فرضية لكل سؤال يُختبر إحصائيًا",
+    "A hypothesis for each statistically tested question"
+   ],
+   [
+    "صيغة صفرية أو موجهة، بحسب ما تسمح به الأدبيات",
+    "Null or directional form, as the literature allows"
+   ]
+  ],
+  "how": [
+   [
+    "الفرضية الموجهة تحتاج سندًا من دراسات سابقة.",
+    "A directional hypothesis needs support from prior studies."
+   ],
+   [
+    "تذكر المتغيرين والمجموعات ومستوى الدلالة إن أردت.",
+    "Name the variables, groups and alpha if you wish."
+   ]
+  ]
+ },
+ "obj": {
+  "el": [
+   [
+    "هدف عام واحد",
+    "One overall aim"
+   ],
+   [
+    "أهداف تقابل الأسئلة الفرعية واحدًا بواحد",
+    "Objectives matching the sub-questions one to one"
+   ]
+  ],
+  "how": [
+   [
+    "تبدأ بأفعال قابلة للتحقق: «التعرف على»، «الكشف عن»، «تحديد».",
+    "Start with verifiable verbs: “to determine”, “to identify”."
+   ],
+   [
+    "الهدف ما تكشفه الدراسة، لا ما يحققه البرنامج.",
+    "An objective is what the study finds out, not what a programme achieves."
+   ]
+  ]
+ },
+ "sig": {
+  "el": [
+   [
+    "الأهمية النظرية: ما تضيفه إلى المعرفة أو النظرية",
+    "Theoretical: what it adds to knowledge or theory"
+   ],
+   [
+    "الأهمية التطبيقية: من يستفيد، وكيف",
+    "Practical: who benefits, and how"
+   ]
+  ],
+  "how": [
+   [
+    "من ثلاث إلى خمس نقاط لكل نوع، محددة.",
+    "Three to five specific points for each."
+   ],
+   [
+    "ابنِها على الفجوة، لا على أهمية الموضوع عمومًا.",
+    "Base it on the gap, not on the topic being important."
+   ]
+  ]
+ },
+ "limits": {
+  "el": [
+   [
+    "الحدود الموضوعية: المتغيرات أو الظاهرة",
+    "Topic: the variables or phenomenon"
+   ],
+   [
+    "المكانية",
+    "Place"
+   ],
+   [
+    "الزمانية: العام أو الفصل الدراسي",
+    "Time: the year or term"
+   ],
+   [
+    "البشرية: الفئة المدروسة",
+    "Participants: the population"
+   ]
+  ],
+  "how": [
+   [
+    "الحدود اختيارك أنت؛ والقيود ما فُرض عليك وتُذكر في الفصل الخامس.",
+    "Delimitations are your choices; limitations are imposed and go in Chapter Five."
+   ]
+  ],
+  "by": {
+   "review": {
+    "el": [
+     [
+      "مدة النشر، واللغات، وقواعد البيانات",
+      "Publication period, languages and databases"
+     ]
+    ]
+   }
+  }
+ },
+ "terms": {
+  "el": [
+   [
+    "المصطلحات الأساسية في العنوان والأسئلة فقط",
+    "Only the key terms in the title and questions"
+   ],
+   [
+    "تعريف مفاهيمي موثّق لكل مصطلح",
+    "A cited conceptual definition for each"
+   ],
+   [
+    "تعريف إجرائي يبيّن كيف يُقاس في دراستك",
+    "An operational definition: how it is measured here"
+   ]
+  ],
+  "how": [
+   [
+    "التعريف الإجرائي يذكر الأداة: «الدرجة التي يحصل عليها الطالب في…».",
+    "The operational definition names the instrument: “the score on…”."
+   ]
+  ],
+  "by": {
+   "qual": {
+    "how": [
+     [
+      "في البحث النوعي يكفي التعريف المفاهيمي وكيف يُفهم المصطلح في السياق.",
+      "In qualitative work, a conceptual definition and its meaning in context suffice."
+     ]
+    ]
+   }
+  }
+ },
+ "framework": {
+  "el": [
+   [
+    "النظرية أو النموذج الذي تستند إليه",
+    "The theory or model your study rests on"
+   ],
+   [
+    "مفاهيمه الأساسية وعلاقاتها",
+    "Its key concepts and their relations"
+   ],
+   [
+    "محاور الإطار المرتبطة بمتغيرات دراستك",
+    "Themes tied to your variables"
+   ],
+   [
+    "كيف يوجّه أسئلتك وتفسير نتائجك",
+    "How it guides your questions and interpretation"
+   ]
+  ],
+  "how": [
+   [
+    "نظّم المحاور بحسب متغيرات الدراسة.",
+    "Organise themes by your variables."
+   ],
+   [
+    "اكتب بلغتك، واجمع المصادر في فقرة واحدة بدل اقتباسات متتالية.",
+    "Write in your own words; synthesise sources rather than stacking quotes."
+   ],
+   [
+    "اربط كل محور بدراستك في آخره.",
+    "Close each theme by linking it to your study."
+   ]
+  ],
+  "by": {
+   "qual": {
+    "how": [
+     [
+      "الإطار في البحث النوعي يوجّه ولا يقيّد؛ اذكر المفاهيم الحساسة التي تنطلق منها.",
+      "In qualitative work the framework guides rather than constrains; state your sensitising concepts."
+     ]
+    ]
+   }
+  }
+ },
+ "studies": {
+  "el": [
+   [
+    "دراسات منظمة بحسب محاور دراستك",
+    "Studies organised by your themes"
+   ],
+   [
+    "لكل دراسة: الهدف، والمنهج، والعينة، وأبرز النتائج",
+    "For each: aim, method, sample and main findings"
+   ],
+   [
+    "العربية والأجنبية، والحديثة أولًا",
+    "Arabic and international, recent first"
+   ],
+   [
+    "توثيق يمكن التحقق منه",
+    "Verifiable citations"
+   ]
+  ],
+  "how": [
+   [
+    "رتّب داخل كل محور من الأقدم إلى الأحدث أو العكس، والتزم بترتيب واحد.",
+    "Within each theme, order consistently by date."
+   ],
+   [
+    "لا تنسخ الملخصات؛ اذكر ما يخص دراستك.",
+    "Do not copy abstracts; keep what matters to your study."
+   ],
+   [
+    "تحقق من وجود كل دراسة قبل إضافتها.",
+    "Verify each study exists before adding it."
+   ]
+  ]
+ },
+ "comment": {
+  "el": [
+   [
+    "ما اتفقت فيه الدراسات",
+    "Where studies agree"
+   ],
+   [
+    "ما اختلفت فيه، ولماذا",
+    "Where they differ, and why"
+   ],
+   [
+    "ما لم تتناوله: الفجوة",
+    "What they leave out: the gap"
+   ],
+   [
+    "ما أفادته دراستك منها",
+    "What your study took from them"
+   ],
+   [
+    "ما تتميز به دراستك",
+    "What distinguishes your study"
+   ]
+  ],
+  "how": [
+   [
+    "اربطه بالفجوة التي ذكرتها في مشكلة الدراسة.",
+    "Tie it to the gap in your problem statement."
+   ],
+   [
+    "لا تكتفِ باختلاف المكان والعينة؛ ابحث عن فجوة في المتغيرات أو المنهج أو الفئة.",
+    "Go beyond a different place or sample; look for gaps in variables, method or population."
+   ]
+  ]
+ },
+ "method": {
+  "el": [
+   [
+    "المنهج والتصميم باسمهما",
+    "The approach and design by name"
+   ],
+   [
+    "تعريف موجز بالتصميم مع مرجع منهجي",
+    "A brief definition with a methods reference"
+   ],
+   [
+    "لماذا يناسب أسئلتك",
+    "Why it suits your questions"
+   ]
+  ],
+  "how": [
+   [
+    "فقرة واحدة غالبًا؛ لا تشرح المناهج كلها.",
+    "Usually one paragraph; do not describe every approach."
+   ]
+  ],
+  "by": {
+   "desc": {
+    "el": [
+     [
+      "نوع الوصف: مسحي مقطعي أو طولي أو تحليل محتوى",
+      "The kind of description: cross-sectional, longitudinal or content analysis"
+     ]
+    ]
+   },
+   "corr": {
+    "el": [
+     [
+      "نوع العلاقة المدروسة: ارتباطية أو تنبؤية أو نموذج",
+      "Type: correlational, predictive or a model"
+     ]
+    ]
+   },
+   "exp": {
+    "el": [
+     [
+      "مخطط التصميم (قبلي–معالجة–بعدي، مجموعة ضابطة)",
+      "The design diagram (pre–treatment–post, control group)"
+     ],
+     [
+      "المتغير المستقل والتابع والدخيلة",
+      "Independent, dependent and extraneous variables"
+     ]
+    ]
+   },
+   "qual": {
+    "el": [
+     [
+      "التصميم النوعي وتقاليده (مثل الظاهراتي أو دراسة الحالة)",
+      "The qualitative design and its tradition"
+     ],
+     [
+      "الموقف الفلسفي باختصار إن طُلب",
+      "The philosophical stance briefly, if required"
+     ]
+    ]
+   },
+   "mixed": {
+    "el": [
+     [
+      "نوع التصميم المختلط ومخططه",
+      "The mixed design and its diagram"
+     ],
+     [
+      "أولوية كل جزء وتوقيته ونقطة الدمج",
+      "Priority, timing and point of integration"
+     ]
+    ]
+   },
+   "review": {
+    "el": [
+     [
+      "نوع المراجعة والإرشادات المتبعة (PRISMA)",
+      "Review type and the guideline followed (PRISMA)"
+     ],
+     [
+      "تسجيل البروتوكول إن وجد",
+      "Protocol registration, if any"
+     ]
+    ]
+   },
+   "psy": {
+    "el": [
+     [
+      "مراحل بناء الأداة أو تكييفها",
+      "The stages of instrument development or adaptation"
+     ]
+    ]
+   },
+   "appl": {
+    "el": [
+     [
+      "عدد الدورات وما يحدث في كل منها",
+      "The number of cycles and what happens in each"
+     ]
+    ]
+   },
+   "exp.scd": {
+    "el": [
+     [
+      "نوع التصميم (ABAB، خط قاعدي متعدد…) ومبرره",
+      "The design type (ABAB, multiple baseline…) and why"
+     ]
+    ]
+   },
+   "qual.phen": {
+    "el": [
+     [
+      "النوع: ظاهراتي وصفي أم تأويلي",
+      "Descriptive or interpretive phenomenology"
+     ]
+    ]
+   },
+   "qual.case": {
+    "el": [
+     [
+      "نوع الحالة: جوهرية أم أداتية، مفردة",
+      "Intrinsic or instrumental, single case"
+     ]
+    ]
+   },
+   "qual.case_multi": {
+    "el": [
+     [
+      "منطق اختيار الحالات وتكرارها",
+      "The logic of case selection and replication"
+     ]
+    ]
+   },
+   "qual.gt": {
+    "el": [
+     [
+      "مدرسة النظرية المجذّرة المتبعة",
+      "The grounded-theory tradition followed"
+     ]
+    ]
+   }
+  }
+ },
+ "pop": {
+  "el": [
+   [
+    "وصف المجتمع: مَن هم وأين",
+    "Who they are and where"
+   ],
+   [
+    "عدده التقريبي ومصدر هذا العدد",
+    "Its approximate size and source of that figure"
+   ]
+  ],
+  "how": [
+   [
+    "المجتمع من تعمم عليهم النتائج.",
+    "The population is whom you generalise to."
+   ]
+  ],
+  "by": {
+   "qual": {
+    "how": [
+     [
+      "في البحث النوعي يكفي وصف الفئة والسياق الذي تُختار منه.",
+      "In qualitative work, describe the group and setting participants come from."
+     ]
+    ]
+   }
+  }
+ },
+ "sample": {
+  "el": [
+   [
+    "طريقة الاختيار",
+    "How participants were selected"
+   ],
+   [
+    "الحجم ومبرره",
+    "Size and its justification"
+   ],
+   [
+    "خصائص العينة (جدول وصفي)",
+    "Sample characteristics (a descriptive table)"
+   ]
+  ],
+  "how": [
+   [
+    "اذكر نسبة الاستجابة إن كانت استبانة.",
+    "Report the response rate for questionnaires."
+   ]
+  ],
+  "by": {
+   "desc": {
+    "el": [
+     [
+      "العينة الممثلة وطريقة سحبها (عشوائية، طبقية…)",
+      "A representative sample and how it was drawn"
+     ]
+    ]
+   },
+   "corr": {
+    "el": [
+     [
+      "حساب الحجم بتحليل القوة لعدد المتغيرات",
+      "Size from power analysis for the number of variables"
+     ]
+    ]
+   },
+   "exp": {
+    "el": [
+     [
+      "توزيع المشاركين على المجموعات",
+      "How participants were assigned to groups"
+     ],
+     [
+      "تكافؤ المجموعات قبل التطبيق (جدول)",
+      "Baseline equivalence of groups (a table)"
+     ]
+    ]
+   },
+   "qual": {
+    "el": [
+     [
+      "المعاينة القصدية ومعايير الاختيار",
+      "Purposeful sampling and selection criteria"
+     ],
+     [
+      "عدد المشاركين ومتى توقف الجمع (التشبع)",
+      "Number of participants and when collection stopped (saturation)"
+     ],
+     [
+      "وصف موجز لكل مشارك برمز مستعار",
+      "A brief profile of each participant under a pseudonym"
+     ]
+    ],
+    "how": [
+     [
+      "لا تُستخدم كلمة «عينة» عادة؛ بل «المشاركون».",
+      "Usually “participants”, not “sample”."
+     ]
+    ]
+   },
+   "mixed": {
+    "el": [
+     [
+      "عينة كل جزء والعلاقة بينهما",
+      "Each strand’s sample and how they relate"
+     ]
+    ]
+   },
+   "psy": {
+    "el": [
+     [
+      "العينة الاستطلاعية وعينة التقنين وحجم كل منهما",
+      "Pilot and norming samples and their sizes"
+     ]
+    ]
+   },
+   "exp.scd": {
+    "el": [
+     [
+      "وصف دقيق لكل مشارك ومعايير اختياره",
+      "A precise description of each participant and selection criteria"
+     ]
+    ]
+   },
+   "qual.case": {
+    "el": [
+     [
+      "وصف الحالة وحدودها ولماذا اختيرت",
+      "The case, its boundaries and why chosen"
+     ]
+    ]
+   },
+   "qual.gt": {
+    "el": [
+     [
+      "المعاينة النظرية: كيف وجّه التحليلُ اختيار المشاركين",
+      "Theoretical sampling: how analysis guided selection"
+     ]
+    ]
+   }
+  }
+ },
+ "review": {
+  "el": [
+   [
+    "معايير الإدراج والاستبعاد",
+    "Inclusion and exclusion criteria"
+   ],
+   [
+    "قواعد البيانات ومدة البحث",
+    "Databases and search period"
+   ],
+   [
+    "سلسلة البحث كاملة لقاعدة واحدة على الأقل",
+    "The full search string for at least one database"
+   ],
+   [
+    "الفرز بمراجعَين ومعالجة الاختلاف",
+    "Screening by two reviewers and resolving disagreement"
+   ],
+   [
+    "مخطط PRISMA",
+    "The PRISMA flow diagram"
+   ],
+   [
+    "أداة تقييم الجودة",
+    "The quality appraisal tool"
+   ]
+  ],
+  "how": [
+   [
+    "اكتب الإجراءات بحيث يكرر غيرك البحث ويصل إلى النتائج نفسها.",
+    "Write so someone could rerun the search and get the same results."
+   ]
+  ]
+ },
+ "instr": {
+  "el": [
+   [
+    "اسم كل أداة ومصدرها",
+    "Each instrument’s name and source"
+   ],
+   [
+    "ما تقيسه، وأبعادها، وعدد فقراتها، وطريقة الاستجابة والتصحيح",
+    "What it measures, dimensions, items, response format and scoring"
+   ],
+   [
+    "دلالات الصدق بأرقامها",
+    "Validity evidence with figures"
+   ],
+   [
+    "دلالات الثبات بأرقامها",
+    "Reliability evidence with figures"
+   ]
+  ],
+  "how": [
+   [
+    "الأداة المقتبسة: اذكر المؤلف وإذن الاستخدام وأي تعديل.",
+    "For a borrowed tool: cite the author, permission and any changes."
+   ],
+   [
+    "الأداة المعدّة: مراحل بنائها وتحكيمها والتجربة الاستطلاعية.",
+    "For your own: its development, expert review and pilot."
+   ]
+  ],
+  "by": {
+   "qual": {
+    "el": [
+     [
+      "دليل المقابلة ومحاوره وكيف بُني",
+      "The interview guide, its sections and how it was built"
+     ],
+     [
+      "الملاحظة أو الوثائق إن وُجدت",
+      "Observation or documents, if used"
+     ]
+    ],
+    "how": [
+     [
+      "في النوعي لا يُذكر ثبات بمعامل؛ بل مراجعة الدليل وتجريبه في مقابلة استطلاعية.",
+      "Qualitative tools are not given reliability coefficients; describe review and a pilot interview."
+     ]
+    ]
+   },
+   "exp.scd": {
+    "el": [
+     [
+      "تعريف السلوك المستهدف وطريقة تسجيله",
+      "The target behaviour and how it is recorded"
+     ],
+     [
+      "اتفاق الملاحظين ونسبته",
+      "Inter-observer agreement and its rate"
+     ]
+    ]
+   },
+   "psy": {
+    "el": [
+     [
+      "خطوات بناء الفقرات أو ترجمتها",
+      "How items were written or translated"
+     ]
+    ]
+   }
+  }
+ },
+ "treat": {
+  "el": [
+   [
+    "أساس المعالجة النظري",
+    "The treatment’s theoretical basis"
+   ],
+   [
+    "أهدافها ومحتواها",
+    "Its aims and content"
+   ],
+   [
+    "مدتها، وعدد جلساتها، وزمن الجلسة",
+    "Duration, number and length of sessions"
+   ],
+   [
+    "من يطبقها وكيف دُرّب",
+    "Who delivers it and how they were trained"
+   ],
+   [
+    "تحكيمها ودقة تطبيقها",
+    "Expert review and fidelity"
+   ]
+  ],
+  "how": [
+   [
+    "صِف المعالجة بما يكفي ليكررها باحث آخر؛ والتفاصيل في الملاحق.",
+    "Describe it so another researcher could repeat it; details in appendices."
+   ]
+  ],
+  "by": {
+   "appl": {
+    "el": [
+     [
+      "ما تغيّر في الإجراء بين الدورات ولماذا",
+      "What changed between cycles, and why"
+     ]
+    ]
+   }
+  }
+ },
+ "control": {
+  "el": [
+   [
+    "المتغيرات الدخيلة المتوقعة",
+    "Expected extraneous variables"
+   ],
+   [
+    "كيف ضُبط كل منها",
+    "How each was controlled"
+   ],
+   [
+    "نتيجة اختبار التكافؤ القبلي",
+    "The result of the baseline equivalence test"
+   ]
+  ]
+ },
+ "trust": {
+  "el": [
+   [
+    "المصداقية: كيف تأكدت أن النتائج تعبّر عن المشاركين",
+    "Credibility: how findings reflect participants"
+   ],
+   [
+    "قابلية النقل: وصف كثيف للسياق",
+    "Transferability: thick description of context"
+   ],
+   [
+    "الاعتمادية: سجل التدقيق",
+    "Dependability: an audit trail"
+   ],
+   [
+    "التأكيدية والانعكاسية: موقفك وأثره",
+    "Confirmability and reflexivity: your stance and its effect"
+   ]
+  ],
+  "how": [
+   [
+    "اذكر الإجراء الفعلي، لا تعريف المفهوم فقط.",
+    "Describe what you actually did, not just the concept."
+   ]
+  ],
+  "by": {
+   "qual.phen": {
+    "el": [
+     [
+      "تعليق الأحكام المسبقة وكيف طُبّق",
+      "Bracketing and how it was applied"
+     ]
+    ]
+   },
+   "qual.case": {
+    "el": [
+     [
+      "التثليث بين المصادر",
+      "Triangulation across sources"
+     ]
+    ]
+   },
+   "qual.gt": {
+    "el": [
+     [
+      "المذكرات التحليلية والمقارنة المستمرة",
+      "Analytic memos and constant comparison"
+     ]
+    ]
+   }
+  }
+ },
+ "proc": {
+  "el": [
+   [
+    "الخطوات بترتيبها الزمني",
+    "Steps in chronological order"
+   ],
+   [
+    "الموافقات قبل الجمع",
+    "Approvals before collection"
+   ],
+   [
+    "كيف طُبّقت الأدوات ومتى",
+    "How and when instruments were administered"
+   ]
+  ],
+  "how": [
+   [
+    "بصيغة الماضي، خطوة في كل فقرة أو سطر.",
+    "In the past tense, one step per line or paragraph."
+   ]
+  ],
+  "by": {
+   "exp": {
+    "el": [
+     [
+      "القياس القبلي، ثم المعالجة، ثم القياس البعدي، بتواريخها",
+      "Pre-test, treatment, post-test, with dates"
+     ]
+    ]
+   },
+   "qual": {
+    "el": [
+     [
+      "مكان المقابلات ومدتها وتسجيلها وتفريغها",
+      "Where interviews took place, length, recording and transcription"
+     ]
+    ]
+   },
+   "review": {
+    "el": [
+     [
+      "البحث، ثم الفرز، ثم الاستخراج، ثم التقييم",
+      "Search, screening, extraction, appraisal"
+     ]
+    ]
+   }
+  }
+ },
+ "ethics": {
+  "el": [
+   [
+    "موافقة لجنة أخلاقيات البحث ورقمها",
+    "Ethics committee approval and its number"
+   ],
+   [
+    "إذن الجهة",
+    "Institutional permission"
+   ],
+   [
+    "الموافقة المستنيرة وحق الانسحاب",
+    "Informed consent and the right to withdraw"
+   ],
+   [
+    "السرية وحفظ البيانات",
+    "Confidentiality and data storage"
+   ]
+  ],
+  "by": {
+   "review": {
+    "how": [
+     [
+      "المراجعات لا تحتاج عادة موافقة أخلاقية؛ اذكر ذلك.",
+      "Reviews usually need no ethics approval; say so."
+     ]
+    ]
+   }
+  }
+ },
+ "analysis": {
+  "el": [
+   [
+    "لكل سؤال أسلوب تحليله",
+    "The analysis for each question"
+   ],
+   [
+    "البرنامج المستخدم",
+    "The software used"
+   ]
+  ],
+  "how": [
+   [
+    "اذكر لماذا اخترت الأسلوب إن لم يكن معتادًا.",
+    "Justify the method if it is not the usual one."
+   ]
+  ],
+  "by": {
+   "desc": {
+    "el": [
+     [
+      "المتوسطات والانحرافات المعيارية، ومعيار الحكم على المستوى",
+      "Means, SDs and the criterion for judging levels"
+     ],
+     [
+      "اختبار (ت) أو تحليل التباين للفروق",
+      "t-tests or ANOVA for differences"
+     ]
+    ]
+   },
+   "corr": {
+    "el": [
+     [
+      "معامل الارتباط أو الانحدار، وفحص افتراضاته",
+      "Correlation or regression, with assumption checks"
+     ]
+    ]
+   },
+   "causal": {
+    "el": [
+     [
+      "اختبار الفروق مع حجم الأثر",
+      "Difference tests with effect sizes"
+     ]
+    ]
+   },
+   "exp": {
+    "el": [
+     [
+      "تحليل التباين المصاحب بضبط القبلي",
+      "ANCOVA controlling for the pre-test"
+     ],
+     [
+      "حجم الأثر وتفسيره",
+      "Effect size and its interpretation"
+     ],
+     [
+      "فحص الافتراضات",
+      "Assumption checks"
+     ]
+    ]
+   },
+   "qual": {
+    "el": [
+     [
+      "خطوات التحليل بالتفصيل ومرجعها",
+      "The analysis steps in detail, with a reference"
+     ],
+     [
+      "الترميز وكيف تكوّنت المحاور",
+      "Coding and how themes formed"
+     ],
+     [
+      "البرنامج إن استُخدم (مثل NVivo)",
+      "Software if used (e.g. NVivo)"
+     ]
+    ]
+   },
+   "mixed": {
+    "el": [
+     [
+      "تحليل كل جزء ثم طريقة الدمج",
+      "Each strand’s analysis, then integration"
+     ]
+    ]
+   },
+   "review": {
+    "el": [
+     [
+      "طريقة استخراج البيانات وتوليفها",
+      "Data extraction and synthesis"
+     ]
+    ]
+   },
+   "psy": {
+    "el": [
+     [
+      "التحليل العاملي، ومعاملات الثبات، واشتقاق المعايير",
+      "Factor analysis, reliability coefficients, norms"
+     ]
+    ]
+   },
+   "exp.scd": {
+    "el": [
+     [
+      "التحليل البصري ومؤشر عدم التداخل",
+      "Visual analysis and a non-overlap index"
+     ]
+    ]
+   },
+   "qual.phen": {
+    "el": [
+     [
+      "خطوات كولايزي أو موستاكس أو IPA",
+      "The Colaizzi, Moustakas or IPA steps"
+     ]
+    ]
+   },
+   "qual.gt": {
+    "el": [
+     [
+      "الترميز المفتوح والمحوري والانتقائي",
+      "Open, axial and selective coding"
+     ]
+    ]
+   },
+   "qual.gq": {
+    "el": [
+     [
+      "مراحل التحليل الموضوعي الست (Braun & Clarke)",
+      "The six phases of thematic analysis (Braun & Clarke)"
+     ]
+    ]
+   }
+  }
+ },
+ "collect": {
+  "el": [
+   [
+    "مدة الجمع وتواريخه",
+    "When and how long data collection took"
+   ],
+   [
+    "العدد الفعلي ونسبة الاستجابة",
+    "The actual numbers and response rate"
+   ],
+   [
+    "ما واجهته وكيف عالجته",
+    "Problems and how you handled them"
+   ]
+  ]
+ },
+ "results": {
+  "el": [
+   [
+    "نتيجة كل سؤال بترتيب الأسئلة",
+    "Each question’s result, in question order"
+   ],
+   [
+    "جداول أو أشكال مرقّمة يُشار إليها في النص",
+    "Numbered tables or figures referred to in the text"
+   ]
+  ],
+  "how": [
+   [
+    "اعرض ولا تفسّر؛ التفسير في المناقشة.",
+    "Report, do not interpret; that belongs in the discussion."
+   ],
+   [
+    "ابدأ كل سؤال بإعادة صياغته، ثم الجدول، ثم قراءته.",
+    "Restate each question, then the table, then what it shows."
+   ]
+  ],
+  "by": {
+   "desc": {
+    "el": [
+     [
+      "المتوسطات والانحرافات والترتيب ومستوى كل بُعد",
+      "Means, SDs, ranks and level of each dimension"
+     ]
+    ]
+   },
+   "corr": {
+    "el": [
+     [
+      "مصفوفة الارتباطات أو جدول الانحدار",
+      "The correlation matrix or regression table"
+     ]
+    ]
+   },
+   "exp": {
+    "el": [
+     [
+      "قيمة الإحصاء ودلالته وحجم الأثر",
+      "The statistic, its significance and effect size"
+     ],
+     [
+      "قبول الفرضية أو رفضها",
+      "Whether each hypothesis was supported"
+     ]
+    ]
+   },
+   "qual": {
+    "el": [
+     [
+      "المحاور الرئيسة والفرعية في جدول",
+      "Main themes and sub-themes in a table"
+     ],
+     [
+      "اقتباسات من المشاركين لكل موضوع، برموز مستعارة",
+      "Participants’ quotations for each theme, under pseudonyms"
+     ]
+    ],
+    "how": [
+     [
+      "النتائج في النوعي تُعرض بالمحاور لا بالأسئلة دائمًا.",
+      "Qualitative findings are presented by theme, not always by question."
+     ]
+    ]
+   },
+   "mixed": {
+    "el": [
+     [
+      "نتائج كل جزء ثم النتائج المدمجة",
+      "Each strand’s results, then the integrated results"
+     ]
+    ]
+   },
+   "review": {
+    "el": [
+     [
+      "مخطط PRISMA وخصائص الدراسات المدرجة",
+      "The PRISMA diagram and study characteristics"
+     ],
+     [
+      "نتائج التوليف أو التحليل البعدي",
+      "The synthesis or meta-analysis results"
+     ]
+    ]
+   },
+   "exp.scd": {
+    "el": [
+     [
+      "الرسم البياني لكل مشارك عبر المراحل",
+      "A graph for each participant across phases"
+     ]
+    ]
+   }
+  }
+ },
+ "disc": {
+  "el": [
+   [
+    "تفسير كل نتيجة",
+    "An interpretation of each result"
+   ],
+   [
+    "مقارنتها بالدراسات السابقة مع التوثيق",
+    "Comparison with prior studies, cited"
+   ],
+   [
+    "ربطها بالإطار النظري",
+    "A link to the theoretical framework"
+   ],
+   [
+    "ما تضيفه للمعرفة والممارسة",
+    "What it adds to knowledge and practice"
+   ]
+  ],
+  "how": [
+   [
+    "بالترتيب نفسه الذي عُرضت به النتائج.",
+    "In the same order as the results."
+   ],
+   [
+    "فسّر النتيجة غير المتوقعة بأمانة.",
+    "Explain unexpected results honestly."
+   ],
+   [
+    "لا تكرر الأرقام؛ ناقش معناها.",
+    "Do not repeat the numbers; discuss their meaning."
+   ]
+  ],
+  "by": {
+   "qual": {
+    "el": [
+     [
+      "ما تكشفه المحاور عن الظاهرة ككل",
+      "What the themes reveal about the phenomenon as a whole"
+     ]
+    ]
+   }
+  }
+ },
+ "recs": {
+  "el": [
+   [
+    "توصيات مستندة إلى النتائج",
+    "Recommendations grounded in the results"
+   ],
+   [
+    "الجهة المعنية بكل توصية",
+    "Who each recommendation is for"
+   ]
+  ],
+  "how": [
+   [
+    "محددة وقابلة للتنفيذ، لا عبارات عامة.",
+    "Specific and actionable, not general statements."
+   ],
+   [
+    "من خمس إلى عشر غالبًا.",
+    "Usually five to ten."
+   ]
+  ]
+ },
+ "limits2": {
+  "el": [
+   [
+    "ما حدّ من النتائج: العينة، أو الأداة، أو المدة، أو التصميم",
+    "What constrained the results: sample, tool, duration or design"
+   ],
+   [
+    "أثر كل قيد على التعميم أو التفسير",
+    "Each one’s effect on generalisation or interpretation"
+   ]
+  ]
+ },
+ "future": {
+  "el": [
+   [
+    "مقترحات تنبع من القيود أو النتائج",
+    "Suggestions arising from limitations or results"
+   ]
+  ],
+  "how": [
+   [
+    "حدد الفئة أو المتغير أو المنهج المقترح.",
+    "Name the population, variable or method suggested."
+   ]
+  ]
+ },
+ "refs": {
+  "el": [
+   [
+    "كل ما أُحيل إليه في النص، ولا شيء غيره",
+    "Everything cited, and nothing else"
+   ],
+   [
+    "صيغة واحدة (APA غالبًا)",
+    "One style (usually APA)"
+   ],
+   [
+    "ترتيب هجائي",
+    "Alphabetical order"
+   ]
+  ],
+  "how": [
+   [
+    "العربية أولًا ثم الأجنبية، أو بحسب تعليمات جامعتك.",
+    "Arabic then English, or as your university requires."
+   ],
+   [
+    "أضف DOI حيث وُجد.",
+    "Include DOIs where available."
+   ]
+  ]
+ }
+}
