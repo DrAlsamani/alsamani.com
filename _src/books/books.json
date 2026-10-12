@@ -15,16 +15,19 @@
  },
  {
   "slug": "diagnosis-identification",
-  "status": "draft",
+  "status": "published",
   "lang": "ar",
   "title": "المرجع في التشخيص والتعرف على ذوي الاستثنائية",
   "title_en": "Diagnosis and Identification of Exceptional Learners",
-  "subtitle": "من الملاحظة الأولية إلى القرار لذوي الإعاقة والموهوبين ومزدوجي الاستثنائية",
-  "subtitle_en": "From first observation to decision for learners with disabilities, the gifted and the twice-exceptional",
+  "subtitle": "ذوي الإعاقة والموهوبين ومزدوجي الاستثنائية",
+  "subtitle_en": "Learners with disabilities, the gifted and the twice-exceptional",
   "author": "د. عمر عبدالله الصمعاني",
   "author_en": "Dr. Omar A. Alsamani",
-  "description": "يتتبع الكتاب الطريق من الملاحظة الأولى إلى القرار، ويعرض المقاييس المعتمدة عالميًا كما تبدو وكما تُطبق فعلًا، ويقرأها في ضوء التنظيمات السعودية والأدوات العربية: أربعة أبواب، وخمسة عشر فصلًا، وخمسة ملاحق، وأكثر من أربعين حالة.",
-  "description_en": "A reference on diagnosis and identification across disabilities, giftedness and twice-exceptionality, read in light of Saudi regulations and Arabic instruments.",
-  "accent": "#0d6b67"
+  "description": "يتتبع الكتاب مراحل التشخيص والتعرف تتبعًا منهجيًا، من الإحالة وجمع الأدلة إلى تفسيرها وبناء القرار عليها، ويعرض المقاييس المعتمدة عالميًا وإجراءات تطبيقها وأصول تفسيرها، ويقرؤها في ضوء التنظيمات السعودية والأدوات العربية.",
+  "description_en": "A reference on diagnosis and identification across disabilities, giftedness and twice-exceptionality, tracing the process from referral and evidence gathering to interpretation and decision, read in light of Saudi regulations and Arabic instruments.",
+  "accent": "#0d6b67",
+  "license_note": "الطبعة الأولى، ١٤٤٨هـ / ٢٠٢٦م · رقم الإيداع: ١٤٤٨/٧٠٠٨ · ردمك: 978-603-06-7714-6. منشور برخصة المشاع الإبداعي (CC BY-NC-ND 4.0): يجوز نسخه وتوزيعه ومشاركته للأغراض التعليمية والبحثية غير التجارية، مع نسبته إلى مؤلفه ودون تعديل في نصه.",
+  "isbn": "978-603-06-7714-6",
+  "legal_deposit": "1448/7008"
  }
 ]
