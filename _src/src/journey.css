@@ -319,3 +319,4 @@ html[dir=ltr] .jr-dch.fd .jr-fold::before{transform:rotate(-45deg)}
 .jr-fold::before{border-inline-end:0;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg);margin-top:-4px}
 .jr-dch.fd .jr-fold::before{transform:rotate(-45deg);margin-top:0}
 .jr-paper[dir=rtl] .jr-dch.fd .jr-fold::before{transform:rotate(135deg)}
+.jr-mg-pick{background:var(--alt);border-radius:12px;padding:10px 12px;margin:0 0 10px;display:grid;gap:10px}.jr-mg-pick .jr-l{font-size:.8125rem;margin:0 0 4px}.jr-mg-pick .jr-help{display:none}.jr-mg-pick .tl-chip>span{font-size:.8125rem;padding:5px 11px}
