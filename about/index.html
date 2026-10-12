@@ -1180,6 +1180,102 @@ textarea.jr-in{resize:vertical}
 .jr-pri li{line-height:1.6}.jr-pri small{display:block;color:var(--muted);font-size:.8125rem}
 .jr-pri .jr-sm{margin-top:4px}
 html[lang=ar] .jr-pri{list-style:arabic-indic}
+/* calm, one-question layout */
+.jr{max-width:820px}
+.jr-grid{grid-template-columns:1fr!important}
+.jr-grid.t-work .jr-side{display:none}.jr-grid.t-draft .jr-main{display:none}
+.jr-side{position:static!important;max-height:none!important}
+.jr-bar2{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+.jr-bar2 .jr-tabs{display:flex!important;margin:0;position:static;flex:0 1 auto;gap:4px;background:var(--alt);border-radius:12px;padding:4px}
+.jr-bar2 .jr-tabs button{border:0;background:none;padding:7px 16px;border-radius:9px;font:inherit;font-size:.9375rem;color:var(--ink);cursor:pointer}
+.jr-bar2 .jr-tabs button[aria-selected=true]{background:var(--bg);font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.jr-bar2 .jr-tabs small{color:var(--muted);font-weight:400}
+.jr-menu{position:relative}
+.jr-menu>summary{list-style:none;cursor:pointer;color:var(--muted);font-size:.9375rem;padding:7px 10px}
+.jr-menu>summary::-webkit-details-marker{display:none}
+.jr-menu>summary::after{content:" ▾"}
+.jr-menu[open]>.jr-tools{position:absolute;inset-inline-end:0;top:100%;z-index:5;background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:8px;margin:6px 0 0;display:flex;flex-direction:column;align-items:stretch;gap:4px;min-width:240px;box-shadow:0 10px 30px rgba(0,0,0,.12)}
+.jr-menu .jr-tools .btn{border:0;background:none;text-align:start;justify-content:flex-start;padding:8px 12px;border-radius:9px;font-size:.9375rem;width:100%}
+.jr-menu .jr-tools .btn:hover{background:var(--alt)}
+.jr-map{justify-content:center}
+.jr-step{padding:6px 4px}
+.jr-sh{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.jr-sh .eyebrow{margin:0}
+.jr-cnt{color:var(--muted);font-size:.875rem}
+.jr-pbar{height:3px;background:var(--line);border-radius:2px;margin:10px 0 18px;overflow:hidden}
+.jr-pbar i{display:block;height:100%;background:var(--accent);transition:width .3s}
+.jr-q{margin:6px 0 4px}
+.jr-q>.jr-f>.jr-l{font-size:1.375rem;font-weight:700;color:var(--ink);margin-bottom:8px;line-height:1.5}
+.jr-q .jr-help{font-size:.9375rem}
+.jr-q textarea.jr-in{min-height:9em;font-size:1.0625rem}
+.jr-q input.jr-in{font-size:1.0625rem;padding:12px 14px}
+.jr-q .tl-chip>span{font-size:1rem;padding:9px 16px}
+.jr-sumh{font-size:1.375rem;margin:4px 0 14px}
+.jr-sum{display:grid;gap:2px;margin:0 0 16px}
+.jr-sr{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
+.jr-sr span{font-size:.8125rem;color:var(--muted)}.jr-sr p{margin:2px 0 0;line-height:1.7}.jr-sr em{color:var(--tl-bad);font-style:normal;font-size:.9375rem}
+.jr-edit{background:none;border:0;color:var(--accent);font:inherit;font-size:.875rem;cursor:pointer;padding:4px 0;white-space:nowrap}
+.jr-okm{margin:0;color:var(--tl-ok);font-weight:600}
+.jr-more2{margin-top:8px;font-size:.875rem}.jr-more2 summary{cursor:pointer;color:var(--muted)}
+.jr-start h2{margin:0 0 12px}
+.jr-opt{margin:16px 0 0}.jr-opt>summary{cursor:pointer;color:var(--muted);font-size:.9375rem}.jr-opt>.jr-setup{margin-top:14px}
+.jr-start .jr-sf.wide .tl-chip>span{font-size:1rem;padding:10px 18px}
+/* document view */
+.jr:has(.jr-docw){max-width:1180px}
+.jr-dbar{justify-content:space-between}
+.jr-pct2{display:inline-flex;align-items:center;gap:8px;color:var(--muted);font-size:.875rem}
+.jr-acts{display:flex;align-items:center;gap:8px}.jr-acts>.btn{font-size:.875rem;padding:7px 14px}
+.jr-docw{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:28px;align-items:start}
+.jr-paper{background:#fff;color:#1d1d1f;border:1px solid var(--line);border-radius:6px;box-shadow:0 10px 40px rgba(0,0,0,.07);padding:56px 64px 64px;font-family:"Amiri","Traditional Arabic",Georgia,serif;font-size:1.0625rem;line-height:2}
+.jr-paper .jr-dch{font-size:1.25rem;text-align:center;margin:44px 0 18px;font-weight:700}
+.jr-ds{position:relative;padding:4px 10px;margin:0 -10px 10px;border-radius:6px;transition:background .2s}
+.jr-ds.on{background:rgba(0,113,227,.035)}
+.jr-ds.on::before{content:"";position:absolute;inset-inline-start:-4px;top:8px;bottom:8px;width:3px;border-radius:2px;background:var(--accent)}
+.jr-dh3{font-size:1.0625rem;font-weight:700;margin:14px 0 2px;display:flex;align-items:center;gap:8px}
+.jr-dtitle .jr-dh3{display:none}
+.jr-dtitle .jr-in{text-align:center;font-size:1.5rem!important;font-weight:700}
+.jr-nb{font-family:var(--sans,system-ui);font-size:.6875rem;font-weight:700;min-width:18px;height:18px;padding:0 5px;border-radius:9px;display:inline-grid;place-items:center;background:#f6e3b4;color:#7a5200}
+.jr-nb.m{background:#fbd5cf;color:#9b2c1c}.jr-nb.ok{background:#d9f0de;color:#1e6b33}
+.jr-paper .jr-in{border:0;background:transparent;padding:2px 0;font:inherit;line-height:2;color:inherit;border-radius:0;box-shadow:none;min-height:0}
+.jr-paper .jr-in:focus{outline:none;border:0}
+.jr-paper textarea.jr-in{resize:none;overflow:hidden;min-height:2.2em}
+.jr-paper .jr-in::placeholder{color:#a8a8ad;font-style:normal}
+.jr-di{margin:0 0 4px}
+.jr-dl{display:block;font-family:var(--sans,system-ui);font-size:.75rem;color:#8a8a8e;margin:6px 0 0}
+.jr-paper .tl-chips{margin:4px 0 6px}.jr-paper .tl-chip>span{font-family:var(--sans,system-ui);font-size:.8125rem;padding:4px 11px;background:#fff}
+.jr-paper .jr-row.stack{background:#fafafa;border-color:#eee}
+.jr-paper .jr-row .jr-in{border-bottom:1px dashed #e3e3e6!important;font-size:.9375rem}
+.jr-paper .jr-sm{font-family:var(--sans,system-ui)}
+.jr-cs .jr-dh3 input{border:0;background:transparent;font:inherit;font-weight:700;width:100%;color:inherit}
+.jr-refs{font-size:.9375rem;padding-inline-start:20px}
+.jr-hidn{text-align:center;margin-top:10px}
+.jr-mg{position:relative;font-size:.875rem;line-height:1.7;transition:margin-top .25s}
+.jr-mg>*{max-width:100%}
+.jr-mg-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}.jr-mg-h b{font-size:.9375rem}
+.jr-mg-g{color:var(--muted);margin:0 0 10px}
+.jr-mg-d{background:var(--alt);border-radius:10px;padding:8px 12px;margin:0 0 10px}.jr-mg-d span{display:block;font-size:.75rem;color:var(--muted)}.jr-mg-d p{margin:2px 0 0}
+.jr-mg .jr-checks{margin:0 0 10px;font-size:.8125rem}
+.jr-mg .jr-cmp,.jr-help2,.jr-secopt{margin:0 0 8px}
+.jr-help2>summary,.jr-secopt>summary{cursor:pointer;color:var(--accent);font-size:.8125rem}
+.jr-help2 .jr-fields{grid-template-columns:1fr;gap:12px;margin-top:10px}
+.jr-help2 .jr-l{font-size:.8125rem}.jr-help2 .jr-in{font-size:.875rem;padding:7px 9px}
+.jr-secopt>summary{color:var(--muted)}.jr-secopt div{display:flex;flex-direction:column;align-items:flex-start;margin-top:4px}
+.jr-mg-empty{color:var(--muted)}.jr-mg-empty h4{color:var(--ink);font-size:.875rem;margin:12px 0 6px}
+.jr-mgl{list-style:none;margin:0;padding:0;display:grid;gap:6px}.jr-mgl button{background:none;border:0;padding:0;color:var(--accent);font:inherit;cursor:pointer}
+.jr-mg .jr-needs,.jr-mg .jr-guide{background:var(--alt);font-size:.8125rem}
+@media (max-width:900px){
+  .jr-docw{grid-template-columns:1fr}
+  .jr-paper{padding:28px 18px 34px;font-size:1rem}
+  .jr-mg{display:none;margin:4px 0 14px!important;background:var(--alt);border-radius:12px;padding:12px 14px}
+  .jr-mg.open{display:block}
+  .jr-dbar{flex-direction:column;align-items:stretch}.jr-acts{justify-content:space-between}
+}
+@media print{body.jr-printing .jr-printdoc{display:block!important}}
+.jr-mg{font-family:var(--sans,system-ui),sans-serif}
+.jr-appr{background:var(--alt);border:0;border-radius:99px;padding:5px 12px;font:inherit;font-size:.8125rem;color:var(--ink);cursor:pointer;margin-inline-end:8px}
+.jr-acts{flex-wrap:wrap}
+@media (max-width:900px){.jr-dtitle .jr-in{font-size:1.125rem!important}.jr-paper .jr-dch{font-size:1.0625rem;margin-top:30px}}
+.jr-dch [contenteditable]{outline:none;border-radius:4px;padding:0 4px}.jr-dch [contenteditable]:hover,.jr-dch [contenteditable]:focus{background:rgba(0,0,0,.035)}
 </style>
 </head>
 <body>
@@ -1893,7 +1989,7 @@ requestAnimationFrame(function(){requestAnimationFrame(function(){s.split('').fo
       if(tx('limits2'))h+='<h3>'+T('قيود الدراسة','Limitations')+'</h3>'+para('limits2','','');if(rc5.length)h+='<h3>'+T('التوصيات','Recommendations')+'</h3><ol>'+rc5.map(function(r){return '<li>'+esc(r[0])+'</li>'}).join('')+'</ol>';if(lines('future').length)h+='<h3>'+T('مقترحات لبحوث مستقبلية','Future research')+'</h3>'+ol('future','','')}
     var ch=[hasLit||ch2done?null:[T('الفصل الثاني: الإطار النظري والدراسات السابقة','Chapter Two: Literature review'),[T('الإطار النظري','Theoretical framework'),T('الدراسات السابقة','Prior studies'),T('التعقيب على الدراسات السابقة وموقع الدراسة منها','Commentary and the place of this study')]],
       has3?null:[T('الفصل الثالث: منهجية الدراسة وإجراءاتها','Chapter Three: Methodology'),[T('منهج الدراسة','Research design')+(m?' ('+T(m.ar,m.en)+(dd?' — '+T(dd.ar,dd.en):'')+')':'')+(tx('just')?': '+esc(tx('just')):'')].concat(m?need.map(function(n){return T(n[0],n[1])}):[T('تتحدد أقسامه بعد اختيار المنهج','Sections follow once the approach is chosen')])],
-      has4?null:[k==='ql'?T('الفصل الرابع: نتائج الدراسة (المحاور والموضوعات)','Chapter Four: Findings (themes)'):k==='rv'?T('الفصل الرابع: نتائج المراجعة','Chapter Four: Results of the review'):T('الفصل الرابع: نتائج الدراسة ومناقشتها','Chapter Four: Results and discussion'),[]],
+      has4?null:[k==='ql'?T('الفصل الرابع: نتائج الدراسة (المحاور والموضوعات)','Chapter Four: Findings (themes)'):k==='rv'?T('الفصل الرابع: نتائج المراجعة','Chapter Four: Results of the review'):T('الفصل الرابع: نتائج الدراسة','Chapter Four: Results'),[]],
       has5?null:[T('الفصل الخامس: مناقشة النتائج والتوصيات','Chapter Five: Discussion and recommendations'),[]]];
     h+=ch.filter(Boolean).map(function(c){return '<h2 class="jr-later">'+c[0]+'</h2>'+(c[1].length?'<ul class="jr-later">'+c[1].map(function(x){return '<li>'+x+'</li>'}).join('')+'</ul>':'')}).join('');
     h+='<h2'+(ss2.length?'':' class="jr-later"')+'>'+T('المراجع','References')+'</h2>'+(ss2.length?'<p>'+ph('[ تُكتب المراجع كاملة بصيغة APA ]','[ Complete the references in APA style ]')+'</p><ul>'+ss2.map(function(r){return '<li>'+esc(r[0])+(r[4]?' <span dir="ltr">'+esc(r[4])+'</span>':'')+'</li>'}).join('')+'</ul>':'');
@@ -1917,54 +2013,183 @@ requestAnimationFrame(function(){requestAnimationFrame(function(){s.split('').fo
     if(f.h)h+='<p class="jr-help">'+esc(L(f.h[0],f.h[1]))+'</p>';
     if(f.ex)h+='<p class="jr-ex">'+L('مثال: ','Example: ')+esc(L(f.ex[0],f.ex[1]))+'</p>';
     if(f.cmp)h+='<details class="jr-cmp"><summary>'+L('مثال ضعيف ومثال أفضل','A weak and a better example')+'</summary><div class="jr-cw"><span>'+L('ضعيف','Weak')+'</span><p dir="auto">'+esc(L(f.cmp[0][0],f.cmp[0][1]))+'</p></div><div class="jr-cg"><span>'+L('أفضل','Better')+'</span><p dir="auto">'+esc(L(f.cmp[1][0],f.cmp[1][1]))+'</p></div><p class="jr-cy">'+esc(L(f.cmp[2][0],f.cmp[2][1]))+'</p></details>';
+    h+=inputH(f)+actH(f);
+    return h+'</div>';
+  }
+  function inputH(f,ph){var val=v(f.id),id='jf-'+f.id,h='',P=ph?' placeholder="'+esc(ph)+'"':'';
     var dir=' dir="auto"';
-    if(f.t==='text')h+='<input class="jr-in" id="'+id+'" data-f="'+f.id+'" type="text"'+dir+' value="'+esc(val)+'">';
-    else if(f.t==='area'||f.t==='lines')h+='<textarea class="jr-in" id="'+id+'" data-f="'+f.id+'" rows="'+(f.rows||3)+'"'+dir+'>'+esc(val)+'</textarea>';
+    if(f.t==='text')h+='<input class="jr-in" id="'+id+'" data-f="'+f.id+'" type="text"'+dir+' value="'+esc(val)+'"'+P+'>';
+    else if(f.t==='area'||f.t==='lines')h+='<textarea class="jr-in" id="'+id+'" data-f="'+f.id+'" rows="'+(f.rows||3)+'"'+dir+P+'>'+esc(val)+'</textarea>';
     else if(f.t==='chips')h+='<div data-f="'+f.id+'" data-multi="'+(f.multi?1:0)+'">'+chipsH(f,'jc-'+f.id,val)+'</div>';
     else if(f.t==='rows'){var rows=(val&&val.length)?val:[blankRow(f)];h+='<div class="jr-rows">'+rows.map(function(r,i){return '<div class="jr-row'+(f.stack?' stack':'')+(f.nopair?' nopair':'')+'">'+f.c.map(function(c,j){var at=' class="jr-in" data-f="'+f.id+'" data-r="'+i+'" data-c="'+j+'"'+dir+' placeholder="'+esc(L(c[0],c[1]))+'"';return f.ta&&f.ta.indexOf(j)>-1?'<textarea rows="2"'+at+'>'+esc(r[j]||'')+'</textarea>':'<input'+at+' value="'+esc(r[j]||'')+'"'+(j===f.c.length-1&&f.stack?' dir="ltr"':'')+'>'}).join('')+'<button type="button" class="jr-x" data-act="delrow" data-f="'+f.id+'" data-r="'+i+'" aria-label="'+L('حذف','Remove')+'">×</button></div>'}).join('')+'</div><button type="button" class="btn jr-sm" data-act="addrow" data-f="'+f.id+'">+ '+(f.add?L(f.add[0],f.add[1]):L('مصطلح','Term'))+'</button>'+(f.id==='studies'?' <button type="button" class="btn jr-sm" data-act="verify">'+L('تحقق من وجود الدراسات','Check that the studies exist')+'</button><div data-verify></div>':'')}
+    return h}
+  function actH(f){var h='';
     if(f.act==='assemble')h+='<button type="button" class="btn jr-sm" data-act="assemble">'+L('ابنِ هيكل الفقرة من إجاباتي','Build a skeleton from my answers')+'</button>';
     var ACTL={resrows:['ابدأ من جدول التحليل','Start from your analysis table'],discrows:['ابدأ من نتائجك','Start from your results'],qbank:['اقترح أسئلة متوقعة بحسب منهجك','Suggest likely questions for your approach']};if(ACTL[f.act])h+=' <button type="button" class="btn jr-sm" data-act="'+f.act+'">'+L(ACTL[f.act][0],ACTL[f.act][1])+'</button>';
     if(f.act==='qrows')h+=' <button type="button" class="btn jr-sm" data-act="qrows">'+L('ابدأ من أسئلتك الفرعية','Start from your sub-questions')+'</button>';
     if(f.act==='derive')h+='<button type="button" class="btn jr-sm" data-act="derive">'+L('ابدأ الأهداف من الأسئلة الفرعية','Start objectives from the sub-questions')+'</button>';
-    return h+'</div>';
-  }
+    return h}
 
   // ---------- UI pieces ----------
   var DEC={ok:['معتمدة','Approved'],okc:['معتمدة مع تعديلات','Approved with changes'],rev:['تحتاج مراجعة','Needs revision']};
   function stState(s){if(s.soon)return 'soon';var r=(mode==='review'?R.rv:S.rv)[s.id];if(r&&r.d)return r.d;var p=pct(s);return p>=100?'done':p>0?'part':'none'}
-  function mapH(){return '<ol class="jr-map">'+STAGES.map(function(s,i){var c=stState(s),cur=mode==='work'&&S.cur===s.id;return '<li class="jr-st s-'+c+(cur?' cur':'')+(s.soon||inScope(s)?'':' out')+'"><button type="button" data-act="go" data-s="'+s.id+'"'+(s.soon?' disabled':'')+(cur?' aria-current="step"':'')+'><b>'+num(i+1)+'</b><span>'+esc(L(s.ar,s.en))+'</span>'+(s.soon?'<em>'+L('قريبًا','Soon')+'</em>':'')+'</button></li>'}).join('')+'</ol>'}
+  function mapH(){var all=!S||S.meta.showAll||scope().length===ACTIVE.length;return '<ol class="jr-map">'+STAGES.map(function(s,i){if(!all&&!inScope(s)&&S.cur!==s.id)return '';var c=stState(s),cur=mode==='work'&&S.cur===s.id;return '<li class="jr-st s-'+c+(cur?' cur':'')+(s.soon||inScope(s)?'':' out')+'"><button type="button" data-act="go" data-s="'+s.id+'"'+(s.soon?' disabled':'')+(cur?' aria-current="step"':'')+'><b>'+num(i+1)+'</b><span>'+esc(L(s.ar,s.en))+'</span>'+(s.soon?'<em>'+L('قريبًا','Soon')+'</em>':'')+'</button></li>'}).join('')+'</ol>'}
   function checksH(s){return '<ul class="jr-checks">'+chk(s).map(function(c){return '<li class="c-'+c[0]+'">'+(c[3]?'<details><summary>'+esc(L(c[1],c[2]))+' <span class="jr-why">'+L('لماذا؟','Why?')+'</span></summary><p>'+esc(L(c[3][0],c[3][1]))+'</p></details>':esc(L(c[1],c[2])))+'</li>'}).join('')+'</ul>'}
   function rvNote(s){var r=S.rv[s.id];if(!r||!r.d)return '';return '<div class="jr-rv d-'+r.d+'"><p><b>'+L('رأي المشرف: ','Supervisor: ')+esc(L(DEC[r.d][0],DEC[r.d][1]))+'</b>'+(r.edited?' · '+L('عُدّلت بعد الرأي','edited since'):'')+'</p>'+(r.c?'<p dir="auto">'+esc(r.c)+'</p>':'')+'</div>'}
-  function stageH(){var s=st(S.cur),SC=inScope(s)?scope():ACTIVE,i=SC.indexOf(s);
+  function fullH(){var s=st(S.cur),SC=inScope(s)?scope():ACTIVE,i=SC.indexOf(s);
     var h='<div class="jr-stage" data-stage="'+s.id+'"><p class="eyebrow">'+L('المرحلة ','Stage ')+num(STAGES.indexOf(s)+1)+'</p><h2>'+esc(L(s.ar,s.en))+'</h2><p class="jr-goal">'+esc(L(s.goal[0],s.goal[1]))+'</p>'+rvNote(s)+(s.tips?'<details class="jr-tips"><summary>'+L('قبل أن تكتب','Before you write')+'</summary><ul>'+s.tips.map(function(x){return '<li>'+esc(L(x[0],x[1]))+'</li>'}).join('')+'</ul></details>':'');
     var now=s.fields.filter(function(f){return !f.later}),lat=s.fields.filter(function(f){return f.later});
     h+='<div class="jr-fields">'+now.map(fieldH).join('')+(lat.length?'<details class="jr-defer"'+(lat.some(filled)?' open':'')+'><summary>'+L('تُكمَل لاحقًا','To complete later')+' <span>('+num(lat.length)+')</span></summary><div class="jr-fields">'+lat.map(fieldH).join('')+'</div></details>':'')+'</div>';
     h+=restH();h+='<div class="jr-qc"><h4>'+L('مراجعة الجودة','Quality check')+'</h4><div data-checks>'+checksH(s)+'</div></div>';
     h+='<div class="jr-nav">'+(i>0?'<button type="button" class="btn" data-act="go" data-s="'+SC[i-1].id+'">'+L('السابقة','Previous')+'</button>':'<span></span>')+(i<SC.length-1?'<button type="button" class="btn solid" data-act="go" data-s="'+SC[i+1].id+'">'+L('المرحلة التالية','Next stage')+'</button>':'<button type="button" class="btn solid" data-act="send">'+L('أرسل للمشرف','Send to supervisor')+'</button>')+'</div></div>';
     return h}
+  var VIEW='doc';try{VIEW=localStorage.getItem('journey:view')||'doc'}catch(e){}
+  function stepsOf(s){return s.fields.filter(function(f){return f.t!=='needs'&&f.t!=='d5guide'&&!f.later&&shown(f)})}
+  function laterOf(s){return s.fields.filter(function(f){return f.later&&f.t!=='d5guide'&&shown(f)})}
+  function posOf(s){S.pos=S.pos||{};return Math.min(S.pos[s.id]||0,stepsOf(s).length)}
+  function sumVal(f){var x=v(f.id);if(f.t==='chips'){var a=f.multi?(x||[]):[x],oo=typeof f.o==='function'?f.o():f.o;return oo.filter(function(o){return a.indexOf(o[0])>-1}).map(function(o){return L(o[1],o[2])}).join('، ')}if(f.t==='rows')return (x||[]).filter(function(r){return r[0]&&r[0].trim()}).map(function(r){return r[0]}).join('، ');return x||''}
+  function sumChecksH(s){var c=chk(s).filter(function(x){return x[0]!=='ok'}),top=c.filter(function(x){return x[0]==='miss'}).concat(c.filter(function(x){return x[0]!=='miss'})),first=top.slice(0,3),rest=top.slice(3);return (first.length?'<h4>'+L('ما يحتاج انتباهك','What needs your attention')+'</h4><ul class="jr-checks">'+first.map(function(x){return '<li class="c-'+x[0]+'">'+(x[3]?'<details><summary>'+esc(L(x[1],x[2]))+' <span class="jr-why">'+L('لماذا؟','Why?')+'</span></summary><p>'+esc(L(x[3][0],x[3][1]))+'</p></details>':esc(L(x[1],x[2])))+'</li>'}).join('')+'</ul>'+(rest.length?'<details class="jr-more2"><summary>'+L('ملاحظات أخرى','More notes')+' ('+num(rest.length)+')</summary><ul class="jr-checks">'+rest.map(function(x){return '<li class="c-'+x[0]+'">'+esc(L(x[1],x[2]))+'</li>'}).join('')+'</ul></details>':''):'<p class="jr-okm">'+L('أحسنت؛ لا ملاحظات على هذه المرحلة.','Well done; nothing to flag in this stage.')+'</p>')}
+  function stageH(){if(VIEW==='all')return fullH();var s=st(S.cur),SC=inScope(s)?scope():ACTIVE,si=SC.indexOf(s),fs=stepsOf(s),p=posOf(s),n=fs.length;
+    var h='<div class="jr-stage jr-step" data-stage="'+s.id+'"><div class="jr-sh"><p class="eyebrow">'+L('المرحلة ','Stage ')+num(STAGES.indexOf(s)+1)+' · '+esc(L(s.ar,s.en))+'</p>'+(p<n?'<span class="jr-cnt">'+num(p+1)+' / '+num(n)+'</span>':'')+'</div><div class="jr-pbar"><i style="width:'+Math.round(100*p/Math.max(n,1))+'%"></i></div>'+rvNote(s);
+    if(p<n){var f=fs[p];
+      if(p===0)h+='<p class="jr-goal">'+esc(L(s.goal[0],s.goal[1]))+'</p>'+(s.tips?'<details class="jr-tips"><summary>'+L('قبل أن تكتب','Before you write')+'</summary><ul>'+s.tips.map(function(x){return '<li>'+esc(L(x[0],x[1]))+'</li>'}).join('')+'</ul></details>':'');
+      if(s.id==='design'&&p===0)h+=fieldH({t:'d5guide'});
+      h+='<div class="jr-q">'+fieldH(f)+(f.id==='approach'||f.id==='design'?'<div data-needs>'+needsH()+'</div>':'')+'</div>';
+      h+='<div class="jr-nav"><button type="button" class="btn" data-act="sprev"'+(p===0&&si<=0?' disabled':'')+'>'+L('السابق','Back')+'</button><button type="button" class="btn solid" data-act="snext">'+L('التالي','Next')+'</button></div>';
+    }else{
+      h+='<h2 class="jr-sumh">'+L('مراجعة المرحلة','Stage review')+'</h2>';
+      h+='<div class="jr-sum">'+fs.map(function(f,i){var val=sumVal(f);return '<div class="jr-sr"><div><span>'+esc(L(f.l[0],f.l[1]))+'</span><p dir="auto">'+(val?esc(val.length>220?val.slice(0,220)+'…':val):'<em>'+L('لم تُكتب بعد','Not written yet')+'</em>')+'</p></div><button type="button" class="jr-edit" data-act="sgo" data-i="'+i+'">'+L('عدّل','Edit')+'</button></div>'}).join('')+'</div>';
+      h+='<div class="jr-qc jr-qc2" data-checks>'+sumChecksH(s)+'</div>';
+      var lt=laterOf(s);if(lt.length)h+='<details class="jr-defer"'+(lt.some(filled)?' open':'')+'><summary>'+L('أسئلة إضافية تُكمَل لاحقًا','Extra questions for later')+' <span>('+num(lt.length)+')</span></summary><div class="jr-fields">'+lt.map(fieldH).join('')+'</div></details>';
+      h+=restH();
+      h+='<div class="jr-nav"><button type="button" class="btn" data-act="sgo" data-i="0">'+L('إلى الأسئلة','Back to questions')+'</button>'+(si>-1&&si<SC.length-1?'<button type="button" class="btn solid" data-act="go" data-s="'+SC[si+1].id+'">'+L('المرحلة التالية','Next stage')+'</button>':'<button type="button" class="btn solid" data-act="send">'+L('أرسل للمشرف','Send to supervisor')+'</button>')+'</div>';
+    }
+    return h+'</div>'}
   function draftPanel(){var p=total();return '<div class="jr-dh"><div><h3>'+L('المسودة','The draft')+'</h3><p class="jr-pc"><span class="jr-bar"><i style="width:'+p+'%"></i></span><b data-pct>'+num(p)+'٪'.replace('٪',ar()?'٪':'%')+'</b> '+L('من المسودة','of the draft')+'</p></div>'+
     '<div class="jr-dact"><button type="button" class="btn" data-act="word">Word</button><button type="button" class="btn" data-act="print">'+L('طباعة','Print')+'</button></div></div><article class="jr-doc" data-doc dir="'+(DL()==='ar'?'rtl':'ltr')+'" lang="'+DL()+'">'+draft()+'</article>'}
   function sendBox(){return '<div class="jr-send" data-sendbox hidden><h4>'+L('رابط المراجعة','Review link')+'</h4><p>'+L('أرسل هذا الرابط لمشرفك. يحمل نسخة من عملك الآن؛ يكتب ملاحظاته ورأيه في كل مرحلة، ثم يعيد إليك رابطًا تفتحه هنا.','Send this link to your supervisor. It carries a copy of your work as it is now; they comment and decide on each stage, then send you back a link to open here.')+'</p><div class="jr-link"><input readonly data-link dir="ltr"><button type="button" class="btn solid" data-act="copy">'+L('نسخ','Copy')+'</button></div></div>'}
-  function tools(){return '<div class="jr-tools"><button type="button" class="btn" data-act="report">'+L('تقرير المسودة','Draft report')+'</button><button type="button" class="btn" data-act="imp">'+L('استيراد من مسودة','Import from a draft')+'</button><button type="button" class="btn" data-act="send">'+L('أرسل للمشرف','Send to supervisor')+'</button><button type="button" class="btn" data-act="meta">'+L('بيانات المشروع','Project details')+'</button><button type="button" class="btn" data-act="backup">'+L('حفظ نسخة','Save a copy')+'</button><label class="btn">'+L('استعادة نسخة','Restore a copy')+'<input type="file" accept=".json,application/json" data-act="restore" hidden></label><button type="button" class="btn jr-quiet" data-act="reset">'+L('مشروع جديد','New project')+'</button></div>'}
+  function tools(){return '<details class="jr-menu"><summary>'+L('خيارات','Options')+'</summary><div class="jr-tools"><button type="button" class="btn" data-act="report">'+L('تقرير المسودة','Draft report')+'</button><button type="button" class="btn" data-act="view">'+(VIEW==='doc'?L('أسئلة موجّهة خطوة بخطوة','Guided questions, step by step'):L('العودة إلى الرسالة','Back to the thesis'))+'</button><button type="button" class="btn" data-act="defence">'+L('الاستعداد للمناقشة','Preparing for the defence')+'</button><button type="button" class="btn" data-act="print">'+L('طباعة','Print')+'</button>'+(VIEW==='doc'&&S?'<button type="button" class="btn" data-act="merge">'+(S.meta.merge45?L('النتائج في فصل والمناقشة في فصل','Results and discussion in separate chapters'):L('دمج النتائج والمناقشة في فصل واحد','Results and discussion in one chapter'))+'</button>':'')+'<button type="button" class="btn" data-act="allst">'+(S&&S.meta.showAll?L('المراحل التي اخترتها فقط','Only my stages'):L('كل المراحل','All stages'))+'</button><button type="button" class="btn" data-act="imp">'+L('استيراد من مسودة','Import from a draft')+'</button><button type="button" class="btn" data-act="send">'+L('أرسل للمشرف','Send to supervisor')+'</button><button type="button" class="btn" data-act="meta">'+L('بيانات المشروع','Project details')+'</button><button type="button" class="btn" data-act="backup">'+L('حفظ نسخة','Save a copy')+'</button><label class="btn">'+L('استعادة نسخة','Restore a copy')+'<input type="file" accept=".json,application/json" data-act="restore" hidden></label><button type="button" class="btn jr-quiet" data-act="reset">'+L('مشروع جديد','New project')+'</button></div></details>'}
 
+  // ---------- document view: the student writes inside the thesis; guidance and notes sit in the margin ----------
+  function A(a,b){return [a,b]}
+  var SECS=[
+    {id:'title',ch:0,stage:'idea',h:A('عنوان الدراسة','Title'),f:['topic'],ph:A('اكتب عنوان دراستك: الظاهرة، والفئة، والسياق','Your title: the phenomenon, the population, the context'),g:A('العنوان يحمل المتغيرات أو الظاهرة، والفئة، والسياق، في نحو خمس عشرة كلمة.','The title carries the variables or phenomenon, the population and the context, in about fifteen words.'),cmp:'topic'},
+    {id:'abstract',ch:0,stage:'write',h:A('الملخص','Abstract'),f:['abstract','keywords'],ph:A('يُكتب في الآخر: الهدف، والمنهج، والعينة، والأدوات، وأبرز النتائج، والتوصيات.','Written last: aim, method, sample, instruments, main results, recommendations.'),g:A('الملخص صورة مصغرة للرسالة كلها، في نحو ٢٠٠–٢٥٠ كلمة، ويُكتب بعد اكتمال الفصول.','The abstract is the whole thesis in miniature, about 200–250 words, written once the chapters are done.')},
+    {id:'intro',ch:1,stage:'idea',h:A('المقدمة','Background'),f:['intro'],ph:A('ابدأ بالسياق العام لموضوعك، ثم ضيّقه حتى تصل إلى ما تدرسه.','Start from the broad context of your topic and narrow it to what you study.'),g:A('المقدمة تنتقل من العام إلى الخاص، وتمهّد للمشكلة دون أن تعرضها.','The background moves from general to specific and leads to the problem without stating it.'),help:['idea','why','origin','feas'],cmp:'why'},
+    {id:'stmt',ch:1,stage:'problem',h:A('مشكلة الدراسة','Statement of the problem'),f:['stmt'],ph:A('صِف الواقع الذي يحتاج إلى دراسة بشواهد موثقة، وحدّد الفجوة، واختم بالسؤال الرئيس.','Describe the situation with cited evidence, state the gap, and end with the main question.'),g:A('المشكلة واقع له أثر، تُثبته الشواهد، وتكشف الدراسات السابقة أنه لم يُدرس بما يكفي. لا حل فيها.','A problem is a situation with consequences, shown by evidence, that prior studies have not adequately addressed. It contains no solution.'),help:['who','evid','gap','conseq'],cmp:'stmt',act:'assemble'},
+    {id:'questions',ch:1,stage:'questions',h:A('أسئلة الدراسة','Research questions'),f:['mainq','subq'],ph:A('السؤال الرئيس','The main question'),ph2:A('الأسئلة الفرعية، سطر لكل سؤال','Sub-questions, one per line'),g:A('السؤال الجيد يُجاب عنه ببيانات تستطيع جمعها، ويحمل متغيرات العنوان نفسها.','A good question can be answered with data you can collect, and carries the same variables as the title.'),cmp:'mainq'},
+    {id:'hyp',ch:1,stage:'questions',h:A('فرضيات الدراسة','Hypotheses'),f:['hyp'],ph:A('سطر لكل فرضية، تقابل سؤالًا','One per line, each matching a question'),g:A('الفرضية إجابة متوقعة تُختبر إحصائيًا، بصيغة صفرية أو موجهة.','A hypothesis is an expected answer tested statistically, null or directional.')},
+    {id:'obj',ch:1,stage:'questions',h:A('أهداف الدراسة','Objectives'),f:['purpose','obj'],ph:A('الهدف العام','The overall aim'),ph2:A('الأهداف، سطر لكل هدف يقابل سؤالًا','Objectives, one per line, each matching a question'),g:A('لكل سؤال هدف يقابله، يبدأ بفعل مثل «التعرف على» أو «الكشف عن».','Each question has a matching objective, starting with a verb such as “to determine”.'),cmp:'obj',act:'derive'},
+    {id:'sig',ch:1,stage:'questions',h:A('أهمية الدراسة','Significance'),f:['sigT','sigP'],ph:A('الأهمية النظرية','Theoretical significance'),ph2:A('الأهمية التطبيقية: من يستفيد وكيف','Practical significance: who benefits and how'),g:A('الأهمية تُبنى على ما تضيفه الدراسة فعلًا، لا على أهمية الموضوع عمومًا.','Significance rests on what the study actually adds, not on the topic being important.')},
+    {id:'limits',ch:1,stage:'questions',h:A('حدود الدراسة','Delimitations'),f:['limT','limP','limZ','limH'],g:A('الحدود الموضوعية والمكانية والزمانية والبشرية التي اخترتها لدراستك.','The topic, place, time and participant boundaries you chose.')},
+    {id:'terms',ch:1,stage:'questions',h:A('مصطلحات الدراسة','Definition of terms'),f:['terms'],g:A('لكل مصطلح تعريف مفاهيمي موثّق، وتعريف إجرائي يبيّن كيف تقيسه.','Each term has a cited conceptual definition and an operational one showing how you measure it.'),cmp:'terms'},
+    {id:'framework',ch:2,stage:'lit',h:A('الإطار النظري','Theoretical framework'),f:['framework'],ph:A('النظرية أو النموذج الذي تستند إليه دراستك، ولماذا يناسب سؤالك.','The theory or model your study rests on, and why it fits your question.'),g:A('الإطار ليس جمع تعريفات؛ هو النظرية التي تفسر علاقات دراستك وتوجّه أسئلتها.','A framework is not a set of definitions; it is the theory that explains your study’s relations.'),help:['themes','search'],cmp:'framework'},
+    {id:'studies',ch:2,stage:'lit',h:A('الدراسات السابقة','Prior studies'),f:['studies'],g:A('لكل دراسة: ما فعلته، وما وجدته، وصلتها بدراستك، ورقم DOI يثبت وجودها. نظّمها بحسب محاور دراستك.','For each study: what it did, what it found, its relevance, and a DOI. Organise by theme.'),act:'verify'},
+    {id:'comment',ch:2,stage:'lit',h:A('التعقيب على الدراسات السابقة','Commentary on prior studies'),f:['comment'],ph:A('ما تتفق فيه الدراسات وما تختلف، وما لم تتناوله، وما تضيفه دراستك.','Where studies agree and differ, what they leave out, and what your study adds.'),g:A('التعقيب يثبت أن دراستك تضيف جديدًا، ويرتبط بالفجوة التي حددتها في المشكلة.','The commentary shows your study adds something, and ties back to the gap in your problem.'),cmp:'comment'},
+    {id:'method',ch:3,stage:'questions',h:A('منهج الدراسة','Research design'),f:['approach','design','just'],ph:A('لماذا اخترت هذا المنهج والتصميم؟ اربطه بسؤالك.','Why this approach and design? Link it to your question.'),g:A('المنهج يتبع السؤال. اختر المنهج والتصميم، ثم بيّن لماذا يناسبان سؤالك.','The approach follows the question. Choose it, then explain why it fits.'),help:['phen','pcc','pico','caseb','site','stance','integ','vars']},
+    {id:'pop',ch:3,stage:'design',h:A('مجتمع الدراسة','Population'),f:['pop'],ph:A('كل من تنطبق عليهم الدراسة: مَن هم، وأين، وكم عددهم.','Everyone the study applies to: who, where, how many.'),g:A('المجتمع هو من تريد أن تعمم عليهم، والعينة جزء منه.','The population is whom you generalise to; the sample is part of it.')},
+    {id:'sample',ch:3,stage:'design',h:A('العينة أو المشاركون','Sample or participants'),f:['sampleQ','sampleL'],ph:A('طريقة الاختيار، والحجم، وكيف حددته','Sampling method, size, and how you set it'),g:A('بيّن كيف اخترت العينة ولماذا بهذا الحجم؛ وفي البحث النوعي معايير اختيار المشاركين ومتى توقفت.','Explain how and why this sample; in qualitative work, selection criteria and when you stopped.'),cmp:'sampleQ'},
+    {id:'review',ch:3,stage:'design',h:A('معايير الإدراج ومصادر البحث','Eligibility and sources'),f:['criteria','dbs','quality'],g:A('معايير واضحة، وقاعدتا بيانات فأكثر، وسلسلة بحث قابلة للتكرار، وأداة لتقييم الجودة.','Clear criteria, two or more databases, a reproducible search string, and a quality appraisal tool.')},
+    {id:'instr',ch:3,stage:'design',h:A('أدوات الدراسة','Instruments'),f:['instr'],g:A('لكل أداة: مصدرها، وما تقيسه، ودلالات صدقها وثباتها بأرقام.','For each instrument: its source, what it measures, and validity and reliability evidence with figures.'),cmp:'instr'},
+    {id:'treat',ch:3,stage:'design',h:A('المعالجة التجريبية','The intervention'),f:['treat'],ph:A('محتوى البرنامج، ومدته، وجلساته، ومن يطبقه، وكيف حُكِّم.','Content, duration, sessions, who delivers it, and how it was reviewed.'),g:A('صِف المعالجة بما يكفي ليكررها غيرك.','Describe the treatment so someone else could repeat it.')},
+    {id:'control',ch:3,stage:'design',h:A('ضبط المتغيرات','Controls'),f:['control'],ph:A('كيف تتأكد أن الفرق سببه المعالجة.','How you show the difference is due to the treatment.'),g:A('بدون ضبط لا يمكن نسبة الفرق إلى المعالجة.','Without controls the difference cannot be attributed to the treatment.')},
+    {id:'trust',ch:3,stage:'design',h:A('الموثوقية','Trustworthiness'),f:['trust'],ph:A('المصداقية والاعتمادية: التحقق من المشاركين، والتثليث، ومراجعة الزملاء…','Credibility and dependability: member checking, triangulation, peer debriefing…'),g:A('في البحث النوعي تقوم الموثوقية مقام الصدق والثبات.','In qualitative research, trustworthiness takes the place of validity and reliability.')},
+    {id:'proc',ch:3,stage:'design',h:A('إجراءات الدراسة','Procedures'),f:['proc'],ph:A('الخطوات بالترتيب، سطر لكل خطوة، من الموافقات حتى التحليل.','Steps in order, one per line, from approvals to analysis.'),g:A('اكتب الإجراءات بحيث يستطيع غيرك تكرار دراستك.','Write procedures so another researcher could repeat your study.')},
+    {id:'ethics',ch:3,stage:'data',h:A('الاعتبارات الأخلاقية','Ethical considerations'),f:['ethics','ethnote'],ph:A('حماية المشاركين: السرية، وحفظ البيانات، وحق الانسحاب.','Protecting participants: confidentiality, storage, right to withdraw.'),g:A('لا تُجمع بيانات قبل موافقة لجنة أخلاقيات البحث وإذن الجهة.','No data are collected before ethics approval and institutional permission.'),help:['pilot','plan']},
+    {id:'analysis',ch:3,stage:'design',h:A('تحليل البيانات','Data analysis'),f:['analysis'],g:A('لكل سؤال: البيانات التي تجيب عنه، وأسلوب تحليلها. السؤال الذي لا تجد له تحليلًا يحتاج مراجعة.','For each question: the data that answer it and the analysis. A question with no analysis needs revisiting.'),cmp:'analysis',act:'qrows'},
+    {id:'collect',ch:3,stage:'data',h:A('جمع البيانات','Data collection'),f:['collect','dataprep'],ph:A('يُكتب بعد الجمع: المدة، والعدد، ونسبة الاستجابة، وما واجهته.','Written after collection: duration, numbers, response rate, problems.'),g:A('دوّن ما حدث فعلًا أثناء الجمع؛ ستحتاجه في الإجراءات والقيود.','Record what actually happened; you will need it for procedures and limitations.')},
+    {id:'results',ch:4,stage:'analysis',h:A('نتائج الدراسة','Results'),f:['assump','results','unexpected'],ph:A('فحص افتراضات التحليل ونتيجته','Assumption checks and their outcome'),g:A('اعرض نتيجة كل سؤال بأرقامها أو محاورها، دون تفسير؛ التفسير مكانه المناقشة.','Report each question’s result in figures or themes, without interpretation.'),cmp:'results',act:'resrows'},
+    {id:'disc',ch:5,stage:'write',h:A('مناقشة النتائج','Discussion'),f:['disc'],g:A('فسّر كل نتيجة، وقارنها بالدراسات التي عرضتها في الفصل الثاني.','Interpret each result and compare it with the studies in Chapter Two.'),cmp:'disc',act:'discrows'},
+    {id:'recs',ch:5,stage:'write',h:A('التوصيات','Recommendations'),f:['recs'],g:A('كل توصية تستند إلى نتيجة، وتسمّي من يعمل بها.','Each recommendation rests on a result and names who should act.'),cmp:'recs'},
+    {id:'limits2',ch:5,stage:'write',h:A('قيود الدراسة','Limitations'),f:['limits2'],ph:A('ما حدّ من نتائجك، وأثره.','What constrained your results, and how.'),g:A('ذكر القيود يدل على وعيك بحدود دراستك.','Stating limitations shows you understand your study’s bounds.')},
+    {id:'future',ch:5,stage:'write',h:A('مقترحات لبحوث مستقبلية','Future research'),f:['future'],ph:A('سطر لكل مقترح','One per line'),g:A('مقترحات تبني على حدود دراستك أو نتائجها.','Suggestions that build on your limitations or results.')}
+  ];
+  var CHAP=[null,A('الفصل الأول: الإطار العام للدراسة','Chapter One: Introduction'),A('الفصل الثاني: الإطار النظري والدراسات السابقة','Chapter Two: Literature review'),A('الفصل الثالث: منهجية الدراسة وإجراءاتها','Chapter Three: Methodology'),A('الفصل الرابع: نتائج الدراسة','Chapter Four: Results'),A('الفصل الخامس: مناقشة النتائج والتوصيات','Chapter Five: Discussion and recommendations')];
+  function chOf(sec){return S.meta.merge45&&sec.id==='disc'?4:sec.ch}
+  function chTitle(n){var c=(S.meta.chtitles||{})[n];if(c)return c;if(S.meta.merge45&&n===4)return T('الفصل الرابع: نتائج الدراسة ومناقشتها','Chapter Four: Results and discussion');if(S.meta.merge45&&n===5)return T('الفصل الخامس: الخلاصة والتوصيات','Chapter Five: Conclusions and recommendations');return T(CHAP[n][0],CHAP[n][1])}
+  function secF(sec){return sec.f.map(fieldById).filter(function(f){return f&&shown(f)})}
+  function secHas(sec){return secF(sec).some(filled)||customOf(sec.id).length>0}
+  function secOn(sec){if((S.meta.hidden||[]).indexOf(sec.id)>-1)return false;if(!secF(sec).length)return false;if(sec.id==='hyp'){var m=M[v('approach')];if(!m||m.hyp==='no')return false}
+    return inScope(st(sec.stage))||secHas(sec)||S.meta.showAll}
+  function secTitle(sec){var t=(S.meta.titles||{})[sec.id];return t||L(sec.h[0],sec.h[1])}
+  function customOf(after){return (S.d.custom||[]).filter(function(c){return c.after===after})}
+  // which section a quality note belongs to
+  function secOfNote(stage,en){var r=function(re){return re.test(en)};
+    if(stage==='idea')return r(/topic/i)?'title':'intro';
+    if(stage==='problem')return 'stmt';
+    if(stage==='questions'){if(r(/hypothes/i))return 'hyp';if(r(/objective|overall aim/i))return 'obj';if(r(/term|definition/i))return 'terms';if(r(/significance/i))return 'sig';if(r(/delimitation/i))return 'limits';if(r(/approach|design|justification|phenomenon|stance|case|group and the field|integration|PICO|concept and context|variables|independent/i))return 'method';return 'questions'}
+    if(stage==='lit'){if(r(/framework|sensitising/i))return 'framework';if(r(/commentary/i))return 'comment';return 'studies'}
+    if(stage==='design'){if(r(/population/i))return 'pop';if(r(/sample|participants|selection|random|saturation/i))return 'sample';if(r(/inclusion|databases|search string|operators|appraisal/i))return 'review';if(r(/instrument|reliability coefficient/i))return 'instr';if(r(/treatment|duration|sessions/i))return 'treat';if(r(/controls|equivalence/i))return 'control';if(r(/trustworthiness/i))return 'trust';if(r(/procedure|ethical/i))return 'proc';if(r(/stage 3/i))return 'method';return 'analysis'}
+    if(stage==='data')return r(/collection|response rate/i)?'collect':'ethics';
+    if(stage==='analysis')return 'results';
+    if(stage==='write'){if(r(/recommendation/i))return 'recs';if(r(/limitation/i))return 'limits2';if(r(/abstract|keyword/i))return 'abstract';if(r(/title/i))return 'title';return 'disc'}
+    return null}
+  var NOTES={};
+  function collectNotes(){NOTES={};ACTIVE.forEach(function(s){if(s.id==='defence')return;chk(s).forEach(function(c){if(c[0]==='ok')return;var k=secOfNote(s.id,c[2]);if(!k)return;(NOTES[k]=NOTES[k]||[]).push(c)})});return NOTES}
+  function badgeH(sec){if(!secHas(sec))return '';var n=(NOTES[sec.id]||[]).filter(function(c){return c[0]!=='info'}),m=n.filter(function(c){return c[0]==='miss'}).length;return n.length?'<span class="jr-nb'+(m?' m':'')+'" title="">'+num(n.length)+'</span>':(secHas(sec)?'<span class="jr-nb ok">✓</span>':'')}
+  function docInputs(sec){var fs=secF(sec);return fs.map(function(f,i){var ph=i===0?sec.ph:(i===1?sec.ph2:null),tx2=f.t==='text'||f.t==='area'||f.t==='lines',lab=(f.t==='chips'||(fs.length>1&&!(ph&&tx2)))?'<span class="jr-dl">'+esc(L(f.l[0],f.l[1]))+'</span>':'';
+      return '<div class="jr-di" data-fw="'+f.id+'">'+lab+inputH(f,ph?L(ph[0],ph[1]):(tx2?L(f.l[0],f.l[1]):null))+'</div>'}).join('')}
+  function customH(c){return '<section class="jr-ds jr-cs" data-cs="'+c.id+'"><h3 class="jr-dh3"><input class="jr-cst" data-cid="'+c.id+'" data-ck="title" value="'+esc(c.title||'')+'" placeholder="'+L('عنوان القسم','Section title')+'" dir="auto"></h3><textarea class="jr-in jr-cst" data-cid="'+c.id+'" data-ck="text" dir="auto" rows="3" placeholder="'+L('نص القسم','Section text')+'">'+esc(c.text||'')+'</textarea></section>'}
+  function docH(){collectNotes();var h='<article class="jr-paper" dir="'+(DL()==='ar'?'rtl':'ltr')+'" lang="'+DL()+'">',lastCh=-1;
+    SECS.forEach(function(sec){if(!secOn(sec))return;
+      var cn=chOf(sec);if(cn!==lastCh&&cn>0){h+='<h2 class="jr-dch"><span data-chn="'+cn+'" contenteditable="true" spellcheck="false">'+esc(chTitle(cn))+'</span></h2>';lastCh=cn}
+      var tag=sec.id==='title'?'h1':'h3';
+      h+='<section class="jr-ds'+(sec.id==='title'?' jr-dtitle':'')+'" data-sec="'+sec.id+'"><'+tag+' class="jr-dh3"><span>'+esc(secTitle(sec))+'</span>'+badgeH(sec)+'</'+tag+'>'+docInputs(sec)+'</section>';
+      customOf(sec.id).forEach(function(c){h+=customH(c)})});
+    var ss=(v('studies')||[]).filter(function(r){return r[0]&&r[0].trim()});if(ss.length)h+='<h2 class="jr-dch">'+T('المراجع','References')+'</h2><ul class="jr-refs">'+ss.map(function(r){return '<li dir="auto">'+esc(r[0])+(r[4]?' <span dir="ltr">'+esc(r[4])+'</span>':'')+'</li>'}).join('')+'</ul>';
+    return h+'</article>'}
+  var ACTIVE_SEC=null;
+  function marginH(id){var sec=null;SECS.forEach(function(x){if(x.id===id)sec=x});if(!sec)return '<div class="jr-mg-empty"><p>'+L('اكتب في أي قسم، وتظهر هنا إرشاداته وملاحظاته.','Write in any section; its guidance and notes appear here.')+'</p>'+(function(){var all=[];SECS.forEach(function(x){if(secOn(x))(NOTES[x.id]||[]).forEach(function(c){if(c[0]==='miss')all.push([x,c])})});return all.length?'<h4>'+L('أقسام تنتظرك','Sections waiting for you')+'</h4><ul class="jr-mgl">'+all.slice(0,5).map(function(x){return '<li><button type="button" data-act="tosec" data-goto="'+x[0].id+'">'+esc(secTitle(x[0]))+'</button> <span>'+esc(L(x[1][1],x[1][2]))+'</span></li>'}).join('')+'</ul>':''})()+'</div>';
+    var h='<div class="jr-mg-h"><b>'+esc(secTitle(sec))+'</b><button type="button" class="jr-x" data-act="mgclose" aria-label="'+L('إغلاق','Close')+'">×</button></div><p class="jr-mg-g">'+esc(L(sec.g[0],sec.g[1]))+'</p>';
+    var gi={questions:1,sample:2,instr:3,analysis:4,results:5,abstract:6}[sec.id],gd=curGuide(),dz=curDes(),mk=M[v('approach')];
+    if(gi!=null&&gd&&mk)h+='<div class="jr-mg-d"><span>'+L('في تصميمك: ','For your design: ')+esc(L(mk.ar,mk.en))+(dz?' — '+esc(L(dz.ar,dz.en)):'')+'</span><p>'+esc(L(gd.g[gi][0],gd.g[gi][1]))+'</p>'+(gi===1&&!tx('mainq')?'<button type="button" class="jr-edit" data-act="tpl">'+L('استخدمه قالبًا للسؤال الرئيس','Use it as a template for the main question')+'</button>':'')+'</div>';
+    else if(gi!=null&&!mk&&sec.id!=='abstract')h+='<div class="jr-mg-d"><p>'+L('حدّد منهجك وتصميمك في قسم «منهج الدراسة» لتظهر هنا إرشادات تخص تصميمك.','Set your approach and design under “Research design” to see guidance for it here.')+'</p><button type="button" class="jr-edit" data-act="tosec" data-goto="method">'+L('منهج الدراسة','Research design')+'</button></div>';
+    if(sec.id==='framework'&&v('design')==='gt')h+='<div class="jr-mg-d"><p>'+L('في النظرية المجذّرة يُكتفى هنا بالمفاهيم الموجِّهة، ويُبنى الإطار من البيانات.','In grounded theory, list sensitising concepts only; the framework emerges from the data.')+'</p></div>';
+    var ns=secHas(sec)?(NOTES[sec.id]||[]):[];h+='<div data-mgnotes>'+(ns.length?'<ul class="jr-checks">'+ns.map(function(c){return '<li class="c-'+c[0]+'">'+(c[3]?'<details><summary>'+esc(L(c[1],c[2]))+' <span class="jr-why">'+L('لماذا؟','Why?')+'</span></summary><p>'+esc(L(c[3][0],c[3][1]))+'</p></details>':esc(L(c[1],c[2])))+'</li>'}).join('')+'</ul>':(secHas(sec)?'<p class="jr-okm">'+L('لا ملاحظات على هذا القسم.','Nothing to flag here.')+'</p>':''))+'</div>';
+    var cf=sec.cmp&&fieldById(sec.cmp);if(cf&&cf.cmp)h+='<details class="jr-cmp"><summary>'+L('مثال ضعيف ومثال أفضل','A weak and a better example')+'</summary><div class="jr-cw"><span>'+L('ضعيف','Weak')+'</span><p dir="auto">'+esc(L(cf.cmp[0][0],cf.cmp[0][1]))+'</p></div><div class="jr-cg"><span>'+L('أفضل','Better')+'</span><p dir="auto">'+esc(L(cf.cmp[1][0],cf.cmp[1][1]))+'</p></div><p class="jr-cy">'+esc(L(cf.cmp[2][0],cf.cmp[2][1]))+'</p></details>';
+    if(sec.act){var af=null;secF(sec).forEach(function(f){if(f.act)af=f});if(sec.act==='verify')h+='<button type="button" class="btn jr-sm" data-act="verify">'+L('تحقق من وجود الدراسات','Check that the studies exist')+'</button><div data-verify></div>';else if(af)h+=actH(af)}
+    if(sec.id==='method')h+='<div data-needs>'+needsH()+'</div>';
+    var hp=(sec.help||[]).map(fieldById).filter(function(f){return f&&shown(f)});if(hp.length)h+='<details class="jr-help2"'+(secHas(sec)?'':' open')+'><summary>'+L('أسئلة تساعدك على الكتابة','Questions to help you write')+'</summary><div class="jr-fields">'+hp.map(fieldH).join('')+'</div></details>';
+    h+='<details class="jr-secopt"><summary>'+L('خيارات القسم','Section options')+'</summary><div><button type="button" class="jr-edit" data-act="secren" data-goto="'+sec.id+'">'+L('تغيير العنوان','Rename')+'</button><button type="button" class="jr-edit" data-act="secadd" data-goto="'+sec.id+'">'+L('إضافة قسم بعده','Add a section after it')+'</button>'+(sec.id==='title'?'':'<button type="button" class="jr-edit" data-act="sechide" data-goto="'+sec.id+'">'+L('إخفاء القسم','Hide this section')+'</button>')+'</div></details>';
+    return h}
+  function docLayout(){return '<div class="jr-docw"><div class="jr-docm">'+docH()+((S.meta.hidden||[]).length?'<p class="jr-hidn"><button type="button" class="jr-edit" data-act="secshow">'+L('إظهار الأقسام المخفية','Show hidden sections')+' ('+num(S.meta.hidden.length)+')</button></p>':'')+'</div><aside class="jr-mg" data-mg>'+marginH(ACTIVE_SEC)+'</aside></div>'}
+  function setActive(id,force){if(ACTIVE_SEC===id&&!force)return;ACTIVE_SEC=id;[].forEach.call(host.querySelectorAll('.jr-ds.on'),function(x){x.classList.remove('on')});var se=id&&host.querySelector('[data-sec="'+id+'"]');if(se)se.classList.add('on');var mg=host.querySelector('[data-mg]');if(!mg)return;mg.innerHTML=marginH(id);
+    if(window.matchMedia('(max-width:900px)').matches){if(se)se.after(mg);mg.classList.toggle('open',!!id)}else{var w=host.querySelector('.jr-docw');if(w&&mg.parentNode!==w)w.appendChild(mg);if(se){var top=se.offsetTop-(host.querySelector('.jr-docm').offsetTop);mg.style.marginTop=Math.max(0,top)+'px'}}}
+  function docRefresh(){collectNotes();SECS.forEach(function(sec){var hh=host.querySelector('[data-sec="'+sec.id+'"] .jr-dh3');if(!hh)return;var b=hh.querySelector('.jr-nb');if(b)b.remove();hh.insertAdjacentHTML('beforeend',badgeH(sec))});var mn=host.querySelector('[data-mgnotes]');if(mn&&ACTIVE_SEC){var tmp=document.createElement('div');tmp.innerHTML=marginH(ACTIVE_SEC);var nn=tmp.querySelector('[data-mgnotes]');if(nn)mn.innerHTML=nn.innerHTML}
+    [].forEach.call(host.querySelectorAll('.jr-paper textarea'),grow)}
+  function grow(t){if(!t.dataset.g){t.rows=1;t.dataset.g=1}t.style.height='auto';t.style.height=(t.scrollHeight+2)+'px'}
+  function fmtField(f){var x=v(f.id);if(!filled(f))return '';if(f.t==='chips')return '<p>'+esc(sumVal(f))+'</p>';if(f.t==='lines')return '<ol>'+lines(f.id).map(function(l){return '<li>'+esc(l)+'</li>'}).join('')+'</ol>';
+    if(f.t==='rows'){var rs=x.filter(function(r){return r[0]&&r[0].trim()});if(f.id==='recs')return '<ol>'+rs.map(function(r){return '<li>'+esc(r[0])+'</li>'}).join('')+'</ol>';if(f.id==='terms')return rs.map(function(r){return '<p><b>'+esc(r[0])+':</b> '+esc(r[1]||'')+(r[2]?' '+T('ويُعرّف إجرائيًا بأنه: ','Operationally, ')+esc(r[2]):'')+'</p>'}).join('');
+      return rs.map(function(r){var rest=r.slice(1).filter(function(c){return c&&c.trim()});return '<p><b>'+esc(r[0])+'</b>'+(rest.length?': '+esc(rest.join('. ')):'')+'</p>'}).join('')}
+    return String(x).split(/\n+/).filter(Boolean).map(function(p){return '<p>'+esc(p)+'</p>'}).join('')}
+  function docExportH(){var h='',lastCh=-1,meta=S.meta;SECS.forEach(function(sec){if(!secOn(sec))return;
+      if(sec.id==='title'){h+='<header class="jr-dt"><h1>'+esc(tx('ftitle')||tx('topic'))+'</h1>'+(meta.student||meta.supervisor?'<p>'+[meta.student?T('إعداد: ','Prepared by: ')+esc(meta.student):'',meta.supervisor?T('إشراف: ','Supervised by: ')+esc(meta.supervisor):''].filter(Boolean).join(' · ')+'</p>':'')+'</header>';return}
+      var cn=chOf(sec);if(cn!==lastCh&&cn>0){h+='<h2>'+esc(chTitle(cn))+'</h2>';lastCh=cn}
+      var body=secF(sec).map(function(f){var b=fmtField(f);return b&&secF(sec).length>1&&['sigT','sigP','limT','limP','limZ','limH','sampleQ','sampleL','criteria','dbs','quality'].indexOf(f.id)>-1?'<h4>'+esc(L(f.l[0],f.l[1]))+'</h4>'+b:b}).join('');
+      h+='<h3>'+esc(secTitle(sec))+'</h3>'+(body||'<p class="jr-ph">[ … ]</p>');
+      customOf(sec.id).forEach(function(c){h+='<h3>'+esc(c.title||'')+'</h3>'+String(c.text||'').split(/\n+/).filter(Boolean).map(function(p){return '<p>'+esc(p)+'</p>'}).join('')})});
+    var ss=(v('studies')||[]).filter(function(r){return r[0]&&r[0].trim()});if(ss.length)h+='<h2>'+T('المراجع','References')+'</h2><ul>'+ss.map(function(r){return '<li>'+esc(r[0])+(r[4]?' '+esc(r[4]):'')+'</li>'}).join('')+'</ul>';
+    return h}
   // ---------- setup ----------
   function metaH(m,first){var deg=[['ma','ماجستير','Master’s'],['phd','دكتوراه','Doctorate']],lg=[['ar','العربية','Arabic'],['en','الإنجليزية','English']];
     var h='<div class="jr-setup"><div class="jr-sf"><label class="jr-l" for="jm-student">'+L('اسم الباحث','Researcher’s name')+'</label><input class="jr-in" id="jm-student" data-m="student" dir="auto" value="'+esc(m.student)+'"></div>'+
       '<div class="jr-sf"><label class="jr-l" for="jm-supervisor">'+L('المشرف','Supervisor')+'</label><input class="jr-in" id="jm-supervisor" data-m="supervisor" dir="auto" value="'+esc(m.supervisor)+'"></div>'+
       '<div class="jr-sf"><span class="jr-l">'+L('الدرجة','Degree')+'</span>'+chipsH({o:deg},'jm-degree',m.degree)+'</div>'+
       '<div class="jr-sf"><span class="jr-l">'+L('لغة المسودة','Language of the draft')+'</span>'+chipsH({o:lg},'jm-lang',m.lang)+'</div>';
-    h+='<div class="jr-sf wide"><span class="jr-l">'+L('ماذا تحتاج الآن؟','What do you need now?')+'</span>'+chipsH({o:[['idea','فكرة ومشكلة','An idea and a problem'],['proposal','مقترح بحث','A research proposal'],['thesis','إكمال الرسالة: من جمع البيانات إلى المناقشة','Finishing the thesis: from data collection to the defence'],['all','الرحلة كاملة','The whole journey']]},'jm-scope',(m.stages&&m.stages.length?'':m.scope)||(first?'proposal':'all'))+'<p class="jr-help">'+(first?L('تظهر لك المراحل التي تحتاجها، وتبقى البقية متاحة. وإن كانت لديك مسودة فابدأ منها.','You see the stages you need; the rest stay available. If you have a draft, start from it.'):L('تتغير المراحل المعروضة ونسبة الاكتمال بحسب اختيارك.','The stages shown and the completion figure follow your choice.'))+'</p></div>';
-    return h+'</div>'}
+    var sc='<div class="jr-sf wide"><span class="jr-l">'+L('ماذا تحتاج الآن؟','What do you need now?')+'</span>'+chipsH({o:[['idea','فكرة ومشكلة','An idea and a problem'],['proposal','مقترح بحث','A research proposal'],['thesis','إكمال الرسالة: من جمع البيانات إلى المناقشة','Finishing the thesis: from data collection to the defence'],['all','الرحلة كاملة','The whole journey']]},'jm-scope',(m.stages&&m.stages.length?'':m.scope)||(first?'proposal':'all'))+'<p class="jr-help">'+(first?L('تظهر لك المراحل التي تحتاجها، وتبقى البقية متاحة. وإن كانت لديك مسودة فابدأ منها.','You see the stages you need; the rest stay available. If you have a draft, start from it.'):L('تتغير المراحل المعروضة ونسبة الاكتمال بحسب اختيارك.','The stages shown and the completion figure follow your choice.'))+'</p></div>';
+    return first?'<h2>'+L('ماذا تحتاج الآن؟','What do you need now?')+'</h2>'+sc.replace(/<span class="jr-l">[^<]*<\/span>/,'')+'<details class="jr-opt"><summary>'+L('بياناتك (اختيارية)','Your details (optional)')+'</summary>'+h+'</div></details>':h+sc+'</div>'}
   function readMeta(box,m){[].forEach.call(box.querySelectorAll('[data-m]'),function(i){m[i.getAttribute('data-m')]=i.value.trim()});var g=function(n){var x=box.querySelector('input[name="'+n+'"]:checked');return x?x.value:''};m.degree=g('jm-degree')||m.degree;m.lang=g('jm-lang')||m.lang;var sc=g('jm-scope');if(sc){m.scope=sc;m.stages=null}return sc}
 
   // ---------- render ----------
   function render(){
     if(mode==='review')return renderReview();
-    if(!S){host.innerHTML='<div class="jr-card"><h2>'+L('ابدأ مشروعك','Start your project')+'</h2>'+metaH(blank().meta,true)+'<div class="jr-nav"><button type="button" class="btn" data-act="imp">'+L('ابدأ من مسودة لديك','Start from a draft you have')+'</button><button type="button" class="btn solid" data-act="start">'+L('ابدأ','Start')+'</button></div><p class="jr-priv">'+L('يُحفظ عملك في هذا المتصفح فقط، ولا يُرسل إلى أي جهة إلا ما تشاركه أنت برابط.','Your work is saved in this browser only, and nothing is sent anywhere unless you share a link.')+' <label class="jr-lnk">'+L('استعادة نسخة محفوظة','Restore a saved copy')+'<input type="file" accept=".json,application/json" data-act="restore" hidden></label></p></div><div data-impbox hidden></div>';return}
-    host.innerHTML=(notice?'<div class="jr-notice">'+notice+'</div>':'')+(showRep?reportH():'')+mapH()+'<div class="jr-tabs" role="tablist"><button type="button" data-act="tab" data-t="work" aria-selected="'+(tab==='work')+'">'+L('العمل','Work')+'</button><button type="button" data-act="tab" data-t="draft" aria-selected="'+(tab==='draft')+'">'+L('المسودة','Draft')+'</button></div>'+
-      '<div class="jr-grid t-'+tab+'"><div class="jr-main">'+stageH()+'</div><aside class="jr-side">'+sendBox()+draftPanel()+'</aside></div>'+tools()+'<p class="jr-priv">'+L('يُحفظ عملك في هذا المتصفح فقط. احفظ نسخة من حين لآخر.','Your work is saved in this browser only. Save a copy from time to time.')+'</p><div class="jr-meta" data-metabox hidden></div><div data-impbox hidden></div>';
+    if(!S){host.innerHTML='<div class="jr-card jr-start">'+metaH(blank().meta,true)+'<div class="jr-nav"><button type="button" class="btn" data-act="imp">'+L('ابدأ من مسودة لديك','Start from a draft you have')+'</button><button type="button" class="btn solid" data-act="start">'+L('ابدأ','Start')+'</button></div><p class="jr-priv">'+L('يُحفظ عملك في هذا المتصفح فقط، ولا يُرسل إلى أي جهة إلا ما تشاركه أنت برابط.','Your work is saved in this browser only, and nothing is sent anywhere unless you share a link.')+' <label class="jr-lnk">'+L('استعادة نسخة محفوظة','Restore a saved copy')+'<input type="file" accept=".json,application/json" data-act="restore" hidden></label></p></div><div data-impbox hidden></div>';return}
+    if(VIEW==='doc'){host.innerHTML=(notice?'<div class="jr-notice">'+notice+'</div>':'')+(showRep?reportH():'')+'<div class="jr-bar2 jr-dbar"><span class="jr-pct2">'+(function(){var m=M[v('approach')],d=curDes();return '<button type="button" class="jr-appr" data-act="tosec" data-goto="method">'+(m?esc(L(m.ar,m.en))+(d?' — '+esc(L(d.ar,d.en)):''):L('حدّد منهجك','Set your approach'))+'</button>'})()+'<span class="jr-bar"><i style="width:'+total()+'%"></i></span> <b data-pct>'+num(total())+(ar()?'٪':'%')+'</b></span><div class="jr-acts"><button type="button" class="btn" data-act="send">'+L('أرسل للمشرف','Send to supervisor')+'</button><button type="button" class="btn" data-act="word">Word</button>'+tools()+'</div></div>'+sendBox()+docLayout()+'<div class="jr-doc jr-printdoc" data-printdoc hidden></div><p class="jr-priv">'+L('يُحفظ عملك في هذا المتصفح فقط. احفظ نسخة من حين لآخر.','Your work is saved in this browser only. Save a copy from time to time.')+'</p><div class="jr-meta" data-metabox hidden></div><div data-impbox hidden></div>';
+      [].forEach.call(host.querySelectorAll('.jr-paper textarea'),grow);setActive(ACTIVE_SEC,true);return}
+    host.innerHTML=(notice?'<div class="jr-notice">'+notice+'</div>':'')+(showRep?reportH():'')+mapH()+'<div class="jr-bar2"><div class="jr-tabs" role="tablist"><button type="button" data-act="tab" data-t="work" aria-selected="'+(tab==='work')+'">'+L('الأسئلة','Questions')+'</button><button type="button" data-act="tab" data-t="draft" aria-selected="'+(tab==='draft')+'">'+L('المسودة','Draft')+' <small>'+num(total())+(ar()?'٪':'%')+'</small></button></div>'+tools()+'</div>'+
+      '<div class="jr-grid t-'+tab+'"><div class="jr-main">'+stageH()+'</div><aside class="jr-side">'+sendBox()+draftPanel()+'</aside></div><p class="jr-priv">'+L('يُحفظ عملك في هذا المتصفح فقط. احفظ نسخة من حين لآخر.','Your work is saved in this browser only. Save a copy from time to time.')+'</p><div class="jr-meta" data-metabox hidden></div><div data-impbox hidden></div>';
   }
-  function refresh(){var s=st(S.cur),c=host.querySelector('[data-checks]');if(c)c.innerHTML=checksH(s);
+  function refresh(){if(VIEW==='doc'&&mode==='work'){docRefresh();var pc0=host.querySelector('[data-pct]');if(pc0)pc0.textContent=num(total())+(ar()?'٪':'%');var bb=host.querySelector('.jr-pct2 .jr-bar i');if(bb)bb.style.width=total()+'%';return}var s=st(S.cur),c=host.querySelector('[data-checks]');if(c)c.innerHTML=c.classList.contains('jr-qc2')?sumChecksH(s):checksH(s);var tb=host.querySelector('[data-t=draft] small');if(tb)tb.textContent=num(total())+(ar()?'٪':'%');
     var d=host.querySelector('[data-doc]');if(d)d.innerHTML=draft();var p=total(),b=host.querySelector('.jr-bar i');if(b)b.style.width=p+'%';var pc=host.querySelector('[data-pct]');if(pc)pc.textContent=num(p)+(ar()?'٪':'%');
     var mp=host.querySelector('.jr-map');if(mp)mp.outerHTML=mapH();
     s.fields.forEach(function(f){var w=host.querySelector('[data-fw="'+f.id+'"]');if(w)w.hidden=!shown(f)});var n=host.querySelector('[data-needs]');if(n)n.innerHTML=needsH()}
@@ -1983,8 +2208,8 @@ requestAnimationFrame(function(){requestAnimationFrame(function(){s.split('').fo
   var RV={};
 
   // ---------- word export ----------
-  function word(){var dir=DL()==='ar'?'rtl':'ltr',css='body{font-family:'+(DL()==='ar'?'"Traditional Arabic","Simplified Arabic",':'')+'"Times New Roman",serif;font-size:14pt;line-height:1.6;direction:'+dir+'}h1{font-size:20pt;text-align:center}h2{font-size:16pt;margin-top:24pt}h3{font-size:14pt}h4{font-size:13pt}.jr-ph{color:#999}.jr-later{color:#777}.jr-dt p{text-align:center}';
-    var html='<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word"><head><meta charset="utf-8"><style>'+css+'</style></head><body dir="'+dir+'" lang="'+DL()+'">'+draft()+'</body></html>';
+  function word(){var body=VIEW==='doc'&&S?docExportH():draft();var dir=DL()==='ar'?'rtl':'ltr',css='body{font-family:'+(DL()==='ar'?'"Traditional Arabic","Simplified Arabic",':'')+'"Times New Roman",serif;font-size:14pt;line-height:1.6;direction:'+dir+'}h1{font-size:20pt;text-align:center}h2{font-size:16pt;margin-top:24pt}h3{font-size:14pt}h4{font-size:13pt}.jr-ph{color:#999}.jr-later{color:#777}.jr-dt p{text-align:center}';
+    var html='<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word"><head><meta charset="utf-8"><style>'+css+'</style></head><body dir="'+dir+'" lang="'+DL()+'">'+body+'</body></html>';
     var a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['﻿',html],{type:'application/msword'}));a.download=(DL()==='ar'?'مسودة-الفصل-الأول':'chapter-one-draft')+'.doc';document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},500)}
 
   // ---------- events ----------
@@ -1996,6 +2221,11 @@ requestAnimationFrame(function(){requestAnimationFrame(function(){s.split('').fo
     if(id==='approach'){if(!(DES[S.d.approach]&&DES[S.d.approach][S.d.design]))delete S.d.design;save();render();return}
     if(id==='design'){save();render();return}
     save();refresh()}
+  host.addEventListener('focusout',function(e){var c=e.target.getAttribute&&e.target.getAttribute('data-chn');if(!c||!S)return;S.meta.chtitles=S.meta.chtitles||{};var t=e.target.textContent.trim();delete S.meta.chtitles[c];var d0=chTitle(+c);if(t&&t!==d0)S.meta.chtitles[c]=t;else e.target.textContent=d0;save()});
+  host.addEventListener('keydown',function(e){if(e.key==='Enter'&&e.target.getAttribute&&e.target.getAttribute('data-chn')){e.preventDefault();e.target.blur()}});
+  host.addEventListener('focusin',function(e){if(mode!=='work'||VIEW!=='doc')return;var se=e.target.closest('.jr-paper .jr-ds[data-sec]');if(se)setActive(se.getAttribute('data-sec'))});
+  host.addEventListener('input',function(e){var t=e.target;if(t.tagName==='TEXTAREA'&&t.closest('.jr-paper'))grow(t);if(t.matches('[data-cid]')){var cc=(S.d.custom||[]).filter(function(x){return x.id===t.getAttribute('data-cid')})[0];if(cc){cc[t.getAttribute('data-ck')]=t.value;save()}}});
+  host.addEventListener('keydown',function(e){if(e.key==='Enter'&&mode==='work'&&VIEW!=='all'&&e.target.matches('.jr-q input.jr-in[type=text]')){e.preventDefault();var nb=host.querySelector('[data-act=snext]');if(nb)nb.click()}});
   host.addEventListener('input',function(e){if(mode==='work'&&S&&e.target.matches('.jr-in[data-f]'))setVal(e.target)});
   host.addEventListener('change',function(e){var t=e.target;
     if(t.matches('[data-act="impfile"]')){var fi=t.files[0];if(!fi)return;var msg=host.querySelector('[data-impmsg]');
@@ -2007,7 +2237,21 @@ requestAnimationFrame(function(){requestAnimationFrame(function(){s.split('').fo
   function copyLink(btn){var i=host.querySelector('[data-link]');if(!i)return;i.select();var ok=L('نُسخ','Copied');(navigator.clipboard?navigator.clipboard.writeText(i.value):Promise.reject()).then(function(){btn.textContent=ok}).catch(function(){try{document.execCommand('copy');btn.textContent=ok}catch(e){}})}
   host.addEventListener('click',function(e){var b=e.target.closest('[data-act]');if(!b||b.tagName==='INPUT')return;var a=b.getAttribute('data-act');
     if(a==='start'){S=blank();readMeta(host,S.meta);S.cur=scope()[0].id;save();render();return}
+    if(a==='go'&&VIEW==='doc'){e.preventDefault();notice='';showRep=false;var gs=b.getAttribute('data-s'),fsec=null;SECS.forEach(function(x){if(!fsec&&x.stage===gs&&secOn(x))fsec=x});if(!fsec){VIEW='step';S.cur=gs;save();render();return}render();var be=host.querySelector('[data-sec="'+fsec.id+'"]');setActive(fsec.id,true);if(be)be.scrollIntoView({behavior:'smooth',block:'start'});return}
     if(a==='go'){e.preventDefault();notice='';showRep=false;S.cur=b.getAttribute('data-s');save();tab='work';render();var top=host.querySelector('.jr-stage');if(top)top.scrollIntoView({behavior:'smooth',block:'start'});return}
+    if(a==='snext'||a==='sprev'||a==='sgo'){var cs=st(S.cur),n2=stepsOf(cs).length,p2=posOf(cs);S.pos=S.pos||{};
+      if(a==='snext')S.pos[cs.id]=Math.min(p2+1,n2);else if(a==='sgo')S.pos[cs.id]=+b.getAttribute('data-i');else if(p2>0)S.pos[cs.id]=p2-1;else{var SC2=inScope(cs)?scope():ACTIVE,i2=SC2.indexOf(cs);if(i2>0){S.cur=SC2[i2-1].id;S.pos[S.cur]=stepsOf(SC2[i2-1]).length}}
+      save();render();var top2=host.querySelector('.jr-step');if(top2&&top2.getBoundingClientRect().top<0)top2.scrollIntoView({behavior:'smooth',block:'start'});var fi=host.querySelector('.jr-q .jr-in');if(fi&&a!=='sprev')fi.focus({preventScroll:true});return}
+    if(a==='defence'){VIEW='step';S.cur='defence';try{localStorage.setItem('journey:view',VIEW)}catch(e){}save();render();return}
+    if(a==='tosec'){var ts=b.getAttribute('data-goto');setActive(ts,true);var te=host.querySelector('[data-sec="'+ts+'"]');if(te){te.scrollIntoView({behavior:'smooth',block:'start'});var ti=te.querySelector('.jr-in');if(ti)ti.focus({preventScroll:true})}return}
+    if(a==='mgclose'){setActive(null,true);return}
+    if(a==='secren'){var sr=b.getAttribute('data-goto'),sp=host.querySelector('[data-sec="'+sr+'"] .jr-dh3 span');if(sp){sp.contentEditable='true';sp.focus();var rg=document.createRange();rg.selectNodeContents(sp);var sl=getSelection();sl.removeAllRanges();sl.addRange(rg);sp.addEventListener('blur',function(){S.meta.titles=S.meta.titles||{};var t=sp.textContent.trim();if(t)S.meta.titles[sr]=t;else delete S.meta.titles[sr];sp.contentEditable='false';save()},{once:true});sp.addEventListener('keydown',function(ev){if(ev.key==='Enter'){ev.preventDefault();sp.blur()}})}return}
+    if(a==='secadd'){var cid='c'+Math.random().toString(36).slice(2,8);(S.d.custom=S.d.custom||[]).push({id:cid,after:b.getAttribute('data-goto'),title:'',text:''});save();render();var ci=host.querySelector('[data-cid="'+cid+'"][data-ck=title]');if(ci)ci.focus();return}
+    if(a==='sechide'){(S.meta.hidden=S.meta.hidden||[]).push(b.getAttribute('data-goto'));ACTIVE_SEC=null;save();render();return}
+    if(a==='merge'){S.meta.merge45=!S.meta.merge45;save();render();return}
+    if(a==='secshow'){S.meta.hidden=[];save();render();return}
+    if(a==='view'){VIEW=VIEW==='doc'?'step':'doc';try{localStorage.setItem('journey:view',VIEW)}catch(e){}render();return}
+    if(a==='allst'){S.meta.showAll=!S.meta.showAll;save();render();return}
     if(a==='tab'){tab=b.getAttribute('data-t');render();return}
     if(a==='addrow'){var id=b.getAttribute('data-f'),ff=fieldById(id);(S.d[id]=S.d[id]||[blankRow(ff)]).push(blankRow(ff));save();render();return}
     if(a==='delrow'){var id2=b.getAttribute('data-f'),r=+b.getAttribute('data-r');if(S.d[id2]){S.d[id2].splice(r,1);save();render()}return}
@@ -2034,7 +2278,7 @@ requestAnimationFrame(function(){requestAnimationFrame(function(){s.split('').fo
     if(a==='restdel'){if(!confirmless(b))return;S.d._rest.splice(+b.getAttribute('data-i'),1);save();render();return}
     if(a==='copy'){copyLink(b);return}
     if(a==='word'){word();return}
-    if(a==='print'){document.body.classList.add('jr-printing');setTimeout(function(){print()},50);return}
+    if(a==='print'){var pd=host.querySelector('[data-printdoc]');if(pd&&VIEW==='doc'){pd.innerHTML=docExportH();pd.hidden=false;window.addEventListener('afterprint',function(){pd.hidden=true},{once:true})}document.body.classList.add('jr-printing');setTimeout(function(){print()},50);return}
     if(a==='backup'){var bl=new Blob([JSON.stringify(S,null,1)],{type:'application/json'}),l=document.createElement('a');l.href=URL.createObjectURL(bl);l.download='research-journey-'+new Date().toISOString().slice(0,10)+'.json';document.body.appendChild(l);l.click();setTimeout(function(){URL.revokeObjectURL(l.href);l.remove()},500);return}
     if(a==='meta'){var mb=host.querySelector('[data-metabox]');if(!mb.hidden){mb.hidden=true;return}mb.innerHTML='<div class="jr-card">'+metaH(S.meta,false)+'<div class="jr-nav"><span></span><button type="button" class="btn solid" data-act="metasave">'+L('حفظ','Save')+'</button></div></div>';mb.hidden=false;mb.scrollIntoView({behavior:'smooth',block:'center'});return}
     if(a==='metasave'){readMeta(host.querySelector('[data-metabox]'),S.meta);save();render();return}
@@ -2177,7 +2421,7 @@ requestAnimationFrame(function(){requestAnimationFrame(function(){s.split('').fo
   function impRead(paras){IMP=parse(paras);impBox()}
   function impApply(){if(!S){S=blank();readMeta(host,S.meta)}var b=host.querySelector('[data-impbox]');
     [].forEach.call(b.querySelectorAll('[data-impk]:checked'),function(c){var k=c.getAttribute('data-impk');S.d[k]=IMP.r[k]});
-    S.d._rest=(S.d._rest||[]).concat(IMP.rest);var first=null;ACTIVE.map(function(x){return x.id}).forEach(function(id){if(!first&&st(id).fields.some(function(f){return f.t!=='needs'&&filled(f)}))first=id});
+    S.d.custom=(S.d.custom||[]).concat(IMP.rest.map(function(x){return {id:'c'+Math.random().toString(36).slice(2,8),after:x.k==='lit'?'comment':x.k==='design'?'analysis':'intro',title:x.h||'',text:x.t}}));var first=null;ACTIVE.map(function(x){return x.id}).forEach(function(id){if(!first&&st(id).fields.some(function(f){return f.t!=='needs'&&filled(f)}))first=id});
     var lastQ='idea';['idea','problem','questions'].forEach(function(id){if(st(id).fields.some(function(f){return f.t!=='needs'&&filled(f)}))lastQ=id});
     var withC=ACTIVE.filter(function(x){return x.fields.some(function(f){return f.t!=='needs'&&f.t!=='d5guide'&&filled(f)})}).map(function(x){return x.id});if(withC.length){var a1=ACTIVE.map(function(x){return x.id}),cur1=scope().map(function(x){return a1.indexOf(x.id)}),lo=Math.min(a1.indexOf(withC[0]),cur1[0]),hi=Math.max(a1.indexOf(withC[withC.length-1]),cur1[cur1.length-1]);S.meta.stages=a1.slice(lo,hi+1);S.meta.scope=null}
     S.cur=first||'idea';IMP=null;showRep=true;save();notice=L('نُقلت أجزاء مسودتك إلى مراحلها. هذا تقرير بما ينقصها وما يمكن تحسينه.','Your draft has been placed in its stages. Here is a report of what is missing and what to improve.');render();var rp=host.querySelector('.jr-notice');if(rp)rp.scrollIntoView({behavior:'smooth',block:'start'})}
