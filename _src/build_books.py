@@ -407,8 +407,8 @@ if __name__ == '__main__':
                     'license': 'https://creativecommons.org/licenses/by-nc-nd/4.0/', 'isAccessibleForFree': True, 'bookFormat': 'https://schema.org/EBook'}
             stt = b0.get('subtitle_en') if en else b0.get('subtitle')
             if stt: book['alternativeHeadline'] = stt
-            if not en and b0.get('isbn'): book['isbn'] = b0['isbn']
-            if not en and b0.get('status') == 'published': book['datePublished'] = '2026'
+            if b0.get('isbn'): book['isbn'] = b0['isbn']
+            if b0.get('status') == 'published': book['datePublished'] = '2026'
             crumbs = [('Dr. Omar A. Alsamani' if en else 'الرئيسية', _SITE), ('Open Library' if en else 'المكتبة المفتوحة', 'https://alsamani.com/books/'), (book['name'], broot)]
             if url == broot:
                 if d: book['description'] = d
