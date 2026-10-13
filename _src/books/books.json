@@ -1,7 +1,7 @@
 [
  {
   "slug": "innovation-management",
-  "status": "draft",
+  "status": "published",
   "lang": "ar",
   "title": "إدارة الابتكار",
   "title_en": "Innovation Management",
@@ -11,7 +11,10 @@
   "author_en": "Dr. Omar A. Alsamani",
   "description": "يتتبع الكتاب مسار الابتكار من رصد الإشارة الأولى إلى حل يُعتمد في العمل ويحقق قيمة، ويحلل مقوماته المؤسسية: الاستراتيجية، والنظام، والثقافة، والحوكمة، والفرق، والقياس، ويضع الإنسان في مركزها.",
   "description_en": "A guide to building innovation as an institutional capability: strategy, systems, culture, governance, teams and measurement, with people at the center.",
-  "accent": "#9c4318"
+  "accent": "#9c4318",
+  "license_note": "الطبعة الأولى، ١٤٤٨هـ / ٢٠٢٦م · رقم الإيداع: ١٤٤٨/٧٣٢٤ · ردمك: 978-603-06-7961-4. منشور برخصة المشاع الإبداعي (CC BY-NC-ND 4.0): يجوز نسخه وتوزيعه ومشاركته للأغراض التعليمية والبحثية غير التجارية، مع نسبته إلى مؤلفه ودون تعديل في نصه.",
+  "isbn": "978-603-06-7961-4",
+  "legal_deposit": "1448/7324"
  },
  {
   "slug": "diagnosis-identification",

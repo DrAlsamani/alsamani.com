@@ -344,6 +344,91 @@ if __name__ == '__main__':
             add += f'<meta property="og:type" content="book"><meta property="og:url" content="{url}"><meta property="og:site_name" content="Dr. Omar A. Alsamani"><meta name="author" content="Omar Abdullah Alsamani">'
             t = t.replace('</head>', add + '</head>', 1)
         open(h, 'w').write(t)
+    # SEO pass v2: one consistent set of search tags per page (idempotent; rebuilt on every run)
+    import html as _h2, glob as _g2
+    _bk = {x['slug']: x for x in books}
+    _SITE = 'https://alsamani.com/'
+    def _canon(rel): return 'https://alsamani.com/books/' + (rel[:-10] if rel.endswith('index.html') else rel)
+    def _txt(x): return re.sub(r'\s+', ' ', _h2.unescape(re.sub(r'<[^>]+>', '', x))).strip()
+    for h in _g2.glob(os.path.join(OUT, '**', '*.html'), recursive=True):
+        rel = os.path.relpath(h, OUT).replace(os.sep, '/')
+        if '/assets/' in rel or '/pdf/' in rel or rel.startswith(('assets/', 'pdf/')): continue
+        t = open(h).read()
+        hd_end = t.find('</head>')
+        if hd_end < 0: continue
+        hd, rest = t[:hd_end], t[hd_end:]
+        hd = re.sub(r'<link rel="canonical"[^>]*>|<link rel="alternate" hreflang="[^"]*"[^>]*>|<meta name="description"[^>]*>|<meta name="author"[^>]*>|<meta property="og:[^"]*"[^>]*>|<meta name="twitter:[^"]*"[^>]*>|<script type="application/ld\+json"[^>]*>.*?</script>', '', hd, flags=re.S)
+        url = _canon(rel)
+        lang = (re.search(r'<html[^>]*lang="(\w+)"', t) or [None, 'ar'])[1]
+        en = lang == 'en'
+        parts = rel.split('/')
+        b0 = _bk.get(parts[0])
+        tags = [f'<link rel="canonical" href="{url}">']
+        # language versions
+        if b0 and len(parts) >= 2:
+            f = parts[-1]
+            ar_rel = f'{parts[0]}/{f}'; en_rel = f'{parts[0]}/en/{f}'
+            if os.path.exists(os.path.join(OUT, ar_rel)) and os.path.exists(os.path.join(OUT, en_rel)):
+                tags += [f'<link rel="alternate" hreflang="ar" href="{_canon(ar_rel)}">',
+                         f'<link rel="alternate" hreflang="en" href="{_canon(en_rel)}">',
+                         f'<link rel="alternate" hreflang="x-default" href="{_canon(ar_rel)}">']
+        # title
+        m = re.search(r'<title>(.*?)</title>', hd, re.S)
+        ttl = _h2.unescape(m.group(1).strip()) if m else ''
+        who = 'Dr. Omar A. Alsamani' if en else 'د. عمر عبدالله الصمعاني'
+        if b0 and m:
+            bt = b0.get('title_en', b0['title']) if en else b0['title']
+            segs = [x.strip() for x in ttl.split('|')]
+            segs = [x for x in segs if x and x != who and x != bt]
+            if segs and segs[0] == bt: segs = segs[1:]
+            new = ' | '.join(segs + [bt, who]) if segs else f'{bt} | {who}'
+            hd = hd.replace(m.group(0), f'<title>{_h2.escape(new, quote=False)}</title>', 1); ttl = new
+        # description: chapter summary first
+        sub = re.search(r'<p class="sub">(.*?)</p>', t, re.S)
+        d = _txt(sub.group(1)) if sub else ''
+        if len(d) < 60:
+            body = re.sub(r'<(script|style|nav|header|footer|aside)[^>]*>.*?</\1>', ' ', t[hd_end:], flags=re.S)
+            d = next((_txt(x) for x in re.findall(r'<p[^>]*>(.*?)</p>', body, re.S) if len(_txt(x)) > 80), '')
+        if b0 and rel.endswith('index.html') and len(parts) <= 3:
+            d = (b0.get('description_en') if en else b0.get('description')) or d
+        if len(d) > 300: d = d[:297].rsplit(' ', 1)[0] + '…'
+        if d: tags.append(f'<meta name="description" content="{_h2.escape(d)}">')
+        tags.append(f'<meta name="author" content="{"Omar A. Alsamani" if en else "عمر عبدالله الصمعاني"}">')
+        tags += [f'<meta property="og:title" content="{_h2.escape(ttl)}">', f'<meta property="og:url" content="{url}">',
+                 f'<meta property="og:site_name" content="{"Dr. Omar A. Alsamani" if en else "د. عمر عبدالله الصمعاني"}">',
+                 f'<meta property="og:locale" content="{"en_US" if en else "ar_SA"}">', '<meta name="twitter:card" content="summary">']
+        if d: tags.append(f'<meta property="og:description" content="{_h2.escape(d)}">')
+        # structured data
+        person = {'@type': 'Person', 'name': 'Omar A. Alsamani' if en else 'عمر عبدالله الصمعاني', 'alternateName': 'عمر عبدالله الصمعاني' if en else 'Omar A. Alsamani', 'url': _SITE, 'jobTitle': 'Associate Professor', 'affiliation': {'@type': 'CollegeOrUniversity', 'name': 'University of Hail'}}
+        ld = None
+        if b0:
+            broot = _canon(f'{parts[0]}/en/index.html' if en else f'{parts[0]}/index.html')
+            book = {'@type': 'Book', 'name': b0.get('title_en', b0['title']) if en else b0['title'], 'url': broot, 'author': person, 'inLanguage': lang,
+                    'license': 'https://creativecommons.org/licenses/by-nc-nd/4.0/', 'isAccessibleForFree': True, 'bookFormat': 'https://schema.org/EBook'}
+            stt = b0.get('subtitle_en') if en else b0.get('subtitle')
+            if stt: book['alternativeHeadline'] = stt
+            if not en and b0.get('isbn'): book['isbn'] = b0['isbn']
+            if not en and b0.get('status') == 'published': book['datePublished'] = '2026'
+            crumbs = [('Dr. Omar A. Alsamani' if en else 'الرئيسية', _SITE), ('Open Library' if en else 'المكتبة المفتوحة', 'https://alsamani.com/books/'), (book['name'], broot)]
+            if url == broot:
+                if d: book['description'] = d
+                ld = [dict(book, **{'@context': 'https://schema.org'})]
+            else:
+                h1m = re.search(r'<h1[^>]*>(.*?)</h1>', t, re.S); kk = re.search(r'class="kicker">([^<]*)<', t)
+                nm = _txt(h1m.group(1)) if h1m else ttl
+                secs = [_txt(x) for x in re.findall(r'<h2[^>]*id="[^"]+"[^>]*>(.*?)</h2>', t, re.S)]
+                secs = [re.sub(r'^[\d٠-٩.\-–]+\s*', '', x) for x in secs if x][:20]
+                ch = {'@context': 'https://schema.org', '@type': 'Chapter', 'name': nm, 'headline': (f'{_txt(kk.group(1))}: ' if kk else '') + nm, 'url': url, 'inLanguage': lang,
+                      'author': person, 'isPartOf': book, 'license': book['license'], 'isAccessibleForFree': True}
+                if d: ch['description'] = d
+                if secs: ch['keywords'] = ', '.join(secs)
+                pdfp = os.path.join(os.path.dirname(h), 'pdf', os.path.basename(h)[:-5] + '.pdf')
+                if os.path.exists(pdfp): ch['encoding'] = {'@type': 'MediaObject', 'encodingFormat': 'application/pdf', 'contentUrl': url.rsplit('/', 1)[0] + '/pdf/' + os.path.basename(h)[:-5] + '.pdf'}
+                crumbs.append((nm, url)); ld = [ch]
+            ld.append({'@context': 'https://schema.org', '@type': 'BreadcrumbList', 'itemListElement': [{'@type': 'ListItem', 'position': i + 1, 'name': n, 'item': u} for i, (n, u) in enumerate(crumbs)]})
+        if ld:
+            tags.append('<script type="application/ld+json">' + json.dumps(ld if len(ld) > 1 else ld[0], ensure_ascii=False).replace('</', '<\\/') + '</script>')
+        open(h, 'w').write(hd + ''.join(tags) + rest)
     # chapters whose tool can be used interactively on the site
     _TL = {'ch01': 'initiative-card', 'ch03': 'leader-mirror', 'ch05': 'system-health', 'ch15': 'scale-readiness', 'ch20': 'university-ecosystem'}
     for _c, _sl in _TL.items():
