@@ -243,6 +243,17 @@ def build_en(b, order, draft, toc_ar=None):
     idx = re.sub(r'(<a href=")([a-z0-9_-]+\.html)(">)([\s\S]*?)(</a>)', lambda m: m.group(0) if m.group(2) in have else f'{m.group(1)}../{m.group(2)}{m.group(3)}{m.group(4)}<span class="bp-aronly">Arabic · translation in progress</span>{m.group(5)}', idx)
     note = '' if len(have) >= len(order) else '<p class="bp-ednote">Further chapters of this English edition are in preparation.</p>'
     idx = idx.replace('<h2 id="contents">', note + '\n<h2 id="contents">', 1)
+    if en_pdf:
+        chap_dl = ''.join(f'<li><a href="pdf/{t["f"][:-5]}.pdf" download><span>{e(t["kicker"] or "")}</span><b>{e(t["h1"])}</b><i>PDF</i></a></li>' for t in toc if os.path.exists(os.path.join(dst, 'pdf', t['f'][:-5] + '.pdf')))
+        pub = ' · '.join(x for x in ['First edition, 1448 AH / 2026', f"Legal deposit no. {b['legal_deposit']}" if b.get('legal_deposit') else '', f"ISBN {b['isbn']}" if b.get('isbn') else ''] if x)
+        dl = f'''<section class="bp-dl" id="downloads" dir="ltr"><h2>Download the book</h2>
+<p>For reading offline: the full book as a PDF, or each chapter on its own.</p>
+<div class="bp-dl-main"><a class="bp-big" href="pdf/{slug}-full.pdf" download><b>The full book</b><span>PDF · print edition</span></a><a class="bp-big ghost" href="{toc[0]["f"]}"><b>Start reading</b><span>{e(toc[0]["h1"])}</span></a></div>
+<details class="bp-chaps" open><summary>Download chapters individually</summary><ol>{chap_dl}</ol></details>
+<p class="bp-lic">{e(pub)}. Published under a Creative Commons licence (CC BY-NC-ND 4.0): it may be copied, distributed and shared for non-commercial educational and research purposes, with attribution to the author and without changes to the text.</p></section>'''
+        k = idx.rfind('<div class="endmark"')
+        idx = idx[:k] + dl + '\n' + idx[k:] if k > -1 else idx.replace('</body>', dl + '\n</body>', 1)
+        idx = idx.replace('<h2 id="contents">', '<p class="bp-ednote"><a href="#downloads">Download the book and its chapters (PDF)</a></p>\n<h2 id="contents">', 1)
     open(os.path.join(dst, 'index.html'), 'w').write(chrome(idx, 'index.html', True))
     json.dump({'toc': toc, 'search': search}, open(os.path.join(dst, 'book-index.json'), 'w'), ensure_ascii=False)
 
