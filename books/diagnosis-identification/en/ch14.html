@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+
+<html dir="ltr" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
+<title>Chapter 14: Fairness in diagnosis | Diagnosis and Identification of Exceptional Learners | Dr. Omar A. Alsamani</title>
+<link href="../assets/book.css?v=ea97adfb" rel="stylesheet"/>
+<style>
+.gates{display:grid;grid-template-columns:repeat(4,1fr);gap:0;font-family:var(--f-ui);align-items:stretch}
+.gates>div{position:relative;border:1.5px solid var(--line);padding:14px 12px 12px;min-width:0;background:var(--paper)}
+.gates>div:first-child{border-radius:0 12px 12px 0}
+.gates>div:last-child{border-radius:12px 0 0 12px}
+.gates>div+div{border-right:0}
+.gates .n{width:28px;height:28px;border-radius:50%;background:var(--warn);color:var(--paper);display:grid;place-items:center;font-weight:700;font-size:13px;margin-bottom:6px}
+.gates b{display:block;font-size:15px;margin-bottom:4px}
+.gates span{font-size:13px;line-height:1.75;color:var(--ink-2);display:block}
+@media (max-width:640px){.gates{grid-template-columns:1fr}.gates>div,.gates>div:first-child,.gates>div:last-child{border-radius:0;border-right:1.5px solid var(--line)}.gates>div+div{border-top:0}}
+.rr{display:grid;grid-template-columns:1fr 1fr;gap:14px;font-family:var(--f-ui)}
+.rr>div{border-radius:12px;padding:14px;border:1.5px solid var(--line);min-width:0}
+.rr b{display:block;font-size:15px;margin-bottom:8px}
+.rr .dots{display:grid;grid-template-columns:repeat(20,1fr);gap:3px;direction:ltr}
+.rr .dots i{aspect-ratio:1/1;border-radius:50%;background:var(--paper-3)}
+.rr .dots i.on{background:var(--warn)}
+.rr span{display:block;font-size:13.5px;color:var(--ink-2);margin-top:8px;line-height:1.7}
+@media (max-width:560px){.rr{grid-template-columns:1fr}}
+.bics{font-family:var(--f-ui);display:grid;gap:12px}
+.bics .r{display:grid;grid-template-columns:minmax(0,13rem) 1fr;gap:12px;align-items:center;font-size:14px}
+.bics .tr{position:relative;height:30px;background:var(--paper-2);border-radius:6px;direction:ltr}
+.bics .seg{position:absolute;top:0;bottom:0;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:700;color:var(--paper);direction:rtl}
+.bics .b{background:var(--example)}.bics .c{background:var(--accent)}
+.bics .ax{display:grid;grid-template-columns:minmax(0,13rem) 1fr;gap:12px;font-size:12px;color:var(--ink-2)}
+.bics .ax div{position:relative;height:16px;direction:ltr}
+.bics .ax div span{position:absolute;transform:translateX(-50%)}
+@media (max-width:540px){.bics .r,.bics .ax{grid-template-columns:1fr}}
+.clim{display:grid;grid-template-columns:auto repeat(3,1fr);gap:6px;font-family:var(--f-ui);max-width:620px;margin:0 auto}
+.clim div{border-radius:8px;padding:10px 8px;text-align:center;font-size:13px;line-height:1.6;min-width:0}
+.clim .h{background:transparent;font-weight:700;color:var(--ink-2);font-size:12.5px}
+.clim .c1{background:color-mix(in srgb,var(--accent) 12%,var(--paper))}
+.clim .c2{background:color-mix(in srgb,var(--accent) 24%,var(--paper))}
+.clim .c3{background:color-mix(in srgb,var(--accent) 38%,var(--paper))}
+.clim .c4{background:color-mix(in srgb,var(--accent) 54%,var(--paper))}
+.clim .c5{background:color-mix(in srgb,var(--accent) 70%,var(--paper));color:var(--paper)}
+.clim b{display:block;font-size:17px;font-variant-numeric:tabular-nums}
+.checklist{list-style:none;padding:0;margin:0;display:grid;gap:8px;font-family:var(--f-ui);font-size:14.5px;line-height:1.75}
+.checklist li{display:grid;grid-template-columns:22px 1fr;gap:10px;margin:0;border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.checklist li::before{content:"";width:16px;height:16px;border:2px solid var(--accent);border-radius:4px;margin-top:5px}
+.checklist .st{font-size:12px;font-weight:700;color:var(--accent);display:block}
+.svgfig{direction:ltr;display:block;width:100%;height:auto;max-width:640px;margin:0 auto}
+.svgfig text{font-family:var(--f-ui)}
+.svgfig .lb{fill:var(--ink);font-size:14px}
+.svgfig .vl{fill:var(--ink);font-size:14px;font-weight:700}
+.svgfig .tk{fill:var(--ink-2);font-size:12px}
+.svgfig .gr{stroke:var(--line);stroke-width:1}
+.svgfig .b1{fill:var(--paper-3)}
+.svgfig .b2{fill:var(--accent)}
+.svgfig .th{stroke:var(--warn);stroke-width:2.5;stroke-dasharray:6 4}
+.svgfig .thl{fill:var(--warn);font-size:12.5px;font-weight:700}
+.obj{font-family:var(--f-ui);font-size:12.5px;color:var(--ink-2);white-space:nowrap}
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"><style>:root{--f-body:"Source Serif 4",Georgia,serif;--f-display:"Source Serif 4",Georgia,serif;--f-ui:"IBM Plex Sans",system-ui,sans-serif}.questions li::before{content:counter(q)}html{direction:ltr!important}body{letter-spacing:0;text-align:left}caption{text-align:left!important}.formula small{direction:ltr}.cover svg{left:auto!important;right:0}</style><link rel="stylesheet" href="../assets/platform.css?v=b4c32405"><script>window.BOOK={slug:"diagnosis-identification-en",cur:"ch14.html",lang:"en",title:"Diagnosis and Identification of Exceptional Learners",author:"Dr. Omar A. Alsamani"}</script><script src="../assets/platform.js?v=0d28c8d2" defer></script>
+<link rel="canonical" href="https://alsamani.com/books/diagnosis-identification/en/ch14.html"><link rel="alternate" hreflang="ar" href="https://alsamani.com/books/diagnosis-identification/ch14.html"><link rel="alternate" hreflang="en" href="https://alsamani.com/books/diagnosis-identification/en/ch14.html"><link rel="alternate" hreflang="x-default" href="https://alsamani.com/books/diagnosis-identification/ch14.html"><meta name="description" content="A student can be wronged in diagnosis without anyone intending it: a hard-of-hearing child comes close to an autism spectrum disorder diagnosis because no one checked his hearing; another student is nearly diagnosed with intellectual disability because he was tested in a language he has not…"><meta name="author" content="Omar A. Alsamani"><meta property="og:title" content="Chapter 14: Fairness in diagnosis | Diagnosis and Identification of Exceptional Learners | Dr. Omar A. Alsamani"><meta property="og:url" content="https://alsamani.com/books/diagnosis-identification/en/ch14.html"><meta property="og:site_name" content="Dr. Omar A. Alsamani"><meta property="og:locale" content="en_US"><meta name="twitter:card" content="summary"><meta property="og:description" content="A student can be wronged in diagnosis without anyone intending it: a hard-of-hearing child comes close to an autism spectrum disorder diagnosis because no one checked his hearing; another student is nearly diagnosed with intellectual disability because he was tested in a language he has not…"><script type="application/ld+json">[{"@context": "https://schema.org", "@type": "Chapter", "name": "Fairness in diagnosis", "headline": "Chapter 14: Fairness in diagnosis", "url": "https://alsamani.com/books/diagnosis-identification/en/ch14.html", "inLanguage": "en", "author": {"@type": "Person", "name": "Omar A. Alsamani", "alternateName": "عمر عبدالله الصمعاني", "url": "https://alsamani.com/", "jobTitle": "Associate Professor", "affiliation": {"@type": "CollegeOrUniversity", "name": "University of Hail"}}, "isPartOf": {"@type": "Book", "name": "Diagnosis and Identification of Exceptional Learners", "url": "https://alsamani.com/books/diagnosis-identification/en/", "author": {"@type": "Person", "name": "Omar A. Alsamani", "alternateName": "عمر عبدالله الصمعاني", "url": "https://alsamani.com/", "jobTitle": "Associate Professor", "affiliation": {"@type": "CollegeOrUniversity", "name": "University of Hail"}}, "inLanguage": "en", "license": "https://creativecommons.org/licenses/by-nc-nd/4.0/", "isAccessibleForFree": true, "bookFormat": "https://schema.org/EBook", "alternativeHeadline": "Learners with disabilities, the gifted and the twice-exceptional", "isbn": "978-603-06-7714-6", "datePublished": "2026"}, "license": "https://creativecommons.org/licenses/by-nc-nd/4.0/", "isAccessibleForFree": true, "description": "A student can be wronged in diagnosis without anyone intending it: a hard-of-hearing child comes close to an autism spectrum disorder diagnosis because no one checked his hearing; another student is nearly diagnosed with intellectual disability because he was tested in a language he has not…", "keywords": "Introduction, What is fairness in diagnosis?, Disproportionality and how it is measured, Where does bias enter?, Fairness in gifted identification, Language and culture, Assessor biases, A fairness checklist, Three cases and a school audit, Conclusion, Summary, key terms and activities"}, {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Dr. Omar A. Alsamani", "item": "https://alsamani.com/"}, {"@type": "ListItem", "position": 2, "name": "Open Library", "item": "https://alsamani.com/books/"}, {"@type": "ListItem", "position": 3, "name": "Diagnosis and Identification of Exceptional Learners", "item": "https://alsamani.com/books/diagnosis-identification/en/"}, {"@type": "ListItem", "position": 4, "name": "Fairness in diagnosis", "item": "https://alsamani.com/books/diagnosis-identification/en/ch14.html"}]}]</script></head>
+<body>
+<div class="bp-bar" dir="ltr"><div class="bp-in">
+<a class="bp-home" href="../../../index.html">Dr. Omar A. Alsamani</a><span class="bp-sep">/</span><a href="../../index.html">Open Library</a><span class="bp-sep">/</span><a href="index.html" class="bp-book">Diagnosis and Identification of Exceptional Learners</a>
+<span class="bp-sp"></span><span class="bp-tools"><button class="bp-ic" type="button" data-rd="z-" aria-label="Smaller text" title="Smaller text">A−</button><button class="bp-ic" type="button" data-rd="z+" aria-label="Larger text" title="Larger text">A+</button><button class="bp-ic" type="button" data-rd="theme" aria-label="Dark mode" title="Dark/light mode">Dark</button></span><a class="bp-btn" href="../ch14.html" hreflang="ar" lang="ar">العربية</a><button class="bp-btn" type="button" data-notes>Notes<i hidden></i></button><button class="bp-btn" type="button" data-share>Share</button><button class="bp-btn" type="button" data-bp="search">Search</button><button class="bp-btn solid" type="button" data-bp="toc">Contents</button></div></div>
+<div class="bp-share" id="bpShare" hidden dir="ltr"><b>Share this page</b><button type="button" data-sh="copy">Copy link</button><button type="button" data-sh="native" hidden>Share…</button><a data-sh="wa" target="_blank" rel="noopener">WhatsApp</a><a data-sh="x" target="_blank" rel="noopener">X</a><a data-sh="li" target="_blank" rel="noopener">LinkedIn</a><a data-sh="tg" target="_blank" rel="noopener">Telegram</a><a data-sh="mail">Email</a><small>To share a specific section, hover over its heading and click ¶</small></div>
+<div class="bp-drawer" id="bpDrawer" hidden dir="ltr"><div class="bp-panel" role="dialog" aria-label="Contents and search">
+<div class="bp-head"><b>Diagnosis and Identification of Exceptional Learners</b><button type="button" class="bp-x" data-bp="close" aria-label="Close">×</button></div>
+<div class="bp-search"><input id="bpQ" type="search" placeholder="Search the text of the book…" autocomplete="off"><div id="bpRes"></div></div>
+<nav class="bp-toc" id="bpToc"></nav>
+<div class="bp-links"><a href="../../index.html">Open Library</a><a href="../../../index.html">alsamani.com home</a></div>
+</div></div>
+<div class="page">
+<nav class="booknav"><a href="index.html">→ Diagnosis and Identification of Exceptional Learners</a><span>Part Four: Applied issues</span></nav>
+<header class="opener">
+<div aria-hidden="true" class="num">14</div>
+<div>
+<div class="kicker">Chapter 14</div>
+<h1>Fairness in diagnosis</h1>
+</div>
+<p class="sub">A student can be wronged in diagnosis without anyone intending it: a hard-of-hearing child comes close to an autism spectrum disorder diagnosis because no one checked his hearing; another student is nearly diagnosed with intellectual disability because he was tested in a language he has not mastered; and the youngest child in the class has activity that is perfectly expected for his age read as a disorder. In this chapter we move from the individual case to a broader question: how can we tell whether the diagnostic system as a whole is fair, and whether its fairness reaches beyond the single student?</p>
+</header>
+<nav aria-label="Chapter contents" class="toc">
+<b>In this chapter</b>
+<ol>
+<li class="u"><a href="#intro">Introduction</a></li>
+<li value="1"><a href="#s1">What is fairness in diagnosis?</a></li>
+<li value="2"><a href="#s2">Disproportionality and how it is measured</a></li>
+<li value="3"><a href="#s3">Where does bias enter?</a></li>
+<li value="4"><a href="#s4">Fairness in gifted identification</a></li>
+<li value="5"><a href="#s5">Language and culture</a></li>
+<li value="6"><a href="#s6">Assessor biases</a></li>
+<li value="7"><a href="#s7">A fairness checklist</a></li>
+<li value="8"><a href="#s8">Three cases and a school audit</a></li>
+<li class="u"><a href="#conclusion">Conclusion</a></li>
+<li value="9"><a href="#s9">Summary, key terms and activities</a></li>
+</ol>
+</nav>
+<div class="scene">
+<span class="lbl">Scene from an end-of-year report</span>
+<p>A special education supervisor in an education directorate reviewed the referral records of the schools in her charge. Three things caught her eye. Boys were referred for behavior roughly four times as often as girls. Students who were not native speakers of Arabic made up twice as large a share of learning disabilities referrals as of the school population. And the schools in remote villages had not referred a single student to the gifted program in three years.</p>
+<p>She asked herself: do these numbers reflect real differences among students, or do they reflect the way we ourselves work?</p>
+</div>
+<p>The fair answer is that both may be true at once. Our aim in this chapter is to show how to tell the two apart.</p>
+<h3>Chapter objectives</h3>
+<p>After studying this chapter, the reader should be able to:</p>
+<ol class="objectives">
+<li>Calculate the risk index and risk ratio from a school’s data, and explain the limits of the risk ratio when numbers are small.</li>
+<li>Identify, in a given scenario, the point at which bias entered the diagnostic pathway, and propose a step to limit it.</li>
+<li>Calculate the representation index and the minimum fair representation in a gifted program, and propose two steps to raise the representation of an underrepresented group.</li>
+<li>Distinguish, in the description of a student learning in a second language, between conversational fluency and academic proficiency, and specify the evidence needed before referral.</li>
+<li>Critique the interpretation of a score pattern with the Culture-Language Interpretive Matrix in light of studies that have examined its validity.</li>
+<li>Name the cognitive bias at work in a given assessment scenario, and propose a strategy to reduce it.</li>
+<li>Judge whether the evidence is sufficient for a fair decision in a new case, and justify that judgment.</li>
+</ol>
+<h2 class="unnum" id="intro">Introduction</h2>
+<p>A student can suffer injustice in diagnosis without anyone meaning it to happen, when his hearing goes unchecked, when he is tested in a language he has not mastered, or when activity expected for his age is read as a disorder. Yet fairness is not tested in the individual case alone. Patterns of referral and diagnosis across the schools of an entire education directorate, like those the supervisor noticed in the opening scene, may reveal that certain groups are referred more often, or less often, than others. Judging the fairness of a diagnostic system requires distinguishing disparities in rates from actual bias, knowing the points through which bias enters, and knowing the tools that expose it.</p>
+<p>We open the chapter by defining what fairness in diagnosis means (Section 14.1), then turn to disproportionality, the ways it is measured and what happens when numbers are small (Section 14.2), and the points through which bias enters, along with its sources within the instrument (Section 14.3). We then address fairness in gifted identification, the representation index and the fair minimum (Section 14.4), followed by language and culture, the Culture-Language Interpretive Matrix and what studies say about its validity (Section 14.5), and assessor biases (Section 14.6). We offer a fairness checklist (Section 14.7) and close with three cases and a school audit (Section 14.8).</p>
+<!-- 1 -->
+<h2 id="s1"><span class="sec">14.1</span>What is fairness in diagnosis?</h2>
+<p>Fairness in diagnosis does not mean that every group should appear in special education or gifted programs in equal proportions. Some differences are real: attention-deficit/hyperactivity disorder, for example, genuinely is more prevalent among boys. Fairness means, rather, that every student has the same chance of being identified if he needs services, and that no student is misdiagnosed because of something unrelated to need: his language, his sex, his family’s poverty, the location of his school, or the expectations of the person assessing him. The “Standards for Educational and Psychological Testing” devote their third chapter to fairness in testing, defining it as the extent to which score interpretations are equally valid for all individuals and groups to whom the instrument is administered. They approach it from four angles: fair treatment of examinees during administration, freedom of measurement from bias, access to the construct the test measures without obstacles unrelated to it, such as the language of the instructions or the format of presentation, and the validity of the interpretation of an individual’s own score (AERA et al., 2014).</p>
+<p>Diagnostic error runs in two directions, and each carries a cost:</p>
+<div class="compare">
+<div class="bad"><h6>Overdiagnosis</h6>A student who does not need services is diagnosed: he may be separated from his peers, expectations of him drop, he carries a label that does not fit him, and resources are diverted from those who need them.</div>
+<div class="bad"><h6>Underdiagnosis</h6>A student who needs services goes unidentified: he struggles for years without understanding or support, is blamed for what lies beyond his control, and loses time when intervention would have done the most good.</div>
+</div>
+<!-- 2 -->
+<h2 id="s2"><span class="sec">14.2</span>Disproportionality and how it is measured</h2>
+<p>Disproportionality is present when the share of a group in a diagnostic category or program differs markedly from its expected share. It is measured with two simple indicators:</p>
+<ul>
+<li><strong>Risk index:</strong> the proportion of a group’s members who have been diagnosed or referred, out of the group’s total number.</li>
+<li><strong>Risk ratio:</strong> the risk index of one group divided by the risk index of a comparison group. A value of 1 indicates proportionate representation; a value above 1 indicates overrepresentation, and a value below 1 underrepresentation. U.S. regulations use the risk ratio to determine significant disproportionality at the state and district levels (U.S. Department of Education, 2024).</li>
+</ul>
+<div class="worked">
+<b class="h">Worked example: behavior referrals in one school</b>
+<div class="step"><i>1</i><span>The school has 400 boys and 380 girls. Thirty-six boys and 8 girls were referred for behavior.</span></div>
+<div class="step"><i>2</i><span>Risk index for boys: 36 ÷ 400 = 9%; for girls: 8 ÷ 380 ≈ 2.1%.</span></div>
+<div class="step"><i>3</i><span>Risk ratio for boys compared with girls: 9 ÷ 2.1 ≈ 4.3.</span></div>
+<div class="step"><i>4</i><span>In other words, a boy is more than four times as likely as a girl to be referred for behavior.</span></div>
+<div class="step"><i>5</i><span><strong>Caution:</strong> the figure of 4.3 rests on only 8 girls. Had two more girls been referred (10 girls), the risk ratio would be about 3.4; had two fewer been referred (6 girls), it would be about 5.7. A change of two referrals moves the ratio anywhere between “three times” and “nearly six times.”</span></div>
+</div>
+<figure class="fig-frame" id="fig-14-1">
+<div aria-label="Two grids of one hundred dots: nine dots are shaded in the boys&#x27; grid and two in the girls&#x27; grid" class="rr" role="img">
+<div><b>Boys: 9 in every 100</b><div class="dots"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><span>Risk index 9%</span></div>
+<div><b>Girls: 2 in every 100</b><div class="dots"><i class="on"></i><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><span>Risk index about 2%</span></div>
+</div>
+<figcaption><b>Figure 14.1:</b> The risk index made visible. Each grid has one hundred dots, each dot representing a student; the shaded dots are those referred for behavior. The risk ratio here is about 4.3.</figcaption>
+</figure>
+<div class="callout" data-k="warn">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M12 3 2 20h20L12 3Z"></path><path d="M12 10v4M12 17h.01"></path></svg>The number raises a question; it does not answer it</div>
+<p>A high risk ratio does not, on its own, prove bias. Behavior problems may genuinely be more common among boys. The right questions are these: is the difference larger than studies of real differences would lead us to expect? Are boys referred for behaviors that are overlooked in girls? And are internalizing problems in girls, such as anxiety, withdrawal and sadness, missed because they do not disrupt the classroom the way overt behavior does? The literature holds a genuine debate on this point: one large study found that some groups were less likely to be diagnosed than expected once other factors were controlled (Morgan et al., 2015), while other researchers criticized it on the grounds that the method of control itself may conceal bias (Skiba et al., 2016). The lesson is that the numbers mark the beginning of an inquiry and an invitation to complete it.</p>
+</div>
+<h3>When numbers are small</h3>
+<p>The risk ratio is a fraction whose denominator is the risk index of the comparison group. When only a few members of that group have been referred, the denominator becomes fragile, and a change of one or two cases is enough to make the result jump, as the caution in the previous example showed. When the number is zero, the division cannot be performed at all. For this reason, a risk ratio in a small school, or in a rare category, should be read only alongside the raw counts on which it rests. More useful than a single year’s ratio is to pool data across several years and look at the trend over time.</p>
+<div class="callout" data-k="pro">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M4 19V5M4 19h16M8 15l3-4 3 2 5-6"></path></svg>For the specialist: how do U.S. regulations deal with the instability of the ratio?</div>
+<p>Section §300.647 of the implementing regulations of the Individuals with Disabilities Education Act (IDEA) governs how “significant disproportionality” is calculated, and it addresses the problem of small numbers with three tools. <strong>The first</strong> is a minimum cell size, meaning the number of group members diagnosed or referred, together with a minimum group size (<span class="en">Minimum n-size</span>), meaning the group’s total membership. The ratio is not calculated unless both thresholds are met, and the regulation regards a threshold of no more than 10 for the cell and 30 for the group as presumptively reasonable. <strong>The second</strong> is the alternate risk ratio: when the comparison group in the district falls below these thresholds, the group’s risk index is compared with the risk index of all other students across the state. <strong>The third</strong> is that a state may decline to identify significant disproportionality unless the ratio exceeds its threshold for several consecutive years, up to three (U.S. Department of Education, 2024). We know of no published Saudi text that sets out a method or a threshold for monitoring disproportionality, but the same logic holds for any education directorate reviewing its own data.</p>
+</div>
+<!-- 3 -->
+<h2 id="s3"><span class="sec">14.3</span>Where does bias enter?</h2>
+<p>Many people assume that bias in diagnosis comes from the test. But the test is only one of four points along the way, and bias can enter at any of them:</p>
+<figure class="fig-frame" id="fig-14-2">
+<div class="gates">
+<div><div class="n">1</div><b>Referral</b><span>Whom the teacher notices and whom he does not. The disruptive student is referred, the quiet one is forgotten, and the culturally different student has his behavior misread.</span></div>
+<div><div class="n">2</div><b>Instrument</b><span>Items familiar to one culture and not another, norms that do not represent the student, a language he has not mastered, and a test unsuited to his senses.</span></div>
+<div><div class="n">3</div><b>Interpretation</b><span>Reading the score without regard to language and opportunity, and looking for what confirms the first hypothesis.</span></div>
+<div><div class="n">4</div><b>Decision</b><span>A combination rule that excludes particular groups, services not available in every region, and pressure to find the student a placement.</span></div>
+</div>
+<figcaption><b>Figure 14.2:</b> Four points at which bias enters the diagnostic pathway. A fair instrument alone does not guarantee a fair system.</figcaption>
+</figure>
+<h3>Sources of bias in the instrument</h3>
+<div class="tw"><table id="tab-14-1">
+<caption>Table 14.1: Sources of bias in the instrument and ways of detecting it.</caption>
+<thead><tr><th>Type</th><th>What it means</th><th>Example</th></tr></thead>
+<tbody>
+<tr><td>Content bias</td><td>Items that assume knowledge or experience not equally available to all students</td><td>A question about snow or a train put to a child who has never seen either, or about vocabulary specific to one region</td></tr>
+<tr><td>Norm bias</td><td>A norming sample that does not represent the student</td><td>Comparing a Saudi student with American norms, or a rural student with urban-only norms</td></tr>
+<tr><td>Language bias</td><td>A test that measures ability through a language the student has not mastered</td><td>A student whose first language is not Arabic is tested on vocabulary and verbal comprehension in Arabic, and his verbal ability score drops because of his weak Arabic</td></tr>
+<tr><td>Predictive bias</td><td>The same score predicts different performance in two groups. It is examined statistically by comparing the regression lines in the two groups: the slope of each and its intercept with the axis</td><td>A test that predicts the success of urban students in a program better than it predicts the success of village students</td></tr>
+<tr><td>Situational bias</td><td>Testing conditions affect one group more than others</td><td>An unfamiliar examiner in a formal setting with a child unused to dealing with strangers</td></tr>
+<tr><td>Differential item functioning and measurement noninvariance</td><td>An item on which two groups perform differently even though they are equal in the trait being measured, or an instrument that does not measure the same construct in the same way in the two groups</td><td>An item on a verbal reasoning scale that is harder for students from one region because it contains a word common in another dialect, even though students from the two regions with equal total scores should perform equally on it</td></tr>
+</tbody>
+</table></div>
+<p>The last row of the table differs from the others: rather than describing a type of bias, it describes <strong>two standard methods for detecting it</strong>. The first is <strong>differential item functioning</strong> (<span class="en">Differential item functioning, DIF</span>). The idea is to compare students from two groups who are <em>equal in ability</em>, rather than comparing the two groups as wholes. If an item is harder for one group even though its members are equal in ability, then for that group the item is measuring something else as well, such as cultural knowledge or a local word. A difference between the two groups’ mean scores on an item does not by itself indicate bias, since it may reflect a real difference in the trait. The second is <strong>measurement invariance</strong> (<span class="en">Measurement invariance</span>), which asks at the level of the whole instrument: is the factor structure the same in both groups? Are the items related to the factors with the same strength? Does the same score signify the same level of the trait? If invariance does not hold, comparing the two groups’ means is not warranted, nor is applying a single cutoff score to both (AERA et al., 2014). The practical question for the practitioner is whether the manual of the instrument he uses reports the results of these analyses for the groups with whom he uses it, such as boys and girls, different regions, and speakers of languages other than Arabic. If it does not, fairness remains an untested assumption.</p>
+<!-- 4 -->
+<h2 id="s4"><span class="sec">14.4</span>Fairness in gifted identification</h2>
+<p>The examples in the preceding sections all concern overrepresentation, where a group appears in special education more often than it should. In gifted programs, the best-known problem runs the other way: <strong>underrepresentation</strong>. Students from low-income families, from remote schools, and those learning in a second language are usually fewer in these programs than their share of the student body. Nor does the matter stop at the test. Groups differ in the proportions who reach advanced levels of performance in the first place, differences known as <strong>excellence gaps</strong> (<span class="en">Excellence gaps</span>), and these gaps reflect, in large part, differences in opportunity more than in potential (Plucker &amp; Peters, 2016). A program that admits only those who have already reached advanced performance inherits these gaps, then widens them by serving those who were already ahead.</p>
+<h3>The representation index and the fair minimum</h3>
+<p>The risk index and risk ratio apply here as well, but the gifted education literature often relies on two indicators that are easier to read:</p>
+<ul>
+<li><strong>Representation index</strong> (<span class="en">Representation index</span>): the group’s share among program students divided by its share among students at the same grade level. A result of 1 means proportionate representation; anything below it means underrepresentation.</li>
+<li><strong>Equity formula</strong> (<span class="en">Equity formula</span>), proposed by Donna Ford: it accepts that the two percentages may differ somewhat, since perfect correspondence is unrealistic, but it places a ceiling on the difference. The minimum acceptable representation of a group in the program is its share among students minus 20% of that share, that is, <strong>its share among students × 0.8</strong>. Anything below that counts as underrepresentation that calls for review (Ford, 2013).</li>
+</ul>
+<p>The 20% margin is a practical convention. It spares the program from chasing small differences while obliging it to account for large ones.</p>
+<div class="worked">
+<b class="h">Worked example: a gifted program in an education directorate</b>
+<div class="step"><i>1</i><span>Grades three through six in an education directorate enroll 4,000 students, 1,200 of them (30%) in village schools. The gifted program has 200 students, 20 of them (10%) from village schools.</span></div>
+<div class="step"><i>2</i><span>Representation index for village students: 10 ÷ 30 ≈ 0.33. Their representation in the program is thus about one third of their share of the student body.</span></div>
+<div class="step"><i>3</i><span>Fair minimum under Ford’s formula: 30% × 0.8 = 24%, that is, at least 48 of the 200 students. The shortfall is 28 students.</span></div>
+<div class="step"><i>4</i><span>In risk ratio terms: the risk index for village students is 20 ÷ 1,200 ≈ 1.7%, for urban students 180 ÷ 2,800 ≈ 6.4%, and the risk ratio ≈ 0.26. A village student, in other words, is about one quarter as likely as an urban student to be identified as gifted.</span></div>
+<div class="step"><i>5</i><span><strong>The next question</strong> is “Where are they falling out?” before “How many should we add?” Did nomination or registration reach them? Were they given the test? Did they pass it and then fail to enroll because the program was too far away? Each point calls for a different remedy.</span></div>
+</div>
+<figure class="fig-frame" id="fig-14-3">
+<svg aria-label="Two horizontal bars: village students make up thirty percent of the directorate&#x27;s students but ten percent of the gifted program; a dashed line at twenty-four percent marks the minimum for fair representation under Ford&#x27;s formula, and the second bar falls clearly below it." class="svgfig" role="img" viewbox="0 0 640 196">
+<line class="gr" x1="460" x2="460" y1="28" y2="150"></line>
+<line class="gr" x1="360" x2="360" y1="28" y2="150"></line>
+<line class="gr" x1="260" x2="260" y1="28" y2="150"></line>
+<line class="gr" x1="160" x2="160" y1="28" y2="150"></line>
+<line class="gr" x1="60" x2="60" y1="28" y2="150"></line>
+<rect class="b1" height="34" rx="4" width="300" x="160" y="42"></rect>
+<rect class="b2" height="34" rx="4" width="100" x="360" y="102"></rect>
+<text class="lb" text-anchor="end" x="630" y="64">Among directorate students</text>
+<text class="lb" text-anchor="end" x="630" y="124">In the gifted program</text>
+<text class="vl" text-anchor="end" x="152" y="64">30%</text>
+<text class="vl" text-anchor="end" x="352" y="124">10%</text>
+<line class="th" x1="220" x2="220" y1="30" y2="150"></line>
+<text class="thl" direction="rtl" style="direction:rtl;unicode-bidi:embed" text-anchor="middle" x="220" y="20">Fair minimum 24%</text>
+<text class="tk" text-anchor="middle" x="460" y="170">0</text>
+<text class="tk" text-anchor="middle" x="360" y="170">10%</text>
+<text class="tk" text-anchor="middle" x="260" y="170">20%</text>
+<text class="tk" text-anchor="middle" x="160" y="170">30%</text>
+<text class="tk" text-anchor="middle" x="60" y="170">40%</text>
+<text class="tk" text-anchor="middle" x="260" y="190">Share of village school students</text>
+</svg>
+<figcaption><b>Figure 14.3:</b> Share of village school students among the directorate’s students and in the gifted program, in the worked example. The dashed line marks the fair minimum under Ford’s formula (30% × 0.8 = 24%). Anything below it, like the second bar, is underrepresentation that calls for review.</figcaption>
+</figure>
+<h3>Where does the shortfall come from?</h3>
+<p>Studies indicate that the shortfall accumulates at points close to those in Figure 14.2, with one more point added after the decision: the service itself.</p>
+<ul>
+<li><strong>Nomination:</strong> when the door to a program is teacher nomination or a family request, who walks through it reflects the teacher’s judgment and the family’s awareness as much as the student’s ability. A large U.S. study found that the likelihood of a student being identified as gifted varied with the background of his teacher, even when students’ test achievement was equal (Grissom &amp; Redding, 2016). In Saudi Arabia, Alfaiz examined the accuracy of parent and teacher nominations in identifying gifted students (Alfaiz, 2026). When a large U.S. school district moved from nomination to <strong>universal screening</strong> (<span class="en">Universal screening</span>), administering an initial instrument to every student in the grade, the representation of students from low-income families and from minority groups rose markedly, because many of them had never been nominated in the first place (Card &amp; Giuliano, 2016).</li>
+<li><strong>Instrument and norms:</strong> comparing a student in a less advantaged school with a national sample measures his opportunities as much as his ability. Hence the proposal of <strong>local norms</strong> (<span class="en">Local norms</span>), which compare the student with peers in his own school or in schools with similar circumstances; they have been found to increase the representation of underrepresented groups (Peters et al., 2019).</li>
+<li><strong>Decision rule:</strong> a single high cutoff score on a single instrument, or a requirement to meet every criterion at once, narrows the door for students with a clear strength in one area and a weakness in another.</li>
+<li><strong>Service:</strong> a program offered only in urban centers, or one that requires transportation the family does not have, loses students who have already been identified.</li>
+</ul>
+<p>No single measure solves the problem. Peters, reviewing what these measures have achieved, argues that the effect of each on representation is limited, and that much of the gap forms years before identification, in opportunities to learn themselves, so that better identification alone cannot close it (Peters, 2022). Fair identification is necessary, then, but not sufficient.</p>
+<div class="callout" data-k="example">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="10" r="3"></circle><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11Z"></path></svg>In the Saudi context: fairness issues</div>
+<p>Four issues in the Saudi system bear on fairness in diagnosis and identification. For each, we present what has been published, and we state plainly what we could not find in print.</p>
+<ol>
+<li><strong>Voluntary registration and fees.</strong> The Mawhiba Multiple Cognitive Abilities Test, the instrument of the National Program for Gifted Identification, is administered to students whose families register them through the National Center for Assessment website, with a parental contribution of 200 riyals from which supported students are exempt; a student may sit the test once at each level (King Abdulaziz and His Companions Foundation for Giftedness and Creativity, n.d. [Arabic]). In the absence of universal screening, the first gate here is the family’s decision: a student whose family does not know about the program, or does not see it as a priority, never reaches the test, however able he may be. The exemption eases the barrier of cost, but the barrier of awareness remains. We found no published data on registration rates by region, school or family income.</li>
+<li><strong>Different admission rules in boys’ and girls’ programs.</strong> The guide to the School Program for the Care of Gifted Girls admits the “top 5% of the outcomes” of the national project (Ministry of Education, 1437 AH [Arabic]). The gifted classes guide, by contrast, nominates students classified in the project and fills the remaining places using criteria of which at least two must be met, one of them a cognitive ability test with a score of no less than 120 (Ministry of Education, n.d. [Arabic]). The “top 5%” is calculated from test-takers alone, so it depends on which girls registered and which did not. And because boys and girls are educated separately, those who nominate and assess in girls’ schools are mostly women, and those who nominate in boys’ schools mostly men, so any difference in nomination standards between the two groups turns into a sex difference in representation. We found no published data comparing referral rates to special education, or identification rates in gifted programs, across the two systems. On the other hand, survey studies have been published that offer a basis for comparison, among them a study of 5,495 boys and girls in Al-Zulfi Governorate that estimated the prevalence of dyslexia at about 6.5% among boys and 3.8% among girls (Aldakhil et al., 2023). Because figures of this kind do not pass through referral, they can serve as a benchmark against which actual referral rates in schools are compared.</li>
+<li><strong>Regional variation.</strong> The national test standardizes the instrument across regions, but we do not know how everything around it is distributed. The Special Education Organizational Guide requires that assessment instruments be administered and interpreted by “qualified specialists” (Ministry of Education, 1436 AH [Arabic]), yet we found no published data on their availability in cities and villages, nor on the distribution of gifted classes and programs. The peer-reviewed studies published on national test scores come from particular regions, such as a study of students in Al-Ahsa (Almulhim et al., 2026), and so do not allow regions to be compared.</li>
+<li><strong>Learners of Arabic as a second language and non-Saudi students.</strong> The Regulations exclude from learning disabilities difficulties attributable to “learning conditions or family care” (Ministry of Education [Al-Ma'arif], 1422 AH [Arabic]). This exclusion is what protects a student learning in a second language from misdiagnosis, but the published documents do not explain how it is verified. Nor did we find a published text specifying the eligibility of non-Saudi students for the National Program for Gifted Identification, or any data on their participation in it.</li>
+</ol>
+<p><strong>A question for reflection:</strong> if your education directorate wanted to know whether the Mawhiba test reaches students in all its schools equally, which three pieces of data would you request first, and from which body?</p>
+</div>
+<!-- 5 -->
+<h2 id="s5"><span class="sec">14.5</span>Language and culture</h2>
+<h3>The language of conversation and the language of learning</h3>
+<p>One of the most common sources of misdiagnosis is confusing second language learning with disability. Jim Cummins distinguished between two levels of language proficiency: <strong>basic interpersonal communicative skills</strong> (<span class="en">Basic Interpersonal Communicative Skills, BICS</span>), the language of everyday talk and the playground, in which a second language learner reaches fluency close to that of peers in <strong>about two years</strong>; and <strong>cognitive academic language proficiency</strong> (<span class="en">Cognitive Academic Language Proficiency, CALP</span>), the language of textbooks, abstract concepts and lengthy instructions, which takes roughly <strong>five to seven years</strong> to reach the level of native speakers (Cummins, 1981).</p>
+<figure class="fig-frame" id="fig-14-4">
+<div class="bics">
+<div class="r"><span>Basic interpersonal communicative skills</span><div class="tr"><div class="seg b" style="left:0%;width:25%">About 2 years</div></div></div>
+<div class="r"><span>Cognitive academic language proficiency</span><div class="tr"><div class="seg c" style="left:62.5%;width:25%">5–7 years</div></div></div>
+<div class="ax"><span></span><div><span style="left:0%">0</span><span style="left:25%">2</span><span style="left:50%">4</span><span style="left:75%">6</span><span style="left:100%">8</span></div></div>
+</div>
+<figcaption><b>Figure 14.4:</b> Approximate time, in years, that a second language learner needs to approach native-speaking peers, after Cummins (Cummins, 1981). Conversational fluency comes in about two years; academic proficiency between the fifth and seventh year. A student who speaks Arabic fluently at recess after two years may need several more years before he can learn in it as effectively as his classmates.</figcaption>
+</figure>
+<p>The danger is that a teacher sees a student chatting fluently in Arabic with classmates, then stumbling in reading and science, and concludes that he has a learning disability, when in fact he has not yet attained academic language proficiency. Saudi schools enroll many students from expatriate families whose first language is not Arabic, and these students most closely resemble those on whom the framework was built.</p>
+<p>These figures have limits that readers should know before using them. <strong>First,</strong> they are drawn from data on immigrant children learning English in Canada, and they do not carry over unchanged to another language or another education system. <strong>Second,</strong> it is often suggested that an Arab student who speaks a colloquial dialect encounters in Modern Standard Arabic something akin to a second academic language, since it departs from his dialect in vocabulary and structure. The analogy is reasonable, but it is an inference awaiting research, and it does not justify applying Cummins’s timeframes to that student. <strong>Third,</strong> the distinction between the two levels has itself drawn theoretical criticism: among other things, that it reduces language proficiency to two poles, and that it can be used to explain a student’s difficulties as a deficit in him rather than in his instruction. Cummins has addressed these criticisms, presenting the distinction as a tool for understanding the difference between fluency and learning, with approximate timeframes (Cummins, 2008). The practical conclusion nonetheless stands: <strong>fluency in conversation is not evidence of command of the language of learning</strong>.</p>
+<h3>—</h3>
+<p>How can we tell whether the low scores of a linguistically diverse student reflect his ability or his language? Flanagan and colleagues (Flanagan et al., 2013) proposed a method called the <strong>Culture-Language Interpretive Matrix</strong> (C-LIM). The idea is to classify subtests along two dimensions: how much <strong>cultural content</strong> they carry, and how much <strong>language</strong> they demand. The student’s scores are then placed in the cells of the matrix, and the scores in each cell are compared with an <strong>expected range</strong> for a student whose linguistic and cultural difference from the norming sample is similar to his. A highly different student, such as a recent arrival, is expected to show steeper drops in the high-loading cells than a student who has spent years in schools taught in that language. If scores decline steadily as cultural and linguistic loading increases, <em>and fall within the range expected for such a student</em>, language and culture likely explain the decline. If they fall below the expected range, however, language alone is not a sufficient explanation, and another cause should be sought. The criterion, then, is the size of the graded decline relative to students with similar exposure to the language, not merely its presence (Flanagan et al., 2013).</p>
+<figure class="fig-frame" id="fig-14-5">
+<div aria-label="A matrix of three rows for cultural loading and three columns for linguistic demand, in which scores decline from 98 in the low-loading cell to 74 in the high-loading cell" class="clim" role="img">
+<div class="h"></div><div class="h">Low linguistic demand</div><div class="h">Moderate</div><div class="h">High</div>
+<div class="h">Low cultural loading</div><div class="c1">Figural reasoning<b>98</b></div><div class="c2">Rapid visual attention<b>94</b></div><div class="c3">Auditory verbal memory<b>89</b></div>
+<div class="h">Moderate</div><div class="c2">Block design<b>95</b></div><div class="c3">Picture story sequencing<b>87</b></div><div class="c4">Verbal reasoning<b>81</b></div>
+<div class="h">High</div><div class="c3">Pictorial information<b>86</b></div><div class="c4">Social situations comprehension<b>79</b></div><div class="c5">Vocabulary<b>74</b></div>
+</div>
+<figcaption><b>Figure 14.5:</b> A simplified hypothetical example of the Culture-Language Interpretive Matrix. The numbers are standard scores with a mean of 100. Scores decline steadily from the top cell to the bottom, that is, as cultural and linguistic loading increases, from 98 to 74, and cell shading deepens in the same direction. This pattern is <em>consistent with</em> an effect of language and culture, but it does not prove one on its own (see the next paragraph). The task names here are generic and their classification is illustrative, independent of how particular subtests are classified in published tables.</figcaption>
+</figure>
+<h3>What studies say about the validity of the matrix</h3>
+<p>The matrix spread through practice faster than it was examined. And when it was examined, the results were troubling. Kranzler and colleagues administered a cognitive battery to students learning English as a second language and did not find the graded decline the matrix predicts with the regularity it assumes (Kranzler et al., 2010). Styck and Watkins studied the files of students referred for evaluation, some learning English as a second language and some native speakers, and found that the matrix patterns distinguished poorly between the two groups (Styck &amp; Watkins, 2013). This is to be expected once we recall that a native speaker with a language difficulty will also show declining scores as linguistic demands increase. The graded pattern may mean “second language,” or it may mean “genuine language weakness,” and the matrix alone cannot tell them apart.</p>
+<p>Add to this that its classifications are built on English-language tests, and we know of no published classification of Arabic tests by cultural and linguistic loading. The matrix, then, is <strong>a tool for organizing one’s thinking before judgment</strong>. Its core idea remains valid in any language: <strong>look at the pattern of scores as well as their level</strong>. But the pattern is a hypothesis that needs independent evidence to confirm or refute it, of which three kinds matter most: the student’s proficiency in his first language, measured directly rather than through the family’s report; his level in the second academic language, compared with peers who have had the same length of exposure; and his response to direct, focused instruction monitored over several weeks. Among the tools for the last kind of evidence is dynamic assessment, which measures how much the student benefits from brief instruction provided during the assessment itself (see Chapter 5), complemented by asking the family about the student’s language and educational history (Rhodes et al., 2005).</p>
+<div class="callout" data-k="myth">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5V14M12 17h.01"></path></svg>Common misconceptions</div>
+<ul>
+<li><strong>“A nonverbal test is fair to all students.”</strong> A nonverbal test reduces the influence of language, but it does not remove the influence of experience and schooling, and it does not measure the verbal and quantitative abilities a student needs in most academic programs. For this reason it is not sufficient on its own for identifying gifted students among second language learners; it is more useful to compare the student with others who share similar opportunities, using verbal, quantitative and nonverbal measures together (Lohman, 2005).</li>
+<li><strong>“Translating a test makes it valid for the student.”</strong> Translation can change the difficulty and meaning of items, and it does not carry over the norms. A translated instrument needs evidence of measurement invariance before its scores can be compared with the original.</li>
+<li><strong>“Equal proportions mean fairness, and unequal ones mean injustice.”</strong> The standard is equal chances of identification and equally valid interpretation, not identical proportions. A difference raises a question to be investigated.</li>
+</ul>
+</div>
+<!-- 6 -->
+<h2 id="s6"><span class="sec">14.6</span>Assessor biases</h2>
+<p>Assessors are human, and the mind sometimes falls back on mental shortcuts in judgment that lead to predictable errors. These errors have long been studied in medicine, where many diagnostic errors were found to stem from the way clinicians think more than from gaps in their knowledge (Croskerry, 2003). The most prominent in our field are the following:</p>
+<div class="tw"><table id="tab-14-2">
+<caption>Table 14.2: Common assessor biases and how to reduce them.</caption>
+<thead><tr><th>Bias</th><th>How it shows</th><th>Example</th><th>What reduces it</th></tr></thead>
+<tbody>
+<tr><td>Anchoring</td><td>The first idea governs everything that follows</td><td>A teacher notices that a student does not turn when his name is called, assumes autism from the outset, and never asks for a hearing check</td><td>Writing at least three alternative hypotheses before the assessment</td></tr>
+<tr><td>Confirmation bias</td><td>Seeking what supports the hypothesis and overlooking what contradicts it</td><td>Dismissing a parent’s rating because it differs from what the team expected, instead of asking why the two differ</td><td>Deliberately searching for evidence that contradicts the hypothesis</td></tr>
+<tr><td>Diagnostic overshadowing</td><td>Attributing every symptom to a known diagnosis</td><td>Anxiety in a student with intellectual disability is explained away as “part of his disability”</td><td>Asking: does the known diagnosis actually explain this symptom?</td></tr>
+<tr><td>Halo effect, and its negative counterpart, the horn effect</td><td>One salient trait colors judgment of everything else: a positive one raises it, a negative one lowers it</td><td>Nominating well-behaved high achievers for giftedness while overlooking a gifted girl who asks endless questions and keeps untidy notebooks</td><td>Observation tools with specific items, more than one rater, and judging work without knowing whose it is</td></tr>
+<tr><td>Availability bias</td><td>Judging by whatever comes most readily to mind</td><td>A teacher who attended a course on attention-deficit/hyperactivity disorder begins to see it in every highly active student</td><td>Returning to the written criteria instead of relying on impressions</td></tr>
+</tbody>
+</table></div>
+<div class="callout" data-k="teacher">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M3 8l9-4 9 4-9 4-9-4Z"></path><path d="M7 10v5c0 1.5 2.5 3 5 3s5-1.5 5-3v-5"></path></svg>For the teacher: five minutes before you refer or nominate</div>
+<p>You are the first point in Figure 14.2, which is why bias either begins with you or ends with you. Before you sign a referral or nomination form, ask yourself:</p>
+<ul>
+<li>What specific behavior did I see? How often? In which lesson? Write it down as it happened, before any interpretation.</li>
+<li>If another student in the class had done the same thing, would I refer him? And if this student were a girl rather than a boy, or the reverse, or came from a different family?</li>
+<li>Who in my class has never once crossed my mind? The quiet student, the newcomer, the one who has not yet mastered Arabic may need referral or nomination more than those who caught my attention.</li>
+<li>Did I give the student a chance to show what he can do, through an open-ended task or in a form other than writing, before judging him?</li>
+</ul>
+</div>
+<!-- 7 -->
+<h2 id="s7"><span class="sec">14.7</span>A fairness checklist</h2>
+<p>These are questions for the team to ask before any diagnostic decision, arranged according to the points in Figure 14.2:</p>
+<ul class="checklist">
+<li><div><span class="st">Referral</span>Did the student receive sound instruction and adequate support before referral? And was this documented?</div></li>
+<li><div><span class="st">Referral</span>Was the student’s behavior compared with that of peers of the same age and background?</div></li>
+<li><div><span class="st">Instrument</span>Were hearing and vision checked?</div></li>
+<li><div><span class="st">Instrument</span>Was the instrument normed on a sample resembling the student in language and environment? And when was it normed?</div></li>
+<li><div><span class="st">Instrument</span>Was it administered in the student’s stronger language or through his means of communication? Did he need a nonverbal instrument?</div></li>
+<li><div><span class="st">Instrument</span>Does the instrument’s manual present evidence that its items are free of differential functioning, and of measurement invariance, for the group to which the student belongs?</div></li>
+<li><div><span class="st">Interpretation</span>Was the pattern of scores considered alongside their level? Were confidence intervals taken into account?</div></li>
+<li><div><span class="st">Interpretation</span>Did the team write alternative hypotheses and look for evidence against its first hypothesis?</div></li>
+<li><div><span class="st">Interpretation</span>Was information gathered from home and school, and was any conflict between them understood?</div></li>
+<li><div><span class="st">Decision</span>Is the decision rule made public, and does it avoid excluding any particular group without justification?</div></li>
+<li><div><span class="st">Decision</span>At the program level: are representation rates reviewed every year using raw counts and compared with the fair minimum?</div></li>
+<li><div><span class="st">Decision</span>Did the family take part in the decision and understand it?</div></li>
+</ul>
+<!-- 8 -->
+<h2 id="s8"><span class="sec">14.8</span>Three cases and a school audit</h2>
+<article class="case">
+<div class="case-head"><h3>Case one: Zain, age 10</h3><span class="verdict n">Most likely a second language effect</span></div>
+<p><strong>The story:</strong> Zain arrived with his family two and a half years ago; his first language is Urdu. He speaks Arabic fluently with his classmates but is struggling in reading, science and social studies. His teacher referred him on suspicion of a learning disability.</p>
+<div class="tw"><table id="tab-14-3">
+<caption>Table 14.3: Evidence in Zain’s case.</caption>
+<thead><tr><th>Source</th><th>Result</th><th>What it means</th></tr></thead>
+<tbody>
+<tr><td>Length of time learning Arabic</td><td>Two and a half years</td><td>Conversational language mastered; academic language most likely not yet fully developed</td></tr>
+<tr><td>Direct measure of academic Arabic</td><td>He read a passage from his grade’s science textbook, answered comprehension questions and defined subject vocabulary. His performance fell clearly below that of his Arabic-speaking classmates and close to that of two classmates who had been learning Arabic for the same length of time</td><td>His difficulties are within what is expected for someone with his exposure to Arabic</td></tr>
+<tr><td>Ability test in Arabic</td><td>Scores declining steadily with linguistic and cultural loading, as in the pattern of Figure 14.5</td><td>A pattern consistent with a language effect, but one that cannot by itself distinguish a second language from a language weakness</td></tr>
+<tr><td>Family interview with an interpreter</td><td>He reads Urdu well and was a high achiever at his previous school</td><td>Important information, but it rests on the family’s report alone</td></tr>
+<tr><td>Reading sample in Urdu, with help from a teacher at the school who speaks it fluently</td><td>He read a grade-level passage accurately and fluently and summarized what he read</td><td>Direct, though unstandardized, evidence of sound reading in his first language</td></tr>
+<tr><td>Dynamic assessment in Arabic reading</td><td>Rapid improvement after two sessions of training in decoding strategies</td><td>An initial indicator of learning potential that needs further corroboration</td></tr>
+</tbody>
+</table></div>
+<p><strong>Decision:</strong> Zain is not diagnosed with a learning disability at this point. A genuine learning disability usually shows itself in both languages, and the direct evidence from the reading sample, beyond what the family reports, indicates that he reads soundly in Urdu. He will receive eight weeks of focused support in academic Arabic, including explicit teaching of subject vocabulary, with weekly measurement of his reading progress compared against that of peers who have been learning Arabic for the same length of time. If he grows as they do, the language explanation is confirmed. If his growth stalls despite the support, his case will be revisited through a more comprehensive evaluation, and the possibility of a learning disability remains open.</p>
+<p class="shift"><strong>What evidence could change the decision?</strong> If, after the eight weeks of focused support, his growth in Arabic reading remained clearly slower than that of peers with the same length of exposure, or if a closer assessment of his Urdu reading revealed difficulties with accuracy or fluency, the possibility of a learning disability would return to the fore, and the comprehensive evaluation would be completed.</p>
+</article>
+<article class="case">
+<div class="case-head"><h3>Case two: Waad, age 9</h3><span class="verdict t">Horn effect</span></div>
+<p><strong>The story:</strong> On a gifted nomination scale, Waad’s teacher rated her academic ability low, writing: “Her handwriting is very poor, and her notebook is a mess.” The program coordinator, however, asked two other teachers to rate Waad’s answers on a problem-solving task after they had been retyped on a computer, without telling them whose work it was. Both placed her among the top 10% of girls in the class.</p>
+<p><strong>Decision:</strong> Waad was referred for gifted assessment. Her case illustrates the negative face of the halo effect, known as the <strong>horn effect</strong> (<span class="en">Horn effect</span>): one conspicuous negative trait, here her handwriting, colored the judgment of her ability as a whole. Rating work without knowing whose it is offers a simple way to curb it.</p>
+<p>An assessment of her fine motor skills and handwriting was also requested, and for a reason that goes beyond the handwriting itself. The wide gap between her problem-solving ability and her written performance may be a sign of <strong>twice-exceptionality</strong>: giftedness combined with a writing difficulty (dysgraphia). A student who carries both is exposed to two errors at once: her difficulty may mask her giftedness, so that she is never nominated, as nearly happened here, and her giftedness may mask her difficulty, so that she is never supported. Both sides are therefore assessed together, rather than stopping at her admission to the program (see Chapter 13).</p>
+<p class="shift"><strong>What evidence could change the decision?</strong> If the individual gifted assessment returned average results despite the two teachers’ ratings, her performance on a single task would be treated as a relative strength that needs further evidence before nomination. And if the assessment of her fine motor skills and handwriting revealed a clear deficit, the question of twice-exceptionality would become part of the decision itself.</p>
+</article>
+<article class="case">
+<div class="case-head"><h3>Case three: Ohoud, age 14, ninth grade</h3><span class="verdict y">First, open the gate for her</span></div>
+<p><strong>The story:</strong> Ohoud attends a small intermediate school in a remote village, with eleven girls in her class. The nearest gifted classes for girls are in a city about an hour and a half away by car. She has never been registered for the national test at any level, and no teacher has ever nominated her. As part of the review the supervisor launched in the opening scene, her education directorate ran open-ended problem-solving activities with girls in the village schools for four weeks. During that time, the mathematics teacher noticed that Ohoud was solving problems that had not yet been taught, and proposing more than one method for some of them.</p>
+<div class="tw"><table id="tab-14-4">
+<caption>Table 14.4: Evidence in Ohoud’s case.</caption>
+<thead><tr><th>Source</th><th>Result</th><th>What it means</th></tr></thead>
+<tbody>
+<tr><td>National test registration record</td><td>Not registered at the first or second level. Her mother said she had never heard of the test</td><td>She never reached the first gate at all, and the reason lies in the family’s awareness of the test, quite apart from the student’s ability</td></tr>
+<tr><td>School grades</td><td>Top of her class in mathematics and science since seventh grade</td><td>A limited indicator: ranking first among eleven girls says little about where she would stand in a larger group</td></tr>
+<tr><td>Teacher’s observation after the open-ended activities</td><td>Original solutions to unfamiliar problems, and questions that go beyond the lesson</td><td>Behavior that would not have surfaced in a classroom that offers no such tasks</td></tr>
+<tr><td>Brief group ability test administered by the directorate to all ninth-grade girls in the sector’s village schools</td><td>In the top 3% of 240 girls in these schools</td><td>A clear strength relative to those who share her opportunities; this is a screening indicator that comes before any eligibility decision</td></tr>
+</tbody>
+</table></div>
+<p><strong>Decision:</strong> No judgment is made yet as to whether Ohoud is gifted or not; the first task is to open the gate she never reached. With the school’s help, she will be registered for the Mawhiba test this year, and her eligibility for a fee exemption will be checked. She is at the third level, where she is entitled to only one attempt, so that attempt should not be lost to missing information or to a lack of transport to the test center. In the meantime, she will receive mathematics enrichment within her own school, because her need exists whatever the test result. If she qualifies, the team will work out with her family how she can reach the service, since identification without access to services changes nothing.</p>
+<p><strong>What the case teaches:</strong> Ohoud was wronged because no one had measured her in the first place; neither a test nor an assessor ever reached her. This kind of injustice appears in no individual assessment report. Only a system-level review, like the one the supervisor began, can bring it to light.</p>
+<p class="shift"><strong>What evidence could change the decision?</strong> If her Mawhiba test result fell below the nomination threshold after a registration carried out under suitable conditions, the mathematics enrichment in her school would continue, and her need for a gifted program would be reconsidered. And if it turned out that her family could not reach the service location, the decision would shift to finding an alternative that reaches her in her village.</p>
+</article>
+<div class="callout" data-k="example">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M4 5h16v11H8l-4 4V5Z"></path></svg>School audit: back to the supervisor</div>
+<p>The supervisor in the opening scene has three numbers in front of her. Here are the steps we suggest:</p>
+<ol>
+<li><strong>Behavior referrals:</strong> Calculate the risk ratio for each school, record the raw counts next to it, and pool three years of data for small schools before drawing conclusions. Then review a sample of referrals: which behaviors are cited? Are girls referred for the same behaviors? And look for girls with internalizing problems who were never referred.</li>
+<li><strong>Learning disabilities referrals of non-native speakers of Arabic:</strong> Review how long these students have been learning Arabic; whether their proficiency in their first language was measured directly, alongside asking the family; whether their academic Arabic was measured against peers with the same length of exposure; and whether the referral was preceded by language support whose effect was monitored.</li>
+<li><strong>Village schools missing from gifted programs:</strong> Calculate the representation index and the fair minimum, then trace where students drop out: Were they registered for the national test? Did screening or nomination reach them? Were local norms used? Were they given opportunities to display their abilities? Ohoud’s case is an example of what such tracing can uncover.</li>
+</ol>
+</div>
+<h2 class="unnum" id="conclusion">Conclusion</h2>
+<p>The central argument of this chapter is that fairness means an equal chance of being identified for those who need it, freedom from misdiagnosis for those who do not, and valid score interpretation for every group, which runs deeper than equal percentages. It follows that a risk ratio should be treated as a question that calls for verification, read alongside raw counts and across several years, and that bias should be sought at its four points of entry: referral, instrument, interpretation and decision. It follows, too, that conversational language should not be confused with academic language, that the pattern of scores across cultural and linguistic loading should be read as a hypothesis requiring independent evidence, and that assessor biases should be curbed through alternative hypotheses, multiple raters and a return to the criteria.</p>
+<p>Some questions in this chapter nonetheless remain open. Cummins’s time frames are estimates drawn from a different context; the Culture-Language Interpretive Matrix discriminates poorly between second language learning and language impairment; and part of the representation gap in gifted programs arises before identification itself, so identification tools alone cannot close it. In the Saudi context, optional registration for the national test makes the family’s decision the first gate, and no data are published that would allow comparison across regions or between boys’ and girls’ programs, so system-level monitoring of fairness remains limited by whatever data are available.</p>
+<!-- 9 -->
+<h2 id="s9"><span class="sec">14.9</span>Summary, key terms and activities</h2>
+<h3>Chapter summary</h3>
+<div class="summary"><ul>
+<li>Fairness means an equal chance of being identified for those who need it, freedom from misdiagnosis for those who do not, and valid score interpretation for every group; it runs deeper than equal percentages.</li>
+<li>The risk ratio is a simple tool for detecting disproportionality, but it raises a question rather than proving bias, and it becomes unstable when numbers are small, so it is read alongside raw counts and across several years.</li>
+<li>Bias enters at four points: referral, instrument, interpretation and decision. Instrument bias is detected statistically through analyses of differential item functioning and measurement invariance.</li>
+<li>In gifted programs, underrepresentation is the dominant problem. The representation index and the fair minimum detect it, and universal screening and local norms reduce it, but part of the gap arises before identification.</li>
+<li>In the Saudi context, optional registration for the national test makes the family’s decision the first gate, and no data are published that would allow comparison across regions or between boys’ and girls’ programs.</li>
+<li>Conversational language is acquired much faster than academic language, and confusing the two is a common source of misdiagnosis. Cummins’s time frames are estimates drawn from a different context.</li>
+<li>The pattern of scores across cultural and linguistic loading is more telling than their level, but the Culture-Language Interpretive Matrix discriminates poorly between second language learning and language impairment, so the pattern it shows is a hypothesis that needs independent evidence.</li>
+<li>Assessor biases are to be expected; they are reduced by alternative hypotheses, rating work without knowing whose it is, multiple raters and a return to the criteria.</li>
+</ul></div>
+<h3>Glossary of terms</h3>
+<dl class="gloss">
+<dt>Disproportionality</dt><dd>A clear difference between a group’s share of a category or program and its expected share.</dd>
+<dt>Risk index</dt><dd>The number of students in a group who have been diagnosed, divided by the group’s total number.</dd>
+<dt>Risk ratio</dt><dd>The risk index of one group divided by the risk index of a comparison group.</dd>
+<dt>Representation index</dt><dd>A group’s share among program students divided by its share among all students; a value of 1 indicates proportionate representation.</dd>
+<dt>Equity formula</dt><dd>A rule that sets the minimum acceptable representation of a group in a gifted program at its share among students multiplied by 0.8.</dd>
+<dt>Excellence gaps</dt><dd>Differences between groups in the proportions of students who reach advanced levels of performance.</dd>
+<dt>Universal screening</dt><dd>Administering an initial instrument to all students in a grade or school level, rather than waiting for nomination or a family request.</dd>
+<dt>Differential item functioning<span class="en">Differential item functioning (DIF)</span></dt><dd>A difference in two groups’ performance on an item among individuals of equal standing on the ability being measured, indicating that the item measures something else besides that ability.</dd>
+<dt>Measurement invariance</dt><dd>The property of a scale measuring the same construct in the same way in two groups, so that their scores can be compared and a single cut-off score applied to both.</dd>
+<dt>Basic Interpersonal Communicative Skills (BICS)</dt><dd>The language of everyday conversation, in which a second language learner reaches fluency close to that of peers in about two years.</dd>
+<dt>Cognitive Academic Language Proficiency (CALP)</dt><dd>The language of learning and abstract concepts, which takes roughly five to seven years to develop.</dd>
+<dt>Culture-Language Interpretive Matrix (C-LIM)</dt><dd>A method for interpreting the pattern of scores according to their cultural loading and linguistic demands, by comparing them with the range expected for students whose exposure to the language resembles the student’s own.</dd>
+<dt>Confirmation bias</dt><dd>Seeking evidence that supports a hypothesis while overlooking evidence that contradicts it.</dd>
+<dt>Anchoring</dt><dd>Allowing the first idea that occurs to the assessor to govern the interpretation of everything that follows.</dd>
+<dt>Diagnostic overshadowing</dt><dd>Attributing a new symptom to a diagnosis the student already has, so that the possibility of another problem is overlooked.</dd>
+<dt>Halo effect</dt><dd>The influence of a single salient trait, positive or negative, on judgments across many unrelated areas.</dd>
+<dt>Horn effect</dt><dd>The negative face of the halo effect: a salient negative trait that lowers judgments of areas unrelated to it.</dd>
+<dt>Internalizing problems</dt><dd>Emotional problems the student directs inward, such as anxiety, withdrawal and sadness; they are easily overlooked because they do not disrupt the classroom.</dd>
+</dl>
+<h3>Review questions</h3>
+<ol>
+<li>A school has 300 students who are non-native speakers of Arabic and 900 who are native speakers. Twenty-one students in the first group and 27 in the second have been diagnosed with a learning disability. Calculate the risk ratio for the non-native speakers and interpret it. Then suppose another school has 30 non-native speakers of Arabic, two of whom have been diagnosed: what should you be wary of before comparing its ratio with that of the first school? <span class="obj">(Objective 1)</span></li>
+<li>Why does a high risk ratio not, on its own, prove bias? What further questions does it raise? <span class="obj">(Objective 1)</span></li>
+<li>A gifted program has 150 students, nine of whom are learning Arabic as a second language; these learners make up 15% of students at that school level. Calculate the representation index and the fair minimum using Ford’s formula, determine the shortfall if any, and propose two measures to close it, each addressing a different point of entry. <span class="obj">(Objective 3)</span></li>
+<li>For each of the following situations, identify the point at which bias enters and propose a measure to reduce it: (a) A teacher refers only students who disrupt the class. (b) A program requires a score of 130 on a single verbal test for admission. (c) A team interpreted the low scores of a recently arrived student as low ability without asking about his language. <span class="obj">(Objective 2)</span></li>
+<li>A study found that an item on a reasoning scale was harder, on average, for girls than for boys. Is this enough to conclude that the item is biased? What comparison do you need before reaching a judgment? <span class="obj">(Objective 2)</span></li>
+<li>After two years, a student speaks Arabic fluently but struggles with reading. What three pieces of evidence do you need before referral? And why is his fluency not sufficient evidence that he has mastered the language of instruction? <span class="obj">(Objective 4)</span></li>
+<li>The Culture-Language Interpretive Matrix showed a pattern of gradual decline for a referred student. One team member said: “The pattern proves the problem is linguistic, so there is no need for further assessment.” Evaluate this view in light of studies that have examined the validity of the matrix, and identify two independent pieces of evidence the team needs. <span class="obj">(Objective 5)</span></li>
+<li>Choose one of the three cases in this chapter, or a case you have encountered in your own work, and name a cognitive bias that could have led to a wrong decision in it; then propose a strategy to reduce it. <span class="obj">(Objective 6)</span></li>
+<li>Design one procedure for your school that reduces the halo or horn effect in gifted nomination, and explain how you would know it had worked. <span class="obj">(Objectives 3 and 6)</span></li>
+<li><strong>Case for application:</strong> Adam is eleven years old and in fifth grade. His first language is Somali, and he enrolled in a Saudi school four years ago. He was referred on suspicion of intellectual disability after obtaining a full-scale score of 68 (confidence interval 63–74) on an Arabic intelligence scale, with a verbal score of 62 and a nonverbal score of 84. His teacher says he speaks Arabic fluently but does not understand long instructions and struggles in every subject. His family says he helps out in the family shop, counts money and gives change quickly, and interprets for his parents at official appointments. His adaptive behavior has not been assessed, and his hearing has not been checked in three years. (a) At which of the four points might bias enter his case? (b) For eligibility under intellectual disability, the Special Education Organizational Guide requires an IQ of no more than 75 on a Wechsler scale or its equivalent, along with deficits in at least two areas of adaptive behavior (Ministry of Education, 1436 AH [Arabic]). Is the available evidence sufficient to judge that both conditions are met? Explain. (c) What evidence is missing? Rank it by priority. (d) What is your decision now: diagnosis, no diagnosis, or deferring judgment? Justify your decision, and specify what is needed to finalize it. <span class="obj">(Objectives 2, 4 and 7)</span></li>
+</ol>
+<p><strong>Brief answers to the computational questions:</strong> Question 1: The risk index for non-native speakers of Arabic is 21 ÷ 300 = 7%, and for native speakers 27 ÷ 900 = 3%, so the risk ratio is 7 ÷ 3 ≈ 2.33; that is, a non-native speaker is more than twice as likely as a native speaker to be diagnosed with a learning disability. In the second school the risk index is 2 ÷ 30 ≈ 6.7%, close to the first, but it rests on two cases: a change of a single case moves it between roughly 3.3% and 10%, so it can be compared only alongside the raw counts and several years of data. Question 3: Their share in the program is 9 ÷ 150 = 6%, the representation index is 6 ÷ 15 = 0.4, and the fair minimum is 15% × 0.8 = 12%, or 18 students, a shortfall of nine students.</p>
+<div class="tw"><table id="tab-14-5">
+<caption>Table 14.5: Alignment of chapter objectives with review questions and learning activities.</caption>
+<thead><tr><th>Objective</th><th>Assessed by</th></tr></thead>
+<tbody>
+<tr><td>1. Calculate the risk index and risk ratio and interpret their limits</td><td>Questions 1 and 2; Activity 1</td></tr>
+<tr><td>2. Identify the point at which bias enters and propose ways to reduce it</td><td>Questions 4 and 5; part (a) of Question 10; Activity 2</td></tr>
+<tr><td>3. Calculate the representation index and the fair minimum and propose measures</td><td>Questions 3 and 9; Activity 1</td></tr>
+<tr><td>4. Distinguish conversational fluency from academic proficiency</td><td>Question 6; part (c) of Question 10</td></tr>
+<tr><td>5. Critique interpretations of the Culture-Language Interpretive Matrix</td><td>Question 7</td></tr>
+<tr><td>6. Name the cognitive bias and propose ways to reduce it</td><td>Questions 8 and 9; Activity 3</td></tr>
+<tr><td>7. Judge whether the evidence suffices for a fair decision</td><td>Question 10 (case for application)</td></tr>
+</tbody>
+</table></div>
+<h3>Learning activities</h3>
+<p>Any activity that uses students’ data or work is carried out with the consent of the family and the school administration, without any information that could identify the student, and under the supervision of a qualified specialist. Its results are not used in any decision concerning the student and are reported only through official channels.</p>
+<ol>
+<li><strong>Calculating from school data:</strong> With the administration’s permission, and using aggregate counts only, without names, obtain the numbers of referrals to special education, or of students enrolled in a gifted program, in one school or a group of schools, broken down by gender, grade or school type. Calculate the risk indices and ratios, or the representation index and the fair minimum; flag every cell with fewer than ten students; and write three questions the numbers raise. If no data are available to you, apply the steps to the figures in the opening scene and the two worked examples. <em>Product: a table of calculations and three questions on a single page. Time: about two hours.</em></li>
+<li><strong>Item analysis:</strong> Choose ten items from an Arabized scale whose test booklet you have access to, without reproducing them in your report, and identify those that may carry cultural or dialectal content unfamiliar to a student in your region. Then search the scale’s manual: does it report an analysis of differential item functioning or of measurement invariance across groups? <em>Product: a table of the items, numbered and classified, and a paragraph on the fairness evidence in the manual. Time: about an hour and a half.</em></li>
+<li><strong>Rating without knowing whose work it is:</strong> Collect five pieces of student work, rewrite them in a uniform hand, and ask a colleague to rate them before and after their authors are revealed; then compare. If no student work is available to you, write two answers of equal content to a single task yourself, one in neat handwriting and the other in poor handwriting, and ask colleagues to rate them. <em>Product: a table showing both ratings for each piece of work, and a paragraph interpreting the differences. Time: about an hour.</em></li>
+</ol>
+<h3>Chapter references</h3>
+<ol class="refs">
+<li>King Abdulaziz and His Companions Foundation for Giftedness and Creativity. (n.d.). <i>[National Program for Gifted Identification]</i> [In Arabic]. Retrieved September 29, 2026, from https://www.mawhiba.sa/en/services/the-national-program-for-gifted-identification/</li>
+<li>Ministry of Education. (n.d.). <i>[Guide to gifted classes]</i> [In Arabic]. General Administration for the Gifted. Retrieved September 29, 2026, from https://www.moe.gov.sa/ar/aboutus/aboutministry/RPRLibrary/دليل%20فصول%20الموهوبين.pdf</li>
+<li>Ministry of Education. (1436 AH). <i>[Special education organizational guide]</i> [In Arabic] (1st ed., academic year 1436–1437 AH). https://moe.gov.sa/en/aboutus/aboutministry/RPRLibrary/الدليل%20التنظيمي%20للتربية%20الخاصة.pdf</li>
+<li>Ministry of Education. (1437 AH). <i>Organizational and procedural guide for the school program for gifted girls</i> [In Arabic]. General Directorate for Gifted Girls. https://www.moe.gov.sa/en/aboutus/aboutministry/RPRLibrary/الدليل%20الإجرائي%20والتنظيمي%20لبرنامج%20رعاية%20الموهوبات%20المدرسي%20(1).pdf</li>
+<li>Ministry of Education [Al-Ma'arif]. (1422 AH). <i>[Regulations for Special Education Institutes and Programs]</i> [In Arabic]. https://moe.gov.sa/en/aboutus/aboutministry/RPRLibrary/القواعد%20التنظيمية%20لمعاهد%20وبرامج%20التربية%20الخاصة%201422%20هـ.pdf</li>
+<li>Aldakhil, A. F., Ebrahim, M. T., &amp; Gadelrab, H. F. (2023). Diagnostic survey of dyslexia and accompanying behavioral indicators in primary school students in Saudi Arabia. <i>Research in Developmental Disabilities, 134</i>, Article 104424. https://doi.org/10.1016/j.ridd.2023.104424</li>
+<li>Alfaiz, F. S. (2026). The accuracy of parent and teacher nominations in gifted identification in Saudi Arabia. <i>Cogent Education, 13</i>(1), Article 2654922. https://doi.org/10.1080/2331186X.2026.2654922</li>
+<li>Almulhim, N., Aljughaiman, A. M., &amp; Alfaiz, F. S. (2026). Beyond the total score: Revealing cognitive heterogeneity in high ability through latent profile analysis. <i>Journal of Intelligence, 14</i>(8), Article 166. https://doi.org/10.3390/jintelligence14080166</li>
+<li>American Educational Research Association, American Psychological Association, &amp; National Council on Measurement in Education. (2014). <i>Standards for educational and psychological testing</i>. American Educational Research Association.</li>
+<li>Card, D., &amp; Giuliano, L. (2016). Universal screening increases the representation of low-income and minority students in gifted education. <i>Proceedings of the National Academy of Sciences, 113</i>(48), 13678–13683.</li>
+<li>Croskerry, P. (2003). The importance of cognitive errors in diagnosis and strategies to minimize them. <i>Academic Medicine, 78</i>(8), 775–780.</li>
+<li>Cummins, J. (1981). Age on arrival and immigrant second language learning in Canada: A reassessment. <i>Applied Linguistics, 2</i>(2), 132–149.</li>
+<li>Cummins, J. (2008). BICS and CALP: Empirical and theoretical status of the distinction. In B. Street &amp; N. H. Hornberger (Eds.), <i>Encyclopedia of language and education: Vol. 2. Literacy</i> (2nd ed., pp. 71–83). Springer.</li>
+<li>Flanagan, D. P., Ortiz, S. O., &amp; Alfonso, V. C. (2013). <i>Essentials of cross-battery assessment</i> (3rd ed.). Wiley.</li>
+<li>Ford, D. Y. (2013). <i>Recruiting and retaining culturally different students in gifted education</i>. Prufrock Press.</li>
+<li>Grissom, J. A., &amp; Redding, C. (2016). Discretion and disproportionality: Explaining the underrepresentation of high-achieving students of color in gifted programs. <i>AERA Open, 2</i>(1).</li>
+<li>Kranzler, J. H., Flores, C. G., &amp; Coady, M. (2010). Examination of the cross-battery approach for the cognitive assessment of children and youth from diverse linguistic and cultural backgrounds. <i>School Psychology Review, 39</i>(3), 431–446.</li>
+<li>Lohman, D. F. (2005). The role of nonverbal ability tests in identifying academically gifted students: An aptitude perspective. <i>Gifted Child Quarterly, 49</i>(2), 111–138.</li>
+<li>Morgan, P. L., Farkas, G., Hillemeier, M. M., Mattison, R., Maczuga, S., Li, H., &amp; Cook, M. (2015). Minorities are disproportionately underrepresented in special education: Longitudinal evidence across five disability conditions. <i>Educational Researcher, 44</i>(5), 278–292.</li>
+<li>Peters, S. J. (2022). The challenges of achieving equity within public school gifted and talented programs. <i>Gifted Child Quarterly, 66</i>(2), 82–94.</li>
+<li>Peters, S. J., Rambo-Hernandez, K., Makel, M. C., Matthews, M. S., &amp; Plucker, J. A. (2019). Effect of local norms on racial and ethnic representation in gifted education. <i>AERA Open, 5</i>(2).</li>
+<li>Plucker, J. A., &amp; Peters, S. J. (2016). <i>Excellence gaps in education: Expanding opportunities for talented students</i>. Harvard Education Press.</li>
+<li>Rhodes, R. L., Ochoa, S. H., &amp; Ortiz, S. O. (2005). <i>Assessing culturally and linguistically diverse students: A practical guide</i>. Guilford.</li>
+<li>Skiba, R. J., Artiles, A. J., Kozleski, E. B., Losen, D. J., &amp; Harry, B. (2016). Risks and consequences of oversimplifying educational inequities: A response to Morgan et al. (2015). <i>Educational Researcher, 45</i>(3), 221–225.</li>
+<li>Styck, K. M., &amp; Watkins, M. W. (2013). Diagnostic utility of the Culture-Language Interpretive Matrix for the Wechsler Intelligence Scales for Children—Fourth Edition among referred students. <i>School Psychology Review, 42</i>(4), 367–382.</li>
+<li>U.S. Department of Education. (2024). <i>Significant disproportionality</i>, 34 C.F.R. §§ 300.646–300.647. Retrieved September 29, 2026, from https://www.ecfr.gov/current/title-34/subtitle-B/chapter-III/part-300</li>
+</ol>
+<div aria-hidden="true" class="endmark">✦ ✦ ✦</div>
+<aside class="bp-cite" dir="ltr"><b>How to cite this section</b><p class="bp-ref">Alsamani, O. A. (2026). Chapter 14: Fairness in diagnosis. In <i>Diagnosis and Identification of Exceptional Learners</i>. alsamani.com. https://alsamani.com/books/diagnosis-identification/en/ch14.html</p><p class="bp-lic2">© 2026 Dr. Omar A. Alsamani. Free to read, download, share and quote for non-commercial purposes with attribution to the author and source.</p></aside>
+<nav class="pager"><a href="ch13.html"><small>Previous chapter</small><b>Twice-exceptional learners</b></a><a class="next" href="ch15.html"><small>Next chapter</small><b>From diagnosis to decision</b></a></nav>
+</div>
+<footer class="bp-foot" dir="ltr"><div class="bp-fin"><a class="bp-fid" href="../../../index.html"><span class="bp-fmark">OA</span><b>Dr. Omar A. Alsamani</b></a>
+<nav><a href="../../../index.html">Updates</a><a href="../../../books/index.html">Open Library</a><a href="../../../publications/index.html">Publications</a><a href="../../../tools/index.html">Tools</a><a href="../../../photography/index.html">Photography</a><a href="../../../about/index.html">About</a><a href="../../../contact/index.html">Contact</a></nav><p><bdi dir="ltr">© 2007–2026 alsamani.com</bdi></p><div class="pv" id="pv" dir="ltr" hidden></div></div></footer><script>(function(){{var el=document.getElementById('pv');if(!el)return;var live=/(^|\.)alsamani\.com$/.test(location.hostname);
+fetch('https://abacus.jasoncameron.dev/'+(live?'hit':'get')+'/alsamani-com/views').then(function(r){{return r.json()}}).then(function(d){{
+if(typeof d.value!=='number')return;var s=String(d.value);while(s.length<4)s='0'+s;
+el.innerHTML=s.split('').map(function(){{return '<span class="pv-d"><span class="pv-s">0<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9</span></span>'}}).join('');
+el.hidden=false;var cells=el.querySelectorAll('.pv-s');
+requestAnimationFrame(function(){{requestAnimationFrame(function(){{s.split('').forEach(function(c,i){{cells[i].style.transform='translateY('+(-c*10)+'%)'}})}})}})}}).catch(function(){{}})}})();
+</script><style>.bp-foot{box-shadow:0 0 0 100vmax var(--bpf,#F5F5F7);clip-path:inset(0 -100vmax);background:#F5F5F7;color:#6E6E73;font:13px/1.6 -apple-system,BlinkMacSystemFont,"IBM Plex Sans Arabic","Inter",sans-serif;margin-top:56px;padding:36px 20px calc(36px + env(safe-area-inset-bottom))}
+.bp-fin{max-width:1120px;margin:0 auto;display:flex;flex-wrap:wrap;gap:18px 40px;align-items:center;justify-content:space-between}
+.bp-fid{display:flex;align-items:center;gap:10px;color:#1D1D1F!important;text-decoration:none}.bp-fid b{font-weight:600}
+.bp-fmark{width:30px;height:30px;border:1px solid currentColor;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:600;letter-spacing:.04em}
+.bp-foot nav{display:flex;flex-wrap:wrap;gap:6px 22px}.bp-foot nav a{color:#6E6E73!important;text-decoration:none}.bp-foot nav a:hover{color:#1D1D1F!important}
+.bp-foot p{margin:0;flex-basis:100%;font-size:12px;border-top:1px solid #D2D2D7;padding-top:14px}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .bp-foot{--bpf:#161617;background:#161617;color:#A1A1A6}:root:not([data-theme="light"]) .bp-fid{color:#F5F5F7!important}}
+:root[data-theme="dark"] .bp-foot{--bpf:#161617;background:#161617;color:#A1A1A6}:root[data-theme="dark"] .bp-fid{color:#F5F5F7!important}
+@media print{.bp-foot{display:none}}</style><style>.pv{display:flex;justify-content:center;gap:4px;margin:14px auto 4px;grid-column:1/-1;width:100%}
+.bp-fin>p{text-align:center;width:100%}
+.pv[hidden]{display:none}
+.pv-d{display:inline-block;width:1.25em;height:1.7em;overflow:hidden;border-radius:6px;background:var(--bg,#fff);box-shadow:inset 0 0 0 1px var(--line,#d2d2d7);font:500 13px/1.7em "SF Mono",ui-monospace,Menlo,monospace;text-align:center;color:var(--ink,#1d1d1f)}
+.pv-s{display:block;transition:transform 1.4s cubic-bezier(.2,.8,.2,1)}
+@media (prefers-reduced-motion:reduce){.pv-s{transition:none}}
+.bp-foot .pv-d{background:#fff;box-shadow:inset 0 0 0 1px #d2d2d7;color:#1d1d1f}</style>
+</body>
+</html>

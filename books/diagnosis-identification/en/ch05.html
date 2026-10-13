@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+
+<html dir="ltr" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
+<title>Chapter 3: Formal standardized methods | Diagnosis and Identification of Exceptional Learners | Dr. Omar A. Alsamani</title>
+<link href="../assets/book.css?v=ea97adfb" rel="stylesheet"/>
+<style>
+.basal{font-family:var(--f-ui)}
+.basal .row{display:grid;grid-template-columns:repeat(20,1fr);gap:4px;direction:ltr}
+.basal .it{aspect-ratio:1/1;border-radius:6px;display:grid;place-items:center;font-size:12px;font-weight:700;border:1.5px solid var(--line);background:var(--paper);color:var(--ink-2)}
+.basal .cr{background:var(--good-soft);border-color:var(--good);color:var(--good)}
+.basal .ok{background:var(--good);border-color:var(--good);color:var(--paper)}
+.basal .no{background:var(--warn);border-color:var(--warn);color:var(--paper)}
+.basal .na{background:var(--paper-2);border-style:dashed;color:var(--line)}
+.basal .marks{display:grid;grid-template-columns:repeat(20,1fr);gap:4px;direction:ltr;margin-top:6px;min-height:40px;font-size:12px;font-weight:700}
+.basal .marks span{text-align:center;line-height:1.4}
+.basal .key{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:14px;font-size:13.5px;color:var(--ink-2)}
+.basal .key i{display:inline-block;width:14px;height:14px;border-radius:4px;vertical-align:-2px;margin-left:6px;border:1.5px solid var(--line)}
+@media (max-width:560px){.basal .it{font-size:9px;border-radius:4px}.basal .marks{font-size:10px}}
+.chc{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;font-family:var(--f-ui)}
+.chc>div{border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;min-width:0;display:grid;gap:4px}
+.chc b{font-size:15.5px}
+.chc .code{font-size:12.5px;color:var(--ink-2);direction:ltr;text-align:right}
+.chc span{font-size:13.5px;line-height:1.7;color:var(--ink-2)}
+.chc .idx{justify-self:start;font-size:12px;font-weight:700;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 10px}
+.chc .none{background:var(--paper-2);color:var(--ink-2)}
+.ab3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;font-family:var(--f-ui)}
+.ab3>div{border-radius:14px;padding:16px;min-width:0;background:var(--c-soft);border:1.5px solid var(--c)}
+.ab3 h5{font-family:var(--f-display);font-size:19px;margin:0 0 4px;color:var(--c);font-weight:700}
+.ab3 p{font-size:13.5px;color:var(--ink-2);margin:0 0 8px;line-height:1.7}
+.ab3 ul{margin:0;padding-inline-start:1.1em;font-size:14px;line-height:1.8}
+.ab3 .c1{--c:var(--example);--c-soft:var(--example-soft)}
+.ab3 .c2{--c:var(--teacher);--c-soft:var(--teacher-soft)}
+.ab3 .c3{--c:var(--accent);--c-soft:var(--accent-soft)}
+@media (max-width:640px){.ab3{grid-template-columns:1fr}}
+.tband{direction:ltr;font-family:var(--f-ui)}
+.tband .lbl{direction:rtl;font-size:13.5px;font-weight:700;margin:10px 0 6px}
+.tband .bar{display:flex;height:40px;border-radius:8px;overflow:hidden;border:1px solid var(--line)}
+.tband .bar div{display:grid;place-items:center;font-size:12.5px;font-weight:700;direction:rtl;text-align:center;line-height:1.25}
+.tband .g{background:var(--good-soft);color:var(--good)}
+.tband .m{background:var(--mid-soft);color:var(--mid)}
+.tband .s{background:var(--sev-soft);color:var(--sev)}
+.tband .p{background:var(--paper-2);color:var(--ink-2)}
+.tband .ticks{position:relative;height:24px}
+.tband .ticks span{position:absolute;top:4px;transform:translateX(-50%);font-size:12px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.inf{display:grid;gap:12px;font-family:var(--f-ui)}
+.inf .r{display:grid;grid-template-columns:minmax(0,15rem) 1fr;gap:14px;align-items:center;font-size:14.5px}
+.inf .track{height:26px;background:var(--paper-2);border-radius:6px;direction:ltr;position:relative}
+.inf .fill{height:100%;border-radius:6px;background:var(--example);display:flex;align-items:center;justify-content:flex-end;padding-inline:10px;color:var(--paper);font-weight:700;font-size:13px;font-variant-numeric:tabular-nums}
+@media (max-width:560px){.inf .r{grid-template-columns:1fr}}
+.choose{display:grid;gap:10px;font-family:var(--f-ui)}
+.choose .c{display:grid;grid-template-columns:minmax(0,1fr) 28px minmax(0,1fr);gap:10px;align-items:center}
+.choose .if{border:1.5px solid var(--line);border-radius:10px;padding:10px 14px;font-size:14.5px;line-height:1.7}
+.choose .then{border:1.5px solid var(--accent);background:var(--accent-soft);border-radius:10px;padding:10px 14px;font-size:14.5px;line-height:1.7}
+.choose .ar{text-align:center;color:var(--ink-2);font-size:20px}
+@media (max-width:600px){.choose .c{grid-template-columns:1fr}.choose .ar{transform:rotate(-90deg)}}
+
+/* restored ch05 figure styles */
+
+.ttr{display:grid;grid-template-columns:1fr 40px 1fr 40px 1fr;align-items:stretch;gap:0;font-family:var(--f-ui)}
+.ttr .b{border:1.5px solid var(--line);border-radius:12px;padding:14px;text-align:center;min-width:0}
+.ttr .b.mid{border-color:var(--accent);background:var(--accent-soft)}
+.ttr .b b{display:block;font-size:16px}
+.ttr .b span{font-size:13.5px;color:var(--ink-2);line-height:1.7;display:block;margin-top:4px}
+.ttr .a{display:grid;place-items:center;color:var(--ink-2);font-size:22px}
+@media (max-width:620px){.ttr{grid-template-columns:1fr}.ttr .a{transform:rotate(-90deg);height:34px}}
+.slope{direction:ltr}
+.slope text{font-family:var(--f-ui)}
+.slope .ax{stroke:var(--ink-2);stroke-width:1.2}
+.slope .gr{stroke:var(--line)}
+.slope .tk{fill:var(--ink-2);font-size:12.5px}
+.slope .lA{stroke:var(--accent);stroke-width:3}
+.slope .lB{stroke:var(--teacher);stroke-width:3}
+.slope .pA{fill:var(--accent)}
+.slope .pB{fill:var(--teacher)}
+.slope .tA{fill:var(--accent);font-size:13.5px;font-weight:700}
+.slope .tB{fill:var(--teacher);font-size:13.5px;font-weight:700}
+.slope .lb{fill:var(--ink);font-size:13.5px;font-weight:700}
+.ladder{list-style:none;padding:0;margin:0;display:grid;gap:6px;font-family:var(--f-ui);counter-reset:l}
+.ladder li{counter-increment:l;display:grid;grid-template-columns:36px 1fr;gap:10px;align-items:center;margin:0;border-radius:10px;padding:10px 12px;font-size:14.5px;line-height:1.7;background:color-mix(in srgb,var(--accent) calc(var(--k) * 1%),var(--paper));border:1px solid var(--line)}
+.ladder li::before{content:counter(l,arabic-indic);width:30px;height:30px;border-radius:8px;background:var(--paper);display:grid;place-items:center;font-weight:700;color:var(--accent);border:1.5px solid var(--accent)}
+.fn{display:grid;grid-template-columns:auto 1fr 1fr;gap:8px;font-family:var(--f-ui)}
+.fn>div{border-radius:10px;padding:12px 14px;min-width:0}
+.fn .h{background:transparent;font-weight:700;color:var(--ink-2);font-size:13.5px;text-align:center;align-self:end}
+.fn .rh{background:var(--paper-2);font-weight:700;font-size:15px;display:grid;place-items:center;text-align:center}
+.fn .c{border:1.5px solid var(--line)}
+.fn .c b{display:block;font-size:15.5px;color:var(--accent);margin-bottom:4px}
+.fn .c span{font-size:13.5px;line-height:1.75;color:var(--ink-2)}
+@media (max-width:600px){.fn{grid-template-columns:1fr}.fn .h{display:none}}
+.hyp{border:2px solid var(--accent);border-radius:14px;padding:16px 20px;background:var(--accent-soft);font-size:17.5px;line-height:2.1}
+.hyp .slot{display:inline-block;border-bottom:2px dashed var(--accent);padding:0 6px;font-family:var(--f-ui);font-size:14.5px;color:var(--accent);font-weight:700}
+.tally{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;font-family:var(--f-ui);margin-top:12px}
+.tally>div{border-radius:10px;padding:10px;text-align:center;border:1.5px solid var(--line);font-size:13.5px}
+.tally b{display:block;font-size:24px;font-variant-numeric:tabular-nums}
+.tally .hi{border-color:var(--warn);background:var(--warn-soft);color:var(--warn)}
+@media (max-width:560px){.tally{grid-template-columns:1fr 1fr}}
+.domains{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;font-family:var(--f-ui)}
+.domains>div{border-radius:12px;padding:14px;min-width:0;border:1.5px solid var(--line)}
+.domains b{display:block;font-size:15.5px;margin-bottom:4px;color:var(--accent)}
+.domains span{font-size:13.5px;line-height:1.75;color:var(--ink-2)}
+@media (max-width:680px){.domains{grid-template-columns:1fr 1fr}}
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"><style>:root{--f-body:"Source Serif 4",Georgia,serif;--f-display:"Source Serif 4",Georgia,serif;--f-ui:"IBM Plex Sans",system-ui,sans-serif}.questions li::before{content:counter(q)}html{direction:ltr!important}body{letter-spacing:0;text-align:left}caption{text-align:left!important}.formula small{direction:ltr}.cover svg{left:auto!important;right:0}</style><link rel="stylesheet" href="../assets/platform.css?v=b4c32405"><script>window.BOOK={slug:"diagnosis-identification-en",cur:"ch05.html",lang:"en",title:"Diagnosis and Identification of Exceptional Learners",author:"Dr. Omar A. Alsamani"}</script><script src="../assets/platform.js?v=0d28c8d2" defer></script>
+<link rel="canonical" href="https://alsamani.com/books/diagnosis-identification/en/ch05.html"><link rel="alternate" hreflang="ar" href="https://alsamani.com/books/diagnosis-identification/ch05.html"><link rel="alternate" hreflang="en" href="https://alsamani.com/books/diagnosis-identification/en/ch05.html"><link rel="alternate" hreflang="x-default" href="https://alsamani.com/books/diagnosis-identification/ch05.html"><meta name="description" content="Assessment sometimes reaches beyond the question “What does the student know now?” to more important ones: “How does the student learn when given help?”, “Why does the student behave this way?” and “What can the student produce in a real task?” Traditional tests fall short on these questions,…"><meta name="author" content="Omar A. Alsamani"><meta property="og:title" content="Chapter 3: Formal standardized methods | Diagnosis and Identification of Exceptional Learners | Dr. Omar A. Alsamani"><meta property="og:url" content="https://alsamani.com/books/diagnosis-identification/en/ch05.html"><meta property="og:site_name" content="Dr. Omar A. Alsamani"><meta property="og:locale" content="en_US"><meta name="twitter:card" content="summary"><meta property="og:description" content="Assessment sometimes reaches beyond the question “What does the student know now?” to more important ones: “How does the student learn when given help?”, “Why does the student behave this way?” and “What can the student produce in a real task?” Traditional tests fall short on these questions,…"><script type="application/ld+json">[{"@context": "https://schema.org", "@type": "Chapter", "name": "Alternative methods", "headline": "Chapter 5: Alternative methods", "url": "https://alsamani.com/books/diagnosis-identification/en/ch05.html", "inLanguage": "en", "author": {"@type": "Person", "name": "Omar A. Alsamani", "alternateName": "عمر عبدالله الصمعاني", "url": "https://alsamani.com/", "jobTitle": "Associate Professor", "affiliation": {"@type": "CollegeOrUniversity", "name": "University of Hail"}}, "isPartOf": {"@type": "Book", "name": "Diagnosis and Identification of Exceptional Learners", "url": "https://alsamani.com/books/diagnosis-identification/en/", "author": {"@type": "Person", "name": "Omar A. Alsamani", "alternateName": "عمر عبدالله الصمعاني", "url": "https://alsamani.com/", "jobTitle": "Associate Professor", "affiliation": {"@type": "CollegeOrUniversity", "name": "University of Hail"}}, "inLanguage": "en", "license": "https://creativecommons.org/licenses/by-nc-nd/4.0/", "isAccessibleForFree": true, "bookFormat": "https://schema.org/EBook", "alternativeHeadline": "Learners with disabilities, the gifted and the twice-exceptional", "isbn": "978-603-06-7714-6", "datePublished": "2026"}, "license": "https://creativecommons.org/licenses/by-nc-nd/4.0/", "isAccessibleForFree": true, "description": "Assessment sometimes reaches beyond the question “What does the student know now?” to more important ones: “How does the student learn when given help?”, “Why does the student behave this way?” and “What can the student produce in a real task?” Traditional tests fall short on these questions,…", "keywords": "Introduction, Why do we need alternative methods?, Dynamic assessment, Functional behavioral assessment, Authentic and performance assessment, Play-based assessment and assessment in early childhood, Assessing learners with severe and multiple disabilities, Conclusion, Summary, key terms, and activities"}, {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Dr. Omar A. Alsamani", "item": "https://alsamani.com/"}, {"@type": "ListItem", "position": 2, "name": "Open Library", "item": "https://alsamani.com/books/"}, {"@type": "ListItem", "position": 3, "name": "Diagnosis and Identification of Exceptional Learners", "item": "https://alsamani.com/books/diagnosis-identification/en/"}, {"@type": "ListItem", "position": 4, "name": "Alternative methods", "item": "https://alsamani.com/books/diagnosis-identification/en/ch05.html"}]}]</script></head>
+<body>
+<div class="bp-bar" dir="ltr"><div class="bp-in">
+<a class="bp-home" href="../../../index.html">Dr. Omar A. Alsamani</a><span class="bp-sep">/</span><a href="../../index.html">Open Library</a><span class="bp-sep">/</span><a href="index.html" class="bp-book">Diagnosis and Identification of Exceptional Learners</a>
+<span class="bp-sp"></span><span class="bp-tools"><button class="bp-ic" type="button" data-rd="z-" aria-label="Smaller text" title="Smaller text">A−</button><button class="bp-ic" type="button" data-rd="z+" aria-label="Larger text" title="Larger text">A+</button><button class="bp-ic" type="button" data-rd="theme" aria-label="Dark mode" title="Dark/light mode">Dark</button></span><a class="bp-btn" href="../ch05.html" hreflang="ar" lang="ar">العربية</a><button class="bp-btn" type="button" data-notes>Notes<i hidden></i></button><button class="bp-btn" type="button" data-share>Share</button><button class="bp-btn" type="button" data-bp="search">Search</button><button class="bp-btn solid" type="button" data-bp="toc">Contents</button></div></div>
+<div class="bp-share" id="bpShare" hidden dir="ltr"><b>Share this page</b><button type="button" data-sh="copy">Copy link</button><button type="button" data-sh="native" hidden>Share…</button><a data-sh="wa" target="_blank" rel="noopener">WhatsApp</a><a data-sh="x" target="_blank" rel="noopener">X</a><a data-sh="li" target="_blank" rel="noopener">LinkedIn</a><a data-sh="tg" target="_blank" rel="noopener">Telegram</a><a data-sh="mail">Email</a><small>To share a specific section, hover over its heading and click ¶</small></div>
+<div class="bp-drawer" id="bpDrawer" hidden dir="ltr"><div class="bp-panel" role="dialog" aria-label="Contents and search">
+<div class="bp-head"><b>Diagnosis and Identification of Exceptional Learners</b><button type="button" class="bp-x" data-bp="close" aria-label="Close">×</button></div>
+<div class="bp-search"><input id="bpQ" type="search" placeholder="Search the text of the book…" autocomplete="off"><div id="bpRes"></div></div>
+<nav class="bp-toc" id="bpToc"></nav>
+<div class="bp-links"><a href="../../index.html">Open Library</a><a href="../../../index.html">alsamani.com home</a></div>
+</div></div>
+<div class="page">
+<nav class="booknav"><a href="index.html">→ Diagnosis and Identification of Exceptional Learners</a><span>Part Two: Methods</span></nav>
+<header class="opener">
+<div aria-hidden="true" class="num">5</div>
+<div>
+<div class="kicker">Chapter 5</div>
+<h1>Alternative methods</h1>
+</div>
+<p class="sub">Assessment sometimes reaches beyond the question “What does the student know now?” to more important ones: “How does the student learn when given help?”, “Why does the student behave this way?” and “What can the student produce in a real task?” Traditional tests fall short on these questions, and this chapter presents the methods developed to answer them.</p>
+</header>
+<nav aria-label="Chapter contents" class="toc">
+<b>In this chapter</b>
+<ol>
+<li class="u"><a href="#intro">Introduction</a></li>
+<li value="1"><a href="#s1">Why do we need alternative methods?</a></li>
+<li value="2"><a href="#s2">Dynamic assessment</a></li>
+<li value="3"><a href="#s3">Functional behavioral assessment</a></li>
+<li value="4"><a href="#s4">Authentic and performance assessment</a></li>
+<li value="5"><a href="#s5">Play-based assessment and assessment in early childhood</a></li>
+<li value="6"><a href="#s6">Assessing learners with severe and multiple disabilities</a></li>
+<li class="u"><a href="#conclusion">Conclusion</a></li>
+<li value="7"><a href="#s7">Summary, glossary and activities</a></li>
+</ol>
+</nav>
+<div class="scene">
+<span class="lbl">Three scenes from one school</span>
+<p>In first grade, Nizar, a student who recently moved from another country, scored low on an Arabic vocabulary test. Does he have a language disorder, or has he simply not had enough exposure to Arabic yet?</p>
+<p>In fourth grade, a student throws his book on the floor in almost every math lesson. And every time he is punished, things get worse.</p>
+<p>In sixth grade, Tala, a student with average test scores, single-handedly designed a model of a solar-powered irrigation system for the school garden.</p>
+</div>
+<p>Each of these scenes raises a question that no traditional test can answer, and the methods we take up in this chapter were developed to answer precisely these three questions. Yet, like all assessment methods, they are bound by limits that anyone basing a decision on them must keep in mind, and so we pause on those limits for each method.</p>
+<h3>Chapter objectives</h3>
+<p>After studying this chapter, the reader should be able to:</p>
+<ol class="objectives">
+<li>Apply the test–teach–retest model to a specific task and record the student's response on a graduated prompting scale.</li>
+<li>Interpret the results of a dynamic assessment for a student from a different linguistic background, distinguishing what points to a lack of opportunity from what calls for assessment of a possible disorder.</li>
+<li>Formulate, from antecedent, behavior and consequence data, a hypothesis about the function of a behavior, and specify the evidence needed to confirm it.</li>
+<li>Design an authentic performance task with clear scoring criteria, and critique the reliability of its ratings if it were used in a high-stakes decision.</li>
+<li>Choose between play-based assessment and a standardized developmental test for a child under three, and justify the choice.</li>
+<li>Propose sources of evidence for assessing a student with severe and multiple disabilities for whom standardized instruments are unsuitable.</li>
+<li>Judge whether the evidence an alternative method provides is sufficient for a particular decision in a new case, and justify the judgment.</li>
+</ol>
+<h2 class="unnum" id="intro">Introduction</h2>
+<p>Traditional tests mostly answer a single question: what does the student know now, compared with peers? Yet many diagnostic decisions hinge on other questions. Is a low score a sign of a disorder, or the result of limited opportunities to learn? Why does a behavior persist when punishment has done nothing to stop it? What can a student produce in a real task that a short test does not reveal? And what does a young child, or a student with a severe disability, actually do in daily life when comparison with peers is not meaningful? The three scenes at the start of the chapter illustrate these questions, and each calls for an assessment method suited to it, with limits that must be understood before any decision is built on it.</p>
+<p>We open the chapter by setting out the need for alternative methods and distinguishing them from “alternate assessment” in its regulatory sense (Section 5.1), then present dynamic assessment, with its models, its two formats and its link to response to intervention (Section 5.2). We next turn to functional behavioral assessment, the common functions of behavior and its steps (Section 5.3), then to authentic and performance assessment and their place in identifying gifted learners (Section 5.4), followed by play-based assessment and assessment in early childhood (Section 5.5). We close with the assessment of learners with severe and multiple disabilities (Section 5.6).</p>
+<!-- 1 -->
+<h2 id="s1"><span class="sec">5.1</span>Why do we need alternative methods?</h2>
+<p>Traditional tests, formal and informal alike, usually measure the <strong>product</strong> of learning at a given moment: what does the student know now? This is useful, but it assumes that all students have had equal opportunities to learn, and that performance in the testing situation reflects performance in life. When that assumption does not hold, we need other questions:</p>
+<div class="tw"><table id="tab-5-1">
+<caption>Table 5.1: Alternative methods and the question each one asks.</caption>
+<thead><tr><th>Method</th><th>The question it asks</th><th>Where it is most useful</th></tr></thead>
+<tbody>
+<tr><td>Dynamic assessment</td><td>How does the student learn when we teach? And how much does the student benefit from help?</td><td>Students from different linguistic and cultural backgrounds; distinguishing lack of opportunity from disorder</td></tr>
+<tr><td>—</td><td>What drives the student to this behavior? And what maintains it?</td><td>Behavior problems, and building behavior intervention plans</td></tr>
+<tr><td>Authentic assessment</td><td>What can the student produce in a real, meaningful task?</td><td>Giftedness and creativity, and skills that do not show up on short tests</td></tr>
+<tr><td>Play-based assessment</td><td>How does the young child behave in natural activity?</td><td>Early childhood, and children who do not respond to testing situations</td></tr>
+<tr><td>Assessment in routines and environments</td><td>What does the student actually do, and with what help, in everyday situations?</td><td>Learners with severe and multiple disabilities for whom standardized instruments are unsuitable</td></tr>
+</tbody>
+</table></div>
+<p>These methods have a basis in Saudi regulations. In the section on assessment and diagnosis, the Regulations for Special Education Institutes and Programs call for the use of “formal and informal methods” and for “not relying on the results of a single measure when determining a pupil's eligibility,” and they permit placing a pupil under observation “for a full semester” when needed (Ministry of Education [Al-Ma'arif], 1422 AH [Arabic], Article 80). Alternative methods are what fill this space with organized evidence, rather than leaving observation as a general impression.</p>
+<div class="callout" data-k="warn">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M12 3 2 20h20L12 3Z"></path><path d="M12 10v4M12 17h.01"></path></svg>A note on terminology: “alternative methods” are not “alternate assessment”</div>
+<p>In this chapter we use “alternative methods” to mean methods that complement traditional testing by asking other questions. In the American literature, however, the term <strong>alternate assessment</strong> has a specific regulatory meaning: a statewide achievement test taken by students with the most significant cognitive disabilities, in which their performance is measured against alternate achievement standards rather than grade-level standards. The Every Student Succeeds Act caps the share of students assessed this way at 1% of all students tested in the state in a given subject (Every Student Succeeds Act, 2015). When readers come across the term in a report or study from abroad, it usually carries this narrow regulatory meaning. We discuss the assessment of this group of students in Section 5.6.</p>
+</div>
+<!-- 2 -->
+<h2 id="s2"><span class="sec">5.2</span>Dynamic assessment</h2>
+<p><strong>Dynamic assessment</strong> rests on an idea from the Russian psychologist Lev Vygotsky known as the <strong>zone of proximal development</strong>: the distance between what a child can do alone and what the child can do with help from someone more experienced (Vygotsky, 1978). Two children may earn the same score when each works alone, yet one moves ahead quickly after a simple hint, while the other progresses only with considerable help. This difference does not appear on a traditional test, but it reveals a great deal about their capacity to learn.</p>
+<p>This is why dynamic assessment departs from traditional assessment: the examiner gives up neutrality, deliberately intervening and teaching, and then measures the effect of that teaching. Reuven Feuerstein and his colleagues developed this idea into an instrument called the <strong>Learning Potential Assessment Device</strong> (LPAD), which relies on what Feuerstein called <strong>mediated learning experience</strong>: an adult stands as a mediator between the child and the task, directing the child's attention, organizing information, and helping the child grasp the strategy and transfer it to other situations (Feuerstein et al., 1979).</p>
+<h3>The best-known model: test, teach, retest</h3>
+<figure class="fig-frame" id="fig-5-1">
+<div class="ttr">
+<div class="b"><b>Pretest</b><span>Measure the student's independent performance on a specific task</span></div>
+<div aria-hidden="true" class="a">→</div>
+<div class="b mid"><b>Mediated teaching</b><span>One or two sessions in which the examiner teaches the task strategy and observes how the student responds</span></div>
+<div aria-hidden="true" class="a">→</div>
+<div class="b"><b>Posttest</b><span>Measure performance again on a parallel task and compare it with the first</span></div>
+</div>
+<figcaption><b>Figure 5.1:</b> The test–teach–retest model. More important than the final score are the amount of improvement and the way the student responds during teaching.</figcaption>
+</figure>
+<p>During mediated teaching, the examiner records observations of <strong>modifiability</strong>, that is, how much the student benefits from instruction: Did the student pay attention? Apply the new strategy? Need a great deal of repetition? Transfer it to a slightly different task?</p>
+<h3>Distinguishing difference from disorder</h3>
+<p>One of the most important uses of dynamic assessment is to distinguish a student who performs poorly because of insufficient exposure to the language or skill from one who performs poorly because of a genuine disorder. A study of children from diverse linguistic backgrounds found that children with typical language development improved markedly after two brief sessions on strategies for naming objects, whereas children with a language disorder improved only slightly, even though both groups started with similarly low scores (Peña et al., 2001).</p>
+<figure class="fig-frame" id="fig-5-2">
+<svg aria-label="A line graph of two children&#x27;s performance before and after mediated teaching on a scale from zero to twenty: child (A) rose from 8 to 17, while child (B) rose only from 7 to 9" class="slope" role="img" style="width:100%;height:auto" viewbox="0 0 760 290">
+<line class="gr" x1="170" x2="170" y1="40" y2="240"></line><line class="gr" x1="470" x2="470" y1="40" y2="240"></line>
+<line class="ax" x1="120" x2="520" y1="240" y2="240"></line>
+<text class="tk" text-anchor="end" x="112" y="244">0</text><text class="tk" text-anchor="end" x="112" y="144">10</text><text class="tk" text-anchor="end" x="112" y="44">20</text>
+<line class="gr" x1="120" x2="520" y1="140" y2="140"></line><line class="gr" x1="120" x2="520" y1="40" y2="40"></line>
+<text class="lb" text-anchor="middle" x="170" y="264">Before teaching</text><text class="lb" text-anchor="middle" x="470" y="264">After teaching</text>
+<line class="lA" x1="170" x2="470" y1="160" y2="70"></line><line class="lB" stroke-dasharray="8 5" x1="170" x2="470" y1="170" y2="150"></line>
+<circle class="pA" cx="170" cy="160" r="7"></circle><circle class="pA" cx="470" cy="70" r="7"></circle>
+<rect class="pB" height="14" width="14" x="163" y="170"></rect><rect class="pB" height="14" width="14" x="463" y="143"></rect>
+<text class="tA" text-anchor="end" x="150" y="160">8</text><text class="tA" x="490" y="74">17</text>
+<text class="tB" text-anchor="end" x="150" y="187">7</text><text class="tB" x="490" y="154">9</text>
+<text class="tA" text-anchor="middle" x="610" y="74">Child (A)</text><text class="tk" text-anchor="middle" x="610" y="94">Benefited greatly</text>
+<text class="tB" text-anchor="middle" x="610" y="154">Child (B)</text><text class="tk" text-anchor="middle" x="610" y="174">Benefited little</text>
+</svg>
+<figcaption><b>Figure 5.2:</b> A hypothetical example of two children who both started with low scores (8 and 7 out of 20). Child (A), shown by the solid line and circular markers, jumped to 17 after two sessions, which suggests that the low initial score stemmed from a lack of opportunity. Child (B), shown by the dashed line and square markers, remained low despite the same teaching, which calls for a deeper assessment of a possible disorder.</figcaption>
+</figure>
+<p>Let us return to Nizar in the opening scene. His low score on the vocabulary test says nothing about its cause. So, over two short sessions, the examiner teaches him the names of a new set of objects, along with a strategy: ask for the name of anything he does not know, and link each new name to its category (this is a fruit, this is a kitchen utensil). The examiner then measures how well he learns a parallel set that was not taught. If his performance resembles that of Child (A) in Figure 5.2, learning quickly, transferring the strategy and needing few prompts, this suggests that his low score reflects limited exposure to Arabic, and the appropriate response is intensive language support and monitoring. If it resembles Child (B), the next step is to complete the assessment before any judgment of a language disorder, and among its most important questions is how his first language developed. A true language disorder appears in both languages, whereas difficulty acquiring a second language is confined to the new language.</p>
+<h3>Graduated prompts</h3>
+<p>One form of dynamic assessment has the examiner offer <strong>graduated prompts</strong>, moving from general to specific, and count how many prompts the student needed to reach the answer. A student who needs one general prompt differs greatly from a student who must be given the solution step by step.</p>
+<figure class="fig-frame" id="fig-5-3">
+<ol class="ladder">
+<li style="--k:4">“Think about the problem again.”</li>
+<li style="--k:9">“What is the question asking for? Read it again.”</li>
+<li style="--k:14">“Do you remember a similar problem we solved a little while ago?”</li>
+<li style="--k:20">“Look at these two numbers. How are they related?”</li>
+<li style="--k:27">Show the first step of the solution and ask the student to complete the rest.</li>
+<li style="--k:34">Show the full solution with an explanation, then give a parallel problem.</li>
+</ol>
+<figcaption><b>Figure 5.3:</b> A graduated prompting scale, from most general to most specific. The examiner records the number of the prompt at which the student reached the solution, and then whether the student transferred what was learned to a new problem.</figcaption>
+</figure>
+<h3>Two formats of dynamic assessment</h3>
+<p>Sternberg and Grigorenko distinguish two main formats on which most applications of dynamic assessment are built (Sternberg &amp; Grigorenko, 2002). The first places all the teaching between two tests; the second distributes it across the items themselves, as in the prompting scale above:</p>
+<div class="tw"><table id="tab-5-2">
+<caption>Table 5.2: The two formats of dynamic assessment and what each measures.</caption>
+<thead><tr><th>Format</th><th>How it is administered</th><th>What is recorded</th><th>When it fits</th></tr></thead>
+<tbody>
+<tr><td>“Sandwich” format</td><td>A pretest, then one or more teaching sessions, then a posttest on a parallel task</td><td>The difference between the two tests, and transfer of learning to a new task</td><td>When the aim is to learn the effect of intensive teaching on a specific skill, such as learning new vocabulary</td></tr>
+<tr><td>“Cake” format</td><td>Each item is presented; if the student errs, graduated prompts are given on that same item until the student reaches the solution</td><td>The number and type of prompts on each item, and their decline as the items progress</td><td>When the aim is to build an accurate picture of how much help, and what kind, the student needs</td></tr>
+</tbody>
+</table></div>
+<p>Dynamic assessment also varies in how standardized it is. Some forms are flexible and clinical, with the examiner adapting the mediation to what he or she sees in the student, as in Feuerstein's approach. Others are standardized, with the examiner offering the same prompts in the same order to every student. The flexible forms yield richer information about how the student learns, but the standardized ones make comparisons across students easier and come closer to the requirements of reliability.</p>
+<h3>Dynamic assessment and response to intervention</h3>
+<p>In its underlying idea, dynamic assessment converges with the <strong>response to intervention</strong> (RTI) model discussed in Chapter 6: both look beyond the student's level to ask how the student responds when taught. Grigorenko argued that the two belong to a single family of methodologies whose defining feature is the merging of assessment and intervention into one activity, and she urged RTI proponents to draw on the successes and failures accumulated in dynamic assessment, which predates RTI by decades (Grigorenko, 2009). The practical difference lies in time span and setting: RTI is monitored in the classroom over weeks through repeated measurement, whereas dynamic assessment compresses the same question into one or two sessions run by an examiner. Dynamic assessment can therefore serve as a quick preliminary indicator, but it is no substitute for monitoring the response to genuine intervention in the classroom.</p>
+<div class="callout" data-k="warn">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M12 3 2 20h20L12 3Z"></path><path d="M12 10v4M12 17h.01"></path></svg>Limits of dynamic assessment</div>
+<p>It takes longer than traditional testing, depends heavily on the examiner's skill, and usually lacks norms. It is therefore used as a complement to traditional assessment, and its results are presented descriptively in the report, showing how the student responded to teaching, rather than being reduced to a standard score (Haywood &amp; Lidz, 2007).</p>
+<p>What reviews say about its predictive validity is mixed. Caffrey and two colleagues reviewed twenty-four studies and found that its ability to predict later achievement varied with its form, the student population and the type of criterion: prediction was better when help did not depend on the student's responses, when it was applied to students with disabilities rather than to at-risk or typically developing students, and when the criterion was a criterion-referenced test or an independent dynamic assessment rather than a norm-referenced test or teacher ratings (Caffrey et al., 2008). In a more recent systematic review of fourteen studies on identifying dyslexia, dynamic assessment explained variance in prediction that traditional tests did not, but classification accuracy improved when it was combined with traditional measures, was highest when it targeted skills close to reading such as decoding, and its predictive power declined with age (Dixon et al., 2023). The bottom line: dynamic assessment adds real information, but it cannot by itself serve as the basis for an eligibility decision.</p>
+</div>
+<div class="callout" data-k="pro">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M4 19h16"></path><path d="M6 15l4-6 4 4 4-7"></path></svg>For the specialist: how is benefit from teaching measured?</div>
+<p>The simplest way to measure benefit is to subtract the pretest score from the posttest score. But a difference score is less reliable than either of the two scores, and the higher the correlation between the two tests, the lower the reliability of the difference, because the error in both measurements accumulates in it while the true variance shrinks. The difference is also affected by regression toward the mean: a student whose pretest score was very low because of measurement error will appear to have “benefited” even without teaching. Designers therefore turn to alternatives: relying on the number of prompts needed (the cake format), on the posttest score after statistically controlling for the pretest, or on items that test transfer of learning to an untaught task. The practical rule for anyone reading a dynamic assessment report: read “the score rose by 5 points” together with the kind of help the student needed and the student's ability to transfer.</p>
+</div>
+<!-- 3 -->
+<h2 id="s3"><span class="sec">5.3</span>Functional behavioral assessment</h2>
+<p>When a problem behavior recurs, people tend to explain it by a trait of the student: “stubborn,” “a troublemaker,” “wants attention.” <strong>Functional behavioral assessment</strong> (FBA), by contrast, starts from a different assumption: <strong>every behavior that persists does so because it gets the student something</strong>. Our task is to find out what it gets, that is, what its <strong>function</strong> is. Once we know the function, we can teach the student a more appropriate way to achieve it, and the problem behavior decreases.</p>
+<h3>Four common functions of behavior</h3>
+<p>Functions of behavior are classified along two dimensions: Is the student getting something or escaping something? And does it come from other people or from internal sensation (Iwata et al., 1994)? A single behavior may be maintained by more than one function in the same student.</p>
+<figure class="fig-frame" id="fig-5-4">
+<div class="fn">
+<div class="h"></div><div class="h">From other people or the environment</div><div class="h">From within the body or the senses</div>
+<div class="rh">Getting<br/>something</div>
+<div class="c"><b>Attention or a tangible item</b><span>He screams, and the teacher comes over and talks to him. He cries, and he is given the tablet.</span></div>
+<div class="c"><b>Sensory stimulation</b><span>He rocks his body or makes sounds because the sensation itself is pleasant, and he does it even when alone.</span></div>
+<div class="rh">Escaping<br/>something</div>
+<div class="c"><b>A task or situation</b><span>He throws the book and is sent out of the lesson, so he avoids the difficult task.</span></div>
+<div class="c"><b>An unpleasant sensation</b><span>He covers his ears and leaves the crowded hall to escape the noise, or hits his head when he is in pain.</span></div>
+</div>
+<figcaption><b>Figure 5.4:</b> Four common functions of behavior. The same behavior may serve different functions in different students, so its treatment is built on its function before its form.</figcaption>
+</figure>
+<div class="callout" data-k="myth">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5V14M12 17h.01"></path></svg>Misconception: “He does it to get attention”</div>
+<p>This is the most common explanation in schools, and the most deceptive. Teachers turn to the student after most disruptive behaviors, so attention always seems to be a “consequence” of the behavior. But the presence of attention after a behavior does not mean that attention is what maintains it. The student may be escaping the task, with attention merely a side effect. As we will see under the limits of descriptive assessment below, this confusion is documented in research.</p>
+</div>
+<h3>Steps of functional assessment</h3>
+<ol>
+<li><strong>Define the behavior operationally,</strong> that is, describe it in terms of actions that can be observed and counted, such as “throws the book on the floor” rather than “aggressive” or “uncooperative.”</li>
+<li><strong>Gather indirect information:</strong> interviews with teachers and the family, and questionnaires about when and where the behavior occurs and who is present.</li>
+<li><strong>Direct descriptive observation:</strong> recording what precedes and follows the behavior in its natural settings over several days, known as antecedent-behavior-consequence recording (ABC).</li>
+<li><strong>Formulate a hypothesis</strong> about the function, based on the pattern that emerges in the data.</li>
+<li><strong>Test the hypothesis,</strong> either by trying an intervention built on it and observing its effect, or through an experimental <strong>functional analysis</strong> that systematically varies conditions and is carried out by a behavior analyst (Hanley et al., 2003).</li>
+<li><strong>Build a behavior intervention plan</strong> that teaches the student an acceptable replacement behavior serving the same function.</li>
+</ol>
+<p>The sources of information in these steps differ in the strength of the evidence they provide about function, as Table 5.3 shows:</p>
+<div class="tw"><table id="tab-5-3">
+<caption>Table 5.3: Levels of evidence in functional behavioral assessment.</caption>
+<thead><tr><th>Level</th><th>What it provides</th><th>Its limits</th><th>Who usually carries it out</th></tr></thead>
+<tbody>
+<tr><td>Indirect (interviews and questionnaires)</td><td>A quick picture of the conditions surrounding the behavior, and initial hypotheses</td><td>Depends on the respondent's memory and interpretation, and respondents may disagree</td><td>The teacher, the specialist, and the counselor</td></tr>
+<tr><td>Descriptive (antecedent-behavior-consequence recording)</td><td>An actual pattern from the natural setting</td><td>Correlational: shows what accompanies the behavior, not what causes it</td><td>The teacher after training, and the specialist</td></tr>
+<tr><td>Experimental (functional analysis)</td><td>Causal evidence: one condition is changed and its effect on the behavior observed</td><td>Deliberately evokes the behavior, so it requires a specialist, family consent and safety safeguards</td><td>A behavior analyst</td></tr>
+<tr><td>A trial of an intervention based on the hypothesis</td><td>Practical evidence: does the behavior decrease when the function is met in an acceptable way?</td><td>Slower, and the behavior may improve for other reasons that coincide with the intervention</td><td>The school team under specialist supervision</td></tr>
+</tbody>
+</table></div>
+<h3>Example: Badr and the math book</h3>
+<p>Badr is the fourth grader from the opening scene who throws his book during math lessons. His teacher recorded what came before and after his behavior over ten days, then classified what happened after it, because the consequence that follows a behavior is what maintains it. Here are examples from her record:</p>
+<div class="tw"><table id="tab-5-4">
+<caption>Table 5.4: Examples from Badr's antecedent-behavior-consequence record.</caption>
+<thead><tr><th>What happened before the behavior</th><th>Behavior</th><th>What happened after</th></tr></thead>
+<tbody>
+<tr><td>A worksheet of division problems was handed out</td><td>Threw the book and said, “I don't want to”</td><td>Was sent to the vice principal's office</td></tr>
+<tr><td>Was asked to solve a problem on the board</td><td>Threw the book</td><td>Was seated at the back of the class with no task</td></tr>
+<tr><td>A group mental math activity began</td><td>Threw the book and banged the desk</td><td>Was sent to the school counselor</td></tr>
+<tr><td>Free art lesson</td><td>The behavior did not occur</td><td>Worked quietly</td></tr>
+</tbody>
+</table></div>
+<div class="tally">
+<div class="hi"><b>8</b>Ended with removal from the task</div>
+<div><b>1</b>Ended with teacher attention</div>
+<div><b>1</b>Ended with no change</div>
+<div><b>0</b>In non-academic lessons</div>
+</div>
+<p style="margin-top:14px">The pattern is clear: the behavior occurs when he is asked to do a math task, and it usually ends with his removal from that task. Sending him to the vice principal, which was meant as punishment, in fact gave Badr exactly what he wanted, and this explains why the behavior increased. The hypothesis is formulated as follows:</p>
+<div class="hyp">When <span class="slot">Badr is asked to do a written or public math task</span>, <span class="slot">he throws the book and refuses to work</span>, and this leads to <span class="slot">his removal from the task</span>. The function of the behavior is therefore most likely <span class="slot">escape from the task</span>.</div>
+<p style="margin-top:14px">Yet this hypothesis remains <strong>tentative</strong>, because it rests on a descriptive record that shows what accompanied the behavior, not what caused it. It can be confirmed only by trying an intervention built on it, for instance teaching Badr to ask for a short break, honoring the request, and seeing the throwing decline, or by a functional analysis conducted by a specialist.</p>
+<p>The question the assessment raises next matters for diagnosis: why does Badr escape from math in particular? The answer may reveal an as yet undetected learning disability in mathematics, making the behavior a symptom rather than a separate problem. It is therefore recommended that his math skills be assessed alongside a behavior intervention plan that teaches him to ask for help or a short break instead of throwing the book (O'Neill et al., 2015).</p>
+<div class="callout" data-k="warn">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M12 3 2 20h20L12 3Z"></path><path d="M12 10v4M12 17h.01"></path></svg>Limits of descriptive assessment</div>
+<p>Antecedent-behavior-consequence data are correlational: they record what happens after a behavior, not what maintains it. Thompson and Iwata compared the results of descriptive assessment with those of functional analysis for twelve participants, and the most frequent consequence in the descriptive record matched the actual function in only three cases. Attention was the most frequent consequence following the behavior for eight of them, yet functional analysis confirmed that attention maintained the behavior for only two of those eight (Thompson &amp; Iwata, 2007). In other words, descriptive records tend to inflate the attention function, because adults turn toward disruptive behavior whatever its function.</p>
+<p>Because traditional functional analysis is lengthy and requires controlled conditions, shorter formats suited to schools and clinics have been developed. Among the best known is the <strong>interview-informed synthesized contingency analysis</strong> (IISCA), in which an open-ended interview with the family or teacher is used to identify the conditions most likely to evoke and maintain the behavior; these are then combined into a single test condition and compared with a control condition in which the same reinforcers are available freely (Hanley et al., 2014). Across thirty applications of this format, the analysis took about twenty-five minutes on average (Jessel et al., 2016). A recent review of a full decade of functional analysis research (2012–2022) shows a trend toward shorter sessions, more use in outpatient clinics, and the pairing of analysis with complementary assessments (Melanson &amp; Fahmie, 2023). One criticism of the synthesized format is that it shows what maintains the behavior in combination, without isolating each function separately.</p>
+<p>In all its formats, functional analysis deliberately evokes the problem behavior, so it should be conducted only by a qualified specialist, with written consent from the family and with stated criteria for ending the session if the behavior becomes dangerous.</p>
+</div>
+<div class="callout" data-k="example">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="10" r="3"></circle><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11Z"></path></svg>In the Saudi context: who conducts functional assessment?</div>
+<p>The Regulations assign assessment and diagnosis to a multidisciplinary team whose members include a “behavioral training teacher (psychologist),” and they list among this member's duties the use of formal and informal assessment tools “such as interviews, observation and checklists” (Ministry of Education [Al-Ma'arif], 1422 AH [Arabic], Articles 48–49 and 81). Interviews and descriptive observation, the mainstays of the first two levels in Table 5.3, thus lie at the heart of this team member's role. As for experimental functional analysis, we found no published regulatory text specifying who conducts it in schools or requiring any particular qualification for it.</p>
+<p><em>A question for reflection:</em> If your school has no behavior analyst, what can the team safely do to test a hypothesis such as the one about Badr?</p>
+</div>
+<div class="callout" data-k="key">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9V16h7v-2.1A6 6 0 0 0 12 3Z"></path></svg>Functional assessment and diagnosis</div>
+<p>Functional assessment does not diagnose a disorder, but it complements diagnosis in two ways: it prevents a behavior with a clear function from being read as evidence of an emotional disturbance, and it sometimes uncovers a hidden need, such as a learning disability, sensory sensitivity or a communication weakness.</p>
+</div>
+<!-- 4 -->
+<h2 id="s4"><span class="sec">5.4</span>Authentic and performance assessment</h2>
+<p><strong>Authentic assessment</strong>, and the closely related <strong>performance assessment</strong>, asks students to carry out a task resembling what people do in real life, rather than answer discrete questions. Instead of choosing the correct answer to a question about the area of a rectangle, the student is asked to plan a small garden on a set budget and calculate how much grass and fencing it will need (Wiggins, 1990). Performance is scored with a <strong>rubric</strong>, which is not the same as the “rating scales” a teacher or parent completes about a student's behavior: a rubric sets out <strong>scoring criteria</strong> and describes levels of mastery on each criterion.</p>
+<div class="tw"><table id="tab-5-5">
+<caption>Table 5.5: Traditional testing and authentic assessment.</caption>
+<thead><tr><th>Aspect</th><th>Traditional test</th><th>Authentic assessment</th></tr></thead>
+<tbody>
+<tr><td>Task</td><td>Short, discrete questions</td><td>An integrated task in a real context</td></tr>
+<tr><td>What it measures</td><td>Mostly knowledge and recall</td><td>Application, planning, creativity and communication</td></tr>
+<tr><td>Answer</td><td>Usually one correct answer</td><td>There may be several good solutions</td></tr>
+<tr><td>Scoring</td><td>An answer key</td><td>A rubric with clear scoring criteria</td></tr>
+<tr><td>Weakness</td><td>May not reflect the ability to apply knowledge</td><td>Time-consuming and affected by the scorer and the choice of task, so its reliability needs special attention</td></tr>
+</tbody>
+</table></div>
+<h3>Authentic assessment in identifying gifted learners</h3>
+<p>Authentic assessment has a special place in identifying giftedness, because the abilities of many gifted learners do not show up on standardized tests, especially those from less advantaged linguistic or economic backgrounds and those whose disabilities mask their abilities, namely twice-exceptional learners (discussed in Chapter 13). One of the best-known models here is the DISCOVER project, developed by June Maker, in which trained observers watch children solve problems that range from closed to fully open-ended across several domains, and record their thinking and their solutions (Maker, 1996).</p>
+<p>This model has evidence from an Arab setting. In a study of 248 boys and girls in grades three to five at two private schools in Beirut, DISCOVER ratings of spatial intelligence correlated highly with scores on Raven's Progressive Matrices, while its ratings of linguistic intelligence correlated weakly with them, an expected pattern given that the Raven is a nonverbal test. The model identified 14.5% of the sample, with no differences between boys and girls, and interviews with families and teachers largely supported the results. The researcher concluded that the model is suitable for identification in Lebanon, while calling for further research (Sarouphim, 2009). Note, however, that the sample came from private schools in a single capital city, so the findings cannot be generalized to public or rural schools, and at the time of writing we had found no published study of the model's validity in Saudi schools.</p>
+<p>Tala in the opening scene illustrates what this kind of assessment can reveal. Her average test scores do not capture the problem-solving, design ability and persistence that the real task displayed. This does not mean that she is necessarily gifted, but it does mean that she deserves a broader assessment drawing on other evidence (Chapter 12 covers the identification of gifted learners in detail).</p>
+<h3>Reliability and validity of ratings when the stakes rise</h3>
+<p>The very appeal of authentic assessment makes measurement questions all the more pressing when high-stakes decisions rest on it, such as admission to a program or exclusion from it. Large-scale experience has documented three problems:</p>
+<ul>
+<li><strong>Scorer reliability:</strong> In the US state of Vermont's portfolio assessment program in writing and mathematics, agreement among scorers was so low that the scores could not be used for dependable comparisons between schools and students, even though teachers reported that the program had a positive effect on their teaching practices (Koretz et al., 1994).</li>
+<li><strong>Task variability:</strong> A student's performance on one performance task differs considerably from performance on another task in the same domain, and in the studies of Shavelson and colleagues this source of error was larger than differences among scorers. A dependable judgment therefore requires several tasks, however rich any single task may be (Shavelson et al., 1993).</li>
+<li><strong>Validity beyond appearance:</strong> A task's being “real” does not establish its validity. Linn and two colleagues accordingly proposed criteria for validating complex assessments, among them consequences, fairness, generalizability and transfer, cognitive complexity, content quality and coverage, and cost (Linn et al., 1991).</li>
+</ul>
+<p>The practical upshot: authentic assessment enters the giftedness decision as one piece of evidence among others, not as the sole gateway. It is strengthened by training scorers on the rubric with worked examples, by having each product scored by two independent scorers whose agreement is calculated, and by basing the judgment on more than one task.</p>
+<!-- 5 -->
+<h2 id="s5"><span class="sec">5.5</span>Play-based assessment and assessment in early childhood</h2>
+<p>Young children, especially before school age, cannot sit quietly in front of an unfamiliar examiner who asks them questions, and when they are made to do so, the test measures their fear or boredom more than their abilities. The way around this is to observe the child in the activity most familiar to him or her: play.</p>
+<p>In <strong>play-based assessment</strong>, the child plays in a room with carefully selected toys, first with a parent and then with a trained facilitator, while a multidisciplinary team observes, for example a speech-language pathologist, an occupational therapist, a psychologist and a special education teacher. This model yields information on four developmental domains at once (Linder, 2008):</p>
+<figure class="fig-frame" id="fig-5-5">
+<div class="domains">
+<div><b>Sensorimotor</b><span>How the child moves, grasps objects, and responds to sounds and textures.</span></div>
+<div><b>Emotional and social</b><span>How the child interacts with parents and with a stranger, and expresses and regulates feelings.</span></div>
+<div><b>Communication and language</b><span>How the child requests, comments and understands, through words or gestures.</span></div>
+<div><b>Cognitive</b><span>How the child solves problems, imitates, and engages in pretend play.</span></div>
+</div>
+<figcaption><b>Figure 5.5:</b> The four developmental domains the team observes during a single play-based assessment session.</figcaption>
+</figure>
+<p>Some standardized instruments are built on the same idea, such as the Autism Diagnostic Observation Schedule (ADOS-2), which uses standardized play activities to elicit and observe communication and social interaction behaviors. The difference is that play-based assessment is more flexible and covers all areas of development, whereas the ADOS-2 is standardized and focused on the features of autism spectrum disorder (Chapter 9 discusses it in detail).</p>
+<div class="callout" data-k="teacher">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M3 8l9-4 9 4-9 4-9-4Z"></path><path d="M7 10v5c0 1.5 2.5 3 5 3s5-1.5 5-3v-5"></path></svg>For the early childhood teacher</div>
+<p>Free play time in kindergarten is a daily opportunity for assessment that the child does not even notice. Watch: Whom does the child play with? Does the child imitate other children? Engage in pretend play, such as feeding a doll? How does the child react when another child takes away a toy? Record your observations systematically: the date and time, the situation, and exactly what the child did and said, in words that describe what you saw rather than what you infer.</p>
+</div>
+<h3>Assessment from birth to three: what is different?</h3>
+<p>Assessing an infant or a child under three is not assessing an older child with smaller tools. Development in these years is rapid and uneven, the child is not assessed in isolation from the family, and the first aim is to determine who needs <strong>early intervention</strong> and what they need; classification comes later. In the United States, for example, this stage is covered by Part C of the Individuals with Disabilities Education Act (IDEA), under which eligibility rests on a developmental delay defined by each state or on a diagnosed condition likely to result in delay, and the child receives an individualized family service plan rather than an individualized education program (Individuals with Disabilities Education Act, 2004). Table 5.6 summarizes what follows from the characteristics of this stage:</p>
+<div class="tw"><table id="tab-5-6">
+<caption>Table 5.6: Characteristics of assessment from birth to three and what they mean for the assessor.</caption>
+<thead><tr><th>Characteristic of the stage</th><th>What it means for the assessor</th></tr></thead>
+<tbody>
+<tr><td>Development is rapid and irregular, and performance is affected by sleep, hunger, illness and familiarity</td><td>Scores at this age are less stable and weaker predictors of the future than at school age. No lasting judgment should rest on a single session, and assessment is repeated at short intervals</td></tr>
+<tr><td>Many instruments for young children lack adequate floors and appropriate item gradients</td><td>Two children who differ in ability may obtain the same lowest score. Before choosing an instrument, check the technical manual for the floor and item gradient at the child's age (Bracken, 1987)</td></tr>
+<tr><td>The family is the most important source of information and the primary partner in services</td><td>The family is involved in planning the assessment, carrying it out and interpreting its results, and is asked about its priorities, concerns and daily routines</td></tr>
+<tr><td>The child shows his or her best in a familiar environment</td><td>Observation at home or in daycare during daily routines, such as eating, dressing and playing, is preferred over the testing room alone</td></tr>
+<tr><td>Developmental domains are intertwined</td><td>The child is assessed by a multidisciplinary team, using multiple methods that combine parent report, observation, and a standardized instrument</td></tr>
+</tbody>
+</table></div>
+<p>The recommended practices in early intervention affirm these principles: involving the family, using multiple methods and sources, assessing in natural environments, and matching instruments to the child's language and culture (Division for Early Childhood, 2014). This does not mean dispensing with standardized instruments. When the extent of delay must be determined for an eligibility decision, an individually administered standardized developmental instrument is used, such as the Bayley Scales of Infant and Toddler Development, Fourth Edition (<span class="en">Bayley-4</span>), which covers ages 16 days to 42 months in the cognitive, language, and motor domains and is supplemented by measures of social-emotional and adaptive behavior (Bayley &amp; Aylward, 2019). The standardized instrument and play do not compete: the first answers “How much delay?” relative to peers, and the second answers “How does the child function?” in everyday life.</p>
+<div class="callout" data-k="example">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="10" r="3"></circle><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11Z"></path></svg>In the Saudi context: Early intervention and early detection</div>
+<p><strong>The legal framework:</strong> Article 8 of the Law on the Rights of Persons with Disabilities provides for “designing and implementing early intervention programs for children with disabilities” and for providing and adapting “modern assessment and diagnostic tools” (Law on the Rights of Persons with Disabilities, 1445 AH [Arabic]). The Special Education Organizational Guide defines two groups in early intervention: <strong>developmentally delayed</strong> children, who show a delay “of two standard deviations below the mean in two or more domains” or “at a rate of 25%,” and children <strong>at risk</strong>, who have been exposed to at least three environmental risk factors, provided that the child is no older than six (Ministry of Education, 1436 AH [Arabic]).</p>
+<p><strong>An example of the delay percentage:</strong> Ghaith is two and a half (32 months old), and his communication performance is equivalent to that of a 24-month-old. The delay is 8 months out of 32, or 25%, so he reaches the stated threshold in this domain. Caution is needed with this method, however: age equivalents are not equal units, a delay of eight months at age two is not the same as at age five, and an age equivalent is less reliable than a standard score. It is therefore advisable to pair the percentage calculation with a standard score from a standardized instrument and with observation of the child in daily routines.</p>
+<p><strong>Detection at birth:</strong> The “National Newborn Screening Program for the Prevention of Disability” has operated since 2005. It screens newborns within the first 24–72 hours, and the number of conditions covered has stood at seventeen since 1435 AH (Ministry of Health, 2016 [Arabic]). A national newborn hearing screening program has operated since 2016, and in 2021 its coverage reached about 92.6% of newborns (Alothman et al., 2024). A recent systematic review, however, identified challenges, including low awareness, loss to follow-up after referral, and weak data-tracking systems (Alanazi &amp; Nicholson, 2025). Detection at birth is thus no substitute for monitoring development afterward, and most cases of developmental delay are not detected by newborn screening.</p>
+<p><em>A question for reflection:</em> If a two-year-old girl were referred to you for delayed speech, from what sources would you gather evidence before deciding that she meets the Guide's threshold for “developmental delay”?</p>
+</div>
+<!-- 6 -->
+<h2 id="s6"><span class="sec">5.6</span>Assessing learners with severe and multiple disabilities</h2>
+<p>The Kingdom's Special Education Organizational Guide includes “multiple disabilities” and “deafblindness” among its categories (Ministry of Education, 1436 AH [Arabic]). Students in these two categories, along with those with severe intellectual disability, are the ones most failed by standardized instruments. Most tests assume that the student can see the materials, hear the instructions, point or speak to respond, and sustain attention for several minutes at a stretch. If any of these conditions is missing, the test no longer measures what it was designed to measure. Even when it can be administered, the student's score often falls at the test's floor, so it neither distinguishes one student from another nor says anything about what the student can actually do. Adapting the administration may enable the student to respond, but it takes the test outside its standardization conditions, so the score can no longer be validly compared with the norms.</p>
+<p>For this group, the question therefore shifts from “Where does the student stand relative to peers?” to “What does the student do now, with what help, and what is the next step that can be taught?” All the alternative methods converge in answering it:</p>
+<div class="tw"><table id="tab-5-7">
+<caption>Table 5.7: Sources of evidence when standardized instruments are not suitable.</caption>
+<thead><tr><th>Source</th><th>What it answers</th><th>Example</th></tr></thead>
+<tbody>
+<tr><td>Observation during daily routines on repeated occasions</td><td>What the student actually does, and how much help is needed at each step</td><td>At breakfast: Does he reach toward the cup? Does he open his mouth as the spoon approaches?</td></tr>
+<tr><td>Interviews with the family and those who work with the student daily</td><td>The student's best performance, and how he expresses wanting, refusal, and distress</td><td>“He calms down when he hears his brother's voice”; “He turns his head away when he doesn't want the food”</td></tr>
+<tr><td>Assessment of pre-symbolic communication</td><td>By what means he communicates: body movement, vocalization, gesture, a tangible object, or a picture</td><td>He touches the cup to ask for water, so the cup becomes a tactile symbol to build on</td></tr>
+<tr><td>Functional vision and hearing assessment</td><td>How he uses his available vision and hearing in real-life situations, alongside clinical acuity</td><td>From what distance and on which side does he turn toward a light-up toy?</td></tr>
+<tr><td>Preference assessment</td><td>What he likes that could serve as a reinforcer in instruction</td><td>Presenting two items together and recording which one he chooses across several trials</td></tr>
+<tr><td>Response to structured instruction</td><td>Does he learn a specific skill when it is taught in consistent steps, and how quickly?</td><td>Daily data on the number of successful trials on a single skill, which is the very logic of dynamic assessment</td></tr>
+</tbody>
+</table></div>
+<p>In this group, the student's health has a large effect on performance: fatigue, seizures, medication, and body positioning can change the picture from one day to the next. Evidence is therefore gathered over several days and at different times, and each observation is recorded together with whatever is affecting the student's condition that day. The assessment involves a team that includes the family, the special education teacher, and specialists in movement, communication, vision, and hearing as the case requires, which is also what the Organizational Guide's requirement of “not relying on the results of a single measure” demands (Ministry of Education, 1436 AH [Arabic]). The chapters on specific categories treat the assessment of severe intellectual disability and of sensory and multiple disabilities in greater detail.</p>
+<h2 class="unnum" id="conclusion">Conclusion</h2>
+<p>What unites the methods we have examined in this chapter is that they shift the question from the student's standing among peers to what the student's performance reveals under specific conditions: response to instruction in dynamic assessment, the function of behavior in functional assessment, production in a real task in authentic assessment, and what young children and learners with severe disabilities do in their daily routines. It follows that behavior should be understood before it is addressed, since what is meant as punishment may be the very thing that maintains the behavior if its function is escape, and that a low score from a student with little exposure to the language of instruction should be treated as a question about opportunity before it is taken as evidence of a disorder.</p>
+<p>These methods have their limits as well. The predictive value of dynamic assessment varies, so it cannot by itself serve as the basis for an eligibility decision; a hypothesis built on a descriptive record remains tentative until an intervention trial or a functional analysis confirms it; rater reliability and task variability make authentic assessment one piece of evidence among others; and scores in the early years are unstable. The value of these methods lies in completing and enriching the picture drawn by conventional tests.</p>
+<!-- 7 -->
+<h2 id="s7"><span class="sec">5.7</span>Summary, key terms, and activities</h2>
+<h3>Chapter summary</h3>
+<div class="summary"><ul>
+<li>Alternative methods pose questions that conventional tests do not answer: How does the student learn? Why does the student behave this way? What does the student produce in a real task? What does the student do in daily life? They are distinct from “alternate assessment” in its U.S. regulatory sense.</li>
+<li>Dynamic assessment measures response to instruction in a “sandwich” or “cake” format and helps distinguish lack of opportunity from a genuine disorder. It adds predictive value to conventional tests, but that value varies, so it cannot by itself serve as the basis for an eligibility decision.</li>
+<li>Dynamic assessment and response to intervention belong to the same family: the first compresses the question into a single session, while the second tracks it in the classroom over weeks.</li>
+<li>Functional assessment looks for the function of a behavior, and the common functions are four: obtaining something or escaping it, whether from other people or from sensory experience. What is meant as punishment may be what maintains the behavior if its function is escape.</li>
+<li>A descriptive record is correlational and tends to overstate the attention function, so a hypothesis built on it is tentative until an intervention trial or a functional analysis conducted by a specialist confirms it.</li>
+<li>Authentic assessment reveals abilities that do not show up on short tests, and it is important in identifying gifted students. Rater reliability and task variability, however, require that it be one piece of evidence among others, based on more than one task and two independent raters.</li>
+<li>Play-based assessment suits young children. Assessment below age three centers on the family, the natural environment, and the team, and it combines play with a standardized developmental instrument, with caution about the instability of scores at this age.</li>
+<li>With learners who have severe and multiple disabilities, the question shifts from comparison with peers to what the student does now and with what help; evidence is gathered from routines, the family, communication assessment, preference assessment, and response to structured instruction.</li>
+</ul></div>
+<h3>Glossary of terms</h3>
+<dl class="gloss">
+<dt>Alternate assessment</dt><dd>In the U.S. system: an achievement test based on alternate achievement standards for students with the most significant cognitive disabilities; it does not refer to the “alternative methods” of this chapter.</dd>
+<dt>Zone of proximal development</dt><dd>The distance between what a child can do alone and what the child can do with help from someone more experienced.</dd>
+<dt>Dynamic assessment</dt><dd>Assessment in which the examiner deliberately intervenes and teaches, then measures the effect of the teaching and how the student responds to it.</dd>
+<dt>Mediated learning experience</dt><dd>Learning in which an adult stands as a mediator between the child and the task, directing the child's attention, organizing information, and helping the child transfer what has been learned.</dd>
+<dt>Graduated prompts</dt><dd>Aids the examiner provides, moving from the most general to the most specific, with a record of how many the student needed to reach the solution.</dd>
+<dt>Sandwich and cake formats</dt><dd>Two formats of dynamic assessment: the first places teaching between a pretest and a posttest, and the second provides prompts within each item.</dd>
+<dt>Modifiability</dt><dd>The extent to which a student benefits from mediated teaching and can transfer what has been learned.</dd>
+<dt>Functional behavioral assessment</dt><dd>A process for determining the function of a problem behavior and the conditions that trigger and maintain it.</dd>
+<dt>Behavior function</dt><dd>What a behavior achieves for the person, such as gaining attention or escaping a task.</dd>
+<dt>Descriptive assessment</dt><dd>Recording what precedes and follows a behavior in its natural settings without changing the conditions; it shows what accompanies the behavior, not what causes it.</dd>
+<dt>Functional analysis</dt><dd>Systematically changing conditions to test a hypothesis about the function of a behavior experimentally.</dd>
+<dt>Interview-informed synthesized contingency analysis</dt><dd>An abbreviated form of functional analysis that combines the conditions identified in an open-ended interview into a single test condition compared with a control condition.</dd>
+<dt>Behavior intervention plan</dt><dd>A plan based on the results of a functional assessment that teaches the student a replacement behavior serving the same function and changes the conditions that trigger the problem behavior.</dd>
+<dt>Authentic assessment</dt><dd>Assessment that requires performing tasks resembling real-life tasks, scored with rubrics.</dd>
+<dt>Rubric</dt><dd>A scoring tool that specifies the scoring criteria and the levels of mastery on each criterion, used in assessing open-ended tasks. It differs from rating scales, with which a teacher or parent rates a student's behavior.</dd>
+<dt>Play-based assessment</dt><dd>Observing a young child during play to assess the various developmental domains.</dd>
+<dt>Early intervention</dt><dd>Services provided to young children who are developmentally delayed or at risk of delay, and to their families; each country's legal system sets the age range and eligibility criteria.</dd>
+</dl>
+<h3>Review questions</h3>
+<ol>
+<li>How does the examiner's role in dynamic assessment differ from that in a standardized test? And why is a rise in score between pretest and posttest not, by itself, sufficient evidence of benefit?</li>
+<li>Two students who recently arrived from another country obtained low scores on a vocabulary test. Design a simple dynamic assessment to help distinguish the student whose low score reflects limited exposure to Arabic from the one who may have a language disorder, and specify what you need to know about their home language before reaching a judgment.</li>
+<li>True or false? Explain: “Since dynamic assessment measures the ability to learn directly, it is sufficient on its own to determine a student's eligibility for learning disabilities services.”</li>
+<li>A girl screams at recess when other children approach her. Propose two possible functions for this behavior, and specify the data that would distinguish between them.</li>
+<li>Why did Badr's behavior increase despite punishment? Why does the hypothesis about the function of his behavior remain tentative? And what would confirm it?</li>
+<li>Design an authentic performance task in science for fifth graders, with three scoring criteria and clear performance levels. Then explain what would be needed for its results to serve as evidence in an admission decision for a gifted program.</li>
+<li>When would you prefer play-based assessment to a standardized developmental test for a two-year-old? And when would you still need the standardized test?</li>
+<li>A six-year-old girl has a severe physical disability and severe visual impairment and does not speak. Name four sources of evidence on which to base her assessment, and explain what each source contributes.</li>
+</ol>
+<article class="case">
+<div class="case-head"><h3>Case for application: Hattan, age 14, Grade 8</h3></div>
+<p><strong>The story:</strong> Hattan's teachers referred his behavior to the school team because he “provokes the teacher until he gets sent out of class,” and they believe he “likes his classmates to laugh at him.” A team member recorded what preceded and followed his behavior in English and science classes over eight days; mathematics and physical education classes were not recorded. Hattan's grades in mathematics are good, and he participates orally there, but his grades in reading-dependent subjects are low, and his reading has never been assessed.</p>
+<div class="tw"><table id="tab-5-8">
+<caption>Table 5.8: Summary of Hattan's antecedent-behavior-consequence record (eight incidents over eight days).</caption>
+<thead><tr><th>What happened before the behavior</th><th>Frequency</th><th>What happened after</th></tr></thead>
+<tbody>
+<tr><td>He was asked to read a passage or question aloud in front of the class</td><td>5</td><td>Sent out of class (4); reprimanded by the teacher in front of classmates, who laughed (1)</td></tr>
+<tr><td>Group work began in which students took turns reading the instructions</td><td>2</td><td>Classmates laughed and the teacher excused him from his turn to read (1); reprimanded by the teacher (1)</td></tr>
+<tr><td>The teacher explained the lesson orally</td><td>1</td><td>Nothing changed</td></tr>
+</tbody>
+</table></div>
+<p><strong>Tasks:</strong> (a) Formulate two competing hypotheses about the function of the behavior, and show which data support each. (b) Is this evidence sufficient for a confident hypothesis? Justify your judgment, and identify the missing evidence and how you would gather it. (c) What would you propose assessing in addition to the behavior, and why?</p>
+</article>
+<div class="tw"><table id="tab-5-9">
+<caption>Table 5.9: Mapping chapter objectives to questions and activities.</caption>
+<thead><tr><th>Objective</th><th>Questions</th><th>Activities</th></tr></thead>
+<tbody>
+<tr><td>1 Applying the test-teach-retest model</td><td>1, 2</td><td>1</td></tr>
+<tr><td>2 Interpreting a dynamic assessment of a student from a different linguistic background</td><td>2</td><td>1</td></tr>
+<tr><td>3 Formulating a hypothesis about the function of behavior and identifying the evidence to confirm it</td><td>4, 5, Hattan's case</td><td>2</td></tr>
+<tr><td>4 Designing an authentic task and critiquing the reliability of its scoring</td><td>6</td><td>3</td></tr>
+<tr><td>5 Choosing between play and a standardized developmental test</td><td>7</td><td>—</td></tr>
+<tr><td>6 Sources of evidence for learners with severe and multiple disabilities</td><td>8</td><td>4</td></tr>
+<tr><td>7 Judging the sufficiency of evidence from an alternative method</td><td>3, Hattan's case</td><td>3</td></tr>
+</tbody>
+</table></div>
+<h3>Learning activities</h3>
+<p>For any activity carried out with a student or child: it is conducted with the consent of the family and the school administration, without any data that identify the student, and under professional supervision; no decision is based on its results, and they are communicated only through official channels.</p>
+<ol>
+<li><strong>A dynamic session</strong> (about two hours): Choose a task, such as sorting pictures or solving shape puzzles, and apply the test-teach-retest model to it with a child, recording the number of the prompt needed on each item on a scale like the one in Figure 5.3. <em>Product:</em> a table of prompts and a paragraph interpreting modifiability and the limits of what you can conclude. <em>Desk alternative:</em> conduct the session with an adult colleague on a task unfamiliar to them, such as learning a writing system they do not know.</li>
+<li><strong>Functional assessment</strong> (five days of recording and an hour of analysis): Choose a recurring behavior of a student, record what comes before and after it, then classify the results and formulate a hypothesis modeled on the one about Badr. <em>Product:</em> the record table, the hypothesis, and a two-step plan for confirming it through an intervention trial. <em>Desk alternative:</em> record in the same way a behavior of your own, such as procrastinating on a task or browsing your phone while studying.</li>
+<li><strong>An authentic task and the reliability of its scoring</strong> (about three hours): Design an open-ended task for solving a problem from the school environment, with a three-criterion rubric, and try it out with a small group. Then have a colleague score the same products independently of you. <em>Product:</em> the task and its rubric, the percentage of agreement between you on each criterion, and a paragraph on the reasons for disagreement and what is needed to improve the rubric.</li>
+<li><strong>An assessment plan for a student with multiple disabilities</strong> (desk activity, about one hour): Drawing on Table 5.7, write an assessment plan for the girl in Question 8: who takes part, where and how often she is observed, what questions are put to the family, and how the evidence is recorded. <em>Product:</em> a one-page plan.</li>
+</ol>
+<h3>Chapter references</h3>
+<ol class="refs">
+<li>Law on the Rights of Persons with Disabilities, Royal Decree No. (M/27) (11/2/1445 AH) [In Arabic]. https://ymplatform.com/sdys/</li>
+<li>Ministry of Education. (1436 AH). <i>[Special education organizational guide]</i> [In Arabic] (1st ed., academic year 1436–1437 AH). https://moe.gov.sa/en/aboutus/aboutministry/RPRLibrary/الدليل%20التنظيمي%20للتربية%20الخاصة.pdf</li>
+<li>Ministry of Health. (2016). <i>[The national newborn screening program for the prevention of disability: Operational manual]</i> [In Arabic]. https://www.moh.gov.sa/en/Ministry/About/Health%20Policies/019.pdf</li>
+<li>Ministry of Education [Al-Ma'arif]. (1422 AH). <i>[Regulations for Special Education Institutes and Programs]</i> [In Arabic]. https://moe.gov.sa/en/aboutus/aboutministry/RPRLibrary/القواعد%20التنظيمية%20لمعاهد%20وبرامج%20التربية%20الخاصة%201422%20هـ.pdf</li>
+<li>Alanazi, A. A., &amp; Nicholson, N. (2025). Challenges of newborn hearing screening programs in Saudi Arabia: A systematic review. <i>Audiology Research, 15</i>(2), Article 34. https://doi.org/10.3390/audiolres15020034</li>
+<li>Alothman, N., Elbeltagy, R., &amp; Mulla, R. (2024). Universal newborn hearing screening program in Saudi Arabia: Current insight. <i>Journal of Otology, 19</i>(1), 35–39. https://doi.org/10.1016/j.joto.2024.01.002</li>
+<li>Bayley, N., &amp; Aylward, G. P. (2019). <i>Bayley Scales of Infant and Toddler Development</i> (4th ed.). Pearson.</li>
+<li>Bracken, B. A. (1987). Limitations of preschool instruments and standards for minimal levels of technical adequacy. <i>Journal of Psychoeducational Assessment, 5</i>(4), 313–326.</li>
+<li>Caffrey, E., Fuchs, D., &amp; Fuchs, L. S. (2008). The predictive validity of dynamic assessment: A review. <i>The Journal of Special Education, 41</i>(4), 254–270.</li>
+<li>Division for Early Childhood. (2014). <i>DEC recommended practices in early intervention/early childhood special education 2014</i>. http://www.dec-sped.org/recommendedpractices</li>
+<li>Dixon, C., Oxley, E., Nash, H., &amp; Gellert, A. S. (2023). Does dynamic assessment offer an alternative approach to identifying reading disorder? A systematic review. <i>Journal of Learning Disabilities, 56</i>(6), 423–439. https://doi.org/10.1177/00222194221117510</li>
+<li>Every Student Succeeds Act, 20 U.S.C. § 6301 et seq. (2015).</li>
+<li>Feuerstein, R., Rand, Y., &amp; Hoffman, M. B. (1979). <i>The dynamic assessment of retarded performers: The learning potential assessment device</i>. University Park Press.</li>
+<li>Grigorenko, E. L. (2009). Dynamic assessment and response to intervention: Two sides of one coin. <i>Journal of Learning Disabilities, 42</i>(2), 111–132.</li>
+<li>Hanley, G. P., Iwata, B. A., &amp; McCord, B. E. (2003). Functional analysis of problem behavior: A review. <i>Journal of Applied Behavior Analysis, 36</i>(2), 147–185.</li>
+<li>Hanley, G. P., Jin, C. S., Vanselow, N. R., &amp; Hanratty, L. A. (2014). Producing meaningful improvements in problem behavior of children with autism via synthesized analyses and treatments. <i>Journal of Applied Behavior Analysis, 47</i>(1), 16–36.</li>
+<li>Haywood, H. C., &amp; Lidz, C. S. (2007). <i>Dynamic assessment in practice: Clinical and educational applications</i>. Cambridge University Press.</li>
+<li>Individuals with Disabilities Education Act, 20 U.S.C. § 1400 et seq. (2004); implementing regulations for infants and toddlers (Part C) 34 CFR Part 303.</li>
+<li>Iwata, B. A., Dorsey, M. F., Slifer, K. J., Bauman, K. E., &amp; Richman, G. S. (1994). Toward a functional analysis of self-injury. <i>Journal of Applied Behavior Analysis, 27</i>(2), 197–209. (Original work published 1982)</li>
+<li>Jessel, J., Hanley, G. P., &amp; Ghaemmaghami, M. (2016). Interview-informed synthesized contingency analyses: Thirty replications and reanalysis. <i>Journal of Applied Behavior Analysis, 49</i>(3), 576–595.</li>
+<li>Koretz, D., Stecher, B., Klein, S., &amp; McCaffrey, D. (1994). The Vermont portfolio assessment program: Findings and implications. <i>Educational Measurement: Issues and Practice, 13</i>(3), 5–16. https://doi.org/10.1111/j.1745-3992.1994.tb00443.x</li>
+<li>Linder, T. (2008). <i>Transdisciplinary play-based assessment</i> (2nd ed.). Paul H. Brookes.</li>
+<li>Linn, R. L., Baker, E. L., &amp; Dunbar, S. B. (1991). Complex, performance-based assessment: Expectations and validation criteria. <i>Educational Researcher, 20</i>(8), 15–21.</li>
+<li>Maker, C. J. (1996). Identification of gifted minority students: A national problem, needed changes and a promising solution. <i>Gifted Child Quarterly, 40</i>(1), 41–50.</li>
+<li>Melanson, I. J., &amp; Fahmie, T. A. (2023). Functional analysis of problem behavior: A 40-year review. <i>Journal of Applied Behavior Analysis, 56</i>(2), 262–281. https://doi.org/10.1002/jaba.983</li>
+<li>O'Neill, R. E., Albin, R. W., Storey, K., Horner, R. H., &amp; Sprague, J. R. (2015). <i>Functional assessment and program development for problem behavior: A practical handbook</i> (3rd ed.). Cengage Learning.</li>
+<li>Peña, E., Iglesias, A., &amp; Lidz, C. S. (2001). Reducing test bias through dynamic assessment of children's word learning ability. <i>American Journal of Speech-Language Pathology, 10</i>(2), 138–154.</li>
+<li>Sarouphim, K. M. (2009). The use of a performance assessment for identifying gifted Lebanese students: Is DISCOVER effective? <i>Journal for the Education of the Gifted, 33</i>(2), 275–295. https://doi.org/10.1177/016235320903300206</li>
+<li>Shavelson, R. J., Baxter, G. P., &amp; Gao, X. (1993). Sampling variability of performance assessments. <i>Journal of Educational Measurement, 30</i>(3), 215–232.</li>
+<li>Sternberg, R. J., &amp; Grigorenko, E. L. (2002). <i>Dynamic testing: The nature and measurement of learning potential</i>. Cambridge University Press.</li>
+<li>Thompson, R. H., &amp; Iwata, B. A. (2007). A comparison of outcomes from descriptive and functional analyses of problem behavior. <i>Journal of Applied Behavior Analysis, 40</i>(2), 333–338.</li>
+<li>Vygotsky, L. S. (1978). <i>Mind in society: The development of higher psychological processes</i>. Harvard University Press.</li>
+<li>Wiggins, G. (1990). The case for authentic assessment. <i>Practical Assessment, Research, and Evaluation, 2</i>(2), Article 2.</li>
+</ol>
+<div aria-hidden="true" class="endmark">✦ ✦ ✦</div>
+<aside class="bp-cite" dir="ltr"><b>How to cite this section</b><p class="bp-ref">Alsamani, O. A. (2026). Chapter 3: Formal standardized methods. In <i>Diagnosis and Identification of Exceptional Learners</i>. alsamani.com. https://alsamani.com/books/diagnosis-identification/en/ch05.html</p><p class="bp-lic2">© 2026 Dr. Omar A. Alsamani. Free to read, download, share and quote for non-commercial purposes with attribution to the author and source.</p></aside>
+<nav class="pager"><a href="ch04.html"><small>Previous chapter</small><b>Informal methods</b></a><a class="next" href="ch06.html"><small>Next chapter</small><b>Identification models</b></a></nav>
+</div>
+<footer class="bp-foot" dir="ltr"><div class="bp-fin"><a class="bp-fid" href="../../../index.html"><span class="bp-fmark">OA</span><b>Dr. Omar A. Alsamani</b></a>
+<nav><a href="../../../index.html">Updates</a><a href="../../../books/index.html">Open Library</a><a href="../../../publications/index.html">Publications</a><a href="../../../tools/index.html">Tools</a><a href="../../../photography/index.html">Photography</a><a href="../../../about/index.html">About</a><a href="../../../contact/index.html">Contact</a></nav><p><bdi dir="ltr">© 2007–2026 alsamani.com</bdi></p><div class="pv" id="pv" dir="ltr" hidden></div></div></footer><script>(function(){{var el=document.getElementById('pv');if(!el)return;var live=/(^|\.)alsamani\.com$/.test(location.hostname);
+fetch('https://abacus.jasoncameron.dev/'+(live?'hit':'get')+'/alsamani-com/views').then(function(r){{return r.json()}}).then(function(d){{
+if(typeof d.value!=='number')return;var s=String(d.value);while(s.length<4)s='0'+s;
+el.innerHTML=s.split('').map(function(){{return '<span class="pv-d"><span class="pv-s">0<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9</span></span>'}}).join('');
+el.hidden=false;var cells=el.querySelectorAll('.pv-s');
+requestAnimationFrame(function(){{requestAnimationFrame(function(){{s.split('').forEach(function(c,i){{cells[i].style.transform='translateY('+(-c*10)+'%)'}})}})}})}}).catch(function(){{}})}})();
+</script><style>.bp-foot{box-shadow:0 0 0 100vmax var(--bpf,#F5F5F7);clip-path:inset(0 -100vmax);background:#F5F5F7;color:#6E6E73;font:13px/1.6 -apple-system,BlinkMacSystemFont,"IBM Plex Sans Arabic","Inter",sans-serif;margin-top:56px;padding:36px 20px calc(36px + env(safe-area-inset-bottom))}
+.bp-fin{max-width:1120px;margin:0 auto;display:flex;flex-wrap:wrap;gap:18px 40px;align-items:center;justify-content:space-between}
+.bp-fid{display:flex;align-items:center;gap:10px;color:#1D1D1F!important;text-decoration:none}.bp-fid b{font-weight:600}
+.bp-fmark{width:30px;height:30px;border:1px solid currentColor;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:600;letter-spacing:.04em}
+.bp-foot nav{display:flex;flex-wrap:wrap;gap:6px 22px}.bp-foot nav a{color:#6E6E73!important;text-decoration:none}.bp-foot nav a:hover{color:#1D1D1F!important}
+.bp-foot p{margin:0;flex-basis:100%;font-size:12px;border-top:1px solid #D2D2D7;padding-top:14px}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .bp-foot{--bpf:#161617;background:#161617;color:#A1A1A6}:root:not([data-theme="light"]) .bp-fid{color:#F5F5F7!important}}
+:root[data-theme="dark"] .bp-foot{--bpf:#161617;background:#161617;color:#A1A1A6}:root[data-theme="dark"] .bp-fid{color:#F5F5F7!important}
+@media print{.bp-foot{display:none}}</style><style>.pv{display:flex;justify-content:center;gap:4px;margin:14px auto 4px;grid-column:1/-1;width:100%}
+.bp-fin>p{text-align:center;width:100%}
+.pv[hidden]{display:none}
+.pv-d{display:inline-block;width:1.25em;height:1.7em;overflow:hidden;border-radius:6px;background:var(--bg,#fff);box-shadow:inset 0 0 0 1px var(--line,#d2d2d7);font:500 13px/1.7em "SF Mono",ui-monospace,Menlo,monospace;text-align:center;color:var(--ink,#1d1d1f)}
+.pv-s{display:block;transition:transform 1.4s cubic-bezier(.2,.8,.2,1)}
+@media (prefers-reduced-motion:reduce){.pv-s{transition:none}}
+.bp-foot .pv-d{background:#fff;box-shadow:inset 0 0 0 1px #d2d2d7;color:#1d1d1f}</style>
+</body>
+</html>

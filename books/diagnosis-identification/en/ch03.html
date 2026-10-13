@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+
+<html dir="ltr" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
+<title>Chapter 3: Formal standardized methods | Diagnosis and Identification of Exceptional Learners | Dr. Omar A. Alsamani</title>
+<link href="../assets/book.css?v=ea97adfb" rel="stylesheet"/>
+<style>
+.basal{font-family:var(--f-ui)}
+.basal .row{display:grid;grid-template-columns:repeat(20,1fr);gap:4px;direction:ltr}
+.basal .it{aspect-ratio:1/1;border-radius:6px;display:grid;place-items:center;font-size:12px;font-weight:700;border:1.5px solid var(--line);background:var(--paper);color:var(--ink-2)}
+.basal .cr{background:var(--good-soft);border-color:var(--good);color:var(--good)}
+.basal .ok{background:var(--good);border-color:var(--good);color:var(--paper)}
+.basal .no{background:var(--warn);border-color:var(--warn);color:var(--paper)}
+.basal .na{background:var(--paper-2);border-style:dashed;color:var(--line)}
+.basal .marks{display:grid;grid-template-columns:repeat(20,1fr);gap:4px;direction:ltr;margin-top:6px;min-height:40px;font-size:12px;font-weight:700}
+.basal .marks span{text-align:center;line-height:1.4}
+.basal .key{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:14px;font-size:13.5px;color:var(--ink-2)}
+.basal .key i{display:inline-block;width:14px;height:14px;border-radius:4px;vertical-align:-2px;margin-left:6px;border:1.5px solid var(--line)}
+@media (max-width:560px){.basal .it{font-size:9px;border-radius:4px}.basal .marks{font-size:10px}}
+.chc{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;font-family:var(--f-ui)}
+.chc>div{border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;min-width:0;display:grid;gap:4px}
+.chc b{font-size:15.5px}
+.chc .code{font-size:12.5px;color:var(--ink-2);direction:ltr;text-align:right}
+.chc span{font-size:13.5px;line-height:1.7;color:var(--ink-2)}
+.chc .idx{justify-self:start;font-size:12px;font-weight:700;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 10px}
+.chc .none{background:var(--paper-2);color:var(--ink-2)}
+.ab3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;font-family:var(--f-ui)}
+.ab3>div{border-radius:14px;padding:16px;min-width:0;background:var(--c-soft);border:1.5px solid var(--c)}
+.ab3 h5{font-family:var(--f-display);font-size:19px;margin:0 0 4px;color:var(--c);font-weight:700}
+.ab3 p{font-size:13.5px;color:var(--ink-2);margin:0 0 8px;line-height:1.7}
+.ab3 ul{margin:0;padding-inline-start:1.1em;font-size:14px;line-height:1.8}
+.ab3 .c1{--c:var(--example);--c-soft:var(--example-soft)}
+.ab3 .c2{--c:var(--teacher);--c-soft:var(--teacher-soft)}
+.ab3 .c3{--c:var(--accent);--c-soft:var(--accent-soft)}
+@media (max-width:640px){.ab3{grid-template-columns:1fr}}
+.tband{direction:ltr;font-family:var(--f-ui)}
+.tband .lbl{direction:rtl;font-size:13.5px;font-weight:700;margin:10px 0 6px}
+.tband .bar{display:flex;height:40px;border-radius:8px;overflow:hidden;border:1px solid var(--line)}
+.tband .bar div{display:grid;place-items:center;font-size:12.5px;font-weight:700;direction:rtl;text-align:center;line-height:1.25}
+.tband .g{background:var(--good-soft);color:var(--good)}
+.tband .m{background:var(--mid-soft);color:var(--mid)}
+.tband .s{background:var(--sev-soft);color:var(--sev)}
+.tband .p{background:var(--paper-2);color:var(--ink-2)}
+.tband .ticks{position:relative;height:24px}
+.tband .ticks span{position:absolute;top:4px;transform:translateX(-50%);font-size:12px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.inf{display:grid;gap:12px;font-family:var(--f-ui)}
+.inf .r{display:grid;grid-template-columns:minmax(0,15rem) 1fr;gap:14px;align-items:center;font-size:14.5px}
+.inf .track{height:26px;background:var(--paper-2);border-radius:6px;direction:ltr;position:relative}
+.inf .fill{height:100%;border-radius:6px;background:var(--example);display:flex;align-items:center;justify-content:flex-end;padding-inline:10px;color:var(--paper);font-weight:700;font-size:13px;font-variant-numeric:tabular-nums}
+@media (max-width:560px){.inf .r{grid-template-columns:1fr}}
+.choose{display:grid;gap:10px;font-family:var(--f-ui)}
+.choose .c{display:grid;grid-template-columns:minmax(0,1fr) 28px minmax(0,1fr);gap:10px;align-items:center}
+.choose .if{border:1.5px solid var(--line);border-radius:10px;padding:10px 14px;font-size:14.5px;line-height:1.7}
+.choose .then{border:1.5px solid var(--accent);background:var(--accent-soft);border-radius:10px;padding:10px 14px;font-size:14.5px;line-height:1.7}
+.choose .ar{text-align:center;color:var(--ink-2);font-size:20px}
+@media (max-width:600px){.choose .c{grid-template-columns:1fr}.choose .ar{transform:rotate(-90deg)}}
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"><style>:root{--f-body:"Source Serif 4",Georgia,serif;--f-display:"Source Serif 4",Georgia,serif;--f-ui:"IBM Plex Sans",system-ui,sans-serif}.questions li::before{content:counter(q)}html{direction:ltr!important}body{letter-spacing:0;text-align:left}caption{text-align:left!important}.formula small{direction:ltr}.cover svg{left:auto!important;right:0}</style><link rel="stylesheet" href="../assets/platform.css?v=b4c32405"><script>window.BOOK={slug:"diagnosis-identification-en",cur:"ch03.html",lang:"en",title:"Diagnosis and Identification of Exceptional Learners",author:"Dr. Omar A. Alsamani"}</script><script src="../assets/platform.js?v=0d28c8d2" defer></script>
+<link rel="canonical" href="https://alsamani.com/books/diagnosis-identification/en/ch03.html"><link rel="alternate" hreflang="ar" href="https://alsamani.com/books/diagnosis-identification/ch03.html"><link rel="alternate" hreflang="en" href="https://alsamani.com/books/diagnosis-identification/en/ch03.html"><link rel="alternate" hreflang="x-default" href="https://alsamani.com/books/diagnosis-identification/ch03.html"><meta name="description" content="Intelligence tests, achievement tests, adaptive behavior scales and rating scales: these are the four families that make up the specialist’s toolkit, and their numbers dominate most diagnostic reports. In this chapter we examine what each family measures, how it is administered on paper,…"><meta name="author" content="Omar A. Alsamani"><meta property="og:title" content="Chapter 3: Formal standardized methods | Diagnosis and Identification of Exceptional Learners | Dr. Omar A. Alsamani"><meta property="og:url" content="https://alsamani.com/books/diagnosis-identification/en/ch03.html"><meta property="og:site_name" content="Dr. Omar A. Alsamani"><meta property="og:locale" content="en_US"><meta name="twitter:card" content="summary"><meta property="og:description" content="Intelligence tests, achievement tests, adaptive behavior scales and rating scales: these are the four families that make up the specialist’s toolkit, and their numbers dominate most diagnostic reports. In this chapter we examine what each family measures, how it is administered on paper,…"><script type="application/ld+json">[{"@context": "https://schema.org", "@type": "Chapter", "name": "Formal standardized methods", "headline": "Chapter 3: Formal standardized methods", "url": "https://alsamani.com/books/diagnosis-identification/en/ch03.html", "inLanguage": "en", "author": {"@type": "Person", "name": "Omar A. Alsamani", "alternateName": "عمر عبدالله الصمعاني", "url": "https://alsamani.com/", "jobTitle": "Associate Professor", "affiliation": {"@type": "CollegeOrUniversity", "name": "University of Hail"}}, "isPartOf": {"@type": "Book", "name": "Diagnosis and Identification of Exceptional Learners", "url": "https://alsamani.com/books/diagnosis-identification/en/", "author": {"@type": "Person", "name": "Omar A. Alsamani", "alternateName": "عمر عبدالله الصمعاني", "url": "https://alsamani.com/", "jobTitle": "Associate Professor", "affiliation": {"@type": "CollegeOrUniversity", "name": "University of Hail"}}, "inLanguage": "en", "license": "https://creativecommons.org/licenses/by-nc-nd/4.0/", "isAccessibleForFree": true, "bookFormat": "https://schema.org/EBook", "alternativeHeadline": "Learners with disabilities, the gifted and the twice-exceptional", "isbn": "978-603-06-7714-6", "datePublished": "2026"}, "license": "https://creativecommons.org/licenses/by-nc-nd/4.0/", "isAccessibleForFree": true, "description": "Intelligence tests, achievement tests, adaptive behavior scales and rating scales: these are the four families that make up the specialist’s toolkit, and their numbers dominate most diagnostic reports. In this chapter we examine what each family measures, how it is administered on paper,…", "keywords": "Introduction, What makes an instrument standardized?, Intelligence tests, Achievement tests, Adaptive behavior scales, Behavior rating scales, Accommodations during testing, Digital assessment and teleassessment, How is an instrument chosen?, Conclusion, Summary, key terms and activities"}, {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Dr. Omar A. Alsamani", "item": "https://alsamani.com/"}, {"@type": "ListItem", "position": 2, "name": "Open Library", "item": "https://alsamani.com/books/"}, {"@type": "ListItem", "position": 3, "name": "Diagnosis and Identification of Exceptional Learners", "item": "https://alsamani.com/books/diagnosis-identification/en/"}, {"@type": "ListItem", "position": 4, "name": "Formal standardized methods", "item": "https://alsamani.com/books/diagnosis-identification/en/ch03.html"}]}]</script></head>
+<body>
+<div class="bp-bar" dir="ltr"><div class="bp-in">
+<a class="bp-home" href="../../../index.html">Dr. Omar A. Alsamani</a><span class="bp-sep">/</span><a href="../../index.html">Open Library</a><span class="bp-sep">/</span><a href="index.html" class="bp-book">Diagnosis and Identification of Exceptional Learners</a>
+<span class="bp-sp"></span><span class="bp-tools"><button class="bp-ic" type="button" data-rd="z-" aria-label="Smaller text" title="Smaller text">A−</button><button class="bp-ic" type="button" data-rd="z+" aria-label="Larger text" title="Larger text">A+</button><button class="bp-ic" type="button" data-rd="theme" aria-label="Dark mode" title="Dark/light mode">Dark</button></span><a class="bp-btn" href="../ch03.html" hreflang="ar" lang="ar">العربية</a><button class="bp-btn" type="button" data-notes>Notes<i hidden></i></button><button class="bp-btn" type="button" data-share>Share</button><button class="bp-btn" type="button" data-bp="search">Search</button><button class="bp-btn solid" type="button" data-bp="toc">Contents</button></div></div>
+<div class="bp-share" id="bpShare" hidden dir="ltr"><b>Share this page</b><button type="button" data-sh="copy">Copy link</button><button type="button" data-sh="native" hidden>Share…</button><a data-sh="wa" target="_blank" rel="noopener">WhatsApp</a><a data-sh="x" target="_blank" rel="noopener">X</a><a data-sh="li" target="_blank" rel="noopener">LinkedIn</a><a data-sh="tg" target="_blank" rel="noopener">Telegram</a><a data-sh="mail">Email</a><small>To share a specific section, hover over its heading and click ¶</small></div>
+<div class="bp-drawer" id="bpDrawer" hidden dir="ltr"><div class="bp-panel" role="dialog" aria-label="Contents and search">
+<div class="bp-head"><b>Diagnosis and Identification of Exceptional Learners</b><button type="button" class="bp-x" data-bp="close" aria-label="Close">×</button></div>
+<div class="bp-search"><input id="bpQ" type="search" placeholder="Search the text of the book…" autocomplete="off"><div id="bpRes"></div></div>
+<nav class="bp-toc" id="bpToc"></nav>
+<div class="bp-links"><a href="../../index.html">Open Library</a><a href="../../../index.html">alsamani.com home</a></div>
+</div></div>
+<div class="page">
+<nav class="booknav"><a href="index.html">→ Diagnosis and Identification of Exceptional Learners</a><span>Part Two: Methods</span></nav>
+<header class="opener">
+<div aria-hidden="true" class="num">3</div>
+<div>
+<div class="kicker">Chapter 3</div>
+<h1>Formal standardized methods</h1>
+</div>
+<p class="sub">Intelligence tests, achievement tests, adaptive behavior scales and rating scales: these are the four families that make up the specialist’s toolkit, and their numbers dominate most diagnostic reports. In this chapter we examine what each family measures, how it is administered on paper, digitally and remotely, the conditions under which its results hold or collapse, and, finally, the state of its Arabic versions.</p>
+</header>
+<nav aria-label="Chapter contents" class="toc">
+<b>In this chapter</b>
+<ol>
+<li class="u"><a href="#intro">Introduction</a></li>
+<li value="1"><a href="#s1">What makes an instrument standardized?</a></li>
+<li value="2"><a href="#s2">Intelligence tests</a></li>
+<li value="3"><a href="#s3">Achievement tests</a></li>
+<li value="4"><a href="#s4">Adaptive behavior scales</a></li>
+<li value="5"><a href="#s5">Behavior rating scales</a></li>
+<li value="6"><a href="#s6">Testing accommodations</a></li>
+<li value="7"><a href="#s7">Digital assessment and teleassessment</a></li>
+<li value="8"><a href="#s8">How is an instrument chosen?</a></li>
+<li class="u"><a href="#conclusion">Conclusion</a></li>
+<li value="9"><a href="#s9">Summary, key terms and activities</a></li>
+</ol>
+</nav>
+<div class="scene">
+<span class="lbl">Scene from the assessment room</span>
+<p>Mona, a teacher, stepped into the school psychologist’s room for the first time. Colorful kits lined the shelf; on the table sat an easel booklet propped open, a set of red-and-white blocks, a stopwatch, a response booklet crowded with boxes, and two tablets beside it. “All this to measure intelligence?” she asked. He smiled. “This is just one kit. That’s an achievement record form, and this is an adaptive behavior form—you’ll be filling one out about your student, Sami.”</p>
+<p>Then he added, “What matters, whatever is in the kit and whether I give the test on paper or on the tablet, is that I will say the same words to Sami, in the same order, and stop the clock at exactly the moment everyone who gave this test to thousands of children before him stopped it.”</p>
+</div>
+<p>The psychologist’s last remark holds the key to this chapter. A standardized instrument draws its value less from the difficulty of its questions or the polish of its materials than from the uniformity of its administration, for it is uniformity that makes the comparison between a student and the norm sample (also called the standardization sample) a fair one. The norm sample, as defined in Chapter 2, is the representative group to whom the test was given during its development and from whose performance its norms were derived.</p>
+<h3>Chapter objectives</h3>
+<p>After studying this chapter, the reader should be able to:</p>
+<ol class="objectives">
+<li>Judge, in a given administration scenario, how a change affects the validity of the score: whether it is an accommodation that preserves the comparison with the norms, or a modification or departure from the directions that invalidates it.</li>
+<li>Classify a given formal instrument into one of the four instrument families and name the diagnostic decision it informs.</li>
+<li>Link the indexes of an intelligence test to the broad abilities they measure according to CHC theory.</li>
+<li>Interpret the results of adaptive behavior scales and the T-scores of rating scales, including discrepancies among informants’ ratings.</li>
+<li>Choose the appropriate type of instrument for a described student and justify the choice in terms of the student’s language, senses and motor abilities.</li>
+<li>Evaluate the status of the Arabic version of a formal instrument by asking specific questions about its standardization, reliability, validity and licensing.</li>
+<li>Decide whether digital or remote administration of an instrument is appropriate for a described student, and specify what should be documented about it in the report.</li>
+</ol>
+<h2 class="unnum" id="intro">Introduction</h2>
+<p>Scores from standardized instruments appear in nearly every diagnostic report, and many diagnostic and eligibility decisions rest on them. Yet an instrument’s value lies in the uniformity of its administration, scoring and interpretation, so any departure from the directions can weaken or invalidate the comparison with the norms. Anyone who takes part in a diagnostic decision needs to know what each family of instruments measures and what it does not, how an accommodation, digital administration or remote administration changes the meaning of a score, and which questions ought to be put to any “Arabic version” before its results are trusted.</p>
+<p>We open the chapter by setting out what makes an instrument standardized, including start and discontinue rules and what invalidates a score (Section 3.1). We then present intelligence tests in light of CHC theory—individual, group and nonverbal—together with developmental scales for young children (Section 3.2), followed by achievement tests (Section 3.3). Next we turn to adaptive behavior scales (Section 3.4), and to behavior rating scales, how to read their T-scores and why informants disagree on them (Section 3.5), then to testing accommodations (Section 3.6) and to digital assessment and teleassessment (Section 3.7). We close with how to choose an instrument and with the state of Arabic versions (Section 3.8).</p>
+<!-- 1 -->
+<h2 id="s1"><span class="sec">3.1</span>What makes an instrument standardized?</h2>
+<p>A standardized instrument is one in which everything is administered in a uniform way: the exact wording of the directions, the materials, the order, the timing and the scoring procedure. This uniformity is what allows the student to be compared with the norm sample, because members of that sample took the test in exactly the same way (Salvia et al., 2017). This is why specialists train at length in administration, until they can deliver the directions verbatim while observing the student at the same time.</p>
+<h3>Start and discontinue rules</h3>
+<p>Most individual tests contain items arranged from easiest to hardest, and not every item is given to every student. A fourteen-year-old is not asked the items designed for a six-year-old, and a six-year-old is not taken all the way to the items designed for adolescents. Three rules govern this:</p>
+<ul>
+<li><strong>Start point:</strong> the item at which the examiner begins, according to the student’s age.</li>
+<li><strong>Basal:</strong> a set number of consecutive correct responses; once the student achieves it, he is assumed to have been able to pass all the easier items before it, which are credited without being administered. If the student errs on the first items from the start point, the examiner goes back to easier items until the basal is established.</li>
+<li><strong>Discontinue rule:</strong> the examiner stops once the student misses a set number of consecutive items, on the assumption that he would have missed everything after them. The point at which administration stops is called the ceiling.</li>
+</ul>
+<figure class="fig-frame" id="fig-3-1">
+<div aria-label="A strip of twenty items: items 1 to 7 are credited to the student without administration, and administration began at item 8. The student answered items 8 to 11, 13, and 14 correctly, missed item 12, then missed items 15, 16, and 17, so administration was discontinued; items 18 to 20 were not administered." class="basal" role="img">
+<div class="row">
+<div class="it cr">1</div><div class="it cr">2</div><div class="it cr">3</div><div class="it cr">4</div><div class="it cr">5</div><div class="it cr">6</div><div class="it cr">7</div>
+<div class="it ok">8</div><div class="it ok">9</div><div class="it ok">10</div><div class="it ok">11</div><div class="it no">12</div><div class="it ok">13</div><div class="it ok">14</div>
+<div class="it no">15</div><div class="it no">16</div><div class="it no">17</div>
+<div class="it na">18</div><div class="it na">19</div><div class="it na">20</div>
+</div>
+<div class="marks">
+<span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+<span style="color:var(--accent)">▲<br/>Start</span><span></span><span></span><span></span><span></span><span></span><span></span>
+<span></span><span></span><span style="color:var(--warn)">▲<br/>Stop</span><span></span><span></span><span></span>
+</div>
+<div class="key"><span><i style="background:var(--good-soft);border-color:var(--good)"></i>Credited without administration</span><span><i style="background:var(--good);border-color:var(--good)"></i>Correct</span><span><i style="background:var(--warn);border-color:var(--warn)"></i>Incorrect</span><span><i style="background:var(--paper-2);border-style:dashed"></i>Not administered</span></div>
+</div>
+<figcaption><b>Figure 3.1:</b> A hypothetical 20-item subtest with a basal of two consecutive passes and a discontinue rule of three consecutive errors. The student started at item 8 according to his age and passed items 8 and 9, so items 1 through 7 were credited. The examiner then stopped after three errors on items 15, 16 and 17. Raw score: 13. Actual rules vary from test to test and are specified in the manual.</figcaption>
+</figure>
+<h3>What invalidates a score?</h3>
+<p>Any departure from standardized administration makes the comparison with the norm sample less accurate, and some departures invalidate it altogether. Examples include:</p>
+<ul>
+<li>Rephrasing the directions for a student who did not understand them, on a test whose manual does not permit it.</li>
+<li>Allowing extra time on a timed test, since speed is part of what it measures.</li>
+<li>Giving the test to a student who answered its items only a few months earlier; familiarity with the items raises the score without any change in ability (practice effect).</li>
+<li>Translating items on the fly during administration.</li>
+<li>Giving hints, even through facial expressions, as the student nears the correct answer.</li>
+</ul>
+<div class="callout" data-k="key">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9V16h7v-2.1A6 6 0 0 0 12 3Z"></path></svg>Standardized administration is not rigidity</div>
+<p>Holding to the verbatim directions may seem harsh toward a flustered student. In fact, it is fair to him. Were the examiner to help, the student would obtain a score that looks higher than it really is, and might, because of it, be denied a service he needs. A good examiner reassures the student and encourages his effort without helping him answer.</p>
+</div>
+<!-- 2 -->
+<h2 id="s2"><span class="sec">3.2</span>Intelligence tests</h2>
+<p>Intelligence tests measure general mental abilities such as reasoning, language comprehension, visual thinking and memory. In diagnosis they serve several purposes: a principal criterion for intellectual disability, part of gifted identification, a basis for understanding the profile of strengths and weaknesses in learning disabilities, and a means of ruling out alternative explanations—showing, for example, that a student’s low achievement is not due to low general mental ability.</p>
+<h3>What exactly do they measure? CHC theory</h3>
+<p>Most modern intelligence tests rest on the theory of Cattell, Horn and Carroll (Cattell–Horn–Carroll), known by its authors’ initials as <span class="en">CHC</span>. The theory holds that intelligence consists of a general factor at the apex, broad abilities beneath it, and narrower abilities beneath each of those (Schneider &amp; McGrew, 2018). Knowing these abilities helps the teacher read a report, because a test’s indexes measure some of them. An index is a composite score derived from two or more subtests that measure the same ability.</p>
+<p>In their update of the theory, Schneider and McGrew revised some of what had become settled in older textbooks. The ability once called “long-term retrieval” (<span class="en">Glr</span>) they divided into two: <strong>learning efficiency</strong> (<span class="en">Gl</span>), the speed with which new information is stored and consolidated, and <strong>retrieval fluency</strong> (<span class="en">Gr</span>), the speed with which stored information is recalled. A student may learn slowly yet retrieve fluently, or the reverse, and each pattern carries different implications for teaching. The following figure also includes two abilities close to school achievement, reading and writing and quantitative knowledge, because the next section presents the tests that measure them:</p>
+<figure id="fig-3-2">
+<div class="chc">
+<div><b>Fluid reasoning</b><span class="code">Gf</span><span>Solving novel problems that do not depend on prior knowledge; discovering rules and patterns.</span><span class="idx">Fluid Reasoning Index</span></div>
+<div><b>Crystallized knowledge</b><span class="code">Gc</span><span>Vocabulary, general information and language comprehension—what a person acquires from culture and schooling.</span><span class="idx">Verbal Comprehension Index</span></div>
+<div><b>Visual processing</b><span class="code">Gv</span><span>Imagining shapes and mentally rotating, analyzing and assembling them.</span><span class="idx">Visual Spatial Index</span></div>
+<div><b>Working memory</b><span class="code">Gwm</span><span>Holding information in mind briefly and manipulating it, such as repeating digits in reverse order.</span><span class="idx">Working Memory Index</span></div>
+<div><b>Processing speed</b><span class="code">Gs</span><span>Performing simple tasks quickly and accurately, such as searching for a symbol among symbols.</span><span class="idx">Processing Speed Index</span></div>
+<div><b>Learning efficiency</b><span class="code">Gl</span><span>Learning and storing new information, such as learning pairs of symbols and words and recalling them after a delay.</span><span class="idx none">Complementary indexes</span></div>
+<div><b>Retrieval fluency</b><span class="code">Gr</span><span>Recalling stored information quickly and fluently, such as naming many members of one category in a minute, or rapidly naming familiar objects.</span><span class="idx none">Complementary indexes</span></div>
+<div><b>Auditory processing</b><span class="code">Ga</span><span>Analyzing and discriminating speech sounds; closely related to the phonological awareness that reading requires.</span><span class="idx none">Other tests</span></div>
+<div><b>Reading and writing</b><span class="code">Grw</span><span>Knowledge and skill in written language: decoding, reading comprehension, spelling and written expression.</span><span class="idx none">Achievement tests</span></div>
+<div><b>Quantitative knowledge</b><span class="code">Gq</span><span>Acquired mathematical knowledge: number concepts, operations and rules.</span><span class="idx none">Achievement tests</span></div>
+</div>
+<figcaption><b>Figure 3.2:</b> Ten broad abilities in <span class="en">CHC</span> theory as updated by Schneider and McGrew (Schneider &amp; McGrew, 2018), with the corresponding indexes of the fifth edition of the Wechsler scale for children (<span class="en">Wechsler Intelligence Scale for Children, WISC-V</span>). The last five abilities are not measured by its primary indexes: the examiner assesses learning efficiency and retrieval fluency with complementary indexes and turns to other tests for the remaining three.</figcaption>
+</figure>
+<p>The theory is not without its critics. Independent factor analyses of intelligence batteries generally find that the general factor accounts for most of the variance shared among the tests, and that several broad abilities are only weakly distinct from it. As a result, interpreting indexes individually adds little to the prediction of achievement, and differences among them are less reliable than the full-scale score (McGill et al., 2018). The cautious examiner therefore begins with the full-scale score and the limits of its meaning, and interprets a difference between two indexes only when it is both statistically significant and rare in the norm sample (Chapter 2 presents this debate).</p>
+<h3>The best-known comprehensive individual intelligence tests</h3>
+<div class="tw"><table id="tab-3-1">
+<caption><b>Table 3.1:</b> Comprehensive individual intelligence tests and the state of their Arabic versions.</caption>
+<thead><tr><th>Test</th><th>Age</th><th>Distinctive features</th><th>When preferred</th><th>Arabic version</th></tr></thead>
+<tbody>
+<tr><td>Wechsler Intelligence Scale for Children, Fifth Edition <span class="en">WISC-V</span> (Wechsler, 2014)</td><td>6 years to 16 years 11 months</td><td>Five primary indexes from ten subtests, and a full-scale score from seven. Among the most widely used tests in schools worldwide</td><td>A comprehensive general assessment of the profile of strengths and weaknesses</td><td>At the time of writing we know of no published Saudi standardization of the fourth or fifth edition. The older revised edition (<span class="en">WISC-R</span>) was standardized for ages 6–16 in Saudi Arabia as part of a gifted identification project (Al-Nafi et al., 2000 [Arabic], as cited in Ejbara, 2024)</td></tr>
+<tr><td>Stanford–Binet Intelligence Scales, Fifth Edition <span class="en">SB5</span> (Roid, 2003)</td><td>2 to 85+ years</td><td>Five factors, each measured in a verbal and a nonverbal domain, and a wide range of items that discriminates among very high and very low abilities</td><td>Young children, and very high or very low abilities</td><td>Arabic versions exist, including two Gulf versions used in the Kingdom, one prepared by Safwat Farag and the other by Mahmoud Abu Al-Nil and colleagues; a study in the Northern Borders region compared the two (Mohammed, 2016 [Arabic]). We have not verified the size of their norm samples or the year in which they were collected</td></tr>
+<tr><td>Kaufman Assessment Battery for Children, Second Edition Normative Update <span class="en">KABC-II NU</span> (Kaufman &amp; Kaufman, 2018)</td><td>3 to 18 years</td><td>Can be interpreted within <span class="en">CHC</span> theory or within the Luria model (<span class="en">Luria</span>); offers a composite that excludes tests of acquired knowledge, and a nonverbal composite</td><td>Students from diverse linguistic and cultural backgrounds, when the aim is to reduce the influence of school knowledge</td><td>At the time of writing we know of no published standardized Arabic version</td></tr>
+<tr><td>Differential Ability Scales, Second Edition <span class="en">DAS-II</span> (Elliott, 2007)</td><td>2 years 6 months to 17 years 11 months</td><td>A General Conceptual Ability score, a Special Nonverbal Composite, and many items at the lower levels</td><td>Young children and those with low abilities</td><td>At the time of writing we know of no published standardized Arabic version</td></tr>
+<tr><td>Cognitive Assessment System, Second Edition <span class="en">CAS2</span> (Naglieri et al., 2014)</td><td>5 to 18 years 11 months</td><td>Built on the four-process theory—planning, attention, simultaneous processing and successive processing—independent of acquired knowledge</td><td>When the question concerns processing more than knowledge</td><td>At the time of writing we know of no published standardized Arabic version</td></tr>
+</tbody>
+</table></div>
+<h3>Nonverbal tests</h3>
+<p>These tests are administered through gestured directions or with minimal language, and the student responds by pointing or by arranging pieces. They are essential for deaf students, for those who have not mastered the language of the test, and for some children with language disorders or autism spectrum disorder.</p>
+<div class="tw"><table id="tab-3-2">
+<caption><b>Table 3.2:</b> Nonverbal ability tests and the state of their Arabic versions.</caption>
+<thead><tr><th>Test</th><th>Age</th><th>Distinctive features</th><th>When preferred</th><th>Arabic version</th></tr></thead>
+<tbody>
+<tr><td>Leiter International Performance Scale, Third Edition <span class="en">Leiter-3</span> (Roid et al., 2013)</td><td>3 to 75+ years</td><td>Fully nonverbal: directions given by gesture, responses by pointing or arranging pieces; measures reasoning, attention and memory</td><td>Deaf students, students with limited language, those who do not speak the language of the test, and some children with autism spectrum disorder</td><td>At the time of writing we know of no published standardized Arabic version</td></tr>
+<tr><td>Universal Nonverbal Intelligence Test, Second Edition <span class="en">UNIT2</span> (Bracken &amp; McCallum, 2016)</td><td>5 to 21 years 11 months</td><td>Fully nonverbal; measures several abilities (memory, reasoning and quantitative reasoning) rather than a single one</td><td>A deaf student, or one who does not speak the language of the test, when a broader assessment than a matrices test is needed</td><td>At the time of writing we know of no published standardized Arabic version</td></tr>
+<tr><td>Test of Nonverbal Intelligence, Fourth Edition <span class="en">TONI-4</span> (Brown et al., 2010)</td><td>6 to 89</td><td>Abstract figural problems that the student answers by pointing, in about 15 to 20 minutes</td><td>A quick estimate of nonverbal reasoning that paves the way for a fuller assessment</td><td>At the time of writing we know of no published standardized Arabic version</td></tr>
+<tr><td>Raven’s Progressive Matrices</td><td>A wide range, depending on the form</td><td>Figural matrices with a missing part; can be administered individually or in groups</td><td>Group screening and a quick estimate of fluid reasoning</td><td>At the time of writing we have not verified a published Arabic standardization of its recent forms</td></tr>
+</tbody>
+</table></div>
+<div class="callout" data-k="warn">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M12 3 2 20h20L12 3Z"></path><path d="M12 10v4M12 17h.01"></path></svg>A nonverbal test is not a complete substitute</div>
+<p>Nonverbal tests are useful when language or hearing stands in the way of measuring ability. Most of them, however, measure a single facet: visual reasoning. They therefore do not describe the student comprehensively, nor are they adequate on their own for a high-stakes decision such as a diagnosis of intellectual disability or an identification of giftedness. The report should always state why such a test was chosen and the limits of what it measures.</p>
+<p>In gifted identification specifically, Lohman (2005) showed that these tests predict academic achievement less well than tests of verbal and quantitative reasoning, that they do not erase group differences as is often assumed, and that they may screen out students who excel in verbal and quantitative reasoning. The alternative he proposes is to compare students with peers who have had similar opportunities to learn, within a battery that measures verbal, quantitative and nonverbal reasoning together.</p>
+</div>
+<div class="callout" data-k="pro">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M4 19V5M4 19h16M8 15l4-4 3 3 5-6"></path></svg>For the specialist: the Culture-Language Interpretive Matrix</div>
+<p>This interpretive matrix (<span class="en">Culture-Language Interpretive Matrix, C-LIM</span>), developed by Flanagan, Ortiz and their colleagues, classifies subtests by their degree of cultural loading and linguistic demand (low, moderate and high). It then compares the student’s performance with the range expected of students at the same level of proficiency in the language of the test. If the student’s performance falls within that range and declines as cultural and linguistic loading increases, language and culture are likely to explain a large part of the low scores. Studies examining its validity, however, have not found that the pattern of graded decline distinguishes well between second-language learners and other referred students (Kranzler et al., 2010; Styck &amp; Watkins, 2013). Moreover, its classifications were built on English-language tests and English learners, so transferring it to Arabic-speaking settings calls for research. It is best treated as a tool for organizing one’s thinking and generating hypotheses (Chapter 14 presents it in greater detail).</p>
+</div>
+<h3>Developmental scales for young children</h3>
+<p>Before school age, intelligence tests in the familiar sense are used only within limits; greater reliance is placed on developmental scales that measure cognitive, language and motor skills, such as the Bayley Scales of Infant and Toddler Development, Fourth Edition (<span class="en">Bayley-4</span>), for ages 16 days to 42 months (Bayley &amp; Aylward, 2019). Results at this age are less stable and less predictive of later ability, so they are read as a description of the child’s current developmental level and support decisions about early intervention more than they support a permanent diagnosis. At the time of writing we know of no published standardized Arabic version of the Bayley-4. From age four onward, a study has been published on the properties of a Saudi version of the Wechsler Preschool and Primary Scale of Intelligence, Third Edition (<span class="en">WPPSI-III</span>), administered to 788 children aged 4 years to 7 years 3 months in the Jeddah education directorate between 2018 and 2022. This version was derived from a Jordanian version, and its scores correlated with those of the Saudi version of the Stanford–Binet at 0.81 (Ejbara, 2024).</p>
+<h3>Group tests</h3>
+<p>Some ability tests are given to an entire class at once, with paper and pencil or on a computer. They are faster and less costly, but less precise for the individual, and the examiner cannot observe the student’s behavior. They are therefore used for screening, particularly in gifted programs, after which students who exceed the cut-off score—the score set in advance for advancing to the next stage—are assessed with individual instruments. A student who does not reach the cut-off score, however, is not thereby shown to be not gifted: he may have been tired on the day of the test, or a weak reader who did not understand the written questions (Chapters 12 and 13 address this issue in detail).</p>
+<div class="tw"><table id="tab-3-3">
+<caption><b>Table 3.3:</b> Three group ability tests used in gifted screening.</caption>
+<thead><tr><th>Test</th><th>Target population</th><th>What it measures</th><th>Arabic version</th></tr></thead>
+<tbody>
+<tr><td>Cognitive Abilities Test <span class="en">CogAT</span> (Lohman, 2011)</td><td>Kindergarten through Grade 12</td><td>Three batteries—verbal, quantitative and nonverbal reasoning—with the profile across them interpreted</td><td>At the time of writing we know of no published standardized Arabic version</td></tr>
+<tr><td>Naglieri Nonverbal Ability Test, Third Edition <span class="en">NNAT3</span> (Naglieri, 2016)</td><td>Kindergarten through Grade 12</td><td>Figural matrices only, so the influence of language is small; the limits of nonverbal tests noted above apply to it</td><td>At the time of writing we know of no published standardized Arabic version</td></tr>
+<tr><td>Mawhiba Multiple Cognitive Abilities Test</td><td>Grade 3 through Grade 10 (first year of secondary school), at three levels</td><td>Mental flexibility, linguistic reasoning and reading comprehension, mathematical and spatial reasoning, and scientific and mechanical reasoning</td><td>Developed specifically for the Saudi context and administered by the National Center for Assessment (see the box in 3.8)</td></tr>
+</tbody>
+</table></div>
+<!-- 3 -->
+<h2 id="s3"><span class="sec">3.3</span>Achievement tests</h2>
+<p>If intelligence tests ask, “How able is this student to learn?”, achievement tests ask, “What has this student actually learned?” They are central to the diagnosis of learning disabilities, because one of the criteria for a learning disability is clearly low achievement in a specific area.</p>
+<h3>Comprehensive individual tests</h3>
+<p>These tests measure several academic areas with precision and break each area into its component skills. If a student reads poorly, they pinpoint where the weakness lies: in decoding, in fluency or in comprehension.</p>
+<div class="tw"><table id="tab-3-4">
+<caption><b>Table 3.4:</b> Academic areas and their component skills in individual achievement tests.</caption>
+<thead><tr><th>Area</th><th>Component skills typically measured</th></tr></thead>
+<tbody>
+<tr><td>Reading</td><td>Reading familiar words, decoding pseudowords, fluency and reading comprehension</td></tr>
+<tr><td>Mathematics</td><td>Calculation, solving word problems and fluency with basic facts</td></tr>
+<tr><td>Writing</td><td>Spelling, written expression and writing fluency</td></tr>
+<tr><td>Oral language</td><td>Listening comprehension and oral expression</td></tr>
+</tbody>
+</table></div>
+<p>Three of the best-known such tests internationally are listed below; all are built on the American curriculum and the English language:</p>
+<div class="tw"><table id="tab-3-5">
+<caption><b>Table 3.5:</b> Three comprehensive individual achievement tests and the state of their Arabic versions.</caption>
+<thead><tr><th>Test</th><th>Age</th><th>Distinctive features</th><th>Arabic version</th></tr></thead>
+<tbody>
+<tr><td>Wechsler Individual Achievement Test, Fourth Edition <span class="en">WIAT-4</span> (NCS Pearson, 2020)</td><td>4 years to 50 years 11 months</td><td>Linked to the Wechsler intelligence scales, which makes it easy to compare ability and achievement on a single sample</td><td>At the time of writing we know of no published standardized Arabic version</td></tr>
+<tr><td>Kaufman Test of Educational Achievement, Third Edition <span class="en">KTEA-3</span> (Kaufman &amp; Kaufman, 2014)</td><td>4 to 25 years 11 months</td><td>Allows systematic analysis of error types in reading, spelling and arithmetic</td><td>At the time of writing we know of no published standardized Arabic version</td></tr>
+<tr><td>Woodcock–Johnson IV Tests of Achievement <span class="en">WJ IV ACH</span> (Schrank et al., 2014)</td><td>2 to 90+ years</td><td>Built on <span class="en">CHC</span> theory together with its companion cognitive battery. The publisher has announced a fifth edition (<span class="en">WJ V</span>), so check for the latest edition before relying on it</td><td>At the time of writing we know of no published standardized Arabic version</td></tr>
+</tbody>
+</table></div>
+<div class="callout" data-k="example">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="10" r="3"></circle><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11Z"></path></svg>In the Saudi context: measuring achievement in Arabic</div>
+<p>Achievement is the area most closely tied to language and curriculum. Arabic reading has features with no counterpart in English, such as short-vowel diacritics, letters whose shape changes with their position in the word, and diglossia between Modern Standard Arabic and colloquial dialects. A foreign achievement test therefore cannot be carried over by translation, and we know of no published Arabic standardization of any of the three tests in Table 3.5.</p>
+<p>When no standardized Arabic test is available, the alternative is to combine instruments built on the local curriculum, such as curriculum-based measurement (discussed in Chapter 4), with results from national tests, such as the <strong>Nafes</strong> tests in the Kingdom—bearing in mind that these are group tests designed to evaluate education systems, not to diagnose individuals. Research on curriculum-based measurement in Arabic is still preliminary: a pilot study toward standardizing a measure of oral reading fluency with 200 students in the first three grades in Jordan (Abu-Hamour, 2014a), another on monitoring word recognition fluency in first grade (Abu-Hamour, 2014b), and a third on monitoring word reading fluency among 70 second graders in Al Ain, United Arab Emirates (Mahfouz &amp; Mohamed, 2023). At the time of writing we found no published Saudi norms for such measurement.</p>
+<p><strong>Question for reflection:</strong> If no local norms are available, against whom would you compare a student you suspect is a poor reader? And what is lost if you compare him only with his classmates?</p>
+</div>
+<!-- 4 -->
+<h2 id="s4"><span class="sec">3.4</span>Adaptive behavior scales</h2>
+<p>Adaptive behavior comprises the skills people use in everyday life to look after themselves, interact with others and meet what their community expects of someone their age. A diagnosis of intellectual disability requires that low intelligence be accompanied by deficits in these skills. The American Association on Intellectual and Developmental Disabilities (<span class="en">American Association on Intellectual and Developmental Disabilities, AAIDD</span>) groups them into three domains (Schalock et al., 2021):</p>
+<figure id="fig-3-3">
+<div class="ab3">
+<div class="c1"><h5>Conceptual</h5><p>Skills related to knowledge and communication</p><ul><li>Language, reading and writing</li><li>Money, time and number concepts</li><li>Self-direction and planning</li></ul></div>
+<div class="c2"><h5>Social</h5><p>Skills related to relationships with people</p><ul><li>Interpersonal skills and responsibility</li><li>Self-esteem and avoiding victimization</li><li>Following rules and laws</li></ul></div>
+<div class="c3"><h5>Practical</h5><p>Skills of independent daily living</p><ul><li>Self-care: eating, dressing and hygiene</li><li>Safety and use of money and the telephone</li><li>Occupational skills and getting around</li></ul></div>
+</div>
+<figcaption><b>Figure 3.3:</b> The three domains of adaptive behavior, with examples of the skills in each.</figcaption>
+</figure>
+<div class="callout" data-k="key">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9V16h7v-2.1A6 6 0 0 0 12 3Z"></path></svg>What the student does, not what he can do</div>
+<p>Adaptive behavior scales measure what the student typically does in daily life. A child who knows how to tie his shoes but does so only when reminded and pressed is rated as not performing the skill independently. This distinction is what makes these scales a complement to intelligence tests, which measure the most a student can do under optimal conditions.</p>
+</div>
+<h3>Two principal scales</h3>
+<div class="tw"><table id="tab-3-6">
+<caption><b>Table 3.6:</b> A comparison of the Vineland scales and the Adaptive Behavior Assessment System.</caption>
+<thead><tr><th></th><th>Vineland Adaptive Behavior Scales, Third Edition <span class="en">Vineland-3</span> (Sparrow et al., 2016)</th><th>Adaptive Behavior Assessment System, Third Edition <span class="en">ABAS-3</span> (Harrison &amp; Oakland, 2015)</th></tr></thead>
+<tbody>
+<tr><td>Age</td><td>Birth to 90 years</td><td>Birth to 89 years</td></tr>
+<tr><td>Forms</td><td>Parent interview, parent-completed form and teacher form</td><td>Rating forms for parents, teachers and adult self-report</td></tr>
+<tr><td>Domains</td><td>Communication, daily living skills, socialization, motor skills for young children, and an optional maladaptive behavior domain</td><td>Conceptual, social and practical, comprising eleven skill areas</td></tr>
+<tr><td>Overall score</td><td>Adaptive Behavior Composite, with a mean of 100 and a standard deviation of 15</td><td>General Adaptive Composite, with a mean of 100 and a standard deviation of 15</td></tr>
+<tr><td>Distinctive features</td><td>The semi-structured interview format allows the examiner to probe and ask for examples</td><td>Its domains map directly onto the AAIDD definition</td></tr>
+<tr><td>Arabic version</td><td>We know of no published standardized Arabic version of the third edition whose data we were able to verify. Arabic catalogs list a work titled “Vineland Adaptive Behavior Scale: Saudi Norms,” whose author, year and sample we were unable to verify</td><td>The Arabic teacher form was studied in the Sultanate of Oman with 410 children with intellectual disability; the results supported a single general-factor structure, and reliability was high (Emam et al., 2020). We know of no published standardized Saudi version</td></tr>
+</tbody>
+</table></div>
+<h4>Scene from a Vineland interview</h4>
+<p>The specialist begins with Sami’s mother not by reading her statements to answer yes or no, but with an open question: “Tell me about Sami’s morning on a school day, from the time he wakes up until he leaves the house.” Then he listens and asks about the details: “Does he choose his own clothes? Does he put them on without help? What about buttons?” From her answers he scores several items at once, then returns to the remaining items with further questions. The interview thus feels like a natural conversation, and it yields more accurate information than the form.</p>
+<div class="callout" data-k="teacher">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M3 8l9-4 9 4-9 4-9-4Z"></path><path d="M7 10v5c0 1.5 2.5 3 5 3s5-1.5 5-3v-5"></path></svg>For the teacher: the teacher form in adaptive behavior scales</div>
+<p>You will be asked about skills you see at school: Does the student follow two-step directions? Does he take care of his belongings? Does he ask for help when he needs it? You may also be asked about skills you do not see, such as his use of money. In that case, use the “no opportunity to observe” option if the form provides one, or write a note to the examiner—and do not guess.</p>
+</div>
+<div class="callout" data-k="example">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="10" r="3"></circle><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11Z"></path></svg>In the Saudi context: what do the regulations require of formal instruments?</div>
+<p>For a student to be eligible for intellectual disability programs, the Special Education Organizational Guide requires an IQ no higher than 75 on the Wechsler test or 69 on the Stanford–Binet (Fifth Edition), “or the equivalent of either,” together with deficits in at least two adaptive skill areas, measured “according to formal or informal adaptive behavior tests” (Ministry of Education, 1436 AH [Arabic]). Its definition lists nine adaptive areas: communication, self-care, home living, social skills, use of community resources, self-direction, health and safety, functional academic skills, and leisure and work skills. These are closer to the skill areas of the Adaptive Behavior Assessment System than to the three domains the AAIDD uses today. The Guide further requires the administration of “instruments and scales approved by the Ministry of Education,” “not relying solely on the results of a single scale,” and administration and interpretation by “qualified specialists.” We found no published list naming these approved instruments and their editions.</p>
+<p>For giftedness, if the Ministry of Education’s gifted classes are not filled by students classified through the National Program for Gifted Identification, the remaining places are filled by students who meet two or more criteria, one of which is a mental abilities test with a score “of no less than 120” (Ministry of Education, n.d. [Arabic]).</p>
+<p>Two features of these requirements stand out. First, the upper limit for intellectual disability on the Wechsler (75) allows for measurement error around a score of 70, which is consistent with current diagnostic manuals. Second, the cut-offs on the two scales are not equivalent. The older Regulations set them at 75 on the Wechsler and 73 on the Stanford–Binet (Ministry of Education [Al-Ma'arif], 1422 AH [Arabic]), which are equivalent if the latter is computed with a standard deviation of 16, as in earlier editions of the Stanford–Binet. The fifth edition, however, has a standard deviation of 15, like the Wechsler, yet its cut-off became 69 rather than 75. Moreover, the text specifies neither the Wechsler edition nor the norms to be used.</p>
+<p><strong>Question for reflection:</strong> Two students each score 74, one on recent norms and the other on norms collected twenty years ago. Do they stand in the same position with respect to this requirement?</p>
+</div>
+<!-- 5 -->
+<h2 id="s5"><span class="sec">3.5</span>Behavior rating scales</h2>
+<p>On these scales, someone who knows the student—or the student himself—rates how often specific behaviors occur on a graded scale (for example: never, sometimes, often, always). They fall broadly into two types:</p>
+<ul>
+<li><strong>Broadband scales:</strong> these cover many emotional and behavioral areas at once, such as anxiety, depression, hyperactivity, attention problems, aggression and social skills. They are useful for universal screening and for obtaining the overall picture before focusing on a particular problem. Among the best known are the Behavior Assessment System for Children, Third Edition (<span class="en">Behavior Assessment System for Children, BASC-3</span>) (Reynolds &amp; Kamphaus, 2015), and the Child Behavior Checklist from the Achenbach system (<span class="en">Child Behavior Checklist, CBCL</span>) (Achenbach &amp; Rescorla, 2001).</li>
+<li><strong>Narrowband scales:</strong> these focus on a single disorder and measure it in depth, such as the Conners scales, fourth edition <span class="en">Conners 4</span> (Conners, 2022), for attention-deficit/hyperactivity disorder (<span class="en">Attention-Deficit/Hyperactivity Disorder, ADHD</span>), and the scales for autism spectrum disorder (presented in Chapter 9).</li>
+</ul>
+<div class="tw"><table id="tab-3-7">
+<caption><b>Table 3.7:</b> Common rating scales and the state of their Arabic versions.</caption>
+<thead><tr><th>Scale</th><th>Type and ages</th><th>Informants</th><th>Arabic version</th></tr></thead>
+<tbody>
+<tr><td><span class="en">BASC-3</span></td><td>Broadband; 2 years to 21 years 11 months on the parent and teacher forms</td><td>Parents, teachers and the student himself</td><td>At the time of writing we know of no published standardized Arabic version</td></tr>
+<tr><td>Achenbach System, school-age forms <span class="en">ASEBA: CBCL/TRF/YSR</span></td><td>Broadband; 6 to 18 years</td><td>Parents (<span class="en">CBCL</span>), teachers (<span class="en">TRF</span>) and students aged 11 to 18 (<span class="en">YSR</span>)</td><td>At the time of writing we know of no published standardized Arabic version</td></tr>
+<tr><td>Strengths and Difficulties Questionnaire <span class="en">SDQ</span></td><td>Brief 25-item broadband screener; 2 to 17 years in age-specific versions, self-report version for ages 11–17</td><td>Parents, teachers, and the student himself on the self-report version</td><td>An Arabic version was validated with Yemeni children aged 5 to 12 and discriminated well between a clinical sample (87) and a community sample (100) (Alyahri &amp; Goodman, 2006). We know of no published Saudi norms</td></tr>
+<tr><td><span class="en">Conners 4</span></td><td>Narrowband: inattention, hyperactivity and associated problems; 6 to 18 years</td><td>Parents, teachers and the student</td><td>At the time of writing we found no published peer-reviewed Arabic standardization</td></tr>
+<tr><td>Vanderbilt ADHD Diagnostic Rating Scales</td><td>Narrowband, with items screening for co-occurring problems</td><td>Parents and teachers</td><td>A Saudi Arabic version (<span class="en">VADRS-A</span>) whose properties were studied with 1,812 informants (504 parents and 1,308 teachers) rating children aged 5 to 12 (Alqahtani et al., 2024)</td></tr>
+</tbody>
+</table></div>
+<h3>How is a T-score read?</h3>
+<p>Most of these scales use the T-score, a standard score with a mean of 50 and a standard deviation of 10; a score of 60, for example, lies one standard deviation above the mean of the norm sample. In the <span class="en">BASC-3</span>, the clinical scales, on which a higher score means more problems, and the adaptive scales, on which a lower score means weaker skills, are read as follows:</p>
+<figure class="fig-frame" id="fig-3-4">
+<div aria-label="Two bars showing T-score ranges. On the clinical scales: below 40 low, 40 to 59 average, 60 to 69 at-risk, and 70 or above clinically significant. On the adaptive scales the direction is reversed: 30 or below clinically significant, 31 to 40 at-risk, 41 to 59 average, and 60 or above high." class="tband" role="img">
+<div class="lbl">Clinical scales: a higher score means more problems</div>
+<div class="bar"><div class="p" style="width:36.36%">Low</div><div class="g" style="width:36.36%">Average</div><div class="m" style="width:18.18%">At-risk</div><div class="s" style="width:9.09%">Clinically<br/>significant</div></div>
+<div class="ticks"><span style="left:0%">20</span><span style="left:36.36%">40</span><span style="left:54.55%">50</span><span style="left:72.73%">60</span><span style="left:90.91%">70</span><span style="left:100%">75+</span></div>
+<div class="lbl">Adaptive scales: a lower score means weaker skills</div>
+<div class="bar"><div class="s" style="width:9.09%">Clinically<br/>significant</div><div class="m" style="width:18.18%">At-risk</div><div class="g" style="width:36.36%">Average</div><div class="p" style="width:36.36%">High</div></div>
+<div class="ticks"><span style="left:0%">25</span><span style="left:9.09%">30</span><span style="left:27.27%">40</span><span style="left:45.45%">50</span><span style="left:63.64%">60</span><span style="left:100%">80</span></div>
+</div>
+<figcaption><b>Figure 3.4:</b> T-score interpretation ranges on the <span class="en">BASC-3</span> scales. On the clinical scales, 60 to 69 is at-risk and 70 or above is clinically significant. On the adaptive scales the direction is reversed: 31 to 40 is at-risk and 30 or below is clinically significant. Lengths are approximate, to illustrate direction.</figcaption>
+</figure>
+<h3>Validity indexes within the scale</h3>
+<p>Some rating scales contain indexes that flag questionable response patterns. Some rise when the respondent chooses unusually negative responses, as if exaggerating the problem; others rise when the respondent gives contradictory answers to similar items. When these indexes are elevated, the scale’s results are interpreted with caution, or not interpreted at all.</p>
+<h3>When informants disagree</h3>
+<p>The person who provides information about the student—the father, the mother, the teacher or the student himself—is called the informant. One of the most important things for a teacher to know is that different informants’ ratings of the same student vary considerably, and that this is normal. A well-known meta-analysis pooled the results of dozens of studies (Achenbach et al., 1987). The mean correlation between informants who see the child in the same setting, such as two parents, was about 0.60; between those who see the child in different settings, such as a parent and a teacher, about 0.28; and between the child’s self-ratings and others’ ratings, about 0.22. A more recent review confirmed that these discrepancies are systematic and that, alongside measurement error, they carry information about the settings in which the behavior appears (De Los Reyes et al., 2015).</p>
+<figure class="fig-frame" id="fig-3-5">
+<div aria-label="Three bars showing mean correlations between informants: 0.60 between informants in the same setting, 0.28 between informants in different settings, and 0.22 between the child and others." class="inf" role="img">
+<div class="r"><span>Two informants in the same setting, such as father and mother</span><div class="track"><div class="fill" style="width:60%">0.60</div></div></div>
+<div class="r"><span>Two informants in different settings, such as mother and teacher</span><div class="track"><div class="fill" style="width:28%">0.28</div></div></div>
+<div class="r"><span>The child and another informant</span><div class="track"><div class="fill" style="width:22%">0.22</div></div></div>
+</div>
+<figcaption><b>Figure 3.5:</b> Mean correlations between different informants' ratings of a child's behavioral and emotional problems, from Achenbach and colleagues (Achenbach et al., 1987). The more the settings differ, the lower the agreement.</figcaption>
+</figure>
+<p>This does not mean that one of the informants is necessarily wrong. A child may genuinely behave differently at home and at school. Discrepant ratings are therefore information to be understood and interpreted. The discrepancy itself may even point to something important: a student whom the teacher rates as highly distractible and whose mother rates as attentive may turn out, on examination, to have a hearing loss whose effects show in a noisy classroom and disappear in the quiet of home.</p>
+<!-- 6 -->
+<h2 id="s6"><span class="sec">3.6</span>Accommodations during testing</h2>
+<p>With students who have sensory, motor or language disabilities, the examiner faces a dilemma: administer the test as it stands, and it may measure the disability rather than the ability; change it, and the score may lose its connection to the norms. The way out lies in distinguishing between two kinds of change: accommodation and modification. Accommodation here should not be confused with adapting a test for a new culture (test adaptation), discussed in Chapter 2; that is carried out once, on the instrument as a whole, whereas accommodation is made for a particular student in a particular session.</p>
+<div class="tw"><table id="tab-3-8">
+<caption><b>Table 3.8:</b> Accommodation versus modification during testing.</caption>
+<thead><tr><th></th><th>Accommodation</th><th>Modification</th></tr></thead>
+<tbody>
+<tr><td>Definition</td><td>A change in presentation, response mode or setting that does not alter what the test measures</td><td>A change that affects what the test measures or its level of difficulty</td></tr>
+<tr><td>Examples</td><td>Enlarged print for a student with low vision, a quiet room, breaks between subtests, pointing to an answer instead of saying it</td><td>Reading the items of a reading test aloud to the student, extra time on a speeded test, simplifying the directions on a test of language comprehension</td></tr>
+<tr><td>Effect on the score</td><td>Comparison with the norms usually remains possible, if the manual permits it</td><td>Comparison with the norms is not valid; results are interpreted descriptively</td></tr>
+</tbody>
+</table></div>
+<p>In either case, the examiner records in the report what was changed and why, so that readers know how to understand the score.</p>
+<div class="callout" data-k="myth">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5V14M12 17h.01"></path></svg>Common misconceptions</div>
+<ul>
+<li><strong>“Accommodation is cheating that gives the student an advantage over others.”</strong> A sound accommodation removes a barrier unrelated to what the test measures, bringing the score closer to the student's true ability. What does confer an advantage is modification, which is why a student tested with modifications is not compared with the norms.</li>
+<li><strong>“A nonverbal test is free of cultural influence.”</strong> Matrices, figures and working with timed materials are all experiences that vary with schooling and environment. A nonverbal test reduces the influence of language, but it does not remove the influence of culture and education.</li>
+<li><strong>“An accurate translation is enough to use a foreign test.”</strong> Translation carries over the items, not the norms. The score is still compared with children from another country who speak another language, and the difficulty of an item may itself shift in translation.</li>
+<li><strong>“A computerized test is inherently more accurate and objective.”</strong> The computer standardizes administration and scoring, but it does not guarantee validity. A digital format needs evidence of equivalence with the paper version, as the next section explains.</li>
+</ul>
+</div>
+<!-- 7 -->
+<h2 id="s7"><span class="sec">3.7</span>Digital assessment and teleassessment</h2>
+<p>Formal instruments are no longer only paper forms and test kits. Many are now administered on tablets or scored on online platforms, and some are administered remotely by video link. This raises one question in several guises: does the score still mean what it used to mean? The International Test Commission, together with the Association of Test Publishers, has issued guidelines for technology-based assessment that address these questions, from platform design to data security and the documentation of results (International Test Commission &amp; Association of Test Publishers, 2022).</p>
+<h3>Digital administration and equivalence with paper</h3>
+<p>In the digital administration of the Wechsler Intelligence Scale for Children, for instance, the examiner holds a tablet that displays the directions, records responses, keeps time and applies start and discontinue rules automatically, while the student sees the stimuli on a second tablet and touches it to respond. This reduces examiner errors in calculation and timing, but it changes the medium the student works with. Touching a screen is not the same as pointing to a page, and tapping is not the same as writing with a pencil.</p>
+<p>For this reason, norms for the paper format are not applied to the digital format until <strong>equivalence</strong> has been established. This is done through a study in which the test is given in both formats, either to two matched groups or to the same group in counterbalanced order, after which means, standard deviations, reliability and factor structure are compared. If the differences fall below a small threshold set in advance by the researchers, the same norms may be used; otherwise the digital format needs norms of its own. Speeded and motor tasks are the most sensitive to a change of medium, so they may remain on paper until the equivalence of their digital versions is demonstrated. Examiners should check the equivalence evidence for themselves in the technical manual of the edition they use.</p>
+<h3>Computerized adaptive tests</h3>
+<p>In a computerized adaptive test, the computer selects each item on the basis of the student's previous responses: a harder item after a correct answer, an easier one after an error, stopping once the precision of the ability estimate reaches a preset level. The approach rests on item response theory (introduced in Chapter 2). Its advantages are that it is shorter than a fixed-form test and that its precision is fairly even across ability levels, which matters for the gifted student who reaches the ceiling of a fixed test and for the low-ability student who sits at its floor. Its prerequisite is a large item bank calibrated for difficulty on a representative sample, something still rare among Arabic tests. And because each student answers different items, comparing students item by item makes no sense; comparison rests on the ability estimate alone.</p>
+<h3>Curriculum-based measurement platforms</h3>
+<p>Digital platforms make it possible to administer brief measures of reading and math fluency (discussed in Chapter 4), score them and plot a student's progress automatically. This saves teachers' time and makes the data available to the team. But a polished graph does not settle two questions: are the passages the student reads truly equivalent in difficulty? And where do the norms the platform uses for comparison come from? Many platforms display norms collected in another country and in another language.</p>
+<h3>Teleassessment: when is it appropriate, and when not?</h3>
+<p>In teleassessment, the examiner is in one place and the student in another, and the two communicate by video link. A study of children from a nonclinical sample found that scores on the Wechsler Intelligence Scale for Children were comparable across remote and in-person administration, under controlled conditions and with an assistant seated beside the child (Wright, 2020). That does not mean teleassessment suits every student or every test. The following table summarizes what cautious practice agrees on:</p>
+<div class="tw"><table id="tab-3-9">
+<caption><b>Table 3.9:</b> When teleassessment is suitable and when in-person administration is preferable.</caption>
+<thead><tr><th>Situation</th><th>Usual judgment</th><th>Reason</th></tr></thead>
+<tbody>
+<tr><td>An interview with parents, or a rating scale completed by a teacher or parent</td><td>Usually suitable</td><td>Does not depend on test materials or strict timing, and semi-structured interviews work well by video</td></tr>
+<tr><td>A verbal intelligence or achievement test for a school-age student, on a publisher-approved platform, with a trained assistant beside the student</td><td>Possible under conditions</td><td>Equivalence evidence exists under controlled conditions, but it does not automatically extend to other conditions or other populations</td></tr>
+<tr><td>A young child below school age</td><td>In-person preferred</td><td>Attention and behavior are hard to manage in front of a screen, and measures for this age rely on concrete materials and play</td></tr>
+<tr><td>Motor subtests or subtests that rely on concrete materials (blocks, puzzle pieces, pencil)</td><td>In-person preferred, or the subtests are omitted and this is stated explicitly</td><td>Changing the materials changes the task, and the norms may no longer apply</td></tr>
+<tr><td>A student with a hearing or visual impairment</td><td>In-person preferred</td><td>Audio and video quality add a new sensory barrier, so the test measures the connection rather than the ability</td></tr>
+<tr><td>A high-stakes eligibility decision based on a single test administered remotely</td><td>Not sufficient</td><td>The result is confirmed through in-person testing or other multisource evidence</td></tr>
+</tbody>
+</table></div>
+<h3>Test security, data privacy and consent</h3>
+<p>Digital assessment and teleassessment carry risks unknown to paper-based administration. Test items may be photographed or recorded, or heard and seen by family members, and thereby lose their usefulness for other students. Items from a paper test are therefore not shown over a camera unless the publisher permits it, and the family agrees in advance that nothing will be recorded and on who will be present in the session and in what role. As for data, the results of psychological and educational assessment are personal data, and health-related results count as sensitive data under the Kingdom's Personal Data Protection Law, overseen by the Saudi Data and Artificial Intelligence Authority (Personal Data Protection Law, 1443 AH [Arabic]). Before any platform is used, then, three questions need answers: Where are the data stored? Who can access them? When are they deleted? Added to this is the requirement in education regulations for the guardian's written consent after formal notification (Ministry of Education, 1436 AH [Arabic]); the consent should state explicitly how the assessment will be administered and whether any part of the session will be recorded.</p>
+<div class="callout" data-k="teacher">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M3 8l9-4 9 4-9 4-9-4Z"></path><path d="M7 10v5c0 1.5 2.5 3 5 3s5-1.5 5-3v-5"></path></svg>For the teacher: What should you look for in a report when a test was given digitally or remotely?</div>
+<p>The report should state the mode of administration (paper, digital in person, or remote); the platform and its version; who was with the student and in what role; the quality of the connection and any interruptions; what departed from standardized administration and which subtests were omitted; the evidence that justifies using the norms; and an explicit statement of how cautiously the results should be interpreted. If all of this is missing, ask the examiner before building on the numbers.</p>
+</div>
+<h3>AI-supported screening tools</h3>
+<p>Tools are emerging that promise early detection of autism, dyslexia or attention problems by analyzing video clips, eye movements, voice, handwriting or school records. At best they are screening tools, to be followed by diagnosis on broader evidence, and they should face the same questions as any other measure, along with some of their own:</p>
+<ul>
+<li><strong>Whom were they trained on?</strong> A model that learned from data on children in another country, or from a single group, may err systematically with others. Bias in the training data turns into bias in the decision.</li>
+<li><strong>How accurate are they with your students?</strong> Reported sensitivity and specificity need to be verified in a sample resembling your students, and positive predictive value shifts with the local prevalence (as Chapter 2 shows).</li>
+<li><strong>Do they work in Arabic and its dialects?</strong> A tool that analyzes speech or writing in another language does not carry over to Arabic without fresh validation.</li>
+<li><strong>Can their decisions be explained?</strong> A tool that delivers a verdict without showing its basis is hard for the team to review or challenge.</li>
+<li><strong>Where do the data go?</strong> Children's video clips and voices are highly sensitive personal data.</li>
+</ul>
+<p>The same holds for identifying the gifted. A scoping review of artificial intelligence applications in gifted education found only three empirical studies using machine learning for identification, and it cautioned that models trained on past nomination and rating data may reproduce the very gaps they are meant to close. It therefore recommended treating their outputs as advisory evidence subject to mandatory human review, and verifying their accuracy separately for each group of students (Alsamani &amp; Alsamiri, 2026).</p>
+<p>A subtler danger remains: the inclination to believe what a machine says simply because a machine said it. When a tool's result contradicts what the team knows about the student from observation, interviews and work samples, what is needed is more evidence before the number is accepted.</p>
+<!-- 8 -->
+<h2 id="s8"><span class="sec">3.8</span>How is an instrument chosen?</h2>
+<p>Before choosing any formal instrument, the examiner works through a list of questions. What decision is needed? Does the student's age fall within the instrument's range? Are its norms recent and representative? Does it have a standardized Arabic version, and what is that version's standing? Is its reliability adequate for this decision? Is there validity evidence for this purpose? Am I qualified to administer it? On the last question, test publishers classify their instruments by the qualifications required to purchase and administer them. We found no published text in the Kingdom specifying who may purchase or administer standardized psychological tests according to these levels. What is available is that education regulations assign the administration of intelligence and adaptive behavior measures to the school psychologist on a multidisciplinary team (Ministry of Education [Al-Ma'arif], 1422 AH [Arabic]), and require that instruments be administered and interpreted by “qualified specialists” (Ministry of Education, 1436 AH [Arabic]). The examiner then considers the characteristics of the student, which determine the kind of instrument that fits:</p>
+<figure class="fig-frame" id="fig-3-6">
+<div class="choose">
+<div class="c"><div class="if">The student is deaf, or has limited proficiency in the language of the test</div><div aria-hidden="true" class="ar">→</div><div class="then">A nonverbal test, preferably multi-ability, with awareness of the limits of what it measures</div></div>
+<div class="c"><div class="if">The student is blind or has low vision</div><div aria-hidden="true" class="ar">→</div><div class="then">Verbal subtests only, or instruments designed for blind students</div></div>
+<div class="c"><div class="if">The student has a motor impairment affecting the hands</div><div aria-hidden="true" class="ar">→</div><div class="then">Avoid timed tests that depend on manual manipulation, and allow responses by pointing</div></div>
+<div class="c"><div class="if">The student is very young, or has very high or very low abilities</div><div aria-hidden="true" class="ar">→</div><div class="then">A test with a wide range, reaching the easiest and hardest items, or a developmental scale for young children</div></div>
+<div class="c"><div class="if">The purpose is to screen a whole class</div><div aria-hidden="true" class="ar">→</div><div class="then">A group test or screening checklist, followed by individual assessment for those who exceed the cut-off score</div></div>
+<div class="c"><div class="if">In-person administration is not feasible</div><div aria-hidden="true" class="ar">→</div><div class="then">Remote interviews and rating scales; direct tests administered remotely only under the stated conditions (see 3.7)</div></div>
+</div>
+<figcaption><b>Figure 3.6:</b> Student characteristics and assessment conditions that guide the choice of instrument type.</figcaption>
+</figure>
+<div class="callout" data-k="example">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M4 5h16v11H8l-4 4V5Z"></path></svg>Brief case: Turki, age 9</div>
+<p>Turki has been deaf since birth and communicates in sign language. His teacher referred him because he is far behind in reading. Had a verbal intelligence test been given to him through an interpreter, his score would have come out low, because the test would have measured his knowledge of spoken Arabic rather than his ability to reason. The psychologist chose a multi-ability nonverbal test with pantomimed directions, and his score fell in the average range. A sign language specialist then assessed his communication skills with him. In its report, the team noted that the test used had no Arabic norms, that his score should be read as an indicator of reasoning ability alone, and that his reading delay was more likely related to limited access to spoken Arabic than to his cognitive ability. It recommended reading instruction suited to deaf students.</p>
+<p class="shift"><strong>What evidence could change the decision?</strong> If the sign language specialist's assessment showed delays in Turki's communication skills themselves despite early exposure to sign language, or if his reading progress remained limited after a sufficient period of reading instruction suited to deaf students, that would call for considering a co-occurring language or learning difficulty that hearing loss alone does not explain.</p>
+</div>
+<h3>The state of Arabic versions: questions to ask before trusting a score</h3>
+<p>The tables in this chapter show that, for most instruments in wide international use, we know of no published standardized Arabic version, and that those that do exist vary greatly in how well they are documented. The phrase “Arabic version” in a report or an advertisement is not enough on its own. Before you trust a score from an Arabic version, ask:</p>
+<div class="callout" data-k="key">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9V16h7v-2.1A6 6 0 0 0 12 3Z"></path></svg>Six questions about any Arabic version</div>
+<ol>
+<li><strong>Who developed it, where and when?</strong> The organization or researcher, the country, and the year the data were collected, not the year of printing.</li>
+<li><strong>What is the norming sample?</strong> Its size, its representation of regions, genders and school stages, and the ages it covers. Egyptian or Jordanian norms are not Saudi norms.</li>
+<li><strong>Is it a translation, an adaptation or a standardization?</strong> Translation alone leaves the norms foreign; standardization yields local norms.</li>
+<li><strong>How reliable is it?</strong> Reliability coefficients and the standard error of measurement in the Arabic sample itself.</li>
+<li><strong>What is the evidence of its validity?</strong> Did it retain the original factor structure? Was measurement invariance between the two versions examined? Does it correlate with local criteria?</li>
+<li><strong>Is it licensed?</strong> A version not licensed by the original publisher raises both a legal and a scientific issue, because no one can guarantee that it matches the original.</li>
+</ol>
+</div>
+<div class="callout" data-k="example">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="10" r="3"></circle><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11Z"></path></svg>In the Saudi context: instruments built in Arabic from the outset</div>
+<p>Most of what is used for diagnosis in Arabic consists of foreign instruments that have been translated or adapted. Some instruments, however, were built for the Arab setting from the start and so avoided the problems of translation, although they have limits of their own:</p>
+<ul>
+<li><strong>Mawhiba Multiple Cognitive Abilities Test (MMCAT).</strong> This is the test underlying the National Program for Gifted Identification, launched in 2011 as a partnership among the King Abdulaziz and His Companions Foundation for Giftedness and Creativity (Mawhiba), the Ministry of Education and the National Center for Assessment. It measures four domains—mental flexibility, linguistic reasoning and reading comprehension, mathematical and spatial reasoning, and scientific and mechanical reasoning—at three levels spanning grade 3 through grade 10 (first year of secondary school), and a student may sit it once at each level. It is administered by the National Center for Assessment, part of the Education and Training Evaluation Commission, through optional registration with a fee paid by the guardian except for subsidized students (King Abdulaziz and His Companions Foundation for Giftedness and Creativity, n.d. [Arabic]). We were unable to find the official score scale in published form; a peer-reviewed study of 5,146 students in Al-Ahsa reported an operational cut-off score of 1540 and found that the total score conceals divergent cognitive profiles that remain hidden when it is used alone (Almulhim et al., 2026). Chapter 12 discusses this test in detail.</li>
+<li><strong>Arabic curriculum-based measures.</strong> These were built on Arabic passages and Arabic word lists rather than translations of foreign texts, but they are still at the stage of preliminary studies with limited samples (see the box in 3.3).</li>
+</ul>
+<p>In the sources we were able to verify, we found no comprehensive individual intelligence test built in Arabic from the outset and standardized on a recent Saudi sample. This is a genuine research gap that deserves attention.</p>
+<p><strong>Question for reflection:</strong> What does a student gain from an instrument built in Arabic from the outset, and what might the student lose if its norms are not recent and its validity evidence is unpublished?</p>
+</div>
+<h2 class="unnum" id="conclusion">Conclusion</h2>
+<p>Standardized instruments vary in what they measure: cognitive ability, achievement, what the student typically does in daily life, and what informants observe of the student's behavior. What unites them, as this chapter has shown, is that a score carries meaning only under the conditions of its administration. It loses its value when the directions are departed from, when a modification alters what the test measures, or when a digital format is given paper norms without evidence of equivalence. It follows that interpretation begins with the overall score; that a difference between two indexes is interpreted only if it is both significant and rare; that disagreement among informants is understood as information about the student and the student's settings; and that every accommodation or modification, and every remote administration, is recorded in the report.</p>
+<p>Two matters remain open to debate: what can be inferred from the broad abilities on intelligence tests, given their limited distinctness from the general factor; and what can be expected of nonverbal tests, which help when language or hearing is a barrier but do not remove the influence of culture. Prior to both lies the open question of Arabic instruments. For most widely used instruments, no published standardized Arabic version is known, and the label “Arabic version” confers no confidence that has not been earned through evidence about its developer, sample, reliability, validity and licensing.</p>
+<!-- 9 -->
+<h2 id="s9"><span class="sec">3.9</span>Summary, key terms and activities</h2>
+<h3>Chapter summary</h3>
+<div class="summary"><ul>
+<li>The value of a standardized instrument lies in its uniform administration; any departure from the directions weakens or invalidates comparison with the norms.</li>
+<li>Start and discontinue rules ensure that the student answers items suited to his or her level, and they differ from one test to another.</li>
+<li>Modern intelligence tests measure multiple abilities according to <span class="en">CHC</span> theory, which now separates learning efficiency from retrieval fluency. But the broad abilities are only modestly distinct from the general factor, so interpretation begins with the overall score, and a difference between two indexes is interpreted only if it is both significant and rare.</li>
+<li>Nonverbal tests help when language or hearing is a barrier, but most measure a single aspect, predict achievement less well, and do not remove the influence of culture.</li>
+<li>Achievement tests are tied to language and curriculum and cannot be transferred through translation.</li>
+<li>Adaptive behavior scales measure what the student typically does, not what the student can do, and they are an essential criterion for intellectual disability.</li>
+<li>Discrepancies among informants' ratings are natural and expected; they are information to be understood and interpreted.</li>
+<li>An accommodation does not change what the test measures, whereas a modification does; both are recorded in the report.</li>
+<li>A digital format is not given paper norms without evidence of equivalence; teleassessment suits some instruments and students but not others, and it is documented in the report.</li>
+<li>For most widely used instruments, we know of no published standardized Arabic version; before an “Arabic version” is trusted, questions should be asked about its developer, sample, reliability, validity and licensing.</li>
+</ul></div>
+<h3>Glossary of terms</h3>
+<dl class="gloss">
+<dt>Standardized administration</dt><dd>Administering an instrument with the same directions, materials, timing and scoring procedures used with the norming sample.</dd>
+<dt>Basal</dt><dd>The number of consecutive correct responses after which the student is assumed to know the preceding items, which are then credited.</dd>
+<dt>Discontinue rule</dt><dd>The number of consecutive errors after which the examiner stops administering the subtest.</dd>
+<dt>Ceiling</dt><dd>The point at which administration stops once the discontinue rule is met; the student is assumed to fail the items beyond it.</dd>
+<dt>CHC theory</dt><dd>A hierarchical model of cognitive abilities comprising a general factor, broad abilities and narrow abilities.</dd>
+<dt>Learning efficiency (Gl)</dt><dd>A broad ability in <span class="en">CHC</span> theory concerning the speed of storing and consolidating new information.</dd>
+<dt>Retrieval fluency (Gr)</dt><dd>A broad ability in <span class="en">CHC</span> theory concerning the speed of retrieving stored information.</dd>
+<dt>Adaptive behavior</dt><dd>The conceptual, social and practical skills a person performs in daily life.</dd>
+<dt>Broadband scale</dt><dd>A rating scale that covers many behavioral and emotional domains at once.</dd>
+<dt>Narrowband scale</dt><dd>A rating scale that focuses on a single disorder or domain and measures it in depth.</dd>
+<dt>T-score</dt><dd>A standard score with a mean of 50 and a standard deviation of 10, used in most rating scales.</dd>
+<dt>Informant</dt><dd>The person who provides information about the student on a rating scale or in an interview, such as a parent, a teacher or the student.</dd>
+<dt>Cut-off score</dt><dd>A predetermined score above which a student moves on to the next stage of assessment.</dd>
+<dt>Accommodation</dt><dd>A change in presentation or response mode that does not alter what the test measures.</dd>
+<dt>Modification</dt><dd>A change that affects what the test measures or its difficulty, so that comparison with the norms is no longer valid.</dd>
+<dt>Mode equivalence</dt><dd>Established evidence that the digital format of a test yields scores with the same meaning as the paper format, so that the paper norms apply to it.</dd>
+<dt>Computerized adaptive test</dt><dd>A test in which the computer selects each item on the basis of the student's previous responses and stops when the ability estimate reaches a specified precision.</dd>
+<dt>Teleassessment</dt><dd>Administering an assessment instrument with the examiner in one place and the student in another, by video link.</dd>
+</dl>
+<h3>Review questions</h3>
+<ol>
+<li>Why is strict adherence to the directions a matter of fairness to the student rather than harshness? (Objective 1)</li>
+<li>In Figure 3.1, if the student had made an error on item 8 at the start, what would the examiner do? (Objective 1)</li>
+<li>Assign each of the following instruments to its family, and name one diagnostic decision it contributes to: <span class="en">ABAS-3</span>, <span class="en">WIAT-4</span>, <span class="en">Conners 4</span> and <span class="en">UNIT2</span>. (Objective 2)</li>
+<li>A student scored low on the Processing Speed Index and average on the other indexes. What might you notice about this student in class? And why is this difference alone not enough to conclude that a particular ability is impaired? (Objective 3)</li>
+<li>Why is a low intelligence test score not enough to diagnose intellectual disability? What does an adaptive behavior scale add? (Objective 4)</li>
+<li>On a hyperactivity rating scale, the teacher's rating yielded a T-score of 72 and the mother's a T-score of 55. How would you interpret this? What is the next step? (Objective 4)</li>
+<li>Classify each of the following as an accommodation or a modification: enlarging pictures, reading word problems aloud on a math test, and extending the time on a subtest that measures processing speed. (Objective 1)</li>
+<li>You read in a report that the student was given “the Arabic version of the Wechsler scale.” What questions would you ask about this version before trusting the score? Which do you consider most important, and why? (Objective 6)</li>
+<li>A family in a remote village asks for their five-year-old son to be assessed remotely because traveling to the diagnostic center is not feasible. What can be assessed remotely, and what cannot? (Objective 7)</li>
+</ol>
+<h4>Case for application</h4>
+<p><strong>Razan, 13, first year of intermediate school (grade 7).</strong> Razan has cerebral palsy that affects the movement of her hands; her speech is intelligible but slow, and she uses a computer with a large switch. A recent screening found her hearing and vision intact. Her achievement in math and science is good on oral tests and weak on timed written tests. The school wants to assess her cognitive ability to decide whether she needs a special education program or only accommodations in the general classroom. The family lives in a governorate far from the diagnostic center and asks whether the assessment can be done remotely.</p>
+<ol>
+<li>Which type of intelligence test would you choose for Razan, and which subtests would you avoid? Justify your choice. (Objective 5)</li>
+<li>Propose two accommodations under which her score could still be compared with the norms, and one change that would make the comparison invalid. (Objective 1)</li>
+<li>In her case, what could be gathered remotely, and what should be administered in person? And what should the report say about this? (Objective 7)</li>
+</ol>
+<h3>Learning activities</h3>
+<ol>
+<li><strong>Instrument profile:</strong> Choose an intelligence or achievement test whose record form and manual, or published technical manual, are available to you. Prepare a profile of it covering its underlying idea, format, who administers it, duration, types of scores and limitations. Then complete the “Arabic version” field using the six questions in 3.8, citing the source of each piece of information and writing “unknown” wherever you find no source. <em>Product:</em> a one-page profile. <em>Approximate time:</em> two hours.</li>
+<li><strong>Simulating start and discontinue rules:</strong> Design a subtest of 15 graded questions in a subject you teach, set start and discontinue rules for it, then administer it to an adult colleague and record what happened in the style of Figure 3.1. <em>Product:</em> the test, its rules and a diagram of what happened. <em>Approximate time:</em> an hour and a half.</li>
+<li><strong>Adaptive behavior interview:</strong> Write five open-ended questions to gather information about a child's everyday living skills, in the style of the Vineland interview. Then try them out with a parent, with that parent's consent, without recording any information that could identify the child, and for training purposes only, so that the answers are not used in any decision about the child. If that is not possible, try them with a colleague playing the parent. <em>Product:</em> the questions, and your notes on what the open-ended questions added. <em>Approximate time:</em> one hour.</li>
+<li><strong>Documentation paragraph:</strong> Suppose an intelligence scale was administered remotely to an 11-year-old student, assisted by a teacher at the student's school; the connection dropped once, and a subtest relying on blocks was omitted. Write the paragraph you would add to the report to document this, drawing on the “For the teacher” box in 3.7. <em>Product:</em> a paragraph of 80 to 120 words. <em>Approximate time:</em> half an hour.</li>
+</ol>
+<h3>Chapter references</h3>
+<ol class="refs">
+<li>Mohammed, H. A. A. (2016). [Differences between the two Gulf versions of the Stanford-Binet Intelligence Scales, Fifth Edition, in assessing and diagnosing intelligence and mental abilities among persons with disabilities in the Northern Borders Region] [In Arabic]. <i>Jazan University Journal of Human Sciences, 5</i>(Suppl.), 236–254. https://search.mandumah.com/Record/1103082</li>
+<li>King Abdulaziz and His Companions Foundation for Giftedness and Creativity. (n.d.). <i>[National Program for Gifted Identification]</i> [In Arabic]. Retrieved September 29, 2026, from https://www.mawhiba.sa/en/services/the-national-program-for-gifted-identification/</li>
+<li>Personal Data Protection Law, Royal Decree No. (M/19) (9/2/1443 AH), as amended by Royal Decree No. (M/148) (5/9/1444 AH) [In Arabic].</li>
+<li>Ministry of Education. (n.d.). <i>[Guide to gifted classes]</i> [In Arabic]. General Administration for the Gifted. Retrieved September 29, 2026, from https://www.moe.gov.sa/ar/aboutus/aboutministry/RPRLibrary/دليل%20فصول%20الموهوبين.pdf</li>
+<li>Ministry of Education. (1436 AH). <i>[Special education organizational guide]</i> [In Arabic] (1st ed., academic year 1436–1437 AH). https://moe.gov.sa/en/aboutus/aboutministry/RPRLibrary/الدليل%20التنظيمي%20للتربية%20الخاصة.pdf</li>
+<li>Ministry of Education [Al-Ma'arif]. (1422 AH). <i>[Regulations for Special Education Institutes and Programs]</i> [In Arabic]. https://moe.gov.sa/en/aboutus/aboutministry/RPRLibrary/القواعد%20التنظيمية%20لمعاهد%20وبرامج%20التربية%20الخاصة%201422%20هـ.pdf</li>
+<li>Abu-Hamour, B. (2014a). A pilot study for standardizing curriculum-based measurement oral reading fluency (CBM ORF) in Arabic. <i>Journal of the International Association of Special Education, 15</i>(1), 16–26.</li>
+<li>Abu-Hamour, B. (2014b). Using Arabic word identification fluency to monitor first-grade reading progress. <i>Dyslexia, 20</i>(2), 167–174. https://doi.org/10.1002/dys.1472</li>
+<li>Achenbach, T. M., McConaughy, S. H., &amp; Howell, C. T. (1987). Child/adolescent behavioral and emotional problems: Implications of cross-informant correlations for situational specificity. <i>Psychological Bulletin, 101</i>(2), 213–232.</li>
+<li>Achenbach, T. M., &amp; Rescorla, L. A. (2001). <i>Manual for the ASEBA school-age forms &amp; profiles</i>. University of Vermont, Research Center for Children, Youth, &amp; Families.</li>
+<li>Almulhim, N., Aljughaiman, A. M., &amp; Alfaiz, F. S. (2026). Beyond the total score: Revealing cognitive heterogeneity in high ability through latent profile analysis. <i>Journal of Intelligence, 14</i>(8), Article 166. https://doi.org/10.3390/jintelligence14080166</li>
+<li>Alqahtani, M. M. J., Al Saud, N. M., Alsharef, N. M., Alsalhi, S. M., Al-Hifthy, E. H., AlHadi, A. N., Ad-Dab'bagh, Y., Alenazi, F. A., Alotaibi, B. M., Alsaeed, S. M., Arnout, B. A., ALQasem, L., Alhossein, A., Alqahtani, Y. J., AlGhamdi, S. A., Alrahili, N., Varnham, J., &amp; Asiri, S. A. (2024). Psychometric properties of the Arabic Vanderbilt Children's ADHD Diagnostic Rating Scale (VADRS-A) in a Saudi population sample. <i>Scandinavian Journal of Child and Adolescent Psychiatry and Psychology, 12</i>(1), 72–83. https://doi.org/10.2478/sjcapp-2024-0008</li>
+<li>Alsamani, O. A., &amp; Alsamiri, Y. A. (2026). Artificial intelligence in gifted and talented education: A scoping review. <i>Frontiers in Psychology, 17</i>, Article 1898467. https://doi.org/10.3389/fpsyg.2026.1898467</li>
+<li>Alyahri, A., &amp; Goodman, R. (2006). Validation of the Arabic Strengths and Difficulties Questionnaire and the Development and Well-Being Assessment. <i>Eastern Mediterranean Health Journal, 12</i>(Suppl. 2), S138–S146.</li>
+<li>Bayley, N., &amp; Aylward, G. P. (2019). <i>Bayley Scales of Infant and Toddler Development</i> (4th ed.). Pearson.</li>
+<li>Bracken, B. A., &amp; McCallum, R. S. (2016). <i>Universal Nonverbal Intelligence Test</i> (2nd ed.). PRO-ED.</li>
+<li>Brown, L., Sherbenou, R. J., &amp; Johnsen, S. K. (2010). <i>Test of Nonverbal Intelligence</i> (4th ed.). PRO-ED.</li>
+<li>Conners, C. K. (2022). <i>Conners 4th Edition</i>. Multi-Health Systems.</li>
+<li>De Los Reyes, A., Augenstein, T. M., Wang, M., Thomas, S. A., Drabick, D. A. G., Burgers, D. E., &amp; Rabinowitz, J. (2015). The validity of the multi-informant approach to assessing child and adolescent mental health. <i>Psychological Bulletin, 141</i>(4), 858–900.</li>
+<li>Ejbara, M. A. (2024). Psychometric characteristics of a Saudi version of Wechsler Intelligence Scale for Preschool and Young Children. <i>Dirasat: Educational Sciences, 51</i>(2), 35–52. https://doi.org/10.35516/edu.v51i2.6661</li>
+<li>Elliott, C. D. (2007). <i>Differential Ability Scales</i> (2nd ed.). Harcourt Assessment.</li>
+<li>Emam, M. M., Al-Sulaimani, H., Omara, E., &amp; Al-Nabhany, R. (2020). Assessment of adaptive behaviour in children with intellectual disability in Oman: An examination of ABAS-3 factor structure and validation in the Arab context. <i>International Journal of Developmental Disabilities, 66</i>(4), 317–326. https://doi.org/10.1080/20473869.2019.1587939</li>
+<li>Harrison, P. L., &amp; Oakland, T. (2015). <i>Adaptive Behavior Assessment System</i> (3rd ed.). WPS.</li>
+<li>International Test Commission, &amp; Association of Test Publishers. (2022). <i>Guidelines for technology-based assessment</i>. International Test Commission.</li>
+<li>Kaufman, A. S., &amp; Kaufman, N. L. (2014). <i>Kaufman Test of Educational Achievement</i> (3rd ed.). NCS Pearson.</li>
+<li>Kaufman, A. S., &amp; Kaufman, N. L. (2018). <i>Kaufman Assessment Battery for Children, Second Edition, Normative Update</i>. NCS Pearson.</li>
+<li>Kranzler, J. H., Flores, C. G., &amp; Coady, M. (2010). Examination of the cross-battery approach for the cognitive assessment of children and youth from diverse linguistic and cultural backgrounds. <i>School Psychology Review, 39</i>(3), 431–446.</li>
+<li>Lohman, D. F. (2005). The role of nonverbal ability tests in identifying academically gifted students: An aptitude perspective. <i>Gifted Child Quarterly, 49</i>(2), 111–138.</li>
+<li>Lohman, D. F. (2011). <i>Cognitive Abilities Test</i> (Form 7). Riverside.</li>
+<li>Mahfouz, M. A. S., &amp; Mohamed, A. H. H. (2023). Using word reading fluency curriculum-based measurements to monitor students' reading progress in grade 2. <i>Education Sciences, 13</i>(2), Article 217. https://doi.org/10.3390/educsci13020217</li>
+<li>McGill, R. J., Dombrowski, S. C., &amp; Canivez, G. L. (2018). Cognitive profile analysis in school psychology: History, issues, and continued concerns. <i>Journal of School Psychology, 71</i>, 108–121.</li>
+<li>Naglieri, J. A. (2016). <i>Naglieri Nonverbal Ability Test</i> (3rd ed.). Pearson.</li>
+<li>Naglieri, J. A., Das, J. P., &amp; Goldstein, S. (2014). <i>Cognitive Assessment System</i> (2nd ed.). PRO-ED.</li>
+<li>NCS Pearson. (2020). <i>Wechsler Individual Achievement Test</i> (4th ed.).</li>
+<li>Reynolds, C. R., &amp; Kamphaus, R. W. (2015). <i>Behavior Assessment System for Children</i> (3rd ed.). Pearson.</li>
+<li>Roid, G. H. (2003). <i>Stanford-Binet Intelligence Scales</i> (5th ed.). Riverside.</li>
+<li>Roid, G. H., Miller, L. J., Pomplun, M., &amp; Koch, C. (2013). <i>Leiter International Performance Scale</i> (3rd ed.). Stoelting.</li>
+<li>Salvia, J., Ysseldyke, J. E., &amp; Witmer, S. (2017). <i>Assessment in special and inclusive education</i> (13th ed.). Cengage Learning.</li>
+<li>Schalock, R. L., Luckasson, R., &amp; Tassé, M. J. (2021). <i>Intellectual disability: Definition, diagnosis, classification, and systems of supports</i> (12th ed.). AAIDD.</li>
+<li>Schneider, W. J., &amp; McGrew, K. S. (2018). The Cattell–Horn–Carroll theory of cognitive abilities. In D. P. Flanagan &amp; E. M. McDonough (Eds.), <i>Contemporary intellectual assessment: Theories, tests, and issues</i> (4th ed., pp. 73–163). Guilford.</li>
+<li>Schrank, F. A., Mather, N., &amp; McGrew, K. S. (2014). <i>Woodcock-Johnson IV Tests of Achievement</i>. Riverside.</li>
+<li>Sparrow, S. S., Cicchetti, D. V., &amp; Saulnier, C. A. (2016). <i>Vineland Adaptive Behavior Scales</i> (3rd ed.). Pearson.</li>
+<li>Styck, K. M., &amp; Watkins, M. W. (2013). Diagnostic utility of the Culture-Language Interpretive Matrix for the Wechsler Intelligence Scales for Children—Fourth Edition among referred students. <i>School Psychology Review, 42</i>(4), 367–382.</li>
+<li>Wechsler, D. (2014). <i>Wechsler Intelligence Scale for Children</i> (5th ed.). Pearson.</li>
+<li>Wright, A. J. (2020). Equivalence of remote, digital administration and traditional, in-person administration of the Wechsler Intelligence Scale for Children, Fifth Edition (WISC-V). <i>Psychological Assessment, 32</i>(9), 809–817. https://doi.org/10.1037/pas0000939</li>
+</ol>
+<div aria-hidden="true" class="endmark">✦ ✦ ✦</div>
+<aside class="bp-cite" dir="ltr"><b>How to cite this section</b><p class="bp-ref">Alsamani, O. A. (2026). Chapter 3: Formal standardized methods. In <i>Diagnosis and Identification of Exceptional Learners</i>. alsamani.com. https://alsamani.com/books/diagnosis-identification/en/ch03.html</p><p class="bp-lic2">© 2026 Dr. Omar A. Alsamani. Free to read, download, share and quote for non-commercial purposes with attribution to the author and source.</p></aside>
+<nav class="pager"><a href="ch02.html"><small>Previous chapter</small><b>Measurement fundamentals</b></a><a class="next" href="ch04.html"><small>Next chapter</small><b>Informal methods</b></a></nav>
+</div>
+<footer class="bp-foot" dir="ltr"><div class="bp-fin"><a class="bp-fid" href="../../../index.html"><span class="bp-fmark">OA</span><b>Dr. Omar A. Alsamani</b></a>
+<nav><a href="../../../index.html">Updates</a><a href="../../../books/index.html">Open Library</a><a href="../../../publications/index.html">Publications</a><a href="../../../tools/index.html">Tools</a><a href="../../../photography/index.html">Photography</a><a href="../../../about/index.html">About</a><a href="../../../contact/index.html">Contact</a></nav><p><bdi dir="ltr">© 2007–2026 alsamani.com</bdi></p><div class="pv" id="pv" dir="ltr" hidden></div></div></footer><script>(function(){{var el=document.getElementById('pv');if(!el)return;var live=/(^|\.)alsamani\.com$/.test(location.hostname);
+fetch('https://abacus.jasoncameron.dev/'+(live?'hit':'get')+'/alsamani-com/views').then(function(r){{return r.json()}}).then(function(d){{
+if(typeof d.value!=='number')return;var s=String(d.value);while(s.length<4)s='0'+s;
+el.innerHTML=s.split('').map(function(){{return '<span class="pv-d"><span class="pv-s">0<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9</span></span>'}}).join('');
+el.hidden=false;var cells=el.querySelectorAll('.pv-s');
+requestAnimationFrame(function(){{requestAnimationFrame(function(){{s.split('').forEach(function(c,i){{cells[i].style.transform='translateY('+(-c*10)+'%)'}})}})}})}}).catch(function(){{}})}})();
+</script><style>.bp-foot{box-shadow:0 0 0 100vmax var(--bpf,#F5F5F7);clip-path:inset(0 -100vmax);background:#F5F5F7;color:#6E6E73;font:13px/1.6 -apple-system,BlinkMacSystemFont,"IBM Plex Sans Arabic","Inter",sans-serif;margin-top:56px;padding:36px 20px calc(36px + env(safe-area-inset-bottom))}
+.bp-fin{max-width:1120px;margin:0 auto;display:flex;flex-wrap:wrap;gap:18px 40px;align-items:center;justify-content:space-between}
+.bp-fid{display:flex;align-items:center;gap:10px;color:#1D1D1F!important;text-decoration:none}.bp-fid b{font-weight:600}
+.bp-fmark{width:30px;height:30px;border:1px solid currentColor;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:600;letter-spacing:.04em}
+.bp-foot nav{display:flex;flex-wrap:wrap;gap:6px 22px}.bp-foot nav a{color:#6E6E73!important;text-decoration:none}.bp-foot nav a:hover{color:#1D1D1F!important}
+.bp-foot p{margin:0;flex-basis:100%;font-size:12px;border-top:1px solid #D2D2D7;padding-top:14px}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .bp-foot{--bpf:#161617;background:#161617;color:#A1A1A6}:root:not([data-theme="light"]) .bp-fid{color:#F5F5F7!important}}
+:root[data-theme="dark"] .bp-foot{--bpf:#161617;background:#161617;color:#A1A1A6}:root[data-theme="dark"] .bp-fid{color:#F5F5F7!important}
+@media print{.bp-foot{display:none}}</style><style>.pv{display:flex;justify-content:center;gap:4px;margin:14px auto 4px;grid-column:1/-1;width:100%}
+.bp-fin>p{text-align:center;width:100%}
+.pv[hidden]{display:none}
+.pv-d{display:inline-block;width:1.25em;height:1.7em;overflow:hidden;border-radius:6px;background:var(--bg,#fff);box-shadow:inset 0 0 0 1px var(--line,#d2d2d7);font:500 13px/1.7em "SF Mono",ui-monospace,Menlo,monospace;text-align:center;color:var(--ink,#1d1d1f)}
+.pv-s{display:block;transition:transform 1.4s cubic-bezier(.2,.8,.2,1)}
+@media (prefers-reduced-motion:reduce){.pv-s{transition:none}}
+.bp-foot .pv-d{background:#fff;box-shadow:inset 0 0 0 1px #d2d2d7;color:#1d1d1f}</style>
+</body>
+</html>

@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+
+<html dir="ltr" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
+<title>Chapter 6: Identification models | Diagnosis and Identification of Exceptional Learners | Dr. Omar A. Alsamani</title>
+<link href="../assets/book.css?v=ea97adfb" rel="stylesheet"/>
+<style>
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:16px;font-family:var(--f-ui)}
+.pair>div{border:1.5px solid var(--line);border-radius:14px;padding:16px;min-width:0}
+.pair h5{font-family:var(--f-display);font-size:18px;margin:0 0 10px;font-weight:700}
+.pair .bars{display:grid;gap:8px}
+.pair .r{display:grid;grid-template-columns:5.5rem 1fr 34px;gap:10px;align-items:center;font-size:13.5px}
+.pair .tr{height:22px;background:var(--paper-2);border-radius:5px;direction:ltr;position:relative}
+.pair .tr i{position:absolute;top:0;bottom:0;left:0;border-radius:5px}
+.pair .iq{background:var(--example)}
+.pair .ach{background:var(--teacher)}
+.pair .v{font-weight:700;font-variant-numeric:tabular-nums;text-align:center}
+.pair .res{margin-top:12px;font-size:14px;line-height:1.75;border-radius:8px;padding:8px 12px}
+.pair .yes{background:var(--accent-soft);color:var(--accent)}
+.pair .no{background:var(--warn-soft);color:var(--warn)}
+@media (max-width:600px){.pair{grid-template-columns:1fr}}
+.pyr{display:flex;flex-direction:column;align-items:center;gap:6px;font-family:var(--f-ui)}
+.pyr>div{text-align:center;padding:14px 18px;border-radius:10px;color:var(--ink);max-width:100%}
+.pyr b{display:block;font-size:16px}
+.pyr span{display:block;font-size:13.5px;line-height:1.7;color:var(--ink-2)}
+.pyr .t3{width:40%;background:var(--sev-soft);border:1.5px solid var(--sev)}
+.pyr .t2{width:68%;background:var(--mid-soft);border:1.5px solid var(--mid)}
+.pyr .t1{width:100%;background:var(--good-soft);border:1.5px solid var(--good)}
+.pyr .t3 b{color:var(--sev)}.pyr .t2 b{color:var(--mid)}.pyr .t1 b{color:var(--good)}
+@media (max-width:560px){.pyr>div{width:100%!important}}
+.svgfig{direction:ltr}
+.svgfig text{font-family:var(--f-ui)}
+.svgfig .ax{stroke:var(--ink-2);stroke-width:1.2}
+.svgfig .gr{stroke:var(--line)}
+.svgfig .tk{fill:var(--ink-2);font-size:12.5px}
+.svgfig .cls{stroke:var(--example);stroke-width:2.5;stroke-dasharray:8 5}
+.svgfig .stu{stroke:var(--warn);stroke-width:2;fill:none}
+.svgfig .sp{fill:var(--warn)}
+.svgfig .lab{font-size:13px;font-weight:700}
+.svgfig .br{stroke:var(--ink-2);stroke-width:1.2;fill:none}
+.psw svg{width:100%;max-width:560px;height:auto;display:block;margin:0 auto;direction:ltr}
+.psw text{font-family:var(--f-ui)}
+.psw .nd{stroke-width:2}
+.psw .s{fill:var(--good-soft);stroke:var(--good)}
+.psw .w{fill:var(--warn-soft);stroke:var(--warn)}
+.psw .a{fill:var(--mid-soft);stroke:var(--mid)}
+.psw .t{fill:var(--ink);font-size:15px;font-weight:700}
+.psw .ts{fill:var(--ink-2);font-size:12.5px}
+.psw .e{stroke:var(--ink-2);stroke-width:1.6;fill:none}
+.psw .el{fill:var(--accent);font-size:13px;font-weight:700}
+.rules{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;font-family:var(--f-ui)}
+.rules>div{border:1.5px solid var(--line);border-radius:14px;padding:14px;text-align:center;min-width:0}
+.rules svg{width:100%;max-width:180px;height:auto}
+.rules .pl{fill:var(--paper-2);stroke:var(--line)}
+.rules .in{fill:var(--accent);opacity:.35}
+.rules .th{stroke:var(--ink-2);stroke-width:1.4;stroke-dasharray:4 3}
+.rules .axl{fill:var(--ink-2);font-size:11px}
+.rules b{display:block;font-size:15.5px;margin-top:6px}
+.rules span{display:block;font-size:13px;color:var(--ink-2);line-height:1.7}
+@media (max-width:620px){.rules{grid-template-columns:1fr}}
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;font-family:var(--f-ui)}
+.three>div{border-radius:12px;padding:14px;border:1.5px solid var(--accent);background:var(--accent-soft);min-width:0}
+.three b{display:block;font-size:15.5px;color:var(--accent);margin-bottom:4px}
+.three span{font-size:13.5px;line-height:1.75;color:var(--ink-2)}
+@media (max-width:620px){.three{grid-template-columns:1fr}}
+.svgfig .phase{stroke:var(--ink-2);stroke-width:1.2;stroke-dasharray:3 4}
+.svgfig .peer{stroke:var(--example);stroke-width:2.5;stroke-dasharray:8 5;fill:none}
+.svgfig .zone{font-size:12.5px;font-weight:700;fill:var(--ink-2)}
+td.c,th.c{text-align:center}
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"><style>:root{--f-body:"Source Serif 4",Georgia,serif;--f-display:"Source Serif 4",Georgia,serif;--f-ui:"IBM Plex Sans",system-ui,sans-serif}.questions li::before{content:counter(q)}html{direction:ltr!important}body{letter-spacing:0;text-align:left}caption{text-align:left!important}.formula small{direction:ltr}.cover svg{left:auto!important;right:0}</style><link rel="stylesheet" href="../assets/platform.css?v=b4c32405"><script>window.BOOK={slug:"diagnosis-identification-en",cur:"ch06.html",lang:"en",title:"Diagnosis and Identification of Exceptional Learners",author:"Dr. Omar A. Alsamani"}</script><script src="../assets/platform.js?v=0d28c8d2" defer></script>
+<link rel="canonical" href="https://alsamani.com/books/diagnosis-identification/en/ch06.html"><link rel="alternate" hreflang="ar" href="https://alsamani.com/books/diagnosis-identification/ch06.html"><link rel="alternate" hreflang="en" href="https://alsamani.com/books/diagnosis-identification/en/ch06.html"><link rel="alternate" hreflang="x-default" href="https://alsamani.com/books/diagnosis-identification/ch06.html"><meta name="description" content="The tools are many and the evidence varied, yet one question remains: how is it all brought together into a single decision? Do we look for a gap between intelligence and achievement, wait to see what a student&#x27;s response to sound instruction reveals, or search for a pattern in the student&#x27;s…"><meta name="author" content="Omar A. Alsamani"><meta property="og:title" content="Chapter 6: Identification models | Diagnosis and Identification of Exceptional Learners | Dr. Omar A. Alsamani"><meta property="og:url" content="https://alsamani.com/books/diagnosis-identification/en/ch06.html"><meta property="og:site_name" content="Dr. Omar A. Alsamani"><meta property="og:locale" content="en_US"><meta name="twitter:card" content="summary"><meta property="og:description" content="The tools are many and the evidence varied, yet one question remains: how is it all brought together into a single decision? Do we look for a gap between intelligence and achievement, wait to see what a student&#x27;s response to sound instruction reveals, or search for a pattern in the student&#x27;s…"><script type="application/ld+json">[{"@context": "https://schema.org", "@type": "Chapter", "name": "Identification models", "headline": "Chapter 6: Identification models", "url": "https://alsamani.com/books/diagnosis-identification/en/ch06.html", "inLanguage": "en", "author": {"@type": "Person", "name": "Omar A. Alsamani", "alternateName": "عمر عبدالله الصمعاني", "url": "https://alsamani.com/", "jobTitle": "Associate Professor", "affiliation": {"@type": "CollegeOrUniversity", "name": "University of Hail"}}, "isPartOf": {"@type": "Book", "name": "Diagnosis and Identification of Exceptional Learners", "url": "https://alsamani.com/books/diagnosis-identification/en/", "author": {"@type": "Person", "name": "Omar A. Alsamani", "alternateName": "عمر عبدالله الصمعاني", "url": "https://alsamani.com/", "jobTitle": "Associate Professor", "affiliation": {"@type": "CollegeOrUniversity", "name": "University of Hail"}}, "inLanguage": "en", "license": "https://creativecommons.org/licenses/by-nc-nd/4.0/", "isAccessibleForFree": true, "bookFormat": "https://schema.org/EBook", "alternativeHeadline": "Learners with disabilities, the gifted and the twice-exceptional", "isbn": "978-603-06-7714-6", "datePublished": "2026"}, "license": "https://creativecommons.org/licenses/by-nc-nd/4.0/", "isAccessibleForFree": true, "description": "The tools are many and the evidence varied, yet one question remains: how is it all brought together into a single decision? Do we look for a gap between intelligence and achievement, wait to see what a student's response to sound instruction reveals, or search for a pattern in the student's…", "keywords": "Introduction, Why do we need a model?, The discrepancy model, Response to intervention, Patterns of strengths and weaknesses, Hybrid models, Multiple-criteria models in giftedness, Comparing the models and reading the Saudi regulations, Conclusion, Summary, key terms, and activities"}, {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Dr. Omar A. Alsamani", "item": "https://alsamani.com/"}, {"@type": "ListItem", "position": 2, "name": "Open Library", "item": "https://alsamani.com/books/"}, {"@type": "ListItem", "position": 3, "name": "Diagnosis and Identification of Exceptional Learners", "item": "https://alsamani.com/books/diagnosis-identification/en/"}, {"@type": "ListItem", "position": 4, "name": "Identification models", "item": "https://alsamani.com/books/diagnosis-identification/en/ch06.html"}]}]</script></head>
+<body>
+<div class="bp-bar" dir="ltr"><div class="bp-in">
+<a class="bp-home" href="../../../index.html">Dr. Omar A. Alsamani</a><span class="bp-sep">/</span><a href="../../index.html">Open Library</a><span class="bp-sep">/</span><a href="index.html" class="bp-book">Diagnosis and Identification of Exceptional Learners</a>
+<span class="bp-sp"></span><span class="bp-tools"><button class="bp-ic" type="button" data-rd="z-" aria-label="Smaller text" title="Smaller text">A−</button><button class="bp-ic" type="button" data-rd="z+" aria-label="Larger text" title="Larger text">A+</button><button class="bp-ic" type="button" data-rd="theme" aria-label="Dark mode" title="Dark/light mode">Dark</button></span><a class="bp-btn" href="../ch06.html" hreflang="ar" lang="ar">العربية</a><button class="bp-btn" type="button" data-notes>Notes<i hidden></i></button><button class="bp-btn" type="button" data-share>Share</button><button class="bp-btn" type="button" data-bp="search">Search</button><button class="bp-btn solid" type="button" data-bp="toc">Contents</button></div></div>
+<div class="bp-share" id="bpShare" hidden dir="ltr"><b>Share this page</b><button type="button" data-sh="copy">Copy link</button><button type="button" data-sh="native" hidden>Share…</button><a data-sh="wa" target="_blank" rel="noopener">WhatsApp</a><a data-sh="x" target="_blank" rel="noopener">X</a><a data-sh="li" target="_blank" rel="noopener">LinkedIn</a><a data-sh="tg" target="_blank" rel="noopener">Telegram</a><a data-sh="mail">Email</a><small>To share a specific section, hover over its heading and click ¶</small></div>
+<div class="bp-drawer" id="bpDrawer" hidden dir="ltr"><div class="bp-panel" role="dialog" aria-label="Contents and search">
+<div class="bp-head"><b>Diagnosis and Identification of Exceptional Learners</b><button type="button" class="bp-x" data-bp="close" aria-label="Close">×</button></div>
+<div class="bp-search"><input id="bpQ" type="search" placeholder="Search the text of the book…" autocomplete="off"><div id="bpRes"></div></div>
+<nav class="bp-toc" id="bpToc"></nav>
+<div class="bp-links"><a href="../../index.html">Open Library</a><a href="../../../index.html">alsamani.com home</a></div>
+</div></div>
+<div class="page">
+<nav class="booknav"><a href="index.html">→ Diagnosis and Identification of Exceptional Learners</a><span>Part Two: Methods</span></nav>
+<header class="opener">
+<div aria-hidden="true" class="num">6</div>
+<div>
+<div class="kicker">Chapter 6</div>
+<h1>Identification models</h1>
+</div>
+<p class="sub">The tools are many and the evidence varied, yet one question remains: how is it all brought together into a single decision? Do we look for a gap between intelligence and achievement, wait to see what a student's response to sound instruction reveals, or search for a pattern in the student's abilities? And how are several scores combined to judge that a student is gifted? In this chapter we present the models that take up this question of decision, and then read the Saudi regulations in their light.</p>
+</header>
+<nav aria-label="Chapter contents" class="toc">
+<b>In this chapter</b>
+<ol>
+<li class="u"><a href="#intro">Introduction</a></li>
+<li value="1"><a href="#s1">Why do we need a model?</a></li>
+<li value="2"><a href="#s2">The discrepancy model</a></li>
+<li value="3"><a href="#s3">Response to intervention</a></li>
+<li value="4"><a href="#s4">Patterns of strengths and weaknesses</a></li>
+<li value="5"><a href="#s5">Hybrid models</a></li>
+<li value="6"><a href="#s6">Multiple-criteria models in giftedness</a></li>
+<li value="7"><a href="#s7">Comparing the models and reading the Saudi regulations</a></li>
+<li class="u"><a href="#conclusion">Conclusion</a></li>
+<li value="8"><a href="#s8">Summary, key terms and activities</a></li>
+</ol>
+</nav>
+<div class="scene">
+<span class="lbl">Scene from two team meetings</span>
+<p>Two third graders both read very slowly and make many errors. At one school, the team said of the first: “His intelligence is average and his achievement is low. The gap is large, so he has a learning disability.” Of the second, they said: “His intelligence is slightly below average and the gap is small, so he does not have a learning disability. He is just a slow learner.”</p>
+<p>At another school, the team said of both students: “We won’t make a judgment now. We’ll teach them reading intensively for eight weeks and measure their progress every week. Whoever still doesn’t improve will need a comprehensive evaluation.”</p>
+</div>
+<p>The students are the same, and so is the need, yet the decision changed with the model each school relies on. That is why understanding identification models is a practical necessity for every team.</p>
+<h3>Chapter objectives</h3>
+<p>After studying this chapter, the reader should be able to:</p>
+<ol class="objectives">
+<li>Calculate the ability–achievement discrepancy for a given student using both the simple-difference and regression methods, and explain how the standard error of the difference affects the stability of the decision.</li>
+<li>Apply the common nonresponse criteria (final status, slope and dual discrepancy) to a given set of progress-monitoring data, and state at least one limitation of each.</li>
+<li>Compare the three versions of the patterns of strengths and weaknesses model in terms of what each requires, and summarize one piece of supporting evidence and one piece of critical evidence.</li>
+<li>Apply the criteria of the hybrid model to a given case, and match them against the DSM criteria for specific learning disorder.</li>
+<li>Apply the three combination rules to the scores of given students, and determine whom each rule excludes.</li>
+<li>Analyze the Saudi regulatory texts on learning disabilities and giftedness using the concepts of this chapter, and identify whom they may miss.</li>
+<li>Judge whether the evidence is sufficient to identify a learning disability in a new case, justify the judgment, and name the missing evidence.</li>
+</ol>
+<h2 class="unnum" id="intro">Introduction</h2>
+<p>No single test can detect a learning disability or giftedness; both are judgments built on multiple sources of evidence. A team therefore needs a model that specifies which evidence is gathered, how it is combined, and where the dividing line falls. Choosing a model is a decision with direct consequences for students. As the opening scene shows, the same student may be considered to have a learning disability under one model and not under another, and in giftedness the rule for combining scores changes who is identified as gifted and who is excluded. Understanding the logic and limits of each model is a prerequisite for reading the regulations within which a team works, and for recognizing what those regulations leave to its professional judgment.</p>
+<p>We open the chapter by explaining why a decision model is needed (Section 6.1), then present the discrepancy model and the criticisms leveled at it (Section 6.2), followed by response to intervention, the dual-discrepancy criterion and when nonresponse can be determined (Section 6.3). We then take up the patterns of strengths and weaknesses model in its three versions and the debate surrounding it (Section 6.4), the hybrid models with a worked case (Section 6.5), and multiple-criteria models in giftedness, combination rules, universal screening and local norms (Section 6.6). We close by comparing the models and reading the Saudi regulations in their light (Section 6.7).</p>
+<!-- 1 -->
+<h2 id="s1"><span class="sec">6.1</span>Why do we need a model?</h2>
+<p>Some categories have relatively clear criteria: hearing impairment is measured with audiometric equipment, and autism spectrum disorder has detailed criteria in the Diagnostic and Statistical Manual of Mental Disorders, Fifth Edition, Text Revision (<span class="en">DSM-5-TR</span>; American Psychiatric Association, 2022). Two categories in particular, however, need a model that specifies how we reach a decision: <strong>learning disabilities</strong>, because no single test detects them, and <strong>giftedness</strong>, because its very definition differs from one system to another. A model answers three questions: What evidence do we gather? How do we combine it into a decision? And where do we set the line?</p>
+<p>In this chapter, “learning disabilities” names the educational category that qualifies for services in school systems, and “specific learning disorder” (<span class="en">Specific learning disorder</span>) is used when the discussion concerns the DSM criteria. The two concepts are close, each has its own criteria, and we set them side by side in Section 6.5.</p>
+<!-- 2 -->
+<h2 id="s2"><span class="sec">6.2</span>The discrepancy model</h2>
+<p>For decades, the <strong>discrepancy model</strong> (<span class="en">Discrepancy model</span>) was the most widely used approach to identifying learning disabilities. Its idea is simple: a student with a learning disability is intellectually capable, but his achievement in a particular area falls well below what his ability would predict. In other words, there is a <strong>discrepancy</strong> between ability and achievement (<span class="en">Ability-achievement discrepancy</span>). It is usually calculated as the difference between the standard score on an intelligence test and the standard score on an achievement test, and the difference must reach a set threshold, such as one and a half standard deviations, that is, 22.5 points on a scale with a mean of 100 and a standard deviation of 15.</p>
+<figure id="fig-6-1">
+<div class="pair">
+<div>
+<h5>First student</h5>
+<div class="bars">
+<div class="r"><span>Intelligence</span><div class="tr"><i class="iq" style="width:70%"></i></div><span class="v">105</span></div>
+<div class="r"><span>Reading</span><div class="tr"><i class="ach" style="width:52%"></i></div><span class="v">78</span></div>
+</div>
+<div class="res yes">The difference is 27 points, more than 1.5 standard deviations. A discrepancy is present, so he is classified as having a learning disability.</div>
+</div>
+<div>
+<h5>Second student</h5>
+<div class="bars">
+<div class="r"><span>Intelligence</span><div class="tr"><i class="iq" style="width:54.67%"></i></div><span class="v">82</span></div>
+<div class="r"><span>Reading</span><div class="tr"><i class="ach" style="width:50.67%"></i></div><span class="v">76</span></div>
+</div>
+<div class="res no">The difference is only 6 points. No discrepancy is present, so he is not classified, even though his reading is weaker than the first student’s.</div>
+</div>
+</div>
+<figcaption><b>Figure 6.1:</b> A hypothetical example of the simple-difference discrepancy model. In each card, the upper bar shows intelligence and the lower bar shows reading, with the score beside each bar. The two students struggle in reading to roughly the same degree, yet the model grants services to one and withholds them from the other.</figcaption>
+</figure>
+<div class="callout" data-k="myth">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5V14M12 17h.01"></path></svg>Misconception: “He doesn’t have a learning disability; he’s just a slow learner”</div>
+<p>The first team’s remark about the second student in the chapter’s opening scene is common in our schools. It sounds like a diagnosis, but it is in fact a popular description with no basis in any classification. “Slow learning” is not a category in the DSM or the International Classification of Diseases, nor among the categories of U.S. law, nor among those adopted by the Special Education Organizational Guide in the Kingdom (Ministry of Education, 1436 AH [Arabic]). Its closest counterpart is “borderline intellectual functioning” (<span class="en">Borderline intellectual functioning</span>). Earlier editions of the DSM defined it by a numerical range; the current edition lists it under “other conditions that may be a focus of clinical attention,” with no numerical cutoff, and does not regard it as a disorder (American Psychiatric Association, 2022).</p>
+<p>The practical danger is that this remark closes the file. The student’s intelligence is above the threshold for intellectual disability, so he does not qualify for those services, and the gap between his intelligence and his achievement is small, so under discrepancy logic he does not qualify for learning disability services either. He is left without support, even though his reading weakness is real and he may respond to intensive intervention as well as anyone. The more productive question is “Does he learn when we teach him intensively, and what does he need?” Asking it serves him better than searching for a label for his condition, and it is the question the models in the rest of this chapter set out to answer.</p>
+</div>
+<h3>Why has the discrepancy model been criticized?</h3>
+<ul>
+<li><strong>It does not distinguish who needs different treatment:</strong> A large meta-analysis, that is, a study that pools and analyzes the results of many studies, found that poor readers with a discrepancy and poor readers without one are similar in reading-related skills and need similar instruction (Stuebing et al., 2002). The discrepancy, in other words, does not separate two genuinely different groups.</li>
+<li><strong>A wait-to-fail model:</strong> In the early grades, reading demands are simple, so the gap does not grow wide enough until third or fourth grade. The student waits years, struggling all the while, before qualifying for services, even though early intervention is far more beneficial.</li>
+<li><strong>An unstable decision:</strong> Both scores carry measurement error, and the two errors combine in the difference between them. If the reliability of the intelligence test is 0.95 and that of the reading test is 0.90, the standard error of the difference is about <bdi dir="ltr">15 × √(2 − 0.95 − 0.90) ≈ 5.8</bdi> points, and the first student’s observed difference of 27 is consistent, with 95% confidence, with a true difference of roughly 16 to 38. That range straddles the 22.5 cutoff, so we cannot say with certainty whether the student is above or below it. This is why a student may be classified this year and not next year without anything about him having changed (see the calculation of the standard error of the difference in <a href="ch02.html#s5-1">Chapter 2, 2.5.1</a>).</li>
+<li><strong>It depends on the tests used:</strong> A different intelligence test or a different achievement test may change the entire decision.</li>
+<li><strong>It ignores regression toward the mean:</strong> Intelligence and achievement are correlated, but imperfectly, so for a student with an IQ of 130 we expect achievement closer to the mean than 130. The simple difference overlooks this, as the following box shows.</li>
+</ul>
+<div class="callout" data-k="pro">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M4 19V5M4 19h16M8 15l3-4 3 2 5-6"></path></svg>For the specialist: Regression-based discrepancy</div>
+<p>Rather than comparing achievement with the intelligence score itself, we compare it with the <strong>expected</strong> achievement of a student with that level of intelligence. The expected score is calculated with a regression equation. If both tests have a mean of 100 and a standard deviation of 15, and the correlation coefficient between them is r:</p>
+<div class="formula">Expected achievement = 100 + r × (IQ − 100)<small>We then compare actual achievement with expected achievement and judge the difference against the standard error of estimate: 15 × √(1 − r²)</small></div>
+<div class="worked">
+<b class="h">Worked example: three students, two methods</b>
+<div class="step"><i>1</i><span>For illustration, assume that the correlation between the intelligence test and the reading test is <span class="ltr">r = 0.60</span>. The actual correlation is taken from the test manual or from studies that have linked the two tests.</span></div>
+<div class="step"><i>2</i><span>The standard error of estimate is <span class="ltr">15 × √(1 − 0.36) = 15 × 0.8 = 12</span>. If we want a cutoff equivalent to 1.5 standard deviations, it falls at <span class="ltr">1.5 × 12 = 18</span> points below the expected score.</span></div>
+<div class="step"><i>3</i><span>First student (IQ 105, reading 78): the expected score is <span class="ltr">100 + 0.6 × 5 = 103</span>, and his reading falls 25 points below it, so the discrepancy holds under both methods.</span></div>
+<div class="step"><i>4</i><span>A student with an IQ of 130 and reading of 105: the simple difference is 25, so he is classified. But the expected score is <span class="ltr">100 + 0.6 × 30 = 118</span>, and his reading falls only 13 points below it, so there is no discrepancy under the regression method.</span></div>
+<div class="step"><i>5</i><span>A student with an IQ of 85 and reading of 68: the simple difference is 17, so he is not classified. But the expected score is <span class="ltr">100 + 0.6 × (−15) = 91</span>, and his reading falls 23 points below it, so the discrepancy holds under the regression method.</span></div>
+</div>
+<div class="tw"><table id="tab-6-1">
+<caption>Table 6.1: Judgments for three hypothetical students using the simple difference (cutoff 22.5) and regression (cutoff 18 below expected, assuming a correlation of 0.60).</caption>
+<thead><tr><th>Student</th><th class="c">Intelligence</th><th class="c">Reading</th><th class="c">Simple difference</th><th class="c">Judgment</th><th class="c">Expected</th><th class="c">Below expected</th><th class="c">Judgment</th></tr></thead>
+<tbody>
+<tr><td>First (Figure 6.1)</td><td class="c">105</td><td class="c">78</td><td class="c">27</td><td class="c">✓</td><td class="c">103</td><td class="c">25</td><td class="c">✓</td></tr>
+<tr><td>High IQ</td><td class="c">130</td><td class="c">105</td><td class="c">25</td><td class="c">✓</td><td class="c">118</td><td class="c">13</td><td class="c">✗</td></tr>
+<tr><td>Slightly low IQ</td><td class="c">85</td><td class="c">68</td><td class="c">17</td><td class="c">✗</td><td class="c">91</td><td class="c">23</td><td class="c">✓</td></tr>
+</tbody>
+</table></div>
+<p>The simple difference thus <strong>over-identifies</strong> students with high intelligence, because it expects their achievement to equal their intelligence, and <strong>under-identifies</strong> students with slightly low intelligence, because it expects lower achievement from them than regression does. This is one face of regression toward the mean (see <a href="ch02.html#s5-2">Chapter 2, 2.5.2</a>). The result bears directly on twice-exceptional learners: a gifted student with average achievement may appear “discrepant” under the simple difference but not under regression. Correcting the formula, however, does not solve the model’s other problems; the meta-analysis cited above found no meaningful difference in reading-related skills between discrepant and nondiscrepant poor readers (Stuebing et al., 2002).</p>
+</div>
+<p>For these reasons, the U.S. Individuals with Disabilities Education Act (<span class="en">IDEA</span>), as amended in 2004, and its implementing regulations provide that states may not require schools to use a discrepancy, must permit the use of a process based on response to intervention, and may permit other research-based procedures (U.S. Department of Education, 2006, 34 CFR §300.307).</p>
+<!-- 3 -->
+<h2 id="s3"><span class="sec">6.3</span>Response to intervention</h2>
+<p>The <strong>response to intervention</strong> model (<span class="en">Response to intervention, RTI</span>) turns the question around. Instead of asking “Is there a gap between the student’s ability and achievement?”, it asks “Does the student learn when we provide sound, evidence-based instruction?” If the student does not learn despite good instruction from which peers have learned, that is evidence of a difficulty requiring more than ordinary teaching (Fuchs &amp; Fuchs, 2006). The model is usually implemented in three tiers:</p>
+<figure class="fig-frame" id="fig-6-2">
+<div class="pyr">
+<div class="t3"><b>Tier 3</b><span>Intensive, individual intervention, or intervention in a very small group, with weekly or more frequent monitoring. A student who does not respond at this tier is referred for a comprehensive evaluation</span></div>
+<div class="t2"><b>Tier 2</b><span>Supplementary instruction in small groups several times a week, using an evidence-based method, with progress monitored about every two weeks</span></div>
+<div class="t1"><b>Tier 1</b><span>High-quality instruction for all students in the general classroom, with universal screening three times a year to identify who needs more</span></div>
+</div>
+<figcaption><b>Figure 6.2:</b> The tiers of response to intervention, from the broad base (Tier 1) to the narrow peak (Tier 3). Tier 1 is expected to suffice for most students; it is often said that about 80% need nothing more, about 15% need Tier 2, and about 5% need Tier 3. These proportions are guidelines, not fixed rules.</figcaption>
+</figure>
+<p>The broader framework that encompasses academic and behavioral domains together is called a <strong>multi-tiered system of supports</strong> (<span class="en">Multi-tiered system of supports, MTSS</span>). The idea is the same: support that intensifies with need, and decisions based on repeated data. The best-known source of such data is <strong>curriculum-based measurement</strong>, presented in Chapter 4: brief, equivalent probes administered every week or two, such as the number of words a student reads correctly in one minute, with results graphed to show whether the student is moving toward the goal.</p>
+<h3>The dual-discrepancy criterion</h3>
+<p>How do we know that a student “has not responded”? One of the best-known criteria is the <strong>dual discrepancy</strong> (<span class="en">Dual discrepancy</span>), which Lynn Fuchs proposed as a basis for response decisions (Fuchs, 2003): the student is clearly below peers in the <strong>level</strong> of performance and also below them in the <strong>rate of growth</strong> despite intervention. A low-performing student who grows at the same rate as peers, or faster, is responding to intervention and simply needs time. A low-performing student who grows slowly, however, is falling further behind peers and needs more.</p>
+<figure class="fig-frame" id="fig-6-3">
+<svg aria-label="A hypothetical graph of reading fluency across sixteen weeks of intervention. The dashed peer median line rises from sixty to about eighty-four words per minute, roughly one and a half words per week. The student&#x27;s line of dots starts at about thirty words and rises slowly to about thirty-six, roughly four tenths of a word per week, so the gap between them widens" class="svgfig" role="img" style="width:100%;height:auto" viewbox="0 0 760 310">
+<line class="gr" x1="70" x2="582" y1="60" y2="60"></line><line class="gr" x1="70" x2="582" y1="110" y2="110"></line><line class="gr" x1="70" x2="582" y1="160" y2="160"></line><line class="gr" x1="70" x2="582" y1="210" y2="210"></line>
+<line class="ax" x1="70" x2="582" y1="260" y2="260"></line><line class="ax" x1="70" x2="70" y1="60" y2="260"></line>
+<text class="tk" text-anchor="end" x="62" y="264">20</text><text class="tk" text-anchor="end" x="62" y="214">40</text><text class="tk" text-anchor="end" x="62" y="164">60</text><text class="tk" text-anchor="end" x="62" y="114">80</text><text class="tk" text-anchor="end" x="62" y="64">100</text>
+<text class="tk" text-anchor="middle" x="70" y="280">0</text><text class="tk" text-anchor="middle" x="198" y="280">4</text><text class="tk" text-anchor="middle" x="326" y="280">8</text><text class="tk" text-anchor="middle" x="454" y="280">12</text><text class="tk" text-anchor="middle" x="582" y="280">16</text>
+<text class="tk" text-anchor="middle" x="326" y="302">Weeks of intervention</text>
+<line class="cls" x1="70" x2="582" y1="160" y2="100"></line>
+<polyline class="stu" points="70,235.0 134,232.5 198,230.0 262,230.0 326,227.5 390,225.0 454,222.5 518,222.5 582,220.0"></polyline>
+<circle class="sp" cx="70" cy="235" r="4.5"></circle><circle class="sp" cx="134" cy="232.5" r="4.5"></circle><circle class="sp" cx="198" cy="230" r="4.5"></circle><circle class="sp" cx="262" cy="230" r="4.5"></circle><circle class="sp" cx="326" cy="227.5" r="4.5"></circle><circle class="sp" cx="390" cy="225" r="4.5"></circle><circle class="sp" cx="454" cy="222.5" r="4.5"></circle><circle class="sp" cx="518" cy="222.5" r="4.5"></circle><circle class="sp" cx="582" cy="220" r="4.5"></circle>
+<text class="lab" style="fill:var(--example)" x="600" y="96">Peer median (dashed)</text><text class="tk" x="600" y="114">Rises 1.5 words per week</text>
+<text class="lab" style="fill:var(--warn)" x="600" y="216">Student (points)</text><text class="tk" x="600" y="234">Rises 0.4 words per week</text>
+<path class="br" d="M86 164 L80 164 L80 231 L86 231"></path><text class="tk" x="92" y="200">Level gap</text>
+<path class="br" d="M566 104 L560 104 L560 216 L566 216"></path><text class="tk" x="470" y="170">The gap has widened</text>
+</svg>
+<figcaption><b>Figure 6.3:</b> A hypothetical example of dual discrepancy in reading fluency (words correct per minute). The student started clearly below peers and grew more slowly than they did despite intervention, so the gap widened. This pattern calls for a comprehensive evaluation.</figcaption>
+</figure>
+<h3 id="s3-1">When do we say a student has not responded?</h3>
+<p>“Nonresponse” is a judgment built on a criterion and a threshold set in advance, not on a general impression. Table 6.2 presents the best-known criteria in the literature, with examples of thresholds that have been used in research and practice and the limitations of each. The thresholds here are illustrative and vary from study to study. Some are expressed as percentile ranks, that is, the percentage of peers in the comparison sample (the norm sample or the students in the grade) who scored below the student; a rank of 25 means that the student outperformed 25% of them.</p>
+<div class="tw"><table id="tab-6-2">
+<caption>Table 6.2: Common nonresponse criteria, example thresholds and their limitations.</caption>
+<thead><tr><th>Criterion</th><th>What it measures</th><th>Example thresholds used</th><th>Limitations</th></tr></thead>
+<tbody>
+<tr><td>Normative final status</td><td>The student’s level on a standardized test after intervention ends</td><td>Remaining below roughly the 25th percentile (standard score 90) after intervention</td><td>Ignores the amount of progress; a student who started very low and made substantial gains may be judged a nonresponder</td></tr>
+<tr><td>Benchmark</td><td>Whether the student reaches a level set for the grade and term</td><td>The number of words correct per minute set for the end of the term in that grade</td><td>Relies on norms that may not exist in Arabic, and is affected by the difficulty of the passage chosen for measurement</td></tr>
+<tr><td>Slope</td><td>Weekly rate of growth during intervention</td><td>A slope below the 25th percentile of peer slopes, or below the slope needed to reach the goal on time</td><td>A slope calculated from only a few weeks is unreliable and is affected by variation in passage difficulty (Ardoin et al., 2013)</td></tr>
+<tr><td>Dual discrepancy</td><td>Level and slope together</td><td>Both level and slope fall one standard deviation or more below the peer mean</td><td>Inherits the unreliability of the slope and is affected by the level of the reference class; the same student may be judged a responder in a weak class and a nonresponder in a strong one</td></tr>
+</tbody>
+</table></div>
+<p>The deeper problem is that these criteria do not identify the same students. When different criteria were applied to the same sample of poor readers, agreement among them on who “had not responded” was generally weak (Barth et al., 2008). The decision thus depends as much on the criterion the team chose as on the student. Added to this is what Ardoin and colleagues found in their review of curriculum-based measurement decision rules: most of these rules rest more on expert opinion than on research, slopes calculated over short periods are unstable, and they shift with variation in the difficulty of passages that are supposed to be equivalent (Ardoin et al., 2013). Three practical conclusions follow: the team should set its criterion and threshold before collecting data, not after; it should collect data over a sufficient period using passages that are truly equivalent; and it should treat the slope as it would any score, that is, as a range of plausible values.</p>
+<div class="callout" data-k="warn">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M12 3 2 20h20L12 3Z"></path><path d="M12 10v4M12 17h.01"></path></svg>Response to intervention does not delay evaluation</div>
+<p>The model can be misunderstood and turned into a pretext for waiting: “We won’t evaluate him until he has completed Tiers 2 and 3.” The Office of Special Education Programs in the U.S. Department of Education has cautioned that an RTI process may not be used to delay or deny a comprehensive evaluation when the family requests one or the school suspects a disability (U.S. Department of Education, Office of Special Education Programs, 2011). The data gathered across the tiers of support enter the evaluation as evidence; they do not replace it. This holds even more clearly for a student who shows signs of intellectual or sensory disability or a developmental disorder; such a student should not be made to wait until nonresponse has been “proven.”</p>
+</div>
+<div class="callout" data-k="teacher">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M3 8l9-4 9 4-9 4-9-4Z"></path><path d="M7 10v5c0 1.5 2.5 3 5 3s5-1.5 5-3v-5"></path></svg>For the teacher: What should you document during the tiers of support?</div>
+<p>The value of your data for a later decision depends on how well they are documented. For each student, record the program or method used; the number of sessions planned and actually delivered, and the length of each; the student’s absences; the result of each measurement, with its date, on the same passage or an equivalent one; and any change in method, with its date. Ask a colleague or supervisor to observe at least two sessions using a checklist of the program’s steps; this is <strong>treatment fidelity</strong> (<span class="en">Treatment fidelity</span>). If the student does not progress, the team’s first question will be: was the intervention delivered as planned? If the answer is no, nonresponse says more about the intervention than about the student.</p>
+</div>
+<h3>Strengths and limitations of the model</h3>
+<div class="tw"><table id="tab-6-3">
+<caption>Table 6.3: Strengths and limitations of the response to intervention model.</caption>
+<thead><tr><th>Strengths</th><th>Limitations</th></tr></thead>
+<tbody>
+<tr><td>Provides help early, without waiting for failure or a diagnosis</td><td>Requires high-quality instruction, evidence-based interventions and careful monitoring, which are unevenly available across schools</td></tr>
+<tr><td>Rules out poor instruction as an explanation for the problem before the student is diagnosed</td><td>If used on its own, it may delay the evaluation of a student who needs a comprehensive evaluation immediately, such as one suspected of having an intellectual disability</td></tr>
+<tr><td>Yields direct instructional data that are useful for planning</td><td>Does not explain why the student failed to respond, nor distinguish among the causes of nonresponse</td></tr>
+<tr><td>Reduces misdiagnosis of students who simply need better instruction</td><td>May miss twice-exceptional learners, that is, gifted students with a learning disability, because their performance may not fall below that of their peers</td></tr>
+<tr><td>Rests on repeated data rather than a single measurement</td><td>Nonresponse criteria often disagree with one another, and the reliability of slopes over short periods is limited</td></tr>
+</tbody>
+</table></div>
+<p>Criticism of the model also comes from the opposite direction. Reynolds and Shaywitz argued that response to intervention has not yet proven its validity as a diagnostic tool, that relying on it alone turns “wait to fail” into “watch the student fail,” that it leaves the question of cause unanswered, and that it may overlook the high-ability student who struggles relative to his own ability rather than relative to his peers (Reynolds &amp; Shaywitz, 2009). This criticism does not cancel the model’s value for early intervention, but it reminds us that nonresponse is one piece of evidence, to be combined with others in a comprehensive evaluation.</p>
+<!-- 4 -->
+<h2 id="s4"><span class="sec">6.4</span>Patterns of strengths and weaknesses</h2>
+<p>The <strong>patterns of strengths and weaknesses</strong> model (<span class="en">Patterns of strengths and weaknesses, PSW</span>) seeks to restore to diagnosis a question that response to intervention leaves aside: <strong>why</strong> is the student struggling? It holds that a learning disability is linked to a weakness in a specific cognitive process, such as phonological processing, the ability to perceive, remember and manipulate speech sounds, or working memory, while other abilities remain intact. It therefore looks for a pattern with three corners (Flanagan et al., 2018):</p>
+<figure class="fig-frame psw" id="fig-6-4">
+<svg aria-label="The patterns of strengths and weaknesses triangle: at the apex is a cognitive strength, that is, general abilities in the average range or above. In the left corner is a cognitive weakness such as phonological processing, and in the right corner an academic weakness such as word decoding. An arrow labeled discrepancy links the apex to each corner, and a line labeled consistency links the two corners: the cognitive weakness explains the academic weakness" role="img" viewbox="0 0 560 330">
+<line class="e" x1="280" x2="120" y1="80" y2="250"></line><line class="e" x1="280" x2="440" y1="80" y2="250"></line><line class="e" x1="160" x2="400" y1="262" y2="262"></line>
+<text class="el" text-anchor="middle" x="150" y="160">Discrepancy</text>
+<text class="el" text-anchor="middle" x="410" y="160">Discrepancy</text>
+<text class="el" text-anchor="middle" x="280" y="318">Consistency: the cognitive weakness explains the academic weakness</text>
+<rect class="nd s" height="62" rx="12" width="220" x="170" y="26"></rect>
+<text class="t" text-anchor="middle" x="280" y="52">Cognitive strength</text><text class="ts" text-anchor="middle" x="280" y="72">General abilities average or above</text>
+<rect class="nd w" height="62" rx="12" width="200" x="20" y="226"></rect>
+<text class="t" text-anchor="middle" x="120" y="252">Cognitive weakness</text><text class="ts" text-anchor="middle" x="120" y="272">e.g., phonological processing</text>
+<rect class="nd a" height="62" rx="12" width="200" x="340" y="226"></rect>
+<text class="t" text-anchor="middle" x="440" y="252">Academic weakness</text><text class="ts" text-anchor="middle" x="440" y="272">e.g., word decoding</text>
+</svg>
+<figcaption><b>Figure 6.4:</b> The pattern sought by the patterns of strengths and weaknesses model: a discrepancy between the cognitive strength and the two weaknesses, and consistency between the cognitive weakness and the academic weakness theoretically linked to it.</figcaption>
+</figure>
+<p>Under this model, a student is classified as having a learning disability in reading, for example, if his general abilities are good, he has a weakness in phonological processing, and his decoding achievement is low, because decoding depends on phonological processing. If, on the other hand, he has a weakness in processing speed and a weakness in reading comprehension, the theoretical link between the two is weaker and the pattern less convincing.</p>
+<h3>Three versions of the model</h3>
+<p>The model has three well-known versions that share the logic of the triangle but differ in their theoretical framework and in how “strength” and “weakness” are established. Table 6.4 compares them:</p>
+<div class="tw"><table id="tab-6-4">
+<caption>Table 6.4: The three versions of the patterns of strengths and weaknesses model.</caption>
+<thead><tr><th>Format</th><th>Developers</th><th>Theoretical framework</th><th>How the pattern is established</th></tr></thead>
+<tbody>
+<tr><td>Dual discrepancy/consistency (<span class="en">DD/C</span>)</td><td>Flanagan and colleagues (Flanagan et al., 2018)</td><td>Cattell-Horn-Carroll theory of abilities and cross-battery assessment</td><td>A weakness in a cognitive ability and an academic weakness, both below average, with general ability “average or above” estimated from the intact abilities, and a theoretical consistency between the two weaknesses</td></tr>
+<tr><td>Concordance-discordance (<span class="en">C-DM</span>)</td><td>Hale and Fiorello (Hale &amp; Fiorello, 2004)</td><td>School neuropsychology, with no commitment to a particular battery</td><td>Significance tests of differences based on the standard error of the difference: a significant discordance between the cognitive strength and each of the two weaknesses, and concordance between the cognitive weakness and the academic weakness, that is, a nonsignificant difference between them</td></tr>
+<tr><td>Discrepancy/consistency (<span class="en">D/CM</span>)</td><td>Naglieri (Naglieri, 1999)</td><td>PASS theory of four processes: planning, attention, simultaneous processing and successive processing</td><td>A significant discrepancy between the highest and lowest processes, with the weak process below average; consistency between the weak process and the weak achievement; and a discrepancy between the strong process and the weak achievement</td></tr>
+</tbody>
+</table></div>
+<h3>The debate over the model</h3>
+<p>Proponents argue that the model is consistent with the original concept of learning disability as a disorder in basic psychological processes, and that it offers an explanation of the problem that may guide intervention. Studies that have examined it, however, have found important problems. In a simulation study of the three versions, they were good at ruling out students without a disability, that is, highly specific, but weak at identifying students who actually had one; many of those they identified did not carry the “true” pattern on which the simulation was built, and they identified only small proportions of students (Stuebing et al., 2012). An applied study found that the model’s methods often disagree about who has a disability and who does not, and that their identification rates are low and inconsistent (Miciak et al., 2014). Nor has it yet been shown that tailoring intervention to a cognitive profile improves outcomes more than direct academic intervention. Part of these problems stems from what we saw in the discrepancy model: the pattern rests on differences between scores, and difference scores are less reliable than the scores themselves.</p>
+<p>The model’s developers respond that these studies treat it as a mechanical algorithm, whereas, as proposed, it is a framework for organizing evidence within a comprehensive evaluation, one that draws data from multiple sources and methods, including response-to-intervention data, and that is judged through clinical reasoning rather than numerical comparisons alone (Flanagan et al., 2018). They hold that understanding the cognitive weakness helps in choosing accommodations and explaining nonresponse, even if it has not yet been shown to improve the design of the intervention itself. The model therefore remains the subject of genuine scientific debate to this day.</p>
+<!-- 5 -->
+<h2 id="s5"><span class="sec">6.5</span>Hybrid models</h2>
+<p>After two decades of debate, many researchers lean toward a <strong>hybrid model</strong> (<span class="en">Hybrid model</span>) that combines the best of the earlier models and drops what has proven weak. One of its best-known versions is the model proposed by Fletcher and colleagues (Fletcher et al., 2019), which rests on three criteria that must all be met:</p>
+<div class="three">
+<div><b>Inadequate response</b><span>The student has not improved sufficiently despite good, intensive instruction, with documented progress-monitoring data.</span></div>
+<div><b>Low achievement</b><span>Performance in a specific academic area is clearly low on a standardized achievement measure.</span></div>
+<div><b>Exclusion</b><span>The weakness is not explained by intellectual or sensory disability, emotional disturbance, lack of opportunity to learn, or limited proficiency in the language of instruction.</span></div>
+</div>
+<p style="margin-top:16px">Note that this model requires neither an intelligence test to calculate a discrepancy nor an analysis of cognitive processes. It may, however, use an intelligence test for another purpose: to rule out intellectual disability and to gain a fuller understanding of the student (Chapter 8 examines the application of this model to learning disabilities in detail).</p>
+<p>The hybrid model is very close to the DSM criteria for specific learning disorder, which makes it a bridge between medical diagnosis and educational eligibility. The DSM requires that the difficulties persist for at least six months despite interventions targeting them (Criterion A), which corresponds to nonresponse. It requires that academic skills be substantially and quantifiably below those expected for the student’s age, as confirmed by standardized achievement measures and a comprehensive clinical assessment (Criterion B), and for this it suggests a threshold of about 1.5 standard deviations below the mean, with leniency down to one standard deviation when other evidence supports it. It requires that the difficulties begin during the school years (Criterion C). And it requires that they not be better explained by intellectual disability, uncorrected visual or auditory acuity, another mental or neurological disorder, psychosocial adversity, limited proficiency in the language of instruction, or inadequate instruction (Criterion D) (American Psychiatric Association, 2022). Note that the DSM compares achievement with what is expected for age; it does not require a discrepancy from intelligence.</p>
+<h3 id="s5-1">A worked case using the hybrid model</h3>
+<article class="case">
+<div class="case-head"><h3>Nayef, 9 years 8 months, fourth grade</h3><span class="verdict y">All three criteria met</span></div>
+<p><strong>Background:</strong> Since first grade, Nayef’s teacher had noticed that he sounded out words slowly, guessed words from their first letters, and avoided reading aloud. He understands what is read to him well and takes part in oral discussion. In the universal screening at the start of fourth grade, his reading fluency was at the bottom of his grade, so the school began tiered support with him, with weak decoding as the initial hypothesis.</p>
+<p><strong>Step one: tier data.</strong> The team set its decision criterion in advance: dual discrepancy, meaning that both his level and his slope fall one standard deviation or more below his grade’s mean after two tiers of support.</p>
+<div class="tw"><table id="tab-6-5">
+<caption>Table 6.5: Nayef’s curriculum-based measurement data across the three tiers (words correct per minute; hypothetical figures).</caption>
+<thead><tr><th>Level</th><th>Duration and support provided</th><th class="c">Start</th><th class="c">End</th><th class="c">Weekly slope</th><th>Comparison with grade</th></tr></thead>
+<tbody>
+<tr><td>Tier 1</td><td>Regular classroom instruction; screening in week 1 and a confirmatory measurement two weeks later</td><td class="c">38</td><td class="c">40</td><td class="c">—</td><td>Grade median 92; Nayef ranked sixth from the bottom among the school’s 100 fourth graders</td></tr>
+<tr><td>Tier 2</td><td>12 weeks, 4 sessions a week of 30 minutes each, in a group of 4 students, using an explicit decoding program; weekly measurement</td><td class="c">40</td><td class="c">46</td><td class="c">0.5</td><td>Grade slope over the same period about 1.0</td></tr>
+<tr><td>Tier 3</td><td>14 weeks, a daily session of 30–40 minutes, individually or with one other student, using an intensive decoding and fluency program; weekly measurement</td><td class="c">46</td><td class="c">55</td><td class="c">0.64</td><td>Grade median at the end of the period 120, SD about 25; grade slope 1.0, SD about 0.3</td></tr>
+</tbody>
+</table></div>
+<figure class="fig-frame" id="fig-6-5">
+<svg aria-label="A graph of Nayef&#x27;s reading fluency across twenty-eight weeks, divided by two vertical lines into screening, then Tier 2 from week two to week fourteen, then Tier 3 through week twenty-eight. The dashed peer line rises from ninety-two to one hundred twenty words. Nayef&#x27;s dots rise slowly from thirty-eight to fifty-five words, so the gap remains wide and keeps widening" class="svgfig" role="img" style="width:100%;height:auto" viewbox="0 0 760 330">
+<line class="gr" x1="70" x2="610" y1="50" y2="50"></line><line class="gr" x1="70" x2="610" y1="81.4" y2="81.4"></line><line class="gr" x1="70" x2="610" y1="112.9" y2="112.9"></line><line class="gr" x1="70" x2="610" y1="144.3" y2="144.3"></line><line class="gr" x1="70" x2="610" y1="175.7" y2="175.7"></line><line class="gr" x1="70" x2="610" y1="207.1" y2="207.1"></line><line class="gr" x1="70" x2="610" y1="238.6" y2="238.6"></line>
+<line class="ax" x1="70" x2="610" y1="270" y2="270"></line><line class="ax" x1="70" x2="70" y1="50" y2="270"></line>
+<text class="tk" text-anchor="end" x="62" y="274">0</text><text class="tk" text-anchor="end" x="62" y="242.6">20</text><text class="tk" text-anchor="end" x="62" y="211.1">40</text><text class="tk" text-anchor="end" x="62" y="179.7">60</text><text class="tk" text-anchor="end" x="62" y="148.3">80</text><text class="tk" text-anchor="end" x="62" y="116.9">100</text><text class="tk" text-anchor="end" x="62" y="85.4">120</text><text class="tk" text-anchor="end" x="62" y="54">140</text>
+<text class="tk" text-anchor="middle" x="70" y="290">0</text><text class="tk" text-anchor="middle" x="108.6" y="290">2</text><text class="tk" text-anchor="middle" x="224.3" y="290">8</text><text class="tk" text-anchor="middle" x="340" y="290">14</text><text class="tk" text-anchor="middle" x="455.7" y="290">20</text><text class="tk" text-anchor="middle" x="610" y="290">28</text>
+<text class="tk" text-anchor="middle" x="340" y="316">Weeks since screening</text>
+<line class="phase" x1="108.6" x2="108.6" y1="50" y2="270"></line><line class="phase" x1="340" x2="340" y1="50" y2="270"></line>
+<text class="zone" text-anchor="middle" x="89" y="44">Screening</text><text class="zone" text-anchor="middle" x="224.3" y="44">Tier 2</text><text class="zone" text-anchor="middle" x="475" y="44">Tier 3</text>
+<line class="peer" x1="70" x2="610" y1="125.4" y2="81.4"></line>
+<polyline class="stu" points="70.0,210.3 108.6,207.1 127.9,205.6 147.1,207.1 166.4,204.0 185.7,202.4 205.0,204.0 224.3,200.9 243.6,202.4 262.9,199.3 282.1,200.9 301.4,197.7 320.7,199.3 340.0,197.7 359.3,197.7 378.6,194.6 397.9,196.1 417.1,193.0 436.4,191.4 455.7,193.0 475.0,189.9 494.3,188.3 513.6,189.9 532.9,186.7 552.1,185.1 571.4,186.7 590.7,183.6 610.0,183.6"></polyline>
+<circle class="sp" cx="70.0" cy="210.3" r="3.5"></circle><circle class="sp" cx="108.6" cy="207.1" r="3.5"></circle><circle class="sp" cx="127.9" cy="205.6" r="3.5"></circle><circle class="sp" cx="147.1" cy="207.1" r="3.5"></circle><circle class="sp" cx="166.4" cy="204.0" r="3.5"></circle><circle class="sp" cx="185.7" cy="202.4" r="3.5"></circle><circle class="sp" cx="205.0" cy="204.0" r="3.5"></circle><circle class="sp" cx="224.3" cy="200.9" r="3.5"></circle><circle class="sp" cx="243.6" cy="202.4" r="3.5"></circle><circle class="sp" cx="262.9" cy="199.3" r="3.5"></circle><circle class="sp" cx="282.1" cy="200.9" r="3.5"></circle><circle class="sp" cx="301.4" cy="197.7" r="3.5"></circle><circle class="sp" cx="320.7" cy="199.3" r="3.5"></circle><circle class="sp" cx="340.0" cy="197.7" r="3.5"></circle><circle class="sp" cx="359.3" cy="197.7" r="3.5"></circle><circle class="sp" cx="378.6" cy="194.6" r="3.5"></circle><circle class="sp" cx="397.9" cy="196.1" r="3.5"></circle><circle class="sp" cx="417.1" cy="193.0" r="3.5"></circle><circle class="sp" cx="436.4" cy="191.4" r="3.5"></circle><circle class="sp" cx="455.7" cy="193.0" r="3.5"></circle><circle class="sp" cx="475.0" cy="189.9" r="3.5"></circle><circle class="sp" cx="494.3" cy="188.3" r="3.5"></circle><circle class="sp" cx="513.6" cy="189.9" r="3.5"></circle><circle class="sp" cx="532.9" cy="186.7" r="3.5"></circle><circle class="sp" cx="552.1" cy="185.1" r="3.5"></circle><circle class="sp" cx="571.4" cy="186.7" r="3.5"></circle><circle class="sp" cx="590.7" cy="183.6" r="3.5"></circle><circle class="sp" cx="610.0" cy="183.6" r="3.5"></circle>
+<text class="lab" style="fill:var(--example)" x="622" y="78">Grade median</text><text class="tk" x="622" y="96">(dashed) 1.0 per week</text>
+<text class="lab" style="fill:var(--warn)" x="622" y="180">Nayef (points)</text><text class="tk" x="622" y="198">0.5, then 0.64 per week</text>
+</svg>
+<figcaption><b>Figure 6.5:</b> Nayef’s reading fluency across the three tiers (hypothetical data). His slope rose slightly in Tier 3 but remained below his grade’s slope, so the gap widened instead of narrowing.</figcaption>
+</figure>
+<p><strong>Reading the data:</strong> Nayef’s final level is 55, against 120 for his grade, or about <bdi dir="ltr">(55 − 120) ÷ 25 ≈ −2.6</bdi> standard deviations. His Tier 3 slope is 0.64, against 1.0, or about <bdi dir="ltr">(0.64 − 1.0) ÷ 0.3 ≈ −1.2</bdi> standard deviations. The dual discrepancy is therefore present. Before treating it as evidence about the student, the team checked treatment fidelity: 86% of the planned sessions were delivered, Nayef missed 4% of them, and two observations by the supervisor using the checklist showed 90% adherence to the program’s steps. The intervention was thus delivered largely as planned. And because a slope calculated from 14 weeks remains an imperfect estimate, note that the judgment does not hinge on its exact value: even if his true slope were two-tenths higher, it would still fall below the grade’s slope, and his level would still be far from the grade’s.</p>
+<p><strong>Step two: standardized achievement and exclusion.</strong> With the family’s written consent, a comprehensive evaluation was conducted:</p>
+<div class="tw"><table id="tab-6-6">
+<caption>Table 6.6: Results of Nayef’s comprehensive evaluation (hypothetical standard scores with a mean of 100 and SD of 15; 95% confidence intervals).</caption>
+<thead><tr><th>Source</th><th>Result</th><th>What it means</th></tr></thead>
+<tbody>
+<tr><td>Standardized word-reading test (reliability 0.95)</td><td>76 (69–83)</td><td>About 1.6 standard deviations below the mean, with the entire confidence interval below 85</td></tr>
+<tr><td>Standardized reading-comprehension test</td><td>84 (77–91)</td><td>Higher than word reading, and affected by weak decoding in longer texts</td></tr>
+<tr><td>Listening comprehension</td><td>101</td><td>He understands language when it is read to him, so the problem lies in decoding, not in language</td></tr>
+<tr><td>Individual intelligence test, for exclusion rather than to calculate a discrepancy</td><td>Full Scale IQ 97 (91–103)</td><td>Does not indicate intellectual disability</td></tr>
+<tr><td>Vision and hearing screening this year</td><td>Both normal</td><td>Sensory problems do not explain his difficulty</td></tr>
+<tr><td>School record and family interview</td><td>Arabic is the home language; regular attendance since first grade; reading difficulty noticed since first grade</td><td>Not explained by weakness in the language of instruction or lack of opportunity to learn</td></tr>
+<tr><td>Behavior rating scale completed by the teacher and the mother</td><td>Within the normal range, with clear avoidance of reading tasks</td><td>No emotional disturbance explains the picture; the avoidance is most likely a result of the difficulty, not its cause</td></tr>
+</tbody>
+</table></div>
+<p><strong>Step three: matching the evidence to the criteria.</strong></p>
+<div class="tw"><table id="tab-6-7">
+<caption>Table 6.7: Nayef’s evidence against the criteria of the hybrid model, the DSM and the Saudi regulatory text.</caption>
+<thead><tr><th>Issue</th><th>Hybrid model</th><th>DSM (<span class="en">DSM-5-TR</span>)</th><th>Saudi Regulations</th></tr></thead>
+<tbody>
+<tr><td>—</td><td>✓ Dual discrepancy after two tiers, with acceptable treatment fidelity</td><td>✓ Criterion A: 26 weeks, about six months of targeted intervention</td><td>✓ Evidence that regular services are “of limited effectiveness” documented with data</td></tr>
+<tr><td>Achievement</td><td>✓ 76 in word reading</td><td>✓ Criterion B: 76, below the 1.5 SD cutoff (78)</td><td>? A “clear discrepancy” between ability (97) and achievement (76), and the text does not specify its size (see The lesson)</td></tr>
+<tr><td>Start</td><td>—</td><td>✓ Criterion C: since first grade</td><td>—</td></tr>
+<tr><td>Exclusion</td><td>✓</td><td>✓ Criterion D</td><td>✓ No mental or sensory impairment and no behavioral disorder</td></tr>
+</tbody>
+</table></div>
+<div class="checks" style="grid-template-columns:repeat(3,1fr)">
+<div class="y"><b>Nonresponse ✓</b>Documented dual discrepancy</div>
+<div class="y"><b>Achievement ✓</b>76 (69–83)</div>
+<div class="y"><b>Exclusion ✓</b>No other explanation</div>
+</div>
+<p><strong>Decision:</strong> Nayef is identified as a student with a learning disability in reading, specifically in decoding and fluency, and he meets the criteria for specific learning disorder with impairment in reading. Continued intensive individual intervention is recommended within an individualized education program, with measurable goals in decoding and fluency, along with accommodations in other subjects, such as reading questions aloud to him and allowing extra time, so that his achievement in science, for example, does not measure his reading instead of his understanding. His slope should be monitored every two weeks and the plan reviewed after one term.</p>
+<div class="callout" data-k="key" style="margin-bottom:12px"><div class="tag">The lesson</div><p>Had the team relied on the simple difference with a cutoff of 1.5 standard deviations, Nayef would not have been identified, because the difference between his intelligence (97) and his reading (76) is 21 points, below 22.5. Under regression, however, his expected achievement is about 98, and his reading falls about 22 points below it, exceeding the cutoff of 18. The judgment about the same student changed with the formula, even though his need did not. This is precisely what the hybrid model avoids: it bases the decision on what no one disputes, namely clearly low achievement, documented nonresponse, and the exclusion of other explanations.</p></div>
+<p class="shift"><strong>What evidence could change the decision?</strong> If a retest of word reading with another standardized instrument came out close to average, or if his slope accelerated clearly, approaching his grade’s slope, when measured with passages of established equivalence, the team would need to revisit the identification. And if a weakness in listening comprehension or in hearing emerged on re-examination, another explanation for his difficulty would have to be considered.</p>
+</article>
+<!-- 6 -->
+<h2 id="s6"><span class="sec">6.6</span>Multiple-criteria models in giftedness</h2>
+<p>In most systems it is no longer acceptable to identify a gifted student by a single intelligence score. In contemporary theories, giftedness encompasses intellectual ability, creativity, motivation and achievement in a particular domain, and it interacts with the environment and with opportunity (Gagné, 2009; Renzulli, 1978). Identifying gifted students therefore draws on multiple sources of evidence: an ability test, an achievement test, a teacher rating scale, a portfolio and perhaps a creativity test.</p>
+<p>Gathering multiple sources of evidence, however, raises a question that is often overlooked: <strong>how do we combine them into a decision?</strong> An important study showed that the method of combination, known as the <strong>combination rule</strong> (<span class="en">Combination rule</span>), by itself changes how many students are identified as gifted, and which students they are, even when the instruments and scores are identical (McBee et al., 2014). There are three main rules:</p>
+<figure class="fig-frame" id="fig-6-6">
+<div class="rules">
+<div>
+<svg aria-label="AND rule: a square representing all students, in which only the upper right corner is shaded, that is, those who exceeded both the first criterion cutoff and the second criterion cutoff" role="img" viewbox="0 0 150 150"><rect class="pl" height="120" width="120" x="20" y="10"></rect><rect class="in" height="40" width="40" x="100" y="10"></rect><line class="th" x1="100" x2="100" y1="10" y2="130"></line><line class="th" x1="20" x2="140" y1="50" y2="50"></line><text class="axl" text-anchor="middle" x="80" y="146">Criterion 1</text><text class="axl" text-anchor="middle" transform="rotate(-90 12 70)" x="12" y="70">Criterion 2</text></svg>
+<b>The “and” rule <small dir="ltr" style="display:block;font-weight:400">Conjunctive rule</small></b><span>The student must exceed the cutoff on every criterion. It identifies few students and excludes anyone with a weakness in a single area, such as a gifted student with a learning disability.</span>
+</div>
+<div>
+<svg aria-label="OR rule: the shaded area forms an inverted L that includes everyone who exceeded either the first criterion cutoff or the second criterion cutoff; only the lower left corner is excluded" role="img" viewbox="0 0 150 150"><rect class="pl" height="120" width="120" x="20" y="10"></rect><path class="in" d="M20 10 H140 V130 H100 V50 H20 Z"></path><line class="th" x1="100" x2="100" y1="10" y2="130"></line><line class="th" x1="20" x2="140" y1="50" y2="50"></line><text class="axl" text-anchor="middle" x="80" y="146">Criterion 1</text><text class="axl" text-anchor="middle" transform="rotate(-90 12 70)" x="12" y="70">Criterion 2</text></svg>
+<b>The “or” rule <small dir="ltr" style="display:block;font-weight:400">Disjunctive rule</small></b><span>Exceeding the cutoff on one criterion is enough. It identifies more students and opens the door to diverse profiles of giftedness, but it is sensitive to measurement error on each criterion.</span>
+</div>
+<div>
+<svg aria-label="Averaging rule: the shaded area is a triangle in the upper right corner bounded by a diagonal line, that is, those whose average on the two scores is above the cutoff, so strength on one criterion offsets weakness on the other" role="img" viewbox="0 0 150 150"><rect class="pl" height="120" width="120" x="20" y="10"></rect><path class="in" d="M60 10 H140 V90 Z"></path><line class="th" x1="100" x2="100" y1="10" y2="130"></line><line class="th" x1="20" x2="140" y1="50" y2="50"></line><text class="axl" text-anchor="middle" x="80" y="146">Criterion 1</text><text class="axl" text-anchor="middle" transform="rotate(-90 12 70)" x="12" y="70">Criterion 2</text></svg>
+<b>The averaging rule <small dir="ltr" style="display:block;font-weight:400">Compensatory rule</small></b><span>Scores are combined into an average that is compared with a cutoff. Strength in one area offsets weakness in another; this rule sits between the other two.</span>
+</div>
+</div>
+<figcaption><b>Figure 6.6:</b> Three rules for combining two criteria. Each square represents all students, the shaded area represents those identified as gifted under each rule, and the two dashed lines mark the cutoff on each criterion.</figcaption>
+</figure>
+<h3 id="s6-1">The three rules in numbers</h3>
+<p>Let us apply the rules to seven hypothetical students, each with two standard scores, one on an ability test and one on an achievement test, with a cutoff of 120 on each. Under the “and” rule both scores must reach 120; under the “or” rule one is enough; under the averaging rule their mean must reach 120.</p>
+<div class="tw"><table id="tab-6-8">
+<caption>Table 6.8: Applying the three combination rules to seven hypothetical students (cutoff 120).</caption>
+<thead><tr><th>Student</th><th class="c">Ability</th><th class="c">Achievement</th><th class="c">Mean</th><th class="c">“And” rule</th><th class="c">“Or” rule</th><th class="c">Averaging rule</th></tr></thead>
+<tbody>
+<tr><td>A</td><td class="c">128</td><td class="c">126</td><td class="c">127</td><td class="c">✓</td><td class="c">✓</td><td class="c">✓</td></tr>
+<tr><td>B</td><td class="c">135</td><td class="c">108</td><td class="c">121.5</td><td class="c">✗</td><td class="c">✓</td><td class="c">✓</td></tr>
+<tr><td>C</td><td class="c">121</td><td class="c">119</td><td class="c">120</td><td class="c">✗</td><td class="c">✓</td><td class="c">✓</td></tr>
+<tr><td>D</td><td class="c">118</td><td class="c">117</td><td class="c">117.5</td><td class="c">✗</td><td class="c">✗</td><td class="c">✗</td></tr>
+<tr><td>E</td><td class="c">140</td><td class="c">95</td><td class="c">117.5</td><td class="c">✗</td><td class="c">✓</td><td class="c">✗</td></tr>
+<tr><td>F</td><td class="c">110</td><td class="c">131</td><td class="c">120.5</td><td class="c">✗</td><td class="c">✓</td><td class="c">✓</td></tr>
+<tr><td>G</td><td class="c">119</td><td class="c">122</td><td class="c">120.5</td><td class="c">✗</td><td class="c">✓</td><td class="c">✓</td></tr>
+<tr><td><strong>Number identified</strong></td><td class="c">—</td><td class="c">—</td><td class="c">—</td><td class="c"><strong>1</strong></td><td class="c"><strong>6</strong></td><td class="c"><strong>5</strong></td></tr>
+</tbody>
+</table></div>
+<p>The scores are the same, yet the number identified ranges from one student to six. Three observations in the table deserve attention. First, Student E has an ability score of 140 and an achievement score of 95, a pattern that may point to twice-exceptionality or to limited opportunities to learn; this student is identified only under the “or” rule, because the averaging rule lets the weakness consume the strength. Second, Students C and D are very close: the difference between 121 and 118 is too small to be trusted, since the standard error of a test with a reliability of 0.95 is about 3.4 points. Even so, one of them is identified under two rules and the other under none. Third, each rule errs in its own way. The “or” rule gives measurement error on every criterion a chance to lift a student above the cutoff, increasing false identifications, while the “and” rule gives it a chance to push a student below the cutoff on any criterion, increasing false exclusions (McBee et al., 2014). Choosing a rule, technical as it may appear, is therefore a decision about which of the two errors a program is willing to accept, and it should follow from the program's definition of giftedness and the services it provides.</p>
+<div class="callout" data-k="warn">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M12 3 2 20h20L12 3Z"></path><path d="M12 10v4M12 17h.01"></path></svg>Point matrices</div>
+<p>Some programs use a matrix that assigns points for each criterion and then adds them up. The method looks fair and comprehensive, but it merges scores that differ in nature and reliability into a single number, and the meaning of each is lost. A student may accumulate high points from criteria of weak reliability, while another who is truly exceptional on one strong criterion is excluded. It is better to specify the combination rule explicitly, based on the program's definition of giftedness.</p>
+</div>
+<h3>Universal screening and local norms</h3>
+<p>One of the greatest sources of inequity in gifted identification is reliance on nomination alone instead of <strong>universal screening</strong> (<span class="en">Universal screening</span>), which is applied to all students. A student whom the teacher does not nominate, because the student is quiet, speaks a different home language, or has a difficulty that masks ability, never enters the assessment at all. A study in a large U.S. school district found that adding universal screening of all second graders markedly increased the representation of students from low-income and minority families in gifted programs (Card &amp; Giuliano, 2016).</p>
+<p>Likewise, comparing a student with national norms can exclude an entire school's students in a less advantaged setting, despite their clear superiority over their peers there. Researchers therefore propose using <strong>local norms</strong> (<span class="en">Local norms</span>), which identify the highest-performing students in each school relative to their schoolmates, because these are the students who need services beyond what their classroom offers (Peters et al., 2019). (Chapter 12 addresses this in detail.)</p>
+<!-- 7 -->
+<h2 id="s7"><span class="sec">6.7</span>Comparing the models and reading the Saudi regulations</h2>
+<div class="tw"><table id="tab-6-9">
+<caption>Table 6.9: Comparison of identification models by their central question, their evidence, and what they may miss.</caption>
+<thead><tr><th>Model</th><th>Central question</th><th>Core evidence</th><th>What it may miss</th></tr></thead>
+<tbody>
+<tr><td>Discrepancy</td><td>Is achievement lower than ability predicts?</td><td>An intelligence test and an achievement test</td><td>Students with slightly low ability, and young children before the gap widens; the simple-difference method over-identifies students with high ability</td></tr>
+<tr><td>—</td><td>Does the student learn when taught well?</td><td>Frequent progress-monitoring data across tiers of support</td><td>The reasons for nonresponse, and twice-exceptional learners (gifted students with learning disabilities); the judgment shifts with the nonresponse criterion chosen</td></tr>
+<tr><td>—</td><td>Does a specific cognitive weakness explain the academic weakness?</td><td>A comprehensive cognitive battery and achievement tests</td><td>Many students, because its methods have low sensitivity and agree poorly with one another</td></tr>
+<tr><td>Hybrid</td><td>Is achievement low despite good intervention, with no other explanation?</td><td>Response data, an achievement test, and an assessment for exclusionary factors</td><td>Depends on the quality of the intervention the school provides and the fidelity of its implementation</td></tr>
+<tr><td>Multiple criteria for giftedness</td><td>Do indicators of giftedness appear across multiple sources?</td><td>Ability, achievement, ratings, and performance</td><td>Depends on the combination rule and on who reaches assessment</td></tr>
+</tbody>
+</table></div>
+<div class="callout" data-k="example">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="10" r="3"></circle><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11Z"></path></svg>In the Saudi context: Which model do the regulations adopt?</div>
+<p><strong>Learning disabilities.</strong> The Regulations for Special Education Institutes and Programs set three conditions for admitting a student to learning disabilities programs. The first is that “the student shows a clear discrepancy between the level of his abilities and the level of his academic achievement” in one area, such as reading, writing, counting, or mathematical reasoning, “or has a disorder in one of the psychological processes, such as memory, attention, thinking, and perception.” The second is that the difficulties do not result from mental impairment, a behavioral disorder, or sensory causes. The third is “that it be established that regular educational services are unsuitable or of limited effectiveness” (Ministry of Education [Al-Ma'arif], 1422 AH [Arabic], Article 7). The Special Education Organizational Guide restates these conditions in nearly identical wording and makes no mention of response to intervention (Ministry of Education, 1436 AH [Arabic]). The model the texts prescribe is thus <strong>discrepancy, exclusion, and the ineffectiveness of regular instruction</strong>, with no numerical size for the discrepancy and no specified method for establishing ineffectiveness.</p>
+<p><strong>Giftedness.</strong> The published texts contain three different rules, which Table 6.10 presents through the concepts of this chapter:</p>
+<div class="tw"><table id="tab-6-10">
+<caption>Table 6.10: Identification rules in published Saudi texts, read through the concepts of this chapter.</caption>
+<thead><tr><th>Text</th><th>What it requires</th><th>The rule in this chapter's terms</th></tr></thead>
+<tbody>
+<tr><td>The Regulations (Ministry of Education [Al-Ma'arif], 1422 AH [Arabic], Article 8)</td><td>High academic achievement over two semesters with an IQ of at least 115; or an IQ of at least 125 on the Wechsler or 127 on the Stanford-Binet; or outstanding skills and abilities attested by teachers and peers; or creative or innovative thinking</td><td>An “or” rule across four pathways, the first of which is a compound pathway under an “and” rule</td></tr>
+<tr><td>Guide to Gifted Classes (Ministry of Education, n.d. [Arabic])</td><td>Students are nominated from among those classified in the national program; if the number is not filled, students must pass two or more of four criteria (the cognitive abilities test, personal characteristics, academic achievement, and creative product), one of which must be the cognitive abilities test with a score of at least 120</td><td>A “two of four” rule with a mandatory ability condition, making it in effect an “and” rule between ability and any other criterion</td></tr>
+<tr><td>National Program for Gifted Identification (King Abdulaziz and His Companions Foundation for Giftedness and Creativity [Mawhiba], n.d. [Arabic])</td><td>A score on the Mawhiba Multiple Cognitive Abilities Test, through voluntary registration initiated by the family, with a fee except for subsidized students</td><td>A single criterion with a cut-off score; voluntary registration is not the same as universal screening</td></tr>
+</tbody>
+</table></div>
+<p><strong>A critical reading with the chapter's tools.</strong> In learning disabilities, the absence of a numerical size for the discrepancy is a double-edged sword. It allows two teams to reach two different judgments about the same student, as in the chapter's opening scene, but it also frees the team from an arbitrary cutoff and allows it to estimate the discrepancy through regression and to take the standard error of the difference into account. The phrase “or has a disorder in one of the psychological processes” opens a door close to the logic of patterns of strengths and weaknesses, yet it does not require consistency between the cognitive weakness and the academic weakness, so the critique of that model applies to it with even greater force. The condition that regular services be shown to be ineffective is, in essence, the first criterion of the hybrid model. Two recent studies, however, indicate that practices resembling response to intervention exist in Saudi schools but are mostly informal and lack systematic progress monitoring, and that the absence of formal adoption of the model is among the obstacles to its implementation (Almulla &amp; Mahama, 2026; Altheiabi et al., 2025). A team can therefore read the text in a hybrid way without departing from it, as in Nayef's case: it documents ineffectiveness with monitoring data and a criterion set in advance (Table 6.2), establishes low achievement with a standardized measure and its confidence interval, and satisfies the exclusion requirement.</p>
+<p>In giftedness, the Guide to Gifted Classes makes the cognitive abilities score a mandatory condition at 120. This may exclude the twice-exceptional student whose difficulty lowers the ability score, as well as the student whose score reflects language more than ability, and it gives a student who scores 118 a different fate from one who scores 120, although the difference between them lies within measurement error. The different cutoffs in the Regulations for the Wechsler (125) and the Stanford-Binet (127) are consistent with the different standard deviations of the two scales in their editions at the time, so both cutoffs fall at roughly the same distance from the mean. This is a sound application of the idea that a score can be understood only in relation to its scale. The national program, for its part, administers a standardized instrument to large numbers of students, but it depends on family registration, so a student's access to assessment hinges on the family's awareness and means; this is precisely the problem universal screening addresses. We found no officially published score scale for the test, and a recent peer-reviewed study reports an operational cut-off score of 1540 (Almulhim et al., 2026). Nor did we find a published regulatory text specifying how the four criteria are to be weighed when the scores diverge, or a text that permits or prohibits combining a gifted program with learning disabilities services.</p>
+<p><em>A question for reflection:</em> If the rule of the Guide to Gifted Classes were applied to Student E in Table 6.8, and the student passed the personal characteristics criterion, would the student be admitted? And if the ability score were 118 rather than 140, what would change? What would you propose as a rule that does justice to both students without opening the door to everyone who comes close to the cutoff?</p>
+</div>
+<h2 class="unnum" id="conclusion">Conclusion</h2>
+<p>We conclude in this chapter that every identification model accepts some kind of error in exchange for what it offers. The discrepancy model is simple, but it delays help and fluctuates with measurement error. Response to intervention offers help early and rules out poor instruction as an explanation, but it does not explain why a student fails to respond. Patterns of strengths and weaknesses are high in specificity and low in sensitivity, and hybrid models combine nonresponse, low achievement, and exclusion. In giftedness, the combination rule determines who is identified and who is left out. It follows that a team should recognize the kind of error accepted by the model it works with, should not let the label “slow learner” become a verdict that closes the question of what the student needs, and should not allow response to intervention to become a reason for delaying assessment.</p>
+<p>Some questions remain unsettled by research, such as the value of patterns of strengths and weaknesses for guiding intervention and the weak agreement among nonresponse criteria. Also open in the Saudi context is the fact that, for learning disabilities, the regulations prescribe discrepancy, exclusion, and the ineffectiveness of regular instruction without a numerical cutoff, leaving the cutoff to the team's discretion, and that, for giftedness, they use different combination rules, the most consequential being the cognitive abilities requirement of 120 for gifted classes.</p>
+<!-- 8 -->
+<h2 id="s8"><span class="sec">6.8</span>Summary, key terms, and activities</h2>
+<h3>Chapter summary</h3>
+<div class="summary"><ul>
+<li>Learning disabilities and giftedness require a model that specifies the evidence, how it is combined, and where the cutoff lies, because no single test reveals either one.</li>
+<li>The discrepancy model is simple, but it does not distinguish groups that genuinely differ, it delays help, and it fluctuates with measurement error, because the standard error of the difference is larger than the error of each score. The simple-difference method over-identifies students with high ability and under-identifies those with slightly low ability; regression corrects this without solving the model's other problems.</li>
+<li>“Slow learner” is not a diagnostic category, and settling for it denies the student services without answering what the student needs.</li>
+<li>Response to intervention offers help early and rules out poor instruction as an explanation, but it does not explain why a student fails to respond; its criteria agree poorly, and it must not delay assessment.</li>
+<li>Patterns of strengths and weaknesses comprise three models that seek a cognitive explanation; they are high in specificity and low in sensitivity, and their value for intervention has yet to be demonstrated.</li>
+<li>Hybrid models combine nonresponse, low achievement, and exclusion, and they come close to the DSM criteria for specific learning disorder.</li>
+<li>In giftedness, the combination rule changes who is identified, and each rule accepts a particular kind of error; universal screening and local norms widen access.</li>
+<li>For learning disabilities, the Saudi regulations prescribe discrepancy, exclusion, and the ineffectiveness of regular instruction without a numerical cutoff; for giftedness, they use different combination rules, the most consequential being the cognitive abilities requirement of 120 for gifted classes.</li>
+</ul></div>
+<h3>Glossary of terms</h3>
+<dl class="gloss">
+<dt>Discrepancy model</dt><dd>Identifying a learning disability by a large gap between the ability score and the achievement score.</dd>
+<dt>Regression-based discrepancy</dt><dd>Comparing actual achievement with the achievement predicted from the ability score by a regression equation, rather than with the ability score itself.</dd>
+<dt>Standard error of estimate</dt><dd>The spread of actual scores around the scores predicted by a regression equation, used to judge how far achievement falls from what is expected.</dd>
+<dt>Borderline intellectual functioning</dt><dd>Below-average intellectual functioning that lies above the range of intellectual disability; the DSM lists it as a condition that may be a focus of clinical attention rather than a disorder, and “slow learner” has no corresponding category in current classifications.</dd>
+<dt>Response to intervention (RTI)</dt><dd>A model that provides tiered support and monitors the student's progress, using nonresponse as evidence of the need for a comprehensive evaluation.</dd>
+<dt>Multi-tiered system of supports (MTSS)</dt><dd>A schoolwide framework for providing academic and behavioral support at increasing levels of intensity.</dd>
+<dt>Dual discrepancy</dt><dd>A student's falling below peers in both level of performance and rate of growth.</dd>
+<dt>Nonresponse criterion</dt><dd>The rule a team sets in advance for judging that a student has not responded to intervention, such as normative final status, slope, or dual discrepancy, together with a specified threshold.</dd>
+<dt>Treatment fidelity</dt><dd>The extent to which an intervention is delivered as designed: the number and length of sessions and adherence to its steps.</dd>
+<dt>Patterns of strengths and weaknesses (PSW)</dt><dd>A model that looks for a specific cognitive weakness explaining an academic weakness alongside good general abilities; it has three well-known versions.</dd>
+<dt>Hybrid model</dt><dd>A model for identifying learning disabilities that combines inadequate response to intervention, low achievement, and the exclusion of other explanations.</dd>
+<dt>Meta-analysis</dt><dd>A statistical method that pools the results of multiple studies on a single topic and analyzes them together to reach a more general conclusion.</dd>
+<dt>Combination rule</dt><dd>The way scores on multiple criteria are combined into a single decision, including the “and” rule, the “or” rule, and the averaging rule.</dd>
+<dt>Universal screening</dt><dd>Assessing all students in a grade or stage, rather than relying on nomination or family registration.</dd>
+<dt>Local norms</dt><dd>Norms that compare a student with schoolmates in the same school or district rather than with a national sample.</dd>
+</dl>
+<h3>Review questions</h3>
+<ol>
+<li>Calculate the discrepancy for a student with an IQ of 112 and a mathematics achievement score of 90 using the simple-difference method, and decide whether it reaches a cutoff of 1.5 standard deviations. Then calculate it using the regression method, assuming a correlation of 0.60 and a cutoff of 18 points below the predicted score. Does the judgment change? And what does it mean that the student is close to the cutoff under both methods?</li>
+<li>Why is the discrepancy model described as a “wait-to-fail” model? And why does regression-based discrepancy not solve this problem?</li>
+<li>True or false? Explain: “A student described as a slow learner does not need assessment, because the weakness is expected given the student's intelligence.”</li>
+<li>A student started below peers but is growing faster than they are. Does the student show a dual discrepancy? What do you decide?</li>
+<li>A second-grade girl remained at the 20th percentile on a standardized test after Tier 2, but her slope equals that of her peers. Judge her response using the normative final status criterion, then the slope criterion, then dual discrepancy. What do you conclude from the differing judgments?</li>
+<li>A family requested an evaluation of their son because they suspected dyslexia, and the school replied that he must first complete Tier 3 support. What is the position of the U.S. Office of Special Education Programs memorandum on this? And how can the school reconcile the family's right with the continuation of support?</li>
+<li>How might the response to intervention model miss a gifted student with a learning disability? And how might the patterns of strengths and weaknesses model miss the same student?</li>
+<li>What does each of the three patterns of strengths and weaknesses models require? Why might these models be high in specificity and low in sensitivity? And what does this mean for a student who meets none of their patterns?</li>
+<li>A gifted program uses the “and” rule between an intelligence test and an achievement test. Which students might it unfairly exclude? What is the alternative? Draw on Table 6.8.</li>
+<li>A student scored 118 on the cognitive abilities test and passed the achievement, personal characteristics, and creative product criteria. What does the rule of the Guide to Gifted Classes decide for this student? And what does the standard error say about the difference between 118 and 120?</li>
+<li>Why might local norms be fairer than national norms in determining who needs gifted services?</li>
+</ol>
+<article class="case">
+<div class="case-head"><h3>Case for application: Lujain, age 13, Grade 7</h3></div>
+<p><strong>The story:</strong> Lujain moved with her family from another region in the middle of sixth grade; this is her third school since fourth grade. Her teacher says she “understands the explanation but falls apart in arithmetic.” She counts on her fingers to add small numbers and takes a long time on multiplication problems. Her grades in other subjects are average. The school placed her in Tier 2 support in mathematics and then, at her family's request, referred her to the assessment team.</p>
+<div class="tw"><table id="tab-6-11">
+<caption>Table 6.11: Evidence available on Lujain at referral (hypothetical data).</caption>
+<thead><tr><th>Source</th><th>Result</th></tr></thead>
+<tbody>
+<tr><td>Tier 2 in mathematics</td><td>10 weeks, three sessions a week; 55% of planned sessions were delivered because of scheduling conflicts; no session was observed with a checklist</td></tr>
+<tr><td>Curriculum-based measurement in computation (correct digits in two minutes)</td><td>From 18 to 22, a slope of 0.4 per week; class slope about 0.8</td></tr>
+<tr><td>Standardized test of arithmetic operations</td><td>81 (75–87)</td></tr>
+<tr><td>Standardized test of mathematical reasoning</td><td>88 (81–95)</td></tr>
+<tr><td>Individual intelligence test</td><td>Full Scale IQ 92 (86–98)</td></tr>
+<tr><td>Vision and hearing screening</td><td>Last recorded screening in first grade</td></tr>
+<tr><td>School record</td><td>Absent about 20% of school days last semester because of the move; no data from the two previous schools</td></tr>
+</tbody>
+</table></div>
+<p><strong>Tasks:</strong> (a) Apply the three criteria of the hybrid model to the evidence, and for each criterion state whether it is met, not met, or unresolved, with your reasoning. (b) Match the evidence against the DSM criteria for specific learning disorder, especially Criteria A and D. (c) Does the evidence meet the conditions of the Saudi regulations? (d) What is your decision now? What three pieces of evidence would you request before the final decision, and how would you gather them without delaying Lujain's access to support?</p>
+</article>
+<div class="tw"><table id="tab-6-12">
+<caption>Table 6.12: Mapping chapter objectives to questions and activities.</caption>
+<thead><tr><th>Objective</th><th>Questions</th><th>Activities</th></tr></thead>
+<tbody>
+<tr><td>1 Calculating discrepancy by both methods and the effect of the standard error of the difference</td><td>1, 2, 3</td><td>—</td></tr>
+<tr><td>2 Applying nonresponse criteria and their limits</td><td>4, 5, 6, 7</td><td>2</td></tr>
+<tr><td>3 Comparing the patterns of strengths and weaknesses models</td><td>7, 8</td><td>3</td></tr>
+<tr><td>4 Applying the hybrid model and matching it to the DSM</td><td>Lujain's case (a, b)</td><td>2</td></tr>
+<tr><td>5 Applying combination rules and determining whom each rule excludes</td><td>9, 11</td><td>1</td></tr>
+<tr><td>6 Analyzing Saudi regulatory texts</td><td>10, Lujain's case (c)</td><td>4</td></tr>
+<tr><td>7 Judging the sufficiency of evidence in a new case</td><td>Lujain's case (d)</td><td>4</td></tr>
+</tbody>
+</table></div>
+<h3>Learning activities</h3>
+<p>For any activity that uses real student data: it is conducted with the consent of the family and the school administration, without any data that identify the student, and under professional supervision; no decision is based on its results, and they are communicated only through official channels. All the activities can be carried out with hypothetical data.</p>
+<ol>
+<li><strong>Simulating combination rules</strong> (about one hour): In a spreadsheet, create scores for twenty hypothetical students on two criteria and identify the gifted under each of the three rules. Then add a small random error (between −4 and +4) to each score and repeat the identification. <em>Product:</em> a table showing how many students each rule identified before and after the error, and a paragraph explaining which rules were most affected by the error and whose status changed.</li>
+<li><strong>Designing tiers of support</strong> (about two hours): Design a response to intervention plan in reading for first grade in an elementary school you know or a hypothetical one. What happens at each tier? Who delivers it? How often is progress measured? What nonresponse criterion and threshold will you use, chosen from Table 6.2? How will implementation fidelity be documented? And when is a case referred for comprehensive evaluation without waiting? <em>Product:</em> a two-page outline.</li>
+<li><strong>Debate</strong> (one class session): The group splits into two teams, one defending the response to intervention model and the other the patterns of strengths and weaknesses model, drawing on the evidence in this chapter, including Table 6.4 and the critique by Reynolds and Shaywitz. <em>Product:</em> a one-page paper from each team summarizing its two strongest arguments and the other team's strongest argument.</li>
+<li><strong>From text to procedure</strong> (desk activity, about two hours): Read the text of Article 7 of the Regulations as presented in this chapter, and write a proposed procedure for a school team specifying how a “clear discrepancy” is to be estimated, how regular services are to be shown to be “of limited effectiveness,” the minimum duration of support and the data it requires, and how the exclusion requirement is to be met. Then apply your procedure to Lujain's case. <em>Product:</em> a one-page procedure and a paragraph on the result of applying it.</li>
+</ol>
+<h3>Chapter references</h3>
+<ol class="refs">
+<li>King Abdulaziz and His Companions Foundation for Giftedness and Creativity. (n.d.). <i>[National Program for Gifted Identification]</i> [In Arabic]. Retrieved September 29, 2026, from https://www.mawhiba.sa/en/services/the-national-program-for-gifted-identification/</li>
+<li>Ministry of Education. (n.d.). <i>[Guide to gifted classes]</i> [In Arabic]. General Administration for the Gifted. Retrieved September 29, 2026, from https://www.moe.gov.sa/ar/aboutus/aboutministry/RPRLibrary/دليل%20فصول%20الموهوبين.pdf</li>
+<li>Ministry of Education. (1436 AH). <i>[Special education organizational guide]</i> [In Arabic] (1st ed., academic year 1436–1437 AH). https://moe.gov.sa/en/aboutus/aboutministry/RPRLibrary/الدليل%20التنظيمي%20للتربية%20الخاصة.pdf</li>
+<li>Ministry of Education [Al-Ma'arif]. (1422 AH). <i>[Regulations for Special Education Institutes and Programs]</i> [In Arabic]. https://moe.gov.sa/en/aboutus/aboutministry/RPRLibrary/القواعد%20التنظيمية%20لمعاهد%20وبرامج%20التربية%20الخاصة%201422%20هـ.pdf</li>
+<li>Almulhim, N., Aljughaiman, A. M., &amp; Alfaiz, F. S. (2026). Beyond the total score: Revealing cognitive heterogeneity in high ability through latent profile analysis. <i>Journal of Intelligence, 14</i>(8), Article 166. https://doi.org/10.3390/jintelligence14080166</li>
+<li>Almulla, A. A., &amp; Mahama, I. (2026). Elementary teachers' perspectives on RTI programmes in supporting students with learning disabilities in Saudi Arabia. <i>Humanities and Social Sciences Communications, 13</i>(1), Article 974. https://doi.org/10.1057/s41599-026-07376-9</li>
+<li>Altheiabi, A. S., Bagadood, N. H., &amp; Sulaimani, M. F. (2025). Perceptions of learning difficulty teachers regarding the barriers to applying the response to the intervention model in Saudi Arabia. <i>Australian Journal of Learning Difficulties, 30</i>(1), 75–92. https://doi.org/10.1080/19404158.2025.2473425</li>
+<li>American Psychiatric Association. (2022). <i>Diagnostic and statistical manual of mental disorders</i> (5th ed., text rev.). https://doi.org/10.1176/appi.books.9780890425787</li>
+<li>Ardoin, S. P., Christ, T. J., Morena, L. S., Cormier, D. C., &amp; Klingbeil, D. A. (2013). A systematic review and summarization of the recommendations and research surrounding curriculum-based measurement of oral reading fluency (CBM-R) decision rules. <i>Journal of School Psychology, 51</i>(1), 1–18. https://doi.org/10.1016/j.jsp.2012.09.004</li>
+<li>Barth, A. E., Stuebing, K. K., Anthony, J. L., Denton, C. A., Mathes, P. G., Fletcher, J. M., &amp; Francis, D. J. (2008). Agreement among response to intervention criteria for identifying responder status. <i>Learning and Individual Differences, 18</i>(3), 296–307.</li>
+<li>Card, D., &amp; Giuliano, L. (2016). Universal screening increases the representation of low-income and minority students in gifted education. <i>Proceedings of the National Academy of Sciences, 113</i>(48), 13678–13683.</li>
+<li>Flanagan, D. P., Alfonso, V. C., Sy, M. C., Mascolo, J. T., McDonough, E. M., &amp; Ortiz, S. O. (2018). Dual discrepancy/consistency operational definition of SLD: Integrating multiple data sources and multiple data-gathering methods. In D. P. Flanagan &amp; E. M. McDonough (Eds.), <i>Contemporary intellectual assessment: Theories, tests, and issues</i> (4th ed.). Guilford.</li>
+<li>Fletcher, J. M., Lyon, G. R., Fuchs, L. S., &amp; Barnes, M. A. (2019). <i>Learning disabilities: From identification to intervention</i> (2nd ed.). Guilford.</li>
+<li>Fuchs, D., &amp; Fuchs, L. S. (2006). Introduction to response to intervention: What, why, and how valid is it? <i>Reading Research Quarterly, 41</i>(1), 93–99.</li>
+<li>Fuchs, L. S. (2003). Assessing intervention responsiveness: Conceptual and technical issues. <i>Learning Disabilities Research &amp; Practice, 18</i>(3), 172–186.</li>
+<li>Gagné, F. (2009). Building gifts into talents: Detailed overview of the DMGT 2.0. In B. MacFarlane &amp; T. Stambaugh (Eds.), <i>Leading change in gifted education: The festschrift of Dr. Joyce VanTassel-Baska</i> (pp. 61–80). Prufrock Press.</li>
+<li>Hale, J. B., &amp; Fiorello, C. A. (2004). <i>School neuropsychology: A practitioner's handbook</i>. Guilford.</li>
+<li>McBee, M. T., Peters, S. J., &amp; Waterman, C. (2014). Combining scores in multiple-criteria assessment systems: The impact of combination rule. <i>Gifted Child Quarterly, 58</i>(1), 69–89.</li>
+<li>Miciak, J., Fletcher, J. M., Stuebing, K. K., Vaughn, S., &amp; Tolar, T. D. (2014). Patterns of cognitive strengths and weaknesses: Identification rates, agreement, and validity for learning disabilities identification. <i>School Psychology Quarterly, 29</i>(1), 21–37.</li>
+<li>Naglieri, J. A. (1999). <i>Essentials of CAS assessment</i>. Wiley.</li>
+<li>Peters, S. J., Rambo-Hernandez, K., Makel, M. C., Matthews, M. S., &amp; Plucker, J. A. (2019). Effect of local norms on racial and ethnic representation in gifted education. <i>AERA Open, 5</i>(2).</li>
+<li>Renzulli, J. S. (1978). What makes giftedness? Reexamining a definition. <i>Phi Delta Kappan, 60</i>(3), 180–184.</li>
+<li>Reynolds, C. R., &amp; Shaywitz, S. E. (2009). Response to intervention: Ready or not? Or, from wait-to-fail to watch-them-fail. <i>School Psychology Quarterly, 24</i>(2), 130–145.</li>
+<li>Stuebing, K. K., Fletcher, J. M., Branum-Martin, L., &amp; Francis, D. J. (2012). Evaluation of the technical adequacy of three methods for identifying specific learning disabilities based on cognitive discrepancies. <i>School Psychology Review, 41</i>(1), 3–22.</li>
+<li>Stuebing, K. K., Fletcher, J. M., LeDoux, J. M., Lyon, G. R., Shaywitz, S. E., &amp; Shaywitz, B. A. (2002). Validity of IQ-discrepancy classifications of reading disabilities: A meta-analysis. <i>American Educational Research Journal, 39</i>(2), 469–518.</li>
+<li>U.S. Department of Education. (2006). Assistance to states for the education of children with disabilities and preschool grants for children with disabilities; Final rule (34 CFR Parts 300 and 301). <i>Federal Register, 71</i>(156).</li>
+<li>U.S. Department of Education, Office of Special Education Programs. (2011). <i>A response to intervention (RTI) process cannot be used to delay-deny an evaluation for eligibility under IDEA</i> (OSEP Memo 11-07).</li>
+</ol>
+<div aria-hidden="true" class="endmark">✦ ✦ ✦</div>
+<aside class="bp-cite" dir="ltr"><b>How to cite this section</b><p class="bp-ref">Alsamani, O. A. (2026). Chapter 6: Identification models. In <i>Diagnosis and Identification of Exceptional Learners</i>. alsamani.com. https://alsamani.com/books/diagnosis-identification/en/ch06.html</p><p class="bp-lic2">© 2026 Dr. Omar A. Alsamani. Free to read, download, share and quote for non-commercial purposes with attribution to the author and source.</p></aside>
+<nav class="pager"><a href="ch05.html"><small>Previous chapter</small><b>Alternative methods</b></a><a class="next" href="ch07.html"><small>Next chapter</small><b>Intellectual disability</b></a></nav>
+</div>
+<footer class="bp-foot" dir="ltr"><div class="bp-fin"><a class="bp-fid" href="../../../index.html"><span class="bp-fmark">OA</span><b>Dr. Omar A. Alsamani</b></a>
+<nav><a href="../../../index.html">Updates</a><a href="../../../books/index.html">Open Library</a><a href="../../../publications/index.html">Publications</a><a href="../../../tools/index.html">Tools</a><a href="../../../photography/index.html">Photography</a><a href="../../../about/index.html">About</a><a href="../../../contact/index.html">Contact</a></nav><p><bdi dir="ltr">© 2007–2026 alsamani.com</bdi></p><div class="pv" id="pv" dir="ltr" hidden></div></div></footer><script>(function(){{var el=document.getElementById('pv');if(!el)return;var live=/(^|\.)alsamani\.com$/.test(location.hostname);
+fetch('https://abacus.jasoncameron.dev/'+(live?'hit':'get')+'/alsamani-com/views').then(function(r){{return r.json()}}).then(function(d){{
+if(typeof d.value!=='number')return;var s=String(d.value);while(s.length<4)s='0'+s;
+el.innerHTML=s.split('').map(function(){{return '<span class="pv-d"><span class="pv-s">0<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9</span></span>'}}).join('');
+el.hidden=false;var cells=el.querySelectorAll('.pv-s');
+requestAnimationFrame(function(){{requestAnimationFrame(function(){{s.split('').forEach(function(c,i){{cells[i].style.transform='translateY('+(-c*10)+'%)'}})}})}})}}).catch(function(){{}})}})();
+</script><style>.bp-foot{box-shadow:0 0 0 100vmax var(--bpf,#F5F5F7);clip-path:inset(0 -100vmax);background:#F5F5F7;color:#6E6E73;font:13px/1.6 -apple-system,BlinkMacSystemFont,"IBM Plex Sans Arabic","Inter",sans-serif;margin-top:56px;padding:36px 20px calc(36px + env(safe-area-inset-bottom))}
+.bp-fin{max-width:1120px;margin:0 auto;display:flex;flex-wrap:wrap;gap:18px 40px;align-items:center;justify-content:space-between}
+.bp-fid{display:flex;align-items:center;gap:10px;color:#1D1D1F!important;text-decoration:none}.bp-fid b{font-weight:600}
+.bp-fmark{width:30px;height:30px;border:1px solid currentColor;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:600;letter-spacing:.04em}
+.bp-foot nav{display:flex;flex-wrap:wrap;gap:6px 22px}.bp-foot nav a{color:#6E6E73!important;text-decoration:none}.bp-foot nav a:hover{color:#1D1D1F!important}
+.bp-foot p{margin:0;flex-basis:100%;font-size:12px;border-top:1px solid #D2D2D7;padding-top:14px}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .bp-foot{--bpf:#161617;background:#161617;color:#A1A1A6}:root:not([data-theme="light"]) .bp-fid{color:#F5F5F7!important}}
+:root[data-theme="dark"] .bp-foot{--bpf:#161617;background:#161617;color:#A1A1A6}:root[data-theme="dark"] .bp-fid{color:#F5F5F7!important}
+@media print{.bp-foot{display:none}}</style><style>.pv{display:flex;justify-content:center;gap:4px;margin:14px auto 4px;grid-column:1/-1;width:100%}
+.bp-fin>p{text-align:center;width:100%}
+.pv[hidden]{display:none}
+.pv-d{display:inline-block;width:1.25em;height:1.7em;overflow:hidden;border-radius:6px;background:var(--bg,#fff);box-shadow:inset 0 0 0 1px var(--line,#d2d2d7);font:500 13px/1.7em "SF Mono",ui-monospace,Menlo,monospace;text-align:center;color:var(--ink,#1d1d1f)}
+.pv-s{display:block;transition:transform 1.4s cubic-bezier(.2,.8,.2,1)}
+@media (prefers-reduced-motion:reduce){.pv-s{transition:none}}
+.bp-foot .pv-d{background:#fff;box-shadow:inset 0 0 0 1px #d2d2d7;color:#1d1d1f}</style>
+</body>
+</html>

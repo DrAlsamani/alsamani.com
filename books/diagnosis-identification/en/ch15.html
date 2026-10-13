@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+
+<html dir="ltr" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
+<title>Chapter 15: From diagnosis to decision | Diagnosis and Identification of Exceptional Learners | Dr. Omar A. Alsamani</title>
+<link href="../assets/book.css?v=ea97adfb" rel="stylesheet"/>
+<style>
+.rep{display:grid;grid-template-columns:1fr 1fr;gap:16px;font-family:var(--f-ui)}
+.rep>div{border-radius:12px;padding:14px;border:1.5px solid var(--line);min-width:0}
+.rep h6{margin:0 0 10px;font-size:15px}
+.rep .x{border-color:color-mix(in srgb,var(--warn) 45%,var(--line))}
+.rep .x h6{color:var(--warn)}
+.rep .ok{border-color:color-mix(in srgb,var(--accent) 50%,var(--line))}
+.rep .ok h6{color:var(--accent)}
+.rep ol{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.rep li{margin:0;border-radius:8px;padding:8px 10px;font-size:13.5px;line-height:1.7;background:var(--paper-2)}
+.rep .ok li.q{background:color-mix(in srgb,var(--accent) 14%,var(--paper));font-weight:700}
+.rep .ok li.a{margin-right:18px}
+.rep .x li{color:var(--ink-2)}
+@media (max-width:600px){.rep{grid-template-columns:1fr}}
+.chain{display:grid;grid-template-columns:repeat(5,1fr);gap:0;font-family:var(--f-ui)}
+.chain>div{position:relative;padding:12px 10px 12px 14px;min-width:0;border-top:4px solid var(--accent);background:var(--paper-2)}
+.chain>div:nth-child(2){border-top-color:color-mix(in srgb,var(--accent) 80%,var(--example))}
+.chain>div:nth-child(3){border-top-color:color-mix(in srgb,var(--accent) 55%,var(--example))}
+.chain>div:nth-child(4){border-top-color:color-mix(in srgb,var(--accent) 30%,var(--example))}
+.chain>div:nth-child(5){border-top-color:var(--example)}
+.chain>div+div{border-right:1px dashed var(--line)}
+.chain .k{font-size:12px;font-weight:700;color:var(--ink-2);display:block}
+.chain b{display:block;font-size:15px;margin:2px 0 6px}
+.chain span{display:block;font-size:13px;line-height:1.75}
+@media (max-width:720px){.chain{grid-template-columns:1fr}.chain>div+div{border-right:0}.chain>div{border-top-width:0;border-right:4px solid var(--accent)!important;margin-bottom:6px;border-radius:0 8px 8px 0}}
+.meet{counter-reset:m;list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(5,1fr);gap:10px;font-family:var(--f-ui)}
+.meet li{counter-increment:m;margin:0;border:1.5px solid var(--line);border-radius:12px;padding:12px 10px;min-width:0;position:relative}
+.meet li::before{content:counter(m,arabic-indic);display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--teacher);color:var(--paper);font-weight:700;font-size:13px;margin-bottom:6px}
+.meet b{display:block;font-size:14.5px;margin-bottom:4px}
+.meet span{display:block;font-size:13px;line-height:1.75;color:var(--ink-2)}
+.meet em{display:block;font-style:normal;font-size:12.5px;margin-top:6px;padding-top:6px;border-top:1px dashed var(--line);color:var(--ink)}
+@media (max-width:760px){.meet{grid-template-columns:1fr 1fr}}
+@media (max-width:460px){.meet{grid-template-columns:1fr}}
+.cyc{display:grid;grid-template-columns:repeat(6,1fr);gap:18px;font-family:var(--f-ui);align-items:stretch}
+.cyc>div{border-radius:10px;padding:10px 8px;text-align:center;background:color-mix(in srgb,var(--accent) 10%,var(--paper));border:1px solid color-mix(in srgb,var(--accent) 30%,var(--line));min-width:0;position:relative}
+.cyc>div+div::before{content:"←";position:absolute;right:-15px;top:50%;transform:translateY(-50%);color:var(--ink-2);font-size:14px}
+.cyc b{display:block;font-size:14px}
+.cyc span{display:block;font-size:12px;color:var(--ink-2);line-height:1.6;margin-top:4px}
+.cyc-back{font-family:var(--f-ui);font-size:13px;color:var(--ink-2);text-align:center;margin-top:10px;border-top:1.5px dashed var(--line);padding-top:8px}
+@media (max-width:700px){.cyc{grid-template-columns:1fr 1fr 1fr;row-gap:14px}.cyc>div:nth-child(4)::before{display:none}}
+@media (max-width:420px){.cyc{grid-template-columns:1fr 1fr}.cyc>div:nth-child(3)::before,.cyc>div:nth-child(5)::before{display:none}.cyc>div:nth-child(4)::before{display:block}}
+.principles{counter-reset:p;list-style:none;padding:0;margin:0;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.principles li{counter-increment:p;margin:0;display:grid;grid-template-columns:44px 1fr;gap:10px;align-items:start;border-radius:12px;padding:12px;background:var(--paper-2)}
+.principles li::before{content:counter(p,arabic-indic);font-family:var(--f-display);font-size:30px;line-height:1;color:var(--accent);text-align:center}
+.principles b{display:block;font-family:var(--f-ui);font-size:15px;margin-bottom:2px}
+.principles span{font-size:14.5px;line-height:1.8;color:var(--ink-2)}
+@media (max-width:620px){.principles{grid-template-columns:1fr}}
+.svgfig{direction:ltr}
+.svgfig text{font-family:var(--f-ui)}
+.svgfig .ax{stroke:var(--ink-2);stroke-width:1.2}
+.svgfig .gr{stroke:var(--line);stroke-width:1}
+.svgfig .tk{fill:var(--ink-2);font-size:12.5px}
+.svgfig .lb{fill:var(--ink);font-size:13.5px;font-weight:700}
+.svgfig .lbs{fill:var(--ink-2);font-size:12px}
+.svgfig .aim{stroke:var(--example);stroke-width:2;stroke-dasharray:7 5;fill:none}
+.svgfig .dat{stroke:var(--ink);stroke-width:1.6;fill:none}
+.svgfig .pt{fill:var(--ink)}
+.svgfig .ptb{fill:var(--accent)}
+.svgfig .ph{stroke:var(--ink-2);stroke-width:1.2;stroke-dasharray:2 4}
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"><style>:root{--f-body:"Source Serif 4",Georgia,serif;--f-display:"Source Serif 4",Georgia,serif;--f-ui:"IBM Plex Sans",system-ui,sans-serif}.questions li::before{content:counter(q)}html{direction:ltr!important}body{letter-spacing:0;text-align:left}caption{text-align:left!important}.formula small{direction:ltr}.cover svg{left:auto!important;right:0}</style><link rel="stylesheet" href="../assets/platform.css?v=b4c32405"><script>window.BOOK={slug:"diagnosis-identification-en",cur:"ch15.html",lang:"en",title:"Diagnosis and Identification of Exceptional Learners",author:"Dr. Omar A. Alsamani"}</script><script src="../assets/platform.js?v=0d28c8d2" defer></script>
+<link rel="canonical" href="https://alsamani.com/books/diagnosis-identification/en/ch15.html"><link rel="alternate" hreflang="ar" href="https://alsamani.com/books/diagnosis-identification/ch15.html"><link rel="alternate" hreflang="en" href="https://alsamani.com/books/diagnosis-identification/en/ch15.html"><link rel="alternate" hreflang="x-default" href="https://alsamani.com/books/diagnosis-identification/ch15.html"><meta name="description" content="A diagnosis is worth what follows from it: a report the family can take in, a plan built on its findings, goals against which progress is measured, and periodic review that asks whether the judgment still holds and whether the services still fit. In this chapter we examine the links that connect…"><meta name="author" content="Omar A. Alsamani"><meta property="og:title" content="Chapter 15: From diagnosis to decision | Diagnosis and Identification of Exceptional Learners | Dr. Omar A. Alsamani"><meta property="og:url" content="https://alsamani.com/books/diagnosis-identification/en/ch15.html"><meta property="og:site_name" content="Dr. Omar A. Alsamani"><meta property="og:locale" content="en_US"><meta name="twitter:card" content="summary"><meta property="og:description" content="A diagnosis is worth what follows from it: a report the family can take in, a plan built on its findings, goals against which progress is measured, and periodic review that asks whether the judgment still holds and whether the services still fit. In this chapter we examine the links that connect…"><script type="application/ld+json">[{"@context": "https://schema.org", "@type": "Chapter", "name": "From diagnosis to decision", "headline": "Chapter 15: From diagnosis to decision", "url": "https://alsamani.com/books/diagnosis-identification/en/ch15.html", "inLanguage": "en", "author": {"@type": "Person", "name": "Omar A. Alsamani", "alternateName": "عمر عبدالله الصمعاني", "url": "https://alsamani.com/", "jobTitle": "Associate Professor", "affiliation": {"@type": "CollegeOrUniversity", "name": "University of Hail"}}, "isPartOf": {"@type": "Book", "name": "Diagnosis and Identification of Exceptional Learners", "url": "https://alsamani.com/books/diagnosis-identification/en/", "author": {"@type": "Person", "name": "Omar A. Alsamani", "alternateName": "عمر عبدالله الصمعاني", "url": "https://alsamani.com/", "jobTitle": "Associate Professor", "affiliation": {"@type": "CollegeOrUniversity", "name": "University of Hail"}}, "inLanguage": "en", "license": "https://creativecommons.org/licenses/by-nc-nd/4.0/", "isAccessibleForFree": true, "bookFormat": "https://schema.org/EBook", "alternativeHeadline": "Learners with disabilities, the gifted and the twice-exceptional", "isbn": "978-603-06-7714-6", "datePublished": "2026"}, "license": "https://creativecommons.org/licenses/by-nc-nd/4.0/", "isAccessibleForFree": true, "description": "A diagnosis is worth what follows from it: a report the family can take in, a plan built on its findings, goals against which progress is measured, and periodic review that asks whether the judgment still holds and whether the services still fit. In this chapter we examine the links that connect…", "keywords": "Introduction, The eligibility decision: what is actually being decided?, Writing the report, Meeting with the family, From the report to the individualized education program, Progress monitoring, reevaluation and exit from services, Decisions for gifted learners: from identification to placement, The regulatory framework in Saudi Arabia compared with US law, Ethics and the student's voice, Three cases, Principles to take with you from this book, Conclusion, Summary, key terms, and activities"}, {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Dr. Omar A. Alsamani", "item": "https://alsamani.com/"}, {"@type": "ListItem", "position": 2, "name": "Open Library", "item": "https://alsamani.com/books/"}, {"@type": "ListItem", "position": 3, "name": "Diagnosis and Identification of Exceptional Learners", "item": "https://alsamani.com/books/diagnosis-identification/en/"}, {"@type": "ListItem", "position": 4, "name": "From diagnosis to decision", "item": "https://alsamani.com/books/diagnosis-identification/en/ch15.html"}]}]</script></head>
+<body>
+<div class="bp-bar" dir="ltr"><div class="bp-in">
+<a class="bp-home" href="../../../index.html">Dr. Omar A. Alsamani</a><span class="bp-sep">/</span><a href="../../index.html">Open Library</a><span class="bp-sep">/</span><a href="index.html" class="bp-book">Diagnosis and Identification of Exceptional Learners</a>
+<span class="bp-sp"></span><span class="bp-tools"><button class="bp-ic" type="button" data-rd="z-" aria-label="Smaller text" title="Smaller text">A−</button><button class="bp-ic" type="button" data-rd="z+" aria-label="Larger text" title="Larger text">A+</button><button class="bp-ic" type="button" data-rd="theme" aria-label="Dark mode" title="Dark/light mode">Dark</button></span><a class="bp-btn" href="../ch15.html" hreflang="ar" lang="ar">العربية</a><button class="bp-btn" type="button" data-notes>Notes<i hidden></i></button><button class="bp-btn" type="button" data-share>Share</button><button class="bp-btn" type="button" data-bp="search">Search</button><button class="bp-btn solid" type="button" data-bp="toc">Contents</button></div></div>
+<div class="bp-share" id="bpShare" hidden dir="ltr"><b>Share this page</b><button type="button" data-sh="copy">Copy link</button><button type="button" data-sh="native" hidden>Share…</button><a data-sh="wa" target="_blank" rel="noopener">WhatsApp</a><a data-sh="x" target="_blank" rel="noopener">X</a><a data-sh="li" target="_blank" rel="noopener">LinkedIn</a><a data-sh="tg" target="_blank" rel="noopener">Telegram</a><a data-sh="mail">Email</a><small>To share a specific section, hover over its heading and click ¶</small></div>
+<div class="bp-drawer" id="bpDrawer" hidden dir="ltr"><div class="bp-panel" role="dialog" aria-label="Contents and search">
+<div class="bp-head"><b>Diagnosis and Identification of Exceptional Learners</b><button type="button" class="bp-x" data-bp="close" aria-label="Close">×</button></div>
+<div class="bp-search"><input id="bpQ" type="search" placeholder="Search the text of the book…" autocomplete="off"><div id="bpRes"></div></div>
+<nav class="bp-toc" id="bpToc"></nav>
+<div class="bp-links"><a href="../../index.html">Open Library</a><a href="../../../index.html">alsamani.com home</a></div>
+</div></div>
+<div class="page">
+<nav class="booknav"><a href="index.html">→ Diagnosis and Identification of Exceptional Learners</a><span>Part Four: Applied issues</span></nav>
+<header class="opener">
+<div aria-hidden="true" class="num">15</div>
+<div>
+<div class="kicker">Chapter 15</div>
+<h1>From diagnosis to decision</h1>
+</div>
+<p class="sub">A diagnosis is worth what follows from it: a report the family can take in, a plan built on its findings, goals against which progress is measured, and periodic review that asks whether the judgment still holds and whether the services still fit. In this chapter we examine the links that connect a diagnostic judgment to an educational decision.</p>
+</header>
+<nav aria-label="Chapter contents" class="toc">
+<b>In this chapter</b>
+<ol>
+<li class="u"><a href="#intro">Introduction</a></li>
+<li value="1"><a href="#s1">The eligibility decision: what is actually being decided?</a></li>
+<li value="2"><a href="#s2">Writing the report</a></li>
+<li value="3"><a href="#s3">Meeting with the family</a></li>
+<li value="4"><a href="#s4">From the report to the individualized education program</a></li>
+<li value="5"><a href="#s5">Progress monitoring, reevaluation and exit from services</a></li>
+<li value="6"><a href="#s6">Decisions for gifted learners: from identification to placement</a></li>
+<li value="7"><a href="#s7">The regulatory framework in Saudi Arabia compared with US law</a></li>
+<li value="8"><a href="#s8">Ethics and the student's voice</a></li>
+<li value="9"><a href="#s9">Three cases</a></li>
+<li value="10"><a href="#s10">Principles to take with you from this book</a></li>
+<li class="u"><a href="#conclusion">Conclusion</a></li>
+<li value="11"><a href="#s11">Summary, key terms and activities</a></li>
+</ol>
+</nav>
+<div class="scene">
+<span class="lbl">Scene from a meeting room</span>
+<p>Mazen's father and mother sat facing a thirty-page report. His mother leafed through it quickly: tables, standard scores, percentile ranks, and terms such as “phonological processing” and “rapid automatized naming.” On the last page was a single line: “He meets the criteria for specific learning disorder in reading.”</p>
+<p>His father looked up and asked two questions: “Does this mean something is wrong with our son?” And then: “So what do we do now?”</p>
+</div>
+<p>The report was accurate, yet it did not answer the two questions the family had come with. In this chapter we look closely at the distance between a correct finding and a useful decision, and at ways of bridging it.</p>
+<h3>Chapter objectives</h3>
+<p>After studying this chapter, the reader should be able to:</p>
+<ol class="objectives">
+<li>Classify a set of decisions as a diagnostic judgment, an eligibility decision or a service decision, and justify each classification with an example.</li>
+<li>Reorganize a test-by-test report around the referral question, and phrase its findings in language parents can understand.</li>
+<li>Turn a general recommendation into a specific one that states what will be done, who will do it, how much and how often, and how success will be judged.</li>
+<li>Apply the steps of a feedback meeting in a role-play with a family.</li>
+<li>Build a chain linking an assessment finding to a need, a measurable goal, a service and a method of progress monitoring in the individualized education program (IEP).</li>
+<li>Calculate a goal from the baseline and the rate of growth, and decide from a given progress graph whether the intervention should be changed, taking the number of data points into account.</li>
+<li>Choose the appropriate type of decision for a gifted student (enrichment, single-subject acceleration, whole-grade acceleration or a domain-specific program), specify the evidence it requires, and write a measurable goal for the student.</li>
+<li>Compare what Saudi regulations stipulate on eligibility, the plan, reevaluation and family rights with what US law stipulates, and identify what the published documents leave unaddressed.</li>
+<li>Judge whether the evidence in a new case is sufficient for reevaluation or exit from services, and justify that judgment.</li>
+</ol>
+<h2 class="unnum" id="intro">Introduction</h2>
+<p>The team's task extends beyond the diagnostic judgment, because the value of a diagnosis lies in what follows from it. A report crowded with tables and terminology that ends with a single line about criteria, like Mazen's report in the opening scene, may be technically sound and still fail to answer the family's question: What does this mean for our son, and what will we do? Moving from diagnosis to decision requires distinguishing among the diagnostic judgment, the eligibility decision and the service decision; writing a report organized around the referral question; building a plan whose goals can be measured; and conducting periodic review that asks whether the judgment is still correct and whether the services are still appropriate.</p>
+<p>We open the chapter with the eligibility decision and what is actually decided in it (Section 15.1), then turn to writing the report and its recommendations, with a sample report (Section 15.2); the meeting with the family (Section 15.3); and the move from the report to the individualized education program, including how to write measurable goals (Section 15.4). We then address progress monitoring, reevaluation and exit from services (Section 15.5); decisions for gifted learners, from identification to placement (Section 15.6); the regulatory framework in Saudi Arabia compared with US law (Section 15.7); and ethics and the student's voice (Section 15.8). We apply all of this to three cases (Section 15.9) and close with principles drawn from the book as a whole (Section 15.10).</p>
+<!-- 1 -->
+<h2 id="s1"><span class="sec">15.1</span>The eligibility decision: what is actually being decided?</h2>
+<p>At the end of an assessment, three distinct decisions are made, and they are often confused:</p>
+<ul>
+<li><strong>The diagnostic judgment:</strong> Does the student meet the criteria for a category, such as specific learning disorder, intellectual disability, autism spectrum disorder or giftedness? (The chapters of Part Three discuss the criteria for these categories in detail.)</li>
+<li><strong>The eligibility decision (Eligibility):</strong> Is the student entitled to special education services or to a gifted program under the regulations of the agency that provides them? It usually requires two conditions: the presence of the category, and the student's resulting need for specially designed instruction. In Saudi Arabia, this decision is made by the school's assessment and diagnosis team, which, according to the Special Education Organizational Guide, includes the school principal, the vice principal for student affairs, the special education teacher, the general education teacher, the student counselor or social worker, specialists relevant to the category, and the student's parent or guardian where possible (Ministry of Education, 1436 AH [Arabic]). Saudi regulations define a student with a disability as one whose impairment reaches “the extent that requires the provision of special education services” (Ministry of Education [Al-Ma'arif], 1422 AH [Arabic]), so need is built into the definition itself. The same logic applies in US law, namely the Individuals with Disabilities Education Act (IDEA), reauthorized in 2004 as the Individuals with Disabilities Education Improvement Act: the presence of a disability must be accompanied by the student's need, because of it, for special education (Code of Federal Regulations, 34 C.F.R. §300.8; Yell, 2019).</li>
+<li><strong>The service decision:</strong> What exactly will the student receive, where, how much, and how will we know it is helping? This decision rests on the details of the student's <em>profile</em> more than on the name of the category.</li>
+</ul>
+<p>A student may be diagnosed with autism spectrum disorder while succeeding in class and needing only minor accommodations. Another may meet the criteria for no category at all yet need Tier 2 support within response to intervention (RTI), a model that provides students with graduated support across tiers that grow more intensive as their response diminishes. The label does not determine the service: two students diagnosed with the same specific learning disorder may need entirely different plans.</p>
+<div class="callout" data-k="key">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9V16h7v-2.1A6 6 0 0 0 12 3Z"></path></svg>Key idea</div>
+<p>The question with which an assessment begins, “Does the student have X?”, must end with another: “What does the student need, and how will we know that what we provide is helping?” An assessment that answers only the first has done only half its job.</p>
+</div>
+<!-- 2 -->
+<h2 id="s2"><span class="sec">15.2</span>Writing the report</h2>
+<p>The report is what remains of the assessment. It will be read by the parents, the teacher, the planning team, and perhaps another specialist years later. Most weak reports get the numbers right; they fall short in three ways: they are organized by test rather than by question, they are written in professional jargon, and they end with general recommendations that no one knows how to carry out (Harvey, 2006; Schneider et al., 2018).</p>
+<h3>Organize the report around the question</h3>
+<p>A test-by-test report presents each instrument in its own section: the Wechsler results, then the achievement test results, then the behavior rating scale, leaving readers to pull the threads together themselves. A question-driven report, by contrast, begins with the referral question and gathers evidence from all sources under each sub-question, as Figure 15.1 illustrates.</p>
+<figure class="fig-frame" id="fig-15-1">
+<div class="rep">
+<div class="x"><h6>Organized by test</h6>
+<ol>
+<li>Student information and reason for referral</li>
+<li>Wechsler results: a table of ten indexes with a description of each</li>
+<li>Achievement test results: a table of fifteen subtests</li>
+<li>Phonological processing test results: a table</li>
+<li>Teacher rating scale: a table</li>
+<li>Summary: criteria are met</li>
+<li>Recommendations: remedial instruction and follow-up</li>
+</ol>
+</div>
+<div class="ok"><h6>Organized around the question</h6>
+<ol>
+<li class="q">Why does Mazen struggle with reading despite good comprehension?</li>
+<li class="a">What are his strengths? Oral comprehension and reasoning: from testing, the teacher and the family</li>
+<li class="a">Where does the difficulty lie? Decoding and fluency: from the achievement test, reading of classroom texts and error analysis</li>
+<li class="a">What explains it? Weak phonological awareness and rapid naming</li>
+<li class="a">What was ruled out? Hearing, vision, intellectual disability and limited opportunity to learn</li>
+<li class="q">What does this mean? The judgment and the degree of confidence in it</li>
+<li class="q">What do we do? Specific recommendations tied to each finding</li>
+</ol>
+</div>
+</div>
+<figcaption><b>Figure 15.1:</b> Two structures for the same report. On the left, the instruments are presented one after another; on the right, evidence from all sources is gathered under the questions the reader cares about. Full score tables move to an appendix at the end of the report.</figcaption>
+</figure>
+<h3>Principles of clear writing</h3>
+<ul>
+<li><strong>Write for the least specialized reader:</strong> If the parents understand the report, the specialist will too; the reverse does not hold.</li>
+<li><strong>Describe the behavior before naming the term:</strong> “He has difficulty linking letters to their sounds, confusing letters that sound alike, such as sīn and ṣād, and dropping a syllable from long words” is clearer than “weakness in phonological processing” (that is, the processing of speech sounds). If you need the term, explain it the first time it appears.</li>
+<li><strong>Present numbers with their meaning:</strong> Pair “his standard score is 76” with what it means: “he performs below roughly 95% of peers his age.” This is what the percentile rank expresses: the percentage of the student's age peers in the norming sample who scored lower than he did. A percentile rank of 84 means he outperformed 84% of them, and a standard score of 76 corresponds to a percentile rank of about 5. Report the confidence interval as well, that is, the range within which the student's true score most likely falls, since every score carries some measurement error.</li>
+<li><strong>Begin with strengths:</strong> Strengths are an integral part of the picture, and they are often the key to the plan.</li>
+<li><strong>Separate what was observed from what was inferred:</strong> “I observed that he left the task four times in ten minutes” is an observation. “The task appeared to be above his level” is an inference. Both are useful, provided the reader can tell one from the other.</li>
+<li><strong>State the limits of the assessment:</strong> If the norms were developed elsewhere, if the student was ill on the day of testing, or if the assessment was conducted in the student's second language, say so and note its likely effect.</li>
+</ul>
+<div class="tw"><table id="tab-15-1">
+<caption>Table 15.1: Statements from diagnostic reports in professional language, rephrased in language parents and teachers can understand.</caption>
+<thead><tr><th>In professional language</th><th>In language everyone can understand</th></tr></thead>
+<tbody>
+<tr><td>He obtained a composite score of 72 on the Working Memory Index (percentile rank 3).</td><td>He has clear difficulty holding information in mind while using it, such as remembering the steps of a problem as he solves it. His performance in this area is lower than that of most of his peers.</td></tr>
+<tr><td>He showed indicators of executive function weakness.</td><td>He starts tasks without planning, forgets what he was asked to do when instructions have more than two steps, and needs reminders to check his work.</td></tr>
+<tr><td>Findings are consistent with autism spectrum disorder, Level 1.</td><td>She meets the criteria for autism spectrum disorder. She needs support in understanding social situations and in coping with sudden change, while her language and achievement are on par with her peers.</td></tr>
+</tbody>
+</table></div>
+<h3>Recommendations: from general to specific</h3>
+<p>A good recommendation answers four questions: What will be done? Who will do it? How much and how often? How will we know it has worked? It is tied to a specific finding in the report: no recommendation without a finding to support it, and no important finding without a recommendation that addresses it.</p>
+<div class="tw"><table id="tab-15-2">
+<caption>Table 15.2: From general to specific recommendations, with the finding that supports each one.</caption>
+<thead><tr><th>General recommendation</th><th>Specific recommendation</th><th>Supporting finding</th></tr></thead>
+<tbody>
+<tr><td>He needs remedial reading instruction.</td><td>Structured phonics instruction in a small group of no more than three students, 30 minutes a session, five days a week, delivered by the learning disabilities teacher, with weekly fluency measurement.</td><td>Weak decoding and phonological awareness</td></tr>
+<tr><td>Allowances should be made for him on tests.</td><td>Test questions in science and social studies are read aloud to him, and he is given extended time on written tests.</td><td>Average oral comprehension, with slow reading that masks what he knows</td></tr>
+<tr><td>Communication with the family is advised.</td><td>Every two weeks the teacher sends the family a graph of his fluency progress, along with one ten-minute home reading activity.</td><td>A cooperative family asking what they can do</td></tr>
+</tbody>
+</table></div>
+<div class="callout" data-k="myth">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5V14M12 17h.01"></path></svg>Common misconceptions</div>
+<ul>
+<li><strong>“A long report is a thorough report.”</strong> Length often comes from copying test descriptions out of their manuals. A useful report selects what answers the question and places the rest in an appendix.</li>
+<li><strong>“General recommendations are safer because they commit no one.”</strong> That is precisely their flaw: a recommendation that does not specify who does what will be carried out by no one.</li>
+<li><strong>“Stating the limits of the assessment weakens the report.”</strong> The opposite is true. A report that acknowledges its limits earns more trust and protects the student from a decision built on evidence weaker than it appears.</li>
+</ul>
+</div>
+<h3>Sample report: Mazen's report organized around the question</h3>
+<p>What follows is the report presented in the opening scene, rewritten on the right-hand structure in Figure 15.1. The wording is the author's, and the data are hypothetical, for teaching purposes. The report has been trimmed to what the parents and teacher need, and the scores have been moved to an appendix at the end. The numbered notes explain the function of each part.</p>
+<div class="report">
+<div class="doc">
+<div class="dh"><span>Psychoeducational Assessment Report (teaching sample)</span><span>Name: (withheld) · Age: 8 years, 6 months · Grade 3</span></div>
+<p><strong>Referral question.</strong> <mark>Mazen's classroom teacher referred him with a question she framed together with his parents: Why does he struggle with reading even though he understands well what is read to him? And what will help him?</mark><sup>1</sup> Before the referral, he had received twelve weeks of small-group support, in which he made slow progress.</p>
+<p><strong>Sources of information.</strong> Interviews with the parents and the teacher, observation in two lessons, samples from his notebooks, the record of previous support, an individual intelligence test, an individual achievement test, phonological awareness and rapid naming tasks, and reading of passages from his school textbook. His hearing and vision were screened before the assessment.</p>
+<p><strong>What are his strengths?</strong> <mark>Mazen understands what is read to him and explains it clearly.</mark><sup>2</sup> When the teacher read the class a lesson about bees, he explained how the bees divide the work of the hive more precisely than many of his classmates. His performance in listening comprehension and in verbal and nonverbal reasoning fell in the average range. His parents describe him as curious, full of questions, and fond of being told stories.</p>
+<p><strong>Where does the difficulty lie?</strong> In reading words, and in reading speed. He reads 28 words correct per minute from a grade-level passage, whereas his schoolmates read about 70. <mark>His single-word reading is below that of roughly 95% of peers his age</mark><sup>3</sup>, and weaker still on pseudowords, a task in which guessing from context cannot help him. Most of his errors involve confusing letters that sound alike or look alike, and dropping a syllable from long words. His teacher noted that he avoids reading aloud and complains of tiredness after a single page.</p>
+<p><strong>What explains it?</strong> His performance was weak on phonological awareness tasks, such as deleting a sound from a word and blending sounds, and slow on rapid naming of letters. These two skills are among the strongest correlates of learning to decode. The picture, then, is one of difficulty linking letters to their sounds, with intact comprehension.</p>
+<p><strong>What was ruled out?</strong> His hearing and vision are normal. His cognitive ability is in the average range, so intellectual disability does not explain his difficulty. His attendance has been regular since first grade, Arabic is the language of the home, and he has received classroom instruction followed by additional support, so the difficulty cannot be attributed to limited opportunity to learn. There were no indications of an emotional problem that would account for it, although his avoidance of reading merits monitoring.</p>
+<p><strong>What does this mean?</strong> <mark>Mazen meets the criteria for specific learning disorder with impairment in reading, affecting word reading accuracy and fluency. He also meets the requirements of the Special Education Organizational Guide for eligibility for the learning disabilities program: a clear discrepancy between his ability and his reading achievement, the exclusion of other causes, and the limited effectiveness of regular educational services alone.</mark><sup>4</sup> Our confidence in this judgment is high, because the evidence from testing, classroom passages, the teacher, the family and the support record converges.</p>
+<p><strong>Limits of this assessment.</strong> <mark>No published local norms for reading fluency are available for his grade, so his fluency was compared with that of his schoolmates.</mark><sup>5</sup> Sessions were held in the morning over two days, and he was cooperative in both.</p>
+<p><strong>What do we do?</strong><sup>6</sup></p>
+<ol>
+<li>Structured, explicit phonics instruction in a group of no more than three students, 30 minutes daily, delivered by the learning disabilities teacher. <em>(Addresses weak phonological awareness and decoding.)</em></li>
+<li>Repeated reading of passages at his level for ten minutes daily, with immediate feedback. <em>(Addresses slow fluency.)</em></li>
+<li>Test questions read aloud to him in science and social studies, and extended time on written tests, with none of this applied to the reading test itself. <em>(Because his slow reading masks his good comprehension.)</em></li>
+<li>Weekly fluency measurement with a grade-level passage, reviewed every four weeks, with the graph sent to the family every two weeks along with a ten-minute home reading activity. <em>(So we know whether the services are sufficient.)</em></li>
+<li>Explaining his profile to Mazen in age-appropriate language: what he does well, what he finds hard, and what will help him. <em>(Because of his avoidance of reading and the fatigue it causes him.)</em></li>
+<li>Rediagnosis at the time specified by the Organizational Guide, that is, six to eighteen months after this diagnosis, or earlier if needed.</li>
+</ol>
+<div class="tw"><table id="tab-15-3">
+<caption>Table 15.3: Report appendix: Mazen's scores with confidence intervals (90%). Descriptive labels vary across tests; those used here are the Wechsler labels.</caption>
+<thead><tr><th>Area</th><th>Standard score</th><th>Confidence interval</th><th>Percentile rank</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td>Verbal reasoning</td><td>106</td><td>99–112</td><td>66</td><td>Average</td></tr>
+<tr><td>Nonverbal reasoning</td><td>102</td><td>94–109</td><td>55</td><td>Average</td></tr>
+<tr><td>Listening comprehension</td><td>104</td><td>96–111</td><td>61</td><td>Average</td></tr>
+<tr><td>Word reading</td><td>76</td><td>71–83</td><td>5</td><td>Very low</td></tr>
+<tr><td>Pseudoword reading</td><td>73</td><td>68–81</td><td>4</td><td>Very low</td></tr>
+<tr><td>Phonological awareness</td><td>78</td><td>72–86</td><td>7</td><td>Very low</td></tr>
+<tr><td>—</td><td>79</td><td>72–88</td><td>8</td><td>Very low</td></tr>
+<tr><td>Fluency in grade-level text</td><td colspan="4">28 words correct per minute (median of three passages); schoolmates about 70</td></tr>
+</tbody>
+</table></div>
+</div>
+<ol class="notes">
+<li><b>1</b><span><strong>The referral question</strong> is framed with the family and the teacher, and it remains the organizing thread for everything that follows.</span></li>
+<li><b>2</b><span><strong>Strengths first</strong>, with a specific example from the student himself.</span></li>
+<li><b>3</b><span><strong>The number with its meaning.</strong> The score and its confidence interval go in the appendix; the meaning goes in the body.</span></li>
+<li><b>4</b><span><strong>The judgment statement</strong> names the category and the domain, ties them to the eligibility requirement in the applicable regulations, and then states the degree of confidence and the reason for it.</span></li>
+<li><b>5</b><span><strong>The limits</strong> are stated explicitly, along with their bearing on interpretation.</span></li>
+<li><b>6</b><span><strong>Each recommendation</strong> is tied to a finding and specifies what will be done, who will do it, how much and how often, and how success will be judged.</span></li>
+</ol>
+</div>
+<!-- 3 -->
+<h2 id="s3"><span class="sec">15.3</span>Meeting with the family</h2>
+<p>This may be the first time the family hears the word “disability” or “disorder” attached to their child's name. What is said in this meeting, and how it is said, stays with them for years. The task is to present the findings honestly, clearly and compassionately all at once, without softening them to the point that they are lost.</p>
+<figure class="fig-frame" id="fig-15-2">
+<ol class="meet">
+<li><b>Start with what they know</b><span>Ask: What have you noticed? What worries you? Let the conversation build on their observations.</span><em>“You mentioned that he avoids homework. Is that true for every subject?”</em></li>
+<li><b>Present strengths first</b><span>With specific examples from the student himself.</span><em>“His explanation of how bees work in the hive was more precise than that of many of his classmates.”</em></li>
+<li><b>Explain the difficulty and the judgment</b><span>In plain language, then the name if there is one, with what it means and what it does not mean.</span><em>“This does not mean he is lazy or less intelligent.”</em></li>
+<li><b>Pause and listen</b><span>Leave time for silence, questions and feelings. Do not move on to the plan before they are ready.</span><em>“What is the first thing that comes to mind for you right now?”</em></li>
+<li><b>Move to the next step</b><span>What will happen, when, what their role is, and whom to contact.</span><em>“We will meet in two weeks to write the plan together.”</em></li>
+</ol>
+<figcaption><b>Figure 15.2:</b> Five steps for a feedback meeting. Beneath each step is a sentence that might be said during it. The parents are given a copy of the report, ideally early enough before the meeting to read it, or a one-page summary in plain language.</figcaption>
+</figure>
+<div class="callout" data-k="teacher">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M3 8l9-4 9 4-9 4-9-4Z"></path><path d="M7 10v5c0 1.5 2.5 3 5 3s5-1.5 5-3v-5"></path></svg>For the teacher: reactions to expect</div>
+<ul>
+<li><strong>Denial:</strong> “He's smart; he just doesn't want to study.” Do not argue. Return to the shared evidence: samples of his work, his progress graph, and what the parents themselves have observed.</li>
+<li><strong>Guilt:</strong> “We should have noticed long ago.” Explain that many of these difficulties surface only with the demands of school, and that identifying them now is better than identifying them later.</li>
+<li><strong>Relief:</strong> Some families feel relieved that the difficulty has a name and an explanation, after years of blaming the child or themselves. This, too, is a legitimate reaction.</li>
+<li><strong>Fear of stigma:</strong> “Will this be written in his file?” Answer honestly about who will have access to the report and about their rights in this regard.</li>
+</ul>
+</div>
+<!-- 4 -->
+<h2 id="s4"><span class="sec">15.4</span>From the report to the individualized education program</h2>
+<p>The individualized education program (IEP) is the document that turns assessment findings into instruction. Its components are set by each country's regulations. In Saudi Arabia, the Regulations for Special Education Institutes and Programs specify eight components and make it one of the plan's foundations that “the family must participate in preparing, implementing, evaluating and following up the plan” (Ministry of Education [Al-Ma'arif], 1422 AH [Arabic], Articles 83–85). Table 15.4 sets these alongside the components of the plan under US law (34 C.F.R. §300.320).</p>
+<div class="tw"><table id="tab-15-4">
+<caption>Table 15.4: Components of the individualized education program in the Saudi Regulations and their counterparts in US law.</caption>
+<thead><tr><th>Component in the Regulations (1422 AH)</th><th>Counterpart in US law</th></tr></thead>
+<tbody>
+<tr><td>(a) Description of the present level of performance: strengths and areas of need</td><td>Present levels of academic achievement and functional performance, and how the disability affects the student's involvement and progress in the general curriculum</td></tr>
+<tr><td>(b) Long-term and short-term goals, “provided that they are written in behavioral, measurable terms”</td><td>Measurable annual goals. Short-term objectives or benchmarks are required only for students assessed on alternate assessments aligned to alternate achievement standards (§300.320(a)(2)(ii))</td></tr>
+<tr><td>(c) Educational services and related services</td><td>Special education, related services and accommodations, and any supports needed for school personnel</td></tr>
+<tr><td>(d) Start and end of services</td><td>Projected start date of services, and their frequency, location and duration</td></tr>
+<tr><td>(e) Appropriate educational placement options</td><td>A statement of the extent to which the student will not participate with peers in the general education class, with an explanation</td></tr>
+<tr><td>(f) Objective criteria for measuring performance, and procedures and periodic schedules for evaluating the plan (daily, weekly, monthly or annual)</td><td>How progress toward annual goals will be measured, and when the family will be informed of it</td></tr>
+<tr><td>(g) Identification of those participating in implementing the plan</td><td>Members of the IEP team are specified in a separate section and include the parents and, when appropriate, the student (§300.321)</td></tr>
+<tr><td>(h) Identification of instructional materials</td><td>No separate counterpart, although the team must consider the student's need for assistive technology</td></tr>
+<tr><td>No corresponding component among the eight</td><td>The student's participation in statewide assessments and the accommodations provided in them, and transition services beyond school beginning no later than the first plan in effect when the student turns sixteen, or earlier if the team deems it appropriate (§300.320(b))</td></tr>
+</tbody>
+</table></div>
+<p>The comparison reveals a difference worth noting: the Saudi Regulations require short-term objectives for every student, whereas US law, since the 2004 amendments, has required only annual goals and limited short-term objectives to a narrow group. A reader who adopts an American IEP template may therefore omit a component required under their own system.</p>
+<p>A good assessment feeds every one of these components. The following chain is what links the report to the plan. If any link breaks, the assessment becomes a document in a file, and the plan becomes a set of goals with no grounding.</p>
+<figure class="fig-frame" id="fig-15-3">
+<div class="chain">
+<div><span class="k">Link 1</span><b>Finding</b><span>Mazen reads 28 words correct per minute from a grade-level passage, and most of his errors involve letters that look and sound alike.</span></div>
+<div><span class="k">Link 2</span><b>Need</b><span>He needs to master letter–sound correspondence and to have enough practice to build fluency.</span></div>
+<div><span class="k">Link 3</span><b>Goal</b><span>By the end of the second semester, he will read 60 words correct per minute from a grade-level passage on three consecutive measurements.</span></div>
+<div><span class="k">Link 4</span><b>Service and accommodation</b><span>Structured phonics instruction, 30 minutes daily, and test questions read aloud to him in science.</span></div>
+<div><span class="k">Link 5</span><b>Progress monitoring</b><span>Weekly fluency measurement with a grade-level passage, graphed and reviewed every four weeks.</span></div>
+</div>
+<figcaption><b>Figure 15.3:</b> The chain linking assessment to the plan, illustrated with Mazen's case from the opening scene. Each link rests on the one before it: the goal addresses a need, the need arises from a finding, and measurement tells us whether the service is achieving the goal.</figcaption>
+</figure>
+<h3>How is a measurable goal written?</h3>
+<p>A measurable goal specifies five things: <strong>who</strong>, <strong>what</strong> the student will do, expressed as observable behavior, <strong>under what conditions</strong>, <strong>to what criterion</strong>, and <strong>by when</strong> (Bateman &amp; Linden, 2012). Compare:</p>
+<div class="compare">
+<div class="bad"><h6>Non-measurable goal</h6>Mazen will improve his reading skills.<br/><br/>How will we know he has improved? By how much? When do we judge? At the end of the year, no one can say whether the goal was met.</div>
+<div class="bad" style="border-color:color-mix(in srgb,var(--accent) 50%,var(--line))"><h6 style="color:var(--accent)">Measurable goal</h6>By the end of the second semester, Mazen will read aloud 60 words correct per minute from an unfamiliar grade-level passage on three consecutive weekly measurements.</div>
+</div>
+<h3>Where does the number 60 come from?</h3>
+<p>The criterion is not chosen at random. It is usually built on three sources: the <strong>baseline</strong> (Baseline), that is, the student's current performance, measured three times with the median taken; the <strong>expected rate of growth</strong> per week with good intervention; and <strong>peer performance</strong> or the local grade-level norm. In a well-known study of reading in English, the ambitious rate of growth in second grade was about two words correct per week (Fuchs et al., 1993). Such rates cannot be transferred to Arabic as they are, since the nature and length of Arabic words differ; local norms are therefore used where they exist, or data from students in the same school.</p>
+<div class="worked">
+<b class="h">Worked example: Mazen's goal</b>
+<div class="step"><i>1</i><span>Baseline: three measurements, 27, 28 and 30. Median: 28 words correct per minute.</span></div>
+<div class="step"><i>2</i><span>Time remaining until the end of the second semester: 20 weeks.</span></div>
+<div class="step"><i>3</i><span>An ambitious yet reasonable growth rate, estimated by the team from school data: about 1.6 words per week.</span></div>
+<div class="step"><i>4</i><span>Goal: <bdi dir="ltr">28 + (1.6 × 20) = 60</bdi> words correct per minute.</span></div>
+<div class="step"><i>5</i><span>The aimline is drawn from 28 at week zero to 60 at week twenty, and each measurement is compared against it, as in Figure 15.4.</span></div>
+<div class="step"><i>6</i><span>Because the Saudi Regulations also require short-term objectives, the goal is divided into milestones that fall on the same aimline, for example reading <bdi dir="ltr">28 + (1.6 × 10) = 44</bdi> words correct per minute by the end of week ten.</span></div>
+</div>
+<h3>Accommodation and modification</h3>
+<p>An <strong>accommodation</strong> (Accommodation) changes how the student accesses or responds to a task without changing what is measured, such as reading the questions aloud to Mazen on a science test, since the aim is to measure his understanding of science independently of his reading. A <strong>modification</strong> (Modification), by contrast, changes the content or the standard itself, as when a student is given a passage at a lower level. The distinction matters in the plan, because a modification changes the meaning of the score and is used only when the student genuinely needs it. Questions are not read aloud to Mazen on the reading test itself, because doing so would cancel out what is being measured.</p>
+<!-- 5 -->
+<h2 id="s5"><span class="sec">15.5</span>Progress monitoring, reevaluation and exit from services</h2>
+<h3>Progress monitoring</h3>
+<p>A plan is a hypothesis: we hypothesize that this service will bring the student to this goal. Repeated measurement is what tests the hypothesis. Among its common tools is curriculum-based measurement (CBM), a brief, repeated measure of a basic skill using material from the curriculum itself, such as the number of words a student reads correctly in one minute (Deno, 2003; Chapter 4 discusses it in detail). One common decision rule is the consecutive data-point rule: if four consecutive points fall below the aimline, the intervention is changed; if four consecutive points fall above it, the goal is raised.</p>
+<p>A systematic review of decision rules in reading fluency measurement, however, found that consecutive data-point rules are of low reliability when used alone, because a single measurement fluctuates with the difficulty of the passage and the day of testing. They are therefore supplemented by the <strong>trend line</strong> (<span class="en">Trend line</span>) rule: the line of best fit is drawn through the student's data points, and its slope is compared with that of the aimline. The slope estimate cannot be trusted until enough measurements have accumulated, usually over six to ten weeks or more, depending on the quality of the passages and their equivalence in difficulty (Ardoin et al., 2013). Here the slope behaves like a score: <strong>a slope is a range of plausible values</strong>. A slope calculated from five fluctuating measurements may in reality be much larger or much smaller than it appears, and judging it “insufficient” requires more data or other evidence.</p>
+<p>In Saudi schools, a recent study described teachers applying practices close to the response to intervention model, but in a way that was “largely informal,” lacking systematic progress monitoring, diagnostic tools and regulatory guidance (Almulla &amp; Mahama, 2026). In another study, learning disabilities teachers cited lack of data, limited time and the absence of formal adoption of the model among the barriers to implementation (Altheiabi et al., 2025). Without repeated data, the plan comes to be judged by the teacher's impression at the end of the year.</p>
+<figure class="fig-frame" id="fig-15-4">
+<svg aria-label="Mazen&#x27;s reading fluency progress graph across sixteen weeks" class="svgfig" role="img" viewbox="0 0 660 320">
+<line class="gr" x1="60" x2="620" y1="40" y2="40"></line><line class="gr" x1="60" x2="620" y1="95" y2="95"></line><line class="gr" x1="60" x2="620" y1="150" y2="150"></line><line class="gr" x1="60" x2="620" y1="205" y2="205"></line>
+<line class="ax" x1="60" x2="620" y1="260" y2="260"></line><line class="ax" x1="60" x2="60" y1="40" y2="260"></line>
+<text class="tk" text-anchor="end" x="52" y="264">0</text><text class="tk" text-anchor="end" x="52" y="209">20</text><text class="tk" text-anchor="end" x="52" y="154">40</text><text class="tk" text-anchor="end" x="52" y="99">60</text><text class="tk" text-anchor="end" x="52" y="44">80</text>
+<text class="tk" text-anchor="middle" x="60" y="280">0</text><text class="tk" text-anchor="middle" x="197.5" y="280">5</text><text class="tk" text-anchor="middle" x="335" y="280">10</text><text class="tk" text-anchor="middle" x="472.5" y="280">15</text><text class="tk" text-anchor="middle" x="610" y="280">20</text>
+<text class="lbs" text-anchor="middle" x="340" y="306">Weeks</text>
+<text class="lbs" text-anchor="middle" transform="rotate(-90 20 150)" x="20" y="150">Words correct per minute</text>
+<line class="ph" x1="293.75" x2="293.75" y1="40" y2="260"></line>
+<text class="lbs" text-anchor="middle" x="176" y="58">Initial intervention</text>
+<text class="lbs" text-anchor="middle" x="455" y="58">Intervention after modification</text>
+<line class="aim" x1="60" x2="610" y1="183" y2="95"></line>
+<polyline class="dat" points="87.5,180.25 115,177.5 142.5,180.25 170,174.75 197.5,172 225,174.75 252.5,169.25 280,172"></polyline>
+<polyline class="dat" points="307.5,155.5 335,147.25 362.5,139 390,133.5 417.5,125.25 445,119.75 472.5,111.5 500,106"></polyline>
+<rect fill="var(--example)" height="12" width="12" x="54" y="177"></rect>
+<g class="pt"><circle cx="87.5" cy="180.25" r="4.5"></circle><circle cx="115" cy="177.5" r="4.5"></circle><circle cx="142.5" cy="180.25" r="4.5"></circle><circle cx="170" cy="174.75" r="4.5"></circle><circle cx="197.5" cy="172" r="4.5"></circle><circle cx="225" cy="174.75" r="4.5"></circle><circle cx="252.5" cy="169.25" r="4.5"></circle><circle cx="280" cy="172" r="4.5"></circle></g>
+<g class="ptb"><circle cx="307.5" cy="155.5" r="4.5"></circle><circle cx="335" cy="147.25" r="4.5"></circle><circle cx="362.5" cy="139" r="4.5"></circle><circle cx="390" cy="133.5" r="4.5"></circle><circle cx="417.5" cy="125.25" r="4.5"></circle><circle cx="445" cy="119.75" r="4.5"></circle><circle cx="472.5" cy="111.5" r="4.5"></circle><circle cx="500" cy="106" r="4.5"></circle></g>
+<path d="M610 83 l4 9 h9 l-7 6 3 9 -9 -5 -9 5 3 -9 -7 -6 h9 z" fill="var(--example)"></path>
+<text class="lb" text-anchor="middle" x="596" y="76">Goal: 60</text>
+<text class="lbs" text-anchor="start" x="70" y="203">Baseline: 28</text>
+<text class="lbs" text-anchor="middle" x="210" y="140">Aimline</text>
+<line stroke="var(--example)" stroke-width="1.2" x1="210" x2="222" y1="145" y2="161"></line>
+</svg>
+<figcaption><b>Figure 15.4:</b> Mazen's progress graph with hypothetical values. The square represents the baseline, the dashed line the aimline (Aimline), and the star the goal. In the first eight weeks, all data points fell below the aimline, and their slope was clearly lower than that of the aimline, so the team modified the intervention: it increased the time and added repeated reading practice. Eight measurements are usually enough to judge the slope, whereas four alone are not. After the modification, the slope of the progress line grew steeper, and the points approached the aimline and then rose above it. The decision here was not “Mazen is not learning” but “this intervention is not enough for Mazen.”</figcaption>
+</figure>
+<h3>Reevaluation</h3>
+<p>A diagnosis is a judgment tied to the moment it is made. Children grow, intervention has effects, and instruments improve. For this reason, most systems require reevaluation. In Saudi Arabia, the Special Education Organizational Guide states that “students with disabilities must be rediagnosed no less than 6 months and no more than 18 months after the initial diagnosis,” and it permits further reassessment and rediagnosis later “if the need arises” (Ministry of Education, 1436 AH [Arabic]). We found no fixed periodic schedule in it beyond the first rediagnosis. The Regulations add a right for the family: “rediagnosis of the pupil if the family considers that he was not placed in the appropriate program based on his previous diagnosis, should it request this” (Ministry of Education [Al-Ma'arif], 1422 AH [Arabic], Article 76). Under US law, by contrast, reevaluation takes place at least once every three years unless the family and the school agree it is unnecessary, no more than once a year unless both agree, and also whenever the student's needs change or the parents or teacher request it (34 C.F.R. §300.303). The Saudi system thus brings the first review forward and places it close to the diagnosis, which suits judgments made about young children or on limited evidence, and it leaves what follows to the team's discretion.</p>
+<p>Reevaluation does not necessarily mean repeating every test. The question it asks is different: Does the student still belong to the category? Does the student still need the services? Does the plan need to change? Answering these may require no more than reviewing progress data and teachers' observations, with targeted testing where necessary.</p>
+<figure class="fig-frame" id="fig-15-5">
+<div class="cyc">
+<div><b>Referral</b><span>After screening and early intervention</span></div>
+<div><b>Assessment</b><span>Multiple sources and tools</span></div>
+<div><b>Eligibility decision</b><span>Category and need together</span></div>
+<div><b>Plan</b><span>Goals and services</span></div>
+<div><b>Monitoring</b><span>Repeated measurement and adjustment</span></div>
+<div><b>Reevaluation</b><span>Periodically or as needed</span></div>
+</div>
+<div class="cyc-back">↺ The cycle returns to the plan if eligibility continues, or the student moves to monitoring or exits services</div>
+<figcaption><b>Figure 15.5:</b> The cycle of diagnosis and services. Diagnosis is one link in a continuous cycle, and each link feeds the next.</figcaption>
+</figure>
+<h3>What might reevaluation reveal?</h3>
+<div class="tw"><table id="tab-15-5">
+<caption>Table 15.5: What reevaluation may reveal, and the usual decision in each case.</caption>
+<thead><tr><th>Result</th><th>Example</th><th>Usual decision</th></tr></thead>
+<tbody>
+<tr><td>Category and need continue</td><td>A student with intellectual disability who still needs a modified curriculum</td><td>Eligibility continues, and the plan is updated</td></tr>
+<tr><td>The category has changed</td><td>A child diagnosed with global developmental delay before age six, for whom later assessment showed a picture of autism spectrum disorder with average abilities</td><td>The category is changed, and the plan is rebuilt on the new profile</td></tr>
+<tr><td>The need has ended</td><td>A student with a reading difficulty who has reached the level of her peers and maintains it with minor accommodations</td><td>She may exit services, with monitoring or accommodations in the general education class</td></tr>
+<tr><td>The initial judgment was wrong</td><td>A student diagnosed with intellectual disability while learning Arabic, whose scores rose substantially as he mastered the language</td><td>The judgment is corrected, and the source of the error is reviewed to protect other students (Chapter 14 discusses the sources of this kind of error)</td></tr>
+</tbody>
+</table></div>
+<h3>Exit from services</h3>
+<p>A student's exit from services is a diagnostic decision in its own right, and it requires assessment just as entry did. Under US law, a student may not be determined to no longer have a disability without an evaluation, except when the student graduates with a regular diploma or reaches the upper age limit (34 C.F.R. §300.305(e)). We found no provision in the Special Education Organizational Guide specific to exit procedures, so rediagnosis is the gateway through which this decision passes. A successful exit is planned: When will support be tapered? Who will monitor the student afterward? What signs would call for a return? Exit from gifted programs follows a similar logic, taken up in the next section.</p>
+<!-- 6 -->
+<h2 id="s6"><span class="sec">15.6</span>Decisions for gifted learners: from identification to placement</h2>
+<p>Most of this chapter so far has been built on the disability model: a category, a need, and a plan that addresses a deficit. Yet the value of a judgment of giftedness, too, depends on the service decision that follows it, and the question is essentially the same: What does this student need, and how will we know that what we provide fits? The label “gifted” does not determine the service any more than a disability label does. Of two students classified as gifted, one may need acceleration in mathematics and the other a program in creative writing. A growing strand of the literature therefore calls for asking whether the service matches the student's need in a particular domain before asking about the label (Peters et al., 2014; Worrell et al., 2019).</p>
+<h3>Types of decisions and the evidence each requires</h3>
+<div class="tw"><table id="tab-15-6">
+<caption>Table 15.6: Types of decisions for gifted learners, the evidence each decision requires, and what to ask before making it.</caption>
+<thead><tr><th>Decision</th><th>What it means</th><th>Evidence required</th><th>What to ask before deciding</th></tr></thead>
+<tbody>
+<tr><td>Enrichment</td><td>Broadening and deepening the curriculum without changing the student's grade or pace of progress, either within the classroom or in a separate program</td><td>Ability or interest that exceeds what the classroom offers: an ability measure, teacher ratings, and the student's products</td><td>Is the enrichment tied to the student's area of strength, or is it a general activity suitable for any student?</td></tr>
+<tr><td>Subject acceleration</td><td>The student studies a single subject using a higher grade's curriculum or alongside a higher grade, while remaining with his own grade for all other subjects</td><td>Advanced achievement in that same subject: above-level testing showing that the ceiling is masking the student's ability, followed by a test on the higher grade's curriculum showing what he already knows of it and what he does not, so that only the unknown material is taught</td><td>Can his timetable be arranged? And who will teach him the following year so that he does not repeat what he has already mastered?</td></tr>
+<tr><td>Whole-grade acceleration</td><td>Skipping an entire grade, or early entrance</td><td>High general ability, advanced achievement in more than one subject, social and emotional maturity, and the student's own wish together with the support of the family and teachers. A structured tool such as the Iowa Acceleration Scale is used</td><td>How does the student himself see it? How will the new class receive him? And who will follow up with him after the move?</td></tr>
+<tr><td>Talent-domain program</td><td>A program specialized in a particular domain, such as science, mathematics, scientific research, or the arts</td><td>Evidence from the domain itself (a test, a product, or a performance in it) added to the overall score</td><td>Does the admission criterion measure what the program actually offers?</td></tr>
+<tr><td>Exit from the program or change of service</td><td>Ending a student's enrollment in a program, or moving him to another service</td><td>Performance data from the program covering at least one semester after the service has been modified, and an assessment that rules out an undetected learning disability or a temporary circumstance, with the reason documented</td><td>Does the problem lie in the student, or in how well the program fits him? And do the student and his family know when and how he can return?</td></tr>
+</tbody>
+</table></div>
+<p>The acceleration decision is among the most thoroughly studied decisions in gifted education, and among the least used. The report <span class="en">A Nation Empowered</span> summarized decades of research and concluded that acceleration is one of the most effective options available for academically advanced students; that accelerated students generally achieve at least as well as their older peers; that the evidence shows, on average, no social or emotional harm from it; and that the greatest obstacle to it is the beliefs of educators, which run contrary to the research findings (Assouline et al., 2015). This does not mean that acceleration suits every gifted student. The <strong>Iowa Acceleration Scale</strong> (<span class="en">Iowa Acceleration Scale</span>) was therefore developed to guide the team in whole-grade acceleration decisions specifically. The team uses it to gather data on ability, achievement, aptitude, development, relationships, and attitudes, and the scale treats certain items as critical, among them the student's own unwillingness to be accelerated (Assouline et al., 2009).</p>
+<h3>The gifted student's plan and goals</h3>
+<p>A student with a disability receives a written individual plan, whereas a gifted student is often placed in a program with no plan at all. Some systems address this through an individual document called an <strong>Advanced Learning Plan</strong> (<span class="en">Advanced Learning Plan</span>), as in several US states. The plan specifies the student's areas of strength, measurable goals in those areas, social and emotional goals, programs and placement, and the way progress will be monitored. The essential difference between a goal for a gifted student and a goal for a student with a disability is that the former measures <em>growth beyond grade level</em>, that is, learning what the student has not yet mastered. Compare:</p>
+<div class="compare">
+<div class="bad"><h6>Non-measurable goal</h6>The student’s skills in advanced mathematics will grow, and his passion for science will be satisfied.<br/><br/>What content? What criterion? And how will we know he has learned something new to him?</div>
+<div class="bad" style="border-color:color-mix(in srgb,var(--accent) 50%,var(--line))"><h6 style="color:var(--accent)">Measurable goal</h6>By the end of the second semester, after studying them through mathematics acceleration, the student will pass the end-of-unit test for the sixth-grade fractions and ratio units with a score of 85% or higher. He will also complete a science research project in which he defines a question and a method for collecting and analyzing data, earning 3 out of 4 or higher on every criterion of a rubric applied by two independent raters.</div>
+</div>
+<h3>Continuation and exit</h3>
+<p>A judgment of giftedness, like a judgment of disability, holds at a particular point in time. A longitudinal study that followed elementary students found that many of those identified as gifted in a given year no longer met the same criterion a few years later, while others met it only later (Lohman &amp; Korb, 2006). Two consequences follow. First, identification should be repeated periodically, so that the door is not closed to a student who was not identified in third grade. Second, exit from a program should not rest on a single score or one poor semester. The decline may stem from an undetected learning disability, a program that does not fit the student's area of strength, an environment that fails to challenge him and so erodes his motivation, or a temporary family circumstance. A fair exit decision therefore passes through four steps: looking for the cause of the decline; modifying the service with clear goals for a set period; reviewing the data with the student and his family; and, finally, documenting the decision together with publicly stated criteria for return.</p>
+<p>Twice-exceptional learners are a special case. Such a student needs a single plan with two tracks, one that builds on his strength and one that supports his difficulty, with neither sacrificed for the sake of the other. The case of Rakan in Section 15.9 offers an example of such a dual plan.</p>
+<!-- 7 -->
+<h2 id="s7"><span class="sec">15.7</span>The regulatory framework in Saudi Arabia compared with US law</h2>
+<p>So far this chapter has presented general principles of eligibility, planning, and reevaluation. The procedures binding on the school and the family, however, are set by each country's own regulations. In this section we present what we found in the published Saudi documents, and we place US law in a parallel column for comparison, since it is among the most detailed systems and among the most prominent in the literature (Yell, 2019). The presentation rests on four Saudi documents: the Regulations for Special Education Institutes and Programs, issued by the Ministry of Education [Al-Ma'arif] in 1422 AH; the Special Education Organizational Guide, issued by the Ministry of Education in its first edition for the 1436–1437 AH school year, which names the Regulations among its foundations; the Law on the Rights of Persons with Disabilities, issued by Royal Decree No. (M/27) dated 11/2/1445 AH, which replaced the Disability Welfare Law of 1421 AH (Article 32); and the Personal Data Protection Law. At the time of writing we found no published edition of the Organizational Guide more recent than the first, so readers should verify which edition is in force at the time they consult it.</p>
+<div class="tw"><table id="tab-15-7">
+<caption>Table 15.7: Principles of eligibility, planning, and family rights in the Saudi regulations, and their counterparts in US law. Sources: the Regulations (Ministry of Education [Al-Ma'arif], 1422 AH [Arabic]), the Organizational Guide (Ministry of Education, 1436 AH [Arabic]), the Law on the Rights of Persons with Disabilities (1445 AH), and the Personal Data Protection Law (1443 AH); and 34 C.F.R. pt. 300.</caption>
+<thead><tr><th>Principle</th><th>In the Saudi regulations</th><th>In US law (34 C.F.R. pt. 300)</th></tr></thead>
+<tbody>
+<tr><td>Who determines eligibility</td><td>The assessment and diagnosis team: the school principal, the vice principal for student affairs, the special education teacher, the general education teacher, the student counselor or social worker, specialists according to the category, the physician or nurse where available, and the parent or guardian where possible (Organizational Guide). In the Regulations: the relevant special education teacher, the behavioral training teacher (psychologist), the parent or guardian, and anyone whose participation the case requires (Article 81)</td><td>A team that includes the parents and qualified professionals (§300.306(a)(1))</td></tr>
+<tr><td>Assessment requirements</td><td>“Not relying solely on the results of a single measure,” using “the tools and measures approved by the Ministry of Education,” administered and interpreted by “qualified specialists” (Organizational Guide), with tests that are “appropriate to the child's environment” (Regulations, Article 80)</td><td>No single procedure is used as the sole criterion; tools are valid for the purposes for which they are used and are administered by trained personnel (§300.304)</td></tr>
+<tr><td>Informed consent</td><td>Written consent from the parent or guardian after formal notification, with a response due within a period “not exceeding (14) days from the date of the written notification”; if no response is received, “this is considered permission granting consent” (Organizational Guide; the Regulations say “within two weeks,” Article 80). The parent's permission is sought “for the purpose of diagnosis, program preparation, and approval of any modifications” (Article 76)</td><td>Informed written consent before the initial evaluation, and separate consent before services begin. Silence does not count as consent, except for reevaluation when the school can show that it made reasonable efforts and the parents did not respond (§300.300)</td></tr>
+<tr><td>Participation</td><td>The family is invited “to take part in diagnosis, program preparation, and evaluation” (Article 76); the parent or guardian is a member of the assessment team (Article 81); and “the family must participate in preparing, implementing, evaluating, and monitoring the plan” (Articles 83–85)</td><td>The right to attend eligibility and plan meetings and to participate meaningfully in the decision (§300.322)</td></tr>
+<tr><td>Access and explanation</td><td>The parent or guardian is enabled “to review everything related to his child's program,” and the pupil's condition is explained “in understandable language” (Article 76). We found no explicit provision for giving the family a copy of the evaluation report</td><td>Access to records, and a copy of the evaluation report at no cost (§300.306(a)(2), §300.613)</td></tr>
+<tr><td>Confidentiality and data protection</td><td>“Maintaining the confidentiality of all information” (Articles 76 and 80). The Personal Data Protection Law, issued by Royal Decree No. (M/19) dated 9/2/1443 AH and amended by Royal Decree No. (M/148) dated 5/9/1444 AH, has been in force since 14 September 2023; it is overseen by the Saudi Data and Artificial Intelligence Authority (SDAIA), and it classifies health data as sensitive data</td><td>The confidentiality rules in the law (§300.610 et seq.), together with the Family Educational Rights and Privacy Act (FERPA)</td></tr>
+<tr><td>—</td><td>Eight elements, including long-term and short-term goals written in measurable behavioral terms (Articles 83–85; see Table 15.4)</td><td>Measurable annual goals, with short-term objectives only for students assessed through alternate assessments (§300.320)</td></tr>
+<tr><td>Reevaluation</td><td>No sooner than 6 months and no later than 18 months after the initial diagnosis, and thereafter “as needed” (Organizational Guide). Also at the family's request “if it considers that [the child] has not been placed in the appropriate program” (Article 76)</td><td>At least once every three years, and no more than once a year unless the family and the school agree otherwise (§300.303)</td></tr>
+<tr><td>Disputes and a second evaluation</td><td>The right to request rediagnosis (Article 76). We found no published provision granting the family the right to an independent evaluation by an outside party at the expense of the education authority, nor any specific procedure for appealing an eligibility decision</td><td>Parents may request an independent educational evaluation <strong>at public expense</strong>; the agency must then either pay for it or request a due process hearing to show that its own evaluation is appropriate. The agency must also consider any independent evaluation the family submits (§300.502)</td></tr>
+<tr><td>System-level entitlement</td><td>The Law on the Rights of Persons with Disabilities: the right to “supportive educational and training services at all stages,” including the provision and adaptation of “modern assessment and diagnostic tools,” and the design and implementation of early intervention programs (Article 8), as well as “screening and diagnostic services” and “early detection of disability” (Article 9)</td><td>The right to a free appropriate public education (§300.101), and the duty to locate, identify, and evaluate every child with a disability (§300.111)</td></tr>
+</tbody>
+</table></div>
+<p>Table 15.7 shows that the Saudi regulations converge with US law on most principles: multiple sources, the team, family consent and participation, confidentiality, and a written plan with measurable goals. They differ in three respects that assessors would do well to know. First, a parent's silence for fourteen days counts as consent, which means that the notification itself must be clear, understandable, and documented, since a family may “consent” without having understood. Second, the first reevaluation comes early, after six to eighteen months. Third, we found no published provision for the right to an independent evaluation or for an appeals procedure; if such a right exists, it is not spelled out in the documents we reviewed.</p>
+<h3>Gifted programs</h3>
+<p>The Special Education Organizational Guide does not address gifted students; it lists eleven categories, all of them disability categories (Ministry of Education, 1436 AH [Arabic]). The Regulations had earlier defined “superior ability and giftedness” and set alternative admission conditions combining academic achievement, IQ, teacher testimony, and creative thinking (Ministry of Education [Al-Ma'arif], 1422 AH [Arabic], Article 8). Current practice is governed instead by the gifted program guides and the documents of the national program, as summarized in Table 15.8. US law has no binding federal counterpart to this: giftedness is not one of the IDEA categories, and it is regulated by the states.</p>
+<div class="tw"><table id="tab-15-8">
+<caption>Table 15.8: Stages of the decision for gifted students in the published Saudi documents.</caption>
+<thead><tr><th>Stage</th><th>What we found</th></tr></thead>
+<tbody>
+<tr><td>Nomination and identification</td><td>The National Program for Gifted Identification, launched in 2011 as a partnership among Mawhiba, the Ministry of Education, and the National Center for Assessment. It is based on the Mawhiba Multiple Cognitive Abilities Test and targets grades 3 through 10 at three levels, and “the student is entitled to sit the test once at each level.” Registration is initiated by the family, with a financial contribution from the parent except for subsidized students (King Abdulaziz and His Companions Foundation for Giftedness and Creativity, n.d. [Arabic])</td></tr>
+<tr><td>Admission to Mawhiba programs</td><td>Available to those who qualify: Mawhiba classes, the Mawhiba advanced program in science and mathematics, research and enrichment programs, and nomination for university scholarships (King Abdulaziz and His Companions Foundation for Giftedness and Creativity, n.d. [Arabic])</td></tr>
+<tr><td>Admission to Ministry of Education gifted classes</td><td>Students are nominated “from among the students classified in the National Project for Gifted Identification”; if the quota is not filled, places are completed according to criteria (a mental abilities test, personal characteristics, academic achievement, and creative products) by meeting two or more criteria, one of which must be the mental abilities test with a score “of no less than 120” (Ministry of Education, n.d. [Arabic])</td></tr>
+<tr><td>School program for the care of gifted girls</td><td>Admission for “the top 5% of the outcomes of the project,” that is, the national project, from grade 4 through grade 11 (Ministry of Education, 1437 AH [Arabic])</td></tr>
+<tr><td>Individual plan for the gifted student</td><td>In the documents we reviewed, we found no provision requiring a written individual plan for every gifted student</td></tr>
+<tr><td>Continuation and exit</td><td>Among the materials we reviewed, we found no published criteria for continuation in, or exit from, these programs</td></tr>
+<tr><td>Combining with special education services</td><td>We found no provision allowing a student to combine a gifted program with a special education service, nor any provision prohibiting it</td></tr>
+</tbody>
+</table></div>
+<p>In light of Section 15.6, the Saudi regulations appear detailed at the stage of identification and admission and only general beyond it. For a student who has entered a program, the published texts tell us neither how goals are to be written, nor when the student's status is to be reviewed, nor how exit takes place. A recent review of gifted education in the Kingdom described extensive efforts in identification and programming (Alfaiz et al., 2022), and an exploratory study estimated that about 5.9% of a sample of 6,875 students in four private schools in Riyadh may be twice-exceptional, calling for policies specific to them (Almulhim et al., 2026). In all these areas the decision is left largely to the team's professional discretion, which makes clear principles, such as those set out in the previous section, all the more necessary.</p>
+<p><strong>Question for reflection:</strong> A student in a gifted program saw her grades drop over a single semester, and the program administration proposed removing her to free her seat for someone else. In the absence of published exit criteria, what steps would you suggest to the team, and what evidence would you ask for before the decision is made?</p>
+<!-- 8 -->
+<h2 id="s8"><span class="sec">15.8</span>Ethics and the student's voice</h2>
+<p>The following principles are established in the professional codes for assessors, among them the standards of the National Association of School Psychologists (National Association of School Psychologists [NASP], 2020) and the Ethical Principles of Psychologists and Code of Conduct of the American Psychological Association (American Psychological Association [APA], 2017). In essence they are general principles applicable to any system. In Saudi Arabia, the Organizational Guide requires that tools be administered and interpreted “by qualified specialists” (Ministry of Education, 1436 AH [Arabic]), and psychologists practicing in the health sector are subject to professional classification and licensure by the Saudi Commission for Health Specialties, including a licensing examination whose content covers psychological assessment and diagnosis (Saudi Commission for Health Specialties, 2024 [Arabic]). We found no published text specifying the levels of qualification required to administer each category of standardized tests.</p>
+<div class="callout" data-k="warn">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M12 3 2 20h20L12 3Z"></path><path d="M12 10v4M12 17h.01"></path></svg>Ethics for the assessor (NASP, 2020; APA, 2017)</div>
+<ul>
+<li><strong>Boundaries of competence:</strong> Assessors do not administer a tool they have not been trained on, nor do they issue a judgment in an area outside their specialty. Referral to another specialist is a sign of competence.</li>
+<li><strong>Test security and the right of access:</strong> Items from standardized tests are not copied, nor are they given to the family or the teacher for practice, because doing so destroys their validity for that student and for others. This is why no actual items appear in this book. Test security, however, does not justify withholding results from the family: the family has the right to know what was measured, what the result was, and what it means, even if it does not see the items themselves.</li>
+<li><strong>Understood consent:</strong> Consent given through silence, or through a signature on a form that was never explained, is not informed consent in the professional sense. Whatever may suffice from a regulatory standpoint, the assessor's duty is to make sure the family understands what will happen and why.</li>
+<li><strong>No pressure on the outcome:</strong> A judgment is neither made harsher nor softened so that a student will receive a service or be denied one, or because the school wants a certain number. The judgment follows the evidence.</li>
+<li><strong>Independence and conflicts of interest:</strong> If some party asks for a particular result, the assessor's duty is to write what was found and to make clear the limits of what is known. Assessors also disclose any interest that might influence their judgment, such as assessing a student at a center they own and then recommending its services.</li>
+</ul>
+</div>
+<h3>The student's voice</h3>
+<p>It is often forgotten that a diagnosis belongs to someone. A student who understands his own profile (what he does well, what he finds hard, and what helps him) is better able to ask for what he needs and less likely to explain his difficulty by deciding that he is “stupid.” Students are involved in a way that fits their age: a young child hears a simple explanation of his strengths and of what will help him, an older child attends part of the plan meeting, and an adolescent takes part in writing his own goals. Under US law, the student is invited to the plan meeting whenever postsecondary goals are discussed, beginning no later than the first plan to be in effect when the student turns sixteen, or earlier if the team sees fit (34 C.F.R. §300.321(b), §300.320(b)). Among the eight plan elements in the Saudi Regulations, we found no explicit provision for the student's own participation, although the element “identifying the participants” is broad enough to accommodate it. Adolescents moving from one school level to the next need this participation more than any other students, as the case of Tamim in the next section shows.</p>
+<!-- 9 -->
+<h2 id="s9"><span class="sec">15.9</span>Three cases</h2>
+<p style="font-family:var(--f-ui);font-size:14.5px;color:var(--ink-2)">All three cases are hypothetical, written for teaching purposes, and their figures are illustrative.</p>
+<article class="case">
+<div class="case-head"><h3>Case 1: Mazen, 8 years 6 months</h3><span class="verdict y">From report to plan</span></div>
+<p><strong>The story:</strong> Mazen is the student from the opening scene, and his full report was presented in Section 15.2: he understands what is read to him and explains his ideas well orally, but he has struggled with reading since first grade. After the first meeting, at which his parents did not understand the report, the specialist went over it with them again. She began by asking them what they had noticed, then read them what the teacher had written about his explanation of how bees work in the hive, and then explained the difficulty in a single sentence: “Mazen understands well, but in his mind the letters don't link to their sounds quickly enough, so reading tires him out. This has a name, and there is teaching that helps with it.” The team then wrote the following plan together with the family.</p>
+<div class="tw"><table id="tab-15-9">
+<caption>Table 15.9: Mazen's individualized education program.</caption>
+<thead><tr><th>Plan element</th><th>What was written</th></tr></thead>
+<tbody>
+<tr><td>Present level</td><td>Strengths: oral comprehension and reasoning in the average range, and clear intellectual curiosity. Needs: reads 28 words correct per minute in grade-level text, whereas his schoolmates read about 70. Avoids reading aloud and complains of fatigue.</td></tr>
+<tr><td>Long-term goal</td><td>Will read 60 words correct per minute in grade-level text, on three consecutive measurements, by the end of the second semester.</td></tr>
+<tr><td>Short-term goals</td><td>(1) Will read 44 words correct per minute in grade-level text by the end of week 10. (2) Will read two-syllable words containing letters that are similar in sound or in shape with 90% accuracy, on a list of twenty words, by the end of week 8.</td></tr>
+<tr><td>Service and setting</td><td>Structured phonics instruction with the learning disabilities teacher in the resource room, 30 minutes daily; he remains in his regular class for the rest of the day.</td></tr>
+<tr><td>Accommodations</td><td>Questions are read aloud to him in science and social studies. He is not asked to read aloud in front of the class without preparation.</td></tr>
+<tr><td>Progress monitoring</td><td>Weekly fluency measurement, review of the graph every four weeks, and a graph sent to the family every two weeks.</td></tr>
+<tr><td>Participants</td><td>The learning disabilities teacher, the classroom teacher, the parents, and Mazen himself, through a simple explanation of his plan.</td></tr>
+</tbody>
+</table></div>
+<p><strong>What we learned:</strong> The same report, with the same numbers, became useful once it was organized around the family's question and led to goals that could be judged. We saw in Figure 15.4 how progress monitoring led to a change in the intervention rather than to blaming Mazen.</p>
+<p class="shift"><strong>What evidence could change the decision?</strong> If, after the adjustment, the slope of his trend line remained clearly below the slope of the aimline across eight or more measurements, the team would review the intensity and type of service and reconsider the picture of the difficulty itself. If his oral comprehension proved to weaken as the language demands of later grades increased, the assessment would be broadened to oral language, as happened in Tamim's case.</p>
+</article>
+<article class="case">
+<div class="case-head"><h3>Case 2: Tamim, 14 years 9 months, grade 9</h3><span class="verdict t">Reevaluation changes the picture</span></div>
+<p><strong>The story:</strong> Tamim was diagnosed in fourth grade with specific learning disorder in reading: he struggled with decoding, and his nonverbal ability was in the average range. Rediagnosis a year later confirmed his continued eligibility, and he received resource room services for five years; the decoding goals in his plan were met two years ago. In the second semester of ninth grade, before his move to secondary school, his parents requested a reevaluation: he was struggling in science and social studies and said, “I read the whole page, and I don't know what it said.” The special education teacher requested it as well, because he no longer knew what the service was offering Tamim now that he had mastered decoding. Rather than simply renewing eligibility, the team asked the question afresh and added to the assessment what had not been asked the first time: listening comprehension; oral language, through an assessment conducted by the speech-language pathologist; and developmental history.</p>
+<div class="tw"><table id="tab-15-10">
+<caption>Table 15.10: Tamim's evidence at the initial diagnosis and at reevaluation.</caption>
+<thead><tr><th>Source</th><th>At initial diagnosis (grade 4)</th><th>At reevaluation (grade 9)</th></tr></thead>
+<tbody>
+<tr><td>Word reading (standard score)</td><td>74</td><td>93</td></tr>
+<tr><td>Pseudoword reading</td><td>71</td><td>88</td></tr>
+<tr><td>Fluency in grade-level text</td><td>Below the 10th percentile among his schoolmates</td><td>At about the 30th percentile among his schoolmates</td></tr>
+<tr><td>Reading comprehension</td><td>78</td><td>79</td></tr>
+<tr><td>Listening comprehension (text read aloud to him)</td><td>Not measured</td><td>77</td></tr>
+<tr><td>Oral language (language sample and vocabulary and syntax tasks)</td><td>Not assessed</td><td>Short sentences; errors in plural forms and attached pronouns; limited academic vocabulary; difficulty understanding complex sentences and long instructions</td></tr>
+<tr><td>Nonverbal reasoning</td><td>98</td><td>101</td></tr>
+<tr><td>Developmental history (mother)</td><td>Not asked about</td><td>Delayed speech; did not combine words into sentences until after age three</td></tr>
+<tr><td>Teachers</td><td>“Struggles with reading”</td><td>“Understands when things are explained with examples, but gets lost in long questions even when they are read to him”</td></tr>
+<tr><td>Tamim himself</td><td>—</td><td>Knows he is “slower than others at understanding,” and asks: Will he be able to choose what he wants in secondary school?</td></tr>
+</tbody>
+</table></div>
+<p><strong>Analysis of the evidence:</strong> The “reading difficulty” explanation was appropriate in fourth grade: decoding was weak, and it responded to intervention until it approached the average. His comprehension, however, remained low to roughly the same degree, and it then emerged that his understanding of what he hears is low as well. The remaining difficulty, now that turning letters into words has improved, lies in understanding language itself, whether read or heard. This is supported by his history of delayed speech and by what the speech-language pathologist found in his oral language. The better explanation now is a language disorder (developmental language disorder), of which the decoding difficulty was the most visible face in his early years; that face has been treated, but the underlying basis remains.</p>
+<p><strong>Decision:</strong></p>
+<ul>
+<li><strong>Category:</strong> The primary category is changed to “speech and language disorders,” one of the categories listed in the Organizational Guide, with documentation of the history of reading difficulty and its response to intervention.</li>
+<li><strong>Plan:</strong> Phonics instruction is discontinued, and speech-language services begin, with goals in academic vocabulary and in understanding complex sentences. The special education teacher and the subject teachers work with the speech-language pathologist to pre-teach new vocabulary before lessons and to break long instructions into parts.</li>
+<li><strong>Accommodations:</strong> Extra time; long questions broken into parts without changing what they measure; and a glossary of science terms.</li>
+<li><strong>Transition:</strong> Before the school year begins, a meeting is held between the intermediate and secondary school teams, and his plan moves with him. With his teacher, Tamim writes a “one-page profile” introducing himself to his new teachers: what he does well, what he finds hard, and what helps him. The data are reviewed after his first semester in secondary school, and rediagnosis takes place on the schedule the Organizational Guide sets following a change of category.</li>
+<li><strong>Tamim's voice:</strong> He attended the last part of the meeting, chose to tell his new teachers himself, and discussed secondary school options with the school counselor in light of his strength in nonverbal reasoning.</li>
+</ul>
+<p><strong>What we learned:</strong> Reevaluation is a new question that goes beyond renewing eligibility: What is the student's picture now? A label that was right at nine may not be the best explanation at fourteen, because the school's demands shift from learning to read to reading to learn, and because the initial assessment never asked about oral language. Transitions between school levels are moments of risk: the new school knows nothing about the student unless his plan moves with him, and unless he himself can speak about who he is.</p>
+<p class="shift"><strong>What evidence could change the decision?</strong> If his listening and reading comprehension improved quickly after a few weeks of pre-teaching academic vocabulary, that would suggest his weakness reflects limited vocabulary and experience rather than a developmental language disorder, and the category would be reviewed. And if a recent hearing screening revealed an undetected hearing loss, the explanation of both the speech delay and the weak comprehension would change.</p>
+</article>
+<article class="case">
+<div class="case-head"><h3>Case 3: Rakan, 12 years, grade 7</h3><span class="verdict t">One plan, two tracks</span></div>
+<p><strong>The story:</strong> Rakan is twice-exceptional; that is, he combines giftedness with a learning disability. He was diagnosed in elementary school with specific learning disorder in reading, then nominated for the gifted program after qualifying on the national test. He joined the program and received reading support along with testing accommodations. In seventh grade his teacher asked for his plan to be reviewed, because he had begun refusing accommodations in front of his classmates, saying, “I don't want anyone to know.” The specialist found that his reading accuracy had improved considerably, but his speed was still low. Because we found no provision governing the combination of the two services (Section 15.7), the gifted program team and the school's learning disabilities team agreed on a single plan with two tracks, instead of two plans, each unaware of the other.</p>
+<p><strong>A session with Rakan alone:</strong> The specialist showed him his profile in a simple graph: reasoning at the top, speed at the bottom. He said, “So it means I'm not stupid, I'm just slow at reading?” He then chose for himself the accommodations that suited him and helped draft his goals.</p>
+<div class="tw"><table id="tab-15-11">
+<caption>Table 15.11: Rakan's dual plan: the strength track and the support track.</caption>
+<thead><tr><th>Plan element</th><th>Strength track (gifted program)</th><th>Support and accommodations track (learning disabilities)</th></tr></thead>
+<tbody>
+<tr><td>Present level</td><td>Very high verbal and nonverbal reasoning (General Ability Index 126), original ideas in science projects, and fluent oral explanation</td><td>Reading accuracy of 96% in grade-level texts, speed roughly half that of his peers, and long completion times on extended written assignments</td></tr>
+<tr><td>Objective</td><td>By the end of the year, he will complete a research project in physics and present it orally with visuals, earning 3 out of 4 or higher on every criterion of the program rubric, as scored by two raters</td><td>By the end of the second semester, he will use text-to-speech and audiobooks independently on four out of every five extended reading tasks, and will request extra time himself on every test</td></tr>
+<tr><td>Service</td><td>The gifted program, with enrichment in science</td><td>A weekly session with the learning disabilities teacher to practice reading strategies and assistive technology</td></tr>
+<tr><td>Accommodations</td><td>Completing some tasks orally or through a visual presentation in place of long written reports, without lowering the level of the content</td><td>Extra time on tests without announcing it in class, and digital texts with text-to-speech</td></tr>
+<tr><td>Progress monitoring</td><td>Project rubric at mid-semester and at the end of the semester</td><td>A monthly log of technology use, and a sample of assignment completion times</td></tr>
+<tr><td>Responsible</td><td>Gifted program teacher</td><td>Learning disabilities teacher, in coordination with the program teacher</td></tr>
+</tbody>
+</table></div>
+<p><strong>What we learned:</strong> A twice-exceptional student needs a single plan that reads his strength and his difficulty together, so that he is neither removed from the gifted program because of his difficulty nor left without support because of his giftedness. An accommodation the student rejects does not work. Once Rakan understood his profile, he began asking for what he needed on his own, a skill he will carry with him beyond school.</p>
+<p class="shift"><strong>What evidence could change the decision?</strong> If he continued to refuse accommodations even after they were no longer visible to others, and his grades fell in reading-heavy subjects, the team would review the accommodations with Rakan himself, looking for alternatives he would accept. And if the samples of assignment completion times showed that his reading speed had approached that of his peers, the support track would be gradually scaled back while monitoring continued.</p>
+</article>
+<!-- 10 -->
+<h2 id="s10"><span class="sec">15.10</span>Principles to take with you from this book</h2>
+<p>Across this book we have covered many categories, a variety of tools, and numerous cases. Even if the names of instruments and the numbers in the criteria fade from memory, these are the principles we hope will endure:</p>
+<ol class="principles">
+<li><div><b>No single measure settles the question</b><span>Judgment rests on converging evidence from multiple sources, tools, and settings.</span></div></li>
+<li><div><b>A score is a range, not a point</b><span>Every score carries measurement error, and a cutoff is a wide zone.</span></div></li>
+<li><div><b>Rule out before you rule in</b><span>Check hearing, vision, language, and opportunities to learn before attributing a difficulty to the student.</span></div></li>
+<li><div><b>Functional impact is a requirement</b><span>A low score is not enough without a real effect on the student's life and learning.</span></div></li>
+<li><div><b>Differential diagnosis is the heart of the work</b><span>Alongside the question “Are the criteria met?” comes the question “What is the best explanation?”</span></div></li>
+<li><div><b>Giftedness and difficulty can coexist</b><span>Look at the student in comparison with peers and in comparison with himself.</span></div></li>
+<li><div><b>A tool is a product of its culture</b><span>Norms, items, and language carry assumptions, and fairness needs someone to ask about them.</span></div></li>
+<li><div><b>The family is a source and a partner</b><span>Its knowledge of the child is evidence, and its decision is part of the decision.</span></div></li>
+<li><div><b>Diagnosis serves instruction</b><span>Its value lies in the measurable goals and services that change after it.</span></div></li>
+<li><div><b>Every judgment is provisional</b><span>The child grows, the evidence is renewed, and the judgment is revisited.</span></div></li>
+</ol>
+<h2 class="unnum" id="conclusion">Conclusion</h2>
+<p>The central argument we have sought to develop in this chapter is that a diagnosis is measured by what follows from it, and that it is the student's profile, more than the label, that determines the service. A connected chain follows from this: a report organized around the referral question, describing behavior before terminology and presenting numbers with their meaning; recommendations that specify what is to be done, by whom, to what extent, and how success will be recognized; and an individualized education program that moves from finding to need to goal to service to measurement. The plan is a hypothesis tested by repeated measurement: if the student does not progress, the intervention is changed and the student is not blamed. Reevaluation, in turn, is a new question about the student's picture now, one that goes beyond renewing eligibility. The same logic applies to gifted students: each placement decision has its own evidence, and no gifted student should be removed from a program without a search for the cause of the decline.</p>
+<p>Within the Saudi regulatory framework, however, there remain issues for which we found no published text, such as the right to an independent evaluation and criteria for continuation in and exit from gifted programs; in these matters judgment rests on professional discretion until they are settled by regulation. The student, for his part, retains a right to understand his own profile and to take part in the decision about him, a right that grows in importance at transitions between school levels and a reminder that the purpose of all assessment is a decision that serves the student at its center.</p>
+<!-- 11 -->
+<h2 id="s11"><span class="sec">15.11</span>Summary, key terms, and activities</h2>
+<h3>Chapter summary</h3>
+<div class="summary"><ul>
+<li>The diagnostic judgment, the eligibility decision, and the service decision are three different decisions. It is the profile, more than the label, that determines the service. In Saudi Arabia, the eligibility decision is made by the school's assessment and diagnosis team.</li>
+<li>A useful report is organized around the referral question, begins with strengths, describes behavior before terminology, presents numbers with their meaning, states its own limitations, and places tables in an appendix.</li>
+<li>A good recommendation specifies what is to be done, by whom, to what extent, and how success will be recognized, and it is tied to a finding in the report.</li>
+<li>The feedback meeting with the family begins with what the family knows, presents strengths, explains the judgment clearly, and leaves time for listening before moving on to the plan.</li>
+<li>A chain running from finding to need to goal to service to measurement links assessment to the individualized education program. The Saudi Regulations specify eight elements for the plan, including long-term and short-term goals.</li>
+<li>The plan is a hypothesis tested by repeated measurement. Consecutive data-point rules are complemented by the trend line, and a slope is a range that requires enough data points. Lack of progress calls for changing the intervention rather than blaming the student.</li>
+<li>Reevaluation is a new question about the student's picture now, going beyond renewal of eligibility. The Organizational Guide sets the first reevaluation at six to eighteen months after diagnosis. Exit from services is a decision that requires assessment and planning.</li>
+<li>Decisions for gifted students take several forms (enrichment, subject acceleration, whole-grade acceleration, and talent-domain programs), each with its own evidence. Gifted students have goals that measure growth beyond their grade level, and they are not removed from a program without a search for the cause of their decline. A twice-exceptional student has a single plan with two tracks.</li>
+<li>Under the Saudi regulations, the family has rights to consent, participation, access, confidentiality, and requesting rediagnosis, and its silence for fourteen days counts as consent. We found no published provision for the right to an independent evaluation, nor for criteria for continuation in and exit from gifted programs.</li>
+<li>Students have a right to understand their own files and to take part in the decisions made about them, and this right matters all the more at transitions between school levels.</li>
+</ul></div>
+<h3>Glossary of terms</h3>
+<dl class="gloss">
+<dt>Eligibility determination</dt><dd>The decision on whether a student is entitled to services; it usually requires both a qualifying category and a need for specially designed instruction.</dd>
+<dt>Assessment and diagnosis team</dt><dd>The school team that determines eligibility under the Saudi regulations; it includes members from school administration, special education, general education and counseling, along with relevant specialists and the parent or guardian.</dd>
+<dt>Individualized Education Program (IEP)</dt><dd>A document that sets out the student’s present level, goals, services and accommodations, and how progress will be measured.</dd>
+<dt>Present levels of performance</dt><dd>A description of what the student can do now, with both strengths and areas of need; it is the starting point for writing goals.</dd>
+<dt>Measurable goal</dt><dd>A goal that specifies the behavior, the conditions, the criterion and the time frame, so that one can judge whether it has been met.</dd>
+<dt>Baseline</dt><dd>The level of performance before intervention, usually measured three times, with the median taken.</dd>
+<dt>Aimline</dt><dd>A line on the progress graph connecting the baseline to the goal, against which data points are compared.</dd>
+<dt>Trend line</dt><dd>The line of best fit through a student’s data points on the progress graph; its slope is compared with the slope of the aimline.</dd>
+<dt>Decision rule</dt><dd>A rule agreed upon in advance for changing the intervention or the goal, such as four consecutive data points below the aimline, or a trend-line slope lower than the aimline slope.</dd>
+<dt>Reevaluation</dt><dd>A periodic or as-needed evaluation that asks whether the category still applies, whether the student still needs services, and what the student’s current profile looks like.</dd>
+<dt>Accommodation</dt><dd>A change in how a task is presented or responded to that does not change what is being measured, such as reading science test questions aloud to the student.</dd>
+<dt>Modification</dt><dd>A change in the content or the standard itself, such as providing a lower-level text; it changes the meaning of the score.</dd>
+<dt>Enrichment</dt><dd>Broadening and deepening the curriculum for a gifted student without changing the student’s grade placement or pace of progress through it.</dd>
+<dt>Acceleration</dt><dd>Moving a student through the curriculum at a pace matched to the student’s level, whether in a single subject, by skipping a whole grade, or through early admission.</dd>
+<dt>Advanced Learning Plan (ALP)</dt><dd>An individual document for a gifted student that identifies areas of strength, measurable goals in those areas, social and emotional goals, and how progress will be monitored.</dd>
+<dt>Independent educational evaluation</dt><dd>An evaluation conducted by a party outside the school. Under US law, families may request one at public expense if they disagree with the school’s evaluation.</dd>
+</dl>
+<h3>Review questions</h3>
+<ol>
+<li>Classify each of the following as a diagnostic judgment, an eligibility decision or a service decision, and justify your answer: (a) “She meets the criteria for autism spectrum disorder.” (b) “Science questions will be read aloud to him.” (c) “He is admitted to the learning disabilities program.” Then explain: can a student be diagnosed and yet not be eligible for services?</li>
+<li>Rephrase the following statement in language that parents can understand: “He obtained a standard score of 68 on the Processing Speed Index, in the extremely low range.”</li>
+<li>Turn the recommendation “needs support with attention” into a specific recommendation, and state the finding that could support it.</li>
+<li>A student’s baseline is 40 words correct per minute, 15 weeks remain, and a reasonable growth rate is 1.5 words per week. What is the goal? What is her short-term goal at week 8? After four measurements, all of which fell below the aimline, should the intervention be changed now? Justify your answer in light of what you have learned about the number of data points and the trend line.</li>
+<li>What is the difference between an accommodation and a modification? And why are the questions not read aloud to Mazen on the reading test?</li>
+<li>Compare the Saudi regulations with US law on three points: the effect of a parent’s silence on a request for consent, the timing of reevaluation, and the right to an independent evaluation. What does the first difference imply for how the notice should be prepared?</li>
+<li>Why does a decision to exit a student from services require an evaluation? And what steps should precede removing a student from a gifted program?</li>
+<li>In Tamim’s case: what question did the first evaluation fail to ask, and why did answering it change both the category and the plan?</li>
+<li>Choose one of the cases in this chapter (Mazen, Tamim or Rakan) and write a paragraph explaining the student’s profile to the student in age-appropriate language.</li>
+</ol>
+<h3>Case for application</h3>
+<article class="case">
+<div class="case-head"><h3>Aseel, age 10, fifth grade</h3></div>
+<p><strong>The story:</strong> Aseel qualified through the National Program for Gifted Identification and attends a general enrichment activity at her school once a week. Her mathematics teacher says that she “finishes the class exercises in a quarter of the time and then distracts her classmates,” and Aseel says she “knows the lesson before it is taught.” Her parents have asked that she be moved straight to seventh grade, but Aseel told the counselor that she does not want to leave her friends. With the family’s consent, the teacher gathered the following data.</p>
+<div class="tw"><table id="tab-15-12">
+<caption>Table 15.12: Aseel’s data.</caption>
+<thead><tr><th>Source</th><th>Result</th></tr></thead>
+<tbody>
+<tr><td>Above-level mathematics test</td><td>Performance close to the average for eighth-grade students</td></tr>
+<tr><td>End-of-year sixth-grade mathematics test</td><td>92%, with all of her errors in the geometry unit</td></tr>
+<tr><td>Arabic language and science</td><td>High scores within the range of her grade level</td></tr>
+<tr><td>Ability test</td><td>Quantitative reasoning clearly higher than verbal reasoning</td></tr>
+<tr><td>Teachers and counselor</td><td>She gets along well with her classmates, and becomes frustrated when asked to redo what she has already mastered</td></tr>
+</tbody>
+</table></div>
+<p><strong>Tasks:</strong> (1) Which of the decision types in Table 15.6 would you propose for Aseel, and why not the others? (2) What evidence is still missing before you can be confident in your decision? (3) Write one measurable goal for her. (4) How would you explain your decision to her parents, who asked for something else, and to Aseel herself?</p>
+</article>
+<h3>Learning activities</h3>
+<p style="font-family:var(--f-ui);font-size:14.5px;color:var(--ink-2)">Any activity that uses data from a real student is carried out with the consent of the family and the school administration, after removing everything that could identify the student, and under the supervision of a specialist. The products of these activities are for learning purposes only, and no decision is to be based on them.</p>
+<ol>
+<li><strong>Rewriting a report (about two hours):</strong> Take a report organized test by test, either a real report used under the conditions above or one you write yourself for Tamim from the data in Table 15.10, and reorganize it around the referral question, following the model report in Section 15.2. <em>Product:</em> a two-page report and a one-page summary for the family.</li>
+<li><strong>Role play (45 minutes):</strong> In groups of three, one of you plays the specialist and the other two play the parents. The specialist presents the findings of one of the cases in this chapter, following the steps in Figure 15.2. The parents choose one of the expected reactions without telling the specialist. Then switch roles. <em>Product:</em> a list of what worked in each meeting and what did not.</li>
+<li><strong>Building a chain (one hour):</strong> For Tamim’s case after reevaluation, or for a student you know (under the conditions above), build the five-link chain in Figure 15.3 for two different goals, giving each long-term goal a short-term objective. <em>Product:</em> a two-column table.</li>
+<li><strong>The regulatory framework in your school (two hours):</strong> Consult the current edition of the Special Education Organizational Guide and the guides for gifted programs, and check every cell in Tables 15.7 and 15.8: has the text changed? Then compare the texts with practice in a school you know: who actually attends the planning meeting? Do parents receive a copy of the report? How is the consent notice worded? How does a student exit services, or leave the gifted program? <em>Product:</em> a one-page table showing where practice matches the text and where it falls short.</li>
+<li><strong>A two-track plan (one hour):</strong> Write a plan, using the template in Table 15.11, for Aseel (the case for application) or for a twice-exceptional student from one of the book’s chapters. <em>Product:</em> a plan in a single table.</li>
+<li><strong>Reviewing the book:</strong> Return to the ten principles in Section 15.10 and choose an example to illustrate each one, drawn from the cases in this chapter or elsewhere in the book. <em>Product:</em> ten short paragraphs.</li>
+</ol>
+<h3>Chapter references</h3>
+<ol class="refs">
+<li>King Abdulaziz and His Companions Foundation for Giftedness and Creativity. (n.d.). <i>[National Program for Gifted Identification]</i> [In Arabic]. Retrieved September 29, 2026, from https://www.mawhiba.sa/en/services/the-national-program-for-gifted-identification/</li>
+<li>Law on the Rights of Persons with Disabilities, Royal Decree No. (M/27) (11/2/1445 AH) [In Arabic]. https://ymplatform.com/sdys/</li>
+<li>Personal Data Protection Law, Royal Decree No. (M/19) (9/2/1443 AH), as amended by Royal Decree No. (M/148) (5/9/1444 AH) [In Arabic].</li>
+<li>Saudi Commission for Health Specialties. (2024). <i>Saudi Psychology Licensure Examination (SPSLE): Applicant guide</i>. https://scfhs.org.sa/sites/default/files/2024-03/SPSLE%20Applicant%20Guide%202024.pdf</li>
+<li>Ministry of Education. (n.d.). <i>[Guide to gifted classes]</i> [In Arabic]. General Administration for the Gifted. Retrieved September 29, 2026, from https://www.moe.gov.sa/ar/aboutus/aboutministry/RPRLibrary/دليل%20فصول%20الموهوبين.pdf</li>
+<li>Ministry of Education. (1436 AH). <i>[Special education organizational guide]</i> [In Arabic] (1st ed., academic year 1436–1437 AH). https://moe.gov.sa/en/aboutus/aboutministry/RPRLibrary/الدليل%20التنظيمي%20للتربية%20الخاصة.pdf</li>
+<li>Ministry of Education. (1437 AH). <i>Organizational and procedural guide for the school program for gifted girls</i> [In Arabic]. General Directorate for Gifted Girls. https://www.moe.gov.sa/en/aboutus/aboutministry/RPRLibrary/الدليل%20الإجرائي%20والتنظيمي%20لبرنامج%20رعاية%20الموهوبات%20المدرسي%20(1).pdf</li>
+<li>Ministry of Education [Al-Ma'arif]. (1422 AH). <i>[Regulations for Special Education Institutes and Programs]</i> [In Arabic]. https://moe.gov.sa/en/aboutus/aboutministry/RPRLibrary/القواعد%20التنظيمية%20لمعاهد%20وبرامج%20التربية%20الخاصة%201422%20هـ.pdf</li>
+<li>Alfaiz, F. S., Alfaid, A. A., &amp; Aljughaiman, A. M. (2022). Current status of gifted education in Saudi Arabia. <i>Cogent Education, 9</i>(1), Article 2064585. https://doi.org/10.1080/2331186X.2022.2064585</li>
+<li>Almulhim, N., Aljughaiman, A., Alnaim, F., Alsayed, A., Alfawzan, S., &amp; Alarfaj, A. (2026). Hidden potential: An exploratory study of the prevalence of twice-exceptional students in Saudi Arabia. <i>Journal of Intelligence, 14</i>(5), Article 83. https://doi.org/10.3390/jintelligence14050083</li>
+<li>Almulla, A. A., &amp; Mahama, I. (2026). Elementary teachers' perspectives on RTI programmes in supporting students with learning disabilities in Saudi Arabia. <i>Humanities and Social Sciences Communications, 13</i>(1), Article 974. https://doi.org/10.1057/s41599-026-07376-9</li>
+<li>Altheiabi, A. S., Bagadood, N. H., &amp; Sulaimani, M. F. (2025). Perceptions of learning difficulty teachers regarding the barriers to applying the response to the intervention model in Saudi Arabia. <i>Australian Journal of Learning Difficulties, 30</i>(1), 75–92. https://doi.org/10.1080/19404158.2025.2473425</li>
+<li>American Psychological Association. (2017). <i>Ethical principles of psychologists and code of conduct</i> (2002, amended effective June 1, 2010, and January 1, 2017). https://www.apa.org/ethics/code</li>
+<li>Ardoin, S. P., Christ, T. J., Morena, L. S., Cormier, D. C., &amp; Klingbeil, D. A. (2013). A systematic review and summarization of the recommendations and research surrounding curriculum-based measurement of oral reading fluency (CBM-R) decision rules. <i>Journal of School Psychology, 51</i>(1), 1–18. https://doi.org/10.1016/j.jsp.2012.09.004</li>
+<li>Assistance to States for the Education of Children With Disabilities, 34 C.F.R. pt. 300 (2006) (§300.8, §300.101, §300.111, §300.300, §300.303, §300.304, §300.305, §300.306, §§300.320–300.322, §300.502, §§300.610–300.613).</li>
+<li>Assouline, S. G., Colangelo, N., Lupkowski-Shoplik, A., Lipscomb, J., &amp; Forstadt, L. (2009). <i>Iowa Acceleration Scale manual</i> (3rd ed.). Great Potential Press.</li>
+<li>Assouline, S. G., Colangelo, N., VanTassel-Baska, J., &amp; Lupkowski-Shoplik, A. (Eds.). (2015). <i>A nation empowered: Evidence trumps the excuses holding back America's brightest students</i>. Belin-Blank Center.</li>
+<li>Bateman, B. D., &amp; Linden, M. A. (2012). <i>Better IEPs: How to develop legally correct and educationally useful programs</i> (5th ed.). Attainment Company.</li>
+<li>Deno, S. L. (2003). Developments in curriculum-based measurement. <i>The Journal of Special Education, 37</i>(3), 184–192.</li>
+<li>Fuchs, L. S., Fuchs, D., Hamlett, C. L., Walz, L., &amp; Germann, G. (1993). Formative evaluation of academic progress: How much growth can we expect? <i>School Psychology Review, 22</i>(1), 27–48.</li>
+<li>Harvey, V. S. (2006). Variables affecting the clarity of psychological reports. <i>Journal of Clinical Psychology, 62</i>(1), 5–18.</li>
+<li>Lohman, D. F., &amp; Korb, K. A. (2006). Gifted today but not tomorrow? Longitudinal changes in ability and achievement during elementary school. <i>Journal for the Education of the Gifted, 29</i>(4), 451–484.</li>
+<li>National Association of School Psychologists. (2020). <i>The professional standards of the National Association of School Psychologists</i>.</li>
+<li>Peters, S. J., Matthews, M. S., McBee, M. T., &amp; McCoach, D. B. (2014). <i>Beyond gifted education: Designing and implementing advanced academic programs</i>. Prufrock Press.</li>
+<li>Schneider, W. J., Lichtenberger, E. O., Mather, N., &amp; Kaufman, N. L. (2018). <i>Essentials of assessment report writing</i> (2nd ed.). Wiley.</li>
+<li>Worrell, F. C., Subotnik, R. F., Olszewski-Kubilius, P., &amp; Dixson, D. D. (2019). Gifted students. <i>Annual Review of Psychology, 70</i>, 551–576.</li>
+<li>Yell, M. L. (2019). <i>The law and special education</i> (5th ed.). Pearson.</li>
+</ol>
+<div aria-hidden="true" class="endmark">✦ ✦ ✦</div>
+<p style="text-align:center;font-family:var(--f-ui);color:var(--ink-2);font-size:14px">End of the book</p>
+<aside class="bp-cite" dir="ltr"><b>How to cite this section</b><p class="bp-ref">Alsamani, O. A. (2026). Chapter 15: From diagnosis to decision. In <i>Diagnosis and Identification of Exceptional Learners</i>. alsamani.com. https://alsamani.com/books/diagnosis-identification/en/ch15.html</p><p class="bp-lic2">© 2026 Dr. Omar A. Alsamani. Free to read, download, share and quote for non-commercial purposes with attribution to the author and source.</p></aside>
+<nav class="pager"><a href="ch14.html"><small>Previous chapter</small><b>Fairness in diagnosis</b></a><a class="next" href="apx-a.html"><small>Next</small><b>Appendix A: Guide to instruments</b></a></nav>
+</div>
+<footer class="bp-foot" dir="ltr"><div class="bp-fin"><a class="bp-fid" href="../../../index.html"><span class="bp-fmark">OA</span><b>Dr. Omar A. Alsamani</b></a>
+<nav><a href="../../../index.html">Updates</a><a href="../../../books/index.html">Open Library</a><a href="../../../publications/index.html">Publications</a><a href="../../../tools/index.html">Tools</a><a href="../../../photography/index.html">Photography</a><a href="../../../about/index.html">About</a><a href="../../../contact/index.html">Contact</a></nav><p><bdi dir="ltr">© 2007–2026 alsamani.com</bdi></p><div class="pv" id="pv" dir="ltr" hidden></div></div></footer><script>(function(){{var el=document.getElementById('pv');if(!el)return;var live=/(^|\.)alsamani\.com$/.test(location.hostname);
+fetch('https://abacus.jasoncameron.dev/'+(live?'hit':'get')+'/alsamani-com/views').then(function(r){{return r.json()}}).then(function(d){{
+if(typeof d.value!=='number')return;var s=String(d.value);while(s.length<4)s='0'+s;
+el.innerHTML=s.split('').map(function(){{return '<span class="pv-d"><span class="pv-s">0<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9</span></span>'}}).join('');
+el.hidden=false;var cells=el.querySelectorAll('.pv-s');
+requestAnimationFrame(function(){{requestAnimationFrame(function(){{s.split('').forEach(function(c,i){{cells[i].style.transform='translateY('+(-c*10)+'%)'}})}})}})}}).catch(function(){{}})}})();
+</script><style>.bp-foot{box-shadow:0 0 0 100vmax var(--bpf,#F5F5F7);clip-path:inset(0 -100vmax);background:#F5F5F7;color:#6E6E73;font:13px/1.6 -apple-system,BlinkMacSystemFont,"IBM Plex Sans Arabic","Inter",sans-serif;margin-top:56px;padding:36px 20px calc(36px + env(safe-area-inset-bottom))}
+.bp-fin{max-width:1120px;margin:0 auto;display:flex;flex-wrap:wrap;gap:18px 40px;align-items:center;justify-content:space-between}
+.bp-fid{display:flex;align-items:center;gap:10px;color:#1D1D1F!important;text-decoration:none}.bp-fid b{font-weight:600}
+.bp-fmark{width:30px;height:30px;border:1px solid currentColor;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:600;letter-spacing:.04em}
+.bp-foot nav{display:flex;flex-wrap:wrap;gap:6px 22px}.bp-foot nav a{color:#6E6E73!important;text-decoration:none}.bp-foot nav a:hover{color:#1D1D1F!important}
+.bp-foot p{margin:0;flex-basis:100%;font-size:12px;border-top:1px solid #D2D2D7;padding-top:14px}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .bp-foot{--bpf:#161617;background:#161617;color:#A1A1A6}:root:not([data-theme="light"]) .bp-fid{color:#F5F5F7!important}}
+:root[data-theme="dark"] .bp-foot{--bpf:#161617;background:#161617;color:#A1A1A6}:root[data-theme="dark"] .bp-fid{color:#F5F5F7!important}
+@media print{.bp-foot{display:none}}</style><style>.pv{display:flex;justify-content:center;gap:4px;margin:14px auto 4px;grid-column:1/-1;width:100%}
+.bp-fin>p{text-align:center;width:100%}
+.pv[hidden]{display:none}
+.pv-d{display:inline-block;width:1.25em;height:1.7em;overflow:hidden;border-radius:6px;background:var(--bg,#fff);box-shadow:inset 0 0 0 1px var(--line,#d2d2d7);font:500 13px/1.7em "SF Mono",ui-monospace,Menlo,monospace;text-align:center;color:var(--ink,#1d1d1f)}
+.pv-s{display:block;transition:transform 1.4s cubic-bezier(.2,.8,.2,1)}
+@media (prefers-reduced-motion:reduce){.pv-s{transition:none}}
+.bp-foot .pv-d{background:#fff;box-shadow:inset 0 0 0 1px #d2d2d7;color:#1d1d1f}</style>
+</body>
+</html>

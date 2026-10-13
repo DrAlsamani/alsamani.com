@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+
+<html dir="ltr" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
+<title>Chapter 4: Informal methods | Diagnosis and Identification of Exceptional Learners | Dr. Omar A. Alsamani</title>
+<link href="../assets/book.css?v=ea97adfb" rel="stylesheet"/>
+<style>
+.svgfig{direction:ltr}
+.svgfig text.lbs{direction:rtl;unicode-bidi:embed}
+.svgfig text{font-family:var(--f-ui)}
+.svgfig .ax{stroke:var(--ink-2);stroke-width:1.2}
+.svgfig .gr{stroke:var(--line);stroke-width:1}
+.svgfig .tk{fill:var(--ink-2);font-size:12.5px}
+.svgfig .lb{fill:var(--ink);font-size:13.5px;font-weight:700}
+.svgfig .lbs{fill:var(--ink-2);font-size:12px}
+.svgfig .beh{fill:var(--teacher)}
+.svgfig .on{fill:var(--accent)}
+.svgfig .off{fill:var(--paper-2);stroke:var(--line)}
+.svgfig .mom{stroke:var(--ink-2);stroke-width:1.2;stroke-dasharray:3 3}
+.svgfig .dotY{fill:var(--accent)}
+.svgfig .dotN{fill:var(--paper);stroke:var(--ink-2);stroke-width:1.5}
+.svgfig .aim{stroke:var(--example);stroke-width:2;stroke-dasharray:7 5;fill:none}
+.svgfig .dat{stroke:var(--ink);stroke-width:1.6;fill:none}
+.svgfig .pt{fill:var(--ink)}
+.svgfig .ptb{fill:var(--accent)}
+.svgfig .ph{stroke:var(--ink-2);stroke-width:1.2;stroke-dasharray:2 4}
+.svgfig .base{fill:var(--paper-2)}
+.svgfig .warnz{fill:var(--warn-soft)}
+.svgfig .wl{fill:var(--warn);font-size:12.5px;font-weight:700}
+.defs{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0;font-size:16.5px;line-height:1.9}
+.defs>div{border-radius:12px;padding:14px 18px;min-width:0}
+.defs .bad{background:var(--warn-soft);border:1px solid color-mix(in srgb,var(--warn) 30%,transparent)}
+.defs .good{background:var(--good-soft);border:1px solid color-mix(in srgb,var(--good) 30%,transparent)}
+.defs h6{font-family:var(--f-ui);font-size:13.5px;margin:0 0 6px;font-weight:700}
+.defs .bad h6{color:var(--warn)}.defs .good h6{color:var(--good)}
+@media (max-width:600px){.defs{grid-template-columns:1fr}}
+.work{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,16rem);gap:20px;align-items:start}
+.paper{background:#fff;color:#1b2326;border:1px solid #d5dcdd;border-radius:6px;padding:18px 22px;box-shadow:0 8px 20px -14px rgba(0,0,0,.25);font-family:var(--f-ui)}
+.paper .ttl{font-size:12.5px;color:#5b686c;border-bottom:1px solid #e1e7e8;padding-bottom:6px;margin-bottom:12px}
+.paper .probs{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.paper .pr{direction:ltr;font-family:"Courier New",ui-monospace,monospace;font-size:20px;line-height:1.35;text-align:right;padding:8px 12px;border:1px solid #e6ebec;border-radius:6px;position:relative}
+.paper .pr .ln{border-top:2px solid #1b2326;margin-top:2px}
+.paper .pr .ans{color:#b23a2c;font-family:"Segoe Print","Comic Sans MS",cursive;font-weight:700}
+.paper .pr .ok{color:#1f7a3f}
+.paper .pr sup{position:absolute;top:4px;left:6px;font-family:var(--f-ui);font-size:11px;color:#0d6b67;font-weight:700}
+.paper .sp{display:grid;gap:8px;direction:rtl;margin-top:14px}
+.paper .sp div{display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:17px;border-bottom:1px dashed #e1e7e8;padding-bottom:4px}
+.paper .sp .w{color:#b23a2c;font-family:var(--f-body)}
+.paper .sp .c{color:#1f7a3f;font-family:var(--f-body)}
+.work .notes{list-style:none;padding:0;margin:0;display:grid;gap:12px;font-family:var(--f-ui);font-size:14px;line-height:1.75}
+.work .notes li{display:grid;grid-template-columns:24px 1fr;gap:8px;margin:0}
+.work .notes b{width:22px;height:22px;border-radius:50%;background:var(--accent);color:var(--paper);display:grid;place-items:center;font-size:12px}
+@media (max-width:640px){.work{grid-template-columns:1fr}.paper .probs{grid-template-columns:1fr 1fr}}
+.rubric th:first-child,.rubric td:first-child{width:18%}
+.formula.ar{direction:rtl}
+.formula.ar small{direction:rtl}
+.obj{font-family:var(--f-ui);font-size:12.5px;color:var(--ink-2);white-space:nowrap}
+/* printable blank forms (4-8) */
+.form{background:#fff;color:#111a1e;border:1.5px solid #3a4448;border-radius:6px;padding:18px 20px 16px;margin:22px 0 30px;font-family:var(--f-ui);font-size:14px;line-height:1.8}
+.form .fh{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;border-bottom:2px solid #3a4448;padding-bottom:6px;margin-bottom:12px}
+.form .fh b{font-size:16.5px}
+.form .fh span{font-size:12.5px;color:#4b5c63}
+.form .fl{display:grid;grid-template-columns:repeat(auto-fit,minmax(13rem,1fr));gap:6px 18px;margin:8px 0 12px}
+.form .fl div{display:flex;gap:6px;align-items:flex-end;min-width:0}
+.form .fl div i{font-style:normal;white-space:nowrap;color:#33403f}
+.form .fl div u{flex:1;border-bottom:1px solid #6b777b;min-height:1.5em;text-decoration:none}
+.form .fl.one{grid-template-columns:1fr}
+@media (max-width:560px){.form .fl div{flex-wrap:wrap}.form .fl div i{white-space:normal}.form .fl div u{min-width:6rem}}
+.form .ln2{border-bottom:1px solid #6b777b;height:1.9em}
+.form .box{border:1px solid #9aa6a9;border-radius:4px;padding:8px 12px;margin:10px 0;font-size:13px;background:#f5f7f7}
+.form .box ul{margin:4px 0 0;padding-inline-start:18px}
+.form .box li{margin:0}
+.form .ck::before{content:"☐ ";font-size:15px}
+.form .fw{overflow-x:auto;margin:10px 0}
+.form table{font-size:13px;line-height:1.5;color:#111a1e;background:#fff}
+.form table caption{color:#33403f;padding:4px 2px 8px}
+.form th,.form td{border:1px solid #6b777b;padding:6px 6px;text-align:center;vertical-align:middle}
+.form th{background:#eef1f1;font-weight:700}
+.form td{height:34px}
+.form td.l{text-align:right}
+.form.abc td{height:64px}
+.form.riot td{height:58px}
+.form .sig{display:grid;grid-template-columns:repeat(auto-fit,minmax(11rem,1fr));gap:18px;margin-top:16px}
+.form .sig div{border-top:1px solid #6b777b;padding-top:4px;font-size:12.5px;color:#4b5c63;text-align:center}
+.form .note{font-size:12px;color:#4b5c63;margin-top:8px}
+@media print{
+  .form{break-before:page;page-break-before:always;border-color:#000;box-shadow:none;margin:0}
+  .form table{min-width:0}
+}
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"><style>:root{--f-body:"Source Serif 4",Georgia,serif;--f-display:"Source Serif 4",Georgia,serif;--f-ui:"IBM Plex Sans",system-ui,sans-serif}.questions li::before{content:counter(q)}html{direction:ltr!important}body{letter-spacing:0;text-align:left}caption{text-align:left!important}.formula small{direction:ltr}.cover svg{left:auto!important;right:0}</style><link rel="stylesheet" href="../assets/platform.css?v=b4c32405"><script>window.BOOK={slug:"diagnosis-identification-en",cur:"ch04.html",lang:"en",title:"Diagnosis and Identification of Exceptional Learners",author:"Dr. Omar A. Alsamani"}</script><script src="../assets/platform.js?v=0d28c8d2" defer></script>
+<link rel="canonical" href="https://alsamani.com/books/diagnosis-identification/en/ch04.html"><link rel="alternate" hreflang="ar" href="https://alsamani.com/books/diagnosis-identification/ch04.html"><link rel="alternate" hreflang="en" href="https://alsamani.com/books/diagnosis-identification/en/ch04.html"><link rel="alternate" hreflang="x-default" href="https://alsamani.com/books/diagnosis-identification/ch04.html"><meta name="description" content="A standardized test captures a snapshot of a student in a single session; systematic observation, weekly measurement, and the analysis of errors in everyday work trace the course of performance over time. In this chapter we examine these methods, which lie more firmly in the teacher&#x27;s hands than…"><meta name="author" content="Omar A. Alsamani"><meta property="og:title" content="Chapter 4: Informal methods | Diagnosis and Identification of Exceptional Learners | Dr. Omar A. Alsamani"><meta property="og:url" content="https://alsamani.com/books/diagnosis-identification/en/ch04.html"><meta property="og:site_name" content="Dr. Omar A. Alsamani"><meta property="og:locale" content="en_US"><meta name="twitter:card" content="summary"><meta property="og:description" content="A standardized test captures a snapshot of a student in a single session; systematic observation, weekly measurement, and the analysis of errors in everyday work trace the course of performance over time. In this chapter we examine these methods, which lie more firmly in the teacher&#x27;s hands than…"><script type="application/ld+json">[{"@context": "https://schema.org", "@type": "Chapter", "name": "Informal methods", "headline": "Chapter 4: Informal methods", "url": "https://alsamani.com/books/diagnosis-identification/en/ch04.html", "inLanguage": "en", "author": {"@type": "Person", "name": "Omar A. Alsamani", "alternateName": "عمر عبدالله الصمعاني", "url": "https://alsamani.com/", "jobTitle": "Associate Professor", "affiliation": {"@type": "CollegeOrUniversity", "name": "University of Hail"}}, "isPartOf": {"@type": "Book", "name": "Diagnosis and Identification of Exceptional Learners", "url": "https://alsamani.com/books/diagnosis-identification/en/", "author": {"@type": "Person", "name": "Omar A. Alsamani", "alternateName": "عمر عبدالله الصمعاني", "url": "https://alsamani.com/", "jobTitle": "Associate Professor", "affiliation": {"@type": "CollegeOrUniversity", "name": "University of Hail"}}, "inLanguage": "en", "license": "https://creativecommons.org/licenses/by-nc-nd/4.0/", "isAccessibleForFree": true, "bookFormat": "https://schema.org/EBook", "alternativeHeadline": "Learners with disabilities, the gifted and the twice-exceptional", "isbn": "978-603-06-7714-6", "datePublished": "2026"}, "license": "https://creativecommons.org/licenses/by-nc-nd/4.0/", "isAccessibleForFree": true, "description": "A standardized test captures a snapshot of a student in a single session; systematic observation, weekly measurement, and the analysis of errors in everyday work trace the course of performance over time. In this chapter we examine these methods, which lie more firmly in the teacher's hands than…", "keywords": "Introduction, Why informal methods?, Structured observation, The interview, Curriculum-based measurement, Error analysis, Portfolios and rubrics, Limits of informal methods, Forms for use, Conclusion, Summary, key terms, and activities"}, {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Dr. Omar A. Alsamani", "item": "https://alsamani.com/"}, {"@type": "ListItem", "position": 2, "name": "Open Library", "item": "https://alsamani.com/books/"}, {"@type": "ListItem", "position": 3, "name": "Diagnosis and Identification of Exceptional Learners", "item": "https://alsamani.com/books/diagnosis-identification/en/"}, {"@type": "ListItem", "position": 4, "name": "Informal methods", "item": "https://alsamani.com/books/diagnosis-identification/en/ch04.html"}]}]</script></head>
+<body>
+<div class="bp-bar" dir="ltr"><div class="bp-in">
+<a class="bp-home" href="../../../index.html">Dr. Omar A. Alsamani</a><span class="bp-sep">/</span><a href="../../index.html">Open Library</a><span class="bp-sep">/</span><a href="index.html" class="bp-book">Diagnosis and Identification of Exceptional Learners</a>
+<span class="bp-sp"></span><span class="bp-tools"><button class="bp-ic" type="button" data-rd="z-" aria-label="Smaller text" title="Smaller text">A−</button><button class="bp-ic" type="button" data-rd="z+" aria-label="Larger text" title="Larger text">A+</button><button class="bp-ic" type="button" data-rd="theme" aria-label="Dark mode" title="Dark/light mode">Dark</button></span><a class="bp-btn" href="../ch04.html" hreflang="ar" lang="ar">العربية</a><button class="bp-btn" type="button" data-notes>Notes<i hidden></i></button><button class="bp-btn" type="button" data-share>Share</button><button class="bp-btn" type="button" data-bp="search">Search</button><button class="bp-btn solid" type="button" data-bp="toc">Contents</button></div></div>
+<div class="bp-share" id="bpShare" hidden dir="ltr"><b>Share this page</b><button type="button" data-sh="copy">Copy link</button><button type="button" data-sh="native" hidden>Share…</button><a data-sh="wa" target="_blank" rel="noopener">WhatsApp</a><a data-sh="x" target="_blank" rel="noopener">X</a><a data-sh="li" target="_blank" rel="noopener">LinkedIn</a><a data-sh="tg" target="_blank" rel="noopener">Telegram</a><a data-sh="mail">Email</a><small>To share a specific section, hover over its heading and click ¶</small></div>
+<div class="bp-drawer" id="bpDrawer" hidden dir="ltr"><div class="bp-panel" role="dialog" aria-label="Contents and search">
+<div class="bp-head"><b>Diagnosis and Identification of Exceptional Learners</b><button type="button" class="bp-x" data-bp="close" aria-label="Close">×</button></div>
+<div class="bp-search"><input id="bpQ" type="search" placeholder="Search the text of the book…" autocomplete="off"><div id="bpRes"></div></div>
+<nav class="bp-toc" id="bpToc"></nav>
+<div class="bp-links"><a href="../../index.html">Open Library</a><a href="../../../index.html">alsamani.com home</a></div>
+</div></div>
+<div class="page">
+<nav class="booknav"><a href="index.html">→ Diagnosis and Identification of Exceptional Learners</a><span>Part Two: Methods</span></nav>
+<header class="opener">
+<div aria-hidden="true" class="num">4</div>
+<div>
+<div class="kicker">Chapter 4</div>
+<h1>Informal methods</h1>
+</div>
+<p class="sub">A standardized test captures a snapshot of a student in a single session; systematic observation, weekly measurement, and the analysis of errors in everyday work trace the course of performance over time. In this chapter we examine these methods, which lie more firmly in the teacher's hands than any others, and we set out the evidence they yield and the safeguards that govern their use.</p>
+</header>
+<nav aria-label="Chapter contents" class="toc">
+<b>In this chapter</b>
+<ol>
+<li class="u"><a href="#intro">Introduction</a></li>
+<li value="1"><a href="#s1">Why informal methods?</a></li>
+<li value="2"><a href="#s2">Structured observation</a></li>
+<li value="3"><a href="#s3">The interview</a></li>
+<li value="4"><a href="#s4">Curriculum-based measurement</a></li>
+<li value="5"><a href="#s5">Error analysis</a></li>
+<li value="6"><a href="#s6">Portfolios and rubrics</a></li>
+<li value="7"><a href="#s7">Limits of informal methods</a></li>
+<li value="8"><a href="#s8">Forms for use</a></li>
+<li class="u"><a href="#conclusion">Conclusion</a></li>
+<li value="9"><a href="#s9">Summary, key terms and activities</a></li>
+</ol>
+</nav>
+<div class="scene">
+<span class="lbl">Scene from a second-grade classroom</span>
+<p>Hessa, a teacher, is worried about her student Ghadeer. Every time she asks her to read aloud, Ghadeer stops at almost every word, reads “سافرَ” (sāfara, “he traveled”) for “سفَر” (safar, “travel”), and sometimes jumps to another line without noticing. Hessa wants to refer her for assessment, but the specialist asks her: “How many words does Ghadeer read per minute? Is she improving? What kinds of errors does she make?” Hessa has no answer beyond “Her reading is weak.”</p>
+</div>
+<p>The specialist's questions are the ones this chapter sets out to answer. A teacher who holds organized data on her student is in a position to judge whether a referral is needed, and to give the assessment team evidence that no test administered in a single session could supply.</p>
+<h3>Chapter objectives</h3>
+<p>After studying this chapter, the reader should be able to:</p>
+<ol class="objectives">
+<li>Write an operational definition of a target behavior that another observer can record accurately.</li>
+<li>Select the appropriate recording method for a given behavior and justify the choice.</li>
+<li>Calculate percentage agreement between two observers and Cohen's kappa, and use both to judge the adequacy of an observation.</li>
+<li>Draft semi-structured interview questions that elicit specific situations and the student's strengths.</li>
+<li>Administer a curriculum-based measure, graph its data, and determine the instructional decision that the decision rules support.</li>
+<li>Classify a student's errors in reading, writing, and arithmetic into patterns, and derive an instructional goal from each pattern.</li>
+<li>Construct an analytic rubric for a writing task and plan how to check the consistency of its application.</li>
+<li>Judge, in a new case, whether informal evidence is sufficient for a particular decision, whether instructional or diagnostic, and justify that judgment.</li>
+</ol>
+<h2 class="unnum" id="intro">Introduction</h2>
+<p>A standardized test captures a snapshot of a student in a single session and compares that performance with a norming sample. The teacher, by contrast, sees the student perform day after day on actual curriculum tasks, and is therefore able to gather repeated data that no one else can: structured observation of behavior, weekly measurement of fluency, and analysis of errors in written work. With such data, a general statement like “Her reading is weak,” as in Ghadeer's case, becomes evidence that reveals the student's level, the extent of improvement under instruction, and the faulty rule the student is applying. Yet the closeness of these methods to the classroom usually comes at the cost of national norms, so it is necessary to establish which decisions they can support and which they cannot.</p>
+<p>We begin by explaining the need for informal methods (Section 4.1). We then present structured observation step by step, from the operational definition through the choice of recording method to the check on interobserver agreement (Section 4.2), followed by the interview (Section 4.3). Next we take up curriculum-based measurement, the graphing of its data, and decision making in light of those data (Section 4.4); error analysis, with particular attention to oral reading errors (Section 4.5); and portfolios and rubrics (Section 4.6). We then consider the limits of these methods (Section 4.7) and close with forms ready for use (Section 4.8).</p>
+<!-- 1 -->
+<h2 id="s1"><span class="sec">4.1</span>Why informal methods?</h2>
+<p>Informal methods are ways of gathering information grounded in what actually happens in the classroom, rather than in norms derived from a norming sample (see Chapter 2): observing behavior, interviewing people who know the student, measuring performance on tasks drawn from the student's curriculum, and analyzing the student's work. They are as important as formal methods, and they complement them in areas those methods cannot reach:</p>
+<div class="tw"><table id="tab-4-1">
+<caption>Table 4.1: Formal standardized methods and informal methods.</caption>
+<thead><tr><th>Aspect</th><th>Formal standardized methods</th><th>Informal methods</th></tr></thead>
+<tbody>
+<tr><td>Core question</td><td>Where does the student stand relative to peers?</td><td>What is the student doing here and now? What do we teach tomorrow?</td></tr>
+<tr><td>Frequency</td><td>Once, or every few years</td><td>Daily or weekly</td></tr>
+<tr><td>Link to the curriculum</td><td>General; may not match what the student is studying</td><td>Taken directly from what the student is studying</td></tr>
+<tr><td>Who administers</td><td>Usually a qualified specialist</td><td>Usually the teacher</td></tr>
+<tr><td>Weakness</td><td>A momentary snapshot; may not suit the student's language and culture</td><td>Usually no national norms; quality depends on the accuracy of the person administering</td></tr>
+</tbody>
+</table></div>
+<!-- 2 -->
+<h2 id="s2"><span class="sec">4.2</span>Structured observation</h2>
+<p>Observation is part of every teacher's work, but observation that can serve as diagnostic evidence differs from everyday impressions in three ways: it begins with a clear definition of the behavior, it uses a specific recording method, and it can be repeated by another person who will arrive at the same result.</p>
+<h3>Step one: the operational definition</h3>
+<p>An operational definition describes behavior in terms of what can be seen and heard, so that two people reading it would agree on whether the behavior occurred. Compare two definitions of the same behavior:</p>
+<div class="defs">
+<div class="bad"><h6>Non-operational definition</h6>“Mishal is aggressive with his classmates.”<br/><span style="font-size:14.5px;color:var(--ink-2)">What does “aggressive” mean? Shouting? Hitting? An angry look? Each observer will interpret it in his or her own way.</span></div>
+<div class="good"><h6>Operational definition</h6>“Physical aggression: any contact between Mishal’s hand or foot, or an object he is holding, and a classmate’s body, with enough force to make a sound or to push the classmate from where he stands. Contact during organized play is not included.”</div>
+</div>
+<p>A definition can be tested with a simple question: if someone who does not know Mishal read it, could that person record the behavior accurately?</p>
+<h3>Step two: choosing a recording method</h3>
+<p>The recording method depends on the nature of the behavior. Does it have a clear beginning and end? Does it occur often? Is the number of occurrences what matters, or their duration? The best-known methods are the following (Cooper et al., 2020):</p>
+<div class="tw"><table id="tab-4-2">
+<caption>Table 4.2: Observation recording methods and the behaviors each one suits.</caption>
+<thead><tr><th>Method</th><th>What is recorded</th><th>Suited to</th><th>Example</th></tr></thead>
+<tbody>
+<tr><td>Anecdotal record</td><td>A free narrative of what happened, in sequence</td><td>The first stage, to grasp the overall picture</td><td>“In the third period, Mishal got up from his seat and went to the window…”</td></tr>
+<tr><td>Antecedent–behavior–consequence recording</td><td>The antecedent event, the behavior, and the consequence that follows</td><td>Understanding the function of the behavior, that is, what it achieves for the student (discussed in Chapter 5)</td><td>Antecedent: he was asked to complete a worksheet. Behavior: he tore up the sheet. Consequence: he was sent out of the class</td></tr>
+<tr><td>Frequency recording</td><td>The number of times the behavior occurs within a set period</td><td>Brief behaviors with a clear beginning and end</td><td>Number of times a student raises a hand to participate in a lesson</td></tr>
+<tr><td>Duration recording</td><td>How long the behavior lasts</td><td>Extended behaviors</td><td>How long a child cries after arriving at kindergarten</td></tr>
+<tr><td>Latency recording</td><td>The time between giving an instruction and the start of the response</td><td>Delays in starting tasks</td><td>How long a student takes to begin writing after being asked to</td></tr>
+<tr><td>Interval recording</td><td>Did the behavior occur in each short time interval?</td><td>Very high-frequency behaviors, or behaviors without a clear beginning and end</td><td>Time on task across a whole lesson</td></tr>
+</tbody>
+</table></div>
+<p>Section 4.8 provides two blank forms for the methods most often used in schools: an interval recording form and an antecedent–behavior–consequence form.</p>
+<h3>Interval recording: three methods, different results</h3>
+<p>In interval recording, the observation period is divided into short, equal intervals, say ten seconds each, and in every interval the observer records whether or not the behavior occurred. There are three ways of doing this, and they yield different results for the same behavior. Consider Figure 4.1, which shows one minute of observing a student who is out of his seat:</p>
+<figure class="fig-frame" id="fig-4-1">
+<svg aria-label="A comparison of the three interval recording methods over one minute of observation: the actual behavior occupies half the minute; whole-interval recording estimates it at one third of the minute, partial-interval recording at five sixths, and momentary time sampling at one half" class="svgfig" role="img" style="width:100%;height:auto" viewbox="0 0 760 290">
+<g>
+<line class="gr" x1="20" x2="20" y1="30" y2="250"></line><line class="gr" x1="120" x2="120" y1="30" y2="250"></line><line class="gr" x1="220" x2="220" y1="30" y2="250"></line><line class="gr" x1="320" x2="320" y1="30" y2="250"></line><line class="gr" x1="420" x2="420" y1="30" y2="250"></line><line class="gr" x1="520" x2="520" y1="30" y2="250"></line><line class="gr" x1="620" x2="620" y1="30" y2="250"></line>
+<text class="tk" text-anchor="middle" x="20" y="268">0</text><text class="tk" text-anchor="middle" x="120" y="268">10</text><text class="tk" text-anchor="middle" x="220" y="268">20</text><text class="tk" text-anchor="middle" x="320" y="268">30</text><text class="tk" text-anchor="middle" x="420" y="268">40</text><text class="tk" text-anchor="middle" x="520" y="268">50</text><text class="tk" text-anchor="middle" x="620" y="268">60</text>
+<text class="lbs" text-anchor="middle" x="320" y="286">Time in seconds</text>
+</g>
+<rect class="beh" height="22" rx="3" width="40" x="20" y="44"></rect><rect class="beh" height="22" rx="3" width="230" x="200" y="44"></rect><rect class="beh" height="22" rx="3" width="30" x="480" y="44"></rect>
+<text class="lb" text-anchor="middle" x="690" y="54">Actual behavior</text><text class="lbs" text-anchor="middle" x="690" y="70">30 seconds = 50%</text>
+<rect class="off" height="26" rx="4" width="92" x="24" y="100"></rect><rect class="off" height="26" rx="4" width="92" x="124" y="100"></rect><rect class="on" height="26" rx="4" width="92" x="224" y="100"></rect><rect class="on" height="26" rx="4" width="92" x="324" y="100"></rect><rect class="off" height="26" rx="4" width="92" x="424" y="100"></rect><rect class="off" height="26" rx="4" width="92" x="524" y="100"></rect>
+<text class="lb" text-anchor="middle" x="690" y="110">Whole interval</text><text class="lbs" text-anchor="middle" x="690" y="126">2 of 6 = 33%</text>
+<rect class="on" height="26" rx="4" width="92" x="24" y="150"></rect><rect class="on" height="26" rx="4" width="92" x="124" y="150"></rect><rect class="on" height="26" rx="4" width="92" x="224" y="150"></rect><rect class="on" height="26" rx="4" width="92" x="324" y="150"></rect><rect class="on" height="26" rx="4" width="92" x="424" y="150"></rect><rect class="off" height="26" rx="4" width="92" x="524" y="150"></rect>
+<text class="lb" text-anchor="middle" x="690" y="160">Partial interval</text><text class="lbs" text-anchor="middle" x="690" y="176">5 of 6 = 83%</text>
+<line class="mom" x1="120" x2="120" y1="196" y2="236"></line><line class="mom" x1="220" x2="220" y1="196" y2="236"></line><line class="mom" x1="320" x2="320" y1="196" y2="236"></line><line class="mom" x1="420" x2="420" y1="196" y2="236"></line><line class="mom" x1="520" x2="520" y1="196" y2="236"></line><line class="mom" x1="620" x2="620" y1="196" y2="236"></line>
+<circle class="dotN" cx="120" cy="216" r="8"></circle><circle class="dotY" cx="220" cy="216" r="8"></circle><circle class="dotY" cx="320" cy="216" r="8"></circle><circle class="dotY" cx="420" cy="216" r="8"></circle><circle class="dotN" cx="520" cy="216" r="8"></circle><circle class="dotN" cx="620" cy="216" r="8"></circle>
+<text class="lb" text-anchor="middle" x="690" y="212">Momentary time sampling</text><text class="lbs" text-anchor="middle" x="690" y="228">3 of 6 = 50%</text>
+</svg>
+<figcaption><b>Figure 4.1:</b> One minute divided into six intervals. The top bar shows when the student was actually out of his seat. In <strong>whole-interval</strong> recording, an interval is scored only if the behavior lasts throughout it, so the method tends to underestimate the behavior. In <strong>partial-interval</strong> recording, an interval is scored if the behavior occurs at any point within it, so the method tends to overestimate the behavior. In <strong>momentary time sampling</strong>, the observer looks only at the end of each interval; filled circles mark the moments when the student was found out of his seat, and open circles the moments when he was found seated. Its estimate comes closer to the true value as the observation lengthens and the number of intervals grows.</figcaption>
+</figure>
+<p>The practical rule: partial-interval recording suits behaviors we want to reduce, because it does not miss their occurrence. Whole-interval recording suits behaviors we want to increase, such as time on task, because it does not inflate them. Momentary time sampling is well suited to a teacher who is teaching and observing at the same time, since all it requires is to look up at the end of each interval, say every minute.</p>
+<h3>Step three: checking interobserver agreement</h3>
+<p>How do we know that our observation is accurate? We ask a second observer to watch the student at the same time, independently, and then calculate the percentage of agreement between the two. The simplest way to calculate it in interval recording is:</p>
+<div class="formula ar">Percentage agreement = agreements ÷ (agreements + disagreements) × 100<small>A figure of 80% or higher is usually considered acceptable in research and practice (Cooper et al., 2020)</small></div>
+<div class="worked">
+<b class="h">Worked example</b>
+<div class="step"><i>1</i><span>A teacher and her assistant observed a student for 20 intervals; they agreed on 17 intervals and disagreed on 3.</span></div>
+<div class="step"><i>2</i><span>Percentage agreement = 17 ÷ (17 + 3) × 100 = 85%.</span></div>
+<div class="step"><i>3</i><span>On its face the figure is acceptable, so the definition is clear enough. Had it fallen below 80%, the two would have reviewed the operational definition together before continuing. This figure can be misleading, however, when the behavior is very rare or very frequent, as the next box shows.</span></div>
+</div>
+<div class="callout" data-k="pro">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"></path></svg>For the specialist: when percentage agreement misleads</div>
+<p>Suppose the twenty intervals in the previous example were distributed as in Table 4.3, and that the recorded behavior is rare, such as a student leaving his seat during a quiet lesson:</p>
+<div class="tw"><table id="tab-4-3">
+<caption>Table 4.3: Distribution of the two observers' records across twenty intervals.</caption>
+<thead><tr><th></th><th>Assistant: occurred</th><th>Assistant: did not occur</th><th>Total</th></tr></thead>
+<tbody>
+<tr><td>Teacher: occurred</td><td>1</td><td>2</td><td>3</td></tr>
+<tr><td>Teacher: did not occur</td><td>1</td><td>16</td><td>17</td></tr>
+<tr><td>Total</td><td>2</td><td>18</td><td>20</td></tr>
+</tbody>
+</table></div>
+<p>Percentage agreement is 85%, as we calculated, but most of that agreement concerns intervals in which nothing happened. The two observers agreed that the behavior occurred in only one of the four intervals in which either of them saw it, that is, just 25%. For this reason, it is recommended that agreement for rare behavior be calculated on occurrence intervals alone, and for very frequent behavior on nonoccurrence intervals alone (Cooper et al., 2020).</p>
+<p>A more general solution is the kappa coefficient (<span class="en">Cohen's kappa</span>), which removes from observed agreement the portion expected by chance (Cohen, 1960):</p>
+<div class="worked">
+<b class="h">Calculating kappa</b>
+<div class="step"><i>1</i><span>Observed agreement = (1 + 16) ÷ 20 = 0.85.</span></div>
+<div class="step"><i>2</i><span>The teacher recorded occurrence in 15% of the intervals, and the assistant in 10%. Agreement expected by chance = (0.15 × 0.10) + (0.85 × 0.90) = 0.015 + 0.765 = 0.78.</span></div>
+<div class="step"><i>3</i><span>Kappa = (0.85 − 0.78) ÷ (1 − 0.78) = 0.07 ÷ 0.22 ≈ 0.32.</span></div>
+</div>
+<p>Once chance is removed, the agreement that seemed acceptable falls into the band that the common classification labels merely “fair” (<span class="en">fair</span>), the same classification that treats values between 0.61 and 0.80 as “substantial” agreement (Landis &amp; Koch, 1977). These cutoffs are flexible conventions, but the lesson holds: before trusting a high percentage of agreement, check how often the behavior occurred in the first place.</p>
+</div>
+<!-- 3 -->
+<h2 id="s3"><span class="sec">4.3</span>The interview</h2>
+<p>The interview is a way of gathering information that cannot be seen in the classroom: developmental history, the student's behavior at home, what the family has already tried, and the student's own view. Interviews vary in how structured they are:</p>
+<ul>
+<li><strong>Structured interview:</strong> specific questions in a fixed order and fixed wording, as in some standardized diagnostic interviews conducted with parents during assessment for autism spectrum disorder. It is precise and its results are comparable, but it is less flexible.</li>
+<li><strong>Semi-structured interview:</strong> predetermined topics, with freedom in wording and follow-up. For example, the specialist might say to a mother, “Tell me about your child's morning on a school day,” and then follow up with questions about the details, as in the Vineland Adaptive Behavior Scales interview.</li>
+<li><strong>Unstructured interview:</strong> an open conversation that follows what the interviewee raises; it is useful for building rapport and grasping the overall picture.</li>
+</ul>
+<div class="callout" data-k="teacher">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M3 8l9-4 9 4-9 4-9-4Z"></path><path d="M7 10v5c0 1.5 2.5 3 5 3s5-1.5 5-3v-5"></path></svg>For the teacher: a short family interview guide</div>
+<ol>
+<li>What does your child enjoy, and what is he or she good at?</li>
+<li>What concerns you about your child's learning or behavior? When did you first notice it?</li>
+<li>Describe the last time it happened: What happened before it? What did your child do? How did the situation end?</li>
+<li>Is it different at home than in other places?</li>
+<li>What have you tried? What has worked, even a little?</li>
+<li>Is there any health information, or any change in family life, that would help us understand your child?</li>
+</ol>
+<p>Notice that the first and fifth questions look for strengths and successes alongside the problem. The third question asks for a specific situation, because situations yield more precise information than general descriptions.</p>
+</div>
+<p>Do not neglect to interview the student as well. A ten-year-old can tell you what is hard, what helps, and when he feels bored or anxious. He may tell you something no one else knows: “I can't see the board well from where I sit.” This interview carries even more weight with adolescents, who can describe what is going on inside them better than any other source, and who may reject a plan they were never consulted about.</p>
+<!-- 4 -->
+<h2 id="s4"><span class="sec">4.4</span>Curriculum-based measurement</h2>
+<p>Curriculum-based measurement (<span class="en">Curriculum-Based Measurement, CBM</span>) is a set of very brief measures, each taking from one to a few minutes, that the teacher administers to a student regularly, usually weekly, to monitor progress in basic skills. It was developed by Stanley Deno and his colleagues at the University of Minnesota in the 1970s to give teachers a quick and reliable way of knowing whether their instruction was working (Deno, 1985).</p>
+<p>Its central idea is that certain brief tasks work like a thermometer. Just as body temperature indicates general health without diagnosing the illness, the number of words a student reads correctly in one minute is strongly related to reading skill as a whole and changes as that skill improves, even though it measures only one aspect of it.</p>
+<p>This kind of measurement sits between the formal and the informal. Its content comes from the curriculum, but its procedures are standardized: fixed directions, set timing, and uniform scoring rules. Some of its English-language measures have extensive norms by grade and season of the school year. Its scores are therefore interpreted in two ways at once: normatively, by comparing the student with peers in the screening conducted at set points in the year, and against a growth goal set for the student and tracked week by week.</p>
+<h3>The best-known measures</h3>
+<div class="tw"><table id="tab-4-4">
+<caption>Table 4.4: The best-known curriculum-based measures.</caption>
+<thead><tr><th>Area</th><th>Scale</th><th>How it is administered</th><th>What is scored</th></tr></thead>
+<tbody>
+<tr><td>Reading</td><td>Oral reading fluency</td><td>The student reads a grade-level passage aloud for one minute; this is repeated with three passages</td><td>Number of words read correctly per minute, taking the median of the three passages</td></tr>
+<tr><td>Reading</td><td>Maze</td><td>A passage in which every few words one word has been deleted, with three choices offered at each blank; two to three minutes</td><td>Number of correct choices; related to reading comprehension</td></tr>
+<tr><td>Mathematics</td><td>Math computation</td><td>A sheet of mixed problems from the grade-level curriculum; two to four minutes</td><td>Number of correct digits in the answers, which is more precise than the number of problems</td></tr>
+<tr><td>Writing</td><td>Written expression</td><td>The student is given the opening of a story and writes for three minutes</td><td>Number of words written, or number of correct word sequences in spelling and grammar</td></tr>
+</tbody>
+</table></div>
+<h3>Scene from practice: reading fluency</h3>
+<p>Hessa sits down with Ghadeer. In front of Ghadeer is a copy of a passage she has never read; in front of Hessa is a second copy. “Read this story aloud as well as you can,” she says. “If you come to a word you don't know, I'll tell it to you. Begin.” She starts the stopwatch. As Ghadeer reads, Hessa puts a slash through every word she misreads or skips, and whenever Ghadeer pauses on a word for three seconds, Hessa supplies it and counts it as an error. After one minute she says, “Stop,” and marks the last word read. Then she does the arithmetic: Ghadeer read 46 words with 12 errors, so her score is 34 words correct per minute. Hessa records all of this on a scoring sheet like Form A in Section 4.8, together with the type of each error, because she will need it for the error analysis.</p>
+<h3>Graphing data and making decisions</h3>
+<p>The strength of this kind of measurement lies in its repetition and its graphing. Each week the teacher plots the student's score on a graph and draws on it a line representing the goal, called the aimline, then compares the direction of the student's data points with the direction of the line. Several decision rules are in common use. One is the four-point rule: if four consecutive points fall below the aimline, the instructional approach is changed; if four consecutive points fall above it, the goal is raised (Hosp et al., 2016). Another is the trend-line rule, which compares the slope of the line through the student's points with the slope of the aimline: if it is shallower, the approach is changed; if it is steeper, the student is on track to reach the goal.</p>
+<p>These rules, however, are approximate tools, and how far they can be trusted depends on the stakes of the decision built on them:</p>
+<ul>
+<li><strong>A low-stakes instructional decision</strong>, such as modifying the teaching approach or increasing instructional time: an error here becomes apparent and can be corrected within weeks, so the point rule or the trend line serves as a practical guide. Administration manuals advise against reaching a judgment before several measurements have been collected after the baseline, because any single measurement fluctuates. This advice rests more on practitioner experience than on empirical research.</li>
+<li><strong>A high-stakes decision</strong>, such as referral for an eligibility evaluation, a judgment that the student has “not responded” to intervention, or the discontinuation of a service: this requires more than a few weeks and a point rule. It calls for a longer monitoring period, passages that have actually been tried out and shown to be equivalent, administration that follows the same directions every time, and evidence from other sources as well, such as observation, error analysis, and a standardized test when needed.</li>
+</ul>
+<figure class="fig-frame" id="fig-4-2">
+<svg aria-label="A progress monitoring graph of a student&#x27;s reading fluency across fifteen measurements: three baseline measurements, then six measurements below the aimline under the first approach, then six measurements with a steeper slope under the second approach that reach the goal" class="svgfig" role="img" style="width:100%;height:auto" viewbox="0 0 760 330">
+<rect class="base" height="220" width="144" x="52" y="50"></rect>
+<text class="lbs" text-anchor="middle" x="124" y="42">Baseline</text>
+<text class="lbs" text-anchor="middle" x="304" y="42">Approach 1</text>
+<text class="lbs" text-anchor="middle" x="520" y="42">Approach 2</text>
+<line class="gr" x1="52" x2="620" y1="50" y2="50"></line><line class="gr" x1="52" x2="620" y1="105" y2="105"></line><line class="gr" x1="52" x2="620" y1="160" y2="160"></line><line class="gr" x1="52" x2="620" y1="215" y2="215"></line>
+<line class="ax" x1="52" x2="620" y1="270" y2="270"></line><line class="ax" x1="52" x2="52" y1="50" y2="270"></line>
+<text class="tk" text-anchor="end" x="44" y="274">20</text><text class="tk" text-anchor="end" x="44" y="219">30</text><text class="tk" text-anchor="end" x="44" y="164">40</text><text class="tk" text-anchor="end" x="44" y="109">50</text><text class="tk" text-anchor="end" x="44" y="54">60</text>
+<text class="tk" text-anchor="middle" x="178" y="290">0</text><text class="tk" text-anchor="middle" x="286" y="290">3</text><text class="tk" text-anchor="middle" x="394" y="290">6</text><text class="tk" text-anchor="middle" x="502" y="290">9</text><text class="tk" text-anchor="middle" x="610" y="290">12</text>
+<text class="lbs" text-anchor="middle" x="340" y="316">Week</text>
+<text class="lbs" text-anchor="middle" transform="rotate(-90 16 160)" x="16" y="160">Words correct per minute</text>
+<line class="ph" x1="196" x2="196" y1="50" y2="270"></line><line class="ph" x1="412" x2="412" y1="50" y2="270"></line>
+<line class="aim" x1="178" x2="610" y1="204" y2="105"></line>
+<text style="fill:var(--example);font-size:13px;font-weight:700" x="628" y="100">Goal: 50</text>
+<polyline class="dat" points="70,204.0 106,215.0 142,193.0"></polyline>
+<polyline class="dat" points="214,198.5 250,193.0 286,198.5 322,187.5 358,193.0 394,187.5"></polyline>
+<polyline class="dat" points="430,171.0 466,154.5 502,143.5 538,127.0 574,116.0 610,99.5"></polyline>
+<circle class="pt" cx="70" cy="204" r="5"></circle><circle class="pt" cx="106" cy="215" r="5"></circle><circle class="pt" cx="142" cy="193" r="5"></circle>
+<circle class="pt" cx="214" cy="198.5" r="5"></circle><circle class="pt" cx="250" cy="193" r="5"></circle><circle class="pt" cx="286" cy="198.5" r="5"></circle><circle class="pt" cx="322" cy="187.5" r="5"></circle><circle class="pt" cx="358" cy="193" r="5"></circle><circle class="pt" cx="394" cy="187.5" r="5"></circle>
+<circle class="ptb" cx="430" cy="171" r="5"></circle><circle class="ptb" cx="466" cy="154.5" r="5"></circle><circle class="ptb" cx="502" cy="143.5" r="5"></circle><circle class="ptb" cx="538" cy="127" r="5"></circle><circle class="ptb" cx="574" cy="116" r="5"></circle><circle class="ptb" cx="610" cy="99.5" r="5"></circle>
+<text class="wl" text-anchor="middle" x="304" y="232">Six points below the goal: change approach</text>
+</svg>
+<figcaption><b>Figure 4.2:</b> A hypothetical graph monitoring Ghadeer's reading fluency. The baseline, that is, the measurements taken before the new instruction begins, consists of three measurements with a median of 32 words; the goal was set at 50 words after 12 weeks, and the dashed aimline was drawn between the two. Under the first approach all the points stayed below the line, so the teacher waited until she had collected six measurements and then changed the approach in week 6. Under the second approach the slope of the points became steeper than that of the aimline, and they drew closer to it week by week until they reached the goal. This is what the trend-line rule measures. Changing the approach here is a low-stakes instructional decision; were an eligibility decision to be based on these data, a longer period and additional evidence would be required.</figcaption>
+</figure>
+<div class="callout" data-k="pro">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"></path></svg>For the specialist: what supports the decision rules?</div>
+<p>Ardoin and colleagues reviewed the literature on decision rules in curriculum-based measurement of oral reading: 171 documents, including articles, chapters, and administration manuals, of which 102 met the review's criteria. They focused on the recommended number of measurements before reaching a judgment and on guidelines for interpreting an individual student's data. They concluded that most decision-making practices rest on expert opinion and that their psychometric and empirical support is very limited (Ardoin et al., 2013). For this reason, we do not offer in this chapter a number of measurements that suits every case, since the research does not establish such a number. The grounds for caution are well understood in measurement logic:</p>
+<ul>
+<li><strong>Fluctuation:</strong> measurement error in a single session is large compared with the growth expected in a week, so the fluctuation of one measurement can raise or lower a data point by as much as several weeks of growth.</li>
+<li><strong>Passage variability:</strong> passages treated as equivalent may in fact differ in difficulty, so the slope shifts with their order, and what is really an effect of the passage is credited to the student's progress. In Arabic this problem is compounded by differences between passages in vowel marking and word length.</li>
+<li><strong>Unstable slopes over short periods:</strong> a trend line calculated from only a few weeks can change considerably when a single point is added or removed.</li>
+</ul>
+<p>The matter becomes more complicated still when these data are used to determine who has “not responded” to intervention. The common criteria for doing so, such as low level, slow slope, and the dual discrepancy that combines the two, identify different groups of students, and agreement among them is weak (Barth et al., 2008). Chapter 6 presents these criteria, their thresholds, and the critiques of them in detail.</p>
+</div>
+<div class="callout" data-k="key">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9V16h7v-2.1A6 6 0 0 0 12 3Z"></path></svg>What does the graph tell us about diagnosis?</div>
+<p>Had Ghadeer failed to improve even under the second approach, despite good, intensive instruction delivered as planned, that would have been important evidence justifying her referral for a comprehensive evaluation. Her improvement, by contrast, suggests that her weakness stemmed from instruction that did not suit her, which weakens the hypothesis of a learning disability. This idea is the foundation of the response to intervention model (<span class="en">RTI</span>), which Chapter 6 presents in detail.</p>
+</div>
+<div class="callout" data-k="warn">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M12 3 2 20h20L12 3Z"></path><path d="M12 10v4M12 17h.01"></path></svg>Monitoring does not delay the family's right to an evaluation</div>
+<p>Collecting intervention data must never become a reason to postpone or prevent an evaluation the family requests. This was stated explicitly in an official memorandum from the Office of Special Education Programs at the U.S. Department of Education (U.S. Department of Education, 2011). We found no provision in published Saudi regulations addressing the relationship between tiered intervention and a family's request for an initial evaluation. The Regulations do, however, require that the family be invited to take part in the diagnosis, and they give the family the right to request a re-diagnosis if it believes its child has not been placed in the appropriate program (Ministry of Education [Al-Ma'arif], 1422 AH [Arabic], Article 76). Informal data, then, are attached to the referral, where they strengthen and support it.</p>
+</div>
+<div class="callout" data-k="example">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="10" r="3"></circle><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11Z"></path></svg>In the Saudi context: where do we get the goal?</div>
+<p>For reading in English, the United States has extensive reading fluency norms for every grade and season of the school year, from which a teacher can tell where a student stands and what goal is reasonable (Hasbrouck &amp; Tindal, 2017). For Arabic, published studies are few and recent, and most come from outside the Kingdom. They include a pilot study to standardize an Arabic oral reading fluency measure, administered to 200 students in Grades 1 through 3 in Jordan (Abu-Hamour, 2014a); a second study by the same researcher that used Arabic word recognition fluency to monitor the progress of first graders (Abu-Hamour, 2014b); and a third that used word reading fluency measures to monitor the progress of 70 second graders in the city of Al Ain in the United Arab Emirates (Mahfouz &amp; Mohamed, 2023). At the time this book was prepared, we found no published Saudi norms for curriculum-based measurement.</p>
+<p>The practical alternative is for the school to build <strong>local norms</strong>: it administers the same measure to all students in a grade three times a year and calculates the percentile ranks of their scores, that is, the percentage of the student's classmates in the same grade who scored lower than the student did. A percentile rank of 84 thus means that the student outperformed 84% of them. In this way the school knows where each student stands among peers in that school. Passages should be vowelized or unvowelized according to what the student studies in that grade, because short-vowel marks change the difficulty of reading Arabic considerably. The team should also decide in advance whether errors in case endings on final letters count as errors, and then hold to that decision across all measurements; otherwise the scores are no longer comparable.</p>
+<p><strong>A question for reflection:</strong> If your school wanted to build local norms for second-grade reading fluency this year, who would administer the measure, where would the passages come from, and how would you verify that they are equivalent?</p>
+</div>
+<!-- 5 -->
+<h2 id="s5"><span class="sec">4.5</span>Error analysis</h2>
+<p>A score reveals how many items a student got wrong; error analysis reveals how and why. Errors are seldom random. They often betray a faulty rule that the student applies consistently, and once we discover that rule, we know what needs to be taught.</p>
+<figure id="fig-4-3">
+<div class="work">
+<div class="paper">
+<div class="ttl">Hypothetical worksheet from a third-grade student</div>
+<div class="probs">
+<div class="pr"><sup>1</sup>52<br/>− 37<div class="ln"></div><span class="ans">25</span></div>
+<div class="pr"><sup>1</sup>63<br/>− 28<div class="ln"></div><span class="ans">45</span></div>
+<div class="pr"><sup>1</sup>84<br/>− 21<div class="ln"></div><span class="ans ok">63</span></div>
+</div>
+<div class="sp">
+<div><span class="w">مدرسه</span><span class="c">مدرسة</span></div>
+<div><span class="w">‎الشمس‎ → ‎الشّمس‎ → ‎اشمس‎</span><span class="c">الشمس</span></div>
+<div><span class="w">سئل</span><span class="c">سأل</span></div>
+</div>
+</div>
+<ol class="notes">
+<li><b>1</b><span><strong>A subtraction pattern:</strong> in each place, the student subtracts the smaller digit from the larger regardless of its position. In the first problem he subtracted 2 from 7 and wrote 5, instead of regrouping and subtracting 7 from 12. He got the third problem right because it requires no regrouping. The error, then, lies in his understanding of place value; he knows his subtraction facts.</span></li>
+<li><b>2</b><span><strong>Tā’ marbūṭa and hā’:</strong> he writes what he hears when pausing at the end of the word (مدرسه for مدرسة). The remedy is to teach the morphological rule that distinguishes tā’ marbūṭa from hā’.</span></li>
+<li><b>3</b><span><strong>The “sun” lām:</strong> he omits the lām that is not pronounced (اشمس for الشمس). This is a common phonological spelling error that indicates reliance on hearing when writing.</span></li>
+<li><b>4</b><span><strong>The hamza:</strong> he chooses the wrong seat for a medial hamza (سئل for سأل). This is among the most difficult rules of Arabic spelling and calls for systematic instruction.</span></li>
+</ol>
+</div>
+<figcaption><b>Figure 4.3:</b> Error analysis in arithmetic and spelling. Each error carries information about the rule the student is applying, and the remedy targets the rule that produced the answer.</figcaption>
+</figure>
+<p>The first pattern is known in the literature as the “smaller-from-larger” error, one of the best-known error patterns in arithmetic (Ashlock, 2010).</p>
+<h3>Oral reading errors: from “meaning” to decoding</h3>
+<p>A widely used approach to analyzing oral reading errors is miscue analysis, which asks of each error: Did it preserve the meaning? Does it fit the structure of the sentence? Does it resemble the printed word in form? (Goodman, 1969). Today, however, this analysis calls for a critical reading. It rests on a view of reading as the parallel use of three “cues”: meaning, structure, and the visual form of the word. Contemporary reading science has moved away from this view, having shown that skilled readers recognize words from their letters accurately and rapidly, and that reliance on context to recognize words is a mark of weak readers, who use it to compensate for poor decoding (Castles et al., 2018). The practical danger is that the question “Did it preserve the meaning?” can reward guessing, masking a decoding weakness rather than exposing it, which matters particularly in the diagnosis of dyslexia (taken up in Chapter 8).</p>
+<div class="callout" data-k="myth">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5V14M12 17h.01"></path></svg>Misconception: “As long as the error didn't change the meaning, it's fine”</div>
+<p>A student read “The child went to the mosque” where the text said “The boy went to the mosque.” By the logic of the “three cues,” this is a good error, because it preserved meaning and structure. But the student never read the printed word at all: he guessed it from the sentence. If this pattern recurs, it is a sign that he cannot yet decode unfamiliar words and is covering for it with good comprehension. The right diagnostic question is therefore “Did he read what is written?” and not “Did he understand what is meant?” Comprehension is measured with other tasks.</p>
+</div>
+<p>In Arabic, it is more useful to analyze an error from two angles: decoding and morphological structure. Take Ghadeer's reading of “سافرَ” (sāfara) for “سفَر” (safar). The two words share a root (s-f-r), so the root letters are intact; the error lies in the pattern. She read a word on the faʿal pattern as though it were on the fāʿala pattern, adding a long vowel that is not in the text and turning the noun into a verb familiar to her. The diagnostic questions here are: Does she read short vowels and long vowels as written? Does she substitute a familiar word from the same root for the printed word? Does this recur in both vowelized and unvowelized passages? If it does, the instructional goal is accurate reading of short and long vowels and recognition of common patterns, with priority given to reading the word over urging her to “understand the sentence.” Table 4.5 summarizes a practical classification of these errors:</p>
+<div class="tw"><table id="tab-4-5">
+<caption>Table 4.5: A classification of Arabic oral reading errors by decoding and structure.</caption>
+<thead><tr><th>Error type</th><th>Example (written → read)</th><th>What it may indicate</th></tr></thead>
+<tbody>
+<tr><td>Short-vowel error</td><td>‎“كَتَبَ”‎ → ‎“كُتِبَ”‎ (kataba → kutiba)</td><td>Weakness in reading short-vowel marks, or reading the word's outline without its vowels</td></tr>
+<tr><td>Adding or omitting a long vowel</td><td>‎“سفَر”‎ → ‎“سافرَ”‎ (safar → sāfara)</td><td>Inattention to long-vowel letters, and confusion between morphological patterns</td></tr>
+<tr><td>Substituting a letter for one that looks similar</td><td>‎“بنت”‎ → ‎“بيت”‎ (bint, “girl” → bayt, “house”)</td><td>Weakness in discriminating diacritical dots and in analyzing the word into its letters</td></tr>
+<tr><td>Substituting a letter for one that sounds similar</td><td>‎“صار”‎ → ‎“سار”‎ (ṣāra → sāra)</td><td>Weakness in phonological discrimination between similar sounds</td></tr>
+<tr><td>Substituting one form for another from the same root</td><td>‎“الطلاب”‎ → ‎“الطالب”‎ (al-ṭullāb, “the students” → al-ṭālib, “the student”)</td><td>Reading the root and guessing the structure, as in confusing the singular with the broken plural</td></tr>
+<tr><td>Substituting a word that fits the context</td><td>‎“الولد”‎ → ‎“الطفل”‎ (al-walad, “the boy” → al-ṭifl, “the child”)</td><td>Guessing from context to compensate for weak decoding; not counted as a success even if the meaning is preserved</td></tr>
+</tbody>
+</table></div>
+<p>A judgment requires more than a single error. A pattern emerges when the same type of error recurs across more than one passage and more than one session, which is why Form A in Section 4.8 includes columns for tallying error types in each fluency measurement.</p>
+<!-- 6 -->
+<h2 id="s6"><span class="sec">4.6</span>Portfolios and rubrics</h2>
+<h3>The portfolio</h3>
+<p>A portfolio is a selected collection of a student's work, gathered over a period of time for a specific purpose, in whose selection and reflection the student takes part (Paulson et al., 1991). It differs from a mere pile of papers in that it is built around a purpose and has criteria that determine what goes into it and how it is evaluated. There are three common types:</p>
+<ul>
+<li><strong>Working portfolio:</strong> contains work in progress and drafts, and shows how the student is advancing.</li>
+<li><strong>Showcase portfolio:</strong> contains the student's best work, and shows the most the student can do.</li>
+<li><strong>Assessment portfolio:</strong> contains specified pieces of work matched against specified criteria, and is used in decision making.</li>
+</ul>
+<p>In diagnosis, the portfolio is especially useful in two areas: monitoring the progress of a student with difficulties over time, and bringing to light abilities of a gifted student that tests do not reveal, such as a science project, a story the student wrote, or a design the student created. It is therefore an important tool in identifying gifted students, and twice-exceptional learners in particular, that is, students who combine giftedness with a disability or disorder, each of which may mask the other (Chapters 12 and 13 address this in detail).</p>
+<h3>Rubrics</h3>
+<p>To make the evaluation of student work more consistent, rubrics are used: they set out levels of performance and describe each level in words. A note on terminology is in order here. A rubric describes the quality of a piece of work the student has produced, whereas a rating scale asks a teacher or parent to rate the frequency or severity of a student's behaviors, as with the behavior scales presented in Chapter 3. An analytic rubric rates each aspect of the work separately, while a holistic rubric gives a single rating for the work as a whole. Here is an example of a brief analytic rubric for written expression:</p>
+<div class="tw"><table class="rubric" id="tab-4-6">
+<caption>Table 4.6: A brief analytic rubric for written expression.</caption>
+<thead><tr><th>Criterion</th><th>4 Advanced</th><th>3 Proficient</th><th>2 Developing</th><th>1 Beginning</th></tr></thead>
+<tbody>
+<tr><td>Ideas and organization</td><td>A clear idea, with a connected beginning, middle, and end</td><td>A clear idea, with minor weaknesses in coherence</td><td>An incomplete idea and weak organization</td><td>Disconnected sentences with no clear idea</td></tr>
+<tr><td>Language and vocabulary</td><td>Varied and precise vocabulary</td><td>Appropriate vocabulary with some repetition</td><td>Limited and repetitive vocabulary</td><td>Very little vocabulary, or colloquial vocabulary</td></tr>
+<tr><td>Spelling and punctuation</td><td>Rare errors that do not hinder comprehension</td><td>Few errors</td><td>Frequent errors that sometimes hinder comprehension</td><td>Many errors that hinder comprehension</td></tr>
+</tbody>
+</table></div>
+<p>For a rubric to be dependable, it is tried out on a number of work samples that two teachers rate independently. Their agreement is calculated in the way presented for observation (4.2), after which they discuss the points of disagreement and revise the wording of the levels until they agree.</p>
+<h3>Limits of portfolios and performance assessment in high-stakes decisions</h3>
+<p>What serves instruction is not necessarily fit for a consequential decision. The clearest illustration is the experience of the U.S. state of Vermont, which in the early 1990s built a statewide assessment system on portfolios in writing and mathematics. The program's evaluation found that its effect on instruction was positive, but that the quality of the scores it produced, including agreement among raters, was not sufficient for using them to make judgments about students and schools (Koretz et al., 1994). The lesson is that a portfolio is strong evidence of what a student can do, and it can support an eligibility or admission decision once raters have been trained, tasks standardized, and interrater agreement calculated, and when it stands alongside other evidence.</p>
+<p>The same holds for performance assessments used in identifying gifted students, such as the DISCOVER model (<span class="en">DISCOVER</span>), in which trained assessors observe students as they solve problems in different domains. In a study of 248 students in Grades 3 through 5 at two private schools in Beirut, ratings in the spatial domain correlated highly with scores on Raven's Progressive Matrices, whereas ratings in the linguistic domain correlated only weakly with those scores. The researcher concluded that the model could be used in Lebanon, while noting the need for further research to support the findings (Sarouphim, 2009). The evidence from the Arab region is thus promising, but it is limited by a small sample and private schools, and it calls for local validation before the tool is relied on for admission decisions.</p>
+<!-- 7 -->
+<h2 id="s7"><span class="sec">4.7</span>Limits of informal methods</h2>
+<p>For all their considerable value, these methods have limits that anyone who uses them should keep in mind:</p>
+<ul>
+<li><strong>They usually lack norms:</strong> on their own, they cannot tell us whether a student's performance departs from that of peers to an unusual degree, unless local norms have been built for them.</li>
+<li><strong>Their quality is in the hands of the person administering them:</strong> a vague definition, a reading passage harder than the others, or an unclear rubric will each render the results unreliable.</li>
+<li><strong>They may carry observer bias:</strong> a teacher who expects a problem may see more of it than is there. Checking agreement between independent observers is among the most important ways of limiting this bias.</li>
+<li><strong>Their decision rules are approximate:</strong> they are adequate for instructional decisions, but a high-stakes decision requires other evidence alongside them, as we saw in 4.4.</li>
+</ul>
+<p>For this reason, these methods are used in the diagnostic process both before and after referral: before it, to document the problem and attempt to address it in the classroom; after it, to complete the picture provided by formal tests and to plan instruction. Rarely are they sufficient on their own for a diagnostic decision. Even models that base their decisions on these data in a systematic way, such as response to intervention, require an adequate monitoring period, equivalent passages, and evidence from other sources.</p>
+<div class="callout" data-k="example">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="10" r="3"></circle><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11Z"></path></svg>In the Saudi context: where do informal methods fit in the regulations?</div>
+<p>The Regulations for Special Education Institutes and Programs stipulate that assessment and diagnosis use both formal and informal methods; that the results of a single measure not be relied on alone in determining a pupil's eligibility; that information be gathered from a variety of sources; and that, where necessary, the pupil be placed under observation for a full semester (Ministry of Education [Al-Ma'arif], 1422 AH [Arabic], Article 80). The same Regulations cite the interview, observation, and checklists as examples of the informal tools used by the school psychologist (Articles 48 and 49). Among the conditions for admitting a pupil to learning disabilities programs is that “it be established that regular educational services are inappropriate or of limited effectiveness” (Article 7), which is precisely what curriculum-based measurement data document when they are collected regularly. The Special Education Organizational Guide retained these conditions and did not mention response to intervention by name (Ministry of Education, 1436 AH [Arabic]).</p>
+<p>In practice, two recent studies have described how this model is applied in Saudi schools from the teachers' perspective. Eight female learning disabilities teachers reported barriers that included limited time, weak collaboration, a shortage of data and training, and the absence of formal adoption of the model (Altheiabi et al., 2025). Another study, with thirteen teachers, found that practices resembling the model were largely informal and lacked systematic progress monitoring, diagnostic tools, and organizational guidance (Almulla &amp; Mahama, 2026). Both studies are qualitative with small samples; they describe experiences, and how widespread those experiences are has yet to be measured.</p>
+<p><strong>A question for reflection:</strong> How would you document “the limited effectiveness of regular educational services” for a student in your school in a way the assessment team would accept?</p>
+</div>
+<!-- 8 -->
+<h2 id="s8"><span class="sec">4.8</span>Forms for use</h2>
+<p>This section contains four blank forms prepared by the author, each designed to be printed on a separate page; readers may copy them for their own educational and professional use. Training in administration should precede use of any form. The forms are used to gather student data in accordance with the procedures adopted by the school, and the Special Education Organizational Guide requires the written consent of the parent or guardian, following formal notification, before assessment and diagnostic procedures begin (Ministry of Education, 1436 AH [Arabic]). In training activities, a code is written in place of the student's name, and no decision is based on the results.</p>
+<ul>
+<li><strong>Form A:</strong> Oral reading fluency record sheet, with columns for classifying errors (4.4 and 4.5).</li>
+<li><strong>Form B:</strong> Interval recording form, with a calculation of interobserver agreement (4.2).</li>
+<li><strong>Form C:</strong> Antecedent–behavior–consequence recording form (4.2).</li>
+<li><strong>Form D:</strong> Evidence-supported referral form, organized according to the <span class="en">RIOT/ICEL</span> framework (Christ, 2008). This framework gathers evidence through four methods (review of records, interview, observation, and testing) across four domains (instruction, curriculum, environment, and the learner); Chapter 1 presents it in detail. Its value here is that it shows the referring teacher which cells are empty before the assessment team discovers them.</li>
+</ul>
+<section aria-label="Form A: Oral reading fluency record sheet" class="form">
+<div class="fh"><b>Form A: Oral reading fluency record sheet</b><span>Curriculum-based measurement in reading</span></div>
+<div class="fl">
+<div><i>Student or code:</i><u></u></div>
+<div><i>Grade:</i><u></u></div>
+<div><i>Date:</i><u></u></div>
+<div><i>Examiner:</i><u></u></div>
+</div>
+<div class="fl">
+<div><i>Purpose:</i> <span class="ck">Screening</span> <span class="ck">Baseline</span> <span class="ck">Progress monitoring, week:</span><u></u></div>
+<div><i>Passages:</i> <span class="ck">Vowelized</span> <span class="ck">Unvowelized</span> <span class="ck">Partially vowelized</span></div>
+</div>
+<div class="box">
+<b>Standardized directions (read verbatim every time):</b> “Read this story aloud as well as you can. If you come to a word you don’t know, I will tell it to you. Begin.” Timing starts when the student says the first word; after 60 seconds the examiner says “Stop” and places a mark after the last word read.
+    <ul>
+<li><b>Counted as an error:</b> substituting a word, omitting a word, and a word on which the student hesitates for 3 seconds and which the examiner then supplies.</li>
+<li><b>Not counted as an error:</b> self-correction within 3 seconds, repeating a word, and inserting a word not in the text (a note is made).</li>
+<li><b>Team decision made in advance:</b> Are case-ending vowel errors at the end of a word counted as errors? <span class="ck">Yes</span> <span class="ck">No</span> (applied consistently across all measurements).</li>
+</ul>
+</div>
+<div class="fw"><table id="tab-4-7">
+<caption>Table 4.7: Form A, recording three passages and classifying their errors.</caption>
+<thead>
+<tr><th rowspan="2">Passage (number or title)</th><th rowspan="2">Words read</th><th rowspan="2">Errors</th><th rowspan="2">Words correct per minute</th><th colspan="5">Number of errors by type (Table 4.5)</th></tr>
+<tr><th>Short vowel</th><th>Long vowel</th><th>Letter similar in shape or sound</th><th>Form from the same root</th><th>Word that fits the context</th></tr>
+</thead>
+<tbody>
+<tr><td class="l">1.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td class="l">2.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td class="l">3.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><th>Median</th><td></td><td></td><td></td><th colspan="5">Total across the three passages:</th></tr>
+</tbody>
+</table></div>
+<div class="fl one"><div><i>Qualitative notes (expression, pauses, line tracking, skipped lines):</i><u></u></div></div>
+<div class="ln2"></div>
+<p class="note">The median value is plotted on the progress-monitoring graph. No change in performance is inferred from a single measurement.</p>
+</section>
+<section aria-label="Form B: Interval recording form" class="form">
+<div class="fh"><b>Form B: Interval recording form</b><span>Ten minutes, six intervals per minute</span></div>
+<div class="fl">
+<div><i>Student or code:</i><u></u></div>
+<div><i>Date:</i><u></u></div>
+<div><i>Time: from</i><u></u><i>to</i><u></u></div>
+<div><i>Class period or activity:</i><u></u></div>
+<div><i>Observer:</i><u></u></div>
+<div><span class="ck">First observer</span> <span class="ck">Second observer</span></div>
+</div>
+<div class="fl one"><div><i>Target behavior:</i><u></u></div></div>
+<div class="fl one"><div><i>Operational definition (what is seen and heard, and what is excluded):</i><u></u></div></div>
+<div class="ln2"></div>
+<div class="fl">
+<div><i>Method:</i> <span class="ck">Partial interval</span> <span class="ck">Whole interval</span> <span class="ck">Momentary time sampling</span></div>
+<div><i>Interval length (seconds):</i><u></u></div>
+</div>
+<div class="fw"><table id="tab-4-8">
+<caption>Table 4.8: Form B, interval grid. Write ✓ if the behavior is scored under the chosen method, and − if it is not.</caption>
+<thead><tr><th>Minute</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>Behavior intervals</th></tr></thead>
+<tbody>
+<tr><th>1</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><th>2</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><th>3</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><th>4</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><th>5</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><th>6</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><th>7</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><th>8</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><th>9</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><th>10</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+</tbody>
+</table></div>
+<div class="fl">
+<div><i>Behavior intervals:</i><u></u><i>of</i><u></u><i>=</i><u></u><i>%</i></div>
+</div>
+<div class="box">
+<b>Interobserver agreement (the two forms are compared interval by interval):</b>
+<div class="fl">
+<div><i>Agreements:</i><u></u></div>
+<div><i>Disagreements:</i><u></u></div>
+<div><i>Percentage agreement:</i><u></u><i>%</i></div>
+<div><i>Agreement on occurrence intervals only:</i><u></u><i>%</i></div>
+<div><i>Kappa (optional):</i><u></u></div>
+</div>
+</div>
+<p class="note">Partial interval for behavior to be reduced, whole interval for behavior to be increased, and momentary time sampling for someone who is teaching and observing at the same time (4.2).</p>
+</section>
+<section aria-label="Form C: Antecedent–behavior–consequence recording form" class="form abc">
+<div class="fh"><b>Form C: Antecedent–behavior–consequence recording form</b><span>Descriptive recording in natural settings</span></div>
+<div class="fl">
+<div><i>Student or code:</i><u></u></div>
+<div><i>Observer:</i><u></u></div>
+<div><i>Period: from</i><u></u><i>to</i><u></u></div>
+</div>
+<div class="fl one"><div><i>Target behavior and its operational definition:</i><u></u></div></div>
+<div class="ln2"></div>
+<div class="fw"><table id="tab-4-9">
+<caption>Table 4.9: Form C, event log. Record what actually happened, and hold back interpretation.</caption>
+<thead><tr><th>Date and time</th><th>Setting and activity, and who was present</th><th>Antecedent: What happened immediately before?</th><th>Behavior: What did the student do? (as seen and heard)</th><th>Consequence: What happened immediately after?</th><th>Notes</th></tr></thead>
+<tbody>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+</tbody>
+</table></div>
+<div class="box">
+<b>After several days of recording:</b>
+<div class="fl one">
+<div><i>Most frequent antecedent:</i><u></u></div>
+<div><i>Most frequent consequence:</i><u></u></div>
+<div><i>Tentative hypothesis about the function of the behavior:</i><u></u></div>
+</div>
+</div>
+<p class="note">The data on this form are descriptive and correlational: they suggest a hypothesis about the function of the behavior that still awaits verification, and Chapter 5 takes up the methods for doing so.</p>
+</section>
+<section aria-label="Form D: Evidence-supported referral form based on the RIOT/ICEL framework" class="form riot">
+<div class="fh"><b>Form D: Evidence-supported referral form</b><span>Organized according to the RIOT/ICEL framework</span></div>
+<div class="fl">
+<div><i>Student:</i><u></u></div>
+<div><i>Grade:</i><u></u></div>
+<div><i>Age:</i><u></u></div>
+<div><i>Referring teacher:</i><u></u></div>
+<div><i>Date of referral:</i><u></u></div>
+</div>
+<div class="fl one"><div><i>Reason for referral in behavioral terms (what the student does or does not do, when, and how often):</i><u></u></div></div>
+<div class="ln2"></div>
+<div class="fl one"><div><i>Student's strengths:</i><u></u></div></div>
+<div class="box">
+<b>What was tried before referral:</b>
+<div class="fl one">
+<div><i>1. Intervention:</i><u></u><i>Duration in weeks:</i><u></u><i>Sessions per week and length:</i><u></u></div>
+<div><i>2. Intervention:</i><u></u><i>Duration in weeks:</i><u></u><i>Sessions per week and length:</i><u></u></div>
+</div>
+<div class="fl">
+<div><i>Baseline (median):</i><u></u></div>
+<div><i>Goal:</i><u></u></div>
+<div><i>Number of measurements after baseline:</i><u></u></div>
+<div><i>Student's slope compared with the slope of the aimline:</i><u></u></div>
+</div>
+<div class="fl">
+<div><span class="ck">Progress-monitoring graph attached</span></div>
+<div><span class="ck">Passages or worksheets are at a single level and have been tried out</span></div>
+<div><span class="ck">Intervention was implemented as planned (documentation available)</span></div>
+</div>
+</div>
+<div class="fl">
+<div><i>Most recent hearing screening, date and result:</i><u></u></div>
+<div><i>Most recent vision screening, date and result:</i><u></u></div>
+<div><i>Attendance and punctuality this year:</i><u></u></div>
+</div>
+<div class="fw"><table id="tab-4-10">
+<caption>Table 4.10: Form D, evidence matrix. In each cell, record the source of the evidence and its date; leave the cell blank if no evidence is available.</caption>
+<thead><tr><th>Domain ↓ / Method →</th><th>Review (R): records and previous work</th><th>Interview (I): teachers, family, and student</th><th>Observation (O): in class and other settings</th><th>Test (T): curriculum-based measurement or other</th></tr></thead>
+<tbody>
+<tr><th>Instruction (I)</th><td></td><td></td><td></td><td></td></tr>
+<tr><th>Curriculum (C)</th><td></td><td></td><td></td><td></td></tr>
+<tr><th>Environment (E)</th><td></td><td></td><td></td><td></td></tr>
+<tr><th>Learner (L)</th><td></td><td></td><td></td><td></td></tr>
+</tbody>
+</table></div>
+<div class="fl">
+<div><i>Date of written notification to parent or guardian:</i><u></u></div>
+<div><i>Date of written consent:</i><u></u></div>
+</div>
+<p class="note">The Special Education Organizational Guide sets the period for the parent or guardian's response at no more than 14 days from the date of written notification (Ministry of Education, 1436 AH [Arabic]). The approved procedures in force at the time of use should be checked.</p>
+<div class="sig"><div>Referring teacher</div><div>Special education teacher</div><div>School principal</div></div>
+</section>
+<h2 class="unnum" id="conclusion">Conclusion</h2>
+<p>In this chapter we have seen that informal methods are a source in their own right of a different kind of evidence, comparable in value to the standardized test: evidence that is closely tied to the curriculum, collected repeatedly, descriptive of what actually happens in the classroom, and of direct service to instruction. Their value, however, depends on the discipline of their procedures. Observation requires an operational definition, a recording method suited to the behavior, and interobserver agreement that chance has not inflated; the strength of curriculum-based measurement lies in graphing its data over time; and error analysis looks past the number of a student's errors for the rule the student is applying. In practice, these data are attached to a referral to strengthen it, and monitoring a student's response to intervention must not become a pretext for delaying an evaluation the family has requested.</p>
+<p>The open question concerns how far these methods can be relied on in high-stakes decisions. Decision rules in curriculum-based measurement rest more on expert opinion than on research, and portfolios and rubrics reveal what tests do not, especially among gifted students, yet before they are used on their own they need evidence of agreement among raters. These methods are at their strongest when combined with other evidence.</p>
+<!-- 9 -->
+<h2 id="s9"><span class="sec">4.9</span>Summary, key terms, and activities</h2>
+<h3>Chapter summary</h3>
+<div class="summary"><ul>
+<li>Informal methods stay close to the classroom and the curriculum, are repeated, and serve instruction, but they usually lack national norms.</li>
+<li>Structured observation begins with an operational definition, selects a recording method suited to the behavior, and checks agreement between observers. When behavior is rare or very frequent, simple percentage agreement is inflated by chance, so the kappa coefficient or agreement on occurrence intervals is used instead.</li>
+<li>The three interval recording methods yield different results for the same behavior, and the one chosen should fit the purpose.</li>
+<li>Curriculum-based measurement is brief, repeated, and standardized in its procedures, and its strength lies in graphing the data. Its decision rules draw more on expert opinion than on research, so they are suited to instructional decisions; a high-stakes decision requires a longer period, equivalent passages, and other evidence.</li>
+<li>Error analysis reveals the faulty rule a student is applying. In reading, an error is analyzed for what it shows about decoding and morphological structure before considering whether it preserved meaning.</li>
+<li>Portfolios and rubrics show what tests do not, especially among gifted students; using them alone in a high-stakes decision first requires checking agreement among raters.</li>
+<li>Response to intervention must not delay an evaluation the family has requested, and informal data are attached to the referral to strengthen it.</li>
+</ul></div>
+<h3>Glossary of terms</h3>
+<dl class="gloss">
+<dt>Operational definition</dt><dd>A description of behavior in terms of what is seen and heard, such that two observers can agree on whether it occurred.</dd>
+<dt>Interval recording</dt><dd>Dividing the observation time into short intervals and recording whether the behavior occurs in each.</dd>
+<dt>Momentary time sampling</dt><dd>Recording whether the behavior is occurring only at the moment each interval ends.</dd>
+<dt>Interobserver agreement</dt><dd>The percentage of agreement between independent observers recording the same behavior.</dd>
+<dt>Cohen's kappa</dt><dd>An index of interobserver agreement that removes the agreement expected by chance; it is more accurate than simple percentage agreement when behavior is rare or very frequent.</dd>
+<dt>Curriculum-based measurement</dt><dd>Brief, repeated measures with standardized procedures, drawn from the curriculum, that monitor progress in basic skills.</dd>
+<dt>Baseline</dt><dd>The first measurements, collected before new instruction begins, against which later progress is compared.</dd>
+<dt>Aimline</dt><dd>A line on the progress-monitoring graph connecting the starting level with the goal, against which the student's data points are compared.</dd>
+<dt>Error analysis</dt><dd>Examining the patterns in a student's errors to uncover the faulty rules the student is applying.</dd>
+<dt>Miscue analysis</dt><dd>Analysis of oral reading errors according to whether they preserve meaning, fit the sentence structure, and resemble the printed word. It rests on a model that contemporary reading science has moved away from.</dd>
+<dt>Portfolio</dt><dd>A selected collection of a student's work, gathered over time according to a purpose and criteria.</dd>
+<dt>Rubric</dt><dd>A tool that sets out the criteria for evaluating a completed piece of work and describes in words the levels of performance on each criterion. It differs from a rating scale, which estimates the frequency or intensity of a behavior.</dd>
+</dl>
+<h3>Review questions</h3>
+<ol>
+<li>Write an operational definition of “inattention,” then test it by asking: Could a stranger record it accurately? <span class="obj">(Objective 1)</span></li>
+<li>You want to monitor how long a student stays engaged with his task during a mathematics lesson. Which interval recording method would you choose, and why? <span class="obj">(Objective 2)</span></li>
+<li>Two observers agreed on 22 intervals and disagreed on 8. Calculate the percentage agreement and decide whether it is acceptable. Then suppose the first observer recorded the behavior in 15 intervals and the second in 13, and that they agreed on its occurrence in 10 of them: calculate the kappa coefficient and interpret it. <span class="obj">(Objective 3)</span></li>
+<li>Draft three questions for a semi-structured interview with the father of a middle school student who is late in handing in his homework, so that one question elicits a specific situation and another looks for strengths. <span class="obj">(Objective 4)</span></li>
+<li>In Figure 4.2, if the points stayed below the aimline after the approach was changed, what would you conclude? What would be the next step? <span class="obj">(Objective 5)</span></li>
+<li>Why might six weekly measurements be enough to adjust the teaching approach, but not enough to decide that a student has “not responded” to intervention? Give two measurement-related reasons. <span class="obj">(Objectives 5 and 8)</span></li>
+<li>A student wrote: 45 + 38 = 713. What faulty rule is he applying? What instructional goal would you derive from it? <span class="obj">(Objective 6)</span></li>
+<li>A student read “يلعبون” (yalʿabūn, “they play”) for “لعبوا” (laʿibū, “they played”) in more than one passage, and “البحر” (al-baḥr, “the sea”) for “النهر” (al-nahr, “the river”) once. Classify each error according to Table 4.5, and explain why the second error should not be regarded as “good” simply because it preserved the general meaning. <span class="obj">(Objective 6)</span></li>
+<li>Why is a portfolio important in identifying a gifted student who does not excel on tests? And what must be verified before it is used in an admission decision? <span class="obj">(Objective 8)</span></li>
+</ol>
+<p><strong>Brief answers to the calculation questions:</strong> Question 3: Percentage agreement = 22 ÷ 30 × 100 ≈ 73%, which is below 80% and therefore not acceptable until the definition has been reviewed. The agreement expected by chance = (0.50 × 0.43) + (0.50 × 0.57) = approximately 0.50, so kappa = (0.73 − 0.50) ÷ (1 − 0.50) ≈ 0.47, that is, “moderate” agreement by the common classification. Question 7: He adds each place value separately and writes the full sum without carrying to the next place (5 + 8 = 13, and 4 + 3 = 7), so the instructional goal is the concept of regrouping in place value.</p>
+<h3>Case for application</h3>
+<article class="case">
+<div class="case-head"><h3>Bandar, 13 years old, first grade of middle school</h3></div>
+<p><strong>The story:</strong> Bandar's mathematics teacher complains that he is “careless”: he does not finish in-class exercises, and he makes many errors on quizzes, even though his homework is usually complete. Over eight weeks, and with his parent's consent, the teacher worked with the learning disabilities teacher to gather the data shown in Table 4.11.</p>
+<div class="tw"><table id="tab-4-11">
+<caption>Table 4.11: Bandar's informal data.</caption>
+<thead><tr><th>Source</th><th>Result</th></tr></thead>
+<tbody>
+<tr><td>Beginning-of-year screening (math computation, two minutes)</td><td>His median performance falls at approximately the 12th percentile rank among students in his grade at the school</td></tr>
+<tr><td>Baseline (three weeks)</td><td>14, 12, and 15 correct digits, with a median of 14. The goal was set at 26 after 12 weeks, that is, one digit per week</td></tr>
+<tr><td>Five weeks of small-group instruction, three sessions a week</td><td>14, 15, 13, 16, 15. The aimline points for these weeks were 15, 16, 17, 18, 19. The worksheets had not been tried out in advance to verify their equivalence</td></tr>
+<tr><td>Observation (momentary time sampling every 30 seconds)</td><td>On task 45% of the time in three mathematics lessons, and 80% in one science lesson. Agreement with a second observer was 90% in a single lesson, and kappa was not calculated</td></tr>
+<tr><td>Analysis of 30 problems from his notebook</td><td>Most errors occur in copying numbers from the board, such as writing 68 for 86, followed by errors with fractions. Multiplication in the printed textbook problems is usually correct</td></tr>
+<tr><td>Interview with Bandar</td><td>He sits at the back of the class and says the numbers on the board “look alike” to him, and that he is too embarrassed to ask to move closer</td></tr>
+<tr><td>Interview with his mother</td><td>He studies with his older brother and completes all of his homework. She does not recall when his vision was last checked</td></tr>
+</tbody>
+</table></div>
+<p><strong>Task:</strong> (1) What instructional decision does the four-point rule support at this point? And what makes you hesitant to rely on it alone? (2) Are these data sufficient to refer Bandar for a comprehensive evaluation for learning disabilities in mathematics? Justify your judgment. (3) Identify at least two missing pieces of evidence, and locate each in the matrix of Form D. <span class="obj">(Objectives 3, 5, and 8)</span></p>
+</article>
+<h3>Learning activities</h3>
+<p>Every activity carried out with students is conducted with the consent of the family and the school administration, without any data that could identify the student, and under the supervision of a specialist; its results are not used in any decision concerning the student.</p>
+<ol>
+<li><strong>Paired observation:</strong> With a colleague, observe a student for ten minutes using partial-interval recording, each of you recording on a separate copy of Form B. Then calculate the percentage agreement, agreement on occurrence intervals, and the kappa coefficient, and discuss where you disagreed. <em>Product:</em> the two forms, a 2 × 2 table, and a paragraph explaining the difference among the three indices. <em>Approximate time:</em> one hour. <em>Desk-based alternative:</em> observe a student in a published video intended for teacher training.</li>
+<li><strong>Measuring fluency:</strong> Choose three passages from the reading textbook for a given grade, administer them to three students using Form A, calculate the median for each student, and classify their errors according to Table 4.5. <em>Product:</em> the three forms and a paragraph on the most prominent error pattern. <em>Approximate time:</em> an hour and a half. <em>Desk-based alternative:</em> prepare six passages at a single grade level, compare them in number of words, word length, and vowelization, then propose which of them could serve as equivalent passages for progress monitoring and justify your choice.</li>
+<li><strong>Analyzing a notebook:</strong> Collect five worksheets from a single student in arithmetic or spelling, identify at least two error patterns in them, and propose an instructional activity for each pattern. <em>Product:</em> a table of the patterns, their examples, and the activity proposed for each. <em>Approximate time:</em> 45 minutes. <em>Desk-based alternative:</em> analyze the errors in Figure 4.3 and in Questions 7 and 8.</li>
+<li><strong>Building a rubric:</strong> Construct a four-level analytic rubric for a writing task from the curriculum of a grade of your choice. Then, with a colleague, use it to evaluate five texts written by students, with their names removed; calculate the percentage agreement on each criterion, and revise the wording of the levels on which you disagreed. <em>Product:</em> the rubric before and after revision, and the agreement table. <em>Approximate time:</em> an hour and a half.</li>
+</ol>
+<h3>Chapter references</h3>
+<ol class="refs">
+<li>Ministry of Education. (1436 AH). <i>[Special education organizational guide]</i> [In Arabic] (1st ed., academic year 1436–1437 AH). https://moe.gov.sa/en/aboutus/aboutministry/RPRLibrary/الدليل%20التنظيمي%20للتربية%20الخاصة.pdf</li>
+<li>Ministry of Education [Al-Ma'arif]. (1422 AH). <i>[Regulations for Special Education Institutes and Programs]</i> [In Arabic]. https://moe.gov.sa/en/aboutus/aboutministry/RPRLibrary/القواعد%20التنظيمية%20لمعاهد%20وبرامج%20التربية%20الخاصة%201422%20هـ.pdf</li>
+<li>Abu-Hamour, B. (2014a). A pilot study for standardizing curriculum-based measurement oral reading fluency (CBM ORF) in Arabic. <i>Journal of the International Association of Special Education, 15</i>(1), 16–26.</li>
+<li>Abu-Hamour, B. (2014b). Using Arabic word identification fluency to monitor first-grade reading progress. <i>Dyslexia, 20</i>(2), 167–174. https://doi.org/10.1002/dys.1472</li>
+<li>Almulla, A. A., &amp; Mahama, I. (2026). Elementary teachers' perspectives on RTI programmes in supporting students with learning disabilities in Saudi Arabia. <i>Humanities and Social Sciences Communications, 13</i>(1), Article 974. https://doi.org/10.1057/s41599-026-07376-9</li>
+<li>Altheiabi, A. S., Bagadood, N. H., &amp; Sulaimani, M. F. (2025). Perceptions of learning difficulty teachers regarding the barriers to applying the response to the intervention model in Saudi Arabia. <i>Australian Journal of Learning Difficulties, 30</i>(1), 75–92. https://doi.org/10.1080/19404158.2025.2473425</li>
+<li>Ardoin, S. P., Christ, T. J., Morena, L. S., Cormier, D. C., &amp; Klingbeil, D. A. (2013). A systematic review and summarization of the recommendations and research surrounding curriculum-based measurement of oral reading fluency (CBM-R) decision rules. <i>Journal of School Psychology, 51</i>(1), 1–18. https://doi.org/10.1016/j.jsp.2012.09.004</li>
+<li>Ashlock, R. B. (2010). <i>Error patterns in computation: Using error patterns to help each student learn</i> (10th ed.). Allyn &amp; Bacon.</li>
+<li>Barth, A. E., Stuebing, K. K., Anthony, J. L., Denton, C. A., Mathes, P. G., Fletcher, J. M., &amp; Francis, D. J. (2008). Agreement among response to intervention criteria for identifying responder status. <i>Learning and Individual Differences, 18</i>(3), 296–307.</li>
+<li>Castles, A., Rastle, K., &amp; Nation, K. (2018). Ending the reading wars: Reading acquisition from novice to expert. <i>Psychological Science in the Public Interest, 19</i>(1), 5–51. https://doi.org/10.1177/1529100618772271</li>
+<li>Christ, T. J. (2008). Best practices in problem analysis. In A. Thomas &amp; J. Grimes (Eds.), <i>Best practices in school psychology V</i> (pp. 159–176). National Association of School Psychologists.</li>
+<li>Cohen, J. (1960). A coefficient of agreement for nominal scales. <i>Educational and Psychological Measurement, 20</i>(1), 37–46. https://doi.org/10.1177/001316446002000104</li>
+<li>Cooper, J. O., Heron, T. E., &amp; Heward, W. L. (2020). <i>Applied behavior analysis</i> (3rd ed.). Pearson.</li>
+<li>Deno, S. L. (1985). Curriculum-based measurement: The emerging alternative. <i>Exceptional Children, 52</i>(3), 219–232.</li>
+<li>Goodman, K. S. (1969). Analysis of oral reading miscues: Applied psycholinguistics. <i>Reading Research Quarterly, 5</i>(1), 9–30.</li>
+<li>Hasbrouck, J., &amp; Tindal, G. (2017). <i>An update to compiled ORF norms</i> (Technical Report No. 1702). Behavioral Research and Teaching, University of Oregon.</li>
+<li>Hosp, M. K., Hosp, J. L., &amp; Howell, K. W. (2016). <i>The ABCs of CBM: A practical guide to curriculum-based measurement</i> (2nd ed.). Guilford.</li>
+<li>Koretz, D., Stecher, B., Klein, S., &amp; McCaffrey, D. (1994). The Vermont portfolio assessment program: Findings and implications. <i>Educational Measurement: Issues and Practice, 13</i>(3), 5–16. https://doi.org/10.1111/j.1745-3992.1994.tb00443.x</li>
+<li>Landis, J. R., &amp; Koch, G. G. (1977). The measurement of observer agreement for categorical data. <i>Biometrics, 33</i>(1), 159–174. https://doi.org/10.2307/2529310</li>
+<li>Mahfouz, M. A. S., &amp; Mohamed, A. H. H. (2023). Using word reading fluency curriculum-based measurements to monitor students' reading progress in grade 2. <i>Education Sciences, 13</i>(2), Article 217. https://doi.org/10.3390/educsci13020217</li>
+<li>Paulson, F. L., Paulson, P. R., &amp; Meyer, C. A. (1991). What makes a portfolio a portfolio? <i>Educational Leadership, 48</i>(5), 60–63.</li>
+<li>Sarouphim, K. M. (2009). The use of a performance assessment for identifying gifted Lebanese students: Is DISCOVER effective? <i>Journal for the Education of the Gifted, 33</i>(2), 275–295. https://doi.org/10.1177/016235320903300206</li>
+<li>U.S. Department of Education, Office of Special Education Programs. (2011). <i>A response to intervention (RTI) process cannot be used to delay-deny an evaluation for eligibility under IDEA</i> (OSEP Memo 11-07).</li>
+</ol>
+<div aria-hidden="true" class="endmark">✦ ✦ ✦</div>
+<aside class="bp-cite" dir="ltr"><b>How to cite this section</b><p class="bp-ref">Alsamani, O. A. (2026). Chapter 4: Informal methods. In <i>Diagnosis and Identification of Exceptional Learners</i>. alsamani.com. https://alsamani.com/books/diagnosis-identification/en/ch04.html</p><p class="bp-lic2">© 2026 Dr. Omar A. Alsamani. Free to read, download, share and quote for non-commercial purposes with attribution to the author and source.</p></aside>
+<nav class="pager"><a href="ch03.html"><small>Previous chapter</small><b>Formal standardized methods</b></a><a class="next" href="ch05.html"><small>Next chapter</small><b>Alternative methods</b></a></nav>
+</div>
+<footer class="bp-foot" dir="ltr"><div class="bp-fin"><a class="bp-fid" href="../../../index.html"><span class="bp-fmark">OA</span><b>Dr. Omar A. Alsamani</b></a>
+<nav><a href="../../../index.html">Updates</a><a href="../../../books/index.html">Open Library</a><a href="../../../publications/index.html">Publications</a><a href="../../../tools/index.html">Tools</a><a href="../../../photography/index.html">Photography</a><a href="../../../about/index.html">About</a><a href="../../../contact/index.html">Contact</a></nav><p><bdi dir="ltr">© 2007–2026 alsamani.com</bdi></p><div class="pv" id="pv" dir="ltr" hidden></div></div></footer><script>(function(){{var el=document.getElementById('pv');if(!el)return;var live=/(^|\.)alsamani\.com$/.test(location.hostname);
+fetch('https://abacus.jasoncameron.dev/'+(live?'hit':'get')+'/alsamani-com/views').then(function(r){{return r.json()}}).then(function(d){{
+if(typeof d.value!=='number')return;var s=String(d.value);while(s.length<4)s='0'+s;
+el.innerHTML=s.split('').map(function(){{return '<span class="pv-d"><span class="pv-s">0<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9</span></span>'}}).join('');
+el.hidden=false;var cells=el.querySelectorAll('.pv-s');
+requestAnimationFrame(function(){{requestAnimationFrame(function(){{s.split('').forEach(function(c,i){{cells[i].style.transform='translateY('+(-c*10)+'%)'}})}})}})}}).catch(function(){{}})}})();
+</script><style>.bp-foot{box-shadow:0 0 0 100vmax var(--bpf,#F5F5F7);clip-path:inset(0 -100vmax);background:#F5F5F7;color:#6E6E73;font:13px/1.6 -apple-system,BlinkMacSystemFont,"IBM Plex Sans Arabic","Inter",sans-serif;margin-top:56px;padding:36px 20px calc(36px + env(safe-area-inset-bottom))}
+.bp-fin{max-width:1120px;margin:0 auto;display:flex;flex-wrap:wrap;gap:18px 40px;align-items:center;justify-content:space-between}
+.bp-fid{display:flex;align-items:center;gap:10px;color:#1D1D1F!important;text-decoration:none}.bp-fid b{font-weight:600}
+.bp-fmark{width:30px;height:30px;border:1px solid currentColor;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:600;letter-spacing:.04em}
+.bp-foot nav{display:flex;flex-wrap:wrap;gap:6px 22px}.bp-foot nav a{color:#6E6E73!important;text-decoration:none}.bp-foot nav a:hover{color:#1D1D1F!important}
+.bp-foot p{margin:0;flex-basis:100%;font-size:12px;border-top:1px solid #D2D2D7;padding-top:14px}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .bp-foot{--bpf:#161617;background:#161617;color:#A1A1A6}:root:not([data-theme="light"]) .bp-fid{color:#F5F5F7!important}}
+:root[data-theme="dark"] .bp-foot{--bpf:#161617;background:#161617;color:#A1A1A6}:root[data-theme="dark"] .bp-fid{color:#F5F5F7!important}
+@media print{.bp-foot{display:none}}</style><style>.pv{display:flex;justify-content:center;gap:4px;margin:14px auto 4px;grid-column:1/-1;width:100%}
+.bp-fin>p{text-align:center;width:100%}
+.pv[hidden]{display:none}
+.pv-d{display:inline-block;width:1.25em;height:1.7em;overflow:hidden;border-radius:6px;background:var(--bg,#fff);box-shadow:inset 0 0 0 1px var(--line,#d2d2d7);font:500 13px/1.7em "SF Mono",ui-monospace,Menlo,monospace;text-align:center;color:var(--ink,#1d1d1f)}
+.pv-s{display:block;transition:transform 1.4s cubic-bezier(.2,.8,.2,1)}
+@media (prefers-reduced-motion:reduce){.pv-s{transition:none}}
+.bp-foot .pv-d{background:#fff;box-shadow:inset 0 0 0 1px #d2d2d7;color:#1d1d1f}</style>
+</body>
+</html>

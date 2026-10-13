@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+
+<html dir="ltr" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
+<title>Chapter 13: Twice-exceptional learners | Diagnosis and Identification of Exceptional Learners | Dr. Omar A. Alsamani</title>
+<link href="../assets/book.css?v=ea97adfb" rel="stylesheet"/>
+<style>
+.groups{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;font-family:var(--f-ui)}
+.groups>div{border:1.5px solid var(--line);border-radius:14px;padding:16px;min-width:0;display:flex;flex-direction:column;gap:10px}
+.groups h5{font-family:var(--f-display);font-size:18px;margin:0;font-weight:700;line-height:1.5}
+.groups .bar{display:grid;grid-template-columns:1fr;gap:4px;font-size:13px}
+.groups .tr{height:18px;border-radius:5px;background:var(--paper-2);direction:ltr;position:relative;overflow:hidden}
+.groups .tr i{position:absolute;top:0;bottom:0;left:0;border-radius:5px}
+.groups .gv{background:var(--accent)}.groups .dv{background:var(--warn)}
+.groups .hid{opacity:.25}
+.groups span.d{font-size:13.5px;line-height:1.75;color:var(--ink-2)}
+.groups .risk{font-size:13px;font-weight:700;border-radius:8px;padding:6px 10px;background:var(--warn-soft);color:var(--warn);margin-top:auto}
+@media (max-width:680px){.groups{grid-template-columns:1fr}}
+.mask{font-family:var(--f-ui);display:grid;gap:10px}
+.mask .r{display:grid;grid-template-columns:minmax(0,14rem) 1fr 48px;gap:12px;align-items:center;font-size:14px}
+.mask .tr{position:relative;height:30px;background:var(--paper-2);border-radius:6px;direction:ltr}
+.mask .avg{position:absolute;top:0;bottom:0;left:31.25%;width:37.5%;background:var(--paper-3)}
+.mask .dot{position:absolute;top:6px;width:18px;height:18px;border-radius:50%;transform:translateX(-50%);box-shadow:0 0 0 3px var(--paper)}
+.mask .v{font-weight:700;text-align:center;font-variant-numeric:tabular-nums}
+.mask .arr{position:absolute;top:14px;height:2px;background:var(--ink-2)}
+.mask .ax{display:grid;grid-template-columns:minmax(0,14rem) 1fr 48px;gap:12px;font-size:12px;color:var(--ink-2)}
+.mask .ax div{position:relative;height:16px;direction:ltr}
+.mask .ax div span{position:absolute;transform:translateX(-50%)}
+@media (max-width:540px){.mask .r,.mask .ax{grid-template-columns:8rem 1fr 40px}}
+.prof3{font-family:var(--f-ui);display:grid;gap:9px}
+.prof3 .r{display:grid;grid-template-columns:minmax(0,12rem) 1fr 44px;gap:12px;align-items:center;font-size:14px}
+.prof3 .tr{position:relative;height:22px;background:var(--paper-2);border-radius:5px;direction:ltr}
+.prof3 .avg{position:absolute;top:0;bottom:0;left:18.75%;width:37.5%;background:var(--paper-3)}
+.prof3 .gap{position:absolute;top:10px;height:2px;background:var(--ink-2)}
+.prof3 .gap::before,.prof3 .gap::after{content:"";position:absolute;top:-5px;width:2px;height:12px;background:var(--ink-2)}
+.prof3 .gap::before{left:0}.prof3 .gap::after{right:0}
+.prof3 .dot{position:absolute;top:4px;width:14px;height:14px;border-radius:50%;transform:translateX(-50%)}
+.prof3 .hi{background:var(--accent)}.prof3 .lo{background:var(--warn)}.prof3 .mid{background:var(--ink-2)}
+.prof3 .v{font-weight:700;text-align:center;font-variant-numeric:tabular-nums}
+.prof3 .sep{border-top:1px dashed var(--line);margin:4px 0}
+.prof3 .ax{display:grid;grid-template-columns:minmax(0,12rem) 1fr 44px;gap:12px;font-size:12px;color:var(--ink-2)}
+.prof3 .ax div{position:relative;height:16px;direction:ltr}
+.prof3 .ax div span{position:absolute;transform:translateX(-50%)}
+@media (max-width:540px){.prof3 .r,.prof3 .ax{grid-template-columns:8rem 1fr 36px}}
+.lens{display:grid;grid-template-columns:1fr 1fr;gap:14px;font-family:var(--f-ui)}
+.lens>div{border-radius:14px;padding:16px;min-width:0;border:1.5px solid var(--c);background:var(--c-soft)}
+.lens h5{font-family:var(--f-display);font-size:18px;margin:0 0 4px;color:var(--c);font-weight:700}
+.lens .q{font-size:14px;font-weight:700;margin-bottom:8px}
+.lens span{font-size:13.5px;line-height:1.8;color:var(--ink-2);display:block}
+.lens .n{--c:var(--example);--c-soft:var(--example-soft)}
+.lens .i{--c:var(--teacher);--c-soft:var(--teacher-soft)}
+@media (max-width:600px){.lens{grid-template-columns:1fr}}
+.flow .fork.f3{grid-template-columns:repeat(3,1fr);gap:10px}
+.flow .fork.f3 .out{padding:10px 10px}
+.flow .fork.f3 .out b{font-size:14.5px}
+.flow .fork.f3 .out span{font-size:12.5px}
+.flow .note{margin-top:12px;border:1.5px dashed var(--line);border-radius:12px;padding:10px 16px;font-size:13.5px;color:var(--ink-2);line-height:1.75;text-align:center}
+@media (max-width:560px){.flow .fork.f3{grid-template-columns:1fr}}
+.defs{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:12px 0 4px}
+.defs>div{border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;background:var(--paper);min-width:0}
+.defs h6{font-family:var(--f-ui);font-size:15px;margin:0 0 6px;color:var(--accent)}
+.defs p{font-size:15px;line-height:1.85;margin:0}
+@media (max-width:600px){.defs{grid-template-columns:1fr}}
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"><style>:root{--f-body:"Source Serif 4",Georgia,serif;--f-display:"Source Serif 4",Georgia,serif;--f-ui:"IBM Plex Sans",system-ui,sans-serif}.questions li::before{content:counter(q)}html{direction:ltr!important}body{letter-spacing:0;text-align:left}caption{text-align:left!important}.formula small{direction:ltr}.cover svg{left:auto!important;right:0}</style><link rel="stylesheet" href="../assets/platform.css?v=b4c32405"><script>window.BOOK={slug:"diagnosis-identification-en",cur:"ch13.html",lang:"en",title:"Diagnosis and Identification of Exceptional Learners",author:"Dr. Omar A. Alsamani"}</script><script src="../assets/platform.js?v=0d28c8d2" defer></script>
+<link rel="canonical" href="https://alsamani.com/books/diagnosis-identification/en/ch13.html"><link rel="alternate" hreflang="ar" href="https://alsamani.com/books/diagnosis-identification/ch13.html"><link rel="alternate" hreflang="en" href="https://alsamani.com/books/diagnosis-identification/en/ch13.html"><link rel="alternate" hreflang="x-default" href="https://alsamani.com/books/diagnosis-identification/ch13.html"><meta name="description" content="A student who is gifted and has a disability at the same time: the phrase may sound contradictory to anyone who sees giftedness and disability as opposite poles. Yet reality shows them coexisting in a single student, each concealing the other, so that the student falls between two systems,…"><meta name="author" content="Omar A. Alsamani"><meta property="og:title" content="Chapter 13: Twice-exceptional learners | Diagnosis and Identification of Exceptional Learners | Dr. Omar A. Alsamani"><meta property="og:url" content="https://alsamani.com/books/diagnosis-identification/en/ch13.html"><meta property="og:site_name" content="Dr. Omar A. Alsamani"><meta property="og:locale" content="en_US"><meta name="twitter:card" content="summary"><meta property="og:description" content="A student who is gifted and has a disability at the same time: the phrase may sound contradictory to anyone who sees giftedness and disability as opposite poles. Yet reality shows them coexisting in a single student, each concealing the other, so that the student falls between two systems,…"><script type="application/ld+json">[{"@context": "https://schema.org", "@type": "Chapter", "name": "Twice-exceptional learners", "headline": "Chapter 13: Twice-exceptional learners", "url": "https://alsamani.com/books/diagnosis-identification/en/ch13.html", "inLanguage": "en", "author": {"@type": "Person", "name": "Omar A. Alsamani", "alternateName": "عمر عبدالله الصمعاني", "url": "https://alsamani.com/", "jobTitle": "Associate Professor", "affiliation": {"@type": "CollegeOrUniversity", "name": "University of Hail"}}, "isPartOf": {"@type": "Book", "name": "Diagnosis and Identification of Exceptional Learners", "url": "https://alsamani.com/books/diagnosis-identification/en/", "author": {"@type": "Person", "name": "Omar A. Alsamani", "alternateName": "عمر عبدالله الصمعاني", "url": "https://alsamani.com/", "jobTitle": "Associate Professor", "affiliation": {"@type": "CollegeOrUniversity", "name": "University of Hail"}}, "inLanguage": "en", "license": "https://creativecommons.org/licenses/by-nc-nd/4.0/", "isAccessibleForFree": true, "bookFormat": "https://schema.org/EBook", "alternativeHeadline": "Learners with disabilities, the gifted and the twice-exceptional", "isbn": "978-603-06-7714-6", "datePublished": "2026"}, "license": "https://creativecommons.org/licenses/by-nc-nd/4.0/", "isAccessibleForFree": true, "description": "A student who is gifted and has a disability at the same time: the phrase may sound contradictory to anyone who sees giftedness and disability as opposite poles. Yet reality shows them coexisting in a single student, each concealing the other, so that the student falls between two systems,…", "keywords": "Introduction, Who are twice-exceptional learners?, Masking and the three groups, Why do the usual models fail them?, The debate over identification criteria, Assessment: the protocol and the uneven profile, The decision pathway: opening both tracks together, Differential diagnosis: three possibilities, When is a judgment warranted? Four cases, In the Saudi and Arab context, Conclusion, Summary, key terms and activities"}, {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Dr. Omar A. Alsamani", "item": "https://alsamani.com/"}, {"@type": "ListItem", "position": 2, "name": "Open Library", "item": "https://alsamani.com/books/"}, {"@type": "ListItem", "position": 3, "name": "Diagnosis and Identification of Exceptional Learners", "item": "https://alsamani.com/books/diagnosis-identification/en/"}, {"@type": "ListItem", "position": 4, "name": "Twice-exceptional learners", "item": "https://alsamani.com/books/diagnosis-identification/en/ch13.html"}]}]</script></head>
+<body>
+<div class="bp-bar" dir="ltr"><div class="bp-in">
+<a class="bp-home" href="../../../index.html">Dr. Omar A. Alsamani</a><span class="bp-sep">/</span><a href="../../index.html">Open Library</a><span class="bp-sep">/</span><a href="index.html" class="bp-book">Diagnosis and Identification of Exceptional Learners</a>
+<span class="bp-sp"></span><span class="bp-tools"><button class="bp-ic" type="button" data-rd="z-" aria-label="Smaller text" title="Smaller text">A−</button><button class="bp-ic" type="button" data-rd="z+" aria-label="Larger text" title="Larger text">A+</button><button class="bp-ic" type="button" data-rd="theme" aria-label="Dark mode" title="Dark/light mode">Dark</button></span><a class="bp-btn" href="../ch13.html" hreflang="ar" lang="ar">العربية</a><button class="bp-btn" type="button" data-notes>Notes<i hidden></i></button><button class="bp-btn" type="button" data-share>Share</button><button class="bp-btn" type="button" data-bp="search">Search</button><button class="bp-btn solid" type="button" data-bp="toc">Contents</button></div></div>
+<div class="bp-share" id="bpShare" hidden dir="ltr"><b>Share this page</b><button type="button" data-sh="copy">Copy link</button><button type="button" data-sh="native" hidden>Share…</button><a data-sh="wa" target="_blank" rel="noopener">WhatsApp</a><a data-sh="x" target="_blank" rel="noopener">X</a><a data-sh="li" target="_blank" rel="noopener">LinkedIn</a><a data-sh="tg" target="_blank" rel="noopener">Telegram</a><a data-sh="mail">Email</a><small>To share a specific section, hover over its heading and click ¶</small></div>
+<div class="bp-drawer" id="bpDrawer" hidden dir="ltr"><div class="bp-panel" role="dialog" aria-label="Contents and search">
+<div class="bp-head"><b>Diagnosis and Identification of Exceptional Learners</b><button type="button" class="bp-x" data-bp="close" aria-label="Close">×</button></div>
+<div class="bp-search"><input id="bpQ" type="search" placeholder="Search the text of the book…" autocomplete="off"><div id="bpRes"></div></div>
+<nav class="bp-toc" id="bpToc"></nav>
+<div class="bp-links"><a href="../../index.html">Open Library</a><a href="../../../index.html">alsamani.com home</a></div>
+</div></div>
+<div class="page">
+<nav class="booknav"><a href="index.html">→ Diagnosis and Identification of Exceptional Learners</a><span>Part Three: Categories</span></nav>
+<header class="opener">
+<div aria-hidden="true" class="num">13</div>
+<div>
+<div class="kicker">Chapter 13</div>
+<h1>Twice-exceptional learners</h1>
+</div>
+<p class="sub">A student who is gifted and has a disability at the same time: the phrase may sound contradictory to anyone who sees giftedness and disability as opposite poles. Yet reality shows them coexisting in a single student, each concealing the other, so that the student falls between two systems, neither of which sees him fully as he is.</p>
+</header>
+<nav aria-label="Chapter contents" class="toc">
+<b>In this chapter</b>
+<ol>
+<li class="u"><a href="#intro">Introduction</a></li>
+<li value="1"><a href="#s1">Who are twice-exceptional learners?</a></li>
+<li value="2"><a href="#s2">Masking and the three groups</a></li>
+<li value="3"><a href="#s3">Why do the usual models fail them?</a></li>
+<li value="4"><a href="#s4">The debate over identification criteria</a></li>
+<li value="5"><a href="#s5">Assessment: the protocol and the uneven profile</a></li>
+<li value="6"><a href="#s6">The decision pathway: opening both tracks together</a></li>
+<li value="7"><a href="#s7">Differential diagnosis: three possibilities</a></li>
+<li value="8"><a href="#s8">When is the judgment made? Four cases</a></li>
+<li value="9"><a href="#s9">In the Saudi and Arab context</a></li>
+<li class="u"><a href="#conclusion">Conclusion</a></li>
+<li value="10"><a href="#s10">Summary, key terms and activities</a></li>
+</ol>
+</nav>
+<div class="scene">
+<span class="lbl">Scene from a meeting that never took place</span>
+<p>Imagine two meetings at the same intermediate school in the same week. In the first, the gifted program team reviews the list of students whose performance has slipped and proposes withdrawing Yasser from the program: “He didn’t hand in his research project report, and his written test scores aren’t what you’d expect from a student in the program.” In the second, the learning disabilities team discusses the list of struggling students, and Yasser’s name never comes up: “He reads well, his Arabic grades are average, and he doesn’t need services.”</p>
+<p>The two teams never met. Had they done so, they would have seen a student who solves math problems taught in secondary school and explains the idea behind his project orally with a fluency that astonishes his teachers, then spends a full hour writing a single paragraph about it, riddled with errors.</p>
+</div>
+<p>Yasser is fourteen, in the third year of intermediate school (ninth grade), and has been in the gifted program since fourth grade. His teacher in the program noticed that the gap between what he says and what he writes widens year after year: he avoids writing reports, asks to present his project orally, and his papers are full of spelling errors no one would expect from a student at his grade level. In this chapter we show why his difficulty was nearly overlooked and how to build an assessment that captures both sides at once, and then we return to his full case in Section 13.8.</p>
+<h3>Chapter objectives</h3>
+<p>After studying this chapter, the reader should be able to:</p>
+<ol class="objectives">
+<li>Define twice-exceptional learners using the two reference definitions, and identify the difference between them.</li>
+<li>Classify a student in a given description into one of the three groups, and explain how each of his two sides masks the other.</li>
+<li>Identify what each of the usual identification models misses, and compare the arguments for normative comparison and intra-individual comparison.</li>
+<li>Design an assessment protocol that opens both the giftedness and the disability tracks together for a given student, and justify each of its components.</li>
+<li>Interpret an uneven cognitive profile using the difference between the General Ability Index and the Cognitive Proficiency Index, and explain why no judgment can rest on it alone.</li>
+<li>Determine, in a given case, which of three possibilities is most likely—giftedness only, giftedness with a disorder, or a disorder only—and state the deciding evidence.</li>
+<li>Judge whether the evidence in a new case suffices for a determination, and justify that judgment.</li>
+</ol>
+<h2 class="unnum" id="intro">Introduction</h2>
+<p>In twice-exceptional learners, giftedness and disability coexist, each concealing the other, so that their performance often appears average and catches the attention of neither the gifted team nor the special education team. Their cases therefore fall into the zone where the usual models break down: a student may be proposed for withdrawal from the gifted program because the disability has lowered his performance, and excluded from learning disabilities services because his giftedness has lifted his achievement to the average range—just as the opening scene portrays through two meetings that never converged. Judgment in such cases requires applying the criteria for each side separately, reading the uneven profile systematically, and knowing when a discrepancy counts as evidence and when it does not.</p>
+<p>We open the chapter by defining twice-exceptional learners and locating them within the book’s chapters (Section 13.1), then present masking and the three groups (Section 13.2), the reasons the usual models fail these students (Section 13.3), and the debate over identification criteria (Section 13.4). We then take up the assessment protocol, the reading of an uneven cognitive profile, and the adaptation of identification tools for learners with sensory and physical disabilities (Section 13.5), followed by the decision pathway that opens both tracks together (Section 13.6) and the three possibilities in differential diagnosis (Section 13.7). We apply all of this to four cases (Section 13.8) and close with the Saudi and Arab context (Section 13.9).</p>
+<!-- 1 -->
+<h2 id="s1"><span class="sec">13.1</span>Who are twice-exceptional learners?</h2>
+<p>Twice-exceptional (<span class="en">Twice-exceptional, 2e</span>) learners are students who show potential for high performance or creative productivity in one or more domains and who, at the same time, have one or more disabilities under recognized eligibility criteria (Reis et al., 2014). The literature stresses that the combination of the two exceptionalities produces a unique situation that is more than the sum of the two conditions: giftedness changes how the disability presents, the disability changes how the giftedness presents, and the student needs instruction that attends to both sides at once (Baldwin et al., 2015). Two definitions are widely cited in the literature, and they serve different functions:</p>
+<div class="callout" data-k="key">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M4 5h11a3 3 0 0 1 3 3v11H7a3 3 0 0 1-3-3V5Z"></path><path d="M8 9h6M8 13h6"></path></svg>Two reference definitions</div>
+<div class="defs">
+<div>
+<h6>The operational definition (Reis et al., 2014)</h6>
+<p>It specifies <strong>who</strong> counts as twice-exceptional: a student who shows potential for high achievement or creative productivity in one or more domains and who has one or more disabilities according to recognized eligibility criteria, such as learning disabilities, speech and language disorders, emotional and behavioral disorders, physical disabilities, autism spectrum disorder, and health impairments such as attention-deficit/hyperactivity disorder. By tying the category to existing criteria, the definition is easy to apply in schools.</p>
+</div>
+<div>
+<h6>The community of practice consensus definition (2014; in Baldwin et al., 2015)</h6>
+<p>It describes <strong>how</strong> the two exceptionalities interact and <strong>what</strong> the student needs: exceptional ability may dominate the disability, may conceal it, or may itself be concealed by it. These students need specialized identification methods that take the interaction between the two sides into account; dual differentiated instruction that develops their talents while meeting their learning needs; concurrent services that include the social and emotional domain; and teachers prepared to work with them.</p>
+</div>
+</div>
+<p>The first, then, is a definition for <strong>eligibility</strong>, answering the question “Is this student one of them?”; the second is a definition for <strong>practice</strong>, answering the question “What does that mean for how we assess and teach him?” The assessment team needs both: the first in order to decide, and the second in order to know where to look and why the usual tools fall short.</p>
+</div>
+<p>Their number is not precisely known, because definitions and identification methods vary widely across studies and because many of these students are never identified at all (Foley Nicpon et al., 2011). Among recent studies, one examined the cognitive and achievement characteristics of students from a U.S. national sample who were identified as potentially twice-exceptional (Maddocks, 2020). In the Kingdom, an exploratory study of 6,875 students in grades 2 through 12 at four private schools in Riyadh estimated that about 5.9% of them may be twice-exceptional: 23.6% showed a discrepancy of more than 1.5 standard deviations between their performance in two subjects, and 24.5% of these then appeared possibly gifted (Almulhim et al., 2026). This is a <strong>preliminary estimate</strong> based on indicators of discrepancy in achievement, and it would need individual diagnostic assessment to confirm. It does not estimate the prevalence of the group in Saudi schools, but it does signal that the group may be less rare than is commonly assumed.</p>
+<p>Recent literature favors planning for these students that begins with their talents and interests rather than their deficits, an approach known as the strength-based, talent-focused approach (Baum et al., 2014). The examples in this chapter include Yasser, gifted in mathematics with a writing difficulty; Joud, linguistically gifted with autism spectrum disorder; and Faris, gifted in mathematics with attention-deficit/hyperactivity disorder. Set against them is Muhannad, a gifted student some of whose characteristics resemble a disorder.</p>
+<h3>Twice-exceptional learners across the chapters of this book</h3>
+<p>This chapter stands on its own, but twice-exceptional learners also appear in the chapters on specific categories, each viewed from the angle of that category. Readers who wish to go further can turn to the following places:</p>
+<div class="tw"><table id="tab-13-1">
+<caption>Table 13.1: Forms of twice-exceptionality across the book’s chapters, and what each place adds.</caption>
+<thead><tr><th>Location</th><th>Form of twice-exceptionality</th><th>What it adds</th></tr></thead>
+<tbody>
+<tr><td>Chapter 8, Section 8.8 (Case 4)</td><td>An eleven-year-old gifted in mathematics, with a specific learning disorder in reading fluency and spelling accuracy</td><td>Limited intervention and response data, and the tension between the logic of ability comparison and the response to intervention model</td></tr>
+<tr><td>Chapter 9, Section 9.8 (Case 3)</td><td>A twelve-year-old girl who excels in mathematics and science, with autism spectrum disorder at support level 1</td><td>Choosing the high-functioning form of the autism rating scale, and the effect of girls’ camouflaging of their traits</td></tr>
+<tr><td>Chapter 10, Section 10.10</td><td>Attention-deficit/hyperactivity disorder with giftedness</td><td>What to ask when a disorder is suspected in a gifted student</td></tr>
+<tr><td>Chapter 12, Sections 12.4 and 12.9</td><td>Giftedness concealed by a disorder, and giftedness that resembles one</td><td>The General Ability Index, the ceiling effect, and above-level testing</td></tr>
+<tr><td>Chapter 15, Section 15.9 (Case 3)</td><td>A twice-exceptional intermediate school student undergoing reevaluation</td><td>Involving the student in decisions about accommodations and his plan</td></tr>
+<tr><td>This chapter, Section 13.8</td><td>Giftedness with a writing difficulty, with autism, and with attention deficit, and giftedness that resembles a disorder</td><td>Judging whether the evidence suffices on both sides together</td></tr>
+</tbody>
+</table></div>
+<!-- 2 -->
+<h2 id="s2"><span class="sec">13.2</span>Masking and the three groups</h2>
+<h3>How does each side mask the other?</h3>
+<p>One way to picture it is as two forces pulling the student’s performance in opposite directions: giftedness lifts it, and the disability drags it down. What the teacher sees in the grades is the net result of this tug-of-war, and it may well be an average performance that draws no one’s attention.</p>
+<figure class="fig-frame" id="fig-13-1">
+<div aria-label="A conceptual chart of three bars on a scale from 60 to 140, with the average range from 85 to 115 shaded: what ability alone would predict, 130; what the difficulty alone would predict, 75; and what the teacher sees in the scores, 98, within the average range" class="mask" role="img">
+<div class="r"><span>What his ability alone predicts</span><div class="tr"><div class="avg"></div><div class="dot" style="left:87.5%;background:var(--accent)"></div></div><span class="v">130</span></div>
+<div class="r"><span>What the difficulty alone predicts</span><div class="tr"><div class="avg"></div><div class="dot" style="left:18.75%;background:var(--warn)"></div></div><span class="v">75</span></div>
+<div class="r" style="font-weight:700"><span>What the teacher sees in the grades</span><div class="tr"><div class="avg"></div><div class="dot" style="left:47.5%;background:var(--ink)"></div></div><span class="v">98</span></div>
+<div aria-hidden="true" class="ax"><span></span><div><span style="left:0%">60</span><span style="left:31.25%">85</span><span style="left:50%">100</span><span style="left:68.75%">115</span><span style="left:100%">140</span></div><span></span></div>
+</div>
+<figcaption><b>Figure 13.1:</b> A hypothetical example of masking. The gray band is the average range, 85 to 115. High ability compensates for the difficulty, and the difficulty pulls performance down to a level that looks ordinary. The gifted team does not notice him because his performance is not high, and the learning disabilities team does not notice him because it is not low. The figure is a <strong>conceptual representation</strong>: the three numbers illustrate the direction of the pull between the two sides and are not meant to be added to or subtracted from one another.</figcaption>
+</figure>
+<h3>The three groups</h3>
+<p>Because of this masking, twice-exceptional learners appear in schools in three groups (Brody &amp; Mills, 1997; Baum &amp; Owen, 2004):</p>
+<figure class="fig-frame" id="fig-13-2">
+<div aria-label="Three cards: a gifted student whose disability is overlooked, at risk of being blamed for what is beyond their control; a student with a disability whose giftedness is overlooked, at risk of having that giftedness wasted; and a student in whom neither side has been identified, at risk of not being seen at all" class="groups" role="img">
+<div>
+<h5>Gifted, with the disability overlooked</h5>
+<div class="bar"><span>Visible giftedness</span><div class="tr"><i class="gv" style="width:85%"></i></div></div>
+<div class="bar"><span>Visible disability</span><div class="tr"><i class="dv hid" style="width:60%"></i></div></div>
+<span class="d">Identified as gifted, with his difficulties explained away as laziness, lack of interest, or “gifted eccentricity.” He stumbles whenever demands increase and may be withdrawn from the program because his performance has declined.</span>
+<div class="risk">The risk: he is blamed for what he cannot control</div>
+</div>
+<div>
+<h5>Disabled, with the giftedness overlooked</h5>
+<div class="bar"><span>Visible giftedness</span><div class="tr"><i class="gv hid" style="width:80%"></i></div></div>
+<div class="bar"><span>Visible disability</span><div class="tr"><i class="dv" style="width:75%"></i></div></div>
+<span class="d">Diagnosed with a disability and receiving services that focus on his weaknesses. No one sees his high abilities, so he is offered no challenge; he may grow bored, and his performance then looks even worse.</span>
+<div class="risk">The risk: his giftedness goes to waste</div>
+</div>
+<div>
+<h5>Neither side identified</h5>
+<div class="bar"><span>Visible giftedness</span><div class="tr"><i class="gv hid" style="width:80%"></i></div></div>
+<div class="bar"><span>Visible disability</span><div class="tr"><i class="dv hid" style="width:60%"></i></div></div>
+<span class="d">The hardest group to identify, and in the view of many researchers the largest. The student looks average and may be struggling in silence with double the effort and a frustration no one understands.</span>
+<div class="risk">The risk: he is not seen at all</div>
+</div>
+</div>
+<figcaption><b>Figure 13.2:</b> The three groups of twice-exceptional learners in schools. Faded bars represent a side that is present but invisible to those around the student; bar lengths are illustrative only.</figcaption>
+</figure>
+<p>The claim that the third group is the largest is a <strong>common hypothesis</strong> in the literature (Baum &amp; Owen, 2004) that still awaits proof, since by their very nature we have no prevalence data on students who go unidentified. Yasser, in the scene that opens this chapter, belongs to the first group: he is in the gifted program, and his writing difficulty is invisible to anyone who hears him speak—so much so that he was nearly withdrawn from the program over the reports he never handed in. Had he never been nominated for the program in the first place, he would have belonged to the third group.</p>
+<!-- 3 -->
+<h2 id="s3"><span class="sec">13.3</span>Why do the usual models fail them?</h2>
+<p>To identify learning disabilities and giftedness, schools rely on familiar models, among them response to intervention, which treats a student’s failure to improve with instruction of graduated intensity as an indicator of difficulty; the criteria for specific learning disorder in the Diagnostic and Statistical Manual of Mental Disorders, fifth edition, text revision (<span class="en">DSM-5-TR</span>), which require the skill to be clearly below what is expected for the student’s age (APA, 2022); and the admission criteria of gifted programs. When we examine these models, we find that each of them may miss the twice-exceptional student (Chapter 6 discusses identification models in detail). Researchers warned early on that relying on the response to intervention model alone may hide these students, because its screening looks for those who fall below their peers (Crepeau-Hobson &amp; Bianco, 2011):</p>
+<div class="tw"><table id="tab-13-2">
+<caption>Table 13.2: The usual identification models, what each requires, and why each may miss the twice-exceptional student.</caption>
+<thead><tr><th>Model</th><th>What it requires</th><th>Why it may miss him</th></tr></thead>
+<tbody>
+<tr><td>—</td><td>Performance below peers that does not improve with intervention</td><td>His performance is at the level of his peers or slightly above, so he never shows up in screening</td></tr>
+<tr><td>Diagnostic manual criteria for specific learning disorder</td><td>A skill clearly below what is expected for age</td><td>His skill is in the low-average range, above the threshold for clearly low performance for his age</td></tr>
+<tr><td>Gifted program criteria</td><td>A high score on the Full Scale IQ or in achievement</td><td>The Full Scale IQ is pulled down by working memory and processing speed, and achievement is pulled down by the difficulty</td></tr>
+<tr><td>The “and” rule across criteria</td><td>Exceeding the threshold on every criterion</td><td>He exceeds the threshold in ability but falls short of it in achievement, and so is excluded</td></tr>
+<tr><td>Teacher nomination</td><td>Behavior that matches the image of a gifted student</td><td>The teacher sees frustration, avoidance, and slowness, and the giftedness is hidden from view</td></tr>
+</tbody>
+</table></div>
+<!-- 4 -->
+<h2 id="s4"><span class="sec">13.4</span>The debate over identification criteria</h2>
+<p>The most important scholarly debate in this area turns on a single question: <strong>what do we compare the student’s performance against?</strong></p>
+<figure id="fig-13-3">
+<div aria-label="A comparison between the two lenses of normative comparison and intra-individual comparison" class="lens" role="group">
+<div class="n"><h5>Normative comparison</h5><div class="q">Is the student’s performance below that of his same-age peers?</div><span>This is what the diagnostic manual’s criteria require. Proponents of this comparison argue that a student who reads in the average range does not suffer a functional impairment that would justify a diagnosis, and that diagnosing everyone with a gap between their abilities would expand the category without justification and turn “relative weakness” into a disability (Lovett &amp; Lewandowski, 2006).</span></div>
+<div class="i"><h5>Intra-individual comparison</h5><div class="q">Is the student’s performance clearly below what his abilities predict?</div><span>Proponents of this comparison argue that a student whose ability lies in the top 1% of his peers, and who reads at an average level only with double the effort, does indeed have a real difficulty with real consequences, even if he is not below his peers. In their view, requiring normatively low performance denies these students understanding and support (Assouline et al., 2010).</span></div>
+</div>
+<figcaption><b>Figure 13.3:</b> The two lenses in the debate over identifying twice-exceptional learners.</figcaption>
+</figure>
+<p>One study compared different methods of identifying gifted students with learning disabilities within a single sample and found that the methods differed considerably in how many students they identified and in which students, with limited agreement among them (Maddocks, 2018). In other words, who counts as twice-exceptional depends in part on the criterion we choose.</p>
+<div class="callout" data-k="key">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9V16h7v-2.1A6 6 0 0 0 12 3Z"></path></svg>A balanced practical position</div>
+<p>The gap between ability and achievement is not sufficient on its own, since everyone has uneven abilities. Nor is normatively low performance sufficient on its own, because it misses these students. The position toward which good practice leans is to base judgment on the gap together with converging evidence: a <strong>history</strong> of early difficulty in the same skill; <strong>processing indicators</strong> that explain it, such as weak phonological awareness in reading or weak orthographic knowledge in writing; a genuine <strong>functional impact</strong>, such as double effort, avoidance, or exhaustion; the <strong>persistence</strong> of the difficulty despite appropriate instruction targeting it; and a skill that actually lies in the low-average range or near the threshold, not merely below the student’s other abilities.</p>
+</div>
+<!-- 5 -->
+<h2 id="s5"><span class="sec">13.5</span>Assessment: the protocol and the uneven profile</h2>
+<h3>Reading an uneven cognitive profile</h3>
+<p>Many twice-exceptional learners show a recurring pattern on intelligence scales such as the Wechsler Intelligence Scale for Children, Fifth Edition (<span class="en">WISC-V</span>): very high reasoning and verbal comprehension, alongside clearly lower working memory and processing speed. These two indexes enter into the calculation of the Full Scale IQ and pull it down. For this reason, identifying giftedness in these students relies on the <strong>General Ability Index</strong> (<span class="en">General Ability Index, GAI</span>), which is calculated without these two indexes (NAGC, 2018). Chapter 12 (Section 12.4) explained this index, the ceiling effect, and above-level testing in detail.</p>
+<p>What this chapter adds is that the index has a counterpart that completes it: the <strong>Cognitive Proficiency Index</strong> (<span class="en">Cognitive Proficiency Index, CPI</span>), calculated from the working memory and processing speed subtests—that is, from the efficiency with which the student processes information, independent of his reasoning ability. Comparing the two indexes is the systematic way to describe an uneven profile, rather than looking at the graph and judging by eye (Kaufman et al., 2016). Two questions are asked, in order:</p>
+<ol>
+<li><strong>Is the difference statistically significant?</strong> That is, is it larger than measurement error alone would produce? This is settled by consulting the tables in the manual.</li>
+<li><strong>Is it rare?</strong> Many statistically significant differences are common in the norm sample, and their presence signals nothing unusual. We therefore look at the proportion of the norm sample who showed a difference of this size, that is, the base rate.</li>
+</ol>
+<p>When a student reaches the ceiling on several subtests, ordinary scores do not reveal the full extent of his ability. Extended norms have been published for the WISC-V Full Scale IQ and General Ability Index that allow scores above the ceiling of the standard norms; the publisher should be consulted on the conditions for their use. But the uneven profile as a whole, however wide its gap, <strong>is not diagnostic</strong>: it appears in many gifted students with no disability whatsoever, and it is not sufficient on its own for any judgment.</p>
+<figure class="fig-frame" id="fig-13-4">
+<div aria-label="Yasser&#x27;s hypothetical profile on the Wechsler indexes, on a scale from 70 to 150 with the average range from 85 to 115 shaded: Fluid Reasoning 134, Visual Spatial 130, Verbal Comprehension 128, Working Memory 100, and Processing Speed 88. Then the General Ability Index 135, the Cognitive Proficiency Index 92, a difference of 43 points between them, and a Full Scale IQ of 122" class="prof3" role="img">
+<div class="r"><span>Fluid reasoning</span><div class="tr"><div class="avg"></div><div class="dot hi" style="left:80%"></div></div><span class="v">134</span></div>
+<div class="r"><span>Visual spatial</span><div class="tr"><div class="avg"></div><div class="dot hi" style="left:75%"></div></div><span class="v">130</span></div>
+<div class="r"><span>Verbal comprehension</span><div class="tr"><div class="avg"></div><div class="dot hi" style="left:72.5%"></div></div><span class="v">128</span></div>
+<div class="r"><span>Working memory</span><div class="tr"><div class="avg"></div><div class="dot mid" style="left:37.5%"></div></div><span class="v">100</span></div>
+<div class="r"><span>Processing speed</span><div class="tr"><div class="avg"></div><div class="dot lo" style="left:22.5%"></div></div><span class="v">88</span></div>
+<div class="sep"></div>
+<div class="r" style="font-weight:700"><span>General Ability Index</span><div class="tr"><div class="avg"></div><div class="dot hi" style="left:81.25%"></div></div><span class="v">135</span></div>
+<div class="r" style="font-weight:700"><span>Cognitive Proficiency Index</span><div class="tr"><div class="avg"></div><div class="dot lo" style="left:27.5%"></div></div><span class="v">92</span></div>
+<div class="r"><span>Difference between the two indexes</span><div class="tr"><div class="avg"></div><div class="gap" style="left:27.5%;width:53.75%"></div></div><span class="v">43</span></div>
+<div class="sep"></div>
+<div class="r"><span>Full Scale IQ</span><div class="tr"><div class="avg"></div><div class="dot mid" style="left:65%"></div></div><span class="v">122</span></div>
+<div aria-hidden="true" class="ax"><span></span><div><span style="left:0%">70</span><span style="left:18.75%">85</span><span style="left:37.5%">100</span><span style="left:56.25%">115</span><span style="left:75%">130</span><span style="left:100%">150</span></div><span></span></div>
+</div>
+<figcaption><b>Figure 13.4:</b> A hypothetical profile for Yasser on the WISC-V indexes. The gray band is the average range, 85 to 115, that is, one standard deviation on either side of the mean, as in the book’s other graphs. (The test manual applies the label “average” only to the range 90 to 109 in its descriptive classification.) The difference between the General Ability Index and the Cognitive Proficiency Index is 43 points, a difference whose significance and rarity are checked in the manual’s tables before it is interpreted. The Full Scale IQ of 122 falls short of the cut-off score in many gifted programs, whereas the General Ability Index of 135 exceeds it.</figcaption>
+</figure>
+<h3>Principles of assessment</h3>
+<ol>
+<li><strong>Two lenses in one assessment:</strong> The assessment involves both someone who knows giftedness and someone who knows disability, or else an assessor who brings both kinds of expertise. Two questions are asked about the student together: What are his abilities? And what is holding him back?</li>
+<li><strong>Start with strength:</strong> What the student excels at is measured with high-ceiling tools, such as above-level testing, performance tasks, and authentic products, rather than grade-level tools on which he reaches the highest possible score and which therefore cannot reveal how far his ability extends (see Chapter 12, Section 12.4).</li>
+<li><strong>Measure skill by time and effort:</strong> Many twice-exceptional learners arrive at the correct answer eventually. Performance is therefore measured once under time limits and once untimed, and the assessor observes the effort the student expends and the compensatory strategies he relies on.</li>
+<li><strong>Developmental and educational history:</strong> When did the difficulty first appear? How did the student compensate for it? Did his performance drop when demands rose at a particular stage, such as the move to intermediate school, when writing and self-regulation demands multiply? What instruction has he received in the area of his difficulty, and how did he respond to it?</li>
+<li><strong>Guard against overinterpretation:</strong> No judgment rests on a gap between indexes alone, nor on analyzing each subtest in isolation. The Full Scale IQ and the General Ability Index are more reliable than any single index, and the difference between two indexes is less reliable than either of them.</li>
+<li><strong>Emotional aspects:</strong> Twice-exceptional learners are vulnerable to frustration and a poor self-concept, because they know they are capable yet cannot understand why they keep stumbling. This side is therefore assessed and taken into account in the plan.</li>
+</ol>
+<h3>Assessment protocol profile</h3>
+<p>No single tool reveals twice-exceptionality. What reveals it is a <strong>protocol</strong>: a set of tools planned in advance and selected according to the referral question, with each component answering a specific question. The profile below presents this protocol in the same format used for instruments in the chapters on specific categories.</p>
+<section aria-labelledby="t13p" class="tool">
+<div class="tool-head"><span class="abbr">2e</span><span class="name" id="t13p">Two-lens assessment protocol for a student suspected of being twice-exceptional</span><span class="fam dx">Assessment protocol</span></div>
+<h4>The idea</h4>
+<p>Both tracks are opened together from the outset: one track searches for strength with tools unconstrained by a ceiling, and the other searches for difficulty with tools that expose what compensation hides. The team does not wait for one to be settled before opening the other, because each side changes how the other should be read.</p>
+<h4>Its components</h4>
+<div class="tw"><table id="tab-13-3">
+<caption>Table 13.3: Components of the two-lens assessment protocol, and the question each component answers.</caption>
+<thead><tr><th>Component</th><th>What is administered</th><th>Question it answers</th></tr></thead>
+<tbody>
+<tr><td>Senses and learning opportunities</td><td>A recent hearing and vision screening, and a review of attendance and of the instruction the student has received</td><td>Is the difficulty explained by a sensory impairment or by a lack of learning opportunities?</td></tr>
+<tr><td>General ability</td><td>An individual intelligence scale with all its indexes, calculating the General Ability Index, the Cognitive Proficiency Index, and the difference between them</td><td>What is the student’s ability on an index that the difficulty does not depress? Is the discrepancy significant and rare?</td></tr>
+<tr><td>High-ceiling strength</td><td>An above-level test in the area of strength, and a performance task or authentic product rated against clear criteria</td><td>Where does the student truly stand in his area of excellence?</td></tr>
+<tr><td>Basic skills, timed and untimed</td><td>A standardized achievement test in reading, writing, and mathematics, part of which is readministered without time limits, along with copying, dictation, and free-writing samples</td><td>What does open time conceal? What is the difference between accuracy and fluency?</td></tr>
+<tr><td>Processing indicators</td><td>A phonological processing tool, such as the Comprehensive Test of Phonological Processing, Second Edition (<span class="en">CTOPP-2</span>; Wagner et al., 2013), or Arabic tasks measuring phonological awareness and rapid naming, along with tasks of orthographic and morphological knowledge when the concern lies in writing</td><td>Is there a deficit in a process that explains the weak skill?</td></tr>
+<tr><td>Attention and behavior</td><td>Standardized rating scales from the teacher and the family, and from the student himself in adolescence, interpreted using T-scores, as well as observation checklists</td><td>Do the symptoms appear in more than one setting, and how severe are they?</td></tr>
+<tr><td>Structured observation</td><td>Interval-recording observation in an ordinary lesson and in a lesson that offers real challenge suited to his level</td><td>What remains of the behavior when challenge is present?</td></tr>
+<tr><td>History</td><td>A family interview and a review of school records going back to kindergarten</td><td>When did the difficulty begin? Did symptoms appear before school and before age twelve?</td></tr>
+<tr><td>Emotional domain</td><td>A student interview, and a self-concept or anxiety measure when needed</td><td>How does the student explain his struggles to himself? And how have they affected him?</td></tr>
+</tbody>
+</table></div>
+<div class="tw"><table class="facts" id="tab-13-4">
+<caption>Table 13.4: Protocol information profile.</caption>
+<tbody>
+<tr><td>Purpose</td><td>To verify the coexistence of giftedness and disability, or to determine which of the three possibilities in Section 13.7 is most likely</td></tr>
+<tr><td>Ages</td><td>School age; instruments are selected according to the student's age</td></tr>
+<tr><td>Who administers it</td><td>A team that includes expertise in both giftedness and disability; individual measures are administered by a qualified psychologist in accordance with each publisher's requirements</td></tr>
+<tr><td>Time</td><td>Typically three to five sessions, with at least two classroom observations</td></tr>
+<tr><td>Score types</td><td>Standard scores, T-scores, and percentile ranks from each tool, along with observation and interview data. A percentile rank is the percentage of the student’s peers in the norm sample who scored lower than he did; a percentile rank of 84 means that his performance exceeds that of 84% of them</td></tr>
+<tr><td>Cutoff scores</td><td>There is no cut-off score for twice-exceptionality. The criteria for giftedness and the criteria for the disorder are applied separately, and judgment rests on converging evidence</td></tr>
+<tr><td>Reliability</td><td>The reliability of each tool is as reported in its manual. Differences between indexes are less reliable than the indexes themselves</td></tr>
+<tr><td>Arabic version</td><td>We know of no standardized Arabic protocol for twice-exceptional learners. The Wechsler scale has a Saudi standardization of the revised edition (<span class="en">WISC-R</span>) for ages 6 to 16 (Al-Nafi et al., 2000 [Arabic], as cited in Ejbara, 2024), but we know of no published Saudi standardization of the fifth edition. Nor did we know of any published standardized Arabic version of the <span class="en">CTOPP-2</span> at the time this book was prepared</td></tr>
+</tbody>
+</table></div>
+<h4>How are the results interpreted?</h4>
+<p>The results are read in three layers. First, are the criteria for giftedness met on an index that the difficulty does not depress? Second, are the criteria for the disorder met, with evidence from history, processing, functional impact, and persistence? Third, does the evidence from different sources converge, or does some of it contradict the rest, so that the team needs additional evidence before reaching a judgment?</p>
+<h4>Its limits</h4>
+<p>The protocol lengthens the assessment and requires a team that is not available in every school. The large number of tools raises the likelihood that a low score will appear by chance, so no judgment should rest on a single score. Most of its tools are standardized on foreign samples, so their scores are read with caution where Arabic norms are unavailable.</p>
+</section>
+<h3>Adapting gifted identification tools for learners with sensory and physical disabilities</h3>
+<p>A deaf or blind student, or a student with a physical disability, may be gifted, yet the usual identification tools measure the disability before they measure the ability. A written verbal reasoning test measures a deaf student’s command of written Arabic; a test of printed matrices is inaccessible to a blind student; and a timed test measures the hand speed of a student with a physical disability before it measures his thinking. The following should therefore be observed:</p>
+<ul>
+<li><strong>For deaf and hard-of-hearing students:</strong> Instructions are given in sign language or in whatever mode the student uses to communicate, and nonverbal ability measures are used, such as the Universal Nonverbal Intelligence Test, Second Edition (<span class="en">UNIT2</span>; Bracken &amp; McCallum, 2016). Nonverbal tests, however, are weaker predictors of academic achievement and may miss students who excel in verbal and quantitative reasoning (Lohman, 2005), so they are supplemented with the student’s products and with ratings from teachers who know him.</li>
+<li><strong>For blind and low-vision students:</strong> Oral verbal measures are relied on, and materials are presented in braille or large print. Any adaptation that changes how an item is presented may change what it measures, so the score is not compared with the original norms unless the adaptation is approved in the tool’s manual.</li>
+<li><strong>For students with physical disabilities:</strong> Alternative response modes are permitted, such as pointing, dictating to a scribe, or using a computer; tests that depend on motor speed are excluded from the judgment, and this is stated explicitly in the report.</li>
+</ul>
+<p>The general rule is this: an adaptation that removes a barrier unrelated to the ability being measured improves the validity of the result, whereas an adaptation that changes the measured ability itself invalidates comparison with the norms. In either case, the adaptation is documented in the report. As for the Mawhiba Multiple Cognitive Abilities Test, administered within the National Program for Gifted Identification (Ministry of Education, 1437 AH [Arabic]), we found no description, in the published sources we consulted, of the accommodations available in it for students with disabilities. It is therefore advisable for the family or the school to ask the administering body about them before registration, and for the performance of a student with a disability on the test to be read in light of what he was given or denied.</p>
+<div class="callout" data-k="teacher">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M3 8l9-4 9 4-9 4-9-4Z"></path><path d="M7 10v5c0 1.5 2.5 3 5 3s5-1.5 5-3v-5"></path></svg>For the teacher: signs worth noticing</div>
+<ul>
+<li>A wide gap between what the student says orally and what he writes.</li>
+<li>A gifted student who declines on moving to a stage with heavier writing and self-regulation demands, such as intermediate school.</li>
+<li>A deep grasp of complex ideas alongside stumbling over simple skills such as spelling or math facts.</li>
+<li>Erratic performance: excellent on one day or task and weak on others, for no apparent reason.</li>
+<li>Severe fatigue or strong avoidance of particular tasks, alongside enthusiasm for others.</li>
+<li>Frustration and remarks like “I’m stupid” from a student who strikes you as very bright.</li>
+</ul>
+<p>Your role is to document what you see with examples, situations, and dates; to refer the student to both teams together; and to leave the judgment of “gifted only” or “has a difficulty only” to the integrated assessment.</p>
+</div>
+<!-- 6 -->
+<h2 id="s6"><span class="sec">13.6</span>The decision pathway: opening both tracks together</h2>
+<p>In the chapters on specific categories, the decision pathway runs along a single line, from initial indicators to matching against the criteria of one category. With a student suspected of being twice-exceptional, however, the most common error is to open one track and close the other prematurely: the student is admitted to the gifted program and no one asks about his difficulty, or he is diagnosed with a disability and no one asks about his giftedness. For this reason, after the second step the pathway branches into two lenses that work together and then converge in a single reading of the profile before the decision.</p>
+<figure class="fig-frame" id="fig-13-5">
+<div aria-label="The decision pathway for twice-exceptional learners in five steps: indicators from either side, then sensory screening and a review of learning opportunities, then opening the lenses of strength and difficulty together, then reading the uneven profile alongside the history and functional impact, then matching against the criteria for each side separately. It ends in one of three decisions: giftedness only; giftedness with a disorder, with dual services; or a disorder only, with support for the strength. If the evidence is insufficient, the student is given an appropriate placement and evidence gathering resumes" class="flow" role="img">
+<div class="st"><div class="n">1</div><b>Indicators from either side</b><span>A nomination for giftedness, a referral for a difficulty, a gifted student declining as demands rise, or a striking gap between oral and written work.</span></div>
+<div class="ar"><i></i></div>
+<div class="st"><div class="n">2</div><b>Senses and learning opportunities</b><span>A recent hearing and vision screening, and a review of attendance and of the instruction the student has received, before any tool is used.</span></div>
+<div class="ar"><i></i><small>Both tracks open together</small></div>
+<div class="st"><div class="n">3</div><b>Two lenses at once</b><span><strong>The strength lens:</strong> the General Ability Index, an above-level test, and a product or performance task. <strong>The difficulty lens:</strong> skills timed and untimed, processing indicators, ratings from multiple informants, and observation in an ordinary lesson and in a challenging one.</span></div>
+<div class="ar"><i></i></div>
+<div class="st"><div class="n">4</div><b>Reading the profile as a whole</b><span>The difference between the General Ability Index and the Cognitive Proficiency Index, with its significance and rarity; developmental and educational history; functional impact at school and at home; and response to the instruction provided.</span></div>
+<div class="ar"><i></i></div>
+<div class="st"><div class="n">5</div><b>Matching against each side’s criteria separately</b><span>The program’s giftedness criteria, applied to an index that the difficulty does not depress, and the disorder criteria in the diagnostic manual and the applicable regulations. Neither side’s criterion is lowered because the other side’s is met.</span></div>
+<div class="ar"><i></i></div>
+<div class="dec">Which side’s criteria are met?</div>
+<div class="fork f3">
+<div><div class="ar"><small>Giftedness alone</small><i></i></div><div class="out"><b>Giftedness only</b><span>Gifted services, with monitoring of behavior after appropriate placement</span></div></div>
+<div><div class="ar"><small>Both sides</small><i></i></div><div class="out yes"><b>Giftedness with a disorder</b><span>Dual services: challenge in the area of strength, and support and accommodations in the area of difficulty</span></div></div>
+<div><div class="ar"><small>The disorder alone</small><i></i></div><div class="out"><b>Disorder only</b><span>Services for the disorder, while nurturing the student’s relative strengths and interests</span></div></div>
+</div>
+<div class="note">If the evidence is insufficient for any judgment: place the student in a setting suited to his ability, repeat structured observation after a set period, and close neither track.</div>
+</div>
+<figcaption><b>Figure 13.5:</b> The decision pathway for a student suspected of being twice-exceptional. After sensory screening, the assessment branches into two lenses that work together; the criteria for each side are applied separately; and the pathway ends in one of three decisions, or in appropriate placement followed by renewed evidence gathering.</figcaption>
+</figure>
+<p>The crucial point in the fifth step is that the team must not “go easy” on one side’s criteria because the other side’s are met. Giftedness does not prove a disorder, and a disorder does not rule out giftedness. What changes for the twice-exceptional student is the <strong>evidence</strong> accepted for each criterion, while the criterion itself stays fixed: the General Ability Index is used in place of the Full Scale IQ for the giftedness criterion, and for the difficulty criterion the skill is read under time limits and in terms of the effort expended.</p>
+<!-- 7 -->
+<h2 id="s7"><span class="sec">13.7</span>Differential diagnosis: three possibilities</h2>
+<p>When a student shows signs suggestive of both giftedness and a disorder, the team faces three possibilities, all of them plausible. It may be giftedness only, some of whose characteristics resemble a disorder when the student finds nothing suited to him (Webb et al., 2005). It may be giftedness with a disorder, which is twice-exceptionality. Or it may be a disorder only, with a relative strength in one part of the profile that does not rise to the level of giftedness. Error is possible in all three directions, and every error has its cost.</p>
+<div class="tw"><table id="tab-13-5">
+<caption>Table 13.5: The three possibilities in differential diagnosis, what favors each, and what is not sufficient on its own.</caption>
+<thead><tr><th>Possibility</th><th>What favors it</th><th>Not sufficient on its own</th><th>The cost of error</th></tr></thead>
+<tbody>
+<tr><td><strong>Giftedness only</strong>, resembling a disorder</td><td>The concern centers on low-challenge situations and diminishes clearly after weeks of appropriate placement. There is no functional impact outside these situations, no developmental history of difficulty, and basic skills are intact on standardized, timed measurement</td><td>The behavior disappearing during a favored or novel activity; this also happens with the disorder</td><td>If the disorder is in fact present, the student is denied understanding and support and is blamed for what he cannot control</td></tr>
+<tr><td><strong>Giftedness with a disorder</strong> (twice-exceptionality)</td><td>Evidence of high ability from more than one source, such as the General Ability Index, above-level testing, and products, together with the disorder criteria being met: early history, a processing indicator or a behavioral pattern in two settings, functional impact, and persistence despite appropriate instruction or appropriate placement</td><td>The gap between indexes; it is common among gifted students with no disability at all</td><td>If the disorder is not present, the student is labeled with a diagnosis he does not need and may be given treatment he has no need for</td></tr>
+<tr><td><strong>Disorder only</strong>, with a relative strength</td><td>The disorder criteria are met, and the strength is a relative strength within the student’s own profile that does not clearly exceed his peers, or broad knowledge confined to a narrow interest without high-level reasoning in that domain</td><td>An extensive memory for facts on a favorite topic, early mechanical reading without matching comprehension, or a single high index amid average ones</td><td>If giftedness is present, it goes to waste, and the student receives services that focus on his weaknesses alone</td></tr>
+</tbody>
+</table></div>
+<div class="callout" data-k="warn">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M12 3 2 20h20L12 3Z"></path><path d="M12 10v4M12 17h.01"></path></svg>Caution: “What happens when he finds challenge?” is a helpful question, not a decisive one</div>
+<p>Comparing a student’s behavior in an ordinary lesson with his behavior in a lesson that offers genuine challenge is a useful comparison, but it does not settle the matter by itself. The diagnostic manual states that signs of attention-deficit/hyperactivity disorder may be minimal or absent when the child is receiving frequent rewards for appropriate behavior, is under close supervision, is in a novel setting, or is engaged in especially interesting activities (APA, 2022). A student’s ability to concentrate for hours on an activity he loves therefore <strong>does not rule out</strong> the disorder. What tips the balance toward one possibility or the other is the convergence of evidence: ratings from two settings, developmental history, functional impact at school and at home, and what remains of the behavior after weeks of appropriate placement. These carry more weight than an hour in a club he loves.</p>
+</div>
+<!-- 8 -->
+<h2 id="s8"><span class="sec">13.8</span>When is a judgment warranted? Four cases</h2>
+<p>The four cases that follow cover the three possibilities set out in the previous section. In three of them, the criteria for both sides are met through different kinds of evidence: a writing difficulty, autism, and attention-deficit/hyperactivity disorder. In one, Muhannad’s case (Case 2), the evidence is not yet sufficient for any judgment about a disorder.</p>
+<article class="case">
+<div class="case-head"><h3>Case 1: Yasser, age 14, ninth grade (third year of intermediate school)</h3><span class="verdict t">Giftedness with a writing difficulty</span></div>
+<p><strong>The story:</strong> Yasser, whose scene opened this chapter, has been in the gifted program since fourth grade and trains with his school’s team for mathematics competitions. At the start of ninth grade, his program teacher referred him after he failed to submit the report for his research project, even though his oral presentation of the idea had astonished the judging panel. His family reported that he had been slow to learn letter formation and spelling in first and second grade, and that he “used to write words the way he said them”; they were told he would improve with time. The gap then widened in intermediate school, as reports and essay answers multiplied, and his older brother began writing down what Yasser dictated to him.</p>
+<p><strong>What the two-lens assessment added:</strong></p>
+<div class="tw"><table id="tab-13-6">
+<caption>Table 13.6: Evidence in Yasser’s case through the two lenses.</caption>
+<thead><tr><th>Lens</th><th>Evidence</th><th>What it means</th></tr></thead>
+<tbody>
+<tr><td>Senses</td><td>Hearing and vision screening this year: normal</td><td>No sensory explanation for the difficulty</td></tr>
+<tr><td>Giftedness</td><td>General Ability Index 135, Cognitive Proficiency Index 92 and Full Scale IQ 122, as shown in Figure 13.4. The difference between the two indexes is statistically significant and rare according to the manual’s tables</td><td>Very high ability, which the full-scale score underestimates</td></tr>
+<tr><td>Giftedness</td><td>A mathematics test designed for twelfth-grade students: percentile rank 70 among students in that grade</td><td>Realized mathematical talent three years ahead of his grade</td></tr>
+<tr><td>Reading</td><td>Reading a fully vowelized text and an unvowelized text at grade level: accuracy 98% and 96%, fluency in the average range, and reading comprehension 118</td><td>Reading is intact in both conditions, so the difficulty must be sought beyond decoding</td></tr>
+<tr><td>Difficulty</td><td>Standardized achievement test in writing: spelling 77, writing fluency 80, and written expression 84</td><td>At or below one standard deviation under the mean, and far below his ability</td></tr>
+<tr><td>Difficulty</td><td>Analysis of spelling errors across three samples: most involve the hamza; tāʾ marbūṭa, open tāʾ and hāʾ; and letters of similar shape distinguished only by their dots, such as writing “ج” for “ح” or dropping dots; as well as spelling words as they are pronounced in his dialect</td><td>A consistent weakness in orthographic and morphological knowledge that recurs in a clear pattern</td></tr>
+<tr><td>Difficulty</td><td>Copying from a ready, legible text at a speed close to his peers’. Free handwritten composition, however, yielded forty-five words in ten minutes, in short, loosely connected sentences. When he wrote on the same topic using a keyboard, his text grew slightly longer but the spelling errors remained; when he spoke about it orally, his presentation was organized and rich</td><td>The difficulty is linguistic, orthographic and organizational, not motor</td></tr>
+<tr><td>Fine motor</td><td>Screening by an occupational therapist: average</td><td>Developmental coordination disorder unlikely</td></tr>
+<tr><td>Intervention</td><td>Twelve weeks in eighth grade of explicit instruction in spelling rules and the hamza in a small group: errors decreased on the trained words, but the gains did not transfer to his free writing</td><td>Persistence of the difficulty despite targeted instruction</td></tr>
+<tr><td>Emotion</td><td>He says, “My thoughts are faster than my hand,” and “I’m stupid in Arabic,” and he grows tense before essay tests</td><td>An effect on self-concept and anxiety tied to writing</td></tr>
+</tbody>
+</table></div>
+<div class="checks" style="grid-template-columns:repeat(4,1fr)">
+<div class="y"><b>A ✓</b>Persistent despite 12 weeks of intervention</div>
+<div class="y"><b>B ✓</b>Spelling 77 and written expression 84, with supporting evidence</div>
+<div class="y"><b>C ✓</b>Began in the early grades and intensified as demands increased</div>
+<div class="y"><b>D ✓</b>Intact senses, high ability, regular instruction, and intact motor skills</div>
+</div>
+<p><strong>How did the team read the evidence?</strong> Yasser reads both vowelized and unvowelized text accurately, and this was the first thing that set his case apart from dyslexia. His writing, however, breaks down at two points where difficulty is common in Arabic: orthographic knowledge, such as the rules of the hamza and tāʾ marbūṭa and distinguishing letters that differ only in their dots; and the distance between his spoken dialect and written Standard Arabic. Comparing copying with dictation, free composition and oral presentation further showed that his hand is not where the problem lies (Chapter 8, in Sections 8.3 and 8.4, set out the characteristics of Arabic reading and writing and the logic of this comparison).</p>
+<p><strong>Decision:</strong> The evidence that the balanced position calls for had come together: a large discrepancy, an early history, an orthographic processing indicator, functional impact, persistence despite intervention, and a skill below the threshold. The team therefore concluded that Yasser is twice-exceptional: gifted in mathematics, with a specific learning disorder with impairment in written expression, affecting spelling accuracy and the clarity and organization of written expression, at a mild level. He remains in the gifted program and receives explicit instruction in spelling grounded in root and pattern, and in planning a text before writing it, with accommodations: word processing for long assignments, speech-to-text for project drafts, extra time, and assessment of content in subjects other than Arabic independently of spelling. His profile is also discussed with him openly, so that he understands that his struggles with writing do not cancel out his ability.</p>
+<div class="callout" data-k="key" style="margin-bottom:12px"><div class="tag">On the term “dysgraphia”</div><p>The term dysgraphia is used in the literature in two senses: a difficulty with handwriting and the physical act of writing, and a difficulty with spelling and written expression. The diagnostic manual speaks instead of a specific learning disorder “with impairment in written expression,” and does not count poor handwriting alone as part of it (APA, 2022). Yasser’s difficulty is of the second kind, which is why the solution was not to improve his handwriting.</p></div>
+<p class="shift"><strong>What evidence could change the decision?</strong> If, after a semester of explicit instruction, his free writing samples showed his spelling errors falling to the level of his peers without accommodations, the description of the disorder and its severity would be revisited. And if a full evaluation by an occupational therapist revealed a motor impairment that the screening had missed, the possibility of developmental coordination disorder would come back under consideration.</p>
+</article>
+<article class="case">
+<div class="case-head"><h3>Case 2: Muhannad, age 9, fourth grade</h3><span class="verdict n">Giftedness that resembles an attention disorder: the evidence is not yet sufficient</span></div>
+<p><strong>The story:</strong> Muhannad was referred for evaluation on suspicion of attention-deficit/hyperactivity disorder. In class he does not finish his exercises, interrupts the teacher with off-topic questions and doodles in the margins of his notebook. His teacher’s ratings on an attention rating scale are elevated. Before reaching any judgment, and after confirming that his hearing and vision were normal, the team gathered the following evidence over six weeks.</p>
+<div class="tw"><table id="tab-13-7">
+<caption>Table 13.7: Evidence in Muhannad’s case.</caption>
+<thead><tr><th>Source</th><th>Result</th><th>What it means</th></tr></thead>
+<tbody>
+<tr><td>Standardized rating scale: teacher</td><td>Inattention: T-score 68 (six symptoms); hyperactivity-impulsivity: 57</td><td>Elevated in the regular classroom</td></tr>
+<tr><td>Standardized rating scale: family</td><td>Inattention: T-score 58 (three symptoms: his mind wanders when given tasks that do not interest him, he avoids repetitive homework, and he sometimes forgets what he is asked to do); hyperactivity: 52</td><td>Few symptoms at home, with a score below the elevated range</td></tr>
+<tr><td>Chess club supervisor</td><td>One symptom; describes him as “the most focused student in the club”</td><td>The behavior decreases in an activity he enjoys, which by itself does not rule out the disorder</td></tr>
+<tr><td>Systematic observation with interval recording</td><td>Off task in 38% of intervals in an ordinary mathematics lesson, and in 9% in a lesson in which he was given sixth-grade-level problems. The rates for two classmates in the ordinary lesson were 12% and 15%</td><td>The behavior rises markedly when challenge is absent in class</td></tr>
+<tr><td>Developmental history</td><td>No concerns about attention or activity level in kindergarten or in first and second grade. The concerns began in third grade, when he was getting far ahead of the mathematics curriculum</td><td>No symptoms before school entry, and the onset of concerns is tied to placement</td></tr>
+<tr><td>Functional impact at home</td><td>He completes his homework on his own in a reasonable time, keeps his materials organized, keeps to his schedule, and spends hours building complex models</td><td>No clear functional impact outside the classroom</td></tr>
+<tr><td>Ability test</td><td>General Ability Index 136, working memory 124</td><td>Very high ability, with no weakness in working memory</td></tr>
+<tr><td>Above-level mathematics test</td><td>At the level of the average sixth-grade student</td><td>About two years ahead of his grade’s curriculum</td></tr>
+</tbody>
+</table></div>
+<p><strong>How did the team read the evidence?</strong> It would be inaccurate to say that the symptoms “appear in only one setting.” Criterion C in the diagnostic manual requires only that <strong>several symptoms</strong> be present in two or more settings, without requiring the full threshold in each, and three symptoms at home may satisfy it (APA, 2022). What prevents a judgment at this point is two other things. The first is the absence of clear functional impact outside the classroom, whereas Criterion D requires that the symptoms interfere with, or reduce the quality of, functioning. The second is a strong alternative explanation that the manual itself mentions under differential diagnosis: individuals of high ability may appear inattentive in an environment that does not challenge them. This explanation is strengthened by the onset’s link to placement and by the absence of any symptoms before school. Yet the decline in the behavior in the challenging lesson and at the chess club is <strong>not enough</strong> to rule out the disorder, since this also happens when the disorder is present.</p>
+<p><strong>Decision:</strong> The evidence is not yet sufficient either to diagnose attention-deficit/hyperactivity disorder or to rule it out definitively. Muhannad is therefore identified as gifted and accelerated in mathematics (<span class="en">Acceleration</span>), that is, moved through its curriculum at a pace that suits his level. The systematic observation and the teacher and family rating scales are repeated after 8 to 12 weeks of appropriate placement. If the symptoms decline in class and there is still no functional impact at home, the “giftedness only” possibility gains weight. If the symptoms persist in two settings with functional impact, the evaluation of the disorder is completed as a possible case of twice-exceptionality.</p>
+<div class="callout" data-k="key" style="margin-bottom:12px"><div class="tag">The lesson</div><p>Not every gifted student who struggles is twice-exceptional. Some characteristics of giftedness, such as boredom with repetition, constant questioning and absorption in ideas, may resemble a disorder when the student finds nothing suited to him (Webb et al., 2005). The question “What happens when he finds the right level of challenge?” is a <strong>supporting question</strong>, answered through actual placement and follow-up over several weeks, and it remains one piece of corroborating evidence to be weighed alongside others.</p></div>
+<p class="shift"><strong>What evidence could change the decision?</strong> If his off-task behavior in class remained high after 8 to 12 weeks of acceleration, or if functional impact emerged at home where none had existed before, such as late homework or lost belongings, the balance would tip toward completing the evaluation of the disorder. And if kindergarten records turned up notes on attention or activity level that had not reached the team, the argument for an onset tied to placement would be weakened.</p>
+</article>
+<article class="case">
+<div class="case-head"><h3>Case 3: Joud, age 15, tenth grade (first year of secondary school)</h3><span class="verdict y">Verbal giftedness with autism, hidden for years</span></div>
+<p><strong>The story:</strong> Joud was identified as gifted in elementary school for her verbal talent; today she writes metrical poetry and has won a literary competition at the regional level. Her teachers describe her as “polite, quiet, outstanding.” Her name did not reach the assessment team through the gifted program but through the school counselor: she had been repeatedly absent on Sunday mornings with headaches, had begun spending recess alone in the learning resource center, and then broke down in tears after her only friend moved to another group. The counselor assumed she was dealing with social anxiety or depression. Her mother said that Joud “shuts down” after school, closing her bedroom door for hours without speaking to anyone. Joud herself told the counselor: “I study my classmates the way I study texts: I memorize what they say, pick out what fits the situation, and practice my facial expressions in the mirror.”</p>
+<div class="tw"><table id="tab-13-8">
+<caption>Table 13.8: Evidence in Joud’s case.</caption>
+<thead><tr><th>Source</th><th>Result</th><th>What it means</th></tr></thead>
+<tbody>
+<tr><td>Hearing and vision</td><td>Both normal</td><td>No sensory explanation</td></tr>
+<tr><td>Social Responsiveness Scale, Second Edition (<span class="en">SRS-2</span>)</td><td>Mother’s rating: T-score 72 (moderate range). Teacher’s rating: 57 (within normal limits)</td><td>A wide discrepancy between home and school, consistent with camouflaging of traits at school</td></tr>
+<tr><td>Autism Diagnostic Interview with the mother (<span class="en">ADI-R</span>)</td><td>Scores reached the algorithm cut-offs in all three domains: reciprocal social interaction, communication, and restricted and repetitive patterns. From her history before age three: she used words to label things and repeated lines from television in an adult tone, did not point to objects to show them to others, arranged books by color, and became upset if the route to her grandmother’s house changed</td><td>Clear early indicators before 36 months; the difficulty long predates adolescence</td></tr>
+<tr><td>Autism Diagnostic Observation Schedule (<span class="en">ADOS-2</span>), Module 4</td><td>Classification: “autism spectrum.” Fluent speech with a rich vocabulary that turns into a lecture when the topic is poetry and prosody; difficulty explaining why her friend was upset or describing the feelings of characters in a story; and eye contact that the specialist describes as “studied”</td><td>The observation is consistent with the interview, although camouflaging may lower the score in a structured session</td></tr>
+<tr><td>Self-report anxiety scale</td><td>Social anxiety in the elevated range; depression within normal limits</td><td>Co-occurring anxiety that needs attention but falls short of explaining her entire history</td></tr>
+<tr><td>—</td><td>Verbal Comprehension 141, General Ability Index 131, Processing Speed 94</td><td>Very high verbal ability</td></tr>
+<tr><td>Her products</td><td>A small collection of her poems, the literary competition award, and her Arabic teacher’s evaluation of her writing</td><td>Realized talent in a specific domain</td></tr>
+<tr><td>Observation at recess and in a group activity</td><td>She withdraws from noise, avoids the cafeteria, sticks in the activity to a role she has set for herself, and becomes upset if it is changed</td><td>Social difficulty and sensory sensitivity in unstructured situations</td></tr>
+</tbody>
+</table></div>
+<div class="checks">
+<div class="y"><b>A ✓</b>In the interview and the observation</div>
+<div class="y"><b>B ✓</b>Intense interest, routines and sensory sensitivity</div>
+<div class="y"><b>C ✓</b>Indicators before age three</div>
+<div class="y"><b>D ✓</b>Absences, exhaustion and breakdown</div>
+<div class="y"><b>E ✓</b>High ability and no better explanation</div>
+</div>
+<p><strong>How did the team read the evidence?</strong> The differential question was whether this was social anxiety alone. A person with social anxiety has social skills that fear holds back, and interacts naturally with familiar people. Joud’s difficulty with social reciprocity, by contrast, has been evident since before age three, including with her family, and it comes with an intense interest, sensory sensitivity and an aversion to change. The anxiety here co-occurs with autism; it is not a better explanation for it. Her identification was delayed until adolescence because her verbal talent and her powers of observation allowed her to camouflage her traits, and because her intense interest, in poetry and prosody, is one that school praises and that does not seem unusual.</p>
+<p><strong>Decision:</strong> Joud was diagnosed with autism spectrum disorder, without intellectual impairment and without language impairment, at support level 1, the lightest of the three support levels in the diagnostic manual, with co-occurring anxiety for which she was referred for evaluation and treatment. She is twice-exceptional. The team designed services that bring both sides together, an approach known as dual differentiation: advanced enrichment in literary writing with a specialist mentor who follows her work; a quiet space available at recess; explicit teaching of what is expected in social situations, rather than leaving her to work it out alone through exhausting effort; and a conversation with the family about the after-school “shutting down” as the price she pays for camouflaging throughout her school day.</p>
+<div class="callout" data-k="example" style="margin-bottom:12px">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M8 10h.01M16 10h.01M8 15c2.5 1.5 5.5 1.5 8 0"></path></svg>Camouflaging among gifted autistic girls</div>
+<p>Some autistic individuals, and girls in particular, learn to camouflage their traits (<span class="en">Camouflaging</span>): they watch others, imitate how they speak and their facial expressions, and memorize ready-made phrases for different situations (Hull et al., 2017; see also Chapter 9, Section 9.4). Verbal giftedness makes this camouflaging more polished and longer-lasting, so that a student can reach secondary school without anyone asking about autism, while her anxiety and exhaustion are seen as the whole problem. For this reason, in assessing this group the team gives particular weight to early developmental history, to discrepancies between home and school ratings, and to what the student herself says about the effort she spends to appear “normal.” A low score in a structured observation session is not reassuring: the session is short and structured, precisely the kind of situation in which the student camouflages most skillfully.</p>
+</div>
+<p class="shift"><strong>What evidence could change the decision?</strong> If early records or an interview with another relative showed that the indicators before age three were not as her mother described them, or if her social reciprocity improved markedly after treatment for anxiety, social anxiety would return as the leading explanation, and the autism diagnosis would need to be revisited.</p>
+</article>
+<article class="case">
+<div class="case-head"><h3>Case 4: Faris, age 13, seventh grade (first year of intermediate school)</h3><span class="verdict y">Giftedness with attention-deficit/hyperactivity disorder</span></div>
+<p><strong>The story:</strong> Faris is gifted in mathematics and programming and was admitted to the gifted program in fifth grade. His program teacher referred him because a pattern kept recurring in every project: he starts with striking enthusiasm, then leaves the work unfinished, loses parts of the team’s robot and misses the deadline. In an advanced mathematics competition, he got problems wrong that he knew how to solve because he skipped steps and read the given information in a hurry. His mother said this was “nothing new” and that she sits beside him every evening so that he finishes his homework.</p>
+<div class="tw"><table id="tab-13-9">
+<caption>Table 13.9: Evidence in Faris’s case.</caption>
+<thead><tr><th>Source</th><th>Result</th><th>What it means</th></tr></thead>
+<tbody>
+<tr><td>Hearing, vision and sleep</td><td>Hearing and vision normal; sleeps about nine hours, according to the family</td><td>No sensory explanation and no sleep deprivation</td></tr>
+<tr><td>Standardized rating scale: inattention</td><td>T-scores: mathematics teacher 72, gifted program teacher 69, mother 71, and Faris himself 65. Seven symptoms in both the teacher’s and the mother’s ratings</td><td>Elevated symptoms in three settings, including a challenging one</td></tr>
+<tr><td>Standardized rating scale: hyperactivity-impulsivity</td><td>T-scores: teacher 62, mother 60</td><td>Mildly elevated; the predominant picture is inattention</td></tr>
+<tr><td>Systematic observation with interval recording</td><td>Off task in 34% of intervals in an ordinary lesson, and 27% in a robotics session he enjoys and that challenges him. Two classmates in the same session: 10% and 12%</td><td>The behavior decreases slightly with challenge but remains far higher than his peers’</td></tr>
+<tr><td>History</td><td>Kindergarten report: “Doesn’t settle in circle time and leaves activities before finishing them.” A note in second grade: “Very bright but forgets his books and needs constant reminders”</td><td>Symptoms before age twelve and before school entry</td></tr>
+<tr><td>Functional impact at home</td><td>Homework takes three hours under his mother’s supervision; he forgets test dates, loses his belongings every week, and this leads to frequent conflict at home</td><td>Clear functional impact outside school</td></tr>
+<tr><td>—</td><td>General Ability Index 131, Cognitive Proficiency Index 91 (working memory 97, processing speed 86)</td><td>Very high ability. The difference between the two indexes is consistent with the picture but does not diagnose it on its own</td></tr>
+<tr><td>A mathematics test designed for tenth-grade students</td><td>Percentile rank 80 among students in that grade</td><td>Realized mathematical talent</td></tr>
+<tr><td>Self-report measure of anxiety and depression, and achievement in reading and writing</td><td>Anxiety and depression within normal limits; achievement in the high average range</td><td>No better explanation from another disorder, and no co-occurring learning disability</td></tr>
+</tbody>
+</table></div>
+<div class="checks">
+<div class="y"><b>A ✓</b>Seven symptoms of inattention</div>
+<div class="y"><b>B ✓</b>Symptoms before age 12</div>
+<div class="y"><b>C ✓</b>Home, classroom and program</div>
+<div class="y"><b>D ✓</b>Impact on achievement and family</div>
+<div class="y"><b>E ✓</b>No anxiety or depression accounts for them</div>
+</div>
+<p><strong>Decision:</strong> The team concluded that the evidence favors attention-deficit/hyperactivity disorder, predominantly inattentive presentation, and that Faris is twice-exceptional. He was referred to a physician to complete the medical evaluation and to discuss treatment options with the family, since the Special Education Organizational Guide requires, for eligibility in this category, that the student’s need for intervention be established “according to an approved report” (Ministry of Education, 1436 AH [Arabic]). Faris remains in the gifted program, with support for executive functions: breaking each project into short stages, each with its own deadline and review; a checklist against which he verifies the steps of his solution before submitting; external organizational tools such as a calendar and reminders; and teaching him to monitor his own attention.</p>
+<div class="callout" data-k="key" style="margin-bottom:12px"><div class="tag">The lesson: What distinguished Faris from Muhannad?</div><p>Both are gifted in mathematics, and both had teachers who rated their inattention symptoms as elevated. But Faris’s symptoms remained far above his peers’ even in a session he enjoys and that challenges him; they appeared in three settings, predated school, and affected his life at home. Muhannad’s behavior, by contrast, dropped markedly with challenge, with no functional impact at home and no symptoms before school. What made the difference was the convergence of evidence from different sources.</p></div>
+<p class="shift"><strong>What evidence could change the decision?</strong> If the medical evaluation revealed another cause for the symptoms, such as a sleep disorder the family had not noticed or a health condition affecting attention, the conclusion would be revisited. And if ratings from other teachers who know him well in different subjects came back clearly low, the requirement that symptoms appear in more than one setting would be called into question and would need to be examined anew.</p>
+</article>
+<!-- 9 -->
+<h2 id="s9"><span class="sec">13.9</span>In the Saudi and Arab context</h2>
+<div class="callout" data-k="example">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="10" r="3"></circle><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11Z"></path></svg>In the Saudi context: Can a student receive both gifted program services and learning disabilities services?</div>
+<p><strong>The short answer:</strong> We found no published regulatory text that explicitly permits a student to combine a gifted program with a special education service, nor any text that prohibits it. The Special Education Organizational Guide lists eleven disability categories and does not address the gifted (Ministry of Education, 1436 AH [Arabic]). The gifted program guides we reviewed regulate nomination and admission and make no mention of students with disabilities (Ministry of Education, n.d., 1437 AH [Arabic]). In practice, then, the matter is left to the judgment of teams in schools and education directorates.</p>
+<p>Even so, the texts contain provisions that open the door rather than close it. The Regulations for Special Education Institutes and Programs defined both “superior ability and giftedness” and “learning disabilities” in a single document, set separate admission requirements for each, and did not make giftedness a reason to exclude a learning disability. Moreover, the admission requirement for learning disabilities in the Regulations is “a clear discrepancy between the student’s level of ability and level of academic achievement” in areas that include writing. This is the logic of intra-individual comparison, which suits twice-exceptional learners better than comparison with peers, although the Regulations do not specify a figure for this discrepancy (Ministry of Education [Al-Ma'arif], 1422 AH [Arabic]). Gifted classes, for their part, require meeting two or more criteria, one of which is a cognitive abilities test with a score of no less than 120 (Ministry of Education, n.d. [Arabic]), and the guide does not specify whether this refers to the full-scale score or to an index that the difficulty does not depress.</p>
+<p>Nor may the group be rare, as the preliminary estimate in Section 13.1 suggests (Almulhim et al., 2026). Saudi researchers have studied the experiences of teachers in the Hail region with these students (Alsamiri &amp; Alsamani, 2023), teachers’ professional development needs for identifying them in inclusive schools (Alsamiri &amp; Alsamani, 2026), and the barriers that elementary school teachers see to identifying and supporting them (Alsamani et al., 2026).</p>
+</div>
+<div class="tw"><table id="tab-13-10">
+<caption>Table 13.10: Twice-exceptionality in the diagnostic manuals, US law and Saudi regulations.</caption>
+<thead><tr><th>Element</th><th>DSM-5-TR</th><th>US Individuals with Disabilities Education Act (IDEA)</th><th>Saudi regulations</th></tr></thead>
+<tbody>
+<tr><td>Is giftedness a category?</td><td>No; the manual is designed for classifying disorders</td><td>No; giftedness falls outside the law’s categories and is regulated by the states</td><td>Yes; it was defined in the 1422 AH Regulations and is governed by the gifted program guides</td></tr>
+<tr><td>Does giftedness preclude a diagnosis of a disorder?</td><td>No. The learning disorder criterion compares the student with age expectations, with leeway up to one standard deviation if other evidence supports it</td><td>No. Eligibility requires both a disability and a need for special education</td><td>No text prohibits it. The learning disabilities requirement is a discrepancy between ability and achievement, with no specified figure</td></tr>
+<tr><td>Is combining the two services explicitly provided for?</td><td>Not applicable</td><td>No explicit federal provision, and the law does not prohibit it</td><td>We found no text that permits or prohibits it</td></tr>
+</tbody>
+</table></div>
+<p><strong>A question for reflection:</strong> If Yasser’s case came before your school tomorrow, who would request his evaluation: the gifted team or the learning disabilities team? And who has the authority to decide that he receives both services at once?</p>
+<h2 class="unnum" id="conclusion">Conclusion</h2>
+<p>The central argument of this chapter is that twice-exceptional learners are identified through a multi-instrument protocol that opens the giftedness and disability tracks together and applies the criteria for each separately. It follows that response to intervention, normative criteria or the “and” rule cannot be expected to identify these students; that the difference between the General Ability Index and the Cognitive Proficiency Index should be read as a systematic description of an uneven profile, one that precedes any diagnosis and requires further evidence; and that early history and home–school discrepancies deserve particular weight, especially for gifted autistic girls, who may camouflage their traits for years. In every case, the team faces three possibilities: giftedness only, giftedness with a disorder, or a disorder only.</p>
+<p>Debate continues over the basis for judgment: normative comparison or intra-individual comparison. The balanced position presented in this chapter combines the discrepancy with history, processing indicators, functional impact and persistence despite appropriate instruction, but it remains a matter of professional judgment that has not yet settled into a rule. Two further questions also remain open: the claim that students in whom neither side has been detected form the largest group is a common hypothesis that awaits proof, and no published Saudi regulatory text has been found that either permits or prohibits combining a gifted program with learning disabilities services.</p>
+<!-- 10 -->
+<h2 id="s10"><span class="sec">13.10</span>Summary, key terms and activities</h2>
+<h3>Chapter summary</h3>
+<div class="summary"><ul>
+<li>Twice-exceptional learners are gifted and also have a disability. The operational definition specifies who they are, while the consensus definition describes the interaction between the two sides and what these students need.</li>
+<li>Mutual masking makes their performance look average, so they appear in three groups. The claim that students in whom neither side has been detected form the largest group is a common hypothesis that has yet to be proven.</li>
+<li>The usual models, such as response to intervention, normative criteria and the “and” rule, may miss them.</li>
+<li>The debate centers on normative versus intra-individual comparison; the balanced position combines the discrepancy with history, processing indicators, functional impact and persistence despite appropriate instruction.</li>
+<li>Twice-exceptional learners are identified through a multi-instrument protocol that opens both tracks together and applies the criteria for each side separately.</li>
+<li>The difference between the General Ability Index and the Cognitive Proficiency Index describes an uneven profile systematically, but it does not diagnose on its own.</li>
+<li>The team faces three possibilities: giftedness only, giftedness with a disorder, or a disorder only. The question “What happens when the student finds the right challenge?” is a supporting one, to be weighed with other evidence, because symptoms of a disorder may be absent during a preferred activity.</li>
+<li>Gifted autistic girls may camouflage their traits for years, so early history and home–school discrepancies are given particular weight.</li>
+<li>We found no published Saudi regulatory text that either permits or prohibits combining a gifted program with learning disabilities services.</li>
+</ul></div>
+<h3>Glossary of terms</h3>
+<dl class="gloss">
+<dt>Twice-exceptional<span class="en">Twice-exceptional (2e)</span></dt><dd>A student who has high performance potential in one or more domains and, at the same time, one or more disabilities.</dd>
+<dt>Masking</dt><dd>Giftedness compensating for the disability and the disability depressing the giftedness, so that performance appears average.</dd>
+<dt>Normative comparison</dt><dd>Comparing a student’s performance with that of same-age peers.</dd>
+<dt>Intra-individual comparison</dt><dd>Comparing a student’s performance in one domain with the student’s abilities in other domains.</dd>
+<dt>Compensatory strategies</dt><dd>Methods a student uses to overcome a difficulty, such as memorization or reliance on context, which may conceal it.</dd>
+<dt>Dual differentiation</dt><dd>Instruction that provides challenge in areas of strength and support in areas of difficulty at the same time.</dd>
+<dt>Cognitive Proficiency Index<span class="en">Cognitive Proficiency Index (CPI)</span></dt><dd>A Wechsler index calculated from the working memory and processing speed subtests and compared with the General Ability Index to describe an uneven profile.</dd>
+<dt>Assessment protocol</dt><dd>A set of instruments and procedures planned in advance, each answering a specific question in the assessment.</dd>
+<dt>Camouflaging</dt><dd>An autistic person’s concealment of their traits by observing and imitating others and memorizing ready-made phrases, at an exhausting cost in effort.</dd>
+<dt>Dysgraphia</dt><dd>A term used for a difficulty with handwriting or a difficulty with spelling and written expression; its counterpart in the diagnostic manual is specific learning disorder with impairment in written expression.</dd>
+</dl>
+<h3>Review questions</h3>
+<ol>
+<li>A specialist wrote in a report: “The student is twice-exceptional because he exceeds the gifted program criteria and has a diagnosis of autism.” Which of the two reference definitions does this judgment rest on? And what does the other definition add to what the report should recommend? <span class="obj">(Objective 1)</span></li>
+<li>A fifth-grade student in the gifted program has seen her grades decline in reading-heavy subjects, and her teacher attributes this to her being “busy with competitions.” In which of the three groups in Figure 13.2 would you tentatively place her? And what might each side be concealing in the other? <span class="obj">(Objective 2)</span></li>
+<li>A student has a General Ability Index of 128 and reading fluency of 90, and has received no intervention because he never showed up in screening in the first place. Which of the models in Table 13.2 would miss him, and why? And what would each side of the debate over normative versus intra-individual comparison say about his case? <span class="obj">(Objective 3)</span></li>
+<li>Design an assessment protocol for an eighth-grade student referred because his answers on essay tests are much weaker than his oral participation. Choose six components from Table 13.3 and explain the reason for each choice, as well as one component you do not need and why. <span class="obj">(Objective 4)</span></li>
+<li>A student’s General Ability Index came out at 126 and his Cognitive Proficiency Index at 99. What two questions would you ask before interpreting this difference? And why is it not enough, even if significant and rare, to diagnose him as twice-exceptional? <span class="obj">(Objective 5)</span></li>
+<li>The father of a gifted student says, “My son can focus for three hours on coding games, so there is no way he has an attention disorder.” How would you respond, drawing on what the diagnostic manual states? And what evidence would you need to favor one of the three possibilities? <span class="obj">(Objective 6)</span></li>
+<li>Compare the cases of Muhannad and Faris in Tables 13.7 and 13.9: what three pieces of evidence separated the two decisions? And why is it unsound, in Muhannad’s case, to rely on the family’s rating of only three symptoms to rule out Criterion C? <span class="obj">(Objectives 6 and 7)</span></li>
+<li>Why was Joud’s autism not identified until secondary school? Which evidence in Table 13.8 carried the most weight in the judgment, and why was the observation session alone not considered reassuring? <span class="obj">(Objectives 6 and 7)</span></li>
+</ol>
+<h3>Case for application</h3>
+<article class="case">
+<div class="case-head"><h3>Arwa, age 13, seventh grade (first year of intermediate school)</h3></div>
+<p><strong>The story:</strong> Arwa has been hard of hearing since birth, uses two hearing aids and studies in an inclusion program. Her art teacher considers her designs to be “on another level”; she once built a model of her school to a precise scale without anyone asking her to. Her Arabic teacher, however, sees her as “weak in comprehension,” no one has nominated her for the gifted program, and she has not been registered for the Mawhiba test. With her parent’s consent, the special education teacher gathered the following data over the course of a month.</p>
+<div class="tw"><table id="tab-13-11">
+<caption>Table 13.11: Data in Arwa’s case.</caption>
+<thead><tr><th>Source</th><th>Result</th></tr></thead>
+<tbody>
+<tr><td>Audiological assessment (last year)</td><td>Moderate bilateral sensorineural hearing loss; 55 decibels in the better ear with hearing aids</td></tr>
+<tr><td>Nonverbal ability test, administered with written instructions</td><td>Standard score 134</td></tr>
+<tr><td>Classroom reading comprehension test</td><td>Below her grade’s average</td></tr>
+<tr><td>Mathematics</td><td>Excellent in geometry, average on word problems</td></tr>
+<tr><td>Art teacher</td><td>A portfolio of twelve designs, each rated “highly outstanding”</td></tr>
+<tr><td>Mother</td><td>“She lip-reads well at home, but struggles in class when there is a lot of talk and more than one person speaking”</td></tr>
+</tbody>
+</table></div>
+<p><strong>Tasks:</strong> (1) Which of the three groups does Arwa currently fall into? And why has no one noticed her? (2) What is the value of the nonverbal ability test here, and what are its limits in judging her giftedness? (3) What evidence is missing before any judgment about giftedness can be made, and what accommodations would you request in the identification instruments? (4) Does her hearing loss alone explain her weak reading comprehension, or is further assessment needed? And what decision would you propose now, and why? <span class="obj">(Objectives 2, 4, 6 and 7)</span></p>
+</article>
+<h3>Learning activities</h3>
+<p>Any activity carried out with students or families is conducted with the consent of the family and the school administration, without any data that could identify the student, and under the supervision of a specialist; its results are not used in any decision concerning the student.</p>
+<ol>
+<li><strong>A two-lens profile:</strong> Choose the case of a student with a disability or a gifted student from the cases in this book or from a published case, and rewrite the assessment through two lenses: what does the question of giftedness add to a disability case, or the question of disability to a giftedness case? Product: a three-column evidence table and a decision paragraph, in about two hours. <span class="obj">(Objectives 4 and 6)</span></li>
+<li><strong>Reviewing criteria:</strong> Set out the admission requirements for gifted classes and the eligibility requirements for learning disabilities from the Saudi documents cited in Section 13.9 in two side-by-side tables, and identify where Yasser and Arwa fall between them and what the texts leave unresolved. Product: a table and a paragraph, in about an hour and a half. <span class="obj">(Objective 3)</span></li>
+<li><strong>Interview:</strong> Interview the family or teacher of a twice-exceptional student and ask: When did they notice each of the two sides? Who saw what? And how long did it take to arrive at the full picture? <em>Desk-based alternative:</em> Write the same interview in the voice of Joud’s mother, drawing on the details of her case, then identify in her answers three pieces of information that would never have surfaced at school. Product: one page, in about an hour. <span class="obj">(Objectives 2 and 6)</span></li>
+</ol>
+<h3>Chapter references</h3>
+<ol class="refs">
+<li>Ministry of Education. (n.d.). <i>[Guide to gifted classes]</i> [In Arabic]. General Administration for the Gifted. Retrieved September 29, 2026, from https://www.moe.gov.sa/ar/aboutus/aboutministry/RPRLibrary/دليل%20فصول%20الموهوبين.pdf</li>
+<li>Ministry of Education. (1436 AH). <i>[Special education organizational guide]</i> [In Arabic] (1st ed., academic year 1436–1437 AH). https://moe.gov.sa/en/aboutus/aboutministry/RPRLibrary/الدليل%20التنظيمي%20للتربية%20الخاصة.pdf</li>
+<li>Ministry of Education. (1437 AH). <i>Organizational and procedural guide for the school program for gifted girls</i> [In Arabic]. General Directorate for Gifted Girls. https://www.moe.gov.sa/en/aboutus/aboutministry/RPRLibrary/الدليل%20الإجرائي%20والتنظيمي%20لبرنامج%20رعاية%20الموهوبات%20المدرسي%20(1).pdf</li>
+<li>Ministry of Education [Al-Ma'arif]. (1422 AH). <i>[Regulations for Special Education Institutes and Programs]</i> [In Arabic]. https://moe.gov.sa/en/aboutus/aboutministry/RPRLibrary/القواعد%20التنظيمية%20لمعاهد%20وبرامج%20التربية%20الخاصة%201422%20هـ.pdf</li>
+<li>Almulhim, N., Aljughaiman, A., Alnaim, F., Alsayed, A., Alfawzan, S., &amp; Alarfaj, A. (2026). Hidden potential: An exploratory study of the prevalence of twice-exceptional students in Saudi Arabia. <i>Journal of Intelligence, 14</i>(5), Article 83. https://doi.org/10.3390/jintelligence14050083</li>
+<li>Alsamani, O. A., Alsamiri, Y. A., &amp; Alabdulwahab, R. A. (2026). Twice-exceptionality in primary schools: Teachers' perceived barriers to identifying and supporting 2e students. <i>Acta Psychologica, 262</i>, Article 106031. https://doi.org/10.1016/j.actpsy.2025.106031</li>
+<li>Alsamiri, Y. A., &amp; Alsamani, O. A. (2023). From self-doubt to self-efficacy: Saudi elementary teachers' reflections on their experiences and challenges of teaching 2E students. <i>Islamic University Journal for Educational and Social Sciences, 16</i>(2), 367–388. https://doi.org/10.36046/2162-000-016-019</li>
+<li>Alsamiri, Y. A., &amp; Alsamani, O. A. (2026). Teachers' perceptions of professional development needs for identifying and supporting twice-exceptional students in inclusive schools in Saudi Arabia. <i>Education Sciences, 16</i>(3), Article 366. https://doi.org/10.3390/educsci16030366</li>
+<li>American Psychiatric Association. (2022). <i>Diagnostic and statistical manual of mental disorders</i> (5th ed., text rev.). https://doi.org/10.1176/appi.books.9780890425787</li>
+<li>Assouline, S. G., Foley Nicpon, M., &amp; Whiteman, C. (2010). Cognitive and psychosocial characteristics of gifted students with written language disability. <i>Gifted Child Quarterly, 54</i>(2), 102–115.</li>
+<li>Baldwin, L., Baum, S., Pereles, D., &amp; Hughes, C. (2015). Twice-exceptional learners: The journey toward a shared vision. <i>Gifted Child Today, 38</i>(4), 206–214.</li>
+<li>Baum, S. M., &amp; Owen, S. V. (2004). <i>To be gifted and learning disabled: Strategies for helping bright students with LD, ADHD, and more</i>. Creative Learning Press.</li>
+<li>Baum, S. M., Schader, R. M., &amp; Hébert, T. P. (2014). Through a different lens: Reflecting on a strengths-based, talent-focused approach for twice-exceptional learners. <i>Gifted Child Quarterly, 58</i>(4), 311–327.</li>
+<li>Bracken, B. A., &amp; McCallum, R. S. (2016). <i>Universal Nonverbal Intelligence Test</i> (2nd ed.). PRO-ED.</li>
+<li>Brody, L. E., &amp; Mills, C. J. (1997). Gifted children with learning disabilities: A review of the issues. <i>Journal of Learning Disabilities, 30</i>(3), 282–296.</li>
+<li>Crepeau-Hobson, F., &amp; Bianco, M. (2011). Identification of gifted students with learning disabilities in a Response-to-Intervention era. <i>Psychology in the Schools, 48</i>(2), 102–109.</li>
+<li>Ejbara, M. A. (2024). Psychometric characteristics of a Saudi version of Wechsler Intelligence Scale for Preschool and Young Children. <i>Dirasat: Educational Sciences, 51</i>(2), 35–52. https://doi.org/10.35516/edu.v51i2.6661</li>
+<li>Foley Nicpon, M., Allmon, A., Sieck, B., &amp; Stinson, R. D. (2011). Empirical investigation of twice-exceptionality: Where have we been and where are we going? <i>Gifted Child Quarterly, 55</i>(1), 3–17.</li>
+<li>Hull, L., Petrides, K. V., Allison, C., Smith, P., Baron-Cohen, S., Lai, M.-C., &amp; Mandy, W. (2017). "Putting on my best normal": Social camouflaging in adults with autism spectrum conditions. <i>Journal of Autism and Developmental Disorders, 47</i>(8), 2519–2534. https://doi.org/10.1007/s10803-017-3166-5</li>
+<li>Kaufman, A. S., Raiford, S. E., &amp; Coalson, D. L. (2016). <i>Intelligent testing with the WISC-V</i>. Wiley.</li>
+<li>Lohman, D. F. (2005). The role of nonverbal ability tests in identifying academically gifted students: An aptitude perspective. <i>Gifted Child Quarterly, 49</i>(2), 111–138.</li>
+<li>Lovett, B. J., &amp; Lewandowski, L. J. (2006). Gifted students with learning disabilities: Who are they? <i>Journal of Learning Disabilities, 39</i>(6), 515–527.</li>
+<li>Maddocks, D. L. S. (2018). The identification of students who are gifted and have a learning disability: A comparison of different diagnostic criteria. <i>Gifted Child Quarterly, 62</i>(2), 175–192.</li>
+<li>Maddocks, D. L. S. (2020). Cognitive and achievement characteristics of students from a national sample identified as potentially twice exceptional (gifted with a learning disability). <i>Gifted Child Quarterly, 64</i>(1), 3–18.</li>
+<li>National Association for Gifted Children. (2018). <i>Use of the WISC-V for gifted and twice exceptional identification</i> [Position statement]. NAGC.</li>
+<li>Reis, S. M., Baum, S. M., &amp; Burke, E. (2014). An operational definition of twice-exceptional learners: Implications and applications. <i>Gifted Child Quarterly, 58</i>(3), 217–230.</li>
+<li>Wagner, R. K., Torgesen, J. K., Rashotte, C. A., &amp; Pearson, N. A. (2013). <i>Comprehensive Test of Phonological Processing</i> (2nd ed.). PRO-ED.</li>
+<li>Webb, J. T., Amend, E. R., Webb, N. E., Goerss, J., Beljan, P., &amp; Olenchak, F. R. (2005). <i>Misdiagnosis and dual diagnoses of gifted children and adults</i>. Great Potential Press.</li>
+</ol>
+<div aria-hidden="true" class="endmark">✦ ✦ ✦</div>
+<aside class="bp-cite" dir="ltr"><b>How to cite this section</b><p class="bp-ref">Alsamani, O. A. (2026). Chapter 13: Twice-exceptional learners. In <i>Diagnosis and Identification of Exceptional Learners</i>. alsamani.com. https://alsamani.com/books/diagnosis-identification/en/ch13.html</p><p class="bp-lic2">© 2026 Dr. Omar A. Alsamani. Free to read, download, share and quote for non-commercial purposes with attribution to the author and source.</p></aside>
+<nav class="pager"><a href="ch12.html"><small>Previous chapter</small><b>Giftedness</b></a><a class="next" href="ch14.html"><small>Next chapter</small><b>Fairness in diagnosis</b></a></nav>
+</div>
+<footer class="bp-foot" dir="ltr"><div class="bp-fin"><a class="bp-fid" href="../../../index.html"><span class="bp-fmark">OA</span><b>Dr. Omar A. Alsamani</b></a>
+<nav><a href="../../../index.html">Updates</a><a href="../../../books/index.html">Open Library</a><a href="../../../publications/index.html">Publications</a><a href="../../../tools/index.html">Tools</a><a href="../../../photography/index.html">Photography</a><a href="../../../about/index.html">About</a><a href="../../../contact/index.html">Contact</a></nav><p><bdi dir="ltr">© 2007–2026 alsamani.com</bdi></p><div class="pv" id="pv" dir="ltr" hidden></div></div></footer><script>(function(){{var el=document.getElementById('pv');if(!el)return;var live=/(^|\.)alsamani\.com$/.test(location.hostname);
+fetch('https://abacus.jasoncameron.dev/'+(live?'hit':'get')+'/alsamani-com/views').then(function(r){{return r.json()}}).then(function(d){{
+if(typeof d.value!=='number')return;var s=String(d.value);while(s.length<4)s='0'+s;
+el.innerHTML=s.split('').map(function(){{return '<span class="pv-d"><span class="pv-s">0<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9</span></span>'}}).join('');
+el.hidden=false;var cells=el.querySelectorAll('.pv-s');
+requestAnimationFrame(function(){{requestAnimationFrame(function(){{s.split('').forEach(function(c,i){{cells[i].style.transform='translateY('+(-c*10)+'%)'}})}})}})}}).catch(function(){{}})}})();
+</script><style>.bp-foot{box-shadow:0 0 0 100vmax var(--bpf,#F5F5F7);clip-path:inset(0 -100vmax);background:#F5F5F7;color:#6E6E73;font:13px/1.6 -apple-system,BlinkMacSystemFont,"IBM Plex Sans Arabic","Inter",sans-serif;margin-top:56px;padding:36px 20px calc(36px + env(safe-area-inset-bottom))}
+.bp-fin{max-width:1120px;margin:0 auto;display:flex;flex-wrap:wrap;gap:18px 40px;align-items:center;justify-content:space-between}
+.bp-fid{display:flex;align-items:center;gap:10px;color:#1D1D1F!important;text-decoration:none}.bp-fid b{font-weight:600}
+.bp-fmark{width:30px;height:30px;border:1px solid currentColor;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:600;letter-spacing:.04em}
+.bp-foot nav{display:flex;flex-wrap:wrap;gap:6px 22px}.bp-foot nav a{color:#6E6E73!important;text-decoration:none}.bp-foot nav a:hover{color:#1D1D1F!important}
+.bp-foot p{margin:0;flex-basis:100%;font-size:12px;border-top:1px solid #D2D2D7;padding-top:14px}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .bp-foot{--bpf:#161617;background:#161617;color:#A1A1A6}:root:not([data-theme="light"]) .bp-fid{color:#F5F5F7!important}}
+:root[data-theme="dark"] .bp-foot{--bpf:#161617;background:#161617;color:#A1A1A6}:root[data-theme="dark"] .bp-fid{color:#F5F5F7!important}
+@media print{.bp-foot{display:none}}</style><style>.pv{display:flex;justify-content:center;gap:4px;margin:14px auto 4px;grid-column:1/-1;width:100%}
+.bp-fin>p{text-align:center;width:100%}
+.pv[hidden]{display:none}
+.pv-d{display:inline-block;width:1.25em;height:1.7em;overflow:hidden;border-radius:6px;background:var(--bg,#fff);box-shadow:inset 0 0 0 1px var(--line,#d2d2d7);font:500 13px/1.7em "SF Mono",ui-monospace,Menlo,monospace;text-align:center;color:var(--ink,#1d1d1f)}
+.pv-s{display:block;transition:transform 1.4s cubic-bezier(.2,.8,.2,1)}
+@media (prefers-reduced-motion:reduce){.pv-s{transition:none}}
+.bp-foot .pv-d{background:#fff;box-shadow:inset 0 0 0 1px #d2d2d7;color:#1d1d1f}</style>
+</body>
+</html>

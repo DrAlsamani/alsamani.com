@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+
+<html dir="ltr" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
+<title>Chapter 2: Measurement fundamentals | Diagnosis and Identification of Exceptional Learners | Dr. Omar A. Alsamani</title>
+<link href="../assets/book.css?v=ea97adfb" rel="stylesheet"/>
+<style>
+.bell text{font-family:var(--f-ui)}
+.bell .curve{fill:none;stroke:var(--ink);stroke-width:2}
+.bell .a1{fill:var(--accent);opacity:.32}
+.bell .a2{fill:var(--accent);opacity:.18}
+.bell .a3{fill:var(--accent);opacity:.08}
+.bell .sd{stroke:var(--line);stroke-width:1}
+.bell .axis{stroke:var(--ink-2);stroke-width:1.2}
+.bell .pct{fill:var(--ink);font-size:14px;font-weight:700}
+.bell .pcts{fill:var(--ink-2);font-size:12px}
+.bell .row{fill:var(--ink);font-size:13.5px;font-variant-numeric:tabular-nums}
+.bell .row.hl{fill:var(--accent);font-weight:700}
+.bell .row.hl{direction:ltr;unicode-bidi:bidi-override}
+.bell .lbl{fill:var(--ink-2);font-size:12.5px;font-weight:600}
+.bell .band{fill:var(--paper-2)}
+.ci{direction:ltr;font-family:var(--f-ui);position:relative;padding-top:56px;margin:8px 4px}
+.ci .track{position:relative;height:36px;border-bottom:1.5px solid var(--ink-2)}
+.ci .bandci{position:absolute;top:6px;height:24px;background:var(--accent-soft);border:2px solid var(--accent);border-radius:6px}
+.ci .pt{position:absolute;top:10px;width:16px;height:16px;border-radius:50%;background:var(--accent);transform:translateX(-50%);box-shadow:0 0 0 3px var(--paper)}
+.ci .cut{position:absolute;top:-44px;bottom:-6px;border-left:2px dashed var(--warn)}
+.ci .cut span{position:absolute;top:0;left:6px;white-space:nowrap;font-size:12.5px;font-weight:700;color:var(--warn);direction:rtl}
+.ci .ticks{position:relative;height:28px}
+.ci .ticks span{position:absolute;top:6px;transform:translateX(-50%);font-size:12.5px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.ci .ticks span::before{content:"";position:absolute;left:50%;top:-10px;height:6px;width:1px;background:var(--ink-2)}
+.ci .lab{position:absolute;top:-22px;transform:translateX(-50%);font-size:13px;font-weight:700;color:var(--accent);white-space:nowrap;direction:rtl}
+.gap{display:grid;gap:14px;font-family:var(--f-ui)}
+.gap .g{display:grid;grid-template-columns:minmax(0,13rem) 1fr;gap:14px;align-items:center;font-size:14.5px}
+.gap .bar{height:26px;border-radius:6px;background:var(--example);opacity:.85;display:flex;align-items:center;justify-content:flex-end;padding-inline:10px;color:var(--paper);font-weight:700;font-size:13px;min-width:max-content}
+@media (max-width:560px){.gap .g{grid-template-columns:1fr}}
+.refkinds{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0}
+.refkinds>div{border:1.5px solid var(--line);border-radius:14px;padding:16px 18px;min-width:0}
+.refkinds h5{font-family:var(--f-display);font-size:19px;margin:0 0 4px;font-weight:700}
+.refkinds .q{font-family:var(--f-ui);font-weight:700;color:var(--accent);font-size:14.5px;margin-bottom:8px}
+.refkinds p{font-size:16px;line-height:1.9;margin:0 0 8px}
+.refkinds .ex{font-family:var(--f-ui);font-size:14px;color:var(--ink-2);background:var(--paper-2);border-radius:8px;padding:8px 12px;line-height:1.8}
+@media (max-width:600px){.refkinds{grid-template-columns:1fr}}
+.target{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;font-family:var(--f-ui);text-align:center}
+.target>div{min-width:0}
+.target svg{width:100%;max-width:170px;height:auto}
+.target b{display:block;font-size:15px;margin-top:6px}
+.target span{font-size:13px;color:var(--ink-2);line-height:1.7;display:block}
+.target .ring{fill:none;stroke:var(--line);stroke-width:1.5}
+.target .bull{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.5}
+.target .hit{fill:var(--ink)}
+@media (max-width:560px){.target{grid-template-columns:1fr}}
+.svgfig{direction:ltr}
+.svgfig text{font-family:var(--f-ui)}
+.svgfig .ax{stroke:var(--ink-2);stroke-width:1.2}
+.svgfig .gr{stroke:var(--line);stroke-width:1}
+.svgfig .tk{fill:var(--ink-2);font-size:12.5px}
+.svgfig .lb{fill:var(--ink);font-size:13.5px;font-weight:700}
+.svgfig .lbs{fill:var(--ink-2);font-size:12px}
+.svgfig .ca{fill:none;stroke:var(--accent);stroke-width:2.4}
+.svgfig .cb{fill:none;stroke:var(--example);stroke-width:2.4;stroke-dasharray:8 5}
+.svgfig .ta{fill:var(--accent);font-size:12.5px;font-weight:700}
+.svgfig .tb{fill:var(--example);font-size:12.5px;font-weight:700}
+.svgfig .ph{stroke:var(--ink-2);stroke-width:1;stroke-dasharray:2 4}
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"><style>:root{--f-body:"Source Serif 4",Georgia,serif;--f-display:"Source Serif 4",Georgia,serif;--f-ui:"IBM Plex Sans",system-ui,sans-serif}.questions li::before{content:counter(q)}html{direction:ltr!important}body{letter-spacing:0;text-align:left}caption{text-align:left!important}.formula small{direction:ltr}.cover svg{left:auto!important;right:0}</style><link rel="stylesheet" href="../assets/platform.css?v=b4c32405"><script>window.BOOK={slug:"diagnosis-identification-en",cur:"ch02.html",lang:"en",title:"Diagnosis and Identification of Exceptional Learners",author:"Dr. Omar A. Alsamani"}</script><script src="../assets/platform.js?v=0d28c8d2" defer></script>
+<link rel="canonical" href="https://alsamani.com/books/diagnosis-identification/en/ch02.html"><link rel="alternate" hreflang="ar" href="https://alsamani.com/books/diagnosis-identification/ch02.html"><link rel="alternate" hreflang="en" href="https://alsamani.com/books/diagnosis-identification/en/ch02.html"><link rel="alternate" hreflang="x-default" href="https://alsamani.com/books/diagnosis-identification/ch02.html"><meta name="description" content="What does a score of 78 mean? How does a percentile rank differ from a percentage? And why does the psychologist write two more numbers on either side of a score? In this chapter we provide the keys for reading assessment reports of every kind, and we show what a number can tell us and where its…"><meta name="author" content="Omar A. Alsamani"><meta property="og:title" content="Chapter 2: Measurement fundamentals | Diagnosis and Identification of Exceptional Learners | Dr. Omar A. Alsamani"><meta property="og:url" content="https://alsamani.com/books/diagnosis-identification/en/ch02.html"><meta property="og:site_name" content="Dr. Omar A. Alsamani"><meta property="og:locale" content="en_US"><meta name="twitter:card" content="summary"><meta property="og:description" content="What does a score of 78 mean? How does a percentile rank differ from a percentage? And why does the psychologist write two more numbers on either side of a score? In this chapter we provide the keys for reading assessment reports of every kind, and we show what a number can tell us and where its…"><script type="application/ld+json">[{"@context": "https://schema.org", "@type": "Chapter", "name": "Measurement fundamentals", "headline": "Chapter 2: Measurement fundamentals", "url": "https://alsamani.com/books/diagnosis-identification/en/ch02.html", "inLanguage": "en", "author": {"@type": "Person", "name": "Omar A. Alsamani", "alternateName": "عمر عبدالله الصمعاني", "url": "https://alsamani.com/", "jobTitle": "Associate Professor", "affiliation": {"@type": "CollegeOrUniversity", "name": "University of Hail"}}, "isPartOf": {"@type": "Book", "name": "Diagnosis and Identification of Exceptional Learners", "url": "https://alsamani.com/books/diagnosis-identification/en/", "author": {"@type": "Person", "name": "Omar A. Alsamani", "alternateName": "عمر عبدالله الصمعاني", "url": "https://alsamani.com/", "jobTitle": "Associate Professor", "affiliation": {"@type": "CollegeOrUniversity", "name": "University of Hail"}}, "inLanguage": "en", "license": "https://creativecommons.org/licenses/by-nc-nd/4.0/", "isAccessibleForFree": true, "bookFormat": "https://schema.org/EBook", "alternativeHeadline": "Learners with disabilities, the gifted and the twice-exceptional", "isbn": "978-603-06-7714-6", "datePublished": "2026"}, "license": "https://creativecommons.org/licenses/by-nc-nd/4.0/", "isAccessibleForFree": true, "description": "What does a score of 78 mean? How does a percentile rank differ from a percentage? And why does the psychologist write two more numbers on either side of a score? In this chapter we provide the keys for reading assessment reports of every kind, and we show what a number can tell us and where its…", "keywords": "Introduction, Norm-referenced and criterion-referenced measures, The mean and the standard deviation, The normal curve and standard scores, Percentile ranks and their pitfalls, Reliability/precision and the standard error of measurement, Validity, Norms, standardization and test adaptation, Reading a realistic score table, Ethics and professional responsibility, Conclusion, Summary, key terms and activities"}, {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Dr. Omar A. Alsamani", "item": "https://alsamani.com/"}, {"@type": "ListItem", "position": 2, "name": "Open Library", "item": "https://alsamani.com/books/"}, {"@type": "ListItem", "position": 3, "name": "Diagnosis and Identification of Exceptional Learners", "item": "https://alsamani.com/books/diagnosis-identification/en/"}, {"@type": "ListItem", "position": 4, "name": "Measurement fundamentals", "item": "https://alsamani.com/books/diagnosis-identification/en/ch02.html"}]}]</script></head>
+<body>
+<div class="bp-bar" dir="ltr"><div class="bp-in">
+<a class="bp-home" href="../../../index.html">Dr. Omar A. Alsamani</a><span class="bp-sep">/</span><a href="../../index.html">Open Library</a><span class="bp-sep">/</span><a href="index.html" class="bp-book">Diagnosis and Identification of Exceptional Learners</a>
+<span class="bp-sp"></span><span class="bp-tools"><button class="bp-ic" type="button" data-rd="z-" aria-label="Smaller text" title="Smaller text">A−</button><button class="bp-ic" type="button" data-rd="z+" aria-label="Larger text" title="Larger text">A+</button><button class="bp-ic" type="button" data-rd="theme" aria-label="Dark mode" title="Dark/light mode">Dark</button></span><a class="bp-btn" href="../ch02.html" hreflang="ar" lang="ar">العربية</a><button class="bp-btn" type="button" data-notes>Notes<i hidden></i></button><button class="bp-btn" type="button" data-share>Share</button><button class="bp-btn" type="button" data-bp="search">Search</button><button class="bp-btn solid" type="button" data-bp="toc">Contents</button></div></div>
+<div class="bp-share" id="bpShare" hidden dir="ltr"><b>Share this page</b><button type="button" data-sh="copy">Copy link</button><button type="button" data-sh="native" hidden>Share…</button><a data-sh="wa" target="_blank" rel="noopener">WhatsApp</a><a data-sh="x" target="_blank" rel="noopener">X</a><a data-sh="li" target="_blank" rel="noopener">LinkedIn</a><a data-sh="tg" target="_blank" rel="noopener">Telegram</a><a data-sh="mail">Email</a><small>To share a specific section, hover over its heading and click ¶</small></div>
+<div class="bp-drawer" id="bpDrawer" hidden dir="ltr"><div class="bp-panel" role="dialog" aria-label="Contents and search">
+<div class="bp-head"><b>Diagnosis and Identification of Exceptional Learners</b><button type="button" class="bp-x" data-bp="close" aria-label="Close">×</button></div>
+<div class="bp-search"><input id="bpQ" type="search" placeholder="Search the text of the book…" autocomplete="off"><div id="bpRes"></div></div>
+<nav class="bp-toc" id="bpToc"></nav>
+<div class="bp-links"><a href="../../index.html">Open Library</a><a href="../../../index.html">alsamani.com home</a></div>
+</div></div>
+<div class="page">
+<nav class="booknav"><a href="index.html">→ Diagnosis and Identification of Exceptional Learners</a><span>Part One: Foundations</span></nav>
+<header class="opener">
+<div aria-hidden="true" class="num">2</div>
+<div>
+<div class="kicker">Chapter 2</div>
+<h1>Measurement fundamentals</h1>
+</div>
+<p class="sub">What does a score of 78 mean? How does a percentile rank differ from a percentage? And why does the psychologist write two more numbers on either side of a score? In this chapter we provide the keys for reading assessment reports of every kind, and we show what a number can tell us and where its meaning stops.</p>
+</header>
+<nav aria-label="Chapter contents" class="toc">
+<b>In this chapter</b>
+<ol>
+<li class="u"><a href="#intro">Introduction</a></li>
+<li value="1"><a href="#s1">Norm-referenced and criterion-referenced measures</a></li>
+<li value="2"><a href="#s2">The mean and the standard deviation</a></li>
+<li value="3"><a href="#s3">The normal curve and standard scores</a></li>
+<li value="4"><a href="#s4">Percentile ranks and their pitfalls</a></li>
+<li value="5"><a href="#s5">Reliability/precision and the standard error of measurement</a> (including <a href="#s5-1">differences between scores</a>, <a href="#s5-2">regression toward the mean</a>, <a href="#s5-3">floor, ceiling and item gradients</a>, and <a href="#s5-4">item response theory</a>)</li>
+<li value="6"><a href="#s6">Validity</a> (including <a href="#s6-1">fairness and bias in measurement</a>)</li>
+<li value="7"><a href="#s7">Norms, standardization and test adaptation</a></li>
+<li value="8"><a href="#s8">Reading a realistic score table</a></li>
+<li value="9"><a href="#s9">Ethics and professional responsibility</a></li>
+<li class="u"><a href="#conclusion">Conclusion</a></li>
+<li value="10"><a href="#s10">Summary, key terms and activities</a></li>
+</ol>
+</nav>
+<div class="scene">
+<span class="lbl">Scene from a team meeting</span>
+<p>Umm Majed sits in the school meeting with a six-page report in front of her. She reads: “Full-scale score 72, percentile rank 3, confidence interval 65 to 79.” She looks up and asks the teacher: “Does this mean my son passed with three percent? Does he have a disability or not?”</p>
+<p>The teacher hesitates. He knows the number is not a pass rate, but he does not know how to explain that, nor why the report lists two additional numbers around the score.</p>
+</div>
+<p>We return to Umm Majed at the end of the chapter to give her two questions a precise answer. The concepts presented here recur throughout the category chapters, for they are the shared language in which every diagnostic report is written.</p>
+<h3>Chapter objectives</h3>
+<p>After studying this chapter, the reader should be able to:</p>
+<ol class="objectives">
+<li>Classify a reported assessment result as norm-referenced or criterion-referenced, and justify the classification by the question the result answers.</li>
+<li>Convert a score among the common standard score metrics, and locate it on the normal curve and within its descriptive classification.</li>
+<li>Interpret a percentile rank correctly, and correct a statement that confuses it with a percentage or an age equivalent.</li>
+<li>Calculate the standard error of measurement, the confidence interval and the standard error of the difference, and use them to judge a score close to a cut-off or a difference between two scores.</li>
+<li>Calculate positive and negative predictive values from sensitivity, specificity and prevalence, and explain why they differ between universal screening and a referred group.</li>
+<li>Evaluate whether an instrument is appropriate for a particular student in light of the five sources of validity evidence, reliability, norms, language and fairness evidence.</li>
+<li>Identify the ethical or professional principle at stake in a described assessment situation, and propose a course of action consistent with it.</li>
+</ol>
+<h2 class="unnum" id="intro">Introduction</h2>
+<p>Assessment results reach teachers and families as numbers: a standard score, a percentile rank, a confidence interval and a descriptive classification. The percentile rank is the percentage of the student’s peers in the norming sample (the representative group from which the instrument’s norms were derived) who scored lower than the student did; a percentile rank of 84 means the student outperformed 84% of them. Each of these numbers carries a specific meaning and has limits it cannot exceed, and misreading it leads to a mistaken decision: a percentile rank taken as the proportion of correct answers, as Umm Majed understood it in the opening scene; a score treated as an exact figure free of error; or a firm decision made when the confidence interval straddles the cut-off. In most categories, the diagnostic judgment rests on where the student stands relative to peers, on how precisely that position is estimated, and on whether the instrument suits its purpose and the student to whom it was administered.</p>
+<p>We open the chapter by distinguishing norm-referenced from criterion-referenced measures (Section 2.1), then present the mean and standard deviation (Section 2.2), the normal curve, standard scores and their descriptive classifications (Section 2.3), and percentile ranks and their pitfalls (Section 2.4). We then take up reliability/precision and the standard error of measurement, together with the related matters of score differences, regression toward the mean and floor and ceiling effects (Section 2.5), followed by validity, sensitivity, specificity and fairness (Section 2.6), and then norms, standardization and test adaptation (Section 2.7). We apply all this to reading a realistic score table (Section 2.8), and close with ethics, professional responsibility and levels of qualification (Section 2.9).</p>
+<!-- 1 -->
+<h2 id="s1"><span class="sec">2.1</span>Norm-referenced and criterion-referenced measures</h2>
+<p>Before we ask “How much did the student score?” we must ask “Compared with what?” A score on its own has no meaning. Eighty points may be excellent on a hard test and weak on an easy one. Measures are therefore divided into two main types according to what the score is compared with:</p>
+<div class="refkinds">
+<div>
+<h5>Norm-referenced measures <span class="en">Norm-referenced</span></h5>
+<div class="q">Where does the student stand relative to peers?</div>
+<p>The student’s score is compared with the scores of a large group of same-age or same-grade peers, called the <strong>norming sample</strong>. The result tells us the student’s position among them: average, above average or below average.</p>
+<div class="ex">Examples: intelligence tests, adaptive behavior scales, and rating scales such as the Gilliam Autism Rating Scale, Third Edition (<span class="en">Gilliam Autism Rating Scale, GARS-3</span>).</div>
+</div>
+<div>
+<h5>Criterion-referenced measures <span class="en">Criterion-referenced</span></h5>
+<div class="q">Has the student mastered the target skill?</div>
+<p>The student’s score is compared with a predetermined level of performance. The result tells us what the student can and cannot do, regardless of peers.</p>
+<div class="ex">Examples: “Reads 40 words per minute with 95% accuracy,” or “Adds two two-digit numbers with regrouping on 8 of 10 problems.”</div>
+</div>
+</div>
+<p>The two types complement each other. Diagnosis usually calls for norm-referenced measures, because its question is “Is the student’s performance unusually far from that of peers?” Instructional planning, by contrast, calls for criterion-referenced measures, because its question is “What skill should we teach next?”</p>
+<p>A single tool may combine both logics. One example is <strong>curriculum-based measurement</strong>, a set of brief, repeated probes used to track a student’s reading or mathematics week by week (defined and discussed in detail in Chapter 4). It serves as a general indicator of growth: its scores are interpreted normatively when compared with seasonal grade-level norms, such as fall, winter and spring percentile ranks, and at the same time against a specific growth goal set for the student. It thus draws on both frames of reference at once.</p>
+<div class="callout" data-k="example">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M4 5h16v11H8l-4 4V5Z"></path></svg>An example of the difference</div>
+<p>Saad, a fourth grader, obtained a percentile rank of 50 on a standardized reading test, placing him exactly in the middle of his peers. This is norm-referenced information, and it does not point to a problem. On a criterion-referenced test, however, his teacher noticed that he could not distinguish between letters that share the same shape and differ only in their dots, such as ب (bāʾ), ت (tāʾ) and ث (thāʾ). The first test does not reveal this, yet it is precisely what the teacher needs to know in order to decide what to teach tomorrow.</p>
+</div>
+<!-- 2 -->
+<h2 id="s2"><span class="sec">2.2</span>The mean and the standard deviation</h2>
+<p>Every standard score is built on two numbers: the <strong>mean</strong> (<span class="en">Mean</span>), the center of the norming sample’s scores, and the <strong>standard deviation</strong> (<span class="en">Standard deviation, SD</span>), the degree to which scores are spread around that center. A small standard deviation means people’s scores lie close together; a large one means they are widely dispersed.</p>
+<p>To make the idea of standard deviation concrete, imagine two classes of twenty students each, both with an average height of 140 centimeters. In the first class, heights range from 135 to 145; in the second, from 120 to 160. The mean is the same, but the spread differs. A student who is 150 centimeters tall would be considered very tall in the first class and fairly ordinary in the second. It is the standard deviation that tells us so.</p>
+<p>This gives us the rule on which diagnosis rests: we measure how far a student lies from the mean in standard deviations rather than in points. A distance of two standard deviations from the mean signifies the same thing on any test, however its scores are calculated.</p>
+<!-- 3 -->
+<h2 id="s3"><span class="sec">2.3</span>The normal curve and standard scores</h2>
+<p>When we measure a trait such as intelligence or height in a large number of people, the scores usually fall into a bell shape: most people cluster near the mean, and their numbers dwindle the further we move from it in either direction. This shape is the <strong>normal curve</strong> (<span class="en">Normal curve</span>), and among its properties are fixed proportions that do not change:</p>
+<ul>
+<li>About 68% of people fall between one standard deviation below the mean and one standard deviation above it.</li>
+<li>About 95% fall between two standard deviations below the mean and two above it.</li>
+<li>Only about 2% fall more than two standard deviations below the mean, and roughly the same proportion more than two standard deviations above it.</li>
+</ul>
+<p>This last point is the origin of thresholds that recur throughout this book. The criterion of “two standard deviations below the mean” is used for intellectual disability, and “two standard deviations above the mean” appears in many definitions of giftedness. By this statistical criterion alone, then, each of the two groups represents about 2% of people at either end of the distribution.</p>
+<figure class="fig-frame" id="fig-2-1">
+<svg aria-label="The normal curve with the corresponding types of standard scores at each standard deviation" class="bell" role="img" style="width:100%;height:auto" viewbox="0 0 760 372">
+<path class="a3" d="M61.4 220 L61.4 218.2 L65.6 217.9 L69.7 217.5 L73.9 217.2 L78.0 216.7 L82.1 216.2 L86.3 215.7 L90.4 215.1 L94.6 214.4 L98.7 213.6 L102.9 212.8 L107.0 211.8 L111.1 210.7 L115.3 209.6 L119.4 208.3 L123.6 206.9 L127.7 205.3 L131.9 203.6 L136.0 201.8 L140.1 199.8 L144.3 197.7 L144.3 220 Z"></path>
+<path class="a3" d="M475.7 220 L475.7 197.7 L479.9 199.8 L484.0 201.8 L488.1 203.6 L492.3 205.3 L496.4 206.9 L500.6 208.3 L504.7 209.6 L508.9 210.7 L513.0 211.8 L517.1 212.8 L521.3 213.6 L525.4 214.4 L529.6 215.1 L533.7 215.7 L537.9 216.2 L542.0 216.7 L546.1 217.2 L550.3 217.5 L554.4 217.9 L558.6 218.2 L558.6 220 Z"></path>
+<path class="a2" d="M144.3 220 L144.3 197.7 L148.4 195.4 L152.6 192.9 L156.7 190.2 L160.9 187.3 L165.0 184.3 L169.1 181.1 L173.3 177.7 L177.4 174.1 L181.6 170.4 L185.7 166.4 L189.9 162.3 L194.0 158.1 L198.1 153.7 L202.3 149.1 L206.4 144.5 L210.6 139.7 L214.7 134.8 L218.9 129.9 L223.0 124.9 L227.1 119.9 L227.1 220 Z"></path>
+<path class="a2" d="M392.9 220 L392.9 119.9 L397.0 124.9 L401.1 129.9 L405.3 134.8 L409.4 139.7 L413.6 144.5 L417.7 149.1 L421.9 153.7 L426.0 158.1 L430.1 162.3 L434.3 166.4 L438.4 170.4 L442.6 174.1 L446.7 177.7 L450.9 181.1 L455.0 184.3 L459.1 187.3 L463.3 190.2 L467.4 192.9 L471.6 195.4 L475.7 197.7 L475.7 220 Z"></path>
+<path class="a1" d="M227.1 220 L227.1 119.9 L231.3 114.9 L235.4 109.9 L239.6 105.0 L243.7 100.2 L247.9 95.5 L252.0 90.9 L256.1 86.4 L260.3 82.2 L264.4 78.2 L268.6 74.4 L272.7 70.9 L276.9 67.7 L281.0 64.8 L285.1 62.3 L289.3 60.1 L293.4 58.3 L297.6 56.8 L301.7 55.8 L305.9 55.2 L310.0 55.0 L310.0 220 Z"></path>
+<path class="a1" d="M310.0 220 L310.0 55.0 L314.1 55.2 L318.3 55.8 L322.4 56.8 L326.6 58.3 L330.7 60.1 L334.9 62.3 L339.0 64.8 L343.1 67.7 L347.3 70.9 L351.4 74.4 L355.6 78.2 L359.7 82.2 L363.9 86.4 L368.0 90.9 L372.1 95.5 L376.3 100.2 L380.4 105.0 L384.6 109.9 L388.7 114.9 L392.9 119.9 L392.9 220 Z"></path>
+<path class="curve" d="M20.0 219.6 L28.3 219.5 L36.6 219.3 L44.9 219.0 L53.1 218.6 L61.4 218.2 L69.7 217.5 L78.0 216.7 L86.3 215.7 L94.6 214.4 L102.9 212.8 L111.1 210.7 L119.4 208.3 L127.7 205.3 L136.0 201.8 L144.3 197.7 L152.6 192.9 L160.9 187.3 L169.1 181.1 L177.4 174.1 L185.7 166.4 L194.0 158.1 L202.3 149.1 L210.6 139.7 L218.9 129.9 L227.1 119.9 L235.4 109.9 L243.7 100.2 L252.0 90.9 L260.3 82.2 L268.6 74.4 L276.9 67.7 L285.1 62.3 L293.4 58.3 L301.7 55.8 L310.0 55.0 L318.3 55.8 L326.6 58.3 L334.9 62.3 L343.1 67.7 L351.4 74.4 L359.7 82.2 L368.0 90.9 L376.3 100.2 L384.6 109.9 L392.9 119.9 L401.1 129.9 L409.4 139.7 L417.7 149.1 L426.0 158.1 L434.3 166.4 L442.6 174.1 L450.9 181.1 L459.1 187.3 L467.4 192.9 L475.7 197.7 L484.0 201.8 L492.3 205.3 L500.6 208.3 L508.9 210.7 L517.1 212.8 L525.4 214.4 L533.7 215.7 L542.0 216.7 L550.3 217.5 L558.6 218.2 L566.9 218.6 L575.1 219.0 L583.4 219.3 L591.7 219.5 L600.0 219.6"></path>
+<line class="sd" x1="61.4" x2="61.4" y1="40" y2="344"></line><line class="sd" x1="144.3" x2="144.3" y1="40" y2="344"></line><line class="sd" x1="227.1" x2="227.1" y1="40" y2="344"></line><line class="sd" x1="310" x2="310" y1="40" y2="344"></line><line class="sd" x1="392.9" x2="392.9" y1="40" y2="344"></line><line class="sd" x1="475.7" x2="475.7" y1="40" y2="344"></line><line class="sd" x1="558.6" x2="558.6" y1="40" y2="344"></line>
+<line class="axis" x1="20" x2="600" y1="220" y2="220"></line>
+<text class="pct" text-anchor="middle" x="270" y="160">34%</text>
+<text class="pct" text-anchor="middle" x="350" y="160">34%</text>
+<text class="pct" text-anchor="middle" x="187" y="200">14%</text>
+<text class="pct" text-anchor="middle" x="433" y="200">14%</text>
+<text class="pct" text-anchor="middle" x="103" y="190">2%</text>
+<text class="pct" text-anchor="middle" x="517" y="190">2%</text>
+<text class="pcts" text-anchor="middle" x="310" y="32">Mean</text>
+<rect class="band" height="24" rx="4" width="592" x="14" y="230"></rect>
+<text class="row hl" text-anchor="middle" x="61.4" y="247">−3</text><text class="row hl" text-anchor="middle" x="144.3" y="247">−2</text><text class="row hl" text-anchor="middle" x="227.1" y="247">−1</text><text class="row hl" text-anchor="middle" x="310" y="247">0</text><text class="row hl" text-anchor="middle" x="392.9" y="247">+1</text><text class="row hl" text-anchor="middle" x="475.7" y="247">+2</text><text class="row hl" text-anchor="middle" x="558.6" y="247">+3</text>
+<text class="lbl" text-anchor="middle" x="684" y="247">—</text>
+<text class="row" text-anchor="middle" x="61.4" y="276">55</text><text class="row" text-anchor="middle" x="144.3" y="276">70</text><text class="row" text-anchor="middle" x="227.1" y="276">85</text><text class="row" text-anchor="middle" x="310" y="276">100</text><text class="row" text-anchor="middle" x="392.9" y="276">115</text><text class="row" text-anchor="middle" x="475.7" y="276">130</text><text class="row" text-anchor="middle" x="558.6" y="276">145</text>
+<text class="lbl" text-anchor="middle" x="684" y="276">Standard score (100, 15)</text>
+<text class="row" text-anchor="middle" x="61.4" y="302">1</text><text class="row" text-anchor="middle" x="144.3" y="302">4</text><text class="row" text-anchor="middle" x="227.1" y="302">7</text><text class="row" text-anchor="middle" x="310" y="302">10</text><text class="row" text-anchor="middle" x="392.9" y="302">13</text><text class="row" text-anchor="middle" x="475.7" y="302">16</text><text class="row" text-anchor="middle" x="558.6" y="302">19</text>
+<text class="lbl" text-anchor="middle" x="684" y="302">Scaled score (10, 3)</text>
+<text class="row" text-anchor="middle" x="61.4" y="328">20</text><text class="row" text-anchor="middle" x="144.3" y="328">30</text><text class="row" text-anchor="middle" x="227.1" y="328">40</text><text class="row" text-anchor="middle" x="310" y="328">50</text><text class="row" text-anchor="middle" x="392.9" y="328">60</text><text class="row" text-anchor="middle" x="475.7" y="328">70</text><text class="row" text-anchor="middle" x="558.6" y="328">80</text>
+<text class="lbl" text-anchor="middle" x="684" y="328">T-score (50, 10)</text>
+<text class="row" text-anchor="middle" x="61.4" y="358">0.1</text><text class="row" text-anchor="middle" x="144.3" y="358">2</text><text class="row" text-anchor="middle" x="227.1" y="358">16</text><text class="row" text-anchor="middle" x="310" y="358">50</text><text class="row" text-anchor="middle" x="392.9" y="358">84</text><text class="row" text-anchor="middle" x="475.7" y="358">98</text><text class="row" text-anchor="middle" x="558.6" y="358">99.9</text>
+<text class="lbl" text-anchor="middle" x="684" y="358">Percentile rank</text>
+</svg>
+<figcaption><b>Figure 2.1:</b> The normal curve, with the common score types aligned beneath it by position. Each column represents the same position expressed in different metrics: a full-scale score of 70 on an intelligence test is equivalent to a subtest score of 4 and to a T-score of 30, and all three mean two standard deviations below the mean.</figcaption>
+</figure>
+<h3>Types of standard scores</h3>
+<p>Tests convert the raw score, the number of correct answers, into a standard score with a fixed mean and standard deviation. The benefit is that standard scores can be compared across ages and tests. The most widely used types are:</p>
+<div class="tw"><table id="tab-2-1">
+<caption>Table 2.1: Common types of standard scores.</caption>
+<thead><tr><th>Type</th><th>Mean</th><th>—</th><th>Where you will encounter it</th></tr></thead>
+<tbody>
+<tr><td>z-score (<span class="en">z</span>)</td><td class="num">0</td><td class="num">1</td><td>In calculations and research; it is the basis from which all other types are derived</td></tr>
+<tr><td>Standard score</td><td class="num">100</td><td class="num">15</td><td>Composite and index scores on intelligence and achievement tests and adaptive behavior scales</td></tr>
+<tr><td>Scaled score</td><td class="num">10</td><td class="num">3</td><td>Subtests of intelligence scales, and the subscales of the <span class="en">GARS-3</span></td></tr>
+<tr><td>T-score (<span class="en">T</span>)</td><td class="num">50</td><td class="num">10</td><td>Behavioral and emotional rating scales, including many measures of attention-deficit/hyperactivity disorder (<span class="en">Attention-Deficit/Hyperactivity Disorder, ADHD</span>)</td></tr>
+</tbody>
+</table></div>
+<p>To convert any score to another type, we first convert it to a z-score and then from the z-score to the desired type:</p>
+<div class="formula">z = (X − M) ÷ SD<small>z-score = (student’s score − mean) ÷ standard deviation</small></div>
+<div class="worked">
+<b class="h">Worked example</b>
+<div class="step"><i>1</i><span>Hind obtained a standard score of 82 on an intelligence test with a mean of 100 and a standard deviation of 15.</span></div>
+<div class="step"><i>2</i><span>The z-score: <span class="ltr">(82 − 100) ÷ 15 = −1.2</span>, meaning she is one and one-fifth standard deviations below the mean.</span></div>
+<div class="step"><i>3</i><span>Expressed as a T-score, it would be: <span class="ltr">50 + (−1.2 × 10) = 38</span>.</span></div>
+<div class="step"><i>4</i><span>Her percentile rank is about 12, meaning her performance exceeds that of about 12% of her peers in the norming sample.</span></div>
+</div>
+<div class="callout" data-k="warn">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M12 3 2 20h20L12 3Z"></path><path d="M12 10v4M12 17h.01"></path></svg>Watch the direction of the score</div>
+<p>On ability tests, a higher score means better performance. On many behavioral rating scales, however, a higher score means more problems. A T-score of 70 is excellent on a reading test and worrying on a hyperactivity scale. Always check the test manual or the report for what a high score means.</p>
+</div>
+<h3>Descriptive classifications</h3>
+<p>Tests translate the standard score into a verbal description that is easy to understand. The following example shows the classifications used by the Wechsler Intelligence Scale for Children, Fifth Edition (<span class="en">Wechsler Intelligence Scale for Children, Fifth Edition, WISC-V</span>), together with the official English label for each category, since specialists frequently read reports written with these labels (Wechsler, 2014):</p>
+<div class="tw"><table id="tab-2-2">
+<caption>Table 2.2: Descriptive classifications of composite scores on the Wechsler Intelligence Scale for Children, Fifth Edition.</caption>
+<thead><tr><th>Standard score range</th><th>Descriptive classification</th><th>Approximate percentage of people</th></tr></thead>
+<tbody>
+<tr><td class="num">130 and above</td><td>Extremely high</td><td class="num">2%</td></tr>
+<tr><td class="num">120–129</td><td>Very high</td><td class="num">7%</td></tr>
+<tr><td class="num">110–119</td><td>High average</td><td class="num">16%</td></tr>
+<tr><td class="num">90–109</td><td>Average</td><td class="num">50%</td></tr>
+<tr><td class="num">80–89</td><td>Low average</td><td class="num">16%</td></tr>
+<tr><td class="num">70–79</td><td>Very low</td><td class="num">7%</td></tr>
+<tr><td class="num">69 and below</td><td>Extremely low</td><td class="num">2%</td></tr>
+</tbody>
+</table></div>
+<p>Three cautions apply to this table. First, the labels differ across tests, and even across editions of the same test. The fourth edition of this very scale called the 70–79 range “borderline” (<span class="en">Borderline</span>) and anything above 130 “very superior” (<span class="en">Very Superior</span>). So if you read the phrase <span class="en">Very High</span> in a foreign report describing a score of 125, bear in mind that a higher category sits above it. Second, the “average” category here (90–109) is a descriptive classification specific to the Wechsler scales; it is narrower than the 85–115 range, which spans one standard deviation on either side of the mean and is the range used in this book’s figures. Third, and most important, a descriptive classification is not a diagnosis. The label “extremely low” describes only where the score falls; a judgment of intellectual disability requires other criteria, such as adaptive behavior, that is, the everyday living skills the student actually uses at home and at school (Chapter 7 addresses this in detail).</p>
+<!-- 4 -->
+<h2 id="s4"><span class="sec">2.4</span>Percentile ranks and their pitfalls</h2>
+<p>The percentile rank is, on the surface, the easiest score for families to understand, and it is also the one most prone to misunderstanding. It means <strong>the percentage of peers in the norming sample who scored lower than the student</strong>. A percentile rank of 30 means the student outperformed about 30% of his peers, and that about 70% of them outperformed him.</p>
+<h3>The first pitfall: confusing it with percentage correct</h3>
+<p>The percentile rank has nothing to do with the percentage of correct answers. A student who answered 80% of the questions may have a percentile rank of 20 if the test was easy and most of his peers answered more than that. This is the trap Umm Majed fell into when she thought her son had “passed with three percent.”</p>
+<h3>The second pitfall: the distances between ranks are unequal</h3>
+<p>Because most people cluster around the mean, moving a few percentile ranks near the mean takes only a small difference in performance, whereas moving the same number of ranks at the extremes takes a large one. Compare these two moves, each spanning a similar number of ranks:</p>
+<figure class="fig-frame" id="fig-2-2">
+<div aria-label="Two horizontal bars: moving from the 50th to the 60th percentile rank equals about 4 standard score points, while moving from the 90th to the 99th equals about 16 standard score points" class="gap" role="img">
+<div class="g"><span>From rank 50 to rank 60</span><div class="bar" style="width:24%">4 standard score points</div></div>
+<div class="g"><span>From rank 90 to rank 99</span><div class="bar" style="width:100%">16 standard score points</div></div>
+</div>
+<figcaption><b>Figure 2.2:</b> What each move is worth on a standard score scale with a mean of 100 and a standard deviation of 15. Ten ranks near the mean equal about 4 points, whereas nine ranks at the extreme equal about 16 points.</figcaption>
+</figure>
+<p>For this reason, percentile ranks should not be subtracted from one another or averaged, nor used to measure a student’s progress. If a student moves from the 5th to the 10th percentile, his progress may be far greater than the two numbers suggest.</p>
+<h3>The third pitfall: age and grade equivalents</h3>
+<p>Age equivalents (<span class="en">Age equivalent</span>) and grade equivalents (<span class="en">Grade equivalent</span>) express performance in terms of an age or a school grade. A teacher may read in a report that “the student’s reading age equivalent is 7 years, 3 months,” while the student is actually ten, and conclude that he reads like a seven-year-old. That reading is inaccurate. An age equivalent means only that the student’s raw score equals the average raw score of children of that age; it does not mean that his skills or errors resemble theirs. These scores are also unevenly distributed, and they do not show whether the gap is large relative to the student’s peers. This is why the Standards for Educational and Psychological Testing urge great caution in their use (AERA et al., 2014), and why standard scores and percentile ranks are preferred.</p>
+<!-- 5 -->
+<h2 id="s5"><span class="sec">2.5</span>Reliability/precision and the standard error of measurement</h2>
+<p><strong>Reliability</strong> (<span class="en">Reliability</span>) is the consistency of a measure’s results. If the test were given to the same student twice under similar conditions, would he obtain two similar scores? A scale that shows a different weight each time is useless, however accurate it may be on average. The Standards for Educational and Psychological Testing use the compound term “reliability/precision” (<span class="en">Reliability/precision</span>) to cover traditional reliability coefficients as well as every other index of score precision, such as the standard error of measurement and the information function, which we present at the end of this section (AERA et al., 2014).</p>
+<h3>Types of reliability</h3>
+<div class="tw"><table id="tab-2-3">
+<caption>Table 2.3: Types of reliability and the question each one answers.</caption>
+<thead><tr><th>Type</th><th>Question it answers</th><th>How it is calculated</th></tr></thead>
+<tbody>
+<tr><td>Test–retest reliability</td><td>Does the score remain stable over time?</td><td>The test is given twice with a short interval between administrations, and the correlation between the two is calculated</td></tr>
+<tr><td>Internal consistency</td><td>Do the test items measure the same thing?</td><td>Calculated from the item intercorrelations in a single administration; the best known index is Cronbach’s alpha (<span class="en">Cronbach's alpha</span>)</td></tr>
+<tr><td>Interrater reliability</td><td>Do two different raters assign the same score?</td><td>Two people rate the same student and their ratings are compared; this is especially important for observation and rating scales</td></tr>
+<tr><td>Alternate-forms reliability</td><td>Do two forms of the test yield similar results?</td><td>Two equivalent forms are administered, and the correlation between them is calculated</td></tr>
+</tbody>
+</table></div>
+<p>Reliability is expressed as a coefficient ranging from zero to one. Salvia and colleagues (Salvia et al., 2017) proposed widely used benchmarks: at least 0.60 when scores are used to describe groups, at least 0.80 for screening decisions, and at least 0.90 for important decisions about an individual, such as diagnosis and classification.</p>
+<figure class="fig-frame" id="fig-2-3">
+<div aria-hidden="false" class="target">
+<div>
+<svg aria-label="Shots clustered at the center" role="img" viewbox="0 0 120 120"><circle class="ring" cx="60" cy="60" r="52"></circle><circle class="ring" cx="60" cy="60" r="36"></circle><circle class="bull" cx="60" cy="60" r="18"></circle><circle class="hit" cx="57" cy="58" r="4"></circle><circle class="hit" cx="63" cy="61" r="4"></circle><circle class="hit" cx="59" cy="65" r="4"></circle><circle class="hit" cx="64" cy="55" r="4"></circle><circle class="hit" cx="55" cy="63" r="4"></circle></svg>
+<b>Reliable and valid</b><span>The results are consistent and hit what is meant to be measured</span>
+</div>
+<div>
+<svg aria-label="Shots clustered away from the center" role="img" viewbox="0 0 120 120"><circle class="ring" cx="60" cy="60" r="52"></circle><circle class="ring" cx="60" cy="60" r="36"></circle><circle class="bull" cx="60" cy="60" r="18"></circle><circle class="hit" cx="86" cy="32" r="4"></circle><circle class="hit" cx="92" cy="36" r="4"></circle><circle class="hit" cx="88" cy="40" r="4"></circle><circle class="hit" cx="94" cy="30" r="4"></circle><circle class="hit" cx="84" cy="36" r="4"></circle></svg>
+<b>Reliable but not valid</b><span>The results are consistent but measure something else</span>
+</div>
+<div>
+<svg aria-label="Scattered shots" role="img" viewbox="0 0 120 120"><circle class="ring" cx="60" cy="60" r="52"></circle><circle class="ring" cx="60" cy="60" r="36"></circle><circle class="bull" cx="60" cy="60" r="18"></circle><circle class="hit" cx="30" cy="40" r="4"></circle><circle class="hit" cx="88" cy="70" r="4"></circle><circle class="hit" cx="55" cy="95" r="4"></circle><circle class="hit" cx="75" cy="25" r="4"></circle><circle class="hit" cx="40" cy="78" r="4"></circle></svg>
+<b>Not reliable</b><span>The results are scattered, so the measure cannot be valid</span>
+</div>
+</div>
+<figcaption><b>Figure 2.3:</b> The relationship between reliability and validity, illustrated with target shooting. Reliability is a prerequisite for validity, but it is not sufficient on its own.</figcaption>
+</figure>
+<h3>—</h3>
+<p>No measure is perfectly reliable. A student’s score on any given day is affected by fatigue, attention, guessing and the conditions in the room. The score we obtain is therefore an <strong>estimate</strong> of the true score, the score the student would have obtained had he been measured without any error. The standard error of measurement (<span class="en">Standard Error of Measurement, SEM</span>) is a number that tells us how much the student’s score would be expected to fluctuate if we measured him many times over:</p>
+<div class="formula">SEM = SD × √(1 − r)<small>standard error of measurement = standard deviation × square root of (1 − reliability coefficient)</small></div>
+<p>From it we build a <strong>confidence interval</strong> (<span class="en">Confidence interval</span>): a range of scores within which we can say, with a given degree of confidence, that the true score lies. For a 95% confidence interval, we multiply the standard error by approximately 1.96, then add the result to the score and subtract it from the score.</p>
+<div class="worked">
+<b class="h">Worked example: Majed’s score</b>
+<div class="step"><i>1</i><span>Majed obtained a full-scale score of 72 on an intelligence test with a standard deviation of 15 and a reliability coefficient of 0.95.</span></div>
+<div class="step"><i>2</i><span>The standard error of measurement: <span class="ltr">15 × √(1 − 0.95) = 15 × 0.224 ≈ 3.4</span></span></div>
+<div class="step"><i>3</i><span>The 95% confidence interval: <span class="ltr">72 ± (1.96 × 3.4) = 72 ± 6.6</span>, that is, from about 65 to about 79.</span></div>
+<div class="step"><i>4</i><span>The result: we can be 95% confident that Majed’s true score on this test lies between 65 and 79. This range <strong>straddles the cut-off score of 70</strong>.</span></div>
+</div>
+<figure class="fig-frame" id="fig-2-4">
+<div aria-label="A score axis from 55 to 90 showing Majed&#x27;s score of 72 and a confidence interval band from 65 to 79, with a dashed line at the cut-off score of 70 crossing the band" class="ci" role="img">
+<div class="track">
+<div class="cut" style="left:42.86%"><span>Traditional cut-off score 70</span></div>
+<div class="bandci" style="left:29.71%;width:37.71%"></div>
+<div class="pt" style="left:48.57%"></div>
+<div class="lab" style="left:48.57%">Majed’s score 72</div>
+</div>
+<div class="ticks"><span style="left:0%">55</span><span style="left:14.29%">60</span><span style="left:28.57%">65</span><span style="left:42.86%">70</span><span style="left:57.14%">75</span><span style="left:71.43%">80</span><span style="left:85.71%">85</span><span style="left:100%">90</span></div>
+</div>
+<figcaption><b>Figure 2.4:</b> Majed’s score and the confidence interval around it. The point lies above the cut-off score, but the band extends to either side of it, so we cannot say on the strength of the number alone that he “exceeded” it or “fell short” of it.</figcaption>
+</figure>
+<p>A <strong>cut-off score</strong> (<span class="en">Cut-off score</span>) is the score that separates two categories in a decision, such as “refer” versus “do not refer” on a screening tool, or “meets the criterion” versus “does not meet it” for a diagnostic criterion. We use this term throughout the book.</p>
+<p>It is precisely for this reason that the American Association on Intellectual and Developmental Disabilities (<span class="en">American Association on Intellectual and Developmental Disabilities, AAIDD</span>) calls for the standard error of measurement to be taken into account when determining significant limitations in intellectual functioning, so that 70 is not treated as a hard dividing line (Schalock et al., 2021). A score of 72 or 74 does not automatically rule out intellectual disability, and a score of 68 does not automatically establish it. What settles the matter is the convergence of evidence, especially evidence of adaptive behavior.</p>
+<div class="callout" data-k="key">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9V16h7v-2.1A6 6 0 0 0 12 3Z"></path></svg>The rule to take with you</div>
+<p>Every score in a diagnostic report is a point inside a band. The less reliable the measure, the wider the band. And when the band falls on both sides of the cut-off score, the decision becomes a professional judgment that rests on other evidence besides the number.</p>
+</div>
+<div class="callout" data-k="pro">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M4 19V5M4 19h16M8 15l3-4 3 2 5-6"></path></svg>For the specialist: Why are confidence intervals in reports not symmetrical around the score?</div>
+<p>The way we calculated Majed’s interval is a simplified method that centers the interval on the observed score itself. Many modern tests, however, including the Wechsler Intelligence Scale for Children, center the interval on the <strong>estimated true score</strong> (<span class="en">Estimated true score</span>) and use the <strong>standard error of estimate</strong> (<span class="en">Standard error of estimation, SEE</span>) to do so (Sattler, 2018):</p>
+<div class="formula">T′ = M + r (X − M)<br/>SEE = SD × √(r (1 − r))<small>estimated true score = mean + reliability × (observed score − mean); standard error of estimate = standard deviation × square root of [reliability × (1 − reliability)]</small></div>
+<p>Because reliability is less than one, the estimated true score always lies closer to the mean than the observed score does. Applied to Majed, his estimated true score would be <bdi dir="ltr">100 + 0.95 × (72 − 100) ≈ 73.4</bdi> and the standard error of estimate about 3.3, so the interval would run from about 67 to about 80. The interval is thus skewed toward the mean rather than symmetrical around 72, yet it straddles the cut-off score of 70 under both methods. This is why readers see intervals in report tables such as “84: 78–92” and take them for a typo, when they are nothing of the kind (see Table 2.8). When you read a report, check the test manual for how its intervals were constructed before comparing them with the intervals of another test.</p>
+</div>
+<div class="callout" data-k="example">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="10" r="3"></circle><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11Z"></path></svg>In the Saudi context: Cut-off scores in the regulations</div>
+<p>The Special Education Organizational Guide stipulates that among the conditions for a student’s eligibility for intellectual disability programs is “that the student’s IQ not exceed 75 on the Wechsler test, or 69 on the Stanford-Binet (Fifth Edition), or the equivalent of either,” together with limitations in at least two areas of adaptive skills. It also requires “not relying on the results of a single scale” and that instruments be administered and interpreted “by qualified specialists” (Ministry of Education, 1436 AH [Arabic]). The earlier Regulations had defined the “educable” range as an IQ between 55 and 75 on the Wechsler or between 52 and 73 on the Stanford-Binet (Ministry of Education [Al-Ma'arif], 1422 AH [Arabic]). The different figures in the Regulations can be understood in light of the different standard deviation of the older editions of the Stanford-Binet (16 rather than 15); both fall at roughly the same distance from the mean. In the current Guide, however, the current editions of the two scales share the same standard deviation (15), and we found no rationale in the text for the two different figures (75 and 69). Nor did we find any provision directing that the standard error of measurement or the confidence interval be taken into account when these figures are applied.</p>
+<p><strong>A question for reflection:</strong> A student scores 77 on the Wechsler scale, with a confidence interval of 72–83, and shows clear limitations in three adaptive domains. How should the team handle the cut-off score of 75 in light of what you have learned in this section?</p>
+</div>
+<h3 id="s5-1">2.5.1 Differences between scores</h3>
+<p>Many diagnostic decisions rest on a <strong>difference</strong> between two scores: between ability and achievement in the discrepancy model, between two indexes on an intelligence test, or between a student’s scores before and after an intervention. Each of the two scores carries its own error, and the two errors combine in the difference. A difference is therefore less precise than either score, and it must be relatively large before we can be confident that it is real.</p>
+<p>When we find a difference between two scores, we ask two distinct questions. The first concerns <strong>statistical significance</strong>: is the difference too large to be attributed to measurement error alone? The second concerns <strong>rarity</strong>, or the <strong>base rate</strong> (<span class="en">Base rate</span>): what proportion of the norming sample itself shows a difference of this size or larger? A difference may be significant, that is, real rather than a product of error, and yet common among typically developing children, in which case it cannot be treated as a sign of a disorder. Good test manuals present the two in separate tables.</p>
+<div class="callout" data-k="pro">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M4 19V5M4 19h16M8 15l3-4 3 2 5-6"></path></svg>For the specialist: The standard error of the difference</div>
+<p>When the two scores share the same standard deviation, the <strong>standard error of the difference</strong> (<span class="en">Standard error of the difference, SE<sub>diff</sub></span>) is calculated as follows:</p>
+<div class="formula">SE<sub>diff</sub> = SD × √(2 − r₁ − r₂)<small>standard error of the difference = standard deviation × square root of (2 − reliability of the first score − reliability of the second score)</small></div>
+<div class="worked">
+<b class="h">Worked example: A difference between two indexes (from Table 2.8)</b>
+<div class="step"><i>1</i><span>The Verbal Comprehension Index is 84, with a reliability of 0.94, and the Visual Spatial Index is 102, with a reliability of 0.92. The difference is 18 points.</span></div>
+<div class="step"><i>2</i><span>The standard error of the difference: <span class="ltr">15 × √(2 − 0.94 − 0.92) = 15 × √0.14 ≈ 15 × 0.37 ≈ 5.6</span></span></div>
+<div class="step"><i>3</i><span>The critical difference at the 0.05 level of significance: <span class="ltr">1.96 × 5.6 ≈ 11</span>. The observed difference (18) exceeds it, so it is <strong>statistically significant</strong>.</span></div>
+<div class="step"><i>4</i><span>Next we ask about rarity. Suppose, purely for illustration, that the base rate table in the manual shows that about 15% of children in the norming sample have a difference of this size or larger between these two indexes. The difference is real, but it appears in roughly one child in seven, so it is <strong>not rare</strong> and cannot by itself serve as evidence of a disorder.</span></div>
+<div class="step"><i>5</i><span>Compare this with the difference between Working Memory (76, reliability 0.93) and Processing Speed (80, reliability 0.90): the standard error of the difference is <span class="ltr">15 × √0.17 ≈ 6.2</span>, the critical difference about 12, and the observed difference only 4. We cannot, then, say that processing speed is “stronger” than working memory.</span></div>
+</div>
+<p>The reliability of the difference score itself has a formula that shows the problem from another angle: <bdi dir="ltr">r<sub>diff</sub> = [(r₁ + r₂) ÷ 2 − r₁₂] ÷ (1 − r₁₂)</bdi>, where r₁₂ is the correlation between the two scores. If the two indexes had reliabilities of 0.94 and 0.92 and correlated at 0.60, the reliability of the difference would be <bdi dir="ltr">(0.93 − 0.60) ÷ 0.40 ≈ 0.83</bdi>, lower than that of either index. The higher the correlation between two scores, the lower the reliability of the difference between them. This is the root of the criticism leveled at decisions based on differences alone, as in the ability–achievement discrepancy model and in patterns of strengths and weaknesses models (to which Chapter 6 returns).</p>
+</div>
+<h3 id="s5-2">2.5.2 Regression toward the mean</h3>
+<p>When people who obtained extreme scores are measured again, their average score the second time tends to move closer to the population mean. This statistical phenomenon is called <strong>regression toward the mean</strong> (<span class="en">Regression toward the mean</span>). It occurs because an extreme score usually combines genuinely high (or low) ability with measurement error that happened to fall in the same direction, and that error does not necessarily recur the second time. The estimated true score we met in the previous “For the specialist” box is a direct application of this idea.</p>
+<p>The phenomenon has practical consequences in two places. The first is giftedness: if we select students who scored above 130 on a test with a reliability of 0.90, the expected score of a student who obtained 135, on a retest with the same instrument, is about <bdi dir="ltr">100 + 0.90 × 35 ≈ 132</bdi>, and it drops further if the second test is a different one that correlates with the first at only about 0.80 (to about 128). A decline in the scores of some selected students at reevaluation is therefore to be expected; it means neither that the original decision was wrong nor that the student has “lost” his giftedness (Lohman &amp; Korb, 2006). The second is disability and learning disabilities: some of those selected for their very low scores will score higher when remeasured even without any intervention, so this gain cannot be credited entirely to the program in the absence of a comparison group.</p>
+<h3 id="s5-3">2.5.3 Floor, ceiling and item gradient</h3>
+<p>A test’s <strong>floor</strong> (<span class="en">Floor</span>) is its capacity to discriminate among very low levels of performance, and its <strong>ceiling</strong> (<span class="en">Ceiling</span>) is its capacity to discriminate among very high levels. If a test has few easy items, a child with very low performance and a child with low performance will both receive the same minimum score, and the test can no longer tell them apart. Likewise, if there are few difficult items, high performers bunch up at the highest possible score. On many individual intelligence tests, the full-scale score range bottoms out at about 40 and tops out at about 160. That suffices for most children, but not in two situations: distinguishing levels of severity among the more severe cases of intellectual disability, to which Chapter 7 returns, and distinguishing among exceptionally gifted students, to which Chapter 12 returns. For this reason, some publishers have issued <strong>extended norms</strong> (<span class="en">Extended norms</span>) for both tails of the distribution.</p>
+<p>Closely related is the <strong>item gradient</strong> (<span class="en">Item gradient</span>), the amount by which the standard score changes when the raw score increases by one point. If one additional correct answer moves a child from a scaled score of 4 to 7, the test is coarse in that range, and a small scoring error or a momentary lapse can change the whole classification. Bracken proposed minimum standards of technical adequacy that have since become widespread in the literature, among them that a raw score of 1 on a subtest should place the child more than two standard deviations below the mean if the floor is to be adequate, and that a one-point increase in raw score should not produce a change of more than a third of a standard deviation (Bracken, 1987). The problem is most pronounced with young children and with children at the youngest or oldest ages a test covers. If a child is at the edge of a test’s age range, examine the norm tables before trusting the score.</p>
+<h3 id="s5-4">2.5.4 Item response theory</h3>
+<p>Everything we have presented so far belongs to <strong>classical test theory</strong>, which assumes a single standard error for all scores on a test. Most modern tests, however, were built, wholly or in part, within another framework: <strong>item response theory</strong> (<span class="en">Item Response Theory, IRT</span>). Teachers need only two ideas from it: that a test’s precision varies across ability levels and is highest where its items are concentrated; and that this is what makes computerized adaptive testing possible, in which the computer selects for each student the items suited to his level.</p>
+<div class="callout" data-k="pro">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M4 19V5M4 19h16M8 15l3-4 3 2 5-6"></path></svg>For the specialist: The item characteristic curve and the information function</div>
+<p>The theory describes each item by an <strong>item characteristic curve</strong> (<span class="en">Item characteristic curve</span>), which links the student’s ability, denoted θ and expressed on a scale resembling the z-score, to the probability of answering the item correctly. The curve’s most important features are two parameters: <strong>difficulty</strong> (b), the ability level at which the probability of a correct answer reaches 50%, and <strong>discrimination</strong> (a), the slope of the curve at that point. A third parameter for guessing may be added for multiple-choice questions (Embretson &amp; Reise, 2000).</p>
+<figure class="fig-frame" id="fig-2-5">
+<svg aria-label="Two side-by-side panels. The left panel shows the S-shaped characteristic curves of two items: item A is easy with a moderate slope, and the probability of a correct answer reaches 50% at an ability of minus one; item B is difficult and steep, and its probability reaches 50% at an ability of plus one. The right panel shows the information functions of the two items: item A yields a small amount of information spread around minus one, and item B yields a large amount of information concentrated around plus one" class="svgfig" role="img" style="width:100%;height:auto" viewbox="0 0 760 300">
+<text class="lb" text-anchor="middle" x="205" y="22">Item characteristic curve</text>
+<text class="lb" text-anchor="middle" x="585" y="22">Information function</text>
+<line class="gr" x1="70" x2="340" y1="145" y2="145"></line>
+<line class="ph" x1="160" x2="160" y1="145" y2="240"></line><line class="ph" x1="250" x2="250" y1="145" y2="240"></line>
+<line class="ax" x1="70" x2="340" y1="240" y2="240"></line><line class="ax" x1="70" x2="70" y1="50" y2="240"></line>
+<text class="tk" text-anchor="end" x="62" y="244">0</text><text class="tk" text-anchor="end" x="62" y="149">0.5</text><text class="tk" text-anchor="end" x="62" y="54">1</text>
+<path class="ca" d="M70.0 217.4 L79.0 213.0 L88.0 208.1 L97.0 202.4 L106.0 196.0 L115.0 188.9 L124.0 181.1 L133.0 172.7 L142.0 163.8 L151.0 154.5 L160.0 145.0 L169.0 135.5 L178.0 126.2 L187.0 117.3 L196.0 108.9 L205.0 101.1 L214.0 94.0 L223.0 87.6 L232.0 81.9 L241.0 77.0 L250.0 72.6 L259.0 69.0 L268.0 65.8 L277.0 63.1 L286.0 60.9 L295.0 59.0 L304.0 57.4 L313.0 56.1 L322.0 55.1 L331.0 54.2 L340.0 53.4"></path>
+<path class="cb" d="M70.0 239.9 L88.0 239.9 L106.0 239.7 L124.0 239.3 L142.0 238.4 L151.0 237.7 L160.0 236.6 L169.0 234.9 L178.0 232.6 L187.0 229.1 L196.0 224.2 L205.0 217.4 L214.0 208.1 L223.0 196.0 L232.0 181.1 L241.0 163.8 L250.0 145.0 L259.0 126.2 L268.0 108.9 L277.0 94.0 L286.0 81.9 L295.0 72.6 L304.0 65.8 L313.0 60.9 L322.0 57.4 L331.0 55.1 L340.0 53.4"></path>
+<text class="ta" text-anchor="middle" x="98" y="176">A</text>
+<text class="tb" text-anchor="middle" x="276" y="150">B</text>
+<text class="tk" text-anchor="middle" x="70" y="258">−3</text><text class="tk" text-anchor="middle" x="115" y="258">−2</text><text class="tk" text-anchor="middle" x="160" y="258">−1</text><text class="tk" text-anchor="middle" x="205" y="258">0</text><text class="tk" text-anchor="middle" x="250" y="258">+1</text><text class="tk" text-anchor="middle" x="295" y="258">+2</text><text class="tk" text-anchor="middle" x="340" y="258">+3</text>
+<text class="lbs" text-anchor="middle" x="205" y="278">Ability (θ); vertical axis: probability of a correct answer</text>
+<line class="ax" x1="450" x2="720" y1="240" y2="240"></line><line class="ax" x1="450" x2="450" y1="50" y2="240"></line>
+<path class="ca" d="M450.0 220.1 L459.0 216.9 L468.0 213.4 L477.0 209.8 L486.0 206.2 L495.0 202.6 L504.0 199.4 L513.0 196.5 L522.0 194.4 L531.0 193.0 L540.0 192.5 L549.0 193.0 L558.0 194.4 L567.0 196.5 L576.0 199.4 L585.0 202.6 L594.0 206.2 L603.0 209.8 L612.0 213.4 L621.0 216.9 L630.0 220.1 L639.0 222.9 L648.0 225.5 L657.0 227.8 L666.0 229.7 L675.0 231.4 L684.0 232.8 L693.0 234.1 L702.0 235.1 L711.0 235.9 L720.0 236.6"></path>
+<path class="cb" d="M450.0 239.7 L468.0 239.4 L486.0 238.7 L504.0 237.2 L522.0 233.8 L531.0 230.9 L540.0 226.6 L549.0 220.3 L558.0 211.4 L567.0 198.9 L576.0 182.0 L585.0 160.2 L594.0 133.8 L603.0 104.8 L612.0 77.4 L621.0 57.4 L630.0 50.0 L639.0 57.4 L648.0 77.4 L657.0 104.8 L666.0 133.8 L675.0 160.2 L684.0 182.0 L693.0 198.9 L702.0 211.4 L711.0 220.3 L720.0 226.6"></path>
+<text class="ta" text-anchor="middle" x="540" y="182">A</text>
+<text class="tb" text-anchor="middle" x="646" y="60">B</text>
+<text class="tk" text-anchor="middle" x="450" y="258">−3</text><text class="tk" text-anchor="middle" x="495" y="258">−2</text><text class="tk" text-anchor="middle" x="540" y="258">−1</text><text class="tk" text-anchor="middle" x="585" y="258">0</text><text class="tk" text-anchor="middle" x="630" y="258">+1</text><text class="tk" text-anchor="middle" x="675" y="258">+2</text><text class="tk" text-anchor="middle" x="720" y="258">+3</text>
+<text class="lbs" text-anchor="middle" x="585" y="278">Ability (θ); vertical axis: amount of information</text>
+</svg>
+<figcaption><b>Figure 2.5:</b> Two hypothetical items. Item “A” (solid line) is easy and moderately discriminating, and item “B” (dashed line) is difficult and highly discriminating. In the left panel, the probability of a correct answer reaches 50% at θ = −1 for item “A” and at θ = +1 for item “B.” In the right panel, each item yields the most information near its difficulty, and the more discriminating item provides more information over a narrower range.</figcaption>
+</figure>
+<p>From the curve we derive the <strong>information function</strong> (<span class="en">Information function</span>), which shows how much the item contributes to the precision of the ability estimate at each level. What all the items contribute is summed in the <strong>test information function</strong>, and the standard error of the ability estimate at any level equals the inverse of the square root of the information at that level. A test whose items are concentrated around the mean therefore measures average students with high precision and the two tails with less, which is a more precise formulation of the floor and ceiling problem discussed above. A <strong>computerized adaptive test</strong> (<span class="en">Computerized adaptive testing, CAT</span>) begins with an item of moderate difficulty, estimates the student’s ability after each response, and selects the next item from the item bank so as to yield the most information at that estimate. It thus reaches acceptable precision with fewer items, and each student faces items close to his level. The validity of this approach, however, depends on calibrating the item bank on a sample resembling the students we are measuring, a requirement that brings us back to Section 2.7.</p>
+</div>
+<!-- 6 -->
+<h2 id="s6"><span class="sec">2.6</span>Validity</h2>
+<p>If reliability asks, “Does the scale measure consistently?”, validity asks, “Does it actually measure what it is meant to measure? And are the decisions we base on its scores sound?” In the modern view, validity is a property of the interpretation of a scale’s scores for a particular purpose, and it changes with the purpose and with the person tested. A scale that is valid for screening three-year-olds may not be valid for diagnosing an adolescent. The Standards for Educational and Psychological Testing treat validity as a single, unified concept, sometimes called <strong>construct validity</strong>: the degree to which the evidence supports interpreting the score as representing the intended construct. The construct is what all the evidence, taken together, attests to. The Standards draw this evidence from <strong>five sources</strong> (AERA et al., 2014):</p>
+<div class="tw"><table id="tab-2-4">
+<caption>Table 2.4: The five sources of validity evidence in the Standards for Educational and Psychological Testing, with examples from adapting scales for Arabic-speaking settings.</caption>
+<thead><tr><th>Source of evidence</th><th>Question</th><th>Example</th></tr></thead>
+<tbody>
+<tr><td>Content</td><td>Do the items cover the facets of the construct adequately, and do they suit the setting in which they are used?</td><td>An autism spectrum disorder scale whose items cover the two core domains in the diagnostic manual: difficulties in social communication and interaction, and restricted, repetitive behaviors and interests. For the Arabic version, local experts review each item: does it describe a behavior one would expect to see in a Saudi home or school?</td></tr>
+<tr><td>Response processes</td><td>Do test takers or raters actually engage the processes the construct assumes when they respond?</td><td>Saudi children are asked to think aloud while solving the items of a reasoning test, or parents are asked what they understand by a statement on a rating scale. If it turns out that a child fails because he does not know a Standard Arabic word in the question, the item is measuring vocabulary, not reasoning</td></tr>
+<tr><td>Internal structure</td><td>Do the items and dimensions relate to one another as the theory predicts?</td><td>Factor analysis of the Arabic version: does it retain the structure of the original? A factor analysis of the Arabic version of the Childhood Autism Rating Scale arrived at a three-factor model of 14 items (Alotaibi &amp; Alotaibi, 2021), and an Omani study of the Adaptive Behavior Assessment System (ABAS-3) supported a single general-factor model among children with intellectual disability (Emam et al., 2020)</td></tr>
+<tr><td>Relations to other variables</td><td>Do scores correlate with what they are expected to correlate with, predict the criterion, and distinguish between groups?</td><td>The Saudi version of the Wechsler Preschool and Primary Scale of Intelligence, Third Edition, correlated with the Saudi version of the Stanford-Binet at 0.81 (Ejbara, 2024). In a validation of the Arabic version of the Modified Checklist for Autism in Toddlers across nine Arab countries, sensitivity reached 0.86 and specificity 0.80 (Seif Eldin et al., 2008)</td></tr>
+<tr><td>Consequences</td><td>What are the effects, intended or unintended, of using the scores in decisions?</td><td>Does using a scale for nomination to gifted programs lead to lower-than-expected representation of students from villages or of a particular group? (Chapter 14 returns to this question)</td></tr>
+</tbody>
+</table></div>
+<p>The older division into “content validity,” “criterion validity” and “construct validity” still appears in many test manuals and Arabic textbooks. In that scheme, “criterion validity” corresponds to part of the fourth source, while “construct validity” corresponds to validity as a whole in the modern view. The second and third sources, however, are the most important questions we ask when evaluating an Arabic adaptation: Does the Arab child understand the item as intended? And has the adaptation retained the structure of the original?</p>
+<h3>Sensitivity and specificity, and why the value of a positive result changes</h3>
+<p>For screening and diagnostic tools, validity evidence based on relations to other variables is usually reported through two concepts: <strong>sensitivity</strong> (<span class="en">Sensitivity</span>), the proportion of those who have the condition whom the tool correctly detects, and <strong>specificity</strong> (<span class="en">Specificity</span>), the proportion of those who do not have the condition whom the tool correctly rules out. Yet two other figures matter more to teachers and families. The first is the <strong>positive predictive value</strong> (<span class="en">Positive predictive value</span>): if a student's result is positive, how likely is it that he actually has the condition? The second is the <strong>negative predictive value</strong> (<span class="en">Negative predictive value</span>): if his result is negative, how likely is it that the condition is truly absent? This second figure is the most important question in screening, because a negative result means the student will not be followed up.</p>
+<p>These two probabilities depend jointly on the tool and on how prevalent the condition is in the group being tested. Consider a hypothetical example with illustrative figures: a screening tool with 85% sensitivity and 95% specificity is administered once to 1,000 children in a universal screening where the condition has a prevalence of 2%, and once to 200 children referred because of concerns, among whom the prevalence is 30%:</p>
+<div class="tw"><table id="tab-2-5">
+<caption>Table 2.5: The same tool (sensitivity 85%, specificity 95%) in two groups with different prevalence. Hypothetical figures.</caption>
+<thead><tr><th></th><th>Universal screening (1,000 children, prevalence 2%)</th><th>Referred group (200 children, prevalence 30%)</th></tr></thead>
+<tbody>
+<tr><td>Have the condition</td><td class="num">20</td><td class="num">60</td></tr>
+<tr><td>True positive (detected by the tool)</td><td class="num">17</td><td class="num">51</td></tr>
+<tr><td>False negative (missed by the tool)</td><td class="num">3</td><td class="num">9</td></tr>
+<tr><td>Do not have the condition</td><td class="num">980</td><td class="num">140</td></tr>
+<tr><td>False positive</td><td class="num">49</td><td class="num">7</td></tr>
+<tr><td>True negative</td><td class="num">931</td><td class="num">133</td></tr>
+<tr style="background:var(--paper-2)"><td>Positive predictive value</td><td class="num">17 ÷ 66 ≈ 26%</td><td class="num">51 ÷ 58 ≈ 88%</td></tr>
+<tr style="background:var(--paper-2)"><td>Negative predictive value</td><td class="num">931 ÷ 934 ≈ 99.7%</td><td class="num">133 ÷ 142 ≈ 94%</td></tr>
+</tbody>
+</table></div>
+<p>In universal screening, roughly three-quarters of the positive results are false, yet a negative result is highly trustworthy. In the referred group the picture is reversed: most positive results are correct, but about one in every sixteen children with a negative result actually has the condition. This is why a positive screening result is not a diagnosis, and why a negative result in a high-risk group is not sufficient reason to close the file.</p>
+<h3 id="s6-1">2.6.1 Fairness and bias in measurement</h3>
+<p>The Standards for Educational and Psychological Testing make <strong>fairness</strong> (<span class="en">Fairness</span>) a third foundation of measurement alongside validity and reliability/precision, devoting their third chapter, “Fairness in Testing,” to it (AERA et al., 2014). Fairness in this sense is at heart a question of validity: Does a score mean the same thing for a student from a different linguistic, cultural or geographic group, or for a student with a disability? A failure in this respect is called <strong>measurement bias</strong>, and it takes several forms:</p>
+<div class="tw"><table id="tab-2-6">
+<caption>Table 2.6: Forms of measurement bias and how they are examined.</caption>
+<thead><tr><th>Form</th><th>What it means</th><th>How is it examined?</th></tr></thead>
+<tbody>
+<tr><td>Construct bias</td><td>The construct itself is not defined, or does not manifest, in the same way in the two groups, as when “appropriate social behavior” is measured by the standards of a single culture</td><td>Expert review from both cultures, and comparison of factor structures</td></tr>
+<tr><td>Differential item functioning (<span class="en">Differential item functioning, DIF</span>)</td><td>Two students of equal ability from different groups do not have the same probability of answering a particular item correctly</td><td>Comparing the two groups' performance on each item after matching them on total score or estimated ability; experts then review the items on which a difference appears</td></tr>
+<tr><td>Measurement non-invariance</td><td>The relationship between the items and the construct differs across the two groups, so their scores cannot be compared directly</td><td>Sequential tests in multigroup confirmatory factor analysis: equivalence of structure, then of loadings, then of intercepts</td></tr>
+<tr><td>Predictive bias</td><td>The same score predicts different later performance in the two groups</td><td>Comparing the regression lines of criterion on score in the two groups: a difference in slope or intercept is evidence of bias</td></tr>
+</tbody>
+</table></div>
+<p>A difference in group means may be real; the two groups may genuinely differ in the measured skill for reasons related to opportunities to learn, and the scale may be describing that difference accurately. Bias is when the same score means something different depending on the group. Nor is examining the instrument enough: fairness also includes making the construct accessible to every test taker, as when a student with low vision is given the test in large print, provided this does not change what it measures. Fairness in the referral and identification stages, and indices of proportional representation, are taken up again in Chapter 14.</p>
+<!-- 7 -->
+<h2 id="s7"><span class="sec">2.7</span>Norms, standardization and test adaptation</h2>
+<p>A standard score means “the student's position among his peers in the norming sample.” The <strong>norming sample</strong> (<span class="en">Norm sample</span>) is the group to which the scale was administered to derive its norms. If the norming sample does not resemble the student, the score loses its meaning. We therefore ask three questions of any instrument before using it:</p>
+<ol>
+<li><strong>Who is in the norming sample?</strong> Does it represent the children we are assessing in age, environment and language? A test normed on American children compares a Saudi child with American children rather than with peers in his own environment.</li>
+<li><strong>When was it normed?</strong> Average performance on intelligence tests has risen across generations in many countries, a phenomenon known as the Flynn effect (Flynn, 1984). A meta-analysis, that is, a study that statistically combines the results of many studies, estimated it at about two to three standard-score points per decade (Trahan et al., 2014). The phenomenon, however, is neither universal nor constant in direction; a slowdown or even a reversal has been documented in some countries in recent decades (Bratsberg &amp; Rogeberg, 2018). Where the effect exists, old norms inflate the scores of today's children, masking an existing disability at one end and swelling the number identified as gifted at the other. The practical lesson is the same in both cases: know the year in which the norms were collected, and treat scores near cut-off points with caution when the norms are old.</li>
+<li><strong>In what language and culture?</strong> Translation alone is not enough. A question about “snow” or “Thanksgiving” is familiar to a child in one setting and strange to a child in another.</li>
+</ol>
+<h3>From translation to standardization</h3>
+<p>To simplify the path an instrument travels from one culture to another, this book distinguishes three levels. The division is the author's own teaching simplification, built on what international guidelines require (see the next box):</p>
+<div class="tw"><table id="tab-2-7">
+<caption>Table 2.7: Three levels in transferring an instrument from one culture to another (the author's simplification).</caption>
+<thead><tr><th>Level</th><th>What happens</th><th>What can be done with the scores</th></tr></thead>
+<tbody>
+<tr><td>Translation</td><td>Items are rendered into Arabic literally or nearly so</td><td>The original norms cannot properly be used to judge the child</td></tr>
+<tr><td>Test adaptation</td><td>Items and examples are modified to suit the culture, with back-translation (translating the Arabic version back into the original language and comparing it with the original), expert review, item analysis, and verification of <strong>measurement invariance</strong> across the two versions and of the absence of <strong>differential item functioning</strong> (see 2.6.1)</td><td>Better than translation, but the original norms remain unsuitable</td></tr>
+<tr><td>Local standardization</td><td>The adapted version is administered to a representative sample of the local population, new norms are derived, and reliability and validity are studied in that population</td><td>Standard scores become meaningful for children in that population</td></tr>
+</tbody>
+</table></div>
+<div class="callout" data-k="pro">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M4 19V5M4 19h16M8 15l3-4 3 2 5-6"></path></svg>For the specialist: What do the International Test Commission guidelines actually say?</div>
+<p>The second edition of the International Test Commission Guidelines for Translating and Adapting Tests consists of eighteen guidelines grouped into six categories. Unlike the transfer levels in our table, they follow the stages of the work (International Test Commission, 2017):</p>
+<ol>
+<li><strong>Precondition:</strong> obtaining permission from the copyright holder, and verifying before starting that the construct being measured is meaningful in the new culture.</li>
+<li><strong>Test development:</strong> translating and adapting the items with a team qualified in both languages and in the subject matter, and trying out the items on small samples.</li>
+<li><strong>Confirmation:</strong> gathering empirical evidence of the equivalence of the two versions: measurement invariance, examination of differential item functioning, reliability, and validity in the new population.</li>
+<li><strong>Administration:</strong> controlling administration instructions and conditions so as to reduce sources of bias in the new population.</li>
+<li><strong>Score scales and interpretation:</strong> scores are compared across the two populations only to the extent that the established level of equivalence allows.</li>
+<li><strong>Documentation:</strong> documenting every change made to the original, and providing guidance for those who use the new version.</li>
+</ol>
+<p>Local standardization in our table thus corresponds roughly to the completion of the “confirmation” and “score scales” stages, together with the derivation of new norms. For a version that has not gone through the confirmation stage, a well-crafted translation is not enough.</p>
+</div>
+<div class="callout" data-k="example">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="10" r="3"></circle><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11Z"></path></svg>In the Saudi context: Where do the norms of instruments in use stand?</div>
+<p>The instruments used in the Kingdom vary widely in where they stand among the three levels. Among the published examples we found:</p>
+<ul>
+<li><strong>Wechsler Intelligence Scale for Children:</strong> The Saudi standardization cited in the literature is that of the revised edition (<span class="en">WISC-R</span>) for ages 6–16, carried out within the gifted identification and care project at King Abdulaziz City for Science and Technology (Al-Nafi et al., 2000 [Arabic], as cited in Ejbara, 2024). We found no published Saudi standardization of the fourth or fifth edition at the time of writing. In light of the foregoing, this means that the norms of the locally standardized edition are old, while the norms of the current edition are not local.</li>
+<li><strong>Wechsler Preschool and Primary Scale of Intelligence, Third Edition:</strong> A Saudi version administered to 788 children aged 4 years to 7 years 3 months in the Jeddah education region between 2018 and 2022, derived from the Jordanian version (Ejbara, 2024). The sample is large, but it comes from a single region.</li>
+<li><strong>Stanford-Binet Intelligence Scales, Fifth Edition:</strong> Two Gulf versions are in use, compared in a study in the Northern Borders region (Mohammed, 2016 [Arabic]); we found no details of either norming sample in a published source.</li>
+<li><strong>Gilliam Autism Rating Scale, Third Edition:</strong> An Arabic version studied with 178 participants aged 3 to 22 years from educational and clinical settings in the Kingdom, with a Cronbach's alpha of 0.97 (Alasmari et al., 2024). This is a study of the version's properties; national norms are a later step.</li>
+</ul>
+<p><strong>A question for reflection:</strong> Which of these examples reaches the level of “local standardization” in Table 2.7? And what does each one lack to be suitable for a student in your city?</p>
+</div>
+<div class="callout" data-k="myth">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5V14M12 17h.01"></path></svg>Common misconceptions</div>
+<ul>
+<li><strong>“An accurately translated version carries the validity, reliability and norms of the original.”</strong> Validity, reliability and norms are properties of using scores in a particular population; they do not travel with the translation. New evidence from the new population is essential.</li>
+<li><strong>“As long as the reliability coefficient is high, the scale is valid.”</strong> Reliability is a precondition for validity, not evidence of it (see Figure 2.3). A scale can consistently measure something other than what we intend.</li>
+<li><strong>“Any large difference between two scores indicates a problem.”</strong> The difference may not be statistically significant, or it may be significant yet common in the norming sample (see 2.5.1).</li>
+</ul>
+</div>
+<div class="callout" data-k="warn">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M12 3 2 20h20L12 3Z"></path><path d="M12 10v4M12 17h.01"></path></svg>Before you trust an Arabic version of an instrument</div>
+<ul>
+<li>Is the version licensed by the original publisher?</li>
+<li>Has a published adaptation study been conducted, or was it merely translated? Were measurement invariance and differential item functioning examined?</li>
+<li>Does it have local norms? When were they derived? From which regions was the sample drawn?</li>
+<li>Have its reliability coefficients and validity evidence in the local setting been published, and from which of the five sources does this evidence come?</li>
+</ul>
+<p>If the answer to most of these questions is no, use the scale's results with great caution, confine them to description rather than diagnosis, and state this explicitly in the report.</p>
+</div>
+<!-- 8 -->
+<h2 id="s8"><span class="sec">2.8</span>Reading a realistic score table</h2>
+<p>Intelligence test reports usually present a table summarizing the composite scores. Table 2.8 presents hypothetical values for a ten-year-old student, modeled on the indexes of the Wechsler Intelligence Scale for Children, Fifth Edition:</p>
+<div class="tw"><table id="tab-2-8">
+<caption>Table 2.8: Hypothetical scores for a ten-year-old student, modeled on the indexes of the Wechsler Intelligence Scale for Children, Fifth Edition.</caption>
+<thead><tr><th>Index</th><th>Standard score</th><th>Percentile rank</th><th>95% confidence interval</th><th>Descriptive classification</th></tr></thead>
+<tbody>
+<tr><td>Verbal Comprehension</td><td class="num">84</td><td class="num">14</td><td class="num">78–92</td><td>Low average</td></tr>
+<tr><td>Visual Spatial</td><td class="num">102</td><td class="num">55</td><td class="num">94–110</td><td>Average</td></tr>
+<tr><td>Fluid Reasoning</td><td class="num">98</td><td class="num">45</td><td class="num">91–105</td><td>Average</td></tr>
+<tr><td>Working Memory</td><td class="num">76</td><td class="num">5</td><td class="num">70–85</td><td>Very low</td></tr>
+<tr><td>Processing Speed</td><td class="num">80</td><td class="num">9</td><td class="num">73–91</td><td>Low average</td></tr>
+<tr style="background:var(--paper-2)"><td>—</td><td class="num">86</td><td class="num">18</td><td class="num">81–92</td><td>Low average</td></tr>
+</tbody>
+</table></div>
+<p>The confidence intervals in the table are built around the estimated true score, as in the original scale, which is why they are not symmetrical around the score (see the “For the specialist” box in 2.5). We assumed the following reliability coefficients: 0.94 for Verbal Comprehension and Fluid Reasoning, 0.92 for Visual Spatial, 0.93 for Working Memory, 0.90 for Processing Speed, and 0.96 for the Full Scale IQ (<span class="en">Full Scale IQ, FSIQ</span>). How, then, should a teacher read this table?</p>
+<ol>
+<li><strong>Look first at the full scale score and the limits of what it tells you.</strong> The full scale score is 86, with an interval of 81–92, in the low average range. It is the most reliable score in the table and the strongest predictor of achievement.</li>
+<li><strong>Then examine the differences for significance and rarity before interpreting the pattern.</strong> The gap between the highest and lowest index is 26 points. The questions that concern us are: Is it statistically significant? And is it rare in the norming sample? We saw in 2.5.1 that the difference between Verbal Comprehension and Visual Spatial is significant but not rare, and that the difference between Working Memory and Processing Speed is not significant at all. Only if the differences prove both significant and rare does it make sense to speak of a “pattern,” at which point the full scale score alone no longer describes the student adequately.</li>
+<li><strong>Note the strengths.</strong> His reasoning and visual thinking are in the average range. This is important instructional information: new material can be presented visually, and teachers can draw on his ability to make inferences.</li>
+<li><strong>Note the weaknesses and what they might mean in the classroom.</strong> Working memory and processing speed are low. He may lose track of long instructions, need more time to finish tasks, and appear inattentive when in fact he cannot keep up with the pace of the class. These are hypotheses awaiting verification through classroom observation.</li>
+<li><strong>Read the confidence intervals.</strong> The working memory interval runs from 70 to 85, so describing it as “very low” in the scale's classification is correct for the observed score, but the interval extends into the low average range, so the degree of weakness is not settled.</li>
+<li><strong>Ask: What does this mean for diagnosis?</strong> This table alone diagnoses nothing. It does, however, call for considering the possibility of learning disabilities or attention-deficit/hyperactivity disorder, and for gathering further evidence from achievement, observation and measures of attention.</li>
+</ol>
+<div class="callout" data-k="pro">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M4 19V5M4 19h16M8 15l3-4 3 2 5-6"></path></svg>For the specialist: The scholarly debate over profile analysis</div>
+<p>School psychology has an ongoing debate about the value of <strong>profile analysis</strong>, that is, interpreting the pattern of strengths and weaknesses across indexes. On one side, critics argue that the indexes add little to the full scale score in predicting achievement, that the reliability of differences between them is much lower than that of the full scale score, and that patterns have not proven useful in selecting a particular instructional intervention (McGill et al., 2018). On the other side, its defenders argue that disciplined interpretation of the indexes, grounded in differences that are significant and rare and supported by evidence from outside the test, helps in understanding the student and in guiding subsequent assessment, particularly with twice-exceptional learners, whose uneven abilities the full scale score may conceal (Kaufman et al., 2016). The position this book takes lies between the two: begin with the full scale score and the limits of what it tells you, move to interpreting the pattern only after the differences have been examined statistically, and treat the pattern as a hypothesis requiring further evidence. Chapter 6 returns to this debate in discussing patterns of strengths and weaknesses models.</p>
+</div>
+<!-- 9 -->
+<h2 id="s9"><span class="sec">2.9</span>Ethics and professional responsibility</h2>
+<p>Those who assess children answer to two kinds of references that should not be confused. The first is a <strong>technical reference</strong>, chief among them the Standards for Educational and Psychological Testing, issued by three American associations (AERA et al., 2014). The Standards specify the validity, reliability/precision and fairness that tests and their use should meet, and devote their third chapter to fairness in testing. In international practice they are complemented by the International Test Commission's guidelines on test use, which set out the competencies needed by test users (International Test Commission, 2001). The second is the <strong>codes of ethics</strong> that professional bodies issue for their members, among them the American Psychological Association's Ethical Principles of Psychologists and Code of Conduct (American Psychological Association, 2017), the National Association of School Psychologists' professional standards, which include its principles for professional ethics (National Association of School Psychologists, 2020), and the Council for Exceptional Children's ethics and professional practice standards (Council for Exceptional Children, 2015). Among the principles on which these references agree, several bear directly on the teacher's work:</p>
+<ul>
+<li><strong>Informed consent:</strong> The family knows why the assessment is being conducted, what will be administered and who will see the results, and gives consent before it begins. In the Kingdom, the Special Education Organizational Guide requires the guardian's written consent after formal notification (Ministry of Education, 1436 AH [Arabic]), and the Regulations stipulate obtaining his permission “for the purpose of diagnosis” and explaining his child's condition to him “in understandable language” (Ministry of Education [Al-Ma'arif], 1422 AH [Arabic]).</li>
+<li><strong>Confidentiality:</strong> A student's results are not discussed in the staff room or sent in messaging groups, and only those who need them to serve the student have access to them. In the Kingdom, the Personal Data Protection Law, issued by Royal Decree No. (M/19) in 1443 AH, applies, and it classifies health data as sensitive data.</li>
+<li><strong>Test security:</strong> Test pages are not photographed, and students are not coached on test items, since this undermines the validity of their results and those of others.</li>
+<li><strong>Appropriate use:</strong> A scale is not used for a purpose it was not designed for, and no important decision rests on a single score. This is what the Organizational Guide stipulates in the phrase “not relying solely on the results of a single scale.”</li>
+<li><strong>Equity:</strong> The assessor takes into account the student's language, culture and other disabilities; a student with low vision is not judged on intelligence by a visual test (see 2.6.1).</li>
+<li><strong>Boundaries of competence:</strong> The assessor does not administer a tool on which he has not been trained, nor interpret the results of a student from a linguistic or cultural background he does not know without consulting someone who does. Cultural competence is not acquired by reading a manual, and one of its boundaries is that the assessor knows when he needs a qualified interpreter or a colleague from the same community.</li>
+<li><strong>Conflicts of interest:</strong> When the person who diagnoses is the same person who provides the paid service he recommends, or when a teacher's evaluation of a student is tied to incentives or to the number of students admitted to the teacher's program, judgment is affected, even if unintentionally. This should be disclosed, and an independent opinion sought where possible.</li>
+</ul>
+<p>Among these principles lies a tension that recurs in practice: <strong>the family's right of access</strong> versus <strong>test security</strong>. The family has the right to know everything related to their child's assessment and program, and to request re-diagnosis if they believe he has not been placed in the appropriate program (Ministry of Education [Al-Ma'arif], 1422 AH [Arabic]). On the other hand, copying and handing over test items exposes the test to circulation and may violate the publisher's rights. The solution toward which professional codes lean is to explain the results to the family in detail and to show them their child's responses and how they were scored in the presence of the specialist, without handing over the test booklet or copying its items.</p>
+<h3>Qualification levels: Who administers what?</h3>
+<p>Many publishers classify their instruments into qualification levels that determine who may purchase and use them. The details vary from one publisher to another, but the general idea is the same: a first level for tools that teachers and others can administer after reading the manual; a second level requiring training in measurement or a professional license; and a third level for complex tools such as individual intelligence tests and diagnostic instruments, which requires graduate study in a specialized field or an advanced professional license. The Wechsler Intelligence Scale for Children is an example of this last level. What the Saudi documents we reviewed stipulate is summarized in the following table:</p>
+<div class="tw"><table id="tab-2-9">
+<caption>Table 2.9: Who administers what in the Kingdom, according to the published documents we reviewed at the time of writing.</caption>
+<thead><tr><th>Role</th><th>What the documents stipulate</th><th>What we found no provision for</th></tr></thead>
+<tbody>
+<tr><td>General education teacher</td><td>Member of the school's assessment team (Ministry of Education, 1436 AH [Arabic])</td><td>The tools he is entitled to administer. His practical role is referral, observation and informal tools</td></tr>
+<tr><td>Special education teacher</td><td>Member of the assessment team (Ministry of Education [Al-Ma'arif], 1422 AH [Arabic]; Ministry of Education, 1436 AH [Arabic])</td><td>A list of the standardized scales he administers</td></tr>
+<tr><td>Psychologist in schools and institutes</td><td>The Regulations, under the title “behavioral training teacher (psychologist),” assign him assessment and diagnosis using standardized intelligence scales, adaptive behavior scales and informal methods, as well as re-diagnosis when needed (Ministry of Education [Al-Ma'arif], 1422 AH [Arabic]). The Guide requires that tools be administered and interpreted by “qualified specialists” and that they be “approved by the Ministry of Education” (Ministry of Education, 1436 AH [Arabic])</td><td>A published list of approved scales, and the qualification criteria required for each scale</td></tr>
+<tr><td>Psychologist in the health sector</td><td>Classified and licensed by the Saudi Commission for Health Specialties. In the edition of the classification manual we reviewed, a bachelor's degree holder is classified as an “assistant specialist” working under supervision, and is classified as a “psychology specialist” after no less than three years of clinical experience (Saudi Commission for Health Specialties, 2009 [Arabic]). The psychology licensing examination assesses, among other things, the application of knowledge in psychological assessment and diagnosis (Saudi Commission for Health Specialties, 2024 [Arabic])</td><td>The current edition of the classification manual</td></tr>
+<tr><td>Physician</td><td>Participates in the school's assessment team “if available” (Ministry of Education, 1436 AH [Arabic])</td><td>A general provision in education regulations specifying the diagnoses reserved for physicians alone</td></tr>
+</tbody>
+</table></div>
+<p>We found no published provision in the Kingdom corresponding to the qualification levels publishers apply to the purchase and administration of standardized psychological tests. Until such a provision is issued, the practical reference remains the publisher's own requirements, together with the principle of boundaries of competence described above.</p>
+<div class="callout" data-k="example">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="10" r="3"></circle><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11Z"></path></svg>In the Saudi context: Two ethical dilemmas</div>
+<p><strong>The first dilemma: consent by silence.</strong> The Organizational Guide states that if the guardian does not respond within a period not exceeding fourteen days from the date of written notification, “this shall be considered permission and consent” (Ministry of Education, 1436 AH [Arabic]). The provision protects the student's right not to have his assessment delayed because a notice was ignored. Yet the principle of informed consent assumes that the family has understood what it is consenting to. What should the team do if it learns that the father cannot read, or that the notice was sent home with the student and never arrived? The provision permits the team to proceed; ethics requires attempting to reach the family by other means, and documenting that attempt, before settling for silence.</p>
+<p><strong>The second dilemma: the mother who asks for the items.</strong> A mother asks for a copy of the booklet of the intelligence test administered to her son, because she wants to “train him on the questions he got wrong” before his reassessment next year. The mother has a right to access and understanding, and the test has a security that protects the validity of her own son's results next time. How would you word a reply that respects both rights?</p>
+</div>
+<div class="callout" data-k="teacher">
+<div class="tag"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M3 8l9-4 9 4-9 4-9-4Z"></path><path d="M7 10v5c0 1.5 2.5 3 5 3s5-1.5 5-3v-5"></path></svg>For the teacher: Back to Umm Majed</div>
+<p>The teacher can now answer Umm Majed's two questions along these lines: “The number 3 is not a passing grade. It means that Majed's performance on this test is higher than that of about 3% of his peers of the same age. In other words, he needs clear support. As for your question about disability, the test alone cannot answer it. His score is close to the score used in making the decision, and the band around it extends on both sides, so the team will gather information about his everyday skills at home and at school before reaching any judgment.”</p>
+</div>
+<h2 class="unnum" id="conclusion">Conclusion</h2>
+<p>What we have presented in this chapter rests on a single unifying idea: a score is an approximate estimate of the student's position among his peers. Standard scores of every kind are different languages for one position on the normal curve; a percentile rank is the proportion of peers the student outperformed; every score is surrounded by error whose extent the confidence interval shows; and the difference between two scores is less precise than either one. It follows that a decision in which the confidence interval crosses the cut-off score is a professional decision requiring other evidence; that a difference between two scores supports interpretation only if it is both significant and rare; and that an extreme score can be expected to regress toward the mean on retesting.</p>
+<p>Precision alone is not enough. Whether a score suits its purpose is a question of validity, whose evidence is gathered from multiple sources, and whether it suits the student is a question of norms and fairness: norms are appropriate only if their sample resembles the student and is recent enough, and an accurate translation carries over neither the validity nor the norms of the original. Whenever an assessor uses a translated tool or norms from another setting, one question remains that no calculation can settle: Does the norming sample resemble the student in front of me? The answer depends on the technical evidence available and on the limitations the report states openly.</p>
+<!-- 10 -->
+<h2 id="s10"><span class="sec">2.10</span>Summary, key terms and activities</h2>
+<h3>Chapter summary</h3>
+<div class="summary"><ul>
+<li>Norm-referenced measures compare the student with peers and serve diagnosis; criterion-referenced measures compare the student with a mastery standard and serve instruction; and some tools, such as curriculum-based measurement, are interpreted both ways.</li>
+<li>All standard scores are different languages for one position on the normal curve, and they can be converted into one another via the z-score. Descriptive labels vary across tests and their editions.</li>
+<li>Two standard deviations below or above the mean mark off about 2% of people at each tail, and many diagnostic cut-off scores derive from them.</li>
+<li>A percentile rank is the proportion of peers the student outperformed, not the proportion of correct answers, and the distances between ranks are unequal.</li>
+<li>Every score is an estimate surrounded by error, and the confidence interval shows its extent. When the interval crosses the cut-off score, the decision becomes a professional one resting on other evidence.</li>
+<li>The difference between two scores is less precise than either one, and two questions must be asked of it: Is it statistically significant? And is it rare in the norming sample?</li>
+<li>Extreme scores regress toward the mean on retesting, and a test's precision weakens near its floor and ceiling.</li>
+<li>Validity is a single unified concept whose evidence is gathered from five sources, and fairness is a third foundation alongside it and reliability/precision. The predictive value of a result changes as prevalence changes.</li>
+<li>Norms are appropriate only if their sample resembles the student and is recent enough, and an accurate translation carries over neither the validity nor the norms of the original.</li>
+<li>Testing standards are a technical document, the codes of ethics of professional bodies are a separate reference, and local regulations add what is binding on the assessor in his own country.</li>
+</ul></div>
+<h3>Glossary of terms</h3>
+<dl class="gloss">
+<dt>Norm sample</dt><dd>The group to which a scale was administered to derive its norms, and against which each student's score is later compared.</dd>
+<dt>Raw score</dt><dd>The number of correct answers or the total points before conversion; it has no meaning on its own.</dd>
+<dt>Standard score</dt><dd>A converted score with a fixed mean and standard deviation, the best known having a mean of 100 and a standard deviation of 15.</dd>
+<dt>Percentile rank</dt><dd>The percentage of the student's peers in the norming sample (of the same age or grade) who obtained a lower score; a percentile rank of 84 means the student's score is higher than those of 84% of them. It is not the percentage of correct answers.</dd>
+<dt>Standard deviation</dt><dd>A measure of the spread of scores around their mean.</dd>
+<dt>Cut-off score</dt><dd>The score that separates two categories in a given decision, such as referral versus no referral, or meeting versus not meeting a criterion.</dd>
+<dt>Reliability/precision</dt><dd>The consistency of a scale's results across time, items or raters, and the precision of the score in general.</dd>
+<dt>Standard Error of Measurement, SEM</dt><dd>An estimate of how much an individual's score fluctuates around his true score owing to imperfect reliability.</dd>
+<dt>Confidence interval</dt><dd>A range of scores within which the true score is expected, with a specified probability, to fall.</dd>
+<dt>Standard error of the difference</dt><dd>The amount of error expected in the difference between two scores, from which the smallest statistically significant difference is calculated.</dd>
+<dt>Base rate</dt><dd>The proportion of the norming sample showing a particular difference or pattern, which indicates whether the difference is rare or common.</dd>
+<dt>Regression toward the mean</dt><dd>The tendency of extreme scores to move closer to the mean on retesting.</dd>
+<dt>Floor and ceiling</dt><dd>A test's capacity to discriminate among very low and very high levels of performance.</dd>
+<dt>Item Response Theory, IRT</dt><dd>A measurement framework that describes each item by a curve linking ability to the probability of a correct response, in which measurement precision varies with ability level.</dd>
+<dt>Validity</dt><dd>The degree to which evidence supports interpreting a scale's scores for a particular purpose; its evidence is gathered from five sources.</dd>
+<dt>Differential item functioning, DIF</dt><dd>A difference between two groups of equal ability in the probability of answering an item correctly.</dd>
+<dt>Measurement invariance</dt><dd>A scale's measuring the same construct in the same way in two groups, so that their scores can legitimately be compared.</dd>
+<dt>Flynn effect</dt><dd>Change in average performance on intelligence tests across generations, which was upward for most of the twentieth century; where it occurs, old norms inflate scores.</dd>
+<dt>Norm-referenced test</dt><dd>A test in which a student's score is interpreted by comparison with the scores of peers in the norming sample.</dd>
+<dt>Criterion-referenced test</dt><dd>A test in which a student's score is interpreted by comparison with a predetermined level of performance or mastery.</dd>
+<dt>Age equivalent</dt><dd>The age at which children's average raw score equals the student's raw score; it does not mean the student's skills resemble those of children of that age.</dd>
+<dt>Sensitivity</dt><dd>The proportion of those who have the condition whom the tool correctly detects.</dd>
+<dt>Specificity</dt><dd>The proportion of those who do not have the condition whom the tool correctly rules out.</dd>
+<dt>Positive predictive value</dt><dd>The probability that the condition is actually present in someone with a positive result; it is affected by the prevalence of the condition in the group tested.</dd>
+<dt>Negative predictive value</dt><dd>The probability that the condition is actually absent in someone with a negative result.</dd>
+<dt>Test adaptation</dt><dd>Modifying a scale's items and examples to suit a new culture, together with scientific study of the result; it is broader than translation and narrower than local standardization. It differs from “accommodation” in the sense of supports provided to a student during testing.</dd>
+</dl>
+<h3>Review questions</h3>
+<ol>
+<li>Classify each of the following results as norm-referenced or criterion-referenced, and justify your answer: (a) “Read 42 words correctly per minute; his end-of-term goal is 50.” (b) “His percentile rank is 30 on a standardized reading test.” (c) “Mastered 7 of 10 skills on an addition skills checklist.” (Objective 1)</li>
+<li>Convert a T-score of 35 into a standard score with a mean of 100 and a standard deviation of 15, and give its descriptive classification in Table 2.2. (Objective 2)</li>
+<li>A student obtained a percentile rank of 98 on a mathematics test. What does this mean? What does it not mean? And why is it incorrect to say that a student who moved from rank 45 to 55 progressed as much as a student who moved from 85 to 95? (Objective 3)</li>
+<li>Two attention scales: the first has a reliability of 0.70 and the second 0.92. Which would you prefer for a diagnostic decision, and why? Calculate the standard error of measurement for each if the standard deviation is 10. (Objective 4)</li>
+<li>In Table 2.8, calculate the standard error of the difference between Fluid Reasoning (reliability 0.94) and Working Memory (reliability 0.93), then decide: Is the difference between them significant at the 0.05 level? And what question remains before you interpret it? (Objective 4)</li>
+<li>A screening tool with 90% sensitivity and 90% specificity is administered to 400 children among whom the condition has a prevalence of 5%. Calculate the positive and negative predictive values, and explain to a family what a positive result means for their child. (Objective 5)</li>
+<li>An Arabic version of a behavior rating scale is being used at a diagnostic center with its American norms. For each of the five sources of validity evidence, write one question you would put to whoever prepared the version, and state the potential risks for a Saudi student. (Objective 6)</li>
+<li>A colleague posts in the teachers' messaging group a photo of the summary page of a student's diagnostic report, asking what one of the scores means. Which principles does this action touch on? And how would you respond to him? (Objective 7)</li>
+</ol>
+<h4>Case for application</h4>
+<p>Noura is thirteen and in the first year of intermediate school. Her teacher referred her because of marked underachievement over several years. She was given an Arabic-adapted individual intelligence test whose norms were collected about eighteen years ago on a sample from a region other than her own. Her full scale score was 74, with a full scale reliability coefficient of 0.96. Her Verbal Comprehension index was 86 (reliability 0.94) and her reasoning index 72 (reliability 0.90). An adaptive behavior form completed by the teacher alone indicates a deficit in one domain. One team member holds that “the score is below 75, so the student is eligible for the intellectual disability program.”</p>
+<p>Calculate the confidence interval for the full-scale score and the standard error of the difference between the two indexes. Then reach a judgment: is the evidence sufficient for an eligibility decision? Support your judgment with at least three points you have learned in this chapter, and name the missing evidence you would request before deciding. (Objectives 4, 6, and 7)</p>
+<h3>Learning activities</h3>
+<ol>
+<li><strong>A score ruler:</strong> On a sheet of paper, draw a normal curve and place on it the scores of five hypothetical students expressed in different metrics: standard scores, T-scores, scaled scores, and percentile ranks. Then order them from lowest to highest. <em>Product:</em> one drawing with a conversion table. <em>Time:</em> about 30 minutes. (Objectives 2 and 3)</li>
+<li><strong>Translating for the family:</strong> Rewrite Table 2.8 as a five-sentence paragraph that a family with no training in measurement could follow, mentioning the confidence interval and what the table does not mean. If you wish to practice on a real report, do so only with the consent of the family and the school administration, after removing everything that could identify the student, under the supervision of a specialist, and without using the product of the exercise in any decision. <em>Product:</em> one paragraph. <em>Time:</em> about 20 minutes. (Objectives 3, 4, and 7)</li>
+<li><strong>Examining a test manual:</strong> Choose an instrument whose technical manual you can access, or a published study of an Arabic version of an instrument, and extract from it: a description of the norming sample, the year the norms were collected, the reliability coefficients, the validity evidence classified by the five sources, and any examination of differential item functioning or measurement invariance. Then judge: is it suitable for a student in your city? <em>Product:</em> a one-page table. <em>Time:</em> about two hours. (Objective 6)</li>
+</ol>
+<h3>Chapter references</h3>
+<ol class="refs">
+<li>Mohammed, H. A. A. (2016). [Differences between the two Gulf versions of the Stanford-Binet Intelligence Scales, Fifth Edition, in assessing and diagnosing intelligence and mental abilities among persons with disabilities in the Northern Borders Region] [In Arabic]. <i>Jazan University Journal of Human Sciences, 5</i>(Suppl.), 236–254. https://search.mandumah.com/Record/1103082</li>
+<li>Personal Data Protection Law, Royal Decree No. (M/19) (9/2/1443 AH), as amended by Royal Decree No. (M/148) (5/9/1444 AH) [In Arabic].</li>
+<li>Saudi Commission for Health Specialties. (2009). <i>[Professional classification manual for health practitioners]</i> [In Arabic] (5th ed.). https://cams.ksu.edu.sa/sites/cams.ksu.edu.sa/files/attach/Professional_Registration_Classification_Manual_vr.6.pdf</li>
+<li>Saudi Commission for Health Specialties. (2024). <i>Saudi Psychology Licensure Examination (SPSLE): Applicant guide</i>. https://scfhs.org.sa/sites/default/files/2024-03/SPSLE%20Applicant%20Guide%202024.pdf</li>
+<li>Ministry of Education. (1436 AH). <i>[Special education organizational guide]</i> [In Arabic] (1st ed., academic year 1436–1437 AH). https://moe.gov.sa/en/aboutus/aboutministry/RPRLibrary/الدليل%20التنظيمي%20للتربية%20الخاصة.pdf</li>
+<li>Ministry of Education [Al-Ma'arif]. (1422 AH). <i>[Regulations for Special Education Institutes and Programs]</i> [In Arabic]. https://moe.gov.sa/en/aboutus/aboutministry/RPRLibrary/القواعد%20التنظيمية%20لمعاهد%20وبرامج%20التربية%20الخاصة%201422%20هـ.pdf</li>
+<li>Alasmari, M., Alduais, A., Qasem, F., Almaghlouth, S., &amp; AlAmri, L. (2024). Predicting language, cognition, and social skills in individuals with autism spectrum disorder using the Arabic validation of Gilliam Autism Rating Scale–Third Edition. <i>Applied Neuropsychology: Child</i>. Advance online publication. https://doi.org/10.1080/21622965.2024.2417812</li>
+<li>Alotaibi, B. M., &amp; Alotaibi, A. A. (2021). Exploratory and confirmatory factor analyses of the Arabic version of the Childhood Autism Rating Scale. <i>Research in Autism Spectrum Disorders, 86</i>, Article 101827. https://doi.org/10.1016/j.rasd.2021.101827</li>
+<li>American Educational Research Association, American Psychological Association, &amp; National Council on Measurement in Education. (2014). <i>Standards for educational and psychological testing</i>. American Educational Research Association.</li>
+<li>American Psychological Association. (2017). <i>Ethical principles of psychologists and code of conduct</i> (2002, amended effective June 1, 2010, and January 1, 2017). https://www.apa.org/ethics/code</li>
+<li>Bracken, B. A. (1987). Limitations of preschool instruments and standards for minimal levels of technical adequacy. <i>Journal of Psychoeducational Assessment, 5</i>(4), 313–326.</li>
+<li>Bratsberg, B., &amp; Rogeberg, O. (2018). Flynn effect and its reversal are both environmentally caused. <i>Proceedings of the National Academy of Sciences, 115</i>(26), 6674–6678.</li>
+<li>Council for Exceptional Children. (2015). <i>What every special educator must know: Professional ethics and standards</i> (7th ed.). CEC.</li>
+<li>Ejbara, M. A. (2024). Psychometric characteristics of a Saudi version of Wechsler Intelligence Scale for Preschool and Young Children. <i>Dirasat: Educational Sciences, 51</i>(2), 35–52. https://doi.org/10.35516/edu.v51i2.6661</li>
+<li>Emam, M. M., Al-Sulaimani, H., Omara, E., &amp; Al-Nabhany, R. (2020). Assessment of adaptive behaviour in children with intellectual disability in Oman: An examination of ABAS-3 factor structure and validation in the Arab context. <i>International Journal of Developmental Disabilities, 66</i>(4), 317–326. https://doi.org/10.1080/20473869.2019.1587939</li>
+<li>Embretson, S. E., &amp; Reise, S. P. (2000). <i>Item response theory for psychologists</i>. Lawrence Erlbaum.</li>
+<li>Flynn, J. R. (1984). The mean IQ of Americans: Massive gains 1932 to 1978. <i>Psychological Bulletin, 95</i>(1), 29–51.</li>
+<li>International Test Commission. (2001). International guidelines for test use. <i>International Journal of Testing, 1</i>(2), 93–114.</li>
+<li>International Test Commission. (2017). <i>The ITC guidelines for translating and adapting tests</i> (2nd ed.). <a href="https://www.intestcom.org">https://www.intestcom.org</a></li>
+<li>Kaufman, A. S., Raiford, S. E., &amp; Coalson, D. L. (2016). <i>Intelligent testing with the WISC-V</i>. Wiley.</li>
+<li>Lohman, D. F., &amp; Korb, K. A. (2006). Gifted today but not tomorrow? Longitudinal changes in ability and achievement during elementary school. <i>Journal for the Education of the Gifted, 29</i>(4), 451–484.</li>
+<li>McGill, R. J., Dombrowski, S. C., &amp; Canivez, G. L. (2018). Cognitive profile analysis in school psychology: History, issues, and continued concerns. <i>Journal of School Psychology, 71</i>, 108–121.</li>
+<li>National Association of School Psychologists. (2020). <i>The professional standards of the National Association of School Psychologists</i>. NASP.</li>
+<li>Salvia, J., Ysseldyke, J. E., &amp; Witmer, S. (2017). <i>Assessment in special and inclusive education</i> (13th ed.). Cengage Learning.</li>
+<li>Sattler, J. M. (2018). <i>Assessment of children: Cognitive foundations and applications</i> (6th ed.). Jerome M. Sattler, Publisher.</li>
+<li>Schalock, R. L., Luckasson, R., &amp; Tassé, M. J. (2021). <i>Intellectual disability: Definition, diagnosis, classification, and systems of supports</i> (12th ed.). AAIDD.</li>
+<li>Seif Eldin, A., Habib, D., Noufal, A., Farrag, S., Bazaid, K., Al-Sharbati, M., Badr, H., Moussa, S., Essali, A., &amp; Gaddour, N. (2008). Use of M-CHAT for a multinational screening of young children with autism in the Arab countries. <i>International Review of Psychiatry, 20</i>(3), 281–289. https://doi.org/10.1080/09540260801990324</li>
+<li>Trahan, L. H., Stuebing, K. K., Fletcher, J. M., &amp; Hiscock, M. (2014). The Flynn effect: A meta-analysis. <i>Psychological Bulletin, 140</i>(5), 1332–1360.</li>
+<li>Wechsler, D. (2014). <i>Wechsler Intelligence Scale for Children</i> (5th ed.). Pearson.</li>
+</ol>
+<div aria-hidden="true" class="endmark">✦ ✦ ✦</div>
+<aside class="bp-cite" dir="ltr"><b>How to cite this section</b><p class="bp-ref">Alsamani, O. A. (2026). Chapter 2: Measurement fundamentals. In <i>Diagnosis and Identification of Exceptional Learners</i>. alsamani.com. https://alsamani.com/books/diagnosis-identification/en/ch02.html</p><p class="bp-lic2">© 2026 Dr. Omar A. Alsamani. Free to read, download, share and quote for non-commercial purposes with attribution to the author and source.</p></aside>
+<nav class="pager"><a href="ch01.html"><small>Previous chapter</small><b>Concepts of diagnosis and identification</b></a><a class="next" href="ch03.html"><small>Next chapter</small><b>Formal standardized methods</b></a></nav>
+</div>
+<footer class="bp-foot" dir="ltr"><div class="bp-fin"><a class="bp-fid" href="../../../index.html"><span class="bp-fmark">OA</span><b>Dr. Omar A. Alsamani</b></a>
+<nav><a href="../../../index.html">Updates</a><a href="../../../books/index.html">Open Library</a><a href="../../../publications/index.html">Publications</a><a href="../../../tools/index.html">Tools</a><a href="../../../photography/index.html">Photography</a><a href="../../../about/index.html">About</a><a href="../../../contact/index.html">Contact</a></nav><p><bdi dir="ltr">© 2007–2026 alsamani.com</bdi></p><div class="pv" id="pv" dir="ltr" hidden></div></div></footer><script>(function(){{var el=document.getElementById('pv');if(!el)return;var live=/(^|\.)alsamani\.com$/.test(location.hostname);
+fetch('https://abacus.jasoncameron.dev/'+(live?'hit':'get')+'/alsamani-com/views').then(function(r){{return r.json()}}).then(function(d){{
+if(typeof d.value!=='number')return;var s=String(d.value);while(s.length<4)s='0'+s;
+el.innerHTML=s.split('').map(function(){{return '<span class="pv-d"><span class="pv-s">0<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9</span></span>'}}).join('');
+el.hidden=false;var cells=el.querySelectorAll('.pv-s');
+requestAnimationFrame(function(){{requestAnimationFrame(function(){{s.split('').forEach(function(c,i){{cells[i].style.transform='translateY('+(-c*10)+'%)'}})}})}})}}).catch(function(){{}})}})();
+</script><style>.bp-foot{box-shadow:0 0 0 100vmax var(--bpf,#F5F5F7);clip-path:inset(0 -100vmax);background:#F5F5F7;color:#6E6E73;font:13px/1.6 -apple-system,BlinkMacSystemFont,"IBM Plex Sans Arabic","Inter",sans-serif;margin-top:56px;padding:36px 20px calc(36px + env(safe-area-inset-bottom))}
+.bp-fin{max-width:1120px;margin:0 auto;display:flex;flex-wrap:wrap;gap:18px 40px;align-items:center;justify-content:space-between}
+.bp-fid{display:flex;align-items:center;gap:10px;color:#1D1D1F!important;text-decoration:none}.bp-fid b{font-weight:600}
+.bp-fmark{width:30px;height:30px;border:1px solid currentColor;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:600;letter-spacing:.04em}
+.bp-foot nav{display:flex;flex-wrap:wrap;gap:6px 22px}.bp-foot nav a{color:#6E6E73!important;text-decoration:none}.bp-foot nav a:hover{color:#1D1D1F!important}
+.bp-foot p{margin:0;flex-basis:100%;font-size:12px;border-top:1px solid #D2D2D7;padding-top:14px}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .bp-foot{--bpf:#161617;background:#161617;color:#A1A1A6}:root:not([data-theme="light"]) .bp-fid{color:#F5F5F7!important}}
+:root[data-theme="dark"] .bp-foot{--bpf:#161617;background:#161617;color:#A1A1A6}:root[data-theme="dark"] .bp-fid{color:#F5F5F7!important}
+@media print{.bp-foot{display:none}}</style><style>.pv{display:flex;justify-content:center;gap:4px;margin:14px auto 4px;grid-column:1/-1;width:100%}
+.bp-fin>p{text-align:center;width:100%}
+.pv[hidden]{display:none}
+.pv-d{display:inline-block;width:1.25em;height:1.7em;overflow:hidden;border-radius:6px;background:var(--bg,#fff);box-shadow:inset 0 0 0 1px var(--line,#d2d2d7);font:500 13px/1.7em "SF Mono",ui-monospace,Menlo,monospace;text-align:center;color:var(--ink,#1d1d1f)}
+.pv-s{display:block;transition:transform 1.4s cubic-bezier(.2,.8,.2,1)}
+@media (prefers-reduced-motion:reduce){.pv-s{transition:none}}
+.bp-foot .pv-d{background:#fff;box-shadow:inset 0 0 0 1px #d2d2d7;color:#1d1d1f}</style>
+</body>
+</html>
