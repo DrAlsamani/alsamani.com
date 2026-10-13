@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+
+<html dir="ltr" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
+<title>Chapter 7: The innovator and their environment | Innovation Management | Dr. Omar A. Alsamani</title>
+<link href="../assets/book.css?v=ea7b3e63" rel="stylesheet"/>
+<link href="../assets/innov.css?v=7afb6de9" rel="stylesheet"/>
+<style>
+.comp{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;font-family:var(--f-ui)}
+.comp>div{border:1.5px solid var(--line);border-radius:14px;padding:14px;background:var(--paper);min-width:0}
+.comp>div.core{border-color:var(--accent);background:var(--accent-soft)}
+.comp b{display:block;font-size:15.5px;margin-bottom:4px}
+.comp span{display:block;font-size:13.5px;line-height:1.75;color:var(--ink-2)}
+.comp .env{grid-column:1/-1;border:2px dashed var(--ink-2);background:none;text-align:center}
+@media (max-width:600px){.comp{grid-template-columns:1fr}}
+
+.path{border:2px dashed var(--line);border-radius:18px;padding:14px;font-family:var(--f-ui);position:relative}
+.path .envlbl{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:12.5px;font-weight:700;margin-bottom:10px}
+.path .envlbl .p{color:var(--good)} .path .envlbl .b{color:var(--warn)}
+.path .row{display:grid;grid-template-columns:1fr 1.1fr 1.1fr 1fr;gap:22px;align-items:stretch}
+.path .st{border:1.5px solid var(--line);border-radius:14px;padding:12px;background:var(--paper);position:relative;min-width:0}
+.path .st:not(:last-child)::after{content:"→";position:absolute;inset-inline-end:-19px;top:50%;transform:translateY(-50%);color:var(--accent);font-weight:700;font-size:18px}
+.path .st h6{margin:0 0 6px;font-size:14px;color:var(--accent)}
+.path .st ul{margin:0;padding-inline-start:1.05em;font-size:13px;line-height:1.75}
+.path .st.base{background:var(--accent-soft);border-color:var(--accent)}
+.path .st.out li.nd{color:var(--warn);font-weight:700}
+.path .loop{margin-top:12px;border-top:1.5px dashed var(--accent);padding-top:8px;text-align:center;font-size:13px;color:var(--ink-2)}
+.path .loop b{color:var(--accent)}
+@media (max-width:760px){.path .row{grid-template-columns:1fr;gap:26px}.path .st:not(:last-child)::after{content:"↓";inset-inline-end:auto;inset-inline-start:50%;top:auto;bottom:-24px;transform:translateX(50%)}}
+
+.envx{display:grid;grid-template-columns:1fr 1fr;gap:12px;font-family:var(--f-ui)}
+.envx>div{border-radius:14px;padding:16px;min-width:0}
+.envx .no{background:var(--warn-soft);border:1px solid color-mix(in srgb,var(--warn) 30%,transparent)}
+.envx .yes{background:var(--good-soft);border:1px solid color-mix(in srgb,var(--good) 30%,transparent)}
+.envx h6{font-size:14px;margin:0 0 6px;font-weight:700}
+.envx .no h6{color:var(--warn)} .envx .yes h6{color:var(--good)}
+.envx ul{margin:0;padding-inline-start:1.1em;font-size:14px;line-height:1.85}
+.envx small{color:var(--ink-2);font-size:12px}
+@media (max-width:600px){.envx{grid-template-columns:1fr}}
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"><style>:root{--f-body:"Source Serif 4",Georgia,serif;--f-display:"Source Serif 4",Georgia,serif;--f-ui:"IBM Plex Sans",system-ui,sans-serif}.questions li::before{content:counter(q)}html{direction:ltr!important}body{letter-spacing:0;text-align:left}caption{text-align:left!important}.formula small{direction:ltr}.cover svg{left:auto!important;right:0}</style><link rel="alternate" hreflang="ar" href="https://alsamani.com/books/innovation-management/ch07.html"><link rel="stylesheet" href="../assets/platform.css?v=b4c32405"><script>window.BOOK={slug:"innovation-management-en",cur:"ch07.html",lang:"en",title:"Innovation Management",author:"Dr. Omar A. Alsamani"}</script><script src="../assets/platform.js?v=0d28c8d2" defer></script>
+<link rel="canonical" href="https://alsamani.com/books/innovation-management/en/ch07.html"><meta name="description" content="During her field training, a third-year student noticed that people visiting one agency waited for hours to complete a procedure that could easily be shortened, and she pictured a simple fix. She took the idea to the professor of one of her courses, who praised it and then reminded her that the f…"><meta property="og:description" content="During her field training, a third-year student noticed that people visiting one agency waited for hours to complete a procedure that could easily be shortened, and she pictured a simple fix. She took the idea to the professor of one of her courses, who praised it and then reminded her that the fina"><meta property="og:title" content="Chapter 7: The innovator and their environment | Innovation Management | Dr. Omar A. Alsamani"><meta property="og:type" content="book"><meta property="og:url" content="https://alsamani.com/books/innovation-management/en/ch07.html"><meta property="og:site_name" content="Dr. Omar A. Alsamani"><meta name="author" content="Omar Abdullah Alsamani"></head>
+<body>
+<div class="bp-bar" dir="ltr"><div class="bp-in">
+<a class="bp-home" href="../../../index.html">Dr. Omar A. Alsamani</a><span class="bp-sep">/</span><a href="../../index.html">Open Library</a><span class="bp-sep">/</span><a href="index.html" class="bp-book">Innovation Management</a>
+<span class="bp-sp"></span><span class="bp-tools"><button class="bp-ic" type="button" data-rd="z-" aria-label="Smaller text" title="Smaller text">A−</button><button class="bp-ic" type="button" data-rd="z+" aria-label="Larger text" title="Larger text">A+</button><button class="bp-ic" type="button" data-rd="theme" aria-label="Dark mode" title="Dark/light mode">Dark</button></span><a class="bp-btn" href="../ch07.html" hreflang="ar" lang="ar">العربية</a><a class="bp-btn" href="pdf/ch07.pdf" download>PDF</a><button class="bp-btn" type="button" data-notes>Notes<i hidden></i></button><button class="bp-btn" type="button" data-share>Share</button><button class="bp-btn" type="button" data-bp="search">Search</button><button class="bp-btn solid" type="button" data-bp="toc">Contents</button></div></div>
+<div class="bp-share" id="bpShare" hidden dir="ltr"><b>Share this page</b><button type="button" data-sh="copy">Copy link</button><button type="button" data-sh="native" hidden>Share…</button><a data-sh="wa" target="_blank" rel="noopener">WhatsApp</a><a data-sh="x" target="_blank" rel="noopener">X</a><a data-sh="li" target="_blank" rel="noopener">LinkedIn</a><a data-sh="tg" target="_blank" rel="noopener">Telegram</a><a data-sh="mail">Email</a><small>To share a specific section, hover over its heading and click ¶</small></div>
+<div class="bp-drawer" id="bpDrawer" hidden dir="ltr"><div class="bp-panel" role="dialog" aria-label="Contents and search">
+<div class="bp-head"><b>Innovation Management</b><button type="button" class="bp-x" data-bp="close" aria-label="Close">×</button></div>
+<div class="bp-search"><input id="bpQ" type="search" placeholder="Search the text of the book…" autocomplete="off"><div id="bpRes"></div></div>
+<nav class="bp-toc" id="bpToc"></nav>
+<div class="bp-links"><a href="pdf/innovation-management-full.pdf" download>Download the book (PDF)</a><a href="../../index.html">Open Library</a><a href="../../../index.html">alsamani.com home</a></div>
+</div></div>
+<div class="page">
+<nav class="booknav"><a href="index.html">← Innovation Management</a><span>Part Two: Institutional foundations and people</span></nav>
+<header class="opener">
+<div aria-hidden="true" class="num">7</div>
+<div>
+<div class="kicker">Chapter 7</div>
+<h1>The innovator and their environment: people in the innovation system</h1>
+</div>
+<p class="sub">Having covered strategy, the system and the architecture in the preceding chapters, we now return to the one for whom all of these are built: the person who carries the idea. We look at the characteristics and motivation of innovators, trace the path an idea travels with them, and consider what they need from their environment at each stage along the way.</p>
+</header>
+<nav aria-label="محتويات الفصل" class="toc">
+<b>In this chapter</b>
+<ol>
+<li class="u"><a href="#intro">Introduction</a></li>
+<li value="1"><a href="#s1">Why does innovation begin with people?</a></li>
+<li><a href="#s2">Who is the innovator?</a></li>
+<li><a href="#s3">The innovator's path</a></li>
+<li><a href="#s4">What innovators need</a></li>
+<li><a href="#s5">The environment: barriers and enablers</a></li>
+<li><a href="#s6">Systems with room for people</a></li>
+<li class="u"><a href="#tool">Chapter tool</a></li>
+<li class="u"><a href="#summary">Summary and questions</a></li>
+<li class="u"><a href="#refs">Chapter references</a></li>
+</ol>
+</nav>
+<h2 class="unnum" id="intro">Introduction</h2>
+<div class="scene">
+<span class="lbl">Opening case: a university student (composite case)</span>
+<p>During her field training, a third-year student noticed that people visiting one agency waited for hours to complete a procedure that could easily be shortened, and she pictured a simple fix. She took the idea to the professor of one of her courses, who praised it and then reminded her that the final exam covered chapters one through ten. She went to the university's business accelerator, where she was asked for a full business plan she did not know how to write. She then logged the idea on the ideas platform and received an automated acknowledgment; nothing came after it. Two semesters later, she had forgotten the idea. No one rejected it, and no one accepted it.</p>
+</div>
+<p>The student noticed the problem, imagined the solution and knocked on three doors. Where, then, did her idea stall? And what did she need in order to take a single step forward? That is the question this chapter takes up, and we approach it from the innovator's own vantage point: who the innovator is, what they need, and how the environment and systems around them are designed.</p>
+<h3>Learning Objectives</h3>
+<p>After studying this chapter, the reader should be able to:</p>
+<ol class="objectives">
+<li>Explain why well-funded innovation systems remain empty when they overlook people.</li>
+<li>Describe the characteristics of innovators without reducing them to innate talent.</li>
+<li>Trace the innovator's path from thinking to practice, and identify what the innovator needs at each stage.</li>
+<li>Distinguish between barriers to and enablers of a creative environment, and diagnose them in one's own organization.</li>
+<li>Review existing innovation systems from the perspective of the innovator's experience.</li>
+</ol>
+<h2 id="s1"><span class="sec">7.1</span>Why does innovation begin with people?</h2>
+<p>Many organizations have innovation centers, platforms and budgets, yet they do not produce innovation on a recurring basis. In our view, one of the most important reasons is that these systems were designed around procedure and overlooked people: they specify stages, templates and criteria, and then assume that ideas will flow into them. An idea, however, is born in the mind of someone who notices, questions and connects, and who then decides to make an extra effort that no one asked of them. It is this final decision that the environment either wins or loses.</p>
+<p>Amabile offered the most influential model for explaining this relationship, the <strong>componential model of creativity</strong> <span class="cite">(<span class="en">Amabile, 1988, 1996</span>)</span>. It holds that individual creativity is shaped by three components within the person, all of which are surrounded and influenced by the work environment, as Figure 7.1 shows.</p>
+<figure>
+<div class="fig-frame">
+<div class="comp">
+<div><b>Domain-relevant skills</b><span>Knowledge, experience and technical skill in the field in which the person works. This is the material from which they build their ideas.</span></div>
+<div><b>Creativity-relevant processes</b><span>Ways of thinking and working: viewing a problem from different angles, connecting what seems unrelated, and persevering.</span></div>
+<div class="core"><b>Intrinsic task motivation</b><span>Interest in the work itself and enjoyment of its challenge. This is what turns knowledge and skill into actual effort.</span></div>
+<div class="env"><b>Work environment</b><span>Encourages or weakens all three components, and affects motivation more than the others.</span></div>
+</div>
+</div>
+<figcaption><b>Figure 7.1</b> The components of individual creativity and the surrounding work environment, adapted from <span class="cite"><span class="en">Amabile (1996)</span></span>.</figcaption>
+</figure>
+<p>For innovation management, the significance of this model lies in the third component. Skills and processes grow slowly through education and experience, whereas motivation responds quickly to what happens to a person on a given day: how their idea was received, whether they found time for it, and whether they saw any result from their effort. This is why a poor environment can extinguish in weeks what years of education have built. Amabile and Pratt later developed the model to link individual creativity with organizational innovation, adding two elements: the <strong>progress</strong> a person perceives in work they consider <strong>meaningful</strong>. Together these feed motivation and keep it renewing itself <span class="cite">(<span class="en">Amabile &amp; Pratt, 2016</span>)</span>.</p>
+<p>Putting people first does not mean neglecting the system. The preceding chapters built the strategy that identifies which problems are worth working on, the system that turns ideas into value, and the architecture that connects the various units. This chapter places people at the center of all this, for the system is what connects people to problems; if either side is missing, there is nothing left for it to connect.</p>
+<p>Innovators themselves see it this way. In a phenomenological study with ten innovative Saudi entrepreneurs, each with fifteen to twenty-five years of experience building innovative ventures, participants described a supportive community as one that begins by recognizing the innovator's distinctiveness and understanding their personal and cognitive style, and then invests in them and connects them with suitable economic environments. The study concluded that effective support invests in the innovator as a strategic human resource and goes beyond tracking their outputs <span class="cite">(Alsamani, 2026 [Arabic])</span>.</p>
+<h2 id="s2"><span class="sec">7.2</span>Who is the innovator?</h2>
+<p>A popular image casts the innovator as a rare genius born with a gift. The research does not support this image in any absolute sense. In a meta-analysis of personality studies, Feist found that creative people in the sciences and the arts tend to share certain traits, most notably openness to new experiences, autonomy, self-confidence and high motivation <span class="cite">(<span class="en">Feist, 1998</span>)</span>. These traits, however, are distributed among people along a continuum. Every organization has some people who possess them to a high degree, and a larger number who possess them to a degree sufficient to innovate if they find the right environment.</p>
+<p>The characteristics of innovators can be grouped into three clusters, as classified in the “innovator's path” model presented in the next section:</p>
+<ul>
+<li><strong>Knowledge and skill:</strong> broad knowledge and high skill in the field of interest, higher-order thinking skills, and the ability to research and gather information.</li>
+<li><strong>Self-regulation:</strong> the ability to evaluate one's own work, focus on a long-term goal, self-confidence, self-awareness and autonomy.</li>
+<li><strong>Openness and learning:</strong> curiosity, flexibility, openness to new experiences, and the capacity for self-directed learning.</li>
+</ul>
+<p>One characteristic that deserves managers' particular attention is <strong>creative self-efficacy</strong>: a person's belief in their ability to produce new and useful ideas. Tierney and Farmer found that it predicts employees' creative performance and is influenced by supervisor behavior and job experience <span class="cite">(<span class="en">Tierney &amp; Farmer, 2002</span>)</span>. This means that part of an innovator's “talent” is built or broken in their work environment: an employee whose first ideas were met with ridicule learns that they are “not creative,” while a colleague who found someone to take their ideas seriously learns the opposite.</p>
+<p>The same pattern appears in the experiences of successful innovators. In a phenomenological study conducted in 2023 with eleven prominent Saudi innovators, each with fifteen or more years of innovative work and products and ventures of wide impact, certain factors recurred in their narratives of their journeys. Nine of them regarded self-confidence as a necessity without which the path cannot be completed, and some mentioned talented friends who did not finish their projects because they lost confidence in their abilities. All participants agreed that continuous self-directed learning, driven by love of the field, was one of the reasons for their success <span class="cite">(<span class="en">Alsamani, 2023</span>)</span>.</p>
+<p>Oldham and Cummings's research with employees at two manufacturing facilities sheds light on this question. They measured creativity through employees' suggestions, their patents and their supervisors' ratings, and found that the highest creativity emerged when three conditions came together: a creative personality, complex and challenging work, and supportive, noncontrolling supervision <span class="cite">(<span class="en">Oldham &amp; Cummings, 1996</span>)</span>. A creative personality, then, is a disposition that the environment either reveals or conceals.</p>
+<div class="callout" data-k="myth">
+<div class="tag">Common misconception</div>
+<p>“The organization needs to hire innovators.” Hiring matters, but an innovator who enters an environment that rewards compliance and punishes mistakes adapts to it within months. The more useful step is for the organization to ask first: what happens today to the ideas of the people it already has?</p>
+</div>
+<h2 id="s3"><span class="sec">7.3</span>The innovator's path</h2>
+<p>A qualitative study with teachers of gifted students concluded that creativity and innovation are related yet distinct concepts: creativity is a complex, multifaceted process of <em>generating ideas</em>, which may be individual or collective and requires knowledge of the domain; innovation is the <em>production</em> of original, useful and tangible outcomes that society values <span class="cite">(<span class="en">Alsamani, 2019</span>)</span>. The difference between the two goes beyond definition to need: what a person needs while thinking differs from what they need while turning their idea into reality.</p>
+<p>Building on this distinction, we propose the <strong>innovator's path</strong> model, illustrated in Figure 7.2. The model reads an idea's journey from the perspective of the person who holds it.</p>
+<figure>
+<div class="fig-frame">
+<div class="path">
+<div class="envlbl"><span class="p">Environmental enablers: sufficient freedom · support for sharing ideas · autonomy of judgment · non-authoritarian attitudes</span></div>
+<div class="row">
+<div class="st base"><h6>The base: the person</h6><ul><li>Intrinsic task motivation</li><li>Knowledge and skill</li><li>Self-regulation</li><li>Openness and learning</li></ul></div>
+<div class="st"><h6>Stage one: thinking</h6><ul><li>Defining the problem</li><li>Imagining and connecting</li><li>Generating ideas</li><li>Evaluating and refining</li></ul></div>
+<div class="st"><h6>Stage two: practice</h6><ul><li>The idea needs <b>opportunities</b>, <b>resources</b> and <b>support</b></li><li>Real-world testing</li><li>Ongoing evaluation</li></ul></div>
+<div class="st out"><h6>Outcomes</h6><ul><li>Decision: the idea succeeds</li><li>Decision: the idea is ineffective</li><li>No decision: processing continues</li><li class="nd">No decision: the process has stalled</li></ul></div>
+</div>
+<div class="loop"><b>Learning loop:</b> an idea that did not succeed returns to the start of the path with new knowledge, if its owner finds reason to try again</div>
+<div class="envlbl" style="margin:10px 0 0"><span class="b">Environmental barriers: excessive evaluation · no encouragement of risk-taking · criticism of new ideas · excessive time pressure · authoritarian monitoring</span></div>
+</div>
+</div>
+<figcaption><b>Figure 7.2</b> The innovator's path from thinking to practice, and the environment surrounding it. Developed by the author (first developed in 2017–2018).</figcaption>
+</figure>
+<p>The model rests on four ideas:</p>
+<p><strong>The first is that the person stands on motivation.</strong> Cognitive and personal characteristics do not set themselves in motion; intrinsic motivation is what turns them into actual effort. This is why it is placed as the foundation on which the entire path rests.</p>
+<p><strong>The second is that the path consists of two different stages.</strong> In the thinking stage, a person needs freedom to explore, time to reflect, and as little premature judgment as possible. In the practice stage, the need changes: the idea now requires an <em>opportunity</em> to be tried in a real setting, enough <em>resources</em> to test it, and <em>support</em> from people who hold the authority or the expertise. Many organizations do one of the two stages well and neglect the other: competitions and hackathons celebrate thinking and then leave the winners with no route to practice. This is consistent with Baer's finding that creative ideas get implemented when their originators have both the motivation to implement them and a network of relationships to help them do so <span class="cite">(<span class="en">Baer, 2012</span>)</span>. The finding also matches what the Saudi innovators in the study cited above described: they all agreed on the importance of interacting with peers, and eight of them saw their network of relationships as a route to opportunities. Eight of them likewise held that turning the innovation into a source of income early on is a condition for persisting, and one recounted how a talented friend, forced into a job far from his passion, lost interest in his project <span class="cite">(<span class="en">Alsamani, 2023</span>)</span>. In the practice stage, then, resources do more than allow the idea to be tried; they determine whether the innovator will stay on the path.</p>
+<p><strong>The third is that the path has four possible outcomes.</strong> Besides the idea succeeding or proving ineffective, the path may remain without a decision. This outcome comes in two forms: continued processing, in which the person needs time to reflect, which is healthy; and a stalled process that no one has resolved, which Chapter 5 called <em>decision limbo</em>. The latter is the most damaging to motivation, because a reasoned rejection teaches its recipient something, whereas silence teaches them not to try again. This is what happened to the student in the opening case.</p>
+<p><strong>The fourth is that the environment surrounds the entire path.</strong> Enablers and barriers affect every step along it. Section 7.5 addresses them in detail.</p>
+<p>The learning loop completes these ideas: an idea that has proven ineffective becomes a new starting point if its owner comes away with new knowledge and a desire to try again. That desire depends to a large extent on how the organization treated the failure.</p>
+<h2 id="s4"><span class="sec">7.4</span>What innovators need</h2>
+<p>If motivation is the foundation of the path, the practical question is what nourishes it. Self-determination theory answers that intrinsic motivation grows when three psychological needs are satisfied: autonomy, competence and relatedness <span class="cite">(<span class="en">Gagné &amp; Deci, 2005</span>)</span>. We translate these general needs into specific needs that innovators experience within the organization, summarized in Table 7.1.</p>
+<div class="tw">
+<table>
+<caption><b>Table 7.1</b> What innovators need and what the organization does to meet those needs</caption>
+<thead><tr><th>Need</th><th>What it looks like when met</th><th>What the organization does</th><th>Discussed in</th></tr></thead>
+<tbody>
+<tr><td><strong>Recognition of the idea</strong></td><td>The idea's owner feels it was read and understood, and receives credit for it</td><td>A reasoned response within an announced time frame, and keeping the owner's name attached to the idea at every stage</td><td>Ch. 5, Ch. 8, Ch. 10</td></tr>
+<tr><td><strong>Opportunity</strong></td><td>Finds a route to a real problem, and to someone who can try out the solution</td><td>Opening problems up to people, and reducing the steps between the idea's owner and those who can help</td><td>Ch. 6, Ch. 11</td></tr>
+<tr><td><strong>Deferred criticism</strong></td><td>The idea is explored before it is judged</td><td>Separating idea-generation sessions from evaluation sessions, and judging each stage by its own criteria</td><td>Ch. 12</td></tr>
+<tr><td><strong>Autonomy within boundaries</strong></td><td>Knows the problem and the goal, and owns the way to solve it</td><td>Defining the “what” and the “why” clearly, and leaving the “how” to people</td><td>Ch. 3, Ch. 4</td></tr>
+<tr><td><strong>Resources and support</strong></td><td>Finds enough to test the idea, and a sponsor who champions it</td><td>Staged funding, protected time, prototyping tools and executive sponsorship</td><td>Ch. 6, Ch. 10, Ch. 14</td></tr>
+<tr><td><strong>Understanding and fit</strong></td><td>Finds a system that suits their way of thinking and makes room for differences among people</td><td>Flexible entry routes: a conversation, a prototype or a written proposal</td><td>Ch. 5, Ch. 8</td></tr>
+<tr><td><strong>Meaningful progress</strong></td><td>Sees their idea moving, and sees its effect on a problem they care about</td><td>Making the idea's status visible, and celebrating interim steps alongside final results</td><td>Ch. 8, Ch. 15, Ch. 16</td></tr>
+</tbody>
+</table>
+</div>
+<p>Two of these needs deserve a closer look. The first is <strong>deferred criticism</strong>. As early as the middle of the last century, Osborn called for separating the generation of ideas from judging them <span class="cite">(<span class="en">Osborn, 1953</span>)</span>. Amabile's research explains why this separation matters: expecting evaluation while working weakens intrinsic motivation and pushes people toward safe, familiar solutions <span class="cite">(<span class="en">Amabile, 1996</span>)</span>. Deferring criticism means putting it in its proper place along the path: an idea needs rigorous evaluation, but only after it has been given a chance to take shape.</p>
+<p>The second is <strong>autonomy within boundaries</strong>, the concept that ties the chapters of this book together. Innovators do not need absolute freedom; indeed, boundless freedom can scatter their efforts. What they need is a clear problem and an understood goal, and then to be left to choose the route <span class="cite">(<span class="en">Amabile, 1998</span>)</span>. Leadership that specifies the “how” in detail deprives them of autonomy, and leadership that fails to specify the “what” deprives them of direction.</p>
+<div class="callout" data-k="teacher">
+<div class="tag">In Practice</div>
+<p>Take the last five ideas put forward by people on your team and ask yourself about each one: Does its owner know what happened to it? Were they told the reasons for the decision? Is their name still attached to it? Your answers reveal what your team has learned about whether thinking is worth the effort.</p>
+</div>
+<h2 id="s5"><span class="sec">7.5</span>The environment: barriers and enablers</h2>
+<p>If motivation is the component of creativity most quickly affected by the environment, the next question is what in the environment raises or lowers it. Amabile and her colleagues developed an instrument for assessing the work environment for creativity and used it to compare projects rated as high and low in creativity within the same organizations. They found that the high-creativity projects were distinguished by encouragement at the level of the organization, the supervisor and the work group, by freedom in how the work was done, by challenge, and by sufficient resources. The low-creativity projects were marked by organizational impediments, such as internal conflict, conservatism and rigid formal structures, and by excessive workload pressure <span class="cite">(<span class="en">Amabile et al., 1996</span>)</span>.</p>
+<p>These findings intersect with the environmental arc in the innovator's path model, as Figure 7.3 shows.</p>
+<figure>
+<div class="envx">
+<div class="no"><h6>Barriers</h6>
+<ul>
+<li>Excessive evaluation and monitoring<br/><small>Attention shifts from the work to the judgment expected of it</small></li>
+<li>Criticizing new ideas at the outset<br/><small>People learn to put forward only safe ideas</small></li>
+<li>No encouragement of calculated risk-taking<br/><small>Making a mistake becomes costlier than not trying</small></li>
+<li>Excessive time pressure<br/><small>No room is left for deep thinking</small></li>
+<li>Authoritarian interference in how the work is done<br/><small>Autonomy is taken away and motivation weakens</small></li>
+</ul></div>
+<div class="yes"><h6>Enablers</h6>
+<ul>
+<li>Sufficient freedom in how the work is done<br/><small>Autonomy within the boundaries of the problem</small></li>
+<li>Support for sharing ideas<br/><small>Nearby channels, and a reception that respects the idea's owner</small></li>
+<li>Autonomy of judgment<br/><small>The person is treated as an expert in their own work</small></li>
+<li>Non-authoritarian attitudes<br/><small>The leader facilitates the work and backs those doing it</small></li>
+<li>Meaningful challenge and sufficient resources<br/><small>A task worth the effort, and enough to accomplish it</small></li>
+</ul></div>
+</div>
+<figcaption><b>Figure 7.3</b> Barriers to and enablers of a creative environment. Developed by the author, drawing on <span class="cite"><span class="en">Amabile et al. (1996)</span></span>.</figcaption>
+</figure>
+<p>Three things stand out in the figure. First, most barriers are small everyday practices: a sarcastic remark in a meeting, a weekly progress report that no one reads, or an unnecessary deadline. Second, many of them arise from good intentions: monitoring is meant to ensure quality, and early criticism is meant to save effort. Third, the enablers cost little money, but they require awareness on the part of leaders and a change in their habits. This is why many organizations spend on visible inputs, such as centers and platforms, while keeping the everyday barriers that cancel out their effect.</p>
+<p>Chapter 8 treats culture as the wider frame for these practices: unwritten values and norms, psychological safety, and the handling of failure.</p>
+<h2 id="s6"><span class="sec">7.6</span>Systems with room for people</h2>
+<p>The opening case returns with one final question: if the university redesigned its system around the student rather than around its procedures, what would change? Each step in her journey can be read as an unmet need:</p>
+<ul>
+<li><strong>In the course:</strong> she needed an <em>opportunity</em>. An assignment that measures memorization of information has no room for an idea. An assignment that asks students to identify a problem in their field of study and propose a solution to it, by contrast, turns the course itself into a channel for innovation and gives the professor the role of first supporter.</li>
+<li><strong>At the accelerator:</strong> she needed <em>fit</em>. A full business plan suits someone who has reached the practice stage; someone still in the thinking stage needs a conversation, guidance and a small next step.</li>
+<li><strong>On the platform:</strong> she needed <em>recognition</em>. A reasoned response within an announced time frame, even a polite decline, would have kept her on the path, and might have brought her back to it with a better idea.</li>
+</ul>
+<p>The first step on this list matters most, because it touches every student, whereas only a few of them ever knock on the accelerator's door. In a study of 373 undergraduates from several Saudi universities, faculty support in everyday teaching was associated with students' creative self-efficacy and their innovative behavior, and self-efficacy explained part of this relationship <span class="cite">(<span class="en">Alsamani &amp; Alqahtani, 2026</span>)</span>. It follows that specialized structures, such as incubators and accelerators, and the daily work of faculty members with their students are two parts of a single system. Faculty members themselves believe that students with creative traits need, alongside thinking and problem-solving skills, to become aware of promising creative and innovative opportunities aligned with Saudi Vision 2030 <span class="cite">(Alsamani, 2023 [Arabic])</span>.</p>
+<p>This reading extends beyond the university. In any organization, each stage of the innovation system can be reviewed with a single question: what does the idea's owner need here, and what do they actually find? A system that asks this question regularly evolves around people; one that does not evolves around itself.</p>
+<p>This question grows more important with artificial intelligence. AI tools now do much of what used to set the expert apart, including drafting the kind of business plan that stopped the student in her tracks. What remains for people is what the tool cannot do for them: noticing a problem no one asked them to notice, and caring about it enough to follow it through. These two things are precisely what the environment wins or loses.</p>
+<div class="callout" data-k="key">
+<div class="tag">Principle</div>
+<p>A system built around procedure waits for ideas; a system built around people calls them forth. The difference between the two shows in what happens to one person's idea in its first week.</p>
+</div>
+<h2 class="unnum" id="tool">Chapter tool: The innovator's journey</h2>
+<p>Choose a real idea that passed through your organization in the past year, preferably one that was never completed. Sit down with its owner and trace its journey together, step by step. At each step, record the unit it dealt with, what the idea's owner needed, and what they actually found. Then identify the point at which the path stalled and the need that went unmet there. Repeat the tool with three or four ideas, and look for the point that recurs.</p>
+<div class="tw">
+<table>
+<caption><b>Chapter tool</b> The innovator's journey (example from the opening case)</caption>
+<thead><tr><th>Step</th><th>Unit</th><th>What was needed</th><th>What was found</th><th>Effect on motivation</th></tr></thead>
+<tbody>
+<tr><td>Noticing the problem</td><td>Field training site</td><td>Time and space to reflect</td><td>Available</td><td>High</td></tr>
+<tr><td>First pitch</td><td>Course professor</td><td>An opportunity in the course to develop the idea</td><td>Praise without opportunity</td><td>Steady</td></tr>
+<tr><td>Seeking support</td><td>Business accelerator</td><td>Guidance suited to the thinking stage</td><td>A requirement for a full business plan</td><td>Low</td></tr>
+<tr><td>Formal registration</td><td>Ideas platform</td><td>A reasoned response within an announced time frame</td><td>Automated reply, then silence</td><td>Extinguished</td></tr>
+<tr><td colspan="5"><strong>Stalling point:</strong> decision limbo on the platform. <strong>Unmet need:</strong> recognition.</td></tr>
+</tbody>
+</table>
+</div>
+<h2 class="unnum" id="summary">Chapter Summary</h2>
+<div class="summary">
+<ul>
+<li>Innovation systems remain empty when they are designed around procedure and assume that ideas will flow into them of their own accord; an idea is born in a person who chooses to make an effort no one asked of them.</li>
+<li>Individual creativity is shaped by domain-relevant skills, creativity-relevant processes and intrinsic motivation. Of these, motivation is the most quickly affected by the environment.</li>
+<li>The characteristics of innovators are distributed among people in varying degrees, and some of them, such as creative self-efficacy, are built or broken by the work environment.</li>
+<li>The innovator passes through two different stages: thinking, which calls for freedom and time; and practice, which calls for opportunities, resources and support.</li>
+<li>The path has four possible outcomes, and the most damaging to motivation is “no decision” with the process stalled, because silence teaches the idea's owner not to try.</li>
+<li>Most barriers to a creative environment take the form of small everyday practices, whereas the enablers call for awareness and well-established habits more than for money.</li>
+<li>A professor's support in everyday teaching is associated with students' creative self-efficacy and innovative behavior, and it works together with incubators and accelerators as part of a single system.</li>
+<li>An innovation system is reviewed from the perspective of the idea's owner with one question at each stage: what do they need here, and what do they actually find?</li>
+</ul>
+</div>
+<h3>Key Terms</h3>
+<dl class="gloss">
+<dt>Componential model of creativity<span class="en">Componential model of creativity</span></dt><dd>A model that explains individual creativity through domain-relevant skills, creativity-relevant processes and intrinsic task motivation, within the context of the work environment.</dd>
+<dt>Intrinsic task motivation<span class="en">Intrinsic task motivation</span></dt><dd>The drive to engage in work because of the interest and challenge it holds, rather than for an external reward.</dd>
+<dt>Creative self-efficacy<span class="en">Creative self-efficacy</span></dt><dd>A person's belief in their ability to produce new and useful ideas.</dd>
+<dt>The innovator's path<span class="en">The innovator's path</span></dt><dd>A model that reads an idea's journey from the perspective of its owner, from thinking to practice, along with its possible outcomes and the surrounding environment.</dd>
+<dt>Work environment for creativity<span class="en">Work environment for creativity</span></dt><dd>The enablers and barriers within an organization that affect employees' creativity, particularly their motivation.</dd>
+</dl>
+<h3>Review and Discussion Questions</h3>
+<ol class="questions">
+<li>Why is intrinsic motivation the component of creativity most affected by the environment? What does this imply for managers? <span class="lv">Understanding</span></li>
+<li>In light of Oldham and Cummings's study, what are the limits of relying on hiring people with creative personalities to raise innovation in an organization? <span class="lv">Analysis</span></li>
+<li>Choose an innovation program in your organization, identify which of the two stages of the innovator's path it serves, and what it would need in order to serve the other. <span class="lv">Application</span></li>
+<li>Apply the innovator's journey tool to a real idea, and identify the unmet need at the stalling point. <span class="lv">Application</span></li>
+<li>“Deferring criticism weakens the quality of ideas because it lets weak ones through.” Evaluate this statement. <span class="lv">Evaluation</span></li>
+</ol>
+<h2 class="unnum" id="refs">Chapter references</h2>
+<ol class="refs">
+<li>Alsamani, O. A. (2023). [Needs of creatively and innovatively gifted university students for stimulating creativity and innovation] [In Arabic]. <i>Journal of Human Sciences, University of Hail, 6</i>(19, Pt. 2), 39–62.</li>
+<li>Alsamani, O. A. (2026). [The supportive community for innovation and entrepreneurship for gifted individuals as perceived by Saudi innovative entrepreneurs: A qualitative phenomenological study] [In Arabic]. <i>Journal of Educational and Psychological Sciences, Qassim University, 19</i>(2), 621–652.</li>
+<li>Alsamani, O. A. (2019). <i>Fostering creativity and innovation in gifted students through the eyes of gifted education educators</i> [Doctoral dissertation, University of Northern Colorado]. https://digscholarship.unco.edu/dissertations/573/</li>
+<li>Alsamani, O. A. (2023). The development of innovation for the creatively gifted: A phenomenological study of the lived experiences of successful outstanding innovators. <i>International Journal of Educational Sciences, 41</i>(1–3), 70–81. https://doi.org/10.31901/24566322.2023/41.1-3.1279</li>
+<li>Alsamani, O. A., &amp; Alqahtani, Y. A. (2026). <i>Cultivating innovation in higher education: The role of everyday faculty support and creative self-efficacy</i> [Manuscript submitted for publication]. Department of Special Education, University of Hail.</li>
+<li>Amabile, T. M. (1988). A model of creativity and innovation in organizations. <i>Research in Organizational Behavior, 10</i>, 123–167.</li>
+<li>Amabile, T. M. (1996). <i>Creativity in context: Update to "The social psychology of creativity."</i> Westview Press.</li>
+<li>Amabile, T. M. (1998). How to kill creativity. <i>Harvard Business Review, 76</i>(5), 76–87.</li>
+<li>Amabile, T. M., Conti, R., Coon, H., Lazenby, J., &amp; Herron, M. (1996). Assessing the work environment for creativity. <i>Academy of Management Journal, 39</i>(5), 1154–1184. https://doi.org/10.2307/256995</li>
+<li>Amabile, T. M., &amp; Pratt, M. G. (2016). The dynamic componential model of creativity and innovation in organizations: Making progress, making meaning. <i>Research in Organizational Behavior, 36</i>, 157–183. https://doi.org/10.1016/j.riob.2016.10.001</li>
+<li>Baer, M. (2012). Putting creativity to work: The implementation of creative ideas in organizations. <i>Academy of Management Journal, 55</i>(5), 1102–1119. https://doi.org/10.5465/amj.2009.0470</li>
+<li>Feist, G. J. (1998). A meta-analysis of personality in scientific and artistic creativity. <i>Personality and Social Psychology Review, 2</i>(4), 290–309. https://doi.org/10.1207/s15327957pspr0204_5</li>
+<li>Gagné, M., &amp; Deci, E. L. (2005). Self-determination theory and work motivation. <i>Journal of Organizational Behavior, 26</i>(4), 331–362. https://doi.org/10.1002/job.322</li>
+<li>Oldham, G. R., &amp; Cummings, A. (1996). Employee creativity: Personal and contextual factors at work. <i>Academy of Management Journal, 39</i>(3), 607–634. https://doi.org/10.2307/256657</li>
+<li>Osborn, A. F. (1953). <i>Applied imagination: Principles and procedures of creative thinking</i>. Scribner.</li>
+<li>Tierney, P., &amp; Farmer, S. M. (2002). Creative self-efficacy: Its potential antecedents and relationship to creative performance. <i>Academy of Management Journal, 45</i>(6), 1137–1148. https://doi.org/10.2307/3069429</li>
+</ol>
+<div aria-hidden="true" class="endmark">✦ ✦ ✦</div>
+<aside class="bp-cite" dir="ltr"><b>How to cite this section</b><p class="bp-ref">Alsamani, O. A. (2026). Chapter 7: The innovator and their environment. In <i>Innovation Management</i>. alsamani.com. https://alsamani.com/books/innovation-management/en/ch07.html</p><p class="bp-lic2">© 2026 Dr. Omar A. Alsamani. Free to read, download, share and quote for non-commercial purposes with attribution to the author and source.</p></aside>
+<nav class="pager"><a class="prev" href="ch06.html"><small>Previous chapter</small><b>The organizational architecture of innovation</b></a><a class="next" href="ch08.html"><small>Next chapter</small><b>Innovation culture and the enabling environment</b></a></nav>
+</div>
+<footer class="bp-foot" dir="ltr"><div class="bp-fin"><a class="bp-fid" href="../../../index.html"><span class="bp-fmark">OA</span><b>Dr. Omar A. Alsamani</b></a>
+<nav><a href="../../../index.html">Updates</a><a href="../../../books/index.html">Open Library</a><a href="../../../publications/index.html">Publications</a><a href="../../../tools/index.html">Tools</a><a href="../../../photography/index.html">Photography</a><a href="../../../about/index.html">About</a><a href="../../../contact/index.html">Contact</a></nav><p><bdi dir="ltr">© 2007–2026 alsamani.com</bdi></p><div class="pv" id="pv" dir="ltr" hidden></div></div></footer><script>(function(){{var el=document.getElementById('pv');if(!el)return;var live=/(^|\.)alsamani\.com$/.test(location.hostname);
+fetch('https://abacus.jasoncameron.dev/'+(live?'hit':'get')+'/alsamani-com/views').then(function(r){{return r.json()}}).then(function(d){{
+if(typeof d.value!=='number')return;var s=String(d.value);while(s.length<4)s='0'+s;
+el.innerHTML=s.split('').map(function(){{return '<span class="pv-d"><span class="pv-s">0<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9</span></span>'}}).join('');
+el.hidden=false;var cells=el.querySelectorAll('.pv-s');
+requestAnimationFrame(function(){{requestAnimationFrame(function(){{s.split('').forEach(function(c,i){{cells[i].style.transform='translateY('+(-c*10)+'%)'}})}})}})}}).catch(function(){{}})}})();
+</script><style>.bp-foot{box-shadow:0 0 0 100vmax var(--bpf,#F5F5F7);clip-path:inset(0 -100vmax);background:#F5F5F7;color:#6E6E73;font:13px/1.6 -apple-system,BlinkMacSystemFont,"IBM Plex Sans Arabic","Inter",sans-serif;margin-top:56px;padding:36px 20px calc(36px + env(safe-area-inset-bottom))}
+.bp-fin{max-width:1120px;margin:0 auto;display:flex;flex-wrap:wrap;gap:18px 40px;align-items:center;justify-content:space-between}
+.bp-fid{display:flex;align-items:center;gap:10px;color:#1D1D1F!important;text-decoration:none}.bp-fid b{font-weight:600}
+.bp-fmark{width:30px;height:30px;border:1px solid currentColor;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:600;letter-spacing:.04em}
+.bp-foot nav{display:flex;flex-wrap:wrap;gap:6px 22px}.bp-foot nav a{color:#6E6E73!important;text-decoration:none}.bp-foot nav a:hover{color:#1D1D1F!important}
+.bp-foot p{margin:0;flex-basis:100%;font-size:12px;border-top:1px solid #D2D2D7;padding-top:14px}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .bp-foot{--bpf:#161617;background:#161617;color:#A1A1A6}:root:not([data-theme="light"]) .bp-fid{color:#F5F5F7!important}}
+:root[data-theme="dark"] .bp-foot{--bpf:#161617;background:#161617;color:#A1A1A6}:root[data-theme="dark"] .bp-fid{color:#F5F5F7!important}
+@media print{.bp-foot{display:none}}</style><style>.pv{display:flex;justify-content:center;gap:4px;margin:14px auto 4px;grid-column:1/-1;width:100%}
+.bp-fin>p{text-align:center;width:100%}
+.pv[hidden]{display:none}
+.pv-d{display:inline-block;width:1.25em;height:1.7em;overflow:hidden;border-radius:6px;background:var(--bg,#fff);box-shadow:inset 0 0 0 1px var(--line,#d2d2d7);font:500 13px/1.7em "SF Mono",ui-monospace,Menlo,monospace;text-align:center;color:var(--ink,#1d1d1f)}
+.pv-s{display:block;transition:transform 1.4s cubic-bezier(.2,.8,.2,1)}
+@media (prefers-reduced-motion:reduce){.pv-s{transition:none}}
+.bp-foot .pv-d{background:#fff;box-shadow:inset 0 0 0 1px #d2d2d7;color:#1d1d1f}</style>
+</body>
+</html>

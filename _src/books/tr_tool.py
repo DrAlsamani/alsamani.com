@@ -15,7 +15,7 @@ import sys, os, json, re, hashlib
 from bs4 import BeautifulSoup
 ROOT = os.path.dirname(os.path.abspath(__file__))
 AR = re.compile(r'[؀-ۿ]')
-LEAF = {'p','li','h1','h2','h3','h4','h5','figcaption','caption','td','th','dt','dd','summary','title','text','tspan','button','label'}
+LEAF = {'p','li','h1','h2','h3','h4','h5','h6','figcaption','caption','td','th','dt','dd','summary','title','text','tspan','button','label'}
 INLINE = {'div','span','b','a','small','i','strong','em'}
 
 def H(s):

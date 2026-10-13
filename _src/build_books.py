@@ -154,7 +154,7 @@ def build_book(b, make_pdf):
     k = idx.rfind('<div class="endmark"')
     home = idx[:k] + dl + '\n' + idx[k:] if k > -1 else idx.replace('</body>', dl + '\n</body>', 1)
     if os.path.exists(os.path.join(src, 'en', 'index.html')):
-        home = home.replace('<h2 id="contents">', '<p class="bp-ednote"><a href="en/index.html" lang="en">English edition</a> · قيد الترجمة فصلًا فصلًا</p>\n<h2 id="contents">', 1)
+        home = home.replace('<h2 id="contents">', '<p class="bp-ednote"><a href="en/index.html" lang="en">English edition</a></p>\n<h2 id="contents">', 1)
     open(os.path.join(dst, 'index.html'), 'w').write(chrome(home, 'index.html', True))
 
     # elements page
@@ -197,11 +197,12 @@ def build_en(b, order, draft, toc_ar=None):
     if not os.path.isfile(os.path.join(src, 'index.html')):
         return en_landing(b, toc_ar or [], draft)
     dst = os.path.join(OUT, slug, 'en'); os.makedirs(dst, exist_ok=True)
+    en_pdf = os.path.exists(os.path.join(dst, 'pdf', slug + '-full.pdf'))
     have = [f for f in order if os.path.exists(os.path.join(src, f))]
     title_en = b.get('title_en', b['title'])
     toc, search = [], []
     def chrome(s, f, is_index=False):
-        ar_link = f'<a class="bp-btn" href="../{f}" hreflang="ar" lang="ar">العربية</a>'
+        ar_link = f'<a class="bp-btn" href="../{f}" hreflang="ar" lang="ar">العربية</a>' + (f'<a class="bp-btn" href="pdf/{f[:-5]}.pdf" download>PDF</a>' if (not is_index and os.path.exists(os.path.join(dst, 'pdf', f[:-5] + '.pdf'))) else '')
         bar = f'''<div class="bp-bar" dir="ltr"><div class="bp-in">
 <a class="bp-home" href="../../../index.html">Dr. Omar A. Alsamani</a><span class="bp-sep">/</span><a href="../../index.html">Open Library</a><span class="bp-sep">/</span><a href="index.html" class="bp-book">{e(title_en)}</a>
 <span class="bp-sp"></span><span class="bp-tools"><button class="bp-ic" type="button" data-rd="z-" aria-label="Smaller text" title="Smaller text">A−</button><button class="bp-ic" type="button" data-rd="z+" aria-label="Larger text" title="Larger text">A+</button><button class="bp-ic" type="button" data-rd="theme" aria-label="Dark mode" title="Dark/light mode">Dark</button></span>{ar_link}<button class="bp-btn" type="button" data-notes>Notes<i hidden></i></button><button class="bp-btn" type="button" data-share>Share</button><button class="bp-btn" type="button" data-bp="search">Search</button><button class="bp-btn solid" type="button" data-bp="toc">Contents</button></div></div>
@@ -210,7 +211,7 @@ def build_en(b, order, draft, toc_ar=None):
 <div class="bp-head"><b>{e(title_en)}</b><button type="button" class="bp-x" data-bp="close" aria-label="Close">×</button></div>
 <div class="bp-search"><input id="bpQ" type="search" placeholder="Search the text of the book…" autocomplete="off"><div id="bpRes"></div></div>
 <nav class="bp-toc" id="bpToc"></nav>
-<div class="bp-links"><a href="../index.html#downloads">Download the Arabic edition (PDF)</a><a href="../../index.html">Open Library</a><a href="../../../index.html">alsamani.com home</a></div>
+<div class="bp-links">{'<a href="pdf/' + slug + '-full.pdf" download>Download the book (PDF)</a>' if en_pdf else ''}<a href="../../index.html">Open Library</a><a href="../../../index.html">alsamani.com home</a></div>
 </div></div>'''
         head = (('<meta name="robots" content="noindex,nofollow">' if draft else '') + EN_FONTS + EN_CSS +
                 f'<link rel="alternate" hreflang="ar" href="https://alsamani.com/books/{slug}/{f}">' +
@@ -232,7 +233,7 @@ def build_en(b, order, draft, toc_ar=None):
             t = text(re.sub(r'<(script|style|nav)[\s\S]*?</\1>', '', p))
             if len(t) > 40: search.append({'f': f, 'id': cur_id, 'c': title, 's': cur_t, 't': t[:4000]})
         url = f"https://alsamani.com/books/{slug}/en/{f}"
-        cite = f'''<aside class="bp-cite" dir="ltr"><b>How to cite this section</b><p class="bp-ref">Alsamani, O. A. (2026). {e(title)}. In <i>{e(title_en)}</i>. alsamani.com. {url}</p><p class="bp-lic2">© 2026 {e(b.get('author_en',''))}. English translation of the Arabic original. Free to read, download, share and quote for non-commercial purposes with attribution to the author and source.</p></aside>'''
+        cite = f'''<aside class="bp-cite" dir="ltr"><b>How to cite this section</b><p class="bp-ref">Alsamani, O. A. (2026). {e(title)}. In <i>{e(title_en)}</i>. alsamani.com. {url}</p><p class="bp-lic2">© 2026 {e(b.get('author_en',''))}. Free to read, download, share and quote for non-commercial purposes with attribution to the author and source.</p></aside>'''
         s = s.replace('<nav class="pager"', cite + '\n<nav class="pager"', 1)
         # links to chapters not yet translated go to the Arabic edition
         s = re.sub(r'href="([a-z0-9_-]+\.html)"', lambda m: m.group(0) if m.group(1) in have or m.group(1) == 'index.html' else f'href="../{m.group(1)}"', s)
@@ -240,7 +241,7 @@ def build_en(b, order, draft, toc_ar=None):
         open(os.path.join(dst, f), 'w').write(chrome(s, f))
     idx = open(os.path.join(src, 'index.html')).read()
     idx = re.sub(r'(<a href=")([a-z0-9_-]+\.html)(">)([\s\S]*?)(</a>)', lambda m: m.group(0) if m.group(2) in have else f'{m.group(1)}../{m.group(2)}{m.group(3)}{m.group(4)}<span class="bp-aronly">Arabic · translation in progress</span>{m.group(5)}', idx)
-    note = '<p class="bp-ednote">This English edition is being translated chapter by chapter from the Arabic original. Chapters not yet translated open in Arabic.</p>'
+    note = '' if len(have) >= len(order) else '<p class="bp-ednote">Further chapters of this English edition are in preparation.</p>'
     idx = idx.replace('<h2 id="contents">', note + '\n<h2 id="contents">', 1)
     open(os.path.join(dst, 'index.html'), 'w').write(chrome(idx, 'index.html', True))
     json.dump({'toc': toc, 'search': search}, open(os.path.join(dst, 'book-index.json'), 'w'), ensure_ascii=False)

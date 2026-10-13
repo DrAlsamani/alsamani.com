@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+
+<html dir="ltr" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
+<title>Chapter 6: The organizational architecture of innovation | Innovation Management | Dr. Omar A. Alsamani</title>
+<link href="../assets/book.css?v=ea7b3e63" rel="stylesheet"/>
+<link href="../assets/innov.css?v=7afb6de9" rel="stylesheet"/>
+<style>
+.models3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;font-family:var(--f-ui)}
+.models3>div{border:1.5px solid var(--line);border-radius:14px;padding:14px;min-width:0;background:var(--paper)}
+.models3 svg{width:100%;max-width:150px;height:auto;display:block;margin:0 auto 8px}
+.models3 .hub{fill:var(--accent)} .models3 .nd{fill:var(--paper);stroke:var(--ink-2);stroke-width:2} .models3 .ln{stroke:var(--ink-2);stroke-width:1.5} .models3 .lnd{stroke:var(--line);stroke-width:1.5;stroke-dasharray:3 3}
+.models3 b{display:block;font-family:var(--f-display);font-size:18px;text-align:center}
+.models3 dl{margin:8px 0 0;display:grid;gap:6px}
+.models3 dt{font-size:12px;font-weight:700;color:var(--ink-2)}
+.models3 dd{margin:0;font-size:13.5px;line-height:1.7}
+.models3 .rec{border-color:var(--accent);background:var(--accent-soft)}
+@media (max-width:680px){.models3{grid-template-columns:1fr}}
+.gap{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;font-family:var(--f-ui);position:relative}
+.gap>div{border:1.5px solid var(--line);background:var(--paper);padding:12px;text-align:center;min-width:0}
+.gap>div:first-child{border-radius:0 12px 12px 0} .gap>div:last-child{border-radius:12px 0 0 12px}
+.gap b{display:block;font-size:14.5px}
+.gap .k{display:block;font-size:12.5px;color:var(--good);font-weight:700;margin-top:4px}
+.gap .w{grid-column:1/-1;border:0;background:none;padding:10px 0 0}
+.gap .w span{display:block;border:2px dashed var(--warn);border-radius:12px;padding:10px;font-size:13.5px;line-height:1.7;color:var(--warn);font-weight:700}
+@media (max-width:560px){.gap{grid-template-columns:1fr 1fr}.gap>div{border-radius:10px!important;margin:3px}}
+.orch{display:grid;grid-template-columns:1fr 1fr;gap:12px;font-family:var(--f-ui)}
+.orch>div{border-radius:14px;padding:16px;min-width:0}
+.orch .no{background:var(--warn-soft);border:1px solid color-mix(in srgb,var(--warn) 30%,transparent)}
+.orch .yes{background:var(--good-soft);border:1px solid color-mix(in srgb,var(--good) 30%,transparent)}
+.orch h6{font-size:14px;margin:0 0 6px;font-weight:700}
+.orch .no h6{color:var(--warn)} .orch .yes h6{color:var(--good)}
+.orch ul{margin:0;padding-inline-start:1.1em;font-size:14px;line-height:1.85}
+@media (max-width:600px){.orch{grid-template-columns:1fr}}
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"><style>:root{--f-body:"Source Serif 4",Georgia,serif;--f-display:"Source Serif 4",Georgia,serif;--f-ui:"IBM Plex Sans",system-ui,sans-serif}.questions li::before{content:counter(q)}html{direction:ltr!important}body{letter-spacing:0;text-align:left}caption{text-align:left!important}.formula small{direction:ltr}.cover svg{left:auto!important;right:0}</style><link rel="alternate" hreflang="ar" href="https://alsamani.com/books/innovation-management/ch06.html"><link rel="stylesheet" href="../assets/platform.css?v=b4c32405"><script>window.BOOK={slug:"innovation-management-en",cur:"ch06.html",lang:"en",title:"Innovation Management",author:"Dr. Omar A. Alsamani"}</script><script src="../assets/platform.js?v=0d28c8d2" defer></script>
+<link rel="canonical" href="https://alsamani.com/books/innovation-management/en/ch06.html"><meta name="description" content="One university has what many organizations aspire to: a business accelerator, a Fab Lab for digital fabrication, an innovation oasis, research centers, a program for gifted students, and a Deanship of Student Affairs that organizes competitions. Each of these units has its own plan, indicators an…"><meta property="og:description" content="One university has what many organizations aspire to: a business accelerator, a Fab Lab for digital fabrication, an innovation oasis, research centers, a program for gifted students, and a Deanship of Student Affairs that organizes competitions. Each of these units has its own plan, indicators and a"><meta property="og:title" content="Chapter 6: The organizational architecture of innovation | Innovation Management | Dr. Omar A. Alsamani"><meta property="og:type" content="book"><meta property="og:url" content="https://alsamani.com/books/innovation-management/en/ch06.html"><meta property="og:site_name" content="Dr. Omar A. Alsamani"><meta name="author" content="Omar Abdullah Alsamani"></head>
+<body>
+<div class="bp-bar" dir="ltr"><div class="bp-in">
+<a class="bp-home" href="../../../index.html">Dr. Omar A. Alsamani</a><span class="bp-sep">/</span><a href="../../index.html">Open Library</a><span class="bp-sep">/</span><a href="index.html" class="bp-book">Innovation Management</a>
+<span class="bp-sp"></span><span class="bp-tools"><button class="bp-ic" type="button" data-rd="z-" aria-label="Smaller text" title="Smaller text">A−</button><button class="bp-ic" type="button" data-rd="z+" aria-label="Larger text" title="Larger text">A+</button><button class="bp-ic" type="button" data-rd="theme" aria-label="Dark mode" title="Dark/light mode">Dark</button></span><a class="bp-btn" href="../ch06.html" hreflang="ar" lang="ar">العربية</a><a class="bp-btn" href="pdf/ch06.pdf" download>PDF</a><button class="bp-btn" type="button" data-notes>Notes<i hidden></i></button><button class="bp-btn" type="button" data-share>Share</button><button class="bp-btn" type="button" data-bp="search">Search</button><button class="bp-btn solid" type="button" data-bp="toc">Contents</button></div></div>
+<div class="bp-share" id="bpShare" hidden dir="ltr"><b>Share this page</b><button type="button" data-sh="copy">Copy link</button><button type="button" data-sh="native" hidden>Share…</button><a data-sh="wa" target="_blank" rel="noopener">WhatsApp</a><a data-sh="x" target="_blank" rel="noopener">X</a><a data-sh="li" target="_blank" rel="noopener">LinkedIn</a><a data-sh="tg" target="_blank" rel="noopener">Telegram</a><a data-sh="mail">Email</a><small>To share a specific section, hover over its heading and click ¶</small></div>
+<div class="bp-drawer" id="bpDrawer" hidden dir="ltr"><div class="bp-panel" role="dialog" aria-label="Contents and search">
+<div class="bp-head"><b>Innovation Management</b><button type="button" class="bp-x" data-bp="close" aria-label="Close">×</button></div>
+<div class="bp-search"><input id="bpQ" type="search" placeholder="Search the text of the book…" autocomplete="off"><div id="bpRes"></div></div>
+<nav class="bp-toc" id="bpToc"></nav>
+<div class="bp-links"><a href="pdf/innovation-management-full.pdf" download>Download the book (PDF)</a><a href="../../index.html">Open Library</a><a href="../../../index.html">alsamani.com home</a></div>
+</div></div>
+<div class="page">
+<nav class="booknav"><a href="index.html">← Innovation Management</a><span>Part Two: Institutional foundations and people</span></nav>
+<header class="opener">
+<div aria-hidden="true" class="num">6</div>
+<div>
+<div class="kicker">Chapter 6</div>
+<h1>The organizational architecture of innovation</h1>
+</div>
+<p class="sub">In this chapter we explore how an organization arranges itself to house innovation: where innovation sits in the structure, the enablers it requires, how units can work together rather than each in isolation, and who leads this effort. We take the university as an applied case whose thread runs through later chapters.</p>
+</header>
+<nav aria-label="محتويات الفصل" class="toc">
+<b>In this chapter</b>
+<ol>
+<li class="u"><a href="#intro">Introduction</a></li>
+<li value="1"><a href="#s1">From standalone initiatives to organizational capability</a></li>
+<li><a href="#s2">Where does innovation sit in the structure?</a></li>
+<li><a href="#s3">Enablers</a></li>
+<li><a href="#s4">Innovation between units</a></li>
+<li><a href="#s5">The orchestrating unit</a></li>
+<li><a href="#s6">The chief innovation officer: role and competencies</a></li>
+<li class="u"><a href="#tool">Chapter tool</a></li>
+<li class="u"><a href="#summary">Summary and questions</a></li>
+<li class="u"><a href="#refs">Chapter references</a></li>
+</ol>
+</nav>
+<h2 class="unnum" id="intro">Introduction</h2>
+<div class="scene">
+<span class="lbl">Opening case: a Saudi university (composite case)</span>
+<p>One university has what many organizations aspire to: a business accelerator, a Fab Lab for digital fabrication, an innovation oasis, research centers, a program for gifted students, and a Deanship of Student Affairs that organizes competitions. Each of these units has its own plan, indicators and annual reports. Yet a student survey showed that many students did not know these units existed, and those who did saw no connection between them and their courses. Assignments in most courses measure the ability to answer exam questions; a student with an idea does not know where to take it; and each unit waits for students to come to it.</p>
+</div>
+<p>This university has all the inputs. What it lacks is the architecture that would bring these units together into a single ecosystem reaching students where they learn. That architecture is our concern in this chapter: how an organization arranges itself so that its side-by-side entities become an organizational capability for innovation.</p>
+<h3>Learning Objectives</h3>
+<p>After studying this chapter, the reader should be able to:</p>
+<ol class="objectives">
+<li>Distinguish between the success of a standalone initiative and building an organizational capability for innovation.</li>
+<li>Compare centralized, distributed and hybrid models for organizing innovation.</li>
+<li>Identify the enablers that innovation needs, with time foremost among them.</li>
+<li>Analyze the opportunities hidden in the gaps between units and design integration among them.</li>
+<li>Design an orchestrating unit that links the components of the ecosystem without becoming a new isolated entity.</li>
+<li>Define the role and competencies of the chief innovation officer and the ways they influence units and leadership.</li>
+</ol>
+<h2 id="s1"><span class="sec">6.1</span>From standalone initiatives to organizational capability</h2>
+<p>An innovation initiative may succeed thanks to an enthusiastic leader or an exceptional team, but that does not mean the organization has become capable of innovation. Organizational capability shows itself when the flow of opportunities, experiments and implementation is supported by a structure of roles, resources and relationships that endures when the organization’s standout members move on, and through which innovation is spread across the whole organization. This is why the international standard defines the innovation management system as the organization’s means of developing and demonstrating its innovation <em>capability</em> <span class="cite">(<span class="en">ISO, 2024</span>)</span>.</p>
+<p>When innovation stalls, organizations tend to blame a shortage of ideas or a lack of employee enthusiasm. It is more useful to ask about the architecture: Does innovation have a clear place in the structure? Are its enablers in place? Do units work together? Does the system reach people where they work?</p>
+<h2 id="s2"><span class="sec">6.2</span>Where does innovation sit in the structure?</h2>
+<p>Organizations follow one of three models in organizing innovation, each with its strengths and limits. From their study of large firms pursuing radical innovation, O’Connor and DeMartino concluded that building the capability for it requires turning scattered efforts into a clear organizational function <span class="cite">(<span class="en">O'Connor &amp; DeMartino, 2006</span>)</span>.</p>
+<figure>
+<div class="fig-frame">
+<div class="models3">
+<div>
+<svg aria-hidden="true" viewbox="0 0 150 110"><line class="ln" x1="75" x2="25" y1="55" y2="20"></line><line class="ln" x1="75" x2="125" y1="55" y2="20"></line><line class="ln" x1="75" x2="25" y1="55" y2="90"></line><line class="ln" x1="75" x2="125" y1="55" y2="90"></line><circle class="hub" cx="75" cy="55" r="16"></circle><circle class="nd" cx="25" cy="20" r="8"></circle><circle class="nd" cx="125" cy="20" r="8"></circle><circle class="nd" cx="25" cy="90" r="8"></circle><circle class="nd" cx="125" cy="90" r="8"></circle></svg>
+<b>Centralized</b>
+<dl><div><dt>Form</dt><dd>An independent unit that leads innovation for the whole organization</dd></div>
+<div><dt>Suited to</dt><dd>Building standards, and long-term bets</dd></div>
+<div><dt>Risk</dt><dd>Isolation from the units’ problems and difficulty transferring solutions to them</dd></div></dl>
+</div>
+<div>
+<svg aria-hidden="true" viewbox="0 0 150 110"><line class="lnd" x1="25" x2="125" y1="20" y2="20"></line><line class="lnd" x1="25" x2="125" y1="90" y2="90"></line><circle class="hub" cx="25" cy="20" r="9"></circle><circle class="hub" cx="125" cy="20" r="9"></circle><circle class="hub" cx="25" cy="90" r="9"></circle><circle class="hub" cx="125" cy="90" r="9"></circle><circle class="nd" cx="75" cy="55" r="8"></circle></svg>
+<b>Distributed</b>
+<dl><div><dt>Form</dt><dd>Each unit innovates within its own scope</dd></div>
+<div><dt>Suited to</dt><dd>Proximity to problems and speed of adoption</dd></div>
+<div><dt>Risk</dt><dd>Duplication and fragmentation, and missed cross-unit opportunities</dd></div></dl>
+</div>
+<div class="rec">
+<svg aria-hidden="true" viewbox="0 0 150 110"><line class="ln" x1="75" x2="25" y1="55" y2="20"></line><line class="ln" x1="75" x2="125" y1="55" y2="20"></line><line class="ln" x1="75" x2="25" y1="55" y2="90"></line><line class="ln" x1="75" x2="125" y1="55" y2="90"></line><line class="lnd" x1="25" x2="125" y1="20" y2="20"></line><line class="lnd" x1="25" x2="125" y1="90" y2="90"></line><circle class="nd" cx="75" cy="55" r="12"></circle><circle class="hub" cx="25" cy="20" r="8"></circle><circle class="hub" cx="125" cy="20" r="8"></circle><circle class="hub" cx="25" cy="90" r="8"></circle><circle class="hub" cx="125" cy="90" r="8"></circle></svg>
+<b>Hybrid</b>
+<dl><div><dt>Form</dt><dd>A small central team that runs the system and the portfolio, with focal points and teams in the units</dd></div>
+<div><dt>Suited to</dt><dd>Most organizations of medium maturity and size</dd></div>
+<div><dt>Risk</dt><dd>Ambiguous roles between the center and the units if they are not defined</dd></div></dl>
+</div>
+</div>
+</div>
+<figcaption><b>Figure 6.1</b> Three models for the place of innovation in the organizational structure.</figcaption>
+</figure>
+<p>A particular form of the centralized model, the <strong>innovation lab</strong>, has spread widely in the public sector. A study of 35 government labs found that the motives for setting them up included tackling complex problems and technical challenges, but also imitating other agencies and seeking legitimacy <span class="cite">(<span class="en">Tõnurist et al., 2017</span>)</span>. A lab created because others have created one, or to make the organization look innovative, risks remaining an input with no output.</p>
+<h2 id="s3"><span class="sec">6.3</span>Enablers</h2>
+<p>Wherever it sits in the structure, innovation needs enablers that are a precondition for its work. An organization’s declared support for innovation remains incomplete as long as people are innovating with the same resources they use for their routine work.</p>
+<div class="tw">
+<table>
+<caption><b>Table 6.1</b> The core enablers of innovation</caption>
+<thead><tr><th>Enabler</th><th>What it means</th><th>Sign of its absence</th></tr></thead>
+<tbody>
+<tr><td>Time</td><td>Protected time for exploration within official working hours</td><td>“Innovate once you’ve finished your tasks”</td></tr>
+<tr><td>Skills</td><td>Understanding beneficiaries, formulating hypotheses and designing experiments, alongside generating ideas</td><td>Repeated brainstorming workshops with no progress</td></tr>
+<tr><td>Data and tools</td><td>Access to data and to prototyping and testing tools</td><td>Teams waiting months to obtain data</td></tr>
+<tr><td>Spaces</td><td>Places for collaborative work and experimentation, close to people</td><td>An elegant space in a remote building that no one visits</td></tr>
+<tr><td>Networks</td><td>Connections to experts and partners inside and outside the organization</td><td>Every team starts from scratch</td></tr>
+<tr><td>Funding</td><td>Funding that increases in step with the evidence</td><td>Either no funding at all, or large early funding with no stages</td></tr>
+</tbody>
+</table>
+</div>
+<p><strong>Time</strong> deserves particular attention, because it is the scarcest and most overlooked of the enablers. Amabile and her colleagues analyzed the diaries of 177 employees and found that time pressure undermines creative thinking when people feel they are on a treadmill or working on autopilot, whereas creativity remains possible under pressure when people feel they are on a meaningful mission, know its purpose, and are protected from distraction <span class="cite">(<span class="en">Amabile et al., 2002</span>)</span>. The issue, then, goes beyond the amount of time to its meaning: do individuals feel that their time is directed toward a clear purpose, or spread across scattered tasks that never end?</p>
+<h2 id="s4"><span class="sec">6.4</span>Innovation between units</h2>
+<p>Many innovation opportunities lie in the gaps between organizational units. One unit may carry a burden created by a decision in another; an employee may re-enter data because systems are not integrated; a beneficiary may wait between two service points because ownership of their journey is fragmented. Each unit may look efficient on its local indicator, while the overall journey remains slow.</p>
+<figure>
+<div class="fig-frame">
+<div class="gap">
+<div><b>Unit A</b><span class="k">Its indicator: excellent</span></div>
+<div><b>Unit B</b><span class="k">Its indicator: excellent</span></div>
+<div><b>Unit C</b><span class="k">Its indicator: excellent</span></div>
+<div><b>Unit D</b><span class="k">Its indicator: excellent</span></div>
+<div class="w"><span>The beneficiary’s journey across the four units: waiting between each unit and the next, being asked for the same information again and again, and no one owning the journey as a whole</span></div>
+</div>
+</div>
+<figcaption><b>Figure 6.2</b> When every unit excels on its own indicator yet the overall journey stays slow: the territory of architectural innovation.</figcaption>
+</figure>
+<p>This does not mean that the answer is more meetings and joint committees. Hansen showed that collaboration between units has a cost, that it pays off only when its expected value exceeds that cost, and called for <strong>disciplined collaboration</strong>: collaboration measured by the specific result toward which it is directed <span class="cite">(<span class="en">Hansen, 2009</span>)</span>. Productive integration between units requires:</p>
+<ul>
+<li>A shared purpose and an outcome that goes beyond each unit’s indicator.</li>
+<li>A single picture of the journey: the flow of data and decisions, and the waiting points.</li>
+<li>Clear decision rights: who recommends, who decides, and who implements.</li>
+<li>Time, data and resources allocated to actual experimentation.</li>
+<li>An owner who takes responsibility for sustaining the solution once it has been tested.</li>
+</ul>
+<h2 id="s5"><span class="sec">6.5</span>The orchestrating unit</h2>
+<p>The opening case returns with a practical question: how can the university’s side-by-side units become a single ecosystem? The common response is to set up a new unit in charge of “innovation.” The risk is that this unit becomes a seventh isolated entity alongside the other six. A better alternative is an <strong>orchestrating unit</strong> that reports to senior leadership and works in the background. Its function is limited to connecting the existing units with one another and connecting all of them to the student, without owning initiatives or competing with those units.</p>
+<figure>
+<div class="orch">
+<div class="no"><h6>A unit that becomes a new, isolated entity</h6>
+<ul><li>Launches its own programs and competes with existing units</li><li>Measures its success by the number of its activities</li><li>Waits for students to come to it</li><li>Reports to a mid-level official</li></ul></div>
+<div class="yes"><h6>An orchestrating unit</h6>
+<ul><li>Connects existing units and supports their work</li><li>Measures its success by the flow of students and ideas between units and the results achieved</li><li>Goes to students in their classrooms and courses</li><li>Reports to senior leadership so that it has the authority to coordinate</li></ul></div>
+</div>
+<figcaption><b>Figure 6.3</b> The difference between a unit that adds a new isolated entity and one that builds bridges between existing entities.</figcaption>
+</figure>
+<p>At a university, integration can take several possible forms, depending on what the diagnosis reveals. Three pathways stand out:</p>
+<ul>
+<li><strong>Linking to formal learning:</strong> redesigning the assignments and projects in a limited number of common courses so that they become graded creative and innovative tasks, connecting them to the accelerator, the lab and university competitions, and then scaling up what works.</li>
+<li><strong>The student’s extended pathway:</strong> from attracting gifted students at the secondary school stage, to nurturing and empowering them during their studies in ways that fit their majors, to alumni services that keep them connected to the ecosystem.</li>
+<li><strong>Linking to the external ecosystem:</strong> partnerships with government and industry bodies in the region that open up real problems and opportunities for application to students.</li>
+</ul>
+<p>We return to these pathways in the chapters on the innovator and their environment, adoption and scaling, and innovation ecosystems, and then bring them together in Chapter 20 on the university innovation ecosystem.</p>
+<div class="callout" data-k="key">
+<div class="tag">Principle</div>
+<p>An ecosystem is built by designing the flow between its entities more than by adding new ones. The question that reveals the quality of the architecture is: how many steps does an idea’s owner need to take to reach someone who can help?</p>
+</div>
+<h2 id="s6"><span class="sec">6.6</span>The chief innovation officer: role and competencies</h2>
+<p>The orchestrating unit needs someone to lead it. Many organizations assign this to an innovation officer who goes by various titles: director of the innovation unit, head of innovation, or chief innovation officer. The role carries a paradox: its holder is responsible for results that are mostly achieved within units they do not head, by people who do not report to them. Their success is therefore measured more by their ability to make others succeed than by what they carry out themselves.</p>
+<h3>What the role takes on and what it avoids</h3>
+<p>The chief innovation officer’s role is consistent with the logic of the orchestrating unit: they build capability and leave ownership of ideas with those who originated them. Table 6.2 sets out the main domains of the role, what the officer takes on in each, and what they would do well to avoid.</p>
+<div class="tw">
+<table>
+<caption><b>Table 6.2</b> Domains of the chief innovation officer’s role. Prepared by the author.</caption>
+<thead><tr><th>Domain</th><th>What they take on</th><th>What they avoid</th></tr></thead>
+<tbody>
+<tr><td><strong>Strategy</strong></td><td>Works with leadership to formulate search fields and the level of ambition, and translates them into understandable priorities</td><td>Writing the strategy alone, or copying it from another organization</td></tr>
+<tr><td><strong>Portfolio</strong></td><td>Manages gates and staged funding, and ensures a reasoned response to every idea</td><td>Owning initiatives in place of their originators, or deciding on them unilaterally</td></tr>
+<tr><td><strong>Enablers</strong></td><td>Provides tools, skills and protected time, and removes procedural obstacles</td><td>Becoming the organization’s only source of ideas</td></tr>
+<tr><td><strong>Connection</strong></td><td>Connects units with one another, and connects the organization with partners and beneficiaries</td><td>Competing with existing units through parallel programs</td></tr>
+<tr><td><strong>Measurement</strong></td><td>Measures flow and impact, and learns from failure</td><td>Measuring their success by the number of events and competitions</td></tr>
+<tr><td><strong>Communication</strong></td><td>Tells the story of what is achieved and credits it to those responsible</td><td>Attributing success to their own unit</td></tr>
+</tbody>
+</table>
+</div>
+<h3>Competencies</h3>
+<p>The OECD identified six core skills for public sector innovation that public servants need to varying degrees, and that those who lead innovation need to a greater degree: <strong>iteration</strong>, that is, developing solutions through rapid rounds of prototyping and testing; <strong>data literacy</strong>; <strong>user centricity</strong>; <strong>curiosity</strong>, that is, seeking out new ideas and different perspectives; <strong>storytelling</strong>, that is, explaining change through a narrative that builds support for it and links the past to the present and a possible future; and <strong>insurgency</strong>, that is, challenging the status quo, working with unusual partners, and treating setbacks as opportunities to learn <span class="cite">(<span class="en">OECD, 2017</span>)</span>.</p>
+<p>The chief innovation officer’s position between units adds a critically important competency: <strong>influence without authority</strong>. Cohen and Bradford argue that such influence rests on exchange: the person making a request understands what the other party cares about and what they can offer in return, whether resources, information, support or recognition, so that the relationship shifts from a request to a partnership <span class="cite">(<span class="en">Cohen &amp; Bradford, 2005</span>)</span>. Those who lead innovation by instruction alone usually obtain formal compliance; exchange is more likely to generate commitment.</p>
+<h3>Winning leadership attention</h3>
+<p>The chief innovation officer also needs to place on leadership’s agenda issues that were not there before. Dutton and Ashford described this phenomenon and named it <strong>issue selling</strong>: the efforts employees make to direct senior management’s attention to issues they consider important and to shape how management understands them <span class="cite">(<span class="en">Dutton &amp; Ashford, 1993</span>)</span>. A later study identified three sets of moves that distinguish successful attempts: <strong>packaging</strong> moves, such as linking the issue to the organization’s goals and presenting it in the language of results and cost; <strong>involvement</strong> moves, such as building a coalition of supporters before the pitch; and <strong>process</strong> moves, such as careful preparation, choosing the right timing, and combining formal and informal channels <span class="cite">(<span class="en">Dutton et al., 2001</span>)</span>. A good idea presented at the wrong time, or in language that does not speak to leadership, may be rejected even though it deserves acceptance.</p>
+<h3>Where to begin?</h3>
+<p>When someone is put in charge of innovation, it is tempting to start with a visible program that proves their presence: a competition, a platform or an award. It is wiser to understand before building. They can map the internal ecosystem using the tool presented in this chapter, listen to leadership, units and beneficiaries, look for successful efforts already under way, and agree with leadership on a clear mandate and defined decision rights. Then they can choose one or two initiatives that address a problem everyone acknowledges, use them to produce early evidence of value, and earn the trust on which to build what comes next.</p>
+<h2 class="unnum" id="tool">Chapter tool: internal ecosystem map</h2>
+<p>Draw a map of the units that support innovation in your organization. For each unit, note what it offers, who actually benefits from it, its connection to people’s everyday work, and its connection to the other units. Then look for three signs on the map: a unit unknown to those it is supposed to serve, two units offering the same service, and an idea that finds no clear path from one unit to another.</p>
+<div class="tw">
+<table>
+<caption><b>Chapter tool</b> Internal ecosystem map (example from the university case)</caption>
+<thead><tr><th>Unit</th><th>What it offers</th><th>Who actually benefits</th><th>Connection to everyday work</th><th>Connection to other units</th></tr></thead>
+<tbody>
+<tr><td>Business accelerator</td><td>Incubating entrepreneurial ventures</td><td>A limited number of proactive students</td><td>Weak: no link to courses</td><td>Limited</td></tr>
+<tr><td>Fab Lab</td><td>Prototyping and fabrication tools</td><td>Students from some engineering colleges</td><td>Moderate</td><td>No link to the accelerator</td></tr>
+<tr><td>Gifted program</td><td>Enrichment programs</td><td>Those enrolled in the program</td><td>Separate from students’ majors</td><td>Limited</td></tr>
+<tr><td>Colleges and courses</td><td>Formal learning</td><td>All students</td><td>They are the everyday work itself</td><td>Do not refer students to any unit</td></tr>
+<tr><td>…</td><td></td><td></td><td></td><td></td></tr>
+</tbody>
+</table>
+</div>
+<h2 class="unnum" id="summary">Chapter Summary</h2>
+<div class="summary">
+<ul>
+<li>Organizational capability for innovation rests on a structure of roles, resources and relationships that holds firm when individuals move on, and so goes beyond reliance on a few of them.</li>
+<li>There are three models for placing innovation in the structure: centralized, distributed and hybrid. The hybrid model suits most organizations, provided roles are clearly defined between the center and the units.</li>
+<li>Labs and centers set up out of imitation or in pursuit of legitimacy risk remaining inputs without outputs.</li>
+<li>Innovation needs enablers: time, skills, data, spaces, networks and staged funding. Time is the scarcest of these, and what matters is its meaning more than its quantity.</li>
+<li>Many opportunities lie in the gaps between units, and productive integration is disciplined collaboration directed toward a specific result.</li>
+<li>An orchestrating unit connects existing units with one another and with people, removing the need to add a new isolated entity.</li>
+<li>The chief innovation officer leads results achieved in units they do not head. They build capability and leave ideas to their originators, rely on influence without authority and on issue selling to leadership, and begin by understanding before building.</li>
+</ul>
+</div>
+<h3>Key Terms</h3>
+<dl class="gloss">
+<dt>Innovation capability<span class="en">Innovation capability</span></dt><dd>An organization’s ability to innovate repeatedly and independently of particular individuals.</dd>
+<dt>Innovation lab<span class="en">Innovation lab</span></dt><dd>A unit dedicated to experimentation and to tackling complex problems with new methods.</dd>
+<dt>Disciplined collaboration<span class="en">Disciplined collaboration</span></dt><dd>Collaboration between units directed toward a result whose value exceeds its cost.</dd>
+<dt>Orchestrating unit<span class="en">Orchestrating unit</span></dt><dd>A unit that reports to senior leadership and links the components of the existing ecosystem without owning its initiatives.</dd>
+<dt>Chief innovation officer<span class="en">Chief innovation officer</span></dt><dd>The person who leads the orchestrating unit and achieves results through units they do not head.</dd>
+<dt>Issue selling<span class="en">Issue selling</span></dt><dd>Employees’ efforts to direct senior management’s attention to issues they consider important and to shape how management understands them.</dd>
+<dt>Influence without authority<span class="en">Influence without authority</span></dt><dd>A person’s ability to mobilize people who do not report to them, through exchange and partnership building.</dd>
+</dl>
+<h3>Review and Discussion Questions</h3>
+<ol class="questions">
+<li>What is the difference between an organization in which an innovation initiative has succeeded and an organization that has the capability to innovate? <span class="lv">Understanding</span></li>
+<li>Which of the three models for organizing innovation suits your organization? What needs to be clarified to avoid its risk? <span class="lv">Application</span></li>
+<li>In light of the time pressure study, how can a leader protect their team’s creativity without abolishing deadlines? <span class="lv">Analysis</span></li>
+<li>Draw your organization’s internal ecosystem map, and identify the shortest path an idea can take from its originator to someone who can help. <span class="lv">Application</span></li>
+<li>You have been put in charge of leading innovation in your organization. What will you do in your first three months? What will you avoid? <span class="lv">Application</span></li>
+<li>“The solution to fragmented innovation units is to create a new unit to oversee them.” Evaluate this statement. <span class="lv">Evaluation</span></li>
+</ol>
+<h2 class="unnum" id="refs">Chapter references</h2>
+<ol class="refs">
+<li>Amabile, T. M., Hadley, C. N., &amp; Kramer, S. J. (2002). Creativity under the gun. <i>Harvard Business Review, 80</i>(8), 52–61.</li>
+<li>Cohen, A. R., &amp; Bradford, D. L. (2005). <i>Influence without authority</i> (2nd ed.). Wiley.</li>
+<li>Dutton, J. E., &amp; Ashford, S. J. (1993). Selling issues to top management. <i>Academy of Management Review, 18</i>(3), 397–428. https://doi.org/10.5465/amr.1993.9309035145</li>
+<li>Dutton, J. E., Ashford, S. J., O’Neill, R. M., &amp; Lawrence, K. A. (2001). Moves that matter: Issue selling and organizational change. <i>Academy of Management Journal, 44</i>(4), 716–736. https://doi.org/10.5465/3069412</li>
+<li>Hansen, M. T. (2009). <i>Collaboration: How leaders avoid the traps, create unity, and reap big results</i>. Harvard Business Press.</li>
+<li>International Organization for Standardization. (2024). <i>Innovation management system — Requirements</i> (ISO Standard No. 56001:2024). https://www.iso.org/standard/79278.html</li>
+<li>O'Connor, G. C., &amp; DeMartino, R. (2006). Organizing for radical innovation: An exploratory study of the structural aspects of RI management systems in large established firms. <i>Journal of Product Innovation Management, 23</i>(6), 475–497. https://doi.org/10.1111/j.1540-5885.2006.00219.x</li>
+<li>OECD. (2017). <i>Skills for a high performing civil service</i>. https://doi.org/10.1787/9789264280724-en</li>
+<li>Tõnurist, P., Kattel, R., &amp; Lember, V. (2017). Innovation labs in the public sector: What they are and what they do? <i>Public Management Review, 19</i>(10), 1455–1479. https://doi.org/10.1080/14719037.2017.1287939</li>
+</ol>
+<div aria-hidden="true" class="endmark">✦ ✦ ✦</div>
+<aside class="bp-cite" dir="ltr"><b>How to cite this section</b><p class="bp-ref">Alsamani, O. A. (2026). Chapter 6: The organizational architecture of innovation. In <i>Innovation Management</i>. alsamani.com. https://alsamani.com/books/innovation-management/en/ch06.html</p><p class="bp-lic2">© 2026 Dr. Omar A. Alsamani. Free to read, download, share and quote for non-commercial purposes with attribution to the author and source.</p></aside>
+<nav class="pager"><a class="prev" href="ch05.html"><small>Previous chapter</small><b>The innovation management system</b></a><a class="next" href="ch07.html"><small>Next chapter</small><b>The innovator and their environment</b></a></nav>
+</div>
+<footer class="bp-foot" dir="ltr"><div class="bp-fin"><a class="bp-fid" href="../../../index.html"><span class="bp-fmark">OA</span><b>Dr. Omar A. Alsamani</b></a>
+<nav><a href="../../../index.html">Updates</a><a href="../../../books/index.html">Open Library</a><a href="../../../publications/index.html">Publications</a><a href="../../../tools/index.html">Tools</a><a href="../../../photography/index.html">Photography</a><a href="../../../about/index.html">About</a><a href="../../../contact/index.html">Contact</a></nav><p><bdi dir="ltr">© 2007–2026 alsamani.com</bdi></p><div class="pv" id="pv" dir="ltr" hidden></div></div></footer><script>(function(){{var el=document.getElementById('pv');if(!el)return;var live=/(^|\.)alsamani\.com$/.test(location.hostname);
+fetch('https://abacus.jasoncameron.dev/'+(live?'hit':'get')+'/alsamani-com/views').then(function(r){{return r.json()}}).then(function(d){{
+if(typeof d.value!=='number')return;var s=String(d.value);while(s.length<4)s='0'+s;
+el.innerHTML=s.split('').map(function(){{return '<span class="pv-d"><span class="pv-s">0<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9</span></span>'}}).join('');
+el.hidden=false;var cells=el.querySelectorAll('.pv-s');
+requestAnimationFrame(function(){{requestAnimationFrame(function(){{s.split('').forEach(function(c,i){{cells[i].style.transform='translateY('+(-c*10)+'%)'}})}})}})}}).catch(function(){{}})}})();
+</script><style>.bp-foot{box-shadow:0 0 0 100vmax var(--bpf,#F5F5F7);clip-path:inset(0 -100vmax);background:#F5F5F7;color:#6E6E73;font:13px/1.6 -apple-system,BlinkMacSystemFont,"IBM Plex Sans Arabic","Inter",sans-serif;margin-top:56px;padding:36px 20px calc(36px + env(safe-area-inset-bottom))}
+.bp-fin{max-width:1120px;margin:0 auto;display:flex;flex-wrap:wrap;gap:18px 40px;align-items:center;justify-content:space-between}
+.bp-fid{display:flex;align-items:center;gap:10px;color:#1D1D1F!important;text-decoration:none}.bp-fid b{font-weight:600}
+.bp-fmark{width:30px;height:30px;border:1px solid currentColor;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:600;letter-spacing:.04em}
+.bp-foot nav{display:flex;flex-wrap:wrap;gap:6px 22px}.bp-foot nav a{color:#6E6E73!important;text-decoration:none}.bp-foot nav a:hover{color:#1D1D1F!important}
+.bp-foot p{margin:0;flex-basis:100%;font-size:12px;border-top:1px solid #D2D2D7;padding-top:14px}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .bp-foot{--bpf:#161617;background:#161617;color:#A1A1A6}:root:not([data-theme="light"]) .bp-fid{color:#F5F5F7!important}}
+:root[data-theme="dark"] .bp-foot{--bpf:#161617;background:#161617;color:#A1A1A6}:root[data-theme="dark"] .bp-fid{color:#F5F5F7!important}
+@media print{.bp-foot{display:none}}</style><style>.pv{display:flex;justify-content:center;gap:4px;margin:14px auto 4px;grid-column:1/-1;width:100%}
+.bp-fin>p{text-align:center;width:100%}
+.pv[hidden]{display:none}
+.pv-d{display:inline-block;width:1.25em;height:1.7em;overflow:hidden;border-radius:6px;background:var(--bg,#fff);box-shadow:inset 0 0 0 1px var(--line,#d2d2d7);font:500 13px/1.7em "SF Mono",ui-monospace,Menlo,monospace;text-align:center;color:var(--ink,#1d1d1f)}
+.pv-s{display:block;transition:transform 1.4s cubic-bezier(.2,.8,.2,1)}
+@media (prefers-reduced-motion:reduce){.pv-s{transition:none}}
+.bp-foot .pv-d{background:#fff;box-shadow:inset 0 0 0 1px #d2d2d7;color:#1d1d1f}</style>
+</body>
+</html>

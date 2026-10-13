@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+
+<html dir="ltr" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
+<title>Chapter 16: Measuring innovation and maturity | Innovation Management | Dr. Omar A. Alsamani</title>
+<link href="../assets/book.css?v=ea7b3e63" rel="stylesheet"/>
+<link href="../assets/innov.css?v=7afb6de9" rel="stylesheet"/>
+<style>
+.chain{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:22px;font-family:var(--f-ui)}
+.chain>div{border:1.5px solid var(--line);border-radius:14px;padding:12px;background:var(--paper);position:relative;min-width:0}
+.chain>div:not(.end):not(.note)::after{content:"→";position:absolute;inset-inline-end:-18px;top:50%;transform:translateY(-50%);color:var(--accent);font-weight:700}
+.chain b{display:block;font-size:14.5px;margin-bottom:4px}
+.chain span{display:block;font-size:12.5px;line-height:1.7;color:var(--ink-2)}
+.chain .o{border-color:var(--accent);background:var(--accent-soft)}
+.chain .note{grid-column:1/-1;display:flex;justify-content:space-between;border:0;background:none;padding:0;font-size:12px;font-weight:700;color:var(--ink-2)}
+.chain .note::after{display:none}
+@media (max-width:760px){.chain{grid-template-columns:1fr;gap:24px}.chain>div:not(.end):not(.note)::after{content:"↓";inset-inline-end:auto;inset-inline-start:50%;top:auto;bottom:-22px;transform:translateX(50%)}.chain .note{display:none}}
+
+.mat{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;align-items:end;font-family:var(--f-ui)}
+.mat>div{border-radius:12px 12px 4px 4px;padding:10px;background:var(--paper-2);border:1.5px solid var(--line);min-width:0}
+.mat b{display:block;font-size:14px}
+.mat i{display:block;font-style:normal;font-size:12px;color:var(--accent);font-weight:700}
+.mat span{display:block;font-size:12.5px;line-height:1.65;margin-top:4px}
+.mat .m1{min-height:120px}.mat .m2{min-height:145px}.mat .m3{min-height:170px}.mat .m4{min-height:195px}.mat .m5{min-height:220px;background:var(--accent-soft);border-color:var(--accent)}
+@media (max-width:700px){.mat{grid-template-columns:1fr}.mat>div{min-height:0!important;border-radius:12px}}
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"><style>:root{--f-body:"Source Serif 4",Georgia,serif;--f-display:"Source Serif 4",Georgia,serif;--f-ui:"IBM Plex Sans",system-ui,sans-serif}.questions li::before{content:counter(q)}html{direction:ltr!important}body{letter-spacing:0;text-align:left}caption{text-align:left!important}.formula small{direction:ltr}.cover svg{left:auto!important;right:0}</style><link rel="alternate" hreflang="ar" href="https://alsamani.com/books/innovation-management/ch16.html"><link rel="stylesheet" href="../assets/platform.css?v=b4c32405"><script>window.BOOK={slug:"innovation-management-en",cur:"ch16.html",lang:"en",title:"Innovation Management",author:"Dr. Omar A. Alsamani"}</script><script src="../assets/platform.js?v=0d28c8d2" defer></script>
+<link rel="canonical" href="https://alsamani.com/books/innovation-management/en/ch16.html"><meta name="description" content="A government agency added a new indicator to its employees’ individual performance targets: submit at least two innovative ideas a year through the ideas platform. At year’s end, the agency announced in its annual report that the number of ideas submitted had quadrupled. The platform’s evaluation…"><meta property="og:description" content="A government agency added a new indicator to its employees’ individual performance targets: submit at least two innovative ideas a year through the ideas platform. At year’s end, the agency announced in its annual report that the number of ideas submitted had quadrupled. The platform’s evaluation te"><meta property="og:title" content="Chapter 16: Measuring innovation and maturity | Innovation Management | Dr. Omar A. Alsamani"><meta property="og:type" content="book"><meta property="og:url" content="https://alsamani.com/books/innovation-management/en/ch16.html"><meta property="og:site_name" content="Dr. Omar A. Alsamani"><meta name="author" content="Omar Abdullah Alsamani"></head>
+<body>
+<div class="bp-bar" dir="ltr"><div class="bp-in">
+<a class="bp-home" href="../../../index.html">Dr. Omar A. Alsamani</a><span class="bp-sep">/</span><a href="../../index.html">Open Library</a><span class="bp-sep">/</span><a href="index.html" class="bp-book">Innovation Management</a>
+<span class="bp-sp"></span><span class="bp-tools"><button class="bp-ic" type="button" data-rd="z-" aria-label="Smaller text" title="Smaller text">A−</button><button class="bp-ic" type="button" data-rd="z+" aria-label="Larger text" title="Larger text">A+</button><button class="bp-ic" type="button" data-rd="theme" aria-label="Dark mode" title="Dark/light mode">Dark</button></span><a class="bp-btn" href="../ch16.html" hreflang="ar" lang="ar">العربية</a><a class="bp-btn" href="pdf/ch16.pdf" download>PDF</a><button class="bp-btn" type="button" data-notes>Notes<i hidden></i></button><button class="bp-btn" type="button" data-share>Share</button><button class="bp-btn" type="button" data-bp="search">Search</button><button class="bp-btn solid" type="button" data-bp="toc">Contents</button></div></div>
+<div class="bp-share" id="bpShare" hidden dir="ltr"><b>Share this page</b><button type="button" data-sh="copy">Copy link</button><button type="button" data-sh="native" hidden>Share…</button><a data-sh="wa" target="_blank" rel="noopener">WhatsApp</a><a data-sh="x" target="_blank" rel="noopener">X</a><a data-sh="li" target="_blank" rel="noopener">LinkedIn</a><a data-sh="tg" target="_blank" rel="noopener">Telegram</a><a data-sh="mail">Email</a><small>To share a specific section, hover over its heading and click ¶</small></div>
+<div class="bp-drawer" id="bpDrawer" hidden dir="ltr"><div class="bp-panel" role="dialog" aria-label="Contents and search">
+<div class="bp-head"><b>Innovation Management</b><button type="button" class="bp-x" data-bp="close" aria-label="Close">×</button></div>
+<div class="bp-search"><input id="bpQ" type="search" placeholder="Search the text of the book…" autocomplete="off"><div id="bpRes"></div></div>
+<nav class="bp-toc" id="bpToc"></nav>
+<div class="bp-links"><a href="pdf/innovation-management-full.pdf" download>Download the book (PDF)</a><a href="../../index.html">Open Library</a><a href="../../../index.html">alsamani.com home</a></div>
+</div></div>
+<div class="page">
+<nav class="booknav"><a href="index.html">← Innovation Management</a><span>Part Four: Value and the ecosystem</span></nav>
+<header class="opener">
+<div aria-hidden="true" class="num">16</div>
+<div>
+<div class="kicker">Chapter 16</div>
+<h1>Measuring innovation and maturity</h1>
+</div>
+<p class="sub">How can an organization be confident that its innovation is creating value, and that its capability to innovate is growing? This question organizes the chapter: the results chain, the three levels of measurement, measuring people and the environment, and the errors that allow indicators to devour the very goals they were meant to serve, before arriving at the concept of maturity.</p>
+</header>
+<nav aria-label="محتويات الفصل" class="toc">
+<b>In this chapter</b>
+<ol>
+<li class="u"><a href="#intro">Introduction</a></li>
+<li value="1"><a href="#s1">Why is innovation hard to measure?</a></li>
+<li><a href="#s2">The results chain</a></li>
+<li><a href="#s3">Three levels of measurement</a></li>
+<li><a href="#s4">Measuring people and the environment</a></li>
+<li><a href="#s5">When the indicator devours the goal</a></li>
+<li><a href="#s6">Innovation management maturity</a></li>
+<li class="u"><a href="#tool">Chapter tool</a></li>
+<li class="u"><a href="#summary">Summary and questions</a></li>
+<li class="u"><a href="#refs">Chapter references</a></li>
+</ol>
+</nav>
+<h2 class="unnum" id="intro">Introduction</h2>
+<div class="scene">
+<span class="lbl">Opening case: the ideas indicator (composite case)</span>
+<p>A government agency added a new indicator to its employees’ individual performance targets: submit at least two innovative ideas a year through the ideas platform. At year’s end, the agency announced in its annual report that the number of ideas submitted had quadrupled. The platform’s evaluation team, however, found that most of the ideas were duplicates or generic, that some had been copied from other agencies’ platforms, and that many had been submitted in the final week of the year. Unable to evaluate such a volume, the team let the ideas pile up unanswered, and the few serious ones among them were lost in the crowd. The following year, employees spoke of the platform as a formality to be completed for the sake of the indicator.</p>
+</div>
+<p>The indicator hit its numerical target and damaged the purpose it was set up to serve: it measured activity and overlooked value, rewarded quantity at the expense of quality, and flooded the system beyond its capacity to respond. In this chapter, we set out how measurement can be designed to support innovation rather than distort it.</p>
+<h3>Learning Objectives</h3>
+<p>After studying this chapter, the reader should be able to:</p>
+<ol class="objectives">
+<li>Explain the difficulties of measuring innovation and the effect of indicators on behavior.</li>
+<li>Build a results chain that links inputs to impact.</li>
+<li>Design indicators at the initiative, portfolio and system levels.</li>
+<li>Measure the human and environmental dimensions of innovation.</li>
+<li>Avoid common measurement errors, and use maturity assessment as a tool for learning.</li>
+</ol>
+<h2 id="s1"><span class="sec">16.1</span>Why is innovation hard to measure?</h2>
+<p>Innovation is hard to measure for at least three reasons. Its results are <em>delayed</em>: years may pass between an idea and its impact. They are <em>uncertain</em>: most initiatives do not succeed, and the few successes are the fruit of an entire portfolio of initiatives. And they are <em>difficult to attribute</em>: when an organization’s performance improves, it is hard to say how much of the improvement stems from any particular innovation. For these reasons, organizations tend to measure what is easy to measure: the number of ideas, events, participants and amounts spent.</p>
+<p>Measurement, however, is not a neutral tool. Hauser and Katz observed that organizations become what they measure: indicators direct people’s attention and effort, and people act in ways that improve the indicator even when this harms the purpose <span class="cite">(<span class="en">Hauser &amp; Katz, 1998</span>)</span>. Decades earlier, Kerr had drawn attention to what he called “the folly of rewarding A while hoping for B”: organizations often reward one behavior and then wonder why the behavior they wanted is missing <span class="cite">(<span class="en">Kerr, 1975</span>)</span>. The opening case is a direct example: submitting ideas was rewarded, while innovation was what had been hoped for.</p>
+<h2 id="s2"><span class="sec">16.2</span>The results chain</h2>
+<p>The <strong>results chain</strong>, known in the evaluation literature as the logic model, helps link what an organization spends to what it achieves <span class="cite">(<span class="en">W. K. Kellogg Foundation, 2004</span>)</span>. Figure 16.1 shows its links as applied to innovation.</p>
+<figure>
+<div class="fig-frame">
+<div class="chain">
+<div><b>Inputs</b><span>Budget, time, spaces, people and platforms</span></div>
+<div><b>Activities</b><span>Campaigns, hackathons, training and experiments</span></div>
+<div><b>Outputs</b><span>Evaluated ideas, tested concepts and implemented solutions</span></div>
+<div class="o"><b>Outcomes</b><span>Improvements in service, cost, time or satisfaction for beneficiaries</span></div>
+<div class="o end"><b>Impact</b><span>Sustained value for the organization and society, and greater innovation capability</span></div>
+<div class="note"><span>What is easy to measure and within the organization’s control</span><span>What really matters →</span></div>
+</div>
+</div>
+<figcaption><b>Figure 16.1</b> The innovation results chain, adapted from the logic model in <span class="cite"><span class="en">W. K. Kellogg Foundation (2004)</span></span>.</figcaption>
+</figure>
+<p>Most innovation reports concentrate on the first two links, because they are the easiest to measure and the most within the organization’s control. Outcomes and impact are what matter, but they take more effort to measure. Chapter 2 presented one version of this gap at the national level: the gap between the Kingdom’s ranking on innovation inputs and its ranking on innovation outputs in the Global Innovation Index. An organization that measures only its inputs and activities may consider itself successful while producing nothing.</p>
+<p>Inputs and activities remain necessary for understanding efficiency, but every indicator in the early links needs to be read alongside an indicator in the later ones: the number of ideas on its own says nothing, whereas the share that was implemented and the results it achieved say a great deal.</p>
+<h2 id="s3"><span class="sec">16.3</span>Three levels of measurement</h2>
+<p>Innovation management needs measurement at three levels, each with its own questions and indicators, as Table 16.1 shows.</p>
+<div class="tw">
+<table>
+<caption><b>Table 16.1</b> Levels of innovation measurement and suggested indicators for each</caption>
+<thead><tr><th>Level</th><th>Question</th><th>Suggested indicators</th></tr></thead>
+<tbody>
+<tr><td><strong>Initiative</strong></td><td>Is the initiative learning enough to deserve to continue?</td><td>Number of critical assumptions tested, and which were confirmed or refuted; the cost and duration of each experiment; initiative-specific outcome indicators after implementation</td></tr>
+<tr><td><strong>Portfolio</strong></td><td>Are initiatives flowing, balanced and delivering value collectively?</td><td>Distribution of initiatives across types and horizons; average time an initiative spends at each stage; share of decisions made on time; number of initiatives stopped by decision; share reaching implementation; value realized from what was implemented</td></tr>
+<tr><td><strong>System and capability</strong></td><td>Is the organization’s capability for repeated innovation growing?</td><td>Creative climate; participation of different units; response time to ideas; share of ideas whose authors received a reasoned response; share of implemented solutions still in use after a year</td></tr>
+</tbody>
+</table>
+</div>
+<p>Two indicators in this table deserve particular emphasis, because they measure what this book regards as among the most serious breakdowns in the system. The first is the <strong>share of decisions made on time</strong>, together with the average age of ideas still awaiting a decision; these directly measure the extent of the decision limbo described in Chapter 5. The second is the <strong>share of implemented solutions still in use after a year</strong>, which distinguishes genuine implementation from the superficial implementation discussed in Chapter 15.</p>
+<p>Note that indicators for an initiative in its early stages measure learning; outcome indicators belong to later stages. Asking an initiative in the exploration stage for a financial return is like applying the criteria of the scaling gate at the opportunity gate.</p>
+<h2 id="s4"><span class="sec">16.4</span>Measuring people and the environment</h2>
+<p>If people are the heart of the innovation system, as this book holds, then measuring them is an integral part of measuring the system. What this means is measuring what people experience in their environment: Do they find recognition, opportunity and support? Counting how many ideas each employee submits, as in the opening case, measures something else entirely.</p>
+<p>Well-established research instruments exist for this purpose. Ekvall developed a measure of <strong>creative climate</strong> covering dimensions such as challenge, freedom, idea support, trust and openness, idea time, risk taking, and conflict as a negative dimension <span class="cite">(<span class="en">Ekvall, 1996</span>)</span>. Amabile and colleagues developed an instrument for assessing the work environment for creativity, measuring both stimulants and obstacles <span class="cite">(<span class="en">Amabile et al., 1996</span>)</span>. Such instruments allow an organization to know where it stands and to track the effect of what it does to improve its environment.</p>
+<p>The innovator’s experience of the system can also be measured directly, using indicators drawn from the needs set out in Table 7.1:</p>
+<ul>
+<li><strong>Recognition:</strong> the share of ideas whose authors received a reasoned response, the average response time, and the share of implemented ideas whose authors remained involved in implementing them.</li>
+<li><strong>Opportunity:</strong> the number of steps between the person with the idea and someone able to help, and the share of units from which ideas have come.</li>
+<li><strong>Time and resources:</strong> the share of initiatives whose members received protected time.</li>
+<li><strong>Climate:</strong> results of a short periodic creative climate survey, compared across units and years.</li>
+</ul>
+<p>At the university, the findings of a study on faculty support can be measured by asking students how far their instructors encourage their creative ideas in courses, and how confident they are in their own creative abilities <span class="cite">(<span class="en">Alsamani &amp; Alqahtani, 2026</span>)</span>. This measures a link in the ecosystem that does not appear in incubator and accelerator reports, even though it touches every student.</p>
+<div class="callout" data-k="teacher">
+<div class="tag">In Practice</div>
+<p>Pick ten ideas submitted in your organization six months ago and trace what became of each: Was a decision made on it? When? Did its author learn the reason? This simple measure says more about the innovation system than the number of ideas submitted.</p>
+</div>
+<h2 id="s5"><span class="sec">16.5</span>When the indicator devours the goal</h2>
+<p>The psychologist Campbell formulated an observation that has come to be known as his law: the more a quantitative indicator is relied upon for social decision-making, the more it is subject to corruption pressures and the more it distorts the processes it was meant to monitor <span class="cite">(<span class="en">Campbell, 1979</span>)</span>. In the measurement of innovation, this phenomenon appears in recurring forms:</p>
+<ul>
+<li><strong>Vanity metrics:</strong> numbers that look good in reports but say nothing about value, such as the number of ideas, events, attendees and followers.</li>
+<li><strong>Tying the indicator to individual incentives:</strong> it then turns from a learning tool into a target to be chased, as in the opening case.</li>
+<li><strong>Premature measurement:</strong> demanding results from an initiative before it has had time to achieve them, so that promising initiatives are halted or their early results are overstated.</li>
+<li><strong>The single indicator:</strong> relying on one number that reduces innovation to a single figure, which is then improved at the expense of everything else.</li>
+<li><strong>Measuring entities rather than flow:</strong> each unit measures its own activity in isolation, so what is lost in the spaces between them stays invisible, such as ideas that never find their way from the course to the accelerator.</li>
+</ul>
+<p>These errors can be limited by using indicators as a balanced, multidimensional set; reading activity indicators alongside outcome indicators; separating learning indicators from individual incentives; and periodically reviewing the indicators themselves by asking: Does this indicator still serve the purpose, or has it become an end in itself? The balanced scorecard offers a closely related idea: performance should not be reduced to a single dimension, and the different dimensions should be read together <span class="cite">(<span class="en">Kaplan &amp; Norton, 1992</span>)</span>.</p>
+<div class="callout" data-k="warn">
+<div class="tag">Caution</div>
+<p>An indicator tied to an individual incentive stops measuring reality and starts shaping it. If the aim is for people to put forward good ideas, measure what happens to their ideas after they are submitted.</p>
+</div>
+<h2 id="s6"><span class="sec">16.6</span>Innovation management maturity</h2>
+<p>Many organizations use <strong>maturity models</strong> to assess their innovation management; these models describe successive levels of capability. Figure 16.2 offers a simplified version of these levels, derived from the logic of this book.</p>
+<figure>
+<div class="fig-frame">
+<div class="mat">
+<div class="m1"><i>Level 1</i><b>Scattered</b><span>Initiatives that depend on enthusiastic individuals, with no system or strategy</span></div>
+<div class="m2"><i>Level 2</i><b>Partly organized</b><span>Innovation units and programs that work separately and measure their own activities</span></div>
+<div class="m3"><i>Level 3</i><b>Systematic</b><span>A clear strategy, system, gates and decision rights, and a managed portfolio</span></div>
+<div class="m4"><i>Level 4</i><b>Integrated</b><span>Innovation is part of daily work, evaluation and the budget, and units operate as a single system</span></div>
+<div class="m5"><i>Level 5</i><b>Learning and renewing</b><span>The system measures its impact, reviews itself and adapts to change, with people at its center</span></div>
+</div>
+</div>
+<figcaption><b>Figure 16.2</b> Levels of innovation management maturity in simplified form. Prepared by the author.</figcaption>
+</figure>
+<p>Maturity models have both uses and limits. They are useful in giving an organization a shared language for describing its situation and identifying the next step. Their limit is that they can turn into a ladder climbed for appearances: the organization meets a level’s requirements on paper, much as a certificate of conformity can become a stage for innovation theater. The international guidance on innovation management assessment recommends that assessment serve as a means of understanding the current situation and drawing out what can be improved <span class="cite">(<span class="en">ISO, 2019</span>)</span>. The most important question in any maturity assessment is not “What level are we at?” but “What is preventing us from innovating repeatedly, and what is the next step to remove it?”</p>
+<h2 class="unnum" id="tool">Chapter tool: Balanced measurement dashboard</h2>
+<p>Build a measurement dashboard for your organization’s innovation system with two or three indicators per cell, and no more. Make sure every indicator in the activities column is matched by one in the outcomes column. Then ask of each indicator: How could it be met on paper only? If you find an easy way, rewrite it.</p>
+<div class="tw">
+<table>
+<caption><b>Chapter tool</b> Balanced measurement dashboard (example from the university case)</caption>
+<thead><tr><th>Level</th><th>Inputs and activities</th><th>Outputs</th><th>Outcomes and impact</th></tr></thead>
+<tbody>
+<tr><td>Initiative</td><td>Cost and duration of experiments</td><td>Assumptions tested and those confirmed</td><td>Improvement in the problem indicator for beneficiaries</td></tr>
+<tr><td>Portfolio</td><td>Distribution of initiatives across types and units</td><td>Share of decisions on time; initiatives stopped by decision</td><td>Share implemented; value realized from it</td></tr>
+<tr><td>System and capability</td><td>Courses that include innovation projects</td><td>Response time to ideas; student movement between units</td><td>Creative climate; students’ confidence in their creative abilities; solutions still in use after a year</td></tr>
+</tbody>
+</table>
+</div>
+<h2 class="unnum" id="summary">Chapter Summary</h2>
+<div class="summary">
+<ul>
+<li>Innovation is hard to measure because its results are delayed, uncertain and difficult to attribute to their source, and organizations become what they measure.</li>
+<li>The results chain links inputs and activities to outputs, outcomes and impact, yet most reports stop at its first two links.</li>
+<li>Innovation is measured at three levels: the initiative through learning indicators, the portfolio through flow and balance indicators, and the system through capability indicators.</li>
+<li>The share of decisions made on time measures decision limbo, and the persistence of solutions after a year distinguishes genuine from superficial implementation.</li>
+<li>People and the environment are measured with creative climate instruments and with indicators derived from innovators’ needs and the fate of their ideas.</li>
+<li>The more an indicator is relied upon and tied to incentives, the more it is distorted; balanced measurement and periodic review of indicators limit this.</li>
+<li>Maturity models are a shared language and a learning tool, and they lose their value once they turn into a ladder climbed for appearances.</li>
+</ul>
+</div>
+<h3>Key Terms</h3>
+<dl class="gloss">
+<dt>Results chain / logic model<span class="en">Results chain / logic model</span></dt><dd>A sequence linking inputs and activities to outputs, outcomes and impact.</dd>
+<dt>Vanity metrics<span class="en">Vanity metrics</span></dt><dd>Numbers that look good in reports but do not indicate the value actually achieved.</dd>
+<dt>Campbell's law<span class="en">Campbell's law</span></dt><dd>The more a quantitative indicator is relied upon in decision-making, the greater the pressure to corrupt it and to distort what it measures.</dd>
+<dt>Creative climate<span class="en">Creative climate</span></dt><dd>The observable patterns of behavior and feeling at work that encourage or hinder creativity, and that can be measured.</dd>
+<dt>Maturity model<span class="en">Maturity model</span></dt><dd>A description of successive levels of capability, used to assess the current situation and identify the next step.</dd>
+</dl>
+<h3>Review and Discussion Questions</h3>
+<ol class="questions">
+<li>Why do organizations tend to measure inputs and activities? And what is the danger of stopping there? <span class="lv">Understanding</span></li>
+<li>Analyze the opening case using Kerr’s and Campbell’s ideas, and propose two alternative indicators. <span class="lv">Analysis</span></li>
+<li>Design three indicators for your organization’s innovation portfolio, one of which measures decision limbo. <span class="lv">Application</span></li>
+<li>Build a balanced measurement dashboard for your organization’s innovation system, and test each indicator by asking: How could it be met on paper only? <span class="lv">Application</span></li>
+<li>“Reaching Level 5 in the maturity model is the most important goal of innovation management.” Evaluate this statement. <span class="lv">Evaluation</span></li>
+</ol>
+<h2 class="unnum" id="refs">Chapter references</h2>
+<ol class="refs">
+<li>Alsamani, O. A., &amp; Alqahtani, Y. A. (2026). <i>Cultivating innovation in higher education: The role of everyday faculty support and creative self-efficacy</i> [Manuscript submitted for publication]. Department of Special Education, University of Hail.</li>
+<li>Amabile, T. M., Conti, R., Coon, H., Lazenby, J., &amp; Herron, M. (1996). Assessing the work environment for creativity. <i>Academy of Management Journal, 39</i>(5), 1154–1184. https://doi.org/10.2307/256995</li>
+<li>Campbell, D. T. (1979). Assessing the impact of planned social change. <i>Evaluation and Program Planning, 2</i>(1), 67–90. https://doi.org/10.1016/0149-7189(79)90048-X</li>
+<li>Ekvall, G. (1996). Organizational climate for creativity and innovation. <i>European Journal of Work and Organizational Psychology, 5</i>(1), 105–123. https://doi.org/10.1080/13594329608414845</li>
+<li>Hauser, J., &amp; Katz, G. (1998). Metrics: You are what you measure! <i>European Management Journal, 16</i>(5), 517–528. https://doi.org/10.1016/S0263-2373(98)00029-2</li>
+<li>International Organization for Standardization. (2019). <i>Innovation management — Innovation management assessment — Guidance</i> (ISO/TR 56004:2019). https://www.iso.org/standard/72989.html</li>
+<li>Kaplan, R. S., &amp; Norton, D. P. (1992). The balanced scorecard: Measures that drive performance. <i>Harvard Business Review, 70</i>(1), 71–79.</li>
+<li>Kerr, S. (1975). On the folly of rewarding A, while hoping for B. <i>Academy of Management Journal, 18</i>(4), 769–783. https://doi.org/10.5465/255378</li>
+<li>W. K. Kellogg Foundation. (2004). <i>Logic model development guide</i>.</li>
+</ol>
+<div aria-hidden="true" class="endmark">✦ ✦ ✦</div>
+<aside class="bp-cite" dir="ltr"><b>How to cite this section</b><p class="bp-ref">Alsamani, O. A. (2026). Chapter 16: Measuring innovation and maturity. In <i>Innovation Management</i>. alsamani.com. https://alsamani.com/books/innovation-management/en/ch16.html</p><p class="bp-lic2">© 2026 Dr. Omar A. Alsamani. Free to read, download, share and quote for non-commercial purposes with attribution to the author and source.</p></aside>
+<nav class="pager"><a class="prev" href="ch15.html"><small>Previous chapter</small><b>Adoption and scaling</b></a><a class="next" href="ch17.html"><small>Next chapter</small><b>Innovation and spending efficiency</b></a></nav>
+</div>
+<footer class="bp-foot" dir="ltr"><div class="bp-fin"><a class="bp-fid" href="../../../index.html"><span class="bp-fmark">OA</span><b>Dr. Omar A. Alsamani</b></a>
+<nav><a href="../../../index.html">Updates</a><a href="../../../books/index.html">Open Library</a><a href="../../../publications/index.html">Publications</a><a href="../../../tools/index.html">Tools</a><a href="../../../photography/index.html">Photography</a><a href="../../../about/index.html">About</a><a href="../../../contact/index.html">Contact</a></nav><p><bdi dir="ltr">© 2007–2026 alsamani.com</bdi></p><div class="pv" id="pv" dir="ltr" hidden></div></div></footer><script>(function(){{var el=document.getElementById('pv');if(!el)return;var live=/(^|\.)alsamani\.com$/.test(location.hostname);
+fetch('https://abacus.jasoncameron.dev/'+(live?'hit':'get')+'/alsamani-com/views').then(function(r){{return r.json()}}).then(function(d){{
+if(typeof d.value!=='number')return;var s=String(d.value);while(s.length<4)s='0'+s;
+el.innerHTML=s.split('').map(function(){{return '<span class="pv-d"><span class="pv-s">0<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9</span></span>'}}).join('');
+el.hidden=false;var cells=el.querySelectorAll('.pv-s');
+requestAnimationFrame(function(){{requestAnimationFrame(function(){{s.split('').forEach(function(c,i){{cells[i].style.transform='translateY('+(-c*10)+'%)'}})}})}})}}).catch(function(){{}})}})();
+</script><style>.bp-foot{box-shadow:0 0 0 100vmax var(--bpf,#F5F5F7);clip-path:inset(0 -100vmax);background:#F5F5F7;color:#6E6E73;font:13px/1.6 -apple-system,BlinkMacSystemFont,"IBM Plex Sans Arabic","Inter",sans-serif;margin-top:56px;padding:36px 20px calc(36px + env(safe-area-inset-bottom))}
+.bp-fin{max-width:1120px;margin:0 auto;display:flex;flex-wrap:wrap;gap:18px 40px;align-items:center;justify-content:space-between}
+.bp-fid{display:flex;align-items:center;gap:10px;color:#1D1D1F!important;text-decoration:none}.bp-fid b{font-weight:600}
+.bp-fmark{width:30px;height:30px;border:1px solid currentColor;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:600;letter-spacing:.04em}
+.bp-foot nav{display:flex;flex-wrap:wrap;gap:6px 22px}.bp-foot nav a{color:#6E6E73!important;text-decoration:none}.bp-foot nav a:hover{color:#1D1D1F!important}
+.bp-foot p{margin:0;flex-basis:100%;font-size:12px;border-top:1px solid #D2D2D7;padding-top:14px}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .bp-foot{--bpf:#161617;background:#161617;color:#A1A1A6}:root:not([data-theme="light"]) .bp-fid{color:#F5F5F7!important}}
+:root[data-theme="dark"] .bp-foot{--bpf:#161617;background:#161617;color:#A1A1A6}:root[data-theme="dark"] .bp-fid{color:#F5F5F7!important}
+@media print{.bp-foot{display:none}}</style><style>.pv{display:flex;justify-content:center;gap:4px;margin:14px auto 4px;grid-column:1/-1;width:100%}
+.bp-fin>p{text-align:center;width:100%}
+.pv[hidden]{display:none}
+.pv-d{display:inline-block;width:1.25em;height:1.7em;overflow:hidden;border-radius:6px;background:var(--bg,#fff);box-shadow:inset 0 0 0 1px var(--line,#d2d2d7);font:500 13px/1.7em "SF Mono",ui-monospace,Menlo,monospace;text-align:center;color:var(--ink,#1d1d1f)}
+.pv-s{display:block;transition:transform 1.4s cubic-bezier(.2,.8,.2,1)}
+@media (prefers-reduced-motion:reduce){.pv-s{transition:none}}
+.bp-foot .pv-d{background:#fff;box-shadow:inset 0 0 0 1px #d2d2d7;color:#1d1d1f}</style>
+</body>
+</html>
