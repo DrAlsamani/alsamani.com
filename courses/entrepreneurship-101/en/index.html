@@ -299,6 +299,14 @@ footer{border-top:1px solid var(--line);padding:24px 0;color:var(--muted);font-s
   .pb-cover h1{font-size:40pt}
   .pb-pre{break-after:page}.pb-pre .l-foot,.pb-pre .note{display:none}
   .pb-ch{break-before:page}
+  body.print-plan main{display:none !important}
+  body.print-plan #printBook{display:block !important}
+  .pp-doc{font-size:12pt;line-height:1.9;color:#000}
+  .pp-doc h1{font-size:18pt;margin:0 0 4pt}
+  .pp-doc h1+p{color:#444;font-size:11pt;border-bottom:1.5pt solid #1D4E89;padding-bottom:8pt;margin-bottom:6pt}
+  .pp-doc h2{font-size:14pt;color:#1D4E89;margin:16pt 0 4pt;padding-bottom:3pt;border-bottom:.6pt solid #ccc;break-after:avoid}
+  .pp-doc p,.pp-doc li{orphans:2;widows:2}
+  .pp-doc table{border-collapse:collapse;width:100%;font-size:11pt}.pp-doc td,.pp-doc th{border:1px solid #999;padding:4pt 6pt;text-align:start}
   .pb-ch h1{font-size:22pt}
   .pb-refs li{unicode-bidi:plaintext;text-align:start}
   .tbl{display:table}
@@ -825,7 +833,7 @@ const STATIONS=[
  act:'<b>Search X</b>: within 7 minutes, each team collects 5 real posts complaining about a problem in the region or in their field, then applies “Why ×5” to the strongest.',
  task:'The team chooses one problem and writes it in one precise sentence: who? when? how much?',tool:'t-why',toolName:'Why ×5'},
 {t:'Hear the customer',s:'Get out of the classroom and talk to people',
- idea:`<p>You are not your customer. What you think about the problem is an assumption until you hear it from those who have it. A good interview asks about <b>what actually happened</b> not what they “might” do.</p>
+ idea:`<p>You are not your customer. What you think about the problem is an assumption until you hear it from those who have it. A good interview asks about <b>what actually happened</b> not what they "might" do.</p>
  <ul><li>Ask about the last time they faced the problem.</li><li>Ask how they solve it now and what it costs them.</li><li>Listen more than you talk, and write down their words as they said them.</li><li>Don’t present your solution until the end.</li></ul>
  <p>You will often discover that the problem is different from what you thought. That is not failure; it is the most important thing that happens in the course.</p>`,
  act:'<b>Practice interview</b>: students pair up; one plays the customer and the other asks using the guide, then they swap. The instructor picks out the misleading questions (like: do you like the idea?).',
@@ -1093,23 +1101,25 @@ function planCalc(){
 }
 renderFixed();planCalc();
 
-$('#printBtn').onclick=()=>window.print();
+$('#printBtn').onclick=()=>{const h=planDoc(false);const pb=$('#printBook');pb.innerHTML='<div class="pp-doc">'+h.replace(/^[\s\S]*?<body[^>]*>/,'').replace(/<\/body>[\s\S]*$/,'')+'</div>';document.body.classList.add('print-plan');setTimeout(()=>{window.print();setTimeout(()=>{document.body.classList.remove('print-plan');pb.innerHTML=''},400)},50)};
 $('#clearBtn').onclick=()=>{if(!$('#clearBtn').dataset.sure){$('#clearBtn').dataset.sure=1;$('#clearBtn').textContent='Press again to confirm';setTimeout(()=>{delete $('#clearBtn').dataset.sure;$('#clearBtn').textContent='Clear the plan'},3000);return}
   plan={};fixed=[{n:'',v:''}];store.set('plan',plan);store.set('fixed',fixed);document.querySelectorAll('[data-p]').forEach(el=>{if(el.type==='checkbox')el.checked=false;else el.value=''});renderFixed();planCalc();delete $('#clearBtn').dataset.sure;$('#clearBtn').textContent='Clear the plan';toast('The plan has been cleared')};
-$('#wordBtn').onclick=()=>{
+function planDoc(forWord){
   const sec=[...document.querySelectorAll('#view-plan .plan-sec:not(.checklist)')].map(s=>{
-    const h=s.querySelector('h3').innerText.replace(/^\S+\s*/,'');
+    const h=[...s.querySelector('h3').childNodes].filter(n=>n.nodeType===3).map(n=>n.textContent).join('').trim();
     const ta=s.querySelector('textarea'); let body='';
     if(s.querySelector('#fixedList')){
       body=`<p>Selling price: ${esc(plan.p_price||'')} SAR — variable cost per unit: ${esc(plan.p_var||'')} — expected monthly sales: ${esc(plan.p_sales||'')} — start-up costs: ${esc(plan.p_setup||'')}</p><p>Fixed monthly costs:</p><ul>${fixed.filter(f=>f.n||f.v).map(f=>`<li>${esc(f.n)}: ${esc(f.v)} SAR</li>`).join('')}</ul><p>${$('#planKpis').innerText.replace(/\n+/g,' · ')}</p><p>${esc(plan.p_fin||'').replace(/\n/g,'<br>')}</p>`;
-    } else body=`<p>${esc(ta?ta.value:'').replace(/\n/g,'<br>')}</p>`;
+    } else body=(ta&&ta.value.trim())?`<p>${esc(ta.value).replace(/\n/g,'<br>')}</p>`:'<p style="color:#888">Not written yet.</p>';
     if(s.querySelector('.ptbl')){const rows=[1,2,3].map(n=>[plan['pp'+n+'n']||['Customer','Venture owner','Another party'][n-1],plan['pp'+n+'g']||'',plan['pp'+n+'c']||'',plan['pp'+n+'f']||'']).filter(r=>r[1]||r[2]||r[3]);
       if(rows.length) body+=`<p><b>Stakeholder balance:</b></p><table border="1" cellpadding="5" style="border-collapse:collapse"><tr><th>Party</th><th>What do they gain?</th><th>What do they bear?</th><th>Satisfaction</th></tr>${rows.map(r=>`<tr>${r.map(c=>`<td>${esc(c)}</td>`).join('')}</tr>`).join('')}</table>`;}
     return `<h2>${esc(h)}</h2>${body}`;
   }).join('');
   const html=`<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word"><head><meta charset="utf-8"><style>body{font-family:Calibri,Arial,sans-serif;direction:ltr;font-size:12pt}h1{font-size:20pt}h2{font-size:16pt;color:#8a4a0d;margin-top:14pt}</style></head><body dir="ltr"><h1>Developing the Entrepreneurial Venture Idea: ${esc(plan.p_name||'')}</h1><p>Student / team: ${esc(plan.p_team||'')} — Section: ${esc(plan.p_sec||'')}<br>Course instructor: Dr. Omar A. Alsamani</p>${sec}${(()=>{const ints=store.get('ints',[]);return ints.length?`<h2>Appendix: interview log (${ints.length})</h2><ol>${ints.map(x=>`<li><b>${esc(x.w)}</b>: “${esc(x.s)}”${x.u?` — What surprised us: ${esc(x.u)}`:''}</li>`).join('')}</ol>`:''})()}</body></html>`;
+  if(!forWord) return html;
   const blob=new Blob(['﻿',html],{type:'application/msword'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='Venture-idea-'+(plan.p_name||'venture')+'.doc';document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500);
-};
+}
+$('#wordBtn').onclick=()=>planDoc(true);
 
 /* ---------- quick activities ---------- */
 const ACTS=[
