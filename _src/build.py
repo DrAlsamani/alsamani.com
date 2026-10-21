@@ -247,7 +247,9 @@ def books_band():
         return ''
     cards = []
     for b in books:
-        st = stats.get(b['slug'], {})
+        if b['slug'] not in stats:
+            continue
+        st = stats[b['slug']]
         facts = [f"<span><b class='mono'>{st.get('chapters','')}</b>{bi('فصلًا وملحقًا', 'chapters and appendices')}</span>" if st.get('chapters') else '',
                  f"<span><b class='mono'>{st.get('pages','')}</b>{bi('صفحة', 'pages')}</span>" if st.get('pages') else '',
                  f"<span><b class='mono'>{st.get('figs',0)+st.get('tabs',0)+st.get('tools',0)}</b>{bi('شكلًا وجدولًا وأداة', 'figures, tables and tools')}</span>"]

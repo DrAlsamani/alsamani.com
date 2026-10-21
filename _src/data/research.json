@@ -1,5 +1,85 @@
 [
  {
+  "slug": "strength-referenced-pe-twice-exceptional",
+  "date": "2026-10-20",
+  "orig_title": "Strength-referenced competence support in physical education for twice-exceptional students with physical disabilities",
+  "title_ar": "دعم الكفاءة المستند إلى نقاط القوة في التربية البدنية للطلاب مزدوجي الاستثنائية ذوي الإعاقات الجسدية",
+  "journal": "Frontiers in Psychology",
+  "venue": "Frontiers in Psychology, Vol. 17, Article 1980868",
+  "kind_ar": "مقال محكّم · تحليل مفاهيمي",
+  "kind_en": "Peer-reviewed article · Conceptual analysis",
+  "authors_en": "Yasir Ayed Alsamiri, Omar Abdullah Alsamani, Majed A. Alsharidah, Seham D. Alfaidi",
+  "authors_ar": "ياسر عايض السميري، عمر عبدالله الصمعاني، ماجد الشريدة، سهام الفايدي",
+  "doi": "10.3389/fpsyg.2026.1980868",
+  "url": "https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2026.1980868/full",
+  "facts": [
+   [
+    "المنهج",
+    "Design",
+    "تحليل مفاهيمي يستند إلى نظرية تقرير المصير ونظرية الحاجات النفسية الأساسية",
+    "Conceptual analysis grounded in Self-Determination Theory and Basic Psychological Need Theory"
+   ],
+   [
+    "المخرجات",
+    "Output",
+    "مبدأ تعليمي، ونموذج للتقويم والاعتراف، وسبع قضايا قابلة للاختبار",
+    "An instructional principle, an assessment-and-recognition model, and seven testable propositions"
+   ]
+  ],
+  "teaser_ar": "مبدأ تعليمي للطلاب مزدوجي الاستثنائية ذوي الإعاقات الجسدية في التربية البدنية: تحدٍّ يناسب قدراتهم المتقدمة، وتقويم ميسّر، واعتراف فعلي، مع تعلم حركي مكيّف.",
+  "teaser_en": "An instructional principle for twice-exceptional students with physical disabilities in PE: challenge that fits advanced capacity, accessible assessment, substantive recognition, and adapted motor learning.",
+  "abstract": [
+   [
+    "المستخلص",
+    "Abstract",
+    "قد تُظهر التربية البدنية الأداءَ الحركي بوضوح، بينما تبقى القدرات التكتيكية أو التحليلية المتقدمة دون اعتراف. ولدى الطلاب مزدوجي الاستثنائية من ذوي الإعاقات الجسدية، قد تجتمع المشاركة الميسّرة مع تحدٍّ غير كافٍ، وقد يصاحب الاعترافَ بالقدرة المتقدمة تقييدٌ للحركة. واستنادًا إلى نظرية تقرير المصير ونظرية الحاجات النفسية الأساسية، نطوّر «دعم الكفاءة المستند إلى نقاط القوة» مبدأً تعليميًا يربط القدرة المتقدمة المُثبتة ذات الصلة بالتربية البدنية بالتحدي المناسب، وبأدلة تقويم ميسّرة، وباعتراف فعلي، وبتعلم حركي مكيّف. ويحدد نموذج للتقويم والاعتراف كيف تدخل هذه الشروط التعليمية في المسارات الدافعية المعروفة. وتتناول سبع قضايا ما يتغير حين يتحسن الوصول أو التحدي أو الاعتراف أو تأثير الطالب، بما في ذلك امتداد مبدئي إلى النشاط البدني اللاحق. ونميّز هذا المبدأ من المداخل التربوية القريبة منه، مع تحديد الشروط التي تقدم فيها دعمًا مكافئًا. وتكمن إسهامته في تنبؤات مشروطة بمتطلبات التعلم التي تبقى غير ملبّاة بعد التكييف. ويلزم أن تُثبت المقارنات أن هذه الفروق تحسّن التفسير بما يتجاوز مقاييس التدريس العامة؛ فالعلاقات المألوفة بين الحاجات والدافعية لا تكفي وحدها. وتحتاج هذه التنبؤات إلى تقويم تجريبي مباشر.",
+    "Physical education (PE) can make motor performance visible while leaving advanced tactical or analytical capacities unrecognized. For twice-exceptional students with physical disabilities, accessible participation may coexist with insufficient challenge, while recognition of advanced ability may accompany restricted movement. Drawing on Self-Determination Theory and Basic Psychological Need Theory, we develop strength-referenced competence support as an instructional principle. The principle connects evidenced PE-relevant advanced capacity with appropriate challenge, accessible assessment evidence, and substantive recognition, and adapted motor learning. An assessment-and-recognition model specifies how these instructional conditions enter established motivational pathways. Seven propositions examine what changes when access, challenge, recognition, or student influence improves, including a tentative extension to later activity. We distinguish this principle from related educational approaches while identifying conditions under which they provide equivalent support. Its contribution lies in conditional predictions about which learning requirements remain unmet after an adaptation. Comparative tests must establish whether these distinctions improve explanation beyond general teaching measures; familiar need–motivation associations alone are insufficient. The predictions require direct empirical evaluation."
+   ]
+  ],
+  "keywords_ar": "مواءمة التقويم؛ الحاجات النفسية الأساسية؛ الإعاقة الجسدية؛ التربية البدنية؛ نظرية تقرير المصير؛ دعم الكفاءة المستند إلى نقاط القوة؛ ازدواجية الاستثنائية",
+  "keywords_en": "assessment alignment; basic psychological needs; physical disability; physical education; self-determination theory; strength-referenced competence support; twice-exceptionality",
+  "summary_ar": "تتناول الورقة طالبًا يجمع قدرة متقدمة في الفهم التكتيكي أو التحليلي وإعاقة جسدية في حصة التربية البدنية: قد يشارك بأدوات مكيّفة دون أن يجد تحديًا لفهمه، أو يُقدَّر تحليله فيُبعد عن الحركة. وتقترح مبدأً يجمع أربعة شروط معًا: تحدٍّ مناسب، ودليل تعلم ميسّر، واعتراف فعلي بإسهامه، وتعلم حركي مكيّف، مع سبع قضايا تحدد ما ينبغي أن يتحسن حين يُلبّى كل شرط، وتدعو إلى اختبارها تجريبيًا.",
+  "summary_en": "The paper considers a student who combines advanced tactical or analytical understanding with a physical disability in PE: they may take part with adapted equipment yet find no challenge for their understanding, or have their analysis valued while being kept out of movement. It proposes a principle that brings four conditions together: appropriate challenge, accessible evidence of learning, substantive recognition, and adapted motor learning, with seven propositions on what should improve when each is met, to be tested empirically.",
+  "findings": [
+   [
+    "4",
+    "شروط يجمعها المبدأ: تحدٍّ مناسب، ودليل تعلم ميسّر، واعتراف فعلي، وتعلم حركي مكيّف.",
+    "conditions the principle brings together: challenge, accessible evidence, recognition, adapted motor learning."
+   ],
+   [
+    "7",
+    "قضايا قابلة للاختبار حول الوصول والتحدي والاعتراف وتأثير الطالب.",
+    "testable propositions on access, challenge, recognition and student influence."
+   ],
+   [
+    "⇄",
+    "المشاركة الميسّرة قد تترك الفهم المتقدم دون تحدٍّ، والاعتراف به قد يصاحبه تقييد الحركة.",
+    "accessible participation may leave advanced understanding underchallenged; recognising it may coexist with restricted movement."
+   ],
+   [
+    "!",
+    "المشاركة الحركية الهادفة حق لكل طالب، لا تُستبدل بدور تحليلي.",
+    "meaningful physical participation is every student’s entitlement, not replaced by an analyst role."
+   ]
+  ],
+  "implications": [
+   [
+    "مواءمة التقويم: قبول دليل ميسّر على الفهم التكتيكي، كشرح قرار برسم، مع هدف حركي مكيّف مستقل.",
+    "Align assessment: accept accessible evidence of tactical understanding, such as explaining a decision in a diagram, alongside a separate adapted motor goal."
+   ],
+   [
+    "مراجعة قواعد التجميع والتسجيل والمشاركة حتى يُقبل الإسهام المتقدم والحركة الميسّرة معًا، ولا يكتفى بثناء الأقران.",
+    "Review grouping, scoring and participation rules so that both advanced contributions and accessible movement count, beyond peer praise."
+   ],
+   [
+    "إشراك الطالب في قرارات التكييف ومراجعتها، وتنسيق معلمي التربية البدنية والموهوبين والتربية الخاصة في خطة تعلم واحدة.",
+    "Involve the student in deciding and reviewing adaptations, and coordinate PE, gifted and special education staff in one learning plan."
+   ]
+  ],
+  "cite": "Alsamiri, Y. A., Alsamani, O. A., Alsharidah, M. A., & Alfaidi, S. D. (2026). Strength-referenced competence support in physical education for twice-exceptional students with physical disabilities. <i>Frontiers in Psychology, 17</i>, 1980868. https://doi.org/10.3389/fpsyg.2026.1980868",
+  "pdf": "https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2026.1980868/pdf"
+ },
+ {
   "slug": "ai-gifted-education-scoping-review",
   "date": "2026-07-29",
   "orig_title": "Artificial intelligence in gifted and talented education: a scoping review",
