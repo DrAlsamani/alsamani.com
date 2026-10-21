@@ -9,6 +9,9 @@ P = lambda *a: os.path.join(ROOT, *a)
 feed = json.load(open(P('data/feed.json')))
 pubs = json.load(open(P('data/publications.json')))
 research = sorted(json.load(open(P('data/research.json'))), key=lambda x: x['date'], reverse=True)
+# optional 'pos' (1-based) places an entry at a fixed position instead of by date
+for _r in [r for r in research if r.get('pos')]:
+    research.remove(_r); research.insert(_r['pos'] - 1, _r)
 for _r in research:   # feature articles and paper-derived metadata (data/articles/<slug>.json / .meta.json)
     _a, _m = P('data/articles', _r['slug'] + '.json'), P('data/articles', _r['slug'] + '.meta.json')
     if os.path.exists(_a):
