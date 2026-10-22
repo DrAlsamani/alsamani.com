@@ -637,7 +637,7 @@ for target, full in (('dist', True), ('preview', False)):
 from datetime import date
 urls = [SITE] + [SITE + n + '/' for n, *_ in PAGES if n != 'index']
 import glob as _gs
-for _h in sorted(_gs.glob(P('dist', 'books', '**', '*.html'), recursive=True)):
+for _h in sorted(_gs.glob(P('dist', 'books', '**', '*.html'), recursive=True) + _gs.glob(P('dist', 'courses', '**', '*.html'), recursive=True)):
     _r = os.path.relpath(_h, P('dist')).replace(os.sep, '/')
     if '/assets/' in _r or '/pdf/' in _r: continue
     if 'noindex' in open(_h).read(1500): continue
