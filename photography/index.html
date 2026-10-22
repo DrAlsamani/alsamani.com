@@ -810,6 +810,11 @@ html[dir="rtl"] .rmore button[aria-expanded="true"] .chev{transform:rotate(45deg
 .sf-copy{text-align:center}
 .site-foot .pv{margin-top:-8px}
 .areas .area-lead{grid-column:1/-1}.areas .area-lead h3{font-size:1.375rem}
+
+#books .bkfold:not(.open)>.bkcard:nth-child(n+3){display:none!important}
+#books .bk-cover.en b{font-size:1.2rem;overflow-wrap:anywhere;hyphens:auto}
+.bkfold.open>.bkcard{animation:rcIn .5s ease both}
+#books .rmore{margin-top:28px}
 /* article blocks: each study gets the visual that suits it */
 .bk{margin:40px 0;background:var(--alt);border-radius:20px;padding:clamp(20px,4vw,32px)}
 .bk .ft-h{margin:0 0 20px!important}
@@ -1368,6 +1373,7 @@ html[dir=ltr] .jr-dch.fd .jr-fold::before{transform:rotate(-45deg)}
     addEventListener('scroll',()=>{if(!tick){tick=true;requestAnimationFrame(chk)}},{passive:true});addEventListener('resize',chk);chk()}
   // home research: reveal the rest in place
   const rf=$('rfold'),rb=$('rmoreBtn');
+  const bf=$('bkfold'),bb=$('bkmoreBtn');if(bf&&bb)bb.onclick=()=>{const o=bf.classList.toggle('open');bb.setAttribute('aria-expanded',o);if(!o)$('books').scrollIntoView({behavior:'smooth'})};
   if(rf&&rb)rb.onclick=()=>{const o=rf.classList.toggle('open');rb.setAttribute('aria-expanded',o);if(!o)$('research').scrollIntoView({behavior:'smooth'})};
   // the ribbons double as the light / dark switch
   const isDark=()=>root.dataset.theme?root.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches;

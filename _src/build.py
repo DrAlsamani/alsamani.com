@@ -242,6 +242,22 @@ def research_cards():
   {f'<div class="rmore"><button type="button" id="rmoreBtn" aria-expanded="false" aria-controls="rfold"><span class="m-open">{bi('المزيد من الأبحاث', 'More research')}</span><span class="m-close">{bi('عرض أقل', 'Show less')}</span><i class="chev"></i></button></div>' if len(research) > HOME_RESEARCH else ''}
 </section>'''
 
+HOME_BOOKS = 2  # books shown on the homepage before "More books"
+HOME_BOOK_ORDER = ['entrepreneurship-101', 'innovation-management', 'diagnosis-identification']
+def book_stats(slug):
+    # fallback when build_books.py has not produced stats for a book
+    d = P('dist', 'books', slug)
+    st = {'chapters': len([f for f in os.listdir(d) if f.startswith('ch') and f.endswith('.html')])} if os.path.isdir(d) else {}
+    pdf = os.path.join(d, 'pdf', slug + '-full.pdf')
+    if os.path.exists(pdf):
+        st['mb'] = round(os.path.getsize(pdf) / 1048576, 1)
+        try:
+            from pypdf import PdfReader
+            st['pages'] = len(PdfReader(pdf).pages)
+        except Exception:
+            pass
+    return st
+
 def books_band():
     try:
         books = json.load(open(P('books', 'books.json')))
@@ -249,13 +265,13 @@ def books_band():
     except Exception:
         return ''
     cards = []
+    order = {k: i for i, k in enumerate(HOME_BOOK_ORDER)}
+    books = sorted(books, key=lambda b: order.get(b['slug'], len(order)))
     for b in books:
-        if b['slug'] not in stats:
-            continue
-        st = stats[b['slug']]
+        st = stats.get(b['slug']) or book_stats(b['slug'])
         facts = [f"<span><b class='mono'>{st.get('chapters','')}</b>{bi('فصلًا وملحقًا', 'chapters and appendices')}</span>" if st.get('chapters') else '',
                  f"<span><b class='mono'>{st.get('pages','')}</b>{bi('صفحة', 'pages')}</span>" if st.get('pages') else '',
-                 f"<span><b class='mono'>{st.get('figs',0)+st.get('tabs',0)+st.get('tools',0)}</b>{bi('شكلًا وجدولًا وأداة', 'figures, tables and tools')}</span>"]
+                 f"<span><b class='mono'>{st.get('figs',0)+st.get('tabs',0)+st.get('tools',0)}</b>{bi('شكلًا وجدولًا وأداة', 'figures, tables and tools')}</span>" if st.get('figs',0)+st.get('tabs',0)+st.get('tools',0) else '']
         cards.append(f'''<article class="bkcard" style="--bk:{b.get('accent','#2C3E8F')}">
   <a class="bk-cover ar" href="books/{b['slug']}/index.html" aria-hidden="true" tabindex="-1"><b>{e(b['title'])}</b><span>{e(b['author'])}</span></a>
   <a class="bk-cover en" href="books/{b['slug']}/en/index.html" aria-hidden="true" tabindex="-1"><b>{e(b['title_en'])}</b><span>{e(b.get('author_en',''))}</span></a>
@@ -270,7 +286,8 @@ def books_band():
 </article>''')
     return f'''<section id="books">
   <div class="sec-head"><div><p class="eyebrow">{bi('المكتبة المفتوحة', 'Open Library')}</p><h2>{bi('كتب مفتوحة للقراءة والتحميل', 'Open books to read and download')}</h2></div><a class="more-link" href="books/index.html">{bi('المكتبة المفتوحة', 'Open Library')} <i class="arr"></i></a></div>
-  <div class="bkgrid">{''.join(cards)}</div>
+  <div class="bkgrid bkfold" id="bkfold">{''.join(cards)}</div>
+  {f'<div class="rmore"><button type="button" id="bkmoreBtn" aria-expanded="false" aria-controls="bkfold"><span class="m-open">{bi('المزيد من الكتب', 'More books')}</span><span class="m-close">{bi('عرض أقل', 'Show less')}</span><i class="chev"></i></button></div>' if len(cards) > HOME_BOOKS else ''}
 </section>'''
 
 def carousel(ids, depth):

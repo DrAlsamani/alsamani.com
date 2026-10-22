@@ -10,6 +10,7 @@
     addEventListener('scroll',()=>{if(!tick){tick=true;requestAnimationFrame(chk)}},{passive:true});addEventListener('resize',chk);chk()}
   // home research: reveal the rest in place
   const rf=$('rfold'),rb=$('rmoreBtn');
+  const bf=$('bkfold'),bb=$('bkmoreBtn');if(bf&&bb)bb.onclick=()=>{const o=bf.classList.toggle('open');bb.setAttribute('aria-expanded',o);if(!o)$('books').scrollIntoView({behavior:'smooth'})};
   if(rf&&rb)rb.onclick=()=>{const o=rf.classList.toggle('open');rb.setAttribute('aria-expanded',o);if(!o)$('research').scrollIntoView({behavior:'smooth'})};
   // the ribbons double as the light / dark switch
   const isDark=()=>root.dataset.theme?root.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches;
