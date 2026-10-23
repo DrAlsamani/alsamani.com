@@ -22,6 +22,9 @@ def _meta(name, val):
 def _cite_block(b, en):
     isbn = b.get('isbn')
     url = SITE + 'books/' + b['slug'] + '/' + ('en/' if en else '')
+    doi = b.get('_doi', {}).get('en' if en else 'ar')
+    if doi:
+        url = 'https://doi.org/' + doi
     if en:
         txt = (f"Alsamani, O. A. ({YEAR}). <i>{html.escape(b['title_en'])}: {html.escape(b['subtitle_en'])}</i>"
                + f". {url}")
@@ -36,6 +39,12 @@ def _cite_block(b, en):
 
 def run(dist):
     books = json.load(open(os.path.join(os.path.dirname(dist), 'books', 'books.json')))
+    try:
+        dois = json.load(open(os.path.join(os.path.dirname(dist), 'data', 'book_dois.json')))
+    except Exception:
+        dois = {}
+    for b in books:
+        b['_doi'] = dois.get(b['slug'], {})
     n = 0
     for b in books:
         root = os.path.join(dist, 'books', b['slug'])
@@ -58,6 +67,9 @@ def run(dist):
                      _meta('citation_language', 'en' if en else 'ar')]
                 if b.get('isbn') and not en:
                     m.append(_meta('citation_isbn', b['isbn']))
+                doi = b.get('_doi', {}).get('en' if en else 'ar')
+                if doi and name == 'index':
+                    m.append(_meta('citation_doi', doi))
                 if name == 'index':
                     m.insert(0, _meta('citation_title', book_title + ': ' + (b['subtitle_en'] if en else b['subtitle'])))
                     pdf = f"books/{b['slug']}/pdf/{b['slug']}-full.pdf"
