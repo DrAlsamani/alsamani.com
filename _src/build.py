@@ -651,6 +651,8 @@ for target, full in (('dist', True), ('preview', False)):
             shutil.copy(P('img', f), P(target, 'img', f))
     if os.path.isdir(P('img', 'research')):
         shutil.copytree(P('img', 'research'), P(target, 'img', 'research'), dirs_exist_ok=True)
+import sys as _sys; _sys.path.insert(0, P('tools')); import scholar_meta
+print('scholar meta on', scholar_meta.run(P('dist')), 'book pages')
 from datetime import date
 urls = [SITE] + [SITE + n + '/' for n, *_ in PAGES if n != 'index']
 import glob as _gs
