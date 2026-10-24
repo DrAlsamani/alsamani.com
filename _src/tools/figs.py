@@ -178,3 +178,35 @@ def structure(lang):
             b += T(ax, y + 68 + i * 30, it, 12.5 if lang == 'ar' else 10.5, 'fg-ink', 500, an)
     return svg(b, 900, 460, lang)
 write('supportive-community-gifted-entrepreneurs-2', structure('ar'), structure('en'))
+
+# 9. Strength-referenced PE: predicted experiences (redrawn from the paper's Table 2)
+def pe_matrix(lang):
+    L = {'ar': dict(top='توفير التعلم المتقدم', side='إتاحة التعلم الحركي', c=['تحدٍّ مناسب ودليل متاح واعتراف فعلي', 'قدرة لا تُتحدّى أو لا يُعترف بها'], r=['متاحة', 'مقيّدة'],
+                    cells=[[['فرص للفاعلية في الحركة', 'وفي التعلم المتقدم معًا'], ['فاعلية في الحركة، وفهم متقدم', 'لا يُستخدم ولا يُوسَّع']],
+                           [['فاعلية في التعلم المتقدم', 'مع حركة مقيّدة'], ['فرص محدودة في المجالين', 'ضعف إشباع أو إحباط فعلي']]],
+                    links=[['م2، م5', 'م2، م5'], ['م4–م6', 'م2، م4، م5']], note='مقارنات تعليمية لا أنماط طلاب مثبتة'),
+         'en': dict(top='Advanced learning provision', side='Motor learning access', c=['Challenge, accessible evidence, recognition', 'Capacity underchallenged or unrecognized'], r=['Provided', 'Restricted'],
+                    cells=[[['Effectiveness possible in both', 'movement and advanced learning'], ['Effectiveness in movement; advanced', 'understanding unused or unextended']],
+                           [['Effectiveness in advanced learning', 'alongside restricted movement'], ['Limited opportunities in both;', 'low satisfaction or active frustration']]],
+                    links=[['P2, P5', 'P2, P5'], ['P4–P6', 'P2, P4, P5']], note='Instructional comparisons, not validated student types')}[lang]
+    rtl = lang == 'ar'
+    cw, ch, gx, gy = 330, 120, 20, 16
+    sidew = 150
+    x0 = 20 if rtl else sidew + 40          # grid left edge
+    sx = 900 - 20 - sidew if rtl else 20    # side label column left edge
+    cols = [x0 + cw + gx, x0] if rtl else [x0, x0 + cw + gx]
+    b = T(x0 + cw + gx / 2, 36, L['top'], 16, 'fg-dune', 800)
+    for j, cx in enumerate(cols):
+        b += f'<rect x="{cx}" y="54" width="{cw}" height="40" rx="12" class="{"fg-acc" if j == 0 else "fg-mut"}"/>' + T(cx + cw / 2, 79, L['c'][j], 13.5 if rtl else 12, 'fg-bg', 700)
+    for i in range(2):
+        y = 110 + i * (ch + gy)
+        b += f'<rect x="{sx}" y="{y}" width="{sidew}" height="{ch}" rx="14" class="{"fg-ink" if i == 0 else "fg-dune"}"/>'
+        b += T(sx + sidew / 2, y + ch / 2 - 6, L['side'], 11.5 if rtl else 10.5, 'fg-bg', 500) + T(sx + sidew / 2, y + ch / 2 + 18, L['r'][i], 17, 'fg-bg', 800)
+        for j, cx in enumerate(cols):
+            strong = (i, j) == (0, 0)
+            b += f'<rect x="{cx}" y="{y}" width="{cw}" height="{ch}" rx="14" class="fg-bg" style="stroke:var({"--accent" if strong else "--line"})" stroke-width="{2.2 if strong else 1.5}"/>'
+            b += lines(cx + cw / 2, y + 48, L['cells'][i][j], 15 if rtl else 13.5, 'fg-ink', 600, 1.45)
+            b += T(cx + cw / 2, y + ch - 14, L['links'][i][j], 12, 'fg-mut', 600)
+    b += T(450, 400, L['note'], 13, 'fg-mut', 500)
+    return svg(b, 900, 420, lang)
+write('strength-referenced-pe-twice-exceptional', pe_matrix('ar'), pe_matrix('en'))
