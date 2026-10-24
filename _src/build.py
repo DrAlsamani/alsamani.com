@@ -242,12 +242,32 @@ def research_cards():
   {f'<div class="rmore"><button type="button" id="rmoreBtn" aria-expanded="false" aria-controls="rfold"><span class="m-open">{bi('المزيد من الأبحاث', 'More research')}</span><span class="m-close">{bi('عرض أقل', 'Show less')}</span><i class="chev"></i></button></div>' if len(research) > HOME_RESEARCH else ''}
 </section>'''
 
+def _mb(p):
+    return round(os.path.getsize(p) / 1048576, 1) if os.path.exists(p) else None
+
+def pdf_en_btn(b):
+    p = P('dist', 'books', b['slug'], 'en', 'pdf', b['slug'] + '-full.pdf')
+    mb = _mb(p)
+    if mb is None:
+        return f'<a class="btn ghost en" href="books/{b["slug"]}/pdf/{b["slug"]}-full.pdf">Arabic PDF</a>'
+    return f'<a class="btn ghost en" href="books/{b["slug"]}/en/pdf/{b["slug"]}-full.pdf">Download PDF · {mb} MB</a>'
+
+def cover_link(b, en):
+    sub = 'en/' if en else ''
+    img = P('dist', 'books', b['slug'], *(['en'] if en else []), 'cover.jpg')
+    cls = 'en' if en else 'ar'
+    title = b['title_en'] if en else b['title']
+    if os.path.exists(img):
+        return f'<a class="bk-cover bk-img {cls}" href="books/{b["slug"]}/{sub}index.html" tabindex="-1"><img src="books/{b["slug"]}/{sub}cover.jpg" alt="{e(title)}" loading="lazy" width="190" height="268"></a>'
+    return f'<a class="bk-cover {cls}" href="books/{b["slug"]}/{sub}index.html" aria-hidden="true" tabindex="-1"><b>{e(title)}</b><span>{e(b["author_en"] if en else b["author"])}</span></a>'
+
 HOME_BOOKS = 2  # books shown on the homepage before "More books"
 HOME_BOOK_ORDER = ['entrepreneurship-101', 'innovation-management', 'diagnosis-identification']
 def book_stats(slug):
     # fallback when build_books.py has not produced stats for a book
     d = P('dist', 'books', slug)
     st = {'chapters': len([f for f in os.listdir(d) if f.startswith('ch') and f.endswith('.html')])} if os.path.isdir(d) else {}
+    st['chapters_only'] = True
     pdf = os.path.join(d, 'pdf', slug + '-full.pdf')
     if os.path.exists(pdf):
         st['mb'] = round(os.path.getsize(pdf) / 1048576, 1)
@@ -269,19 +289,19 @@ def books_band():
     books = sorted(books, key=lambda b: order.get(b['slug'], len(order)))
     for b in books:
         st = stats.get(b['slug']) or book_stats(b['slug'])
-        facts = [f"<span><b class='mono'>{st.get('chapters','')}</b>{bi('فصلًا وملحقًا', 'chapters and appendices')}</span>" if st.get('chapters') else '',
+        facts = [f"<span><b class='mono'>{st.get('chapters','')}</b>{bi('فصلًا', 'chapters') if st.get('chapters_only') else bi('فصلًا وملحقًا', 'chapters and appendices')}</span>" if st.get('chapters') else '',
                  f"<span><b class='mono'>{st.get('pages','')}</b>{bi('صفحة', 'pages')}</span>" if st.get('pages') else '',
                  f"<span><b class='mono'>{st.get('figs',0)+st.get('tabs',0)+st.get('tools',0)}</b>{bi('شكلًا وجدولًا وأداة', 'figures, tables and tools')}</span>" if st.get('figs',0)+st.get('tabs',0)+st.get('tools',0) else '']
         cards.append(f'''<article class="bkcard" style="--bk:{b.get('accent','#2C3E8F')}">
-  <a class="bk-cover ar" href="books/{b['slug']}/index.html" aria-hidden="true" tabindex="-1"><b>{e(b['title'])}</b><span>{e(b['author'])}</span></a>
-  <a class="bk-cover en" href="books/{b['slug']}/en/index.html" aria-hidden="true" tabindex="-1"><b>{e(b['title_en'])}</b><span>{e(b.get('author_en',''))}</span></a>
+  {cover_link(b, False)}
+  {cover_link(b, True)}
   <div class="bk-body">
     <span class="bk-kind">{bi('كتاب مفتوح', 'Open book')}</span>
     <h3><a class="ar" href="books/{b['slug']}/index.html">{e(b['title'])}</a><a class="en" href="books/{b['slug']}/en/index.html">{e(b['title_en'])} <small lang="ar">{e(b['title'])}</small></a></h3>
     <p class="bk-sub">{bi(e(b['subtitle']), e(b['subtitle_en']))}</p>
     <p class="bk-desc">{bi(e(b['description']), e(b['description_en']))}</p>
     <div class="bk-facts">{''.join(facts)}</div>
-    <div class="bk-actions"><a class="btn solid ar" href="books/{b['slug']}/index.html">اقرأ على الموقع</a><a class="btn solid en" href="books/{b['slug']}/en/index.html">Read online</a><a class="btn ghost" href="books/{b['slug']}/pdf/{b['slug']}-full.pdf">{bi('تحميل PDF', 'Arabic PDF')}{(' · ' + str(st['mb']) + ' MB') if st.get('mb') else ''}</a></div>
+    <div class="bk-actions"><a class="btn solid ar" href="books/{b['slug']}/index.html">اقرأ على الموقع</a><a class="btn solid en" href="books/{b['slug']}/en/index.html">Read online</a><a class="btn ghost ar" href="books/{b['slug']}/pdf/{b['slug']}-full.pdf">تحميل PDF{(' · ' + str(st['mb']) + ' MB') if st.get('mb') else ''}</a>{pdf_en_btn(b)}</div>
   </div>
 </article>''')
     return f'''<section id="books">
@@ -653,6 +673,7 @@ for target, full in (('dist', True), ('preview', False)):
         shutil.copytree(P('img', 'research'), P(target, 'img', 'research'), dirs_exist_ok=True)
 import sys as _sys; _sys.path.insert(0, P('tools')); import scholar_meta
 print('scholar meta on', scholar_meta.run(P('dist')), 'book pages')
+print('library covers', scholar_meta.library_covers(P('dist')))
 from datetime import date
 urls = [SITE] + [SITE + n + '/' for n, *_ in PAGES if n != 'index']
 import glob as _gs

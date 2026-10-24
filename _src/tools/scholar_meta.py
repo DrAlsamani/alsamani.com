@@ -62,6 +62,7 @@ def run(dist):
                 if 'noindex' in s[:3000]:
                     continue
                 s = _strip(s, M0, M1)
+                s = s.replace(' · Translated from the Arabic edition', '')
                 rel = os.path.relpath(f, dist).replace(os.sep, '/')
                 m = [_meta('citation_author', author), _meta('citation_publication_date', YEAR),
                      _meta('citation_language', 'en' if en else 'ar')]
@@ -91,4 +92,39 @@ def run(dist):
                 s = s.replace('</head>', M0 + '\n' + ''.join(m) + M1 + '\n</head>', 1)
                 open(f, 'w', encoding='utf-8').write(s)
                 n += 1
+    return n
+
+
+L0, L1 = '<!--LIBCOVERS-->', '<!--/LIBCOVERS-->'
+
+
+def library_covers(dist):
+    """Use each edition's real cover image on the Open Library page (books/index.html)."""
+    f = os.path.join(dist, 'books', 'index.html')
+    if not os.path.exists(f):
+        return 0
+    books = json.load(open(os.path.join(os.path.dirname(dist), 'books', 'books.json')))
+    names = {}
+    for b in books:
+        names[b['title']] = (b['slug'], False, b['title'])
+        names[b['title_en']] = (b['slug'], True, b['title_en'])
+    s = open(f, encoding='utf-8').read()
+    s = _strip(s, L0, L1)
+    n = 0
+
+    def rep(m):
+        nonlocal n
+        title = html.unescape(m.group(1))
+        if title not in names:
+            return m.group(0)
+        slug, en, t = names[title]
+        rel = f'{slug}/en/cover.jpg' if en else f'{slug}/cover.jpg'
+        if not os.path.exists(os.path.join(dist, 'books', rel)):
+            return m.group(0)
+        n += 1
+        return f'<div class="lib-spine lib-img"><img src="{rel}" alt="{html.escape(t, quote=True)}" loading="lazy" width="200" height="280"></div>'
+    s = re.sub(r'<div class="lib-spine"><b>([^<]*)</b><span>[^<]*</span></div>', rep, s)
+    css = L0 + '<style>.lib-spine.lib-img{padding:0;background:none;overflow:hidden}.lib-spine.lib-img img{display:block;width:100%;height:100%;object-fit:cover}</style>' + L1
+    s = s.replace('</head>', css + '\n</head>', 1)
+    open(f, 'w', encoding='utf-8').write(s)
     return n

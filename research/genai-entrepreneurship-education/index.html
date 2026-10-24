@@ -820,7 +820,8 @@ html[dir="rtl"] .rmore button[aria-expanded="true"] .chev{transform:rotate(45deg
 .areas .area-lead{grid-column:1/-1}.areas .area-lead h3{font-size:1.375rem}
 
 #books .bkfold:not(.open)>.bkcard:nth-child(n+3){display:none!important}
-#books .bk-cover.en b{font-size:1.2rem;overflow-wrap:anywhere;hyphens:auto}
+#books .bk-cover.en b{font-size:1.2rem;hyphens:none;overflow-wrap:normal}
+#books .bk-cover.bk-img{padding:0!important;background:none!important;overflow:hidden}#books .bk-cover.bk-img img{display:block;width:100%;height:100%;object-fit:cover}
 .bkfold.open>.bkcard{animation:rcIn .5s ease both}
 #books .rmore{margin-top:28px}
 /* article blocks: each study gets the visual that suits it */
