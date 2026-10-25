@@ -199,6 +199,7 @@ def hero():
     return f'''<section class="hero2">{RIB_FALL}
   <p class="h2-role">{bi('أستاذ مشارك · رئيس ابتكار معتمد (<bdi>CCInO®</bdi>)', 'Associate Professor · Certified Chief Innovation Officer (CCInO®)')}</p>
   <h1>{bi('د. عمر عبدالله الصمعاني', 'Dr. Omar A. Alsamani')}</h1>
+  <p class="h2-alt"><span class="ar" lang="en" dir="ltr">Dr. Omar A. Alsamani</span><span class="en" lang="ar" dir="rtl">د. عمر عبدالله الصمعاني</span></p>
   <p class="h2-line">{bi('استراتيجية الابتكار ومنظوماته · الموهبة وتنميتها · التربية الخاصة ومزدوجو الاستثنائية', 'Innovation strategy and ecosystems · Giftedness and talent development · Special education and twice-exceptionality')}</p>
   <p class="h2-cta"><a href="#research">{bi('أحدث الأبحاث', 'Recent research')} <i class="chev"></i></a><a href="books/index.html">{bi('المكتبة المفتوحة', 'Open Library')} <i class="chev"></i></a></p>
   <div class="rb-band">{RIB_TOP}</div>
@@ -560,17 +561,18 @@ def write(path, content):
 
 
 SITE = 'https://alsamani.com/'
-PERSON = {"@type": "Person", "@id": SITE + "#person", "name": "Omar Abdullah Alsamani", "alternateName": ["عمر عبدالله الصمعاني", "Omar A. Alsamani", "Omar Alsamani"],
+PERSON = {"@type": "Person", "@id": SITE + "#person", "name": "Omar Abdullah Alsamani", "alternateName": ["عمر عبدالله الصمعاني", "د. عمر عبدالله الصمعاني", "عمر الصمعاني", "د. عمر الصمعاني", "الدكتور عمر الصمعاني", "Omar A. Alsamani", "Omar Alsamani", "Dr. Omar Alsamani"],
+          "givenName": "Omar", "familyName": "Alsamani", "honorificPrefix": "Dr.", "description": "أستاذ مشارك بجامعة حائل، ورئيس ابتكار معتمد. Associate Professor at the University of Ha'il and Certified Chief Innovation Officer.",
           "jobTitle": ["Associate Professor", "Certified Chief Innovation Officer"], "affiliation": {"@type": "CollegeOrUniversity", "name": "University of Ha'il"}, "url": SITE,
           "alumniOf": [{"@type": "CollegeOrUniversity", "name": "University of Northern Colorado"}, {"@type": "CollegeOrUniversity", "name": "University of Exeter"}],
           "knowsAbout": ["Innovation strategy", "Innovation ecosystems", "Open innovation", "Gifted education", "Twice-exceptionality", "Talent development", "Creativity", "Innovation and entrepreneurship", "Special education", "Artificial intelligence in education", "Identification and assessment"],
-          "sameAs": ["https://www.linkedin.com/in/alsamani/", "https://www.x.com/Omar_ALsamani", "https://scholar.google.com/citations?user=1tSLgBIAAAAJ"]}
+          "sameAs": ["https://www.linkedin.com/in/alsamani/", "https://www.x.com/Omar_ALsamani", "https://scholar.google.com/citations?user=1tSLgBIAAAAJ", "https://orcid.org/0000-0002-5807-8105"]}
 DESCS = {
- 'index': "Research by Dr. Omar A. Alsamani (University of Ha'il) on gifted education, twice-exceptionality, innovation and entrepreneurship, special education and AI in education — abstracts, findings and implications in English and Arabic.",
+ 'index': "د. عمر عبدالله الصمعاني، أستاذ مشارك بجامعة حائل: أبحاث في الموهبة وازدواجية الاستثنائية والابتكار وريادة الأعمال والتربية الخاصة. Research by Dr. Omar A. Alsamani (University of Ha'il) on gifted education, twice-exceptionality, innovation and entrepreneurship, special education and AI in education — abstracts, findings and implications in English and Arabic.",
  'publications': "Full list of publications by Dr. Omar A. Alsamani: journal articles, book chapters and theses on gifted education, twice-exceptional students, autism, creativity, entrepreneurship and AI in education.",
  'photography': "Landscape, wildlife and heritage photography by Omar Alsamani.",
  'contact': "Contact Dr. Omar A. Alsamani for research collaboration, training, consulting and media.",
- 'about': "Dr. Omar A. Alsamani, Associate Professor (PhD) and Certified Chief Innovation Officer: innovation strategy and ecosystems, giftedness and talent development, special education and twice-exceptionality.",
+ 'about': "نبذة عن د. عمر عبدالله الصمعاني، أستاذ مشارك بجامعة حائل ورئيس ابتكار معتمد. Dr. Omar A. Alsamani, Associate Professor (PhD) and Certified Chief Innovation Officer: innovation strategy and ecosystems, giftedness and talent development, special education and twice-exceptionality.",
  'research': "Published research by Dr. Omar A. Alsamani on giftedness, twice-exceptionality, innovation, entrepreneurship and AI in education.",
 }
 def og_img_for(rr):
@@ -635,10 +637,10 @@ def seo(name, title):
 <meta name="author" content="Omar Abdullah Alsamani">
 {extra}{lds}'''
 
-PAGES = [('index', 0, 'Dr. Omar A. Alsamani | د. عمر عبدالله الصمعاني — Gifted Education, Innovation and Entrepreneurship', feed_html),
+PAGES = [('index', 0, 'د. عمر عبدالله الصمعاني | Dr. Omar A. Alsamani — Gifted Education, Innovation and Entrepreneurship', feed_html),
          ('publications', 1, 'Publications | Dr. Omar A. Alsamani | المنشورات', pubs_html),
          ('photography', 1, 'Photography | Omar Alsamani | التصوير', photo_html),
-         ('about', 1, 'About | Dr. Omar A. Alsamani | نبذة', about_html),
+         ('about', 1, 'نبذة عن د. عمر عبدالله الصمعاني | About Dr. Omar A. Alsamani', about_html),
          ('contact', 1, 'Contact | Dr. Omar A. Alsamani | تواصل', contact_html),
          ('research', 1, 'Research | Dr. Omar A. Alsamani | الأبحاث', research_index),
          ('research/ai-visual-instruction-dyslexia', 2, 'AI-based visual instruction and reading comprehension in dyslexia | Alsamani', research_dys)]

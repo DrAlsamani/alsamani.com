@@ -353,3 +353,4 @@ html[dir="rtl"] .rmore button[aria-expanded="true"] .chev{transform:rotate(45deg
 #books .bk-cover.bk-img{padding:0!important;background:none!important;overflow:hidden}#books .bk-cover.bk-img img{display:block;width:100%;height:100%;object-fit:cover}
 .bkfold.open>.bkcard{animation:rcIn .5s ease both}
 #books .rmore{margin-top:28px}
+.h2-alt{color:var(--muted);font-size:clamp(.9375rem,1.5vw,1.0625rem);font-weight:500;margin:8px 0 0}
