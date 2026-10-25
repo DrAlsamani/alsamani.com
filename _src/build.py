@@ -113,7 +113,8 @@ def feed_html():
     upd = f'''<section id="updates" class="alt">
   <div class="sec-head"><div><p class="eyebrow">{bi('المستجدات', 'Updates')}</p><h2>{bi('آخر الأعمال والأخبار', 'Recent work and news')}</h2></div>
   <div class="filters" role="group">{chips}</div></div>
-  <ol class="feed">{''.join(rows)}</ol>
+  <ol class="feed" id="ffold">{''.join(rows)}</ol>
+  <div class="rmore"><button type="button" id="fmoreBtn" aria-expanded="false" aria-controls="ffold"><span class="m-open">{bi('المزيد من المستجدات', 'More updates')}</span><span class="m-close">{bi('عرض أقل', 'Show less')}</span><i class="chev"></i></button></div>
 </section>'''
     return f'''{hero()}
 {research_cards()}

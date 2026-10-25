@@ -354,3 +354,7 @@ html[dir="rtl"] .rmore button[aria-expanded="true"] .chev{transform:rotate(45deg
 .bkfold.open>.bkcard{animation:rcIn .5s ease both}
 #books .rmore{margin-top:28px}
 .h2-alt{color:var(--muted);font-size:clamp(.9375rem,1.5vw,1.0625rem);font-weight:500;margin:8px 0 0}
+#updates .entry.fx{display:none}
+#updates .entry.lastv{border-bottom:0}
+#updates .rmore{margin-top:24px}
+.rmore[hidden]{display:none!important}
