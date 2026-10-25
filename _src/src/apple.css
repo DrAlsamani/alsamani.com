@@ -348,13 +348,19 @@ html[dir="rtl"] .rmore button[aria-expanded="true"] .chev{transform:rotate(45deg
 .site-foot .pv{margin-top:-8px}
 .areas .area-lead{grid-column:1/-1}.areas .area-lead h3{font-size:1.375rem}
 
-#books .bkfold:not(.open)>.bkcard:nth-child(n+3){display:none!important}
+#books .bkfold:not(.open)>.bkcard:nth-child(n+4){display:none!important}
+#books .bkfold:not(.open)>.bkcard:nth-child(3){max-height:170px;justify-content:flex-end!important;overflow:hidden;-webkit-mask-image:linear-gradient(#000,transparent);mask-image:linear-gradient(#000,transparent);pointer-events:none}
+@media (min-width:861px){#books .bkfold:not(.open)>.bkcard:nth-child(4){display:flex!important;justify-content:flex-end!important;max-height:170px;overflow:hidden;-webkit-mask-image:linear-gradient(#000,transparent);mask-image:linear-gradient(#000,transparent);pointer-events:none}}
+#books .bkfold:not(.open)+.rmore{margin-top:-56px;position:relative}
 #books .bk-cover.en b{font-size:1.2rem;hyphens:none;overflow-wrap:normal}
 #books .bk-cover.bk-img{padding:0!important;background:none!important;overflow:hidden}#books .bk-cover.bk-img img{display:block;width:100%;height:100%;object-fit:cover}
 .bkfold.open>.bkcard{animation:rcIn .5s ease both}
-#books .rmore{margin-top:28px}
+#books .bkfold.open+.rmore{margin-top:28px}
 .h2-alt{color:var(--muted);font-size:clamp(.9375rem,1.5vw,1.0625rem);font-weight:500;margin:8px 0 0}
 #updates .entry.fx{display:none}
 #updates .entry.lastv{border-bottom:0}
-#updates .rmore{margin-top:24px}
+#updates .entry.fpeek{display:grid;max-height:120px;overflow:hidden;-webkit-mask-image:linear-gradient(#000,transparent);mask-image:linear-gradient(#000,transparent);pointer-events:none;border-bottom:0}
+#updates .feed:not(.open)+.rmore{margin-top:-60px;position:relative}
+#updates .feed.open+.rmore{margin-top:24px}
+#updates .feed.open>.entry{animation:rcIn .5s ease both}
 .rmore[hidden]{display:none!important}

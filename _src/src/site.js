@@ -62,7 +62,7 @@
   const fchips=[...document.querySelectorAll('[data-ft]')];
   fchips.forEach(c=>c.onclick=()=>{fchips.forEach(x=>x.setAttribute('aria-pressed',x===c));document.querySelectorAll('.entry').forEach(p=>p.hidden=!(c.dataset.ft==='all'||p.dataset.t===c.dataset.ft));ffold()});
   const ff=$('ffold'),fb=$('fmoreBtn'),FN=4;
-  function ffold(){if(!ff||!fb)return;const o=ff.classList.contains('open');const vis=[...ff.querySelectorAll('.entry')].filter(x=>!x.hidden);vis.forEach((x,k)=>{x.classList.toggle('fx',!o&&k>=FN);x.classList.remove('lastv')});const shown=vis.filter(x=>!x.classList.contains('fx'));if(shown.length)shown[shown.length-1].classList.add('lastv');fb.parentNode.hidden=vis.length<=FN}
+  function ffold(){if(!ff||!fb)return;const o=ff.classList.contains('open');const vis=[...ff.querySelectorAll('.entry')].filter(x=>!x.hidden);vis.forEach((x,k)=>{x.classList.toggle('fx',!o&&k>FN);x.classList.toggle('fpeek',!o&&k===FN);x.classList.remove('lastv')});const shown=vis.filter(x=>!x.classList.contains('fx')&&!x.classList.contains('fpeek'));if(shown.length)shown[shown.length-1].classList.add('lastv');fb.parentNode.hidden=vis.length<=FN}
   if(ff&&fb){fb.onclick=()=>{const o=ff.classList.toggle('open');fb.setAttribute('aria-expanded',o);ffold();if(!o)$('updates').scrollIntoView({behavior:'smooth'})};ffold()}
 
   // publications search + filter
