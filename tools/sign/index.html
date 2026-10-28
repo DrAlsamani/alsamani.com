@@ -1663,7 +1663,6 @@ async function snDetectPage(page,pi,OPS){
       b.style.left = r.l + 'px'; b.style.top = r.t + 'px'; b.style.width = r.w + 'px'; b.style.height = r.h + 'px';
       b.dataset.i = i;
       if (s.sig) { const im = new Image(); im.src = s.sig; im.alt = ''; b.appendChild(im); }
-      else if (!opts.edit) b.innerHTML = '<span>' + B('وقّع هنا', 'Sign here') + '</span>';
       if (opts.edit) {
         b.innerHTML = '<span class="sn-bn">' + (i + 1) + '</span><i class="sn-rz" aria-hidden="true"></i><button type="button" class="sn-bx" aria-label="remove">×</button>';
         b.title = s.n || '';
