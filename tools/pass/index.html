@@ -1567,6 +1567,7 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
 .ps input[type=date],.ps input[type=time]{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:9px 10px;width:100%;box-sizing:border-box;min-height:44px}
 .ps-names summary{cursor:pointer;font-weight:500;color:var(--accent)}.ps-names[open] summary{margin-bottom:8px}.ps-names .sn-fine{margin:0 0 8px}
 .ps .sn-keep{display:flex;gap:10px;align-items:flex-start;text-align:start;margin:14px 0}.ps .sn-keep input{width:auto;flex:none;margin-top:5px}
+#psOther{margin-top:8px}
 </style>
 <div id="ps" class="sn ps" data-api="https://script.google.com/macros/s/AKfycbx8-M5oOYDU-TaWyLaySlqZHvBffRiDI6QH85_hBh5y_9uYrvUdxwD3hKNzGoJ4K7UOXQ/exec" data-mode="pass"><noscript><span class="ar">تعمل هذه الأداة مع تفعيل JavaScript.</span><span class="en">This tool needs JavaScript.</span></noscript></div>
 <script>/* alsamani.com — one engine for three committee tools, chosen by #ps[data-mode]:
@@ -1700,8 +1701,10 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
       const head = `<div class="sn-card"><h2>${esc(title())}</h2>${S.locked ? `<p class="ps-closed">${B('أُغلق الرابط.', 'This link is closed.')}</p>` : ''}${admin && MODE === 'att' ? `<div class="sn-two"><button type="button" class="btn ghost" id="psQr">${B('عرض رمز QR للقاعة', 'Show QR code for the room')}</button></div>` : ''}</div>`;
       let form = '';
       if (!S.locked && (editing || !S.mine)) {
-        const nameField = S.names.length
-          ? `<select id="psName"${S.mine ? ' disabled' : ''}><option value="">${T('— اختر اسمك —', '— choose your name —')}</option>${S.names.map(n => { const done = S.voted.includes(n) && !(S.mine && S.mine.name === n); return `<option${done ? ' disabled' : ''}${(S.mine ? S.mine.name === n : n === me) ? ' selected' : ''}>${esc(n)}${done ? ' ✓' : ''}</option>`; }).join('')}</select>`
+        const inList = n => S.names.some(x => x === n);
+        const nameField = S.names.length && !(S.mine && !inList(S.mine.name))
+          ? `<select id="psName"${S.mine ? ' disabled' : ''}><option value="">${T('— اختر اسمك —', '— choose your name —')}</option>${S.names.map(n => { const done = S.voted.includes(n) && !(S.mine && S.mine.name === n); return `<option${done ? ' disabled' : ''}${(S.mine ? S.mine.name === n : n === me) ? ' selected' : ''}>${esc(n)}${done ? ' ✓' : ''}</option>`; }).join('')}<option value="+">${T('اسمي غير موجود في القائمة', 'My name is not on the list')}</option></select>
+            <input type="text" id="psOther" maxlength="120" hidden placeholder="${T('اكتب اسمك', 'Write your name')}" value="${esc(inList(me) ? '' : me)}">`
           : `<input type="text" id="psName" maxlength="120" value="${esc(S.mine ? S.mine.name : me)}"${S.mine ? ' disabled' : ''}>`;
         form = `<div class="sn-card"><label class="sn-lbl">${B('الاسم', 'Name')}${nameField}</label>
           ${S.items.map((t, i) => `<div class="ps-item"><p class="ps-txt">${S.items.length > 1 && MODE === 'pass' ? `<b>${i + 1}.</b> ` : ''}${esc(t).replace(/\n/g, '<br>')}</p>
@@ -1736,7 +1739,7 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
         body += `<table class="ps-tbl"><thead><tr><th>${B('الاسم', 'Name')}</th>${S.items.map((t, i) => `<th>${MODE === 'time' ? esc(t.length > 24 ? t.slice(0, 24) + '…' : t) : S.items.length > 1 ? i + 1 : B('الرأي', 'Answer')}</th>`).join('')}</tr></thead>
           <tbody>${V.map(v => `<tr><td><bdi>${esc(v.name)}</bdi></td>${v.ans.map((a, i) => `<td><span class="ps-tag ps-${C.opts[a][2]}">${optT(a)}</span>${v.notes[i] ? `<small>${esc(v.notes[i])}</small>` : ''}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
       }
-      return `<div class="sn-card ps-result"><h3>${MODE === 'att' ? B('الحاضرون', 'Present') : B('النتيجة', 'Results')} <span class="ps-n">${V.length}${S.names.length ? ' / ' + S.names.length : ''}</span></h3>${body}
+      return `<div class="sn-card ps-result"><h3>${MODE === 'att' ? B('الحاضرون', 'Present') : B('النتيجة', 'Results')} <span class="ps-n">${V.length}${S.names.length ? ' / ' + (S.names.length + V.filter(v => !S.names.includes(v.name)).length) : ''}</span></h3>${body}
         ${miss.length ? `<p class="ps-miss"><b>${MODE === 'att' ? B('لم يسجّل بعد:', 'Not recorded yet:') : B('لم يُجب بعد:', 'Not answered yet:')}</b> ${miss.map(esc).join('، ')}</p>` : ''}
         ${admin ? `<div class="sn-acts"><button type="button" class="btn solid" id="psPrint">${B('طباعة أو حفظ PDF', 'Print or save as PDF')}</button><button type="button" class="btn ghost" id="psText">${B('نسخ النتيجة نصًا', 'Copy as text')}</button>${miss.length && !S.locked ? `<button type="button" class="btn ghost" id="psRemind">${B('نسخ رسالة تذكير', 'Copy a reminder')}</button>` : ''}<button type="button" class="btn ghost" id="psLock">${S.locked ? B('فتح الرابط', 'Reopen') : B('إغلاق الرابط', 'Close')}</button><button type="button" class="btn ghost sn-danger" id="psDel">${B('حذف', 'Delete')}</button></div>` : ''}
       </div>`;
@@ -1760,13 +1763,14 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
         q('#psWa').href = 'https://wa.me/?text=' + encodeURIComponent((S.title ? S.title + '\n' : '') + T(C.link[0], C.link[1]) + link);
       }
       if (q('#psQr')) q('#psQr').onclick = qr;
+      if (q('#psOther')) q('#psName').onchange = () => { const o = q('#psOther'); o.hidden = q('#psName').value !== '+'; if (!o.hidden) o.focus(); };
       root.querySelectorAll('.ps-o').forEach(b => b.onclick = () => {
         const i = +b.dataset.i, k = +b.dataset.k; ans[i] = k;
         root.querySelectorAll(`.ps-o[data-i="${i}"]`).forEach(x => x.setAttribute('aria-checked', x === b));
         const n = root.querySelector(`.ps-note[data-i="${i}"]`); if (n && k > 0) n.hidden = false;
       });
       if (q('#psSend')) q('#psSend').onclick = async ev => {
-        const name = (q('#psName').value || '').trim();
+        const name = (q('#psName').value === '+' ? q('#psOther').value : q('#psName').value || '').trim();
         if (!name) { toast(ERR.bad_name, 1); return; }
         if (ans.some(a => a === null)) { toast(ERR.bad_ans, 1); return; }
         const notes = S.items.map((_, i) => { const n = root.querySelector(`.ps-note[data-i="${i}"]`); return n ? n.value.trim() : ''; });
@@ -1807,7 +1811,7 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
       const html = `<!doctype html><html lang="${isAr() ? 'ar' : 'en'}" dir="${dir}"><head><meta charset="utf-8"><title>${esc(title())}</title>
         <style>body{font-family:"IBM Plex Sans Arabic",Tahoma,Arial,sans-serif;margin:32px;color:#111}h1{font-size:20px;margin:0 0 4px}p.m{color:#555;margin:0 0 18px;font-size:13px}
         .it{margin:14px 0}.it p{margin:0 0 6px;line-height:1.7}.c{font-size:13px;color:#333}table{width:100%;border-collapse:collapse;margin-top:18px;font-size:13px}th,td{border:1px solid #bbb;padding:7px 8px;text-align:start;vertical-align:top}th{background:#f1f1f1}small{display:block;color:#555}@page{margin:16mm}</style></head>
-        <body><h1>${esc(title())}</h1><p class="m">${T('التاريخ', 'Date')}: ${dt} · ${MODE === 'att' ? T('عدد الحاضرين', 'Present') : T('عدد المجيبين', 'Answers')}: ${V.length}${S.names.length ? ' / ' + S.names.length : ''}</p>${body}
+        <body><h1>${esc(title())}</h1><p class="m">${T('التاريخ', 'Date')}: ${dt} · ${MODE === 'att' ? T('عدد الحاضرين', 'Present') : T('عدد المجيبين', 'Answers')}: ${V.length}${S.names.length ? ' / ' + (S.names.length + V.filter(v => !S.names.includes(v.name)).length) : ''}</p>${body}
         ${miss.length ? `<p class="m" style="margin-top:14px">${MODE === 'att' ? T('لم يسجّل', 'Not recorded') : T('لم يُجب', 'Not answered')}: ${miss.map(esc).join('، ')}</p>` : ''}
         <script>window.onload=function(){setTimeout(function(){window.print()},300)}<\/script></body></html>`;
       const w = window.open('', '_blank');
