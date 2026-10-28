@@ -34,7 +34,7 @@ SEO = {
   'faq': [('هل يمكن تحميل رمز QR لوضعه في عرض تقديمي؟', 'Can I download the QR code for slides?', 'نعم، يُحمّل صورة PNG واضحة.', 'Yes, as a sharp PNG image.')]},
  'pdf': {
   'title': ('تحرير ملفات PDF وتعبئتها ودمجها مجانًا', 'Edit, fill and merge PDF files for free'),
-  'how': [('افتح ملف PDF أو أكثر، أو صور الأوراق.', 'Open one or more PDFs, or photos of pages.'),
+  'how': [('اختر ملفات PDF أو صورًا، واحدًا أو أكثر.', 'Choose one or more PDFs or photos.'),
           ('اكتب على الصفحات، وضع علامات ✓ و✕ لتعبئة النماذج، وأضف توقيعك أو صورة أو ختمًا.', 'Write on pages, add ✓ and ✕ marks to fill forms, and add your signature, an image or a stamp.'),
           ('أخفِ نصًا قديمًا بمربع يأخذ لون الصفحة، واكتب بدله.', 'Cover old text with a box that takes the page colour, and write over it.'),
           ('ارسم بقلم ناعم، وظلّل النص، وأضف خطوطًا وأسهمًا ومستطيلات ودوائر.', 'Draw with a smooth pen, highlight text, and add lines, arrows, rectangles and circles.'),

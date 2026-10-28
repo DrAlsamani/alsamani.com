@@ -53,19 +53,16 @@
       <p class="pe-hint" id="peHint" hidden></p>
       <div class="pe-body${panel ? ' pe-open' : ''}" id="peBody">
         <aside class="pe-side"><div class="pe-thumbs" id="peThumbs"></div>
-          <div class="pe-adds"><button type="button" class="pe-addf" id="peAdd">${B('+ ملف PDF', '+ PDF file')}</button><button type="button" class="pe-addf" id="peAddI">${B('+ صور', '+ Photos')}</button><button type="button" class="pe-addf" id="peBlank">${B('+ صفحة فارغة', '+ Blank page')}</button></div>
+          <div class="pe-adds"><button type="button" class="pe-addf" id="peAdd">${B('+ ملف أو صور', '+ File or photos')}</button><button type="button" class="pe-addf" id="peBlank">${B('+ صفحة فارغة', '+ Blank page')}</button></div>
           <button type="button" class="sn-lnk pe-undo" id="peUndo" hidden>${B('تراجع عن الحذف', 'Undo delete')}</button></aside>
-        <div class="pe-pages" id="pePages"><div class="pe-empty" id="peEmpty"><div class="sn-two"><button type="button" class="btn solid" id="pePick">${B('اختيار ملف PDF', 'Choose a PDF')}</button><button type="button" class="btn ghost" id="pePickI">${B('صور الأوراق', 'Photos of pages')}</button></div><p class="pt-fine">${B('يمكن فتح أكثر من ملف ودمجها، ثم الكتابة عليها.', 'You can open several files to merge them, then write on them.')}</p></div></div>
+        <div class="pe-pages" id="pePages"><div class="pe-empty" id="peEmpty"><div class="sn-two"><button type="button" class="btn solid" id="pePick">${B('اختيار الملفات', 'Choose files')}</button></div><p class="pt-fine">${B('ملفات PDF أو صور، واحد أو أكثر، تُدمج في ملف واحد ثم تكتب عليها.', 'PDFs or photos, one or more, merged into one file you can write on.')}</p></div></div>
       </div>
     </div>
-    <input type="file" id="peIn" accept="application/pdf,.pdf" multiple hidden><input type="file" id="peInI" accept="image/*" multiple hidden><input type="file" id="peImg" accept="image/*" multiple hidden><input type="file" id="peFont" accept=".ttf,.otf,.woff,.woff2" hidden>`;
+    <input type="file" id="peIn" accept="application/pdf,.pdf,image/*" multiple hidden><input type="file" id="peImg" accept="image/*" multiple hidden><input type="file" id="peFont" accept=".ttf,.otf,.woff,.woff2" hidden>`;
     const q = s => root.querySelector(s), host = q('#pePages'), thumbs = q('#peThumbs'), body = q('#peBody');
     const inp = q('#peIn');
-    const inpI = q('#peInI');
     q('#pePick').onclick = q('#peAdd').onclick = () => inp.click();
-    q('#pePickI').onclick = q('#peAddI').onclick = () => inpI.click();
     inp.onchange = () => { const fs = [...inp.files]; inp.value = ''; addFiles(fs); };
-    inpI.onchange = () => { const fs = [...inpI.files]; inpI.value = ''; addFiles(fs); };
 
     /* ---------- files and pages ---------- */
     async function addFiles(files) {
