@@ -1636,6 +1636,7 @@ async function snDetectPage(page,pi,OPS){
     locked: B('أُقفل المحضر، ولم يعد التوقيع متاحًا.', 'The minutes are locked; signing is closed.'),
     not_found: B('لم يُعثر على المحضر. ربما حُذف أو انتهت مدته.', 'These minutes were not found. They may have been deleted or expired.'),
     bad_pdf: B('الملف غير صالح أو أكبر من ١٠ ميجابايت.', 'The file is invalid or larger than 10 MB.'),
+    bad_sig: B('صورة التوقيع غير صالحة. ارسم توقيعك، أو استخدم صورة توقيع على ورقة بيضاء.', 'The signature image is not valid. Draw your signature, or use a photo of it on white paper.'),
     net: B('تعذّر الاتصال. تحقق من الإنترنت وحاول مرة أخرى.', 'Could not connect. Check your connection and try again.')
   };
   const errMsg = e => ERR[e && e.code] || ERR.net;
@@ -2009,7 +2010,7 @@ async function snDetectPage(page,pi,OPS){
       const s = S.slots[i], r0 = { x: s.x, y: s.y, w: s.w, h: s.h };
       startAdjust({ pi: s.p, rect: Object.assign({}, r0), png, cls: 'slot', ratio: false, hide: i }, async r => {
         const moved = ['x', 'y', 'w', 'h'].some(k => Math.abs(r[k] - r0[k]) > .8);
-        let j = await call({ a: 'sign', id, i, png }); mine[i] = j.tok; store.set('mine.' + id, mine); if (s.n) store.set('me', s.n);
+        let j = await call({ a: 'sign', id, i, png: await fitSig(png) }); mine[i] = j.tok; store.set('mine.' + id, mine); if (s.n) store.set('me', s.n);
         if (moved) j = await call(Object.assign({ a: 'move', id, i, tok: mine[i] }, r));
         S = j; endMode(); draw(); toast(B('تم توقيعك. شكرًا لك.', 'Signed. Thank you.'));
       });
@@ -2025,7 +2026,7 @@ async function snDetectPage(page,pi,OPS){
       im.onload = () => {
         const wp = Math.min(170, v.wrap.clientWidth * .32) / v.vp.scale, hp = wp * im.height / im.width, pt = v.vp.convertToPdfPoint(x, y);
         startAdjust({ pi: v.pi, rect: { x: pt[0] - wp / 2, y: pt[1] - hp / 2, w: wp, h: hp }, png, cls: 'free', ratio: true }, async r => {
-          const j = await call(Object.assign({ a: 'place', id, p: v.pi, png, n: store.get('me', '') }, r)); mine[j.i] = j.tok; store.set('mine.' + id, mine);
+          const j = await call(Object.assign({ a: 'place', id, p: v.pi, png: await fitSig(png), n: store.get('me', '') }, r)); mine[j.i] = j.tok; store.set('mine.' + id, mine);
           S = j; endMode(); draw(); toast(B('أُضيف توقيعك.', 'Your signature was added.'));
         });
       };
@@ -2108,6 +2109,13 @@ async function snDetectPage(page,pi,OPS){
   }
   function close() { document.querySelectorAll('.sn-bg,.sn-sheet').forEach(x => x.remove()); document.documentElement.classList.remove('sn-lockscroll'); }
 
+  // the server takes signatures up to 250 KB: larger images are scaled down until they fit
+  function fitSig(png) {
+    return new Promise(res => { if (png.length < 230000) { res(png); return; }
+      const im = new Image(); im.onload = () => { let w = im.width, h = im.height, out = png;
+        while (out.length >= 230000 && w > 60) { w = Math.round(w * .8); h = Math.round(h * .8); const c = document.createElement('canvas'); c.width = w; c.height = h; c.getContext('2d').drawImage(im, 0, 0, w, h); out = c.toDataURL('image/png'); }
+        res(out); }; im.onerror = () => res(png); im.src = png; });
+  }
   /* ---------- ink colour (blue or black), remembered per device ---------- */
   const INKS = { blue: '#1d3a8f', black: '#111111' };
   const ink = () => INKS[store.get('ink', 'blue')] || INKS.blue;
