@@ -91,13 +91,30 @@
           try { s.buf = await readBuf(f); s.doc = await pdfjsLib.getDocument({ data: new Uint8Array(s.buf.slice(0)), cMapUrl: PDFJS + 'cmaps/', cMapPacked: true, standardFontDataUrl: PDFJS + 'standard_fonts/', disableFontFace: true }).promise; }
           catch (e) { toast(B('تعذّر فتح ملف: ', 'Could not open: ') + esc(f.name), 1); continue; }
           srcs.push(s); for (let i = 0; i < s.doc.numPages; i++) pages.push({ id: ++seq, s, i, rot: 0 });
-        } else { s.url = URL.createObjectURL(f); srcs.push(s); pages.push({ id: ++seq, s, i: 0, rot: 0 }); }
+        } else {
+          s.url = URL.createObjectURL(f);
+          try { await new Promise((ok, no) => { const im = new Image(); im.onload = () => { s.iw = im.naturalWidth; s.ih = im.naturalHeight; ok(); }; im.onerror = no; im.src = s.url; }); }
+          catch (e) { toast(B('تعذّر فتح صورة: ', 'Could not open an image: ') + esc(f.name), 1); continue; }
+          srcs.push(s); pages.push({ id: ++seq, s, i: 0, rot: 0, fit: 'fit' });
+        }
       }
       inp.value = ''; st.textContent = ''; draw();
       const nm = root.querySelector('#ptName'); if (!nm.value && srcs[0]) nm.value = baseName(srcs[0].f.name);
     };
     // thumbnails are rendered once per page, when they scroll into view
     const io = new IntersectionObserver(es => es.forEach(en => { if (en.isIntersecting) { io.unobserve(en.target); thumb(en.target); } }), { rootMargin: '300px' });
+    let base = null;
+    async function baseSize() {
+      if (base) return base;
+      const s0 = srcs.find(x => x.pdf);
+      if (s0) { const v = (await s0.doc.getPage(1)).getViewport({ scale: 1 }); base = [Math.min(v.width, v.height), Math.max(v.width, v.height)]; }
+      return base || [A4[0], A4[1]];
+    }
+    async function pageWH(s) { const [a, b] = await baseSize(); return s.iw > s.ih ? [b, a] : [a, b]; }
+    async function imgBox(pg, el) {
+      const [W, H] = await pageWH(pg.s), m = pg.fit === 'fit' ? 18 / W * 100 : 0;
+      el.innerHTML = `<div class="pt-ip" style="aspect-ratio:${W}/${H};padding:${m}% ${m}%"><img src="${pg.s.url}" alt="" style="object-fit:${pg.fit === 'fill' ? 'cover' : 'contain'}"></div>`;
+    }
     async function render(pg, w) {
       const page = await pg.s.doc.getPage(pg.i + 1), vp1 = page.getViewport({ scale: 1 }), vp = page.getViewport({ scale: w / vp1.width });
       const c = document.createElement('canvas'); c.width = Math.round(vp.width); c.height = Math.round(vp.height);
@@ -107,23 +124,26 @@
     async function thumb(el) {
       const pg = pages.find(p => p.id === +el.dataset.id); if (!pg) return;
       const box = el.querySelector('.pt-th');
-      if (!pg.s.pdf) { box.innerHTML = `<img src="${pg.s.url}" alt="">`; return; }
+      if (!pg.s.pdf) { imgBox(pg, box); return; }
       try { if (!pg.c) pg.c = await render(pg, 420); box.innerHTML = ''; const im = new Image(); im.src = pg.c.toDataURL('image/jpeg', .8); im.alt = ''; box.appendChild(im); } catch (e) {}
     }
     function draw() {
       grid.innerHTML = pages.map((pg, n) => `<div class="pt-pg" data-id="${pg.id}"><div class="pt-th" style="--r:${pg.rot}deg"></div>
-        <div class="pt-pf"><span>${n + 1}</span><button type="button" data-rot aria-label="rotate" title="${isAr() ? 'تدوير' : 'Rotate'}">↻</button><button type="button" data-del aria-label="delete" title="${isAr() ? 'حذف' : 'Delete'}">×</button></div></div>`).join('');
+        <div class="pt-pf"><button type="button" data-mv="-1" aria-label="${isAr() ? 'قبل' : 'earlier'}"${n ? '' : ' disabled'}>${isAr() ? '→' : '←'}</button><span>${n + 1}</span><button type="button" data-mv="1" aria-label="${isAr() ? 'بعد' : 'later'}"${n < pages.length - 1 ? '' : ' disabled'}>${isAr() ? '←' : '→'}</button></div>
+        <div class="pt-pf">${pg.s.pdf ? '' : `<button type="button" class="pt-fit" data-fit title="${isAr() ? 'ملاءمة الصورة للصفحة' : 'Fit the image to the page'}">${pg.fit === 'fill' ? B('ملء', 'Fill') : B('ملاءمة', 'Fit')}</button>`}<i></i><button type="button" data-rot aria-label="rotate" title="${isAr() ? 'تدوير' : 'Rotate'}">↻</button><button type="button" data-del aria-label="delete" title="${isAr() ? 'حذف' : 'Delete'}">×</button></div></div>`).join('');
       grid.querySelectorAll('.pt-pg').forEach(el => {
         const pg = pages.find(p => p.id === +el.dataset.id);
         if (pg.c) { const im = new Image(); im.src = pg.c.toDataURL('image/jpeg', .8); el.querySelector('.pt-th').appendChild(im); }
-        else if (!pg.s.pdf) el.querySelector('.pt-th').innerHTML = `<img src="${pg.s.url}" alt="">`;
+        else if (!pg.s.pdf) imgBox(pg, el.querySelector('.pt-th'));
         else io.observe(el);
         el.querySelector('[data-rot]').onclick = () => { pg.rot = (pg.rot + 90) % 360; el.querySelector('.pt-th').style.setProperty('--r', pg.rot + 'deg'); };
+        el.querySelectorAll('[data-mv]').forEach(bt => bt.onclick = () => { const a = pages.indexOf(pg), b = a + +bt.dataset.mv; if (b < 0 || b >= pages.length) return; [pages[a], pages[b]] = [pages[b], pages[a]]; draw(); const nb = grid.querySelector(`[data-id="${pg.id}"] [data-mv="${bt.dataset.mv}"]`); if (nb && !nb.disabled) nb.focus(); });
+        if (el.querySelector('[data-fit]')) el.querySelector('[data-fit]').onclick = () => { pg.fit = pg.fit === 'fill' ? 'fit' : 'fill'; draw(); };
         el.querySelector('[data-del]').onclick = () => { const at = pages.indexOf(pg); pages.splice(at, 1); trash.push({ at, pg }); draw(); };
         el.querySelector('.pt-th').onclick = () => big(pg);
       });
       if (window.Sortable && !grid._s) grid._s = Sortable.create(grid, { animation: 160, delay: 160, delayOnTouchOnly: true, filter: 'button', preventOnFilter: false, ghostClass: 'pt-ghost',
-        onEnd: () => { const ord = [...grid.children].map(x => +x.dataset.id); pages.sort((a, b) => ord.indexOf(a.id) - ord.indexOf(b.id)); grid.querySelectorAll('.pt-pf span').forEach((s, n) => s.textContent = n + 1); } });
+        onEnd: () => { const ord = [...grid.children].map(x => +x.dataset.id); pages.sort((a, b) => ord.indexOf(a.id) - ord.indexOf(b.id)); draw(); } });
       const n = pages.length;
       root.querySelector('#ptBar').hidden = !n; root.querySelector('#ptUndo').hidden = !trash.length;
       root.querySelector('#ptCnt').innerHTML = B(n + ' صفحة', n + (n === 1 ? ' page' : ' pages'));
@@ -136,7 +156,7 @@
       ov.innerHTML = `<div class="pt-bigin" style="--r:${pg.rot}deg"></div><button type="button" class="btn ghost">${B('إغلاق', 'Close')}</button>`;
       ov.onclick = () => ov.remove(); document.body.appendChild(ov);
       const box = ov.querySelector('.pt-bigin');
-      if (!pg.s.pdf) { box.innerHTML = `<img src="${pg.s.url}" alt="">`; return; }
+      if (!pg.s.pdf) { await imgBox(pg, box); return; }
       try { const c = await render(pg, Math.min(1600, Math.max(window.innerWidth, window.innerHeight) * (window.devicePixelRatio || 1))); const im = new Image(); im.src = c.toDataURL('image/jpeg', .9); box.appendChild(im); } catch (e) {}
     }
     async function make() {
@@ -151,8 +171,8 @@
             p.setRotation(PDFLib.degrees((p.getRotation().angle + pg.rot) % 360));
           } else {
             if (!pg.s.jpg) pg.s.jpg = await imgToJpeg(pg.s.f, 2200);
-            const j = pg.s.jpg, im = await out.embedJpg(j.buf);
-            const land = j.w > j.h, W = land ? A4[1] : A4[0], H = land ? A4[0] : A4[1], m = 18, k = Math.min((W - 2 * m) / j.w, (H - 2 * m) / j.h);
+            const j = pg.s.jpg, im = await out.embedJpg(j.buf), [W, H] = await pageWH(pg.s), m = pg.fit === 'fill' ? 0 : 18;
+            const k = pg.fit === 'fill' ? Math.max(W / j.w, H / j.h) : Math.min((W - 2 * m) / j.w, (H - 2 * m) / j.h);
             p = out.addPage([W, H]); p.drawImage(im, { x: (W - j.w * k) / 2, y: (H - j.h * k) / 2, width: j.w * k, height: j.h * k });
             if (pg.rot) p.setRotation(PDFLib.degrees(pg.rot));
           }

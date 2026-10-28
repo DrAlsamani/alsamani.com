@@ -576,6 +576,10 @@ DESCS = {
  'about': "نبذة عن د. عمر عبدالله الصمعاني، أستاذ مشارك بجامعة حائل ورئيس ابتكار معتمد. Dr. Omar A. Alsamani, Associate Professor (PhD) and Certified Chief Innovation Officer: innovation strategy and ecosystems, giftedness and talent development, special education and twice-exceptionality.",
  'research': "Published research by Dr. Omar A. Alsamani on giftedness, twice-exceptionality, innovation, entrepreneurship and AI in education.",
 }
+def og_page(name):
+    # tools have their own share cards (img/og/tools-<slug>.jpg); other pages keep the photo
+    f = name.replace('/', '-') + '.jpg'
+    return SITE + 'img/og/' + f if os.path.exists(P('img', 'og', f)) else SITE + 'img/ph15.webp'
 def og_img_for(rr):
     d = P('img', 'research', rr['slug'])
     if os.path.isdir(d):
@@ -633,7 +637,7 @@ def seo(name, title):
 <meta property="og:title" content="{e(title)}">
 <meta property="og:description" content="{e(desc)}">
 <meta property="og:url" content="{url}">
-<meta property="og:image" content="{og_img_for(rr) if rr else SITE + 'img/ph15.webp'}">
+<meta property="og:image" content="{og_img_for(rr) if rr else og_page(name)}">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="author" content="Omar Abdullah Alsamani">
 {extra}{lds}'''
@@ -650,9 +654,14 @@ for _r in research:
         PAGES.append((f"research/{_r['slug']}", 2, _r['orig_title'] + ' | ' + ((_r.get('title_en') or '') if _r.get('orig_lang') == 'ar' else _r.get('title_ar', '')) + ' | Alsamani', (lambda rr: (lambda: research_page(rr)))(_r)))
 
 import tools_pages as _tp
-PAGES.append(('tools', 1, 'Interactive tools | Innovation Management | Dr. Omar A. Alsamani | أدوات تفاعلية', _tp.tools_index))
+PAGES.append(('tools', 1, 'الأدوات | Tools | Dr. Omar A. Alsamani', _tp.tools_index))
 for _t in _tp.TOOLS:
     PAGES.append((f"tools/{_t['slug']}", 2, f"{_t['t_ar']} | {_t['t_en']} | Dr. Omar A. Alsamani", (lambda tt: (lambda: _tp.tool_body(tt)))(_t)))
+for _g, _a, _b, _da, _db in _tp.GROUPS:
+    PAGES.append((f"tools/{_tp.GPAGE[_g]}", 2, " | ".join(_tp.gtitle(_g)) + " | Dr. Omar A. Alsamani", (lambda gg: (lambda: _tp.group_body(gg)))(_g)))
+DESCS['tools/work'] = 'Free tools for committees, boards and office work: sign meeting minutes together, pass a decision by circulation, find a meeting time, record attendance, merge and arrange PDF pages, and make QR codes. أدوات مجانية للجان والمجالس والأعمال المكتبية.'
+DESCS['tools/students'] = 'Tools for graduate student researchers: a guided research journey from the first idea to the approach, and a reference guide to research approaches and designs. أدوات للطالب الباحث.'
+DESCS['tools/leaders'] = 'Diagnostic tools for leaders and organizations from the book Innovation Management: initiative classification, leader\'s mirror, system health, scale readiness and university innovation ecosystem. أدوات تشخيص للقادة والمؤسسات.'
 PAGES.append(('tools/research-journey', 2, 'رحلة البحث | The research journey | Dr. Omar A. Alsamani', _tp.journey_body))
 if _tp.poll_ready(): PAGES.append(('tools/pass', 2, 'تمرير قرار | Decision by circulation | Dr. Omar A. Alsamani', _tp.pass_body))
 if _tp.poll_ready(): PAGES.append(('tools/meet', 2, 'موعد الاجتماع | Meeting time | Dr. Omar A. Alsamani', _tp.meet_body))
@@ -669,7 +678,7 @@ DESCS['tools/sign'] = 'Sign meeting minutes together: upload the PDF once, share
 PAGES.append(('tools/research-methods', 2, 'مناهج البحث وتصاميمها | Research approaches and designs | Dr. Omar A. Alsamani', _tp.methods_body))
 DESCS['tools/research-methods'] = 'A reference guide to research approaches and designs for graduate students: descriptive, correlational, causal-comparative, experimental, single-case, qualitative (phenomenology, case study, grounded theory, ethnography, narrative), mixed methods, systematic and scoping reviews. مناهج البحث وتصاميمها.'
 DESCS['tools/research-journey'] = 'A guided research journey for graduate students: from the first idea to the problem, questions and approach, with quality checks, a live Chapter One draft and supervisor review. رحلة البحث للطالب الباحث.'
-DESCS['tools'] = "Interactive tools from the book Innovation Management by Dr. Omar A. Alsamani: initiative classification, leader's mirror, system health, scale readiness and university innovation ecosystem diagnosis."
+DESCS['tools'] = "Free interactive tools by Dr. Omar A. Alsamani: for everyday work (signing minutes, decisions by circulation, meeting times, attendance, PDF files, QR codes), for student researchers, and for leaders and organizations. أدوات تفاعلية مجانية."
 for _t in _tp.TOOLS:
     DESCS['tools/' + _t['slug']] = _t['q_en'] + ' ' + _t['q_ar'] + ' — ' + _t['intro_en']
 for target, full in (('dist', True), ('preview', False)):
@@ -684,6 +693,8 @@ for target, full in (('dist', True), ('preview', False)):
     for f in os.listdir(P('img')):
         if f.endswith('.webp'):
             shutil.copy(P('img', f), P(target, 'img', f))
+    if os.path.isdir(P('img', 'og')):
+        shutil.copytree(P('img', 'og'), P(target, 'img', 'og'), dirs_exist_ok=True)
     if os.path.isdir(P('img', 'research')):
         shutil.copytree(P('img', 'research'), P(target, 'img', 'research'), dirs_exist_ok=True)
 import sys as _sys; _sys.path.insert(0, P('tools')); import scholar_meta

@@ -11,7 +11,7 @@
 <meta property="og:title" content="موعد الاجتماع | Meeting time | Dr. Omar A. Alsamani">
 <meta property="og:description" content="Find a meeting time for a committee or board: suggest a few times, each member marks what works, and the best time stands out. تحديد موعد اجتماع اللجنة أو المجلس برابط واحد.">
 <meta property="og:url" content="https://alsamani.com/tools/meet/">
-<meta property="og:image" content="https://alsamani.com/img/ph15.webp">
+<meta property="og:image" content="https://alsamani.com/img/og/tools-meet.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="author" content="Omar Abdullah Alsamani">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%232C3E8F'/%3E%3Ctext x='16' y='22' font-size='16' text-anchor='middle' fill='%23fff' font-family='sans-serif'%3EOA%3C/text%3E%3C/svg%3E">
@@ -1004,6 +1004,10 @@ html[lang="ar"] .bk-st button span.en,html[lang="en"] .bk-st button span.ar{disp
   .tl-row .tl-n1 .tl-cards{grid-template-columns:minmax(0,1fr)}
   .tl-index .tl-n5 .tl-cards,.tl-index .tl-group:not(.tl-row .tl-group) .tl-cards{grid-template-columns:repeat(3,minmax(0,1fr))}
 }
+.tl-index .tl-gh h3 a{color:inherit;text-decoration:none}.tl-index .tl-gh h3 a:hover{color:var(--accent)}
+.tl-more{display:inline-flex;align-items:center;gap:6px;margin-top:14px;padding:9px 18px;border-radius:99px;border:1px solid var(--line);color:var(--accent);text-decoration:none;font-weight:500}.tl-more:hover{border-color:var(--accent)}
+.tl-gpage .tl-head{margin-bottom:8px}.tl-gpage>.tl-cards{margin-top:16px}
+.tl-gpage .tl-gnav{position:static;justify-content:flex-start}.tl-also{margin:36px 0 0;color:var(--muted)}
 /* research journey */
 .jr{max-width:1180px;margin:28px auto 0}
 .jr-card{background:var(--alt);border-radius:20px;padding:24px 26px;margin:0 auto 16px;max-width:820px}
@@ -1372,8 +1376,8 @@ html[dir=ltr] .jr-dch.fd .jr-fold::before{transform:rotate(-45deg)}
 <a href="../../contact/index.html"><span class="ar">تواصل</span><span class="en">Contact</span></a></nav>
 </header>
 <main data-base="../../">
-<section class="first tl-page sn-page-wrap"><nav class="tl-crumb" aria-label="breadcrumb"><a href="../index.html"><span class="ar">الأدوات</span><span class="en">Tools</span></a><i class="chev"></i><span><span class="ar">موعد الاجتماع</span><span class="en">Meeting time</span></span></nav>
-<header class="tl-head"><p class="eyebrow"><span class="ar">للجان والمجالس</span><span class="en">For committees and boards</span></p><h1><span class="ar">موعد الاجتماع</span><span class="en">Meeting time</span></h1></header>
+<section class="first tl-page sn-page-wrap"><nav class="tl-crumb" aria-label="breadcrumb"><a href="../index.html"><span class="ar">الأدوات</span><span class="en">Tools</span></a><i class="chev"></i><a href="../work/index.html"><span class="ar">للعمل اليومي</span><span class="en">For everyday work</span></a><i class="chev"></i><span><span class="ar">موعد الاجتماع</span><span class="en">Meeting time</span></span></nav>
+<header class="tl-head"><h1><span class="ar">موعد الاجتماع</span><span class="en">Meeting time</span></h1></header>
 <style>.sn{max-width:900px;margin:0 auto;display:grid;gap:18px}
 .sn-card{background:var(--surface);border-radius:18px;padding:28px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
 .sn-card h2{font-size:1.375rem;font-weight:600;margin:0 0 8px}
@@ -1496,6 +1500,8 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
 .sn-zoom{display:flex;align-items:center;justify-content:center;gap:12px}
 .sn-zoom button{width:40px;height:36px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font-size:1.25rem;line-height:1;cursor:pointer}
 .sn-zoom span{min-width:52px;text-align:center;font-variant-numeric:tabular-nums;color:var(--muted);font-size:.875rem}
+.sn-pen{margin-top:-4px}.sn-pen button{padding:5px 12px}.sn-pen button b{display:inline-block;width:16px;border-radius:2px;background:currentColor}.sn-pen button[aria-checked=true]{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+.sn-keep{display:flex!important;gap:10px;align-items:flex-start;text-align:start}.sn-keep input{width:auto;flex:none;margin-top:5px}
 .pt-choices{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:16px}
 .pt-choice{display:flex;flex-direction:column;align-items:flex-start;gap:6px;text-align:start;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:24px;cursor:pointer;font:inherit;color:var(--ink);transition:border-color .2s,transform .2s}
 .pt-choice:hover{border-color:var(--accent);transform:translateY(-2px)}
@@ -1523,7 +1529,10 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
 .pt-th{aspect-ratio:1/1.3;display:grid;place-items:center;overflow:hidden;border-radius:6px;cursor:zoom-in}
 .pt-th img{max-width:100%;max-height:100%;box-shadow:0 1px 4px rgba(0,0,0,.18);background:#fff;transform:rotate(var(--r,0deg));transition:transform .2s;pointer-events:none;-webkit-user-drag:none}
 .pt-th[style*="90deg"] img,.pt-th[style*="270deg"] img{max-width:76%;max-height:76%}
-.pt-pf{display:flex;align-items:center;gap:4px;margin-top:6px}.pt-pf span{flex:1;font-size:.8125rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.pt-pf{display:flex;align-items:center;gap:4px;margin-top:6px}.pt-pf span{flex:1;text-align:center;font-size:.8125rem;color:var(--muted);font-variant-numeric:tabular-nums}.pt-pf i{flex:1}.pt-pf button:disabled{opacity:.3;cursor:default}
+.pt-pf .pt-fit{width:auto;padding:0 8px;font-size:.75rem;font-weight:500}
+.pt-ip{width:auto;height:100%;max-width:100%;max-height:100%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.18);box-sizing:border-box;display:flex;overflow:hidden;transform:rotate(var(--r,0deg));transition:transform .2s}.pt-ip img{width:100%;height:100%;box-shadow:none!important;transform:none!important;max-width:none!important;max-height:none!important}
+.pt-bigin .pt-ip{height:min(80vh,100%)}
 .pt-pf button{width:30px;height:30px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;font-size:1rem;line-height:1}
 .pt-ghost{opacity:.35}
 .pt-big{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.8);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:16px}

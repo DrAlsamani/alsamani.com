@@ -324,6 +324,7 @@
       const sh = sheet(`<h3>${title}</h3>
         ${saved.length ? `<p class="sn-st">${B('تواقيعي المحفوظة · اضغط لاستخدامه', 'My saved signatures · tap one to use it')}</p><div class="sn-sigs">${saved.map((x, k) => `<div class="sn-sg"><button type="button" class="sn-sgb" data-use="${k}"><img src="${x}" alt=""></button><button type="button" class="sn-sgx" data-rm="${k}" aria-label="remove">×</button></div>`).join('')}</div><p class="sn-or">${B('أو توقيع جديد', 'or a new signature')}</p>` : ''}
         <div class="sn-ink" role="radiogroup" aria-label="ink"><span>${B('لون الحبر', 'Ink')}</span>${Object.keys(INKS).map(k => `<button type="button" role="radio" data-ink="${k}" aria-checked="${store.get('ink', 'blue') === k}" style="--c:${INKS[k]}"><i></i>${k === 'blue' ? B('أزرق', 'Blue') : B('أسود', 'Black')}</button>`).join('')}</div>
+        <div class="sn-ink sn-pen" role="radiogroup" aria-label="pen"><span>${B('القلم', 'Pen')}</span>${Object.keys(PENS).map(k => `<button type="button" role="radio" data-pen="${k}" aria-checked="${pen() === k}"><b style="height:${PENS[k].px}px"></b>${B(PENS[k].ar, PENS[k].en)}</button>`).join('')}</div>
         <div class="sn-tabs" role="tablist"><button type="button" role="tab" aria-selected="true" data-t="draw">${B('ارسم', 'Draw')}</button><button type="button" role="tab" aria-selected="false" data-t="img">${B('صورة التوقيع', 'Photo of signature')}</button></div>
         <div class="sn-pad" data-p="draw"><canvas></canvas><button type="button" class="sn-lnk" data-act="clear">${B('مسح', 'Clear')}</button><p class="sn-hint">${B('وقّع بإصبعك داخل المربع', 'Sign with your finger inside the box')}</p></div>
         <div class="sn-img" data-p="img" hidden><input type="file" accept="image/*" hidden><button type="button" class="btn ghost" data-act="pick">${B('اختيار صورة', 'Choose a photo')}</button><p class="sn-hint">${B('صوّر توقيعك على ورقة بيضاء؛ تُزال الخلفية تلقائيًا.', 'Photograph your signature on white paper; the background is removed automatically.')}</p><canvas hidden></canvas></div>
@@ -334,6 +335,7 @@
         store.set('ink', bt.dataset.ink); sh.querySelectorAll('[data-ink]').forEach(x => x.setAttribute('aria-checked', x === bt)); pad.color();
         if (img) { img = await recolor(img); const im = new Image(); im.onload = () => { ic.getContext('2d').clearRect(0, 0, ic.width, ic.height); ic.getContext('2d').drawImage(im, 0, 0); }; im.src = img; }
       });
+      sh.querySelectorAll('[data-pen]').forEach(bt => bt.onclick = () => { store.set('pen', bt.dataset.pen); sh.querySelectorAll('[data-pen]').forEach(x => x.setAttribute('aria-checked', x === bt)); });
       let img = null, tab = 'draw';
       sh.querySelectorAll('[role=tab]').forEach(t => t.onclick = () => { tab = t.dataset.t; sh.querySelectorAll('[role=tab]').forEach(x => x.setAttribute('aria-selected', x === t)); sh.querySelector('[data-p=draw]').hidden = tab !== 'draw'; sh.querySelector('[data-p=img]').hidden = tab !== 'img'; if (tab === 'draw') pad.fit(); });
       const fi = sh.querySelector('.sn-img input'), ic = sh.querySelector('.sn-img canvas');
@@ -361,7 +363,12 @@
     let Z = 1, pend = null;
     const viewOf = pi => views.find(v => v.pi === pi);
     function modeBar(html) { document.querySelectorAll('.sn-mode').forEach(x => x.remove()); const m = document.createElement('div'); m.className = 'sn-mode'; m.innerHTML = html; document.body.appendChild(m); return m; }
-    function endMode() { pend = null; document.querySelectorAll('.sn-mode,.sn-box.pending').forEach(x => x.remove()); host.querySelectorAll('.sn-box').forEach(x => x.style.visibility = ''); }
+    // leaving adjust mode always returns to the whole-page view, scrolled to the page that was being signed
+    function endMode() {
+      const pi = pend && pend.pi; pend = null;
+      document.querySelectorAll('.sn-mode,.sn-box.pending').forEach(x => x.remove()); host.querySelectorAll('.sn-box').forEach(x => x.style.visibility = '');
+      if (Z !== 1) { Z = 1; rerender().then(() => { const v = pi != null && viewOf(pi); if (v) v.wrap.scrollIntoView({ block: 'center' }); }); }
+    }
     function mountPending() {
       const v = viewOf(pend.pi); if (!v) return null;
       host.querySelectorAll('.sn-box.pending').forEach(x => x.remove());
@@ -502,6 +509,8 @@
   /* ---------- ink colour (blue or black), remembered per device ---------- */
   const INKS = { blue: '#1d3a8f', black: '#111111' };
   const ink = () => INKS[store.get('ink', 'blue')] || INKS.blue;
+  const PENS = { thin: { k: 1, px: 1.5, ar: 'رفيع', en: 'Fine' }, mid: { k: 1.6, px: 2.5, ar: 'متوسط', en: 'Medium' }, thick: { k: 2.3, px: 4, ar: 'عريض', en: 'Bold' } };
+  const pen = () => PENS[store.get('pen', 'mid')] ? store.get('pen', 'mid') : 'mid';
   function recolor(png) {
     return new Promise(res => { const im = new Image(); im.onload = () => {
       const c = document.createElement('canvas'); c.width = im.width; c.height = im.height; const x = c.getContext('2d');
@@ -513,7 +522,7 @@
     const ctx = cv.getContext('2d'); let pts = [], drawn = false, down = false;
     function fit() { const r = cv.getBoundingClientRect(), d = window.devicePixelRatio || 1; if (!r.width) return; const old = drawn ? cv.toDataURL() : null; cv.width = r.width * d; cv.height = r.height * d; ctx.setTransform(d, 0, 0, d, 0, 0); ctx.lineCap = ctx.lineJoin = 'round'; ctx.strokeStyle = ink(); if (old) { const im = new Image(); im.onload = () => ctx.drawImage(im, 0, 0, r.width, r.height); im.src = old; } }
     const pos = e => { const r = cv.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top, t: e.timeStamp, p: e.pressure || .5 }; };
-    cv.addEventListener('pointerdown', e => { down = true; cv.setPointerCapture(e.pointerId); pts = [pos(e)]; e.preventDefault(); });
+    cv.addEventListener('pointerdown', e => { down = true; lw = 2.4 * PENS[pen()].k; cv.setPointerCapture(e.pointerId); pts = [pos(e)]; e.preventDefault(); });
     let lw = 2.4;
     cv.addEventListener('pointermove', e => {
       if (!down) return;
@@ -523,7 +532,7 @@
         if (Math.hypot(p.x - a.x, p.y - a.y) < .6) continue;
         pts.push(p);
         const v = Math.hypot(p.x - a.x, p.y - a.y) / Math.max(1, p.t - a.t);
-        lw = lw * .75 + Math.max(1.5, Math.min(3, 3 - v * .6)) * .25; ctx.lineWidth = lw;
+        const K = PENS[pen()].k; lw = lw * .75 + Math.max(1.5, Math.min(3, 3 - v * .6)) * K * .25; ctx.lineWidth = lw;
         if (pts.length > 2) { const b = pts[pts.length - 3], m1 = { x: (b.x + a.x) / 2, y: (b.y + a.y) / 2 }, m2 = { x: (a.x + p.x) / 2, y: (a.y + p.y) / 2 }; ctx.beginPath(); ctx.moveTo(m1.x, m1.y); ctx.quadraticCurveTo(a.x, a.y, m2.x, m2.y); ctx.stroke(); }
         else { ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(p.x, p.y); ctx.stroke(); }
         drawn = true;
