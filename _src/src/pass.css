@@ -1,0 +1,26 @@
+.ps-gap{margin-top:16px}
+.sn textarea,.ps textarea{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;width:100%;box-sizing:border-box;resize:vertical}
+.ps select,.ps input[type=text]{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;width:100%;box-sizing:border-box}
+.ps-item{border-top:1px solid var(--line);padding:16px 0 4px}
+.ps-txt{color:var(--ink)!important;line-height:1.8;margin:0 0 10px!important;white-space:normal}
+.ps-opts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:8px}
+.ps-o{border:1.5px solid var(--line);background:var(--bg);color:var(--ink);border-radius:12px;padding:12px 6px;font:inherit;font-weight:500;cursor:pointer}
+.ps-o.ps-ok[aria-checked=true]{background:#1e7e4a;border-color:#1e7e4a;color:#fff}
+.ps-o.ps-res[aria-checked=true]{background:#b7791f;border-color:#b7791f;color:#fff}
+.ps-o.ps-no[aria-checked=true]{background:#b83a2e;border-color:#b83a2e;color:#fff}
+.ps-note{margin-bottom:6px}
+.ps-closed{color:#b83a2e!important;font-weight:500}
+.ps-mine h3,.ps-result h3{font-size:1.0625rem;font-weight:600;margin:0 0 12px;display:flex;align-items:center;gap:8px}
+.ps-mine p{color:var(--ink)!important;margin:0 0 6px!important}
+.ps-tag{display:inline-block;font-size:.75rem;font-weight:600;border-radius:99px;padding:2px 10px;color:#fff}
+.ps-tag.ps-ok,.ps-bar .ps-ok{background:#1e7e4a}.ps-tag.ps-res,.ps-bar .ps-res{background:#b7791f}.ps-tag.ps-no,.ps-bar .ps-no{background:#b83a2e}
+.ps-n{font-size:.8125rem;color:var(--muted);background:var(--bg);border-radius:99px;padding:2px 10px;font-weight:500}
+.ps-ri{margin-bottom:14px}
+.ps-bar{display:flex;height:10px;border-radius:9px;overflow:hidden;gap:2px;margin-bottom:6px}.ps-bar i{display:block}
+.ps-cnt{display:flex;gap:6px;flex-wrap:wrap;margin:0!important}
+.ps-tbl{width:100%;border-collapse:collapse;font-size:.875rem;margin:12px 0}
+.ps-tbl th,.ps-tbl td{border-bottom:1px solid var(--line);padding:8px 6px;text-align:start;vertical-align:top}
+.ps-tbl th{color:var(--muted);font-weight:500}.ps-tbl small{display:block;color:var(--muted);margin-top:4px}
+.ps-miss{color:var(--ink)!important;font-size:.9375rem}
+
+.ps-asme summary{cursor:pointer;font-weight:500;color:var(--accent)}.ps-asme[open] summary{margin-bottom:12px}

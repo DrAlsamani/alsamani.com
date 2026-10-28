@@ -54,6 +54,7 @@ function doPost(e) {
   try { d = JSON.parse(e.postData.contents); } catch (x) { return err_('bad_json'); }
   const a = d.a;
   if (a === 'create') return create_(d);
+  if (a && a.charAt(0) === 'p' && a !== 'pdf' && a !== 'place') return poll_(d);
   const lock = LockService.getScriptLock();
   if (a !== 'get' && a !== 'pdf') lock.waitLock(20000);
   try {
@@ -158,5 +159,65 @@ function cleanup() {
   while (it.hasNext()) {
     const f = it.next();
     if (f.getDateCreated().getTime() < cut || f.getLastUpdated().getTime() < cut) f.setTrashed(true);
+  }
+}
+
+/* ---------- passing a decision (alsamani.com/tools/pass): members answer agree / reservation / disagree ---------- */
+function pload_(id) {
+  if (!/^[a-f0-9]{20}$/.test(id || '')) return null;
+  const it = folder_().getFilesByName('p_' + id + '.json');
+  if (!it.hasNext()) return null;
+  const f = it.next();
+  return { file: f, s: JSON.parse(f.getBlob().getDataAsString()) };
+}
+function nk_(s) { return String(s || '').replace(/[\u064B-\u0652\u0640]/g, '').replace(/[أإآ]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي').replace(/^(د|أ|ا|م)\.?\s*/, '').replace(/\s+/g, ' ').trim(); }
+function ppub_(s, admin, mine) {
+  const votes = Object.keys(s.votes).map(k => s.votes[k]);
+  const o = { ok: true, id: s.id, title: s.title, body: s.body, items: s.items, names: s.names, locked: !!s.locked, showAll: !!s.showAll, created: s.created, voted: votes.map(v => v.name), admin: !!admin };
+  if (admin || s.showAll) o.votes = votes.map(v => ({ name: v.name, ans: v.ans, notes: v.notes, t: v.t }));
+  if (mine) o.mine = { name: mine.name, ans: mine.ans, notes: mine.notes, t: mine.t };
+  return o;
+}
+function poll_(d) {
+  const a = d.a;
+  if (a === 'pcreate') {
+    const items = (Array.isArray(d.items) ? d.items : []).map(x => clean_(x, 2000)).filter(x => x.trim()).slice(0, 30);
+    if (!items.length) return err_('bad_items');
+    const names = (Array.isArray(d.names) ? d.names : []).map(x => clean_(x, 120).trim()).filter(Boolean).slice(0, 150);
+    const id = rid_(20), key = rid_(24);
+    const s = { id: id, key: hash_(key), title: clean_(d.title, 200), body: clean_(d.body, 3000), items: items, names: names, showAll: !!d.showAll, locked: false, created: new Date().toISOString(), votes: {} };
+    folder_().createFile('p_' + id + '.json', JSON.stringify(s), 'application/json');
+    return out_({ ok: true, id: id, k: key });
+  }
+  const lock = LockService.getScriptLock();
+  if (a !== 'pget') lock.waitLock(20000);
+  try {
+    const r = pload_(d.id);
+    if (!r) return err_('not_found');
+    const s = r.s, admin = d.k && hash_(String(d.k)) === s.key;
+    const own = () => { const v = s.votes[nk_(d.name)]; return v && d.tok && hash_(String(d.tok)) === v.tok ? v : null; };
+    if (a === 'pget') return out_(ppub_(s, admin, own()));
+    if (a === 'pvote') {
+      if (s.locked) return err_('locked');
+      const name = clean_(d.name, 120).trim(), key = nk_(name);
+      if (!key) return err_('bad_name');
+      if (s.names.length && !s.names.some(n => nk_(n) === key)) return err_('bad_name');
+      const prev = s.votes[key];
+      if (prev && !(d.tok && hash_(String(d.tok)) === prev.tok)) return err_('voted');
+      const ans = (Array.isArray(d.ans) ? d.ans : []).slice(0, s.items.length).map(x => [0, 1, 2].indexOf(Number(x)) >= 0 ? Number(x) : null);
+      if (ans.length !== s.items.length || ans.some(x => x === null)) return err_('bad_ans');
+      const notes = s.items.map((_, i) => clean_((d.notes || [])[i], 500));
+      const tok = prev ? String(d.tok) : rid_(24);
+      s.votes[key] = { name: prev ? prev.name : (s.names.find(n => nk_(n) === key) || name), ans: ans, notes: notes, t: new Date().toISOString(), tok: hash_(tok) };
+      save_(r);
+      return out_(Object.assign(ppub_(s, admin, s.votes[key]), { tok: tok }));
+    }
+    if (!admin) return err_('forbidden');
+    if (a === 'plock') { s.locked = !!d.on; save_(r); return out_(ppub_(s, true)); }
+    if (a === 'pclear') { delete s.votes[nk_(d.name)]; save_(r); return out_(ppub_(s, true)); }
+    if (a === 'pdelete') { r.file.setTrashed(true); return out_({ ok: true, deleted: true }); }
+    return err_('bad_action');
+  } finally {
+    try { lock.releaseLock(); } catch (x) {}
   }
 }

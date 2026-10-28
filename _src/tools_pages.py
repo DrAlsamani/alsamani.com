@@ -52,6 +52,8 @@ GROUPS = [('research', 'للطالب الباحث', 'For student researchers', '
 ICONS = {'research-journey': '<path d="M5 19c3-6 5-9 7-9s2 4 4 4 3-3 3-6"/><circle cx="5" cy="19" r="1.6"/><circle cx="19" cy="8" r="1.6"/>',
          'research-methods': '<path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5z"/><path d="M4 5.5v16M9 8h7M9 12h7"/>',
          'sign': '<path d="M4 20h16"/><path d="M14.5 4.5l5 5L9 20H4v-5z"/>',
+         'pass': '<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 9l2 2 4-4M8 16h8"/>',
+         'pdf': '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/>',
          'initiative-card': '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 10h6M7 14h10"/>',
          'leader-mirror': '<circle cx="12" cy="8" r="3.5"/><path d="M5 20c1.2-3.5 4-5 7-5s5.8 1.5 7 5"/>',
          'system-health': '<path d="M3 12h4l2.5-6 4 12 2.5-6H21"/>',
@@ -63,7 +65,7 @@ def tools_index():
     secs, nav = [], []
     for g, a, b, da, db in GROUPS:
         ts = [t for t in TOOLS if t.get('group') == g]
-        extra = [JOURNEY, METHODS] if g == 'research' else [SIGN] if g == 'work' and sign_ready() else []
+        extra = [JOURNEY, METHODS] if g == 'research' else ([SIGN] if sign_ready() else []) + ([PASS] if poll_ready() else []) + [PDFT] if g == 'work' else []
         items = extra + ts
         if not items:
             continue
@@ -71,10 +73,12 @@ def tools_index():
             if t is JOURNEY: return bi('تسع مراحل', 'Nine stages')
             if t is METHODS: return bi('دليل مرجعي', 'Reference guide')
             if t is SIGN: return bi('للمقرر والأعضاء', 'For coordinators and members')
+            if t is PASS: return bi('بديل جولات «أوافق»', 'Instead of “I agree” rounds')
+            if t is PDFT: return bi('داخل جهازك', 'On your device')
             return bi(t['chn_ar'], t['chn_en'])
         def go(t):
             if t is METHODS: return bi('اقرأ', 'Read')
-            if t in (JOURNEY, SIGN): return bi('ابدأ', 'Begin')
+            if t in (JOURNEY, SIGN, PASS, PDFT): return bi('ابدأ', 'Begin')
             return bi('استخدم الأداة', 'Use the tool')
         cards = ''.join(f'''<a class="tl-card" href="{t["slug"]}/index.html">{_icon(t["slug"])}<span class="tl-cn">{tag(t)}</span><h3>{bi(e(t["t_ar"]), e(t["t_en"]))}</h3><p>{bi(e(t["q_ar"]), e(t["q_en"]))}</p><span class="tl-go">{go(t)} <i class="chev"></i></span></a>''' for t in items)
         secs.append(f'''<div class="tl-group tl-n{len(items)}" id="{g}"><div class="tl-gh"><h3>{bi(a, b)} <span class="tl-gn">{len(items)}</span></h3>{('<p>' + bi(da, db) + '</p>') if da else ''}</div><div class="tl-cards">{cards}</div></div>''')
@@ -135,6 +139,8 @@ SIGN = {'slug': 'sign', 't_ar': 'توقيع المحاضر', 't_en': 'Signing th
         'q_en': 'Upload the minutes and share one link for members to sign.'}
 def sign_ready():
     return (os.environ.get('SIGN_API') or json.load(open(os.path.join(ROOT, 'data', 'sign.json')))['api']).startswith('http')
+def poll_ready():
+    return sign_ready() and bool(json.load(open(os.path.join(ROOT, 'data', 'sign.json'))).get('poll')) or bool(os.environ.get('SIGN_API'))
 def sign_body():
     api = os.environ.get('SIGN_API') or json.load(open(os.path.join(ROOT, 'data', 'sign.json')))['api']
     src = lambda f: open(os.path.join(ROOT, 'src', f)).read()
@@ -148,3 +154,28 @@ def sign_body():
 <script>{src('sign_detect.js')}</script>
 <script>{src('sign.js')}</script>
 </section>'''
+
+PASS = {'slug': 'pass', 't_ar': 'تمرير قرار', 't_en': 'Decision by circulation',
+        'q_ar': 'يصوّت كل عضو على القرار برابط واحد: موافق أو متحفظ أو غير موافق.',
+        'q_en': 'Each member answers the decision from one link: agree, reservation or disagree.'}
+PDFT = {'slug': 'pdf', 't_ar': 'ملفات PDF', 't_en': 'PDF files',
+        'q_ar': 'دمج ملفات PDF وصور الأوراق في ملف واحد، وضغط الملفات الكبيرة.',
+        'q_en': 'Merge PDFs and photos of pages into one file, and shrink large files.'}
+def _tool_page(j, eyebrow, inner, css, scripts):
+    src = lambda f: open(os.path.join(ROOT, 'src', f)).read()
+    return f'''<section class="first tl-page sn-page-wrap"><nav class="tl-crumb" aria-label="breadcrumb"><a href="../index.html">{bi('الأدوات', 'Tools')}</a><i class="chev"></i><span>{bi(j["t_ar"], j["t_en"])}</span></nav>
+<header class="tl-head"><p class="eyebrow">{eyebrow}</p><h1>{bi(j["t_ar"], j["t_en"])}</h1></header>
+<style>{''.join(src(c) for c in css)}</style>
+{inner}
+{''.join(f'<script src="{x}"></script>' if x.startswith('http') else f'<script>{src(x)}</script>' for x in scripts)}
+</section>'''
+def pass_body():
+    api = os.environ.get('SIGN_API') or json.load(open(os.path.join(ROOT, 'data', 'sign.json')))['api']
+    return _tool_page(PASS, bi('للجان والمجالس', 'For committees and boards'),
+        f'<div id="ps" class="sn ps" data-api="{e(api)}"><noscript>{bi("تعمل هذه الأداة مع تفعيل JavaScript.", "This tool needs JavaScript.")}</noscript></div>',
+        ['sign.css', 'pdftool.css', 'pass.css'], ['pass.js'])
+def pdf_body():
+    return _tool_page(PDFT, bi('للجان والمجالس', 'For committees and boards'),
+        f'<div id="pt" class="sn"><noscript>{bi("تعمل هذه الأداة مع تفعيل JavaScript.", "This tool needs JavaScript.")}</noscript></div>',
+        ['sign.css', 'pdftool.css'],
+        ['https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js', 'https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js', 'pdftool.js'])
