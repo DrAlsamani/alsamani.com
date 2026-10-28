@@ -8,6 +8,8 @@
   const FONTS = [['IBM Plex Sans Arabic', 'آي بي إم بلكس'], ['Noto Naskh Arabic', 'نسخ'], ['Amiri', 'أميري'], ['Cairo', 'القاهرة'], ['Tajawal', 'تجوّل'], ['Reem Kufi', 'ريم كوفي'], ['Aref Ruqaa', 'رقعة']];
   const COLORS = ['#111111', '#1d3a8f', '#b3261e', '#1e7e4a'];
   const MARKS = { check: '✓', x: '✕', dot: '●', ring: '○' };
+  const DRAW = [['pen', '✎', 'قلم', 'Pen'], ['hl', '▬', 'تظليل', 'Highlighter'], ['line', '╱', 'خط', 'Line'], ['arrow', '→', 'سهم', 'Arrow'], ['rect', '▭', 'مستطيل', 'Rectangle'], ['oval', '◯', 'دائرة', 'Circle']];
+  const HL = ['#ffe14d', '#9be38f', '#ff9ec7', '#8fd3ff'];
   const loaded = new Set();
   function loadFont(f) {
     if (loaded.has(f) || f.startsWith('my:')) return Promise.resolve();
@@ -39,6 +41,10 @@
         <button type="button" data-tool="pages" aria-pressed="${panel}"><b>☰</b>${B('الصفحات', 'Pages')}</button><i class="pe-sep"></i>
         <button type="button" data-tool="text"><b>T</b>${B('نص', 'Text')}</button>
         <span class="pe-mk"><button type="button" data-tool="mark"><b id="peMkI">✓</b>${B('علامة', 'Mark')}</button><span class="pe-mks" hidden>${Object.keys(MARKS).map(k => `<button type="button" data-mk="${k}">${MARKS[k]}</button>`).join('')}</span></span>
+        <span class="pe-mk pe-dr"><button type="button" data-tool="draw"><b id="peDrI">✎</b>${B('رسم', 'Draw')}</button><span class="pe-mks pe-drs" hidden>
+          <span class="pe-drk">${DRAW.map(d => `<button type="button" data-dk="${d[0]}" title="${isAr() ? d[2] : d[3]}">${d[1]}</button>`).join('')}</span>
+          <span class="pe-drc" id="peDrC"></span>
+          <span class="pe-drw">${[1, 2, 3].map(w => `<button type="button" data-dw="${w}" aria-pressed="${w === 2}"><i style="height:${w * 1.6}px"></i></button>`).join('')}</span></span></span>
         <button type="button" data-tool="cover"><i class="pe-cv"></i>${B('إخفاء', 'Cover')}</button>
         <button type="button" data-tool="img"><b>▣</b>${B('صورة', 'Image')}</button>
         <span class="pe-fill"></span><button type="button" class="pe-save" id="peSave">${B('حفظ PDF', 'Save PDF')}</button>
@@ -177,16 +183,24 @@
     function setTool(t) {
       tool = t; root.querySelectorAll('[data-tool]').forEach(b => b.classList.toggle('on', b.dataset.tool !== 'pages' && !!t && t.split(':')[0] === b.dataset.tool));
       body.classList.toggle('pe-placing', !!t); hint.hidden = !t;
-      if (t) hint.innerHTML = t.startsWith('mark') ? B('اضغط على الصفحة لوضع العلامة، وكررها حيث تشاء. للإيقاف أو تغيير العلامة اضغط زر «علامة».', 'Tap the page to place the mark, as many times as you need. To stop or change the mark, tap the Mark button.')
+      body.classList.toggle('pe-drawing', !!t && t.startsWith('draw'));
+      if (t) hint.innerHTML = t.startsWith('draw') ? B('ارسم على الصفحة. للإيقاف أو تغيير الأداة اضغط زر «رسم».', 'Draw on the page. To stop or change the tool, tap the Draw button.') : t.startsWith('mark') ? B('اضغط على الصفحة لوضع العلامة، وكررها حيث تشاء. للإيقاف أو تغيير العلامة اضغط زر «علامة».', 'Tap the page to place the mark, as many times as you need. To stop or change the mark, tap the Mark button.')
         : t === 'text' ? B('اضغط على المكان الذي تريد الكتابة فيه.', 'Tap where you want to write.') : B('اضغط على الصفحة حيث تريد وضعه.', 'Tap the page where you want it.');
     }
     q('[data-tool=pages]').onclick = () => setPanel(!panel);
     const mkPop = q('.pe-mks'); let mk = 'check';
     q('[data-tool=mark]').onclick = () => { if (!pages.length) { inp.click(); return; } if (tool && tool.startsWith('mark')) { setTool(null); mkPop.hidden = false; return; } mkPop.hidden = !mkPop.hidden; };
+    const drPop = q('.pe-drs'); let dk = 'pen', dcol = { pen: '#1d3a8f', hl: '#ffe14d' }, dw = 2;
+    const drawCols = () => { const hl = dk === 'hl', list = hl ? HL : COLORS, cur = hl ? dcol.hl : dcol.pen; q('#peDrC').innerHTML = list.map(c => `<button type="button" data-dc="${c}" style="--c:${c}" aria-checked="${c === cur}"></button>`).join('');
+      q('#peDrC').querySelectorAll('[data-dc]').forEach(b => b.onclick = () => { if (dk === 'hl') dcol.hl = b.dataset.dc; else dcol.pen = b.dataset.dc; drawCols(); }); };
+    q('[data-tool=draw]').onclick = () => { if (!pages.length) { inp.click(); return; } if (tool && tool.startsWith('draw')) { setTool(null); drPop.hidden = false; drawCols(); return; } drPop.hidden = !drPop.hidden; drawCols(); };
+    drPop.querySelectorAll('[data-dk]').forEach(b => b.onclick = () => { dk = b.dataset.dk; q('#peDrI').textContent = b.textContent; drPop.hidden = true; setTool('draw:' + dk); });
+    drPop.querySelectorAll('[data-dw]').forEach(b => b.onclick = () => { dw = +b.dataset.dw; drPop.querySelectorAll('[data-dw]').forEach(x => x.setAttribute('aria-pressed', x === b)); });
     mkPop.querySelectorAll('[data-mk]').forEach(b => b.onclick = () => { mk = b.dataset.mk; q('#peMkI').textContent = MARKS[mk]; mkPop.hidden = true; setTool('mark:' + mk); });
     ['text', 'cover', 'img'].forEach(t => q(`[data-tool=${t}]`).onclick = () => { if (!pages.length) { inp.click(); return; } setTool(tool === t ? null : t); });
     function onPage(e, v) {
       if (!tool || e.target.closest('.pe-it')) return;
+      if (tool.startsWith('draw')) { stroke(e, v); return; }
       const r = v.wrap.getBoundingClientRect(), x = (e.clientX - r.left) / v.k, y = (e.clientY - r.top) / v.k, pid = v.p.id;
       if (tool.startsWith('mark')) { const s = lastMark ? lastMark.w : 12; add({ id: ++seq, pid, t: 'mark', mk, x: x - s / 2, y: y - s / 2, w: s, h: s, color: lastMark ? lastMark.color : '#111111' }); return; }
       const t = tool; setTool(null);
@@ -202,6 +216,45 @@
         refreshThumb(pid);
       }; fi.click(); }
     }
+    /* ---------- drawing: a smooth pen, a highlighter, lines, arrows and shapes ---------- */
+    function stroke(e, v) {
+      e.preventDefault();
+      const r = v.wrap.getBoundingClientRect(), P = ev => [(ev.clientX - r.left) / v.k, (ev.clientY - r.top) / v.k], kind = dk;
+      const hl = kind === 'hl', col = hl ? dcol.hl : dcol.pen, w = hl ? [8, 12, 18][dw - 1] : [1, 1.8, 3][dw - 1];
+      const [dw0, dh0] = dispWH(v.p), pts = [P(e)];
+      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); svg.setAttribute('class', 'pe-live'); svg.setAttribute('viewBox', `0 0 ${dw0} ${dh0}`); svg.setAttribute('preserveAspectRatio', 'none');
+      v.wrap.appendChild(svg); v.wrap.setPointerCapture(e.pointerId);
+      const shape = () => drawPath(kind, pts, w, col);
+      const mv = ev => { const evs = ev.getCoalescedEvents ? ev.getCoalescedEvents() : [ev]; evs.forEach(x => { const p = P(x), l = pts[pts.length - 1]; if (Math.hypot(p[0] - l[0], p[1] - l[1]) > .6) { if (kind === 'pen' || kind === 'hl') pts.push(p); else pts[1] = p; } }); svg.innerHTML = shape(); };
+      const up = () => {
+        v.wrap.removeEventListener('pointermove', mv); v.wrap.removeEventListener('pointerup', up); v.wrap.removeEventListener('pointercancel', up); svg.remove();
+        if (pts.length < 2) return;
+        if (hl && pts.length > 2) { const ys = pts.map(p => p[1]); if (Math.max(...ys) - Math.min(...ys) < w * 1.2) { const y = ys.reduce((a, b) => a + b) / ys.length; pts.splice(1, pts.length - 2); pts[0][1] = pts[1][1] = y; } }
+        const pad = w * 1.5 + (kind === 'arrow' ? w * 4 : 0), xs = pts.map(p => p[0]), ys = pts.map(p => p[1]);
+        const x0 = Math.min(...xs) - pad, y0 = Math.min(...ys) - pad, bw = Math.max(...xs) - Math.min(...xs) + 2 * pad, bh = Math.max(...ys) - Math.min(...ys) + 2 * pad;
+        if (bw < 2 * pad + 2 && bh < 2 * pad + 2) return;
+        const rel = pts.map(p => [p[0] - x0, p[1] - y0]);
+        add({ id: ++seq, pid: v.p.id, t: 'draw', x: x0, y: y0, w: bw, h: bh, vb: [bw, bh], svg: drawPath(kind, rel, w, col) });
+      };
+      v.wrap.addEventListener('pointermove', mv); v.wrap.addEventListener('pointerup', up); v.wrap.addEventListener('pointercancel', up);
+    }
+    // smooth curves through the midpoints of the captured points
+    function drawPath(kind, pts, w, col) {
+      const f = n => Math.round(n * 100) / 100, a = pts[0], b = pts[pts.length - 1], st = `stroke="${col}" stroke-width="${w}" fill="none" stroke-linecap="${kind === 'hl' ? 'butt' : 'round'}" stroke-linejoin="round"`;
+      if (kind === 'pen' || kind === 'hl') {
+        let d = `M${f(a[0])} ${f(a[1])}`;
+        if (pts.length < 3) d += ` L${f(b[0])} ${f(b[1])}`;
+        else { for (let i = 1; i < pts.length - 1; i++) { const m = [(pts[i][0] + pts[i + 1][0]) / 2, (pts[i][1] + pts[i + 1][1]) / 2]; d += ` Q${f(pts[i][0])} ${f(pts[i][1])} ${f(m[0])} ${f(m[1])}`; } d += ` L${f(b[0])} ${f(b[1])}`; }
+        return `<path d="${d}" ${st}${kind === 'hl' ? ' stroke-opacity=".45"' : ''}/>`;
+      }
+      if (kind === 'line') return `<path d="M${f(a[0])} ${f(a[1])} L${f(b[0])} ${f(b[1])}" ${st}/>`;
+      if (kind === 'arrow') { const t = Math.atan2(b[1] - a[1], b[0] - a[0]), L = w * 4 + 4, s1 = [b[0] - L * Math.cos(t - .45), b[1] - L * Math.sin(t - .45)], s2 = [b[0] - L * Math.cos(t + .45), b[1] - L * Math.sin(t + .45)];
+        return `<path d="M${f(a[0])} ${f(a[1])} L${f(b[0])} ${f(b[1])} M${f(s1[0])} ${f(s1[1])} L${f(b[0])} ${f(b[1])} L${f(s2[0])} ${f(s2[1])}" ${st}/>`; }
+      const x = Math.min(a[0], b[0]), y = Math.min(a[1], b[1]), W = Math.abs(b[0] - a[0]), H = Math.abs(b[1] - a[1]);
+      if (kind === 'rect') return `<rect x="${f(x)}" y="${f(y)}" width="${f(W)}" height="${f(H)}" rx="1" ${st}/>`;
+      return `<ellipse cx="${f(x + W / 2)}" cy="${f(y + H / 2)}" rx="${f(W / 2)}" ry="${f(H / 2)}" ${st}/>`;
+    }
+    const drawSvg = it => `<svg viewBox="0 0 ${it.vb[0]} ${it.vb[1]}" preserveAspectRatio="none">${it.svg}</svg>`;
     function add(it) { items.push(it); mount(it); select(it); if (it.t === 'mark') lastMark = it; }
 
     /* ---------- items ---------- */
@@ -210,7 +263,7 @@
       const v = views.get(it.pid); if (!v) return;
       if (it.el) it.el.remove();
       const el = document.createElement('div'); el.className = 'pe-it pe-' + it.t; it.el = el;
-      el.innerHTML = (it.t === 'text' ? '<span class="pe-tx"></span>' : it.t === 'img' ? `<img class="pe-im" src="${it.src}" alt="">` : it.t === 'mark' ? markSvg(it.mk) : '') +
+      el.innerHTML = (it.t === 'text' ? '<span class="pe-tx"></span>' : it.t === 'img' ? `<img class="pe-im" src="${it.src}" alt="">` : it.t === 'mark' ? markSvg(it.mk) : it.t === 'draw' ? drawSvg(it) : '') +
         `<i class="pe-rz" aria-hidden="true"></i><span class="pe-mini">${it.t === 'mark' ? COLORS.map(c => `<button type="button" data-col="${c}" style="--c:${c}" aria-label="colour"></button>`).join('') : ''}${it.t === 'img' ? `<button type="button" data-a="rl" title="${isAr() ? 'تدوير لليسار' : 'Rotate left'}">↺</button><button type="button" data-a="rr" title="${isAr() ? 'تدوير لليمين' : 'Rotate right'}">↻</button>` : ''}${it.t === 'text' || it.t === 'cover' ? `<button type="button" data-a="edit">${B('تعديل', 'Edit')}</button>` : ''}<button type="button" data-a="dup">${B('تكرار', 'Duplicate')}</button><button type="button" data-a="to">${B('نسخ إلى صفحات', 'Copy to pages')}</button><button type="button" data-a="del">${B('حذف', 'Delete')}</button></span>`;
       v.wrap.appendChild(el); place(it); drag(it);
       el.querySelectorAll('.pe-mini button').forEach(b => b.addEventListener('pointerdown', ev => ev.stopPropagation()));
@@ -262,7 +315,7 @@
       sh.querySelector('#peOk').onclick = () => { const ids = boxes.filter(b => b.checked).map(b => +b.value); close(); ids.forEach(id => dup(it, 0, 0, id)); select(it);
         if (ids.length) toast(B(`نُسخ إلى ${ids.length} صفحة.`, `Copied to ${ids.length} page${ids.length > 1 ? 's' : ''}.`)); };
     }
-    const onDoc = e => { if (sel && !e.target.closest('.pe-it') && !e.target.closest('.pe-sheet')) select(null); if (!e.target.closest('.pe-mk')) mkPop.hidden = true; };
+    const onDoc = e => { if (sel && !e.target.closest('.pe-it') && !e.target.closest('.pe-sheet')) select(null); if (!e.target.closest('.pe-mk')) { mkPop.hidden = true; drPop.hidden = true; } };
     document.addEventListener('pointerdown', onDoc);
     const onKey = e => {
       if (!document.body.contains(root.querySelector('.pe-app')) || document.querySelector('.pe-sheet') || /input|textarea|select/i.test(e.target.tagName)) return;
@@ -390,6 +443,8 @@
       });
       return c.toDataURL('image/png');
     }
+    const svgPng = (svg, w, h) => new Promise(res => { const S = 6, im = new Image(); im.onerror = () => res(null); im.onload = () => { const c = document.createElement('canvas'); c.width = Math.ceil(w * S); c.height = Math.ceil(h * S); c.getContext('2d').drawImage(im, 0, 0, c.width, c.height); res(c.toDataURL('image/png')); };
+      im.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg.replace('<svg ', `<svg xmlns="http://www.w3.org/2000/svg" width="${Math.ceil(w * S)}" height="${Math.ceil(h * S)}" `)); });
     const markPng = it => new Promise(res => { const im = new Image(), S = 240; im.onload = () => { const c = document.createElement('canvas'); c.width = c.height = S; c.getContext('2d').drawImage(im, 0, 0, S, S); res(c.toDataURL('image/png')); };
       im.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(markSvg(it.mk).replace('<svg ', `<svg xmlns="http://www.w3.org/2000/svg" width="${S}" height="${S}" color="${it.color}" `)); });
     const toPng = (src, max) => new Promise(res => { const im = new Image(); im.onload = () => { const k = Math.min(1, (max || 1e5) / Math.max(im.naturalWidth, im.naturalHeight)), c = document.createElement('canvas'); c.width = Math.round(im.naturalWidth * k); c.height = Math.round(im.naturalHeight * k); c.getContext('2d').drawImage(im, 0, 0, c.width, c.height); res(c.toDataURL('image/png')); }; im.src = src; });
@@ -416,7 +471,8 @@
             }
             const [ax, ay] = toPdf(p, it.x, it.y + it.h), o = { x: ax, y: ay, width: it.w, height: it.h, rotate: PDFLib.degrees(R) };
             if (it.t === 'cover') { const h = it.color.replace('#', ''), n = i => parseInt(h.substr(i, 2), 16) / 255; pg.drawRectangle(Object.assign(o, { color: PDFLib.rgb(n(0), n(2), n(4)) })); continue; }
-            const png = it.t === 'text' ? textPng(it) : await markPng(it);
+            const png = it.t === 'text' ? textPng(it) : it.t === 'draw' ? await svgPng(drawSvg(it), it.w, it.h) : await markPng(it);
+            if (!png) continue;
             pg.drawImage(await out.embedPng(png), o);
           }
         }

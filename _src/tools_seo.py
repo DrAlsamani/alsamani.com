@@ -37,6 +37,7 @@ SEO = {
   'how': [('افتح ملف PDF أو أكثر، أو صور الأوراق.', 'Open one or more PDFs, or photos of pages.'),
           ('اكتب على الصفحات، وضع علامات ✓ و✕ لتعبئة النماذج، وأضف صورة أو ختمًا.', 'Write on pages, add ✓ and ✕ marks to fill forms, and add an image or stamp.'),
           ('أخفِ نصًا قديمًا بمربع يأخذ لون الصفحة، واكتب بدله.', 'Cover old text with a box that takes the page colour, and write over it.'),
+          ('ارسم بقلم ناعم، وظلّل النص، وأضف خطوطًا وأسهمًا ومستطيلات ودوائر.', 'Draw with a smooth pen, highlight text, and add lines, arrows, rectangles and circles.'),
           ('رتّب الصفحات من اللوحة الجانبية، ودوّرها أو احذفها، ثم احفظ ملفًا واحدًا.', 'Arrange, rotate or delete pages from the side panel, then save one file.'),
           ('عند الحفظ يمكنك تصغير حجم الملف ليسهل إرساله.', 'When saving, you can make the file smaller so it is easy to send.')],
   'faq': [('هل تُرفع ملفاتي إلى خادم؟', 'Are my files uploaded to a server?', 'لا. تُعالج الملفات داخل جهازك فقط.', 'No. Files are processed on your device only.'),

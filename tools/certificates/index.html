@@ -1612,6 +1612,14 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
 .pe-th.cur{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
 .pe-adds{grid-template-columns:1fr 1fr}.pe-adds #peBlank{grid-column:1/-1}
 .pe-pgs{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 14px;max-height:180px;overflow:auto}.pe-pgs label{display:inline-flex;gap:4px;align-items:center;border:1px solid var(--line);border-radius:8px;padding:5px 9px;font-size:.875rem}.pe-pg{z-index:0}
+.pe-drs{flex-direction:column;gap:6px;min-width:230px}.pe-drs>span{display:flex;gap:4px;flex-wrap:wrap}
+.pe-drk button{width:36px;height:36px;justify-content:center;background:var(--bg);font-size:1rem}
+.pe-drc button{width:24px;height:24px;border-radius:50%;padding:0;background:var(--c);border:2px solid var(--line)}.pe-drc button[aria-checked=true]{box-shadow:0 0 0 2px #0071E3}
+.pe-drw button{width:40px;height:30px;justify-content:center;background:var(--bg)}.pe-drw i{display:block;width:22px;background:currentColor;border-radius:2px}.pe-drw button[aria-pressed=true]{background:var(--accent-soft);color:var(--accent)}
+.pe-drawing .pe-pg{touch-action:none;cursor:crosshair}
+.pe-live{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:4}
+.pe-draw svg{width:100%;height:100%;display:block;pointer-events:none;overflow:visible}
+.pe-drawing .pe-it{pointer-events:none}
 </style>
 <div id="ct" class="sn"><noscript><span class="ar">تعمل هذه الأداة مع تفعيل JavaScript.</span><span class="en">This tool needs JavaScript.</span></noscript></div>
 <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script><script>/* alsamani.com/tools/certificates — one certificate per name from a design and a list. Runs on the device.
