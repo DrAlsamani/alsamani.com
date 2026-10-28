@@ -33,11 +33,13 @@ SEO = {
           ('اطبع كشف الحضور بأوقات التسجيل، ومن لم يسجّل.', 'Print the attendance sheet with times, and who is missing.')],
   'faq': [('هل يمكن تحميل رمز QR لوضعه في عرض تقديمي؟', 'Can I download the QR code for slides?', 'نعم، يُحمّل صورة PNG واضحة.', 'Yes, as a sharp PNG image.')]},
  'pdf': {
-  'title': ('دمج وترتيب وضغط ملفات PDF مجانًا', 'Merge, arrange and compress PDF files for free'),
+  'title': ('دمج وترتيب وضغط ملفات PDF والكتابة عليها مجانًا', 'Merge, arrange, compress and write on PDF files for free'),
   'how': [('أضف ملفات PDF أو صور الأوراق.', 'Add PDFs or photos of pages.'),
           ('رتّب الصفحات بالسحب أو بالأسهم، ودوّرها أو احذفها.', 'Arrange pages by dragging or with the arrows; rotate or delete them.'),
-          ('أنشئ ملفًا واحدًا، أو اضغط ملفًا كبيرًا ليُرسل بسهولة.', 'Create one file, or compress a large one so it is easy to send.')],
+          ('أنشئ ملفًا واحدًا، أو اضغط ملفًا كبيرًا ليُرسل بسهولة.', 'Create one file, or compress a large one so it is easy to send.'),
+          ('اكتب على الصفحات أو أضف صورة أو ختمًا، وأخفِ نصًا قديمًا واكتب بدله.', 'Write on pages or add an image or stamp, and cover old text to write over it.')],
   'faq': [('هل تُرفع ملفاتي إلى خادم؟', 'Are my files uploaded to a server?', 'لا. تُعالج الملفات داخل جهازك فقط.', 'No. Files are processed on your device only.'),
+          ('لماذا يتلخبط النص العربي عند تحرير PDF في برامج أخرى؟', 'Why does Arabic text break when editing a PDF elsewhere?', 'لأن الملف يحفظ أشكال الحروف لا الكلمات. هنا يُغطّى النص القديم ويُكتب الجديد بخط سليم، فلا يتلخبط.', 'Because a PDF stores letter shapes, not words. Here the old text is covered and the new text is written in a proper font, so it does not break.'),
           ('هل تعمل من الجوال؟', 'Does it work on a phone?', 'نعم، على الآيفون والأندرويد، ويُحفظ الملف أو يُشارك مباشرة.', 'Yes, on iPhone and Android; the file can be saved or shared directly.')]},
  'qr': {
   'title': ('إنشاء رمز QR مجاني لا تنتهي صلاحيته', 'Create a free QR code that does not expire'),

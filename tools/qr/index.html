@@ -1550,6 +1550,30 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
 .qt-card svg{width:100%;height:auto;display:block}.qt-cap{margin:0 0 6px!important;font-weight:600;color:#111!important}.qt-cap:empty{display:none}
 .qt-out .sn-two{justify-content:center}
 .qt-tip{margin-top:14px}.qt-tip summary{cursor:pointer;font-weight:500;color:var(--accent)}.qt-tip p{margin:8px 0 0;line-height:1.8}
+.pe-bar{position:sticky;top:64px;z-index:20;display:flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:6px;margin:12px 0;box-shadow:0 4px 18px rgba(0,0,0,.08)}
+.pe-bar span{flex:1}
+.pe-bar button{display:inline-flex;align-items:center;gap:6px;border:0;background:var(--bg);color:var(--ink);border-radius:10px;padding:9px 12px;font:inherit;font-size:.9rem;cursor:pointer}
+.pe-bar button b{font-size:1rem}.pe-cv{width:16px;height:11px;border:1.5px solid currentColor;border-radius:2px;background:#fff}
+.pe-bar .pe-save{background:var(--btn,#0071E3);color:#fff;font-weight:500}.pe-bar .pe-save:disabled{opacity:.5}
+.pe-pages{display:grid;gap:16px;justify-items:center;margin-bottom:24px}
+.pe-pg{position:relative;background:#fff;box-shadow:0 1px 6px rgba(0,0,0,.18)}.pe-pg canvas{width:100%;height:100%;display:block}
+.pe-it{position:absolute;touch-action:none;cursor:move;outline:1.5px dashed transparent;outline-offset:1px}
+.pe-it.on,.pe-it:hover{outline-color:#0071E3}
+.pe-text span{display:block;pointer-events:none;color:#111}
+.pe-img img{width:100%;height:100%;display:block;pointer-events:none}
+.pe-cover{background:#fff}
+.pe-rz{position:absolute;right:-9px;bottom:-9px;width:18px;height:18px;border-radius:50%;background:#0071E3;border:2px solid #fff;cursor:nwse-resize;display:none;touch-action:none}
+.pe-x{position:absolute;left:-11px;top:-11px;width:22px;height:22px;border-radius:50%;border:0;background:#b3261e;color:#fff;font-size:14px;line-height:22px;padding:0;cursor:pointer;display:none}
+.pe-it.on .pe-rz,.pe-it.on .pe-x{display:block}
+.pe-bg{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:70}
+.pe-sheet{position:fixed;inset:auto 0 0 0;z-index:71;background:var(--surface);border-radius:20px 20px 0 0;padding:20px;max-width:560px;margin:0 auto;box-shadow:0 -8px 30px rgba(0,0,0,.2);max-height:88vh;overflow:auto}
+.pe-sheet h3{margin:0 0 10px}.pe-sheet textarea{font:inherit;width:100%;box-sizing:border-box;border:1px solid var(--line);border-radius:10px;padding:10px;background:var(--bg);color:var(--ink);font-size:16px}
+.pe-row{display:flex;flex-wrap:wrap;gap:10px;align-items:end;margin:10px 0}.pe-row label{display:grid;gap:4px;font-size:.8125rem;color:var(--muted);flex:1;min-width:120px}
+.pe-row select,.pe-row input[type=number]{font:inherit;font-size:16px;border:1px solid var(--line);border-radius:10px;padding:8px;background:var(--bg);color:var(--ink)}
+.pe-sw{display:flex;gap:6px;align-items:center}.pe-sw button{width:28px;height:28px;border-radius:50%;background:var(--c);border:2px solid var(--line);cursor:pointer;padding:0}.pe-sw button[aria-checked=true]{box-shadow:0 0 0 3px #0071E3}
+.pe-sw input[type=color]{width:32px;height:32px;border:0;padding:0;background:none}
+.pe-al{display:flex;gap:4px;margin-inline-start:auto}.pe-al button{width:36px;height:34px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);cursor:pointer}.pe-al button[aria-pressed=true]{background:#0071E3;color:#fff;border-color:#0071E3}
+.pe-prev{min-height:44px;font-size:22px;padding:8px 10px;border:1px dashed var(--line);border-radius:10px;background:#fff;margin:6px 0 12px!important;white-space:pre-wrap}
 </style>
 <div id="qt" class="sn"><noscript><span class="ar">تعمل هذه الأداة مع تفعيل JavaScript.</span><span class="en">This tool needs JavaScript.</span></noscript></div>
 <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script><script>/* alsamani.com/tools/qr — turn a link or text into a QR code; PNG for slides and documents, SVG for print. Runs on the device. */

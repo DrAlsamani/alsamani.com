@@ -48,10 +48,13 @@
           <h2>${B('دمج وترتيب الصفحات', 'Merge and arrange pages')}</h2><p>${B('ملفات PDF وصور الأوراق في ملف واحد: رتّب الصفحات بالسحب، ودوّرها، واحذف ما لا تريد.', 'PDFs and photos of pages in one file: drag pages into order, rotate them, and delete what you do not need.')}</p></button>
         <button type="button" class="pt-choice" data-go="shrink"><span class="pt-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14h6v6M20 10h-6V4M14 10l7-7M3 21l7-7"/></svg></span>
           <h2>${B('ضغط ملف', 'Shrink a file')}</h2><p>${B('تصغير حجم ملف PDF كبير ليُرسل بسهولة.', 'Make a large PDF smaller so it is easy to send.')}</p></button>
+        <button type="button" class="pt-choice" data-go="edit"><span class="pt-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7V5h16v2M12 5v14M9 19h6"/></svg></span>
+          <h2>${B('الكتابة على الصفحات', 'Write on pages')}</h2><p>${B('أضف نصًا أو صورة أو ختمًا، وأخفِ نصًا قديمًا واكتب بدله، دون أن يتلخبط الخط العربي.', 'Add text, an image or a stamp, and cover old text to write over it, without breaking Arabic text.')}</p></button>
       </div>
       <p class="pt-fine">${B('تُعالَج الملفات داخل جهازك، ولا تُرفع إلى أي مكان.', 'Files are processed on your device and are not uploaded anywhere.')}</p>`;
     root.querySelector('[data-go=merge]').onclick = merge;
     root.querySelector('[data-go=shrink]').onclick = shrink;
+    root.querySelector('[data-go=edit]').onclick = () => window.PTEdit && window.PTEdit();
   }
   const back = `<button type="button" class="sn-lnk pt-back" data-back>${B('الرجوع', 'Back')}</button>`;
 
@@ -245,6 +248,7 @@
     inp.click();
   }
 
+  window.PTK = { root, B, isAr, esc, toast, deliver, baseName, PDFJS, back, home, readBuf };
   const mode = new URLSearchParams(location.search).get('m');
-  if (mode === 'merge') merge(); else if (mode === 'shrink') shrink(); else home();
+  if (mode === 'merge') merge(); else if (mode === 'shrink') shrink(); else if (mode === 'edit') setTimeout(() => window.PTEdit && window.PTEdit()); else home();
 })();
