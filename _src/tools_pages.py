@@ -78,15 +78,8 @@ def group_items(g):
     extra = [JOURNEY, METHODS] if g == 'research' else ([SIGN] if sign_ready() else []) + ([PASS, MEET, ATTEND] if poll_ready() else []) + [PDFT, QRT] if g == 'work' else []
     return extra + ts
 def _tag(t):
-    if t is JOURNEY: return bi('تسع مراحل', 'Nine stages')
-    if t is METHODS: return bi('دليل مرجعي', 'Reference guide')
-    if t is SIGN: return bi('للمقرر والأعضاء', 'For coordinators and members')
-    if t is PASS: return bi('برابط واحد', 'One link')
-    if t is MEET: return ''
-    if t is ATTEND: return bi('برمز QR أو رابط', 'With a QR code or a link')
-    if t is PDFT: return bi('داخل جهازك', 'On your device')
-    if t is QRT: return bi('لا تنتهي صلاحيته', 'Does not expire')
-    return bi(t['chn_ar'], t['chn_en'])
+    # only the book tools carry a label (their chapter); the others speak for themselves
+    return bi(t['chn_ar'], t['chn_en']) if t.get('chn_ar') else ''
 def _go(t):
     if t is METHODS: return bi('اقرأ', 'Read')
     if t in (JOURNEY, SIGN, PASS, MEET, ATTEND, PDFT, QRT): return bi('ابدأ', 'Begin')
