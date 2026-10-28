@@ -192,8 +192,8 @@ ATTEND = {'slug': 'attend', 't_ar': 'تسجيل الحضور', 't_en': 'Attendan
         'q_ar': 'يسجّل كل حاضر حضوره من جواله، وتظهر لك قائمة الحاضرين ومن غاب.',
         'q_en': 'Each attendee records presence from their phone; you see who came and who did not.'}
 PDFT = {'slug': 'pdf', 't_ar': 'ملفات PDF', 't_en': 'PDF files',
-        'q_ar': 'دمج ملفات PDF وصور الأوراق، وترتيب الصفحات وتدويرها وحذفها، وضغط الملفات الكبيرة.',
-        'q_en': 'Merge PDFs and photos of pages, arrange, rotate or delete pages, and shrink large files.'}
+        'q_ar': 'حرّر ملفات PDF وعبّئها بالكتابة والعلامات، وادمجها ورتّب صفحاتها، واضغط الملفات الكبيرة.',
+        'q_en': 'Edit and fill PDFs with text and marks, merge them and arrange their pages, and shrink large files.'}
 CERT = {'slug': 'certificates', 't_ar': 'الشهادات', 't_en': 'Certificates',
         'q_ar': 'ارفع تصميم الشهادة والصق الأسماء، فتصدر شهادة لكل اسم.',
         'q_en': 'Upload the certificate design and paste the names; a certificate is made for each name.'}

@@ -679,7 +679,7 @@ PAGES.append(('tools/qr', 2, 'رمز QR | QR code | Dr. Omar A. Alsamani', _tp.q
 DESCS['tools/qr'] = 'Turn a link or text into a QR code that does not expire: PNG for slides and documents, SVG for print. تحويل الروابط إلى رمز QR.'
 DESCS['tools/pass'] = 'Pass a committee or board decision by circulation: one link, each member answers agree, reservation or disagree, and the coordinator gets a printable result. تمرير قرار اللجان والمجالس برابط واحد.'
 PAGES.append(('tools/pdf', 2, 'ملفات PDF | PDF files | Dr. Omar A. Alsamani', _tp.pdf_body))
-DESCS['tools/pdf'] = 'Merge PDFs and photos of pages, arrange, rotate or delete pages, write Arabic or English text and images on pages, or shrink a large PDF to send it easily. Runs on your device; nothing is uploaded. دمج ملفات PDF وضغطها.'
+DESCS['tools/pdf'] = 'A free PDF editor in the browser: write Arabic or English text, tick forms with check marks, cover and replace old text, add images and stamps, merge files and arrange pages, or shrink a large PDF. Runs on your device. تحرير ملفات PDF وتعبئتها ودمجها.'
 if _tp.sign_ready(): PAGES.append(('tools/sign', 2, 'توقيع المحاضر | Signing the minutes | Dr. Omar A. Alsamani', _tp.sign_body))
 DESCS['tools/sign'] = 'Sign meeting minutes together: upload the PDF once, share one link, and each member signs in their own box from their phone. توقيع المحاضر: نسخة واحدة وكل عضو يوقّع في خانته.'
 PAGES.append(('tools/research-methods', 2, 'مناهج البحث وتصاميمها | Research approaches and designs | Dr. Omar A. Alsamani', _tp.methods_body))
