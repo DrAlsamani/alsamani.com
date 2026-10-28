@@ -47,6 +47,7 @@
           <span class="pe-drw">${[1, 2, 3].map(w => `<button type="button" data-dw="${w}" aria-pressed="${w === 2}"><i style="height:${w * 1.6}px"></i></button>`).join('')}</span></span></span>
         <button type="button" data-tool="cover"><i class="pe-cv"></i>${B('إخفاء', 'Cover')}</button>
         <button type="button" data-tool="img"><b>▣</b>${B('صورة', 'Image')}</button>
+        <button type="button" data-tool="sig"><b>✍</b>${B('توقيع', 'Signature')}</button>
         <span class="pe-fill"></span><button type="button" class="pe-save" id="peSave">${B('حفظ PDF', 'Save PDF')}</button>
       </div>
       <p class="pe-hint" id="peHint" hidden></p>
@@ -215,7 +216,7 @@
       body.classList.toggle('pe-placing', !!t); hint.hidden = !t;
       body.classList.toggle('pe-drawing', !!t && t.startsWith('draw'));
       if (t) hint.innerHTML = t.startsWith('draw') ? B('ارسم على الصفحة. للإيقاف أو تغيير الأداة اضغط زر «رسم».', 'Draw on the page. To stop or change the tool, tap the Draw button.') : t.startsWith('mark') ? B('اضغط على الصفحة لوضع العلامة، وكررها حيث تشاء. للإيقاف أو تغيير العلامة اضغط زر «علامة».', 'Tap the page to place the mark, as many times as you need. To stop or change the mark, tap the Mark button.')
-        : t === 'text' ? B('اضغط على المكان الذي تريد الكتابة فيه.', 'Tap where you want to write.') : B('اضغط على الصفحة حيث تريد وضعه.', 'Tap the page where you want it.');
+        : t === 'sig' ? B('اضغط على المكان الذي تريد وضع التوقيع فيه.', 'Tap where you want the signature.') : t === 'text' ? B('اضغط على المكان الذي تريد الكتابة فيه.', 'Tap where you want to write.') : B('اضغط على الصفحة حيث تريد وضعه.', 'Tap the page where you want it.');
     }
     q('[data-tool=pages]').onclick = () => setPanel(!panel);
     const mkPop = q('.pe-mks'); let mk = 'check';
@@ -227,6 +228,7 @@
     drPop.querySelectorAll('[data-dk]').forEach(b => b.onclick = () => { dk = b.dataset.dk; q('#peDrI').textContent = b.textContent; drPop.hidden = true; setTool('draw:' + dk); });
     drPop.querySelectorAll('[data-dw]').forEach(b => b.onclick = () => { dw = +b.dataset.dw; drPop.querySelectorAll('[data-dw]').forEach(x => x.setAttribute('aria-pressed', x === b)); });
     mkPop.querySelectorAll('[data-mk]').forEach(b => b.onclick = () => { mk = b.dataset.mk; q('#peMkI').textContent = MARKS[mk]; mkPop.hidden = true; setTool('mark:' + mk); });
+    q('[data-tool=sig]').onclick = () => { if (!pages.length) { inp.click(); return; } if (tool === 'sig') { setTool(null); return; } sigSheet(png => { sigPng = png; setTool('sig'); }); };
     ['text', 'cover', 'img'].forEach(t => q(`[data-tool=${t}]`).onclick = () => { if (!pages.length) { inp.click(); return; } setTool(tool === t ? null : t); });
     function onPage(e, v) {
       if (!tool || e.target.closest('.pe-it')) return;
@@ -234,6 +236,7 @@
       const r = v.wrap.getBoundingClientRect(), x = (e.clientX - r.left) / v.k, y = (e.clientY - r.top) / v.k, pid = v.p.id;
       if (tool.startsWith('mark')) { const s = lastMark ? lastMark.w : 12; add({ id: ++seq, pid, t: 'mark', mk, x: x - s / 2, y: y - s / 2, w: s, h: s, color: lastMark ? lastMark.color : '#111111' }); return; }
       const t = tool; setTool(null);
+      if (t === 'sig' && sigPng) { const im = new Image(); im.onload = () => { const w = Math.min(130, dispWH(v.p)[0] * .3), h = w * im.height / im.width; add({ id: ++seq, pid, t: 'img', x: x - w / 2, y: y - h / 2, w, h, ang: 0, src: sigPng }); refreshThumb(pid); }; im.src = sigPng; return; }
       if (t === 'text') { const last = items.filter(i => i.t === 'text').pop(); const it = { id: ++seq, pid, t: 'text', x: x - 4, y: y - 10, text: '', font: last ? last.font : FONTS[0][0], size: last ? last.size : 12, color: last ? last.color : '#111111', bold: last ? last.bold : false, align: 'right' }; loadFont(it.font).then(() => editText(it, true)); return; }
       if (t === 'cover') { const it = { id: ++seq, pid, t: 'cover', x: x - 50, y: y - 9, w: 100, h: 18, auto: true, color: '#ffffff' }; it.color = bgOf(it); add(it); return; }
       if (t === 'img') { const fi = q('#peImg'); fi.value = ''; fi.onchange = async () => {
@@ -246,6 +249,60 @@
         refreshThumb(pid);
       }; fi.click(); }
     }
+    /* ---------- signature: saved on this device and shared with the signing tool ---------- */
+    let sigPng = null;
+    const sstore = { get(k, d) { try { const v = localStorage.getItem('sn.' + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } }, set(k, v) { try { localStorage.setItem('sn.' + k, JSON.stringify(v)); } catch (e) {} } };
+    const INKS = { blue: '#1d3a8f', black: '#111111' }, PENS = { thin: 1, mid: 1.6, thick: 2.3 };
+    const recolor = (png, col) => new Promise(res => { const im = new Image(); im.onload = () => { const c = document.createElement('canvas'); c.width = im.width; c.height = im.height; const x = c.getContext('2d'); x.drawImage(im, 0, 0); x.globalCompositeOperation = 'source-in'; x.fillStyle = col; x.fillRect(0, 0, c.width, c.height); res(c.toDataURL('image/png')); }; im.onerror = () => res(png); im.src = png; });
+    function trimCanvas(cv) {
+      const x = cv.getContext('2d'), { width: w, height: h } = cv, d = x.getImageData(0, 0, w, h).data; let x0 = w, y0 = h, x1 = -1, y1 = -1;
+      for (let y = 0; y < h; y++) for (let i = 0; i < w; i++) if (d[(y * w + i) * 4 + 3] > 10) { if (i < x0) x0 = i; if (i > x1) x1 = i; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+      if (x1 < 0) return null; const pd = 6; x0 = Math.max(0, x0 - pd); y0 = Math.max(0, y0 - pd); x1 = Math.min(w - 1, x1 + pd); y1 = Math.min(h - 1, y1 + pd);
+      const o = document.createElement('canvas'); o.width = x1 - x0 + 1; o.height = y1 - y0 + 1; o.getContext('2d').drawImage(cv, x0, y0, o.width, o.height, 0, 0, o.width, o.height); return o.toDataURL('image/png');
+    }
+    // a photo of a signature on white paper: the paper becomes transparent
+    const cleanPhoto = f => new Promise(res => { const u = URL.createObjectURL(f), im = new Image(); im.onload = () => {
+      const k = Math.min(1, 1100 / Math.max(im.width, im.height)), c = document.createElement('canvas'); c.width = Math.round(im.width * k); c.height = Math.round(im.height * k);
+      const x = c.getContext('2d'); x.drawImage(im, 0, 0, c.width, c.height); const id = x.getImageData(0, 0, c.width, c.height), d = id.data;
+      let sum = 0; for (let i = 0; i < d.length; i += 4) sum += .299 * d[i] + .587 * d[i + 1] + .114 * d[i + 2]; const th = Math.min(185, sum / (d.length / 4) - 45);
+      for (let i = 0; i < d.length; i += 4) { const L = .299 * d[i] + .587 * d[i + 1] + .114 * d[i + 2]; if (L > th) d[i + 3] = 0; else { d[i] = d[i + 1] = d[i + 2] = 0; d[i + 3] = Math.min(255, (th - L) / th * 400); } }
+      x.putImageData(id, 0, 0); URL.revokeObjectURL(u); res(trimCanvas(c)); }; im.onerror = () => res(null); im.src = u; });
+    function sigSheet(done) {
+      let saved = sstore.get('sigs', []), ink = sstore.get('ink', 'blue'), pen = sstore.get('pen', 'mid');
+      const { sh, close } = sheet(`<h3>${B('توقيعك', 'Your signature')}</h3>
+        <div class="pe-sigs" id="peSigs"></div>
+        <div class="pe-row pe-sigo"><div class="pe-sw">${Object.keys(INKS).map(k => `<button type="button" data-ink="${k}" style="--c:${INKS[k]}" aria-checked="${k === ink}" title="${k}"></button>`).join('')}</div>
+          <div class="pe-al">${Object.keys(PENS).map(k => `<button type="button" data-pen="${k}" aria-pressed="${k === pen}"><i style="display:block;width:16px;margin:auto;height:${PENS[k] * 1.4}px;background:currentColor;border-radius:2px"></i></button>`).join('')}</div></div>
+        <div class="pe-pad"><canvas></canvas><button type="button" class="sn-lnk" id="peClr">${B('مسح', 'Clear')}</button></div>
+        <p class="pt-fine">${B('وقّع داخل المربع، أو', 'Sign in the box, or')} <button type="button" class="sn-lnk" id="pePh">${B('استخدم صورة توقيعك على ورقة بيضاء', 'use a photo of your signature on white paper')}</button></p>
+        <label class="sn-keep"><input type="checkbox" id="peKeep" checked> ${B('احفظ توقيعي في هذا الجهاز', 'Keep my signature on this device')}</label>
+        <div class="sn-two"><button type="button" class="btn solid" id="peOk">${B('استخدام التوقيع', 'Use the signature')}</button><button type="button" class="btn ghost" id="peNo">${B('إلغاء', 'Cancel')}</button></div>
+        <input type="file" id="pePhI" accept="image/*" hidden>`);
+      const use = async png => { png = await recolor(png, INKS[ink]); if (sh.querySelector('#peKeep').checked && !saved.includes(png)) { saved = [png].concat(saved.filter(x => x !== png)).slice(0, 4); sstore.set('sigs', saved); } close(); done(png); };
+      const drawSaved = () => { const box = sh.querySelector('#peSigs'); box.innerHTML = saved.length ? `<p class="pt-fine">${B('تواقيعك المحفوظة · اضغط لاستخدامه', 'Saved signatures · tap one to use it')}</p><div>${saved.map((x, i) => `<span><button type="button" data-use="${i}"><img src="${x}" alt=""></button><button type="button" class="pe-sx" data-rm="${i}">×</button></span>`).join('')}</div>` : '';
+        box.querySelectorAll('[data-use]').forEach(b => b.onclick = async () => { const png = await recolor(saved[+b.dataset.use], INKS[ink]); close(); done(png); });
+        box.querySelectorAll('[data-rm]').forEach(b => b.onclick = () => { saved.splice(+b.dataset.rm, 1); sstore.set('sigs', saved); drawSaved(); }); };
+      drawSaved();
+      // the pad: smooth strokes, a little thinner when the finger moves fast
+      const cv = sh.querySelector('.pe-pad canvas'), cx = cv.getContext('2d'); let pts = [], drawn = false, lw = 2.4;
+      const fit = () => { const r = cv.getBoundingClientRect(), d = window.devicePixelRatio || 1; cv.width = r.width * d; cv.height = r.height * d; cx.setTransform(d, 0, 0, d, 0, 0); cx.lineCap = cx.lineJoin = 'round'; cx.strokeStyle = INKS[ink]; }; requestAnimationFrame(fit);
+      const pos = e => { const r = cv.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top, t: e.timeStamp }; };
+      cv.addEventListener('pointerdown', e => { cv.setPointerCapture(e.pointerId); pts = [pos(e)]; lw = 2.4 * PENS[pen]; e.preventDefault(); });
+      cv.addEventListener('pointermove', e => { if (!pts.length) return; const evs = e.getCoalescedEvents ? e.getCoalescedEvents() : [e];
+        evs.forEach(ev => { const p = pos(ev), a = pts[pts.length - 1]; if (Math.hypot(p.x - a.x, p.y - a.y) < .6) return; pts.push(p); const sp = Math.hypot(p.x - a.x, p.y - a.y) / Math.max(1, p.t - a.t);
+          lw = lw * .75 + Math.max(1.5, Math.min(3, 3 - sp * .6)) * PENS[pen] * .25; cx.lineWidth = lw; cx.strokeStyle = INKS[ink];
+          if (pts.length > 2) { const b0 = pts[pts.length - 3], m1 = { x: (b0.x + a.x) / 2, y: (b0.y + a.y) / 2 }, m2 = { x: (a.x + p.x) / 2, y: (a.y + p.y) / 2 }; cx.beginPath(); cx.moveTo(m1.x, m1.y); cx.quadraticCurveTo(a.x, a.y, m2.x, m2.y); cx.stroke(); }
+          else { cx.beginPath(); cx.moveTo(a.x, a.y); cx.lineTo(p.x, p.y); cx.stroke(); } drawn = true; }); e.preventDefault(); });
+      const stop = () => { pts = []; }; cv.addEventListener('pointerup', stop); cv.addEventListener('pointercancel', stop);
+      sh.querySelector('#peClr').onclick = () => { cx.clearRect(0, 0, cv.width, cv.height); drawn = false; };
+      sh.querySelectorAll('[data-ink]').forEach(b => b.onclick = () => { ink = b.dataset.ink; sstore.set('ink', ink); sh.querySelectorAll('[data-ink]').forEach(x => x.setAttribute('aria-checked', x === b)); if (drawn) { cx.save(); cx.setTransform(1, 0, 0, 1, 0, 0); cx.globalCompositeOperation = 'source-in'; cx.fillStyle = INKS[ink]; cx.fillRect(0, 0, cv.width, cv.height); cx.restore(); } });
+      sh.querySelectorAll('[data-pen]').forEach(b => b.onclick = () => { pen = b.dataset.pen; sstore.set('pen', pen); sh.querySelectorAll('[data-pen]').forEach(x => x.setAttribute('aria-pressed', x === b)); });
+      sh.querySelector('#pePh').onclick = () => sh.querySelector('#pePhI').click();
+      sh.querySelector('#pePhI').onchange = async e => { const f = e.target.files[0]; if (!f) return; const png = await cleanPhoto(f); if (png) use(png); else toast(B('تعذّر قراءة الصورة.', 'The photo could not be read.'), 1); };
+      sh.querySelector('#peNo').onclick = close;
+      sh.querySelector('#peOk').onclick = () => { const png = drawn ? trimCanvas(cv) : null; if (!png) { toast(B('وقّع داخل المربع أولًا، أو اختر توقيعًا محفوظًا.', 'Sign in the box first, or choose a saved signature.'), 1); return; } use(png); };
+    }
+
     /* ---------- drawing: a smooth pen, a highlighter, lines, arrows and shapes ---------- */
     function stroke(e, v) {
       e.preventDefault();

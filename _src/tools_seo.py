@@ -35,7 +35,7 @@ SEO = {
  'pdf': {
   'title': ('تحرير ملفات PDF وتعبئتها ودمجها مجانًا', 'Edit, fill and merge PDF files for free'),
   'how': [('افتح ملف PDF أو أكثر، أو صور الأوراق.', 'Open one or more PDFs, or photos of pages.'),
-          ('اكتب على الصفحات، وضع علامات ✓ و✕ لتعبئة النماذج، وأضف صورة أو ختمًا.', 'Write on pages, add ✓ and ✕ marks to fill forms, and add an image or stamp.'),
+          ('اكتب على الصفحات، وضع علامات ✓ و✕ لتعبئة النماذج، وأضف توقيعك أو صورة أو ختمًا.', 'Write on pages, add ✓ and ✕ marks to fill forms, and add your signature, an image or a stamp.'),
           ('أخفِ نصًا قديمًا بمربع يأخذ لون الصفحة، واكتب بدله.', 'Cover old text with a box that takes the page colour, and write over it.'),
           ('ارسم بقلم ناعم، وظلّل النص، وأضف خطوطًا وأسهمًا ومستطيلات ودوائر.', 'Draw with a smooth pen, highlight text, and add lines, arrows, rectangles and circles.'),
           ('رتّب الصفحات من اللوحة الجانبية، ودوّرها أو احذفها، ثم احفظ ملفًا واحدًا.', 'Arrange, rotate or delete pages from the side panel, then save one file.'),
