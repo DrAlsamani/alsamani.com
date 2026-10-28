@@ -73,7 +73,7 @@
   function draggable(b, onEnd, keepRatio) {
     let mode = null, sx, sy, r0;
     b.addEventListener('pointerdown', e => {
-      if (e.target.closest('.sn-bx')) return;
+      if (e.target.closest('.sn-bx,.sn-nmi')) return;
       mode = e.target.classList.contains('sn-rz') ? 'rz' : 'mv'; sx = e.clientX; sy = e.clientY;
       r0 = { l: b.offsetLeft, t: b.offsetTop, w: b.offsetWidth, h: b.offsetHeight };
       b.setPointerCapture(e.pointerId); e.preventDefault();
@@ -86,6 +86,24 @@
     });
     const up = () => { if (!mode) return; mode = null; onEnd && onEnd(); };
     b.addEventListener('pointerup', up); b.addEventListener('pointercancel', up);
+  }
+  // the name written on the same row as a box, if the file has its text
+  async function nameNear(v, s) {
+    try {
+      const tc = await v.page.getTextContent(), cy = s.y + s.h / 2, skip = /^(الاسم|اسم العضو|التوقيع|توقيع|م|الصفة|المسمى|name|signature|no\.?)$/i;
+      const row = tc.items.filter(t => t.str.trim() && Math.abs(t.transform[5] + (t.height || 8) * .35 - cy) < Math.max(s.h * .6, 8) && (t.transform[4] + t.width < s.x - 2 || t.transform[4] > s.x + s.w + 2));
+      const words = row.filter(t => !/^[\d\s.\-–—:|/٠-٩]+$/.test(t.str) && !skip.test(t.str.trim()));
+      if (!words.length) return '';
+      const dist = t => t.transform[4] > s.x ? t.transform[4] - (s.x + s.w) : s.x - (t.transform[4] + t.width);
+      const near = words.reduce((a, t) => dist(t) < dist(a) ? t : a), side = near.transform[4] > s.x;
+      // join the pieces of the same cell: neighbours on the same side with small gaps
+      const pcs = words.filter(t => (t.transform[4] > s.x) === side).sort((a, b) => a.transform[4] - b.transform[4]);
+      let i = pcs.indexOf(near), lo = i, hi = i;
+      while (lo > 0 && pcs[lo].transform[4] - (pcs[lo - 1].transform[4] + pcs[lo - 1].width) < 10) lo--;
+      while (hi < pcs.length - 1 && pcs[hi + 1].transform[4] - (pcs[hi].transform[4] + pcs[hi].width) < 10) hi++;
+      const g = pcs.slice(lo, hi + 1), rtl = g.some(t => /[\u0600-\u06FF]/.test(t.str));
+      return (rtl ? g.reverse() : g).map(t => t.str.trim()).join(' ').replace(/\s+/g, ' ').trim().slice(0, 120);
+    } catch (e) { return ''; }
   }
   function pdfRect(v, b) {
     const l = b.offsetLeft, t = b.offsetTop, w = b.offsetWidth, h = b.offsetHeight;
@@ -103,8 +121,8 @@
       b.dataset.i = i;
       if (s.sig) { const im = new Image(); im.src = s.sig; im.alt = ''; b.appendChild(im); }
       if (opts.edit) {
-        b.innerHTML = '<span class="sn-bn">' + (i + 1) + '</span><i class="sn-rz" aria-hidden="true"></i><button type="button" class="sn-bx" aria-label="remove">×</button>';
-        b.title = s.n || '';
+        b.innerHTML = '<span class="sn-bn">' + (i + 1) + '</span><i class="sn-rz" aria-hidden="true"></i><button type="button" class="sn-bx" aria-label="remove">×</button><input type="text" class="sn-nmi" maxlength="120" dir="auto" placeholder="' + (isAr() ? 'اسم العضو' : 'Member name') + '">';
+        b.querySelector('.sn-nmi').value = s.n || ''; b.title = s.n || '';
       } else {
         b.type = 'button'; b.setAttribute('aria-label', (s.n || '') + (s.sig ? ' ✓' : ''));
       }
@@ -184,26 +202,28 @@
     function drawList() {
       ed.querySelector('#snNc').textContent = '(' + slots.length + ')';
       list.innerHTML = slots.map((s, i) => `<li><span class="sn-n">${i + 1}</span><input type="text" value="${esc(s.n)}" data-i="${i}" placeholder="${isAr() ? 'الاسم' : 'Name'}" maxlength="120"><button type="button" class="sn-del" data-i="${i}" aria-label="remove">×</button></li>`).join('');
-      list.querySelectorAll('input').forEach(inp => inp.oninput = () => { slots[+inp.dataset.i].n = inp.value; });
+      list.querySelectorAll('input').forEach(inp => inp.oninput = () => { slots[+inp.dataset.i].n = inp.value; const b = host.querySelector(`.sn-box[data-i="${inp.dataset.i}"] .sn-nmi`); if (b) b.value = inp.value; });
       list.querySelectorAll('.sn-del').forEach(b => b.onclick = () => { slots.splice(+b.dataset.i, 1); drawList(); place(); });
     }
     function place() {
       placeBoxes(views, slots, { edit: 1, onBox: (b, i, v) => {
         b.querySelector('.sn-bx').onclick = e => { e.stopPropagation(); slots.splice(i, 1); drawList(); place(); };
         draggable(b, () => Object.assign(slots[i], pdfRect(v, b)));
+        b.addEventListener('pointerdown', () => { host.querySelectorAll('.sn-box.act').forEach(x => x !== b && x.classList.remove('act')); b.classList.add('act'); });
+        const ni = b.querySelector('.sn-nmi'); ni.oninput = () => { slots[i].n = ni.value; const li = list.querySelector(`input[data-i="${i}"]`); if (li) li.value = ni.value; };
       } });
     }
     async function show() {
       views = await renderPages(doc, host, slots, { edit: 1 });
       place();
-      views.forEach(v => v.wrap.addEventListener('click', e => {
+      views.forEach(v => v.wrap.addEventListener('click', async e => {
         if (!adding || e.target.closest('.sn-box')) return;
         const rc = v.wrap.getBoundingClientRect(), x = e.clientX - rc.left, y = e.clientY - rc.top;
-        const last = slots[slots.length - 1], w = last ? last.w : 110, h = last ? last.h : 30;
+        const last = slots[slots.length - 1], w = last ? last.w : 110, h = last ? last.h : 22;
         const pt = v.vp.convertToPdfPoint(x, y);
-        slots.push({ p: v.pi, n: '', r: '', x: pt[0] - w / 2, y: pt[1] - h / 2, w, h });
-        drawList(); place();
-        const inp = list.querySelector('li:last-child input'); if (inp) inp.focus({ preventScroll: true });
+        const s = { p: v.pi, n: '', r: '', x: pt[0] - w / 2, y: pt[1] - h / 2, w, h }; slots.push(s);
+        s.n = await nameNear(v, s); drawList(); place();
+        const nb = host.querySelector(`.sn-box[data-i="${slots.length - 1}"] .sn-nmi`); if (nb && !s.n) nb.focus({ preventScroll: true });
       }));
     }
     const add = ed.querySelector('#snAdd');
