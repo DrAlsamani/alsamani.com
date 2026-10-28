@@ -61,16 +61,41 @@
     root.innerHTML = `<div class="sn-card">
       <label class="sn-lbl">${B('العنوان', 'Title')}<input type="text" id="psT" maxlength="200" placeholder="${T(C.ph[0], C.ph[1])}"></label>
       ${MODE === 'att' ? '' : `<div id="psItems"></div><button type="button" class="sn-lnk" id="psAdd">${B(C.add[0], C.add[1])}</button>`}
-      <label class="sn-lbl ps-gap">${B('أسماء الأعضاء (اختياري، اسم في كل سطر)', 'Member names (optional, one per line)')}<textarea id="psN" rows="5" placeholder="${T('إن كتبتها يختار كل عضو اسمه من قائمة، ويظهر لك من لم يُجب.', 'If given, members pick their name from a list and you see who has not answered.')}">${esc(last)}</textarea></label>
+      <details class="ps-names ps-gap"${last ? ' open' : ''}><summary>${B('قائمة بأسماء الأعضاء (اختياري)', 'A list of member names (optional)')}</summary>
+      <p class="sn-fine">${B('دونها يكتب كل عضو اسمه بنفسه. ومعها يختار اسمه من القائمة، ويظهر لك من لم يُجب.', 'Without it, each member writes their own name. With it, members pick their name from the list and you see who has not answered.')}</p>
+      <textarea id="psN" rows="5" placeholder="${T('اسم في كل سطر', 'One name per line')}">${esc(last)}</textarea></details>
       <label class="sn-keep"><input type="checkbox" id="psShow"${MODE === 'time' ? ' checked' : ''}> ${B(C.show[0], C.show[1])}</label>
       <div class="sn-two"><button type="button" class="btn solid" id="psGo">${B('إنشاء الرابط', 'Create the link')}</button></div>
       <p class="pt-fine">${B('تُحذف البيانات تلقائيًا بعد ٧ أيام، ويستطيع المنسق حذفها فورًا.', 'Data is deleted automatically after 7 days; the coordinator can delete it at once.')}</p>
     </div>`;
     const box = root.querySelector('#psItems');
-    const add = () => { if (!box) return; const n = box.children.length + 1, d = document.createElement('label'); d.className = 'sn-lbl'; d.innerHTML = `${B(C.item[0], C.item[1])} ${n}` + (C.input === 'textarea' ? `<textarea rows="3" maxlength="2000"></textarea>` : `<input type="text" maxlength="200" placeholder="${T(C.itemPh[0], C.itemPh[1])}">`); box.appendChild(d); };
-    if (box) { add(); if (MODE === 'time') add(); root.querySelector('#psAdd').onclick = () => { add(); box.lastChild.querySelector('textarea,input').focus(); }; }
+    // meeting time: optional date and time pickers that write the option text, which stays editable
+    const fmt = (d, t) => {
+      if (!d) return '';
+      const dt = new Date(d + 'T' + (t || '12:00')), L = isAr() ? 'ar-SA-u-ca-gregory-nu-latn' : 'en-GB';
+      let x = dt.toLocaleDateString(L, { weekday: 'long', day: 'numeric', month: 'long' });
+      if (t) x += ' · ' + dt.toLocaleTimeString(L, { hour: 'numeric', minute: '2-digit' });
+      return x;
+    };
+    const add = () => {
+      if (!box) return;
+      const n = box.children.length + 1, d = document.createElement('div'); d.className = 'sn-lbl ps-row';
+      if (MODE !== 'time') { d.innerHTML = `<label>${B(C.item[0], C.item[1])} ${n}<textarea class="ps-it" rows="3" maxlength="2000"></textarea></label>`; box.appendChild(d); return; }
+      const prev = box.lastElementChild;
+      d.innerHTML = `<span>${B(C.item[0], C.item[1])} ${n}</span><div class="ps-pick"><input type="date" class="ps-d" aria-label="${T('اليوم', 'Day')}"><input type="time" class="ps-h" step="900" aria-label="${T('الساعة', 'Time')}"></div>
+        <input type="text" class="ps-it" maxlength="200" placeholder="${T('اختر اليوم والساعة، أو اكتب الموعد كما تريد', 'Pick a day and time, or write the option yourself')}">`;
+      box.appendChild(d);
+      const di = d.querySelector('.ps-d'), hi = d.querySelector('.ps-h'), ti = d.querySelector('.ps-it');
+      const sync = () => { if (!ti.dataset.own) ti.value = fmt(di.value, hi.value); };
+      di.onchange = hi.onchange = sync; ti.oninput = () => { ti.dataset.own = ti.value ? 1 : ''; };
+      // a new option starts from the previous one: next day, same hour
+      if (prev) { const pd = prev.querySelector('.ps-d').value, ph = prev.querySelector('.ps-h').value;
+        if (pd) { const x = new Date(pd + 'T12:00'); x.setDate(x.getDate() + 1); di.value = x.toISOString().slice(0, 10); }
+        hi.value = ph; sync(); }
+    };
+    if (box) { add(); if (MODE === 'time') add(); root.querySelector('#psAdd').onclick = () => { add(); const l = box.lastChild; (l.querySelector('.ps-d') || l.querySelector('.ps-it')).focus(); }; }
     root.querySelector('#psGo').onclick = async ev => {
-      const items = box ? [...box.querySelectorAll('textarea,input')].map(t => t.value.trim()).filter(Boolean) : [];
+      const items = box ? [...box.querySelectorAll('.ps-it')].map(t => t.value.trim()).filter(Boolean) : [];
       if (box && !items.length) { toast(B('اكتب بندًا واحدًا على الأقل.', 'Write at least one item.'), 1); return; }
       const raw = root.querySelector('#psN').value, names = raw.split(/\n+/).map(x => x.replace(/^\s*[\d٠-٩]+[\s.\-)]*/, '').trim()).filter(Boolean);
       const btn = ev.currentTarget; btn.disabled = true;

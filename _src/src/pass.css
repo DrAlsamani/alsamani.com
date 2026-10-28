@@ -31,3 +31,8 @@
 .ps-qr>div{background:#fff;color:#111;border-radius:20px;padding:24px;width:min(92vw,460px);text-align:center}
 .ps-qr h2{margin:0 0 6px;font-size:1.25rem}.ps-qr p{margin:0 0 12px;color:#444}.ps-qr svg{width:100%;height:auto;max-width:360px}
 .ps-qrl{font-size:.8125rem;word-break:break-all}.ps-qr .btn{margin-top:4px}
+.ps-row{display:grid;gap:6px;margin-bottom:12px}.ps-row>label{display:grid;gap:6px}
+.ps-pick{display:grid;grid-template-columns:1.4fr 1fr;gap:8px}
+.ps input[type=date],.ps input[type=time]{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:9px 10px;width:100%;box-sizing:border-box;min-height:44px}
+.ps-names summary{cursor:pointer;font-weight:500;color:var(--accent)}.ps-names[open] summary{margin-bottom:8px}.ps-names .sn-fine{margin:0 0 8px}
+.ps .sn-keep{display:flex;gap:10px;align-items:flex-start;text-align:start;margin:14px 0}.ps .sn-keep input{width:auto;flex:none;margin-top:5px}
