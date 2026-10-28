@@ -50,6 +50,7 @@ SEO = {
           ('ضع الحقول على الشهادة واختر الخط والحجم واللون، وأضف التوقيع أو الختم.', 'Place the fields, choose font, size and colour, and add a signature or stamp.'),
           ('حمّل ملف PDF واحدًا للجميع، أو ملفًا لكل اسم.', 'Download one PDF for everyone, or a file per name.')],
   'faq': [('هل يمكن استخدام خط غير موجود في القائمة؟', 'Can I use a font that is not in the list?', 'نعم، اختر «خط من جهازي» وارفع ملف الخط، فيُستخدم داخل جهازك فقط.', 'Yes. Choose “A font from my device” and load the font file; it is used on your device only.'),
+          ('هل يمكن كتابة فقرة كاملة فيها اسم الشخص؟', 'Can I write a whole paragraph that includes the name?', 'نعم. أضف «نص ثابت» واكتب الفقرة بأسطرها، وأدرج {1} مكان الاسم و{2} مكان الدورة، فتُملأ لكل شخص.', 'Yes. Add fixed text, write the paragraph with its lines, and insert {1} for the name and {2} for the course; they are filled in for each person.'),
           ('ماذا لو كان الاسم طويلًا؟', 'What if a name is long?', 'يصغر الاسم تلقائيًا ليبقى داخل حقله.', 'It shrinks automatically to stay inside its field.'),
           ('هل تُرفع الأسماء أو التصميم إلى خادم؟', 'Are the names or the design uploaded?', 'لا. كل شيء يُعالج داخل جهازك.', 'No. Everything is processed on your device.')]},
  'qr': {

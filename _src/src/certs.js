@@ -94,7 +94,35 @@
     ready(); refresh();
   };
   function ready() { q('#ctEd').hidden = !bg; q('#ctOut').hidden = !(bg && rows.length); }
-  const val = f => f.t === 'fix' ? f.text : (rows[cur] && rows[cur][f.col]) || (isAr() ? 'الاسم الكامل' : 'Full name');
+  const SAMPLE = () => [isAr() ? 'الاسم الكامل' : 'Full name'];
+  // fixed text may carry {1}, {2}… which take the values of those columns
+  const valFor = (f, row) => f.t === 'fix' ? f.text.replace(/\{(\d+)\}/g, (m, n) => row[n - 1] != null ? row[n - 1] : m) : (row[f.col] || '');
+  const val = f => valFor(f, rows[cur] || SAMPLE());
+  // one drawing routine for the screen and the file, so what you see is what you get
+  function wrap(x, text, max) {
+    const out = [];
+    text.split('\n').forEach(par => {
+      const words = par.split(/ +/); let line = '';
+      words.forEach(w => { const t = line ? line + ' ' + w : w; if (line && x.measureText(t).width > max) { out.push(line); line = w; } else line = t; });
+      out.push(line);
+    });
+    return out;
+  }
+  function render(f, v, S) {
+    const c = document.createElement('canvas'), x = c.getContext('2d'), p = 2 * S, multi = f.t === 'fix';
+    const sz = multi ? f.size : fitSize(f, v), lh = (multi ? (f.lh || 1.6) : 1.5) * f.size * S;
+    x.font = `${f.bold ? 700 : 400} ${sz * S}px "${fam(f.font)}", sans-serif`;
+    const lines = multi ? wrap(x, v, f.w * S - 2 * p) : [v];
+    c.width = Math.ceil(f.w * S); c.height = Math.ceil(lines.length * lh);
+    x.font = `${f.bold ? 700 : 400} ${sz * S}px "${fam(f.font)}", sans-serif`; x.fillStyle = f.color; x.textBaseline = 'middle';
+    lines.forEach((ln, i) => {
+      const y = (i + .5) * lh; x.direction = rtlOf(ln || v) ? 'rtl' : 'ltr';
+      if (f.align === 'center') { x.textAlign = 'center'; x.fillText(ln, c.width / 2, y); }
+      else if (f.align === 'left') { x.textAlign = 'left'; x.direction = 'ltr'; x.fillText(ln, p, y); }
+      else { x.textAlign = 'right'; x.fillText(ln, c.width - p, y); }
+    });
+    return { c, h: c.height / S };
+  }
 
   /* ---------- stage ---------- */
   async function draw() {
@@ -116,17 +144,18 @@
   function mount(f) {
     if (f.el) f.el.remove();
     const el = document.createElement('div'); el.className = 'pe-it ' + (f.t === 'img' ? 'pe-img' : 'pe-text ct-f'); f.el = el;
-    el.innerHTML = (f.t === 'img' ? `<img src="${f.src}" alt="">` : '<span></span>') + '<i class="pe-rz" aria-hidden="true"></i><button type="button" class="pe-x" aria-label="delete">×</button>';
+    el.innerHTML = (f.t === 'img' ? `<img src="${f.src}" alt="">` : '<span class="ct-c"></span>') + '<i class="pe-rz" aria-hidden="true"></i><button type="button" class="pe-x" aria-label="delete">×</button>';
     view.wrap.appendChild(el); place(f); drag(f);
     el.querySelector('.pe-x').onclick = ev => { ev.stopPropagation(); fields = fields.filter(x => x !== f); el.remove(); };
   }
   function place(f) {
     const k = view.k, el = f.el; if (!el) return;
     if (f.t === 'img') { Object.assign(el.style, { left: f.x * k + 'px', top: f.y * k + 'px', width: f.w * k + 'px', height: f.h * k + 'px' }); return; }
-    const v = val(f), sz = fitSize(f, v), s = el.querySelector('span');
-    Object.assign(el.style, { left: f.x * k + 'px', top: f.y * k + 'px', width: f.w * k + 'px', height: f.size * 1.5 * k + 'px' });
-    Object.assign(s.style, { fontFamily: `"${fam(f.font)}", sans-serif`, fontWeight: f.bold ? 700 : 400, fontSize: sz * k + 'px', color: f.color, textAlign: f.align, direction: rtlOf(v) ? 'rtl' : 'ltr', lineHeight: f.size * 1.5 * k + 'px', whiteSpace: 'nowrap', overflow: 'hidden', padding: '0 ' + 2 * k + 'px' });
-    s.textContent = v;
+    const v = val(f), d = Math.min(3, window.devicePixelRatio || 1), r = render(f, v, k * d);
+    f.h = r.h;
+    Object.assign(el.style, { left: f.x * k + 'px', top: f.y * k + 'px', width: f.w * k + 'px', height: r.h * k + 'px' });
+    r.c.style.width = '100%'; r.c.style.height = '100%'; r.c.style.display = 'block';
+    const s = el.querySelector('.ct-c'); s.innerHTML = ''; s.appendChild(r.c);
   }
   function select(f) { sel = f; root.querySelectorAll('.pe-it').forEach(x => x.classList.toggle('on', x === (f && f.el))); }
   document.addEventListener('pointerdown', e => { if (sel && !e.target.closest('.pe-it') && !e.target.closest('.pe-sheet')) select(null); });
@@ -159,7 +188,7 @@
     }
     const used = fields.filter(x => x.t === 'col').map(x => x.col), ncol = Math.max(1, ...rows.map(r => r.length));
     const f = { id: ++seq, t: kind, col: kind === 'col' ? Math.min(ncol - 1, used.length ? Math.max(...used) + 1 : 0) : 0, text: kind === 'fix' ? '' : undefined,
-      x: bg.w * .25, y: bg.h * .6, w: bg.w * .5, size: Math.round(last.size * .7), font: last.font, color: last.color, bold: false, align: 'center' };
+      x: kind === 'fix' ? bg.w * .15 : bg.w * .25, y: bg.h * .6, w: kind === 'fix' ? bg.w * .7 : bg.w * .5, lh: 1.6, size: Math.round(last.size * .7), font: last.font, color: last.color, bold: false, align: 'center' };
     if (kind === 'fix') { edit(f, true); return; }
     fields.push(f); mount(f); select(f); edit(f);
   });
@@ -174,7 +203,9 @@
   function edit(f, isNew) {
     const ncol = Math.max(1, ...rows.map(r => r.length)), list = FONTS.concat(f.font.startsWith('my:') ? [[f.font, fam(f.font)]] : []);
     const { sh, close } = sheet(`<h3>${f.t === 'fix' ? B('نص ثابت', 'Fixed text') : B('حقل من القائمة', 'Field from the list')}</h3>
-      ${f.t === 'fix' ? `<textarea id="cfT" rows="2" dir="auto">${esc(f.text)}</textarea>` : `<label class="sn-lbl">${B('العمود', 'Column')}<select id="cfC">${Array.from({ length: ncol }, (_, i) => `<option value="${i}"${i === f.col ? ' selected' : ''}>${i + 1}${rows[0] && rows[0][i] ? ' — ' + esc(rows[0][i].slice(0, 30)) : ''}</option>`).join('')}</select></label>`}
+      ${f.t === 'fix' ? `<textarea id="cfT" rows="5" dir="auto" placeholder="${isAr() ? 'يشهد … بأن {1} قد حضر …' : 'This certifies that {1} attended …'}">${esc(f.text)}</textarea>
+        <p class="pt-fine ct-ins">${B('إدراج من القائمة:', 'Insert from the list:')} ${Array.from({ length: ncol }, (_, i) => `<button type="button" class="sn-lnk" data-ins="${i + 1}">{${i + 1}}${rows[0] && rows[0][i] ? ' ' + esc(rows[0][i].slice(0, 18)) : ''}</button>`).join(' ')}</p>
+        <label class="sn-lbl">${B('تباعد الأسطر', 'Line spacing')}<select id="cfL">${[1.2, 1.4, 1.6, 1.8, 2].map(v => `<option${v === (f.lh || 1.6) ? ' selected' : ''}>${v}</option>`).join('')}</select></label>` : `<label class="sn-lbl">${B('العمود', 'Column')}<select id="cfC">${Array.from({ length: ncol }, (_, i) => `<option value="${i}"${i === f.col ? ' selected' : ''}>${i + 1}${rows[0] && rows[0][i] ? ' — ' + esc(rows[0][i].slice(0, 30)) : ''}</option>`).join('')}</select></label>`}
       <div class="pe-row"><label>${B('الخط', 'Font')}<select id="cfF">${list.map(x => `<option value="${esc(x[0])}"${x[0] === f.font ? ' selected' : ''}>${esc(isAr() ? x[1] : fam(x[0]))}</option>`).join('')}<option value="+">${isAr() ? 'خط من جهازي…' : 'A font from my device…'}</option></select></label>
         <label>${B('الحجم', 'Size')}<input type="number" id="cfS" min="5" max="300" value="${Math.round(f.size)}"></label></div>
       <div class="pe-row"><div class="pe-sw">${COLORS.map(c => `<button type="button" data-c="${c}" style="--c:${c}" aria-checked="${c === f.color}"></button>`).join('')}<input type="color" id="cfK" value="${f.color}"></div>
@@ -182,6 +213,9 @@
       <p class="pt-fine">${B('خط ثمانية وغيره: حمّله من مصدره الرسمي، ثم اختر «خط من جهازي». يُستخدم داخل جهازك فقط.', 'Fonts such as Thmanyah: download from the official source, then choose “A font from my device”. It is used on your device only.')}</p>
       <div class="sn-two"><button type="button" class="btn solid" id="cfOk">${B('تم', 'Done')}</button>${isNew ? `<button type="button" class="btn ghost" id="cfNo">${B('إلغاء', 'Cancel')}</button>` : ''}</div>`);
     const live = () => { if (!isNew) place(f); };
+    sh.querySelectorAll('[data-ins]').forEach(b => b.onclick = () => { const t = sh.querySelector('#cfT'), a = t.selectionStart, z = t.selectionEnd, tok = '{' + b.dataset.ins + '}'; t.value = t.value.slice(0, a) + tok + t.value.slice(z); t.focus(); t.setSelectionRange(a + tok.length, a + tok.length); if (!isNew) { f.text = t.value; live(); } });
+    if (sh.querySelector('#cfL')) sh.querySelector('#cfL').onchange = e => { f.lh = +e.target.value; live(); };
+    if (sh.querySelector('#cfT') && !isNew) sh.querySelector('#cfT').oninput = e => { f.text = e.target.value; live(); };
     if (sh.querySelector('#cfC')) sh.querySelector('#cfC').onchange = e => { f.col = +e.target.value; live(); };
     sh.querySelector('#cfF').onchange = async e => {
       if (e.target.value === '+') { const ff = q('#ctFont'); ff.value = ''; ff.onchange = async () => {
@@ -198,23 +232,13 @@
     sh.querySelectorAll('[data-a]').forEach(b => b.onclick = () => { f.align = b.dataset.a; sh.querySelectorAll('[data-a]').forEach(x => x.setAttribute('aria-pressed', x === b)); live(); });
     if (sh.querySelector('#cfNo')) sh.querySelector('#cfNo').onclick = close;
     sh.querySelector('#cfOk').onclick = async () => {
-      if (f.t === 'fix') { f.text = sh.querySelector('#cfT').value.trim(); if (!f.text) { close(); if (!isNew) { fields = fields.filter(x => x !== f); f.el && f.el.remove(); } return; } }
+      if (f.t === 'fix') { f.text = sh.querySelector('#cfT').value.replace(/\s+$/, ''); if (!f.text) { close(); if (!isNew) { fields = fields.filter(x => x !== f); f.el && f.el.remove(); } return; } }
       await loadFont(f.font); close();
       if (isNew) { fields.push(f); mount(f); select(f); } else place(f);
     };
   }
 
   /* ---------- output ---------- */
-  function textPng(f, v) {
-    const S = 6, sz = fitSize(f, v), c = document.createElement('canvas'), x = c.getContext('2d');
-    c.width = Math.ceil(f.w * S); c.height = Math.ceil(f.size * 1.5 * S);
-    x.font = `${f.bold ? 700 : 400} ${sz * S}px "${fam(f.font)}", sans-serif`; x.fillStyle = f.color; x.textBaseline = 'middle';
-    x.direction = rtlOf(v) ? 'rtl' : 'ltr'; const y = c.height / 2, p = 2 * S;
-    if (f.align === 'center') { x.textAlign = 'center'; x.fillText(v, c.width / 2, y); }
-    else if (f.align === 'left') { x.textAlign = 'left'; x.direction = 'ltr'; x.fillText(v, p, y); }
-    else { x.textAlign = 'right'; x.fillText(v, c.width - p, y); }
-    return c.toDataURL('image/png');
-  }
   const toPng = src => new Promise(res => { const im = new Image(); im.onload = () => { const c = document.createElement('canvas'); c.width = im.naturalWidth; c.height = im.naturalHeight; c.getContext('2d').drawImage(im, 0, 0); res(c.toDataURL('image/png')); }; im.src = src; });
   async function page(out, src, imgs, row) {
     let p;
@@ -222,10 +246,10 @@
     else { p = out.addPage([bg.w, bg.h]); p.drawImage(src, { x: 0, y: 0, width: bg.w, height: bg.h }); }
     const mb = p.getMediaBox();
     for (const f of fields) {
-      const h = f.t === 'img' ? f.h : f.size * 1.5, y0 = mb.y + bg.h - f.y - h, x0 = mb.x + f.x;
-      if (f.t === 'img') { p.drawImage(imgs.get(f), { x: x0, y: y0, width: f.w, height: f.h }); continue; }
-      const v = f.t === 'fix' ? f.text : (row[f.col] || ''); if (!v) continue;
-      p.drawImage(await out.embedPng(textPng(f, v)), { x: x0, y: y0, width: f.w, height: h });
+      if (f.t === 'img') { p.drawImage(imgs.get(f), { x: mb.x + f.x, y: mb.y + bg.h - f.y - f.h, width: f.w, height: f.h }); continue; }
+      const v = valFor(f, row); if (!v.trim()) continue;
+      const r = render(f, v, 6);
+      p.drawImage(await out.embedPng(r.c.toDataURL('image/png')), { x: mb.x + f.x, y: mb.y + bg.h - f.y - r.h, width: f.w, height: r.h });
     }
   }
   async function prep(out) {
