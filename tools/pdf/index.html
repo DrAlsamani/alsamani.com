@@ -1608,6 +1608,9 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
 @media (max-width:600px){.pe-bar button{padding:8px 7px;font-size:.8125rem}.pe-bar .pe-save{padding:8px 10px}}
 .pe-adds{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}.pe-adds .pe-addf{margin:0}
 @media (pointer:coarse){.pe-rz{width:28px;height:28px;right:-14px;bottom:-14px}.pe-mini button{padding:8px 11px}}
+.pe-img{overflow:visible}.pe-img .pe-im{position:absolute;left:50%;top:50%;width:100%;height:100%;max-width:none;display:block;pointer-events:none}
+.pe-th.cur{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+.pe-adds{grid-template-columns:1fr 1fr}.pe-adds #peBlank{grid-column:1/-1}
 </style>
 <div id="pt" class="sn"><noscript><span class="ar">تعمل هذه الأداة مع تفعيل JavaScript.</span><span class="en">This tool needs JavaScript.</span></noscript></div>
 <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script><script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script><script>/* alsamani.com/tools/pdf — shared helpers; the editor itself (write, fill, merge, arrange, shrink) is in pdfedit.js. Everything runs on the device. */
@@ -1708,12 +1711,12 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
       <p class="pe-hint" id="peHint" hidden></p>
       <div class="pe-body${panel ? ' pe-open' : ''}" id="peBody">
         <aside class="pe-side"><div class="pe-thumbs" id="peThumbs"></div>
-          <div class="pe-adds"><button type="button" class="pe-addf" id="peAdd">${B('+ ملف PDF', '+ PDF file')}</button><button type="button" class="pe-addf" id="peAddI">${B('+ صورة', '+ Image')}</button></div>
+          <div class="pe-adds"><button type="button" class="pe-addf" id="peAdd">${B('+ ملف PDF', '+ PDF file')}</button><button type="button" class="pe-addf" id="peAddI">${B('+ صور', '+ Photos')}</button><button type="button" class="pe-addf" id="peBlank">${B('+ صفحة فارغة', '+ Blank page')}</button></div>
           <button type="button" class="sn-lnk pe-undo" id="peUndo" hidden>${B('تراجع عن الحذف', 'Undo delete')}</button></aside>
         <div class="pe-pages" id="pePages"><div class="pe-empty" id="peEmpty"><div class="sn-two"><button type="button" class="btn solid" id="pePick">${B('اختيار ملف PDF', 'Choose a PDF')}</button><button type="button" class="btn ghost" id="pePickI">${B('صور الأوراق', 'Photos of pages')}</button></div><p class="pt-fine">${B('يمكن فتح أكثر من ملف ودمجها، ثم الكتابة عليها.', 'You can open several files to merge them, then write on them.')}</p></div></div>
       </div>
     </div>
-    <input type="file" id="peIn" accept="application/pdf,.pdf" multiple hidden><input type="file" id="peInI" accept="image/*" multiple hidden><input type="file" id="peImg" accept="image/*" hidden><input type="file" id="peFont" accept=".ttf,.otf,.woff,.woff2" hidden>`;
+    <input type="file" id="peIn" accept="application/pdf,.pdf" multiple hidden><input type="file" id="peInI" accept="image/*" multiple hidden><input type="file" id="peImg" accept="image/*" multiple hidden><input type="file" id="peFont" accept=".ttf,.otf,.woff,.woff2" hidden>`;
     const q = s => root.querySelector(s), host = q('#pePages'), thumbs = q('#peThumbs'), body = q('#peBody');
     const inp = q('#peIn');
     const inpI = q('#peInI');
@@ -1736,11 +1739,10 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
               pages.push({ id: ++seq, s, i, pg, w0: v.width, h0: v.height, ox: vb[0], oy: vb[1], r0: pg.rotate || 0, rot: 0 });
             }
           } else {
-            s.url = URL.createObjectURL(f);
-            s.im = await new Promise((ok, no) => { const im = new Image(); im.onload = () => ok(im); im.onerror = no; im.src = s.url; });
-            const base = pages.find(p => p.s.pdf), a = base ? Math.min(base.w0, base.h0) : A4[0], b = base ? Math.max(base.w0, base.h0) : A4[1];
-            const land = s.im.naturalWidth > s.im.naturalHeight;
-            pages.push({ id: ++seq, s, i: 0, w0: land ? b : a, h0: land ? a : b, ox: 0, oy: 0, r0: 0, rot: 0, fit: 'fit' });
+            const im = await loadImg(f), land = im.w > im.h, p = blank(land);
+            const m = 18, k = Math.min((p.w0 - 2 * m) / im.w, (p.h0 - 2 * m) / im.h), w = im.w * k, h = im.h * k;
+            items.push({ id: ++seq, pid: p.id, t: 'img', x: (p.w0 - w) / 2, y: (p.h0 - h) / 2, w, h, ang: 0, src: im.url, file: f });
+            continue;
           }
           srcs.push(s);
         } catch (e) { toast(/\.hei[cf]$/i.test(f.name) ? B('هذه صورة بصيغة HEIC لا يقرؤها هذا المتصفح. افتح الأداة من Safari، أو حوّل الصورة إلى JPG.', 'This HEIC photo cannot be read by this browser. Use Safari, or convert the photo to JPG.') : B('تعذّر فتح ملف: ', 'Could not open: ') + esc(f.name), 1); }
@@ -1748,16 +1750,21 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
       if (!fname && srcs[0]) fname = baseName(srcs[0].f.name);
       layout();
     }
+    // a blank page the size of the first PDF page (A4 otherwise)
+    function blank(land, at) {
+      const base = pages.find(p => p.s.pdf), a = base ? Math.min(base.w0, base.h0) : A4[0], b = base ? Math.max(base.w0, base.h0) : A4[1];
+      const p = { id: ++seq, s: { blank: true }, i: 0, w0: land ? b : a, h0: land ? a : b, ox: 0, oy: 0, r0: 0, rot: 0 };
+      if (at == null) pages.push(p); else pages.splice(at, 0, p);
+      return p;
+    }
+    const loadImg = f => new Promise((ok, no) => { const url = URL.createObjectURL(f), im = new Image(); im.onload = () => ok({ url, w: im.naturalWidth, h: im.naturalHeight }); im.onerror = no; im.src = url; });
+    q('#peBlank').onclick = () => { const cur = pages.findIndex(p => p.id === curPid); const p = blank(false, cur >= 0 ? cur + 1 : undefined); layout(); setTimeout(() => { const v = views.get(p.id); if (v) v.wrap.scrollIntoView({ behavior: 'smooth', block: 'start' }); markThumb(p.id); }, 100); };
     // draws one page as shown (rotation included) into a canvas of the given width
     async function paint(p, W) {
       const [dw, dh] = dispWH(p), k = W / dw, c = document.createElement('canvas');
       c.width = Math.round(dw * k); c.height = Math.round(dh * k);
       const x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height);
-      if (p.s.pdf) { await p.pg.render({ canvasContext: x, viewport: p.pg.getViewport({ scale: k, rotation: rotOf(p) }) }).promise; return c; }
-      x.save(); x.translate(c.width / 2, c.height / 2); x.rotate(rotOf(p) * Math.PI / 180);
-      const W0 = p.w0 * k, H0 = p.h0 * k, iw = p.s.im.naturalWidth, ih = p.s.im.naturalHeight, m = p.fit === 'fill' ? 0 : 18 * k;
-      const s = p.fit === 'fill' ? Math.max(W0 / iw, H0 / ih) : Math.min((W0 - 2 * m) / iw, (H0 - 2 * m) / ih);
-      x.beginPath(); x.rect(-W0 / 2, -H0 / 2, W0, H0); x.clip(); x.drawImage(p.s.im, -iw * s / 2, -ih * s / 2, iw * s, ih * s); x.restore();
+      if (p.s.pdf) await p.pg.render({ canvasContext: x, viewport: p.pg.getViewport({ scale: k, rotation: rotOf(p) }) }).promise;
       return c;
     }
     const views = new Map();
@@ -1770,11 +1777,11 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
       [...views.keys()].forEach(id => { if (!pages.some(p => p.id === id)) { views.get(id).wrap.remove(); views.delete(id); } });
       pages.forEach((p, n) => {
         let v = views.get(p.id); const [dw, dh] = dispWH(p), k = W / dw;
-        if (!v || v.W !== W || v.R !== rotOf(p) || v.fit !== p.fit) {
+        if (!v || v.W !== W || v.R !== rotOf(p)) {
           if (v) v.wrap.remove();
           const wrap = document.createElement('div'); wrap.className = 'pe-pg';
-          v = { p, wrap, k, W, R: rotOf(p), fit: p.fit, drawn: false }; views.set(p.id, v);
-          wrap.addEventListener('pointerdown', e => onPage(e, v));
+          v = { p, wrap, k, W, R: rotOf(p), drawn: false }; views.set(p.id, v);
+          wrap.addEventListener('pointerdown', e => { markThumb(p.id); onPage(e, v); });
         }
         Object.assign(v.wrap.style, { width: W + 'px', height: Math.round(dh * k) + 'px' }); v.k = k;
         host.appendChild(v.wrap); io.observe(v.wrap);
@@ -1790,18 +1797,37 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
     /* ---------- side panel ---------- */
     let sortable = null;
     function drawThumbs() {
-      thumbs.innerHTML = pages.map((p, n) => `<div class="pe-th" data-id="${p.id}"><div class="pe-thi"></div><div class="pe-tha"><span>${n + 1}</span>${p.s.pdf ? '' : `<button type="button" data-fit title="${isAr() ? 'ملاءمة الصورة أو ملء الصفحة' : 'Fit the image or fill the page'}">${p.fit === 'fill' ? '⤢' : '⤡'}</button>`}<button type="button" data-rot title="${isAr() ? 'تدوير' : 'Rotate'}">↻</button><button type="button" data-del title="${isAr() ? 'حذف' : 'Delete'}">×</button></div></div>`).join('');
+      thumbs.innerHTML = pages.map((p, n) => `<div class="pe-th" data-id="${p.id}"><div class="pe-thi"></div><div class="pe-tha"><span>${n + 1}</span><button type="button" data-rot title="${isAr() ? 'تدوير' : 'Rotate'}">↻</button><button type="button" data-del title="${isAr() ? 'حذف' : 'Delete'}">×</button></div></div>`).join('');
       thumbs.querySelectorAll('.pe-th').forEach(el => {
         const p = pages.find(x => x.id === +el.dataset.id);
-        (p.th ? Promise.resolve(p.th) : paint(p, 150).then(c => (p.th = c.toDataURL('image/jpeg', .75)))).then(u => { el.querySelector('.pe-thi').innerHTML = `<img src="${u}" alt="">`; });
-        el.querySelector('.pe-thi').onclick = () => { const v = views.get(p.id); if (v) v.wrap.scrollIntoView({ behavior: 'smooth', block: 'start' }); if (window.innerWidth < 900) setPanel(false); };
+        (p.th ? Promise.resolve(p.th) : thumbOf(p).then(u => (p.th = u))).then(u => { el.querySelector('.pe-thi').innerHTML = `<img src="${u}" alt="">`; });
+        if (p.id === curPid) el.classList.add('cur');
+        el.querySelector('.pe-thi').onclick = () => { markThumb(p.id); const v = views.get(p.id); if (v) v.wrap.scrollIntoView({ behavior: 'smooth', block: 'start' }); if (window.innerWidth < 900) setPanel(false); };
         el.querySelector('[data-rot]').onclick = () => rotate(p);
         el.querySelector('[data-del]').onclick = () => { const at = pages.indexOf(p); pages.splice(at, 1); trash.push({ at, p, its: items.filter(i => i.pid === p.id) }); items = items.filter(i => i.pid !== p.id); layout(); };
-        if (el.querySelector('[data-fit]')) el.querySelector('[data-fit]').onclick = () => { p.fit = p.fit === 'fill' ? 'fit' : 'fill'; p.th = null; layout(); };
       });
       if (window.Sortable && !sortable) sortable = Sortable.create(thumbs, { animation: 160, delay: 160, delayOnTouchOnly: true, filter: 'button', preventOnFilter: false, ghostClass: 'pt-ghost',
         onEnd: () => { const ord = [...thumbs.children].map(x => +x.dataset.id); pages.sort((a, b) => ord.indexOf(a.id) - ord.indexOf(b.id)); layout(); } });
     }
+    let curPid = null;
+    function markThumb(id) {
+      curPid = id; let hit = null;
+      thumbs.querySelectorAll('.pe-th').forEach(t => { const on = +t.dataset.id === id; t.classList.toggle('cur', on); if (on) hit = t; });
+      if (hit && panel) { const box = thumbs.closest('.pe-side'), sc = window.innerWidth >= 900 ? box : thumbs, r = hit.getBoundingClientRect(), b = sc.getBoundingClientRect();
+        if (window.innerWidth >= 900) { if (r.top < b.top || r.bottom > b.bottom) sc.scrollTop += r.top - b.top - (b.height - r.height) / 2; }
+        else if (r.left < b.left || r.right > b.right) sc.scrollLeft += r.left - b.left - (b.width - r.width) / 2; }
+    }
+    // a thumbnail with the photos placed on the page drawn in
+    async function thumbOf(p) {
+      const c = await paint(p, 150), x = c.getContext('2d'), k = c.width / dispWH(p)[0];
+      for (const it of items.filter(i => i.pid === p.id && i.t === 'img')) {
+        const im = await new Promise(r => { const m = new Image(); m.onload = () => r(m); m.onerror = () => r(null); m.src = it.src; }); if (!im) continue;
+        const [iw, ih] = (it.ang || 0) % 180 ? [it.h, it.w] : [it.w, it.h];
+        x.save(); x.translate((it.x + it.w / 2) * k, (it.y + it.h / 2) * k); x.rotate((it.ang || 0) * Math.PI / 180); x.drawImage(im, -iw * k / 2, -ih * k / 2, iw * k, ih * k); x.restore();
+      }
+      return c.toDataURL('image/jpeg', .75);
+    }
+    const refreshThumb = pid => { const p = pages.find(x => x.id === pid); if (!p) return; p.th = null; const el = thumbs.querySelector(`.pe-th[data-id="${pid}"] .pe-thi`); if (el) thumbOf(p).then(u => { p.th = u; el.innerHTML = `<img src="${u}" alt="">`; }); };
     q('#peUndo').onclick = () => { const t = trash.pop(); if (!t) return; pages.splice(Math.min(t.at, pages.length), 0, t.p); items = items.concat(t.its); layout(); };
     function rotate(p) {
       const [, dh] = dispWH(p);
@@ -1831,7 +1857,15 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
       const t = tool; setTool(null);
       if (t === 'text') { const last = items.filter(i => i.t === 'text').pop(); const it = { id: ++seq, pid, t: 'text', x: x - 4, y: y - 10, text: '', font: last ? last.font : FONTS[0][0], size: last ? last.size : 12, color: last ? last.color : '#111111', bold: last ? last.bold : false, align: 'right' }; loadFont(it.font).then(() => editText(it, true)); return; }
       if (t === 'cover') { const it = { id: ++seq, pid, t: 'cover', x: x - 50, y: y - 9, w: 100, h: 18, auto: true, color: '#ffffff' }; it.color = bgOf(it); add(it); return; }
-      if (t === 'img') { const fi = q('#peImg'); fi.value = ''; fi.onchange = () => { const f = fi.files[0]; if (!f) return; const rd = new FileReader(); rd.onload = () => { const im = new Image(); im.onload = () => { const w = Math.min(140, dispWH(v.p)[0] * .35), h = w * im.height / im.width; add({ id: ++seq, pid, t: 'img', x: x - w / 2, y: y - h / 2, w, h, src: rd.result }); }; im.src = rd.result; }; rd.readAsDataURL(f); }; fi.click(); }
+      if (t === 'img') { const fi = q('#peImg'); fi.value = ''; fi.onchange = async () => {
+        const fs = [...fi.files]; if (!fs.length) return;
+        const ims = []; for (const f of fs) { try { ims.push(Object.assign(await loadImg(f), { f })); } catch (e) { toast(B('تعذّر فتح صورة: ', 'Could not open an image: ') + esc(f.name), 1); } }
+        if (ims.length === 1) { const im = ims[0], w = Math.min(160, dispWH(v.p)[0] * .35), h = w * im.h / im.w; add({ id: ++seq, pid, t: 'img', x: x - w / 2, y: y - h / 2, w, h, ang: 0, src: im.url, file: im.f }); refreshThumb(pid); return; }
+        const [W, H] = dispWH(v.p), m = 24, g = 10, n = ims.length, cols = Math.ceil(Math.sqrt(n * W / H)), rows = Math.ceil(n / cols), cw = (W - 2 * m - (cols - 1) * g) / cols, ch = (H - 2 * m - (rows - 1) * g) / rows;
+        ims.forEach((im, i) => { const k = Math.min(cw / im.w, ch / im.h), w = im.w * k, h = im.h * k, cx = m + (i % cols) * (cw + g) + cw / 2, cy = m + Math.floor(i / cols) * (ch + g) + ch / 2;
+          add({ id: ++seq, pid, t: 'img', x: cx - w / 2, y: cy - h / 2, w, h, ang: 0, src: im.url, file: im.f }); });
+        refreshThumb(pid);
+      }; fi.click(); }
     }
     function add(it) { items.push(it); mount(it); select(it); if (it.t === 'mark') lastMark = it; }
 
@@ -1841,14 +1875,15 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
       const v = views.get(it.pid); if (!v) return;
       if (it.el) it.el.remove();
       const el = document.createElement('div'); el.className = 'pe-it pe-' + it.t; it.el = el;
-      el.innerHTML = (it.t === 'text' ? '<span class="pe-tx"></span>' : it.t === 'img' ? `<img src="${it.src}" alt="">` : it.t === 'mark' ? markSvg(it.mk) : '') +
-        `<i class="pe-rz" aria-hidden="true"></i><span class="pe-mini">${it.t === 'mark' ? COLORS.map(c => `<button type="button" data-col="${c}" style="--c:${c}" aria-label="colour"></button>`).join('') : ''}${it.t === 'text' || it.t === 'cover' ? `<button type="button" data-a="edit">${B('تعديل', 'Edit')}</button>` : ''}<button type="button" data-a="dup">${B('تكرار', 'Duplicate')}</button><button type="button" data-a="del">${B('حذف', 'Delete')}</button></span>`;
+      el.innerHTML = (it.t === 'text' ? '<span class="pe-tx"></span>' : it.t === 'img' ? `<img class="pe-im" src="${it.src}" alt="">` : it.t === 'mark' ? markSvg(it.mk) : '') +
+        `<i class="pe-rz" aria-hidden="true"></i><span class="pe-mini">${it.t === 'mark' ? COLORS.map(c => `<button type="button" data-col="${c}" style="--c:${c}" aria-label="colour"></button>`).join('') : ''}${it.t === 'img' ? `<button type="button" data-a="rl" title="${isAr() ? 'تدوير لليسار' : 'Rotate left'}">↺</button><button type="button" data-a="rr" title="${isAr() ? 'تدوير لليمين' : 'Rotate right'}">↻</button>` : ''}${it.t === 'text' || it.t === 'cover' ? `<button type="button" data-a="edit">${B('تعديل', 'Edit')}</button>` : ''}<button type="button" data-a="dup">${B('تكرار', 'Duplicate')}</button><button type="button" data-a="del">${B('حذف', 'Delete')}</button></span>`;
       v.wrap.appendChild(el); place(it); drag(it);
       el.querySelectorAll('.pe-mini button').forEach(b => b.addEventListener('pointerdown', ev => ev.stopPropagation()));
       el.querySelector('[data-a=del]').onclick = ev => { ev.stopPropagation(); remove(it); };
       el.querySelector('[data-a=dup]').onclick = ev => { ev.stopPropagation(); dup(it, 0, it.h + 4); };
       if (el.querySelector('[data-a=edit]')) el.querySelector('[data-a=edit]').onclick = ev => { ev.stopPropagation(); it.t === 'text' ? editText(it) : editCover(it); };
       el.querySelectorAll('[data-col]').forEach(b => b.onclick = ev => { ev.stopPropagation(); it.color = b.dataset.col; place(it); lastMark = it; });
+      el.querySelectorAll('[data-a=rl],[data-a=rr]').forEach(b => b.onclick = ev => { ev.stopPropagation(); turn(it, b.dataset.a === 'rr' ? 90 : -90); });
     }
     function place(it) {
       const v = views.get(it.pid), el = it.el; if (!v || !el) return; const k = v.k;
@@ -1862,10 +1897,17 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
         Object.assign(el.style, { left: it.x * k + 'px', top: it.y * k + 'px', width: it.w * k + 'px', height: it.h * k + 'px' });
         if (it.t === 'cover') el.style.background = it.color;
         if (it.t === 'mark') el.style.color = it.color;
+        if (it.t === 'img') { const a = it.ang || 0, [iw, ih] = a % 180 ? [it.h, it.w] : [it.w, it.h]; Object.assign(el.querySelector('.pe-im').style, { width: iw * k + 'px', height: ih * k + 'px', transform: `translate(-50%,-50%) rotate(${a}deg)` }); }
       }
     }
+    // a quarter turn about the centre: the box swaps width and height
+    function turn(it, d) { const cx = it.x + it.w / 2, cy = it.y + it.h / 2; it.ang = (((it.ang || 0) + d) % 360 + 360) % 360; [it.w, it.h] = [it.h, it.w];
+      // still inside the page after turning: shrink if needed, then keep it on the page
+      const v = views.get(it.pid); if (v) { const [W, H] = dispWH(v.p), k = Math.min(1, (W - 8) / it.w, (H - 8) / it.h); it.w *= k; it.h *= k; it.x = Math.min(Math.max(4, cx - it.w / 2), W - 4 - it.w); it.y = Math.min(Math.max(4, cy - it.h / 2), H - 4 - it.h); }
+      else { it.x = cx - it.w / 2; it.y = cy - it.h / 2; }
+      place(it); refreshThumb(it.pid); }
     function select(it) { sel = it; root.querySelectorAll('.pe-it').forEach(x => x.classList.toggle('on', x === (it && it.el))); }
-    function remove(it) { items = items.filter(x => x !== it); it.el && it.el.remove(); if (sel === it) sel = null; }
+    function remove(it) { items = items.filter(x => x !== it); it.el && it.el.remove(); if (sel === it) sel = null; if (it.t === 'img') refreshThumb(it.pid); }
     // a copy keeps every setting; for text it opens straight away so the content (a date, say) can be changed
     function dup(it, dx, dy) {
       const c = Object.assign({}, it, { id: ++seq, el: null, x: it.x + dx, y: it.y + dy });
@@ -1890,14 +1932,14 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
       const el = it.el;
       el.addEventListener('pointerdown', e => {
         if (e.target.closest('.pe-mini')) return;
-        e.preventDefault(); e.stopPropagation(); select(it);
+        e.preventDefault(); e.stopPropagation(); select(it); markThumb(it.pid);
         const v = views.get(it.pid), rz = e.target.classList.contains('pe-rz'), sx = e.clientX, sy = e.clientY, o = { x: it.x, y: it.y, w: it.w, h: it.h, size: it.size };
         let moved = false; el.setPointerCapture(e.pointerId);
         const mv = ev => {
           const dx = (ev.clientX - sx) / v.k, dy = (ev.clientY - sy) / v.k; if (Math.abs(dx) + Math.abs(dy) > 1) moved = true;
           if (!rz) { it.x = o.x + dx; it.y = o.y + dy; }
           else if (it.t === 'text') it.size = Math.max(5, Math.min(200, o.size * (o.w + dx) / o.w));
-          else if (it.t === 'img' || it.t === 'mark') { const nw = Math.max(5, o.w + dx); it.w = nw; it.h = nw * o.h / o.w; }
+          else if (it.t === 'img' || it.t === 'mark') { const s = Math.max(.05, ((o.w / 2 + dx) * (o.w / 2) + (o.h / 2 + dy) * (o.h / 2)) / ((o.w / 2) ** 2 + (o.h / 2) ** 2)); it.w = Math.max(5, o.w * s); it.h = it.w * o.h / o.w; it.x = o.x + (o.w - it.w) / 2; it.y = o.y + (o.h - it.h) / 2; }
           else { it.w = Math.max(6, o.w + dx); it.h = Math.max(4, o.h + dy); }
           place(it);
         };
@@ -1906,6 +1948,7 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
           if (!moved && !rz && it.t === 'text') editText(it);
           else if (it.t === 'cover' && it.auto && moved) { it.color = bgOf(it); place(it); }
           if (it.t === 'mark') lastMark = it;
+          if (it.t === 'img' && moved) refreshThumb(it.pid);
         };
         el.addEventListener('pointermove', mv); el.addEventListener('pointerup', up); el.addEventListener('pointercancel', up);
       });
@@ -1992,7 +2035,7 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
     }
     const markPng = it => new Promise(res => { const im = new Image(), S = 240; im.onload = () => { const c = document.createElement('canvas'); c.width = c.height = S; c.getContext('2d').drawImage(im, 0, 0, S, S); res(c.toDataURL('image/png')); };
       im.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(markSvg(it.mk).replace('<svg ', `<svg xmlns="http://www.w3.org/2000/svg" width="${S}" height="${S}" color="${it.color}" `)); });
-    const toPng = src => new Promise(res => { const im = new Image(); im.onload = () => { const c = document.createElement('canvas'); c.width = im.naturalWidth; c.height = im.naturalHeight; c.getContext('2d').drawImage(im, 0, 0); res(c.toDataURL('image/png')); }; im.src = src; });
+    const toPng = (src, max) => new Promise(res => { const im = new Image(); im.onload = () => { const k = Math.min(1, (max || 1e5) / Math.max(im.naturalWidth, im.naturalHeight)), c = document.createElement('canvas'); c.width = Math.round(im.naturalWidth * k); c.height = Math.round(im.naturalHeight * k); c.getContext('2d').drawImage(im, 0, 0, c.width, c.height); res(c.toDataURL('image/png')); }; im.src = src; });
     // saving: the file is built first, then a small sheet offers the name and the size (as is, or smaller)
     async function build() {
       // nothing changed in a single file: hand back the original, untouched
@@ -2003,18 +2046,20 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
           if (p.s.pdf) {
             if (!libs.has(p.s)) libs.set(p.s, await PDFLib.PDFDocument.load(p.s.buf, { ignoreEncryption: true }));
             [pg] = await out.copyPages(libs.get(p.s), [p.i]); out.addPage(pg);
-          } else {
-            if (!p.s.jpg) p.s.jpg = await imgToJpeg(p.s.f, 2200);
-            const j = p.s.jpg, im = await out.embedJpg(j.buf), W = p.w0, H = p.h0, m = p.fit === 'fill' ? 0 : 18;
-            const k = p.fit === 'fill' ? Math.max(W / j.w, H / j.h) : Math.min((W - 2 * m) / j.w, (H - 2 * m) / j.h);
-            pg = out.addPage([W, H]); pg.drawImage(im, { x: (W - j.w * k) / 2, y: (H - j.h * k) / 2, width: j.w * k, height: j.h * k });
-          }
+          } else pg = out.addPage([p.w0, p.h0]);
           const R = rotOf(p); pg.setRotation(PDFLib.degrees(R));
           const its = items.filter(i => i.pid === p.id);
           for (const it of its.filter(i => i.t === 'cover').concat(its.filter(i => i.t !== 'cover'))) {
+            if (it.t === 'img') {
+              // photos as JPEG (smaller), images with transparency (stamps, signatures) as PNG; turned about their centre
+              const a = it.ang || 0, [iw, ih] = a % 180 ? [it.h, it.w] : [it.w, it.h], cx = it.x + it.w / 2, cy = it.y + it.h / 2, t = a * Math.PI / 180;
+              const dx = -iw / 2, dy = ih / 2, [ax, ay] = toPdf(p, cx + dx * Math.cos(t) - dy * Math.sin(t), cy + dx * Math.sin(t) + dy * Math.cos(t));
+              const png = it.file && /png|gif|webp/i.test(it.file.type), img = png || !it.file ? await out.embedPng(await toPng(it.src, 2400)) : await out.embedJpg((it.jpg || (it.jpg = await imgToJpeg(it.file, 2400))).buf);
+              pg.drawImage(img, { x: ax, y: ay, width: iw, height: ih, rotate: PDFLib.degrees(R - a) }); continue;
+            }
             const [ax, ay] = toPdf(p, it.x, it.y + it.h), o = { x: ax, y: ay, width: it.w, height: it.h, rotate: PDFLib.degrees(R) };
             if (it.t === 'cover') { const h = it.color.replace('#', ''), n = i => parseInt(h.substr(i, 2), 16) / 255; pg.drawRectangle(Object.assign(o, { color: PDFLib.rgb(n(0), n(2), n(4)) })); continue; }
-            const png = it.t === 'text' ? textPng(it) : it.t === 'mark' ? await markPng(it) : await toPng(it.src);
+            const png = it.t === 'text' ? textPng(it) : await markPng(it);
             pg.drawImage(await out.embedPng(png), o);
           }
         }
