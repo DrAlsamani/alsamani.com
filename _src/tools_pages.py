@@ -82,7 +82,7 @@ def _tag(t):
     if t is METHODS: return bi('دليل مرجعي', 'Reference guide')
     if t is SIGN: return bi('للمقرر والأعضاء', 'For coordinators and members')
     if t is PASS: return bi('برابط واحد', 'One link')
-    if t is MEET: return bi('يُبرز الموعد الأنسب', 'Shows the best time')
+    if t is MEET: return bi('للتصويت على موعد', 'Vote on a time')
     if t is ATTEND: return bi('برمز QR أو رابط', 'With a QR code or a link')
     if t is PDFT: return bi('داخل جهازك', 'On your device')
     if t is QRT: return bi('لا تنتهي صلاحيته', 'Does not expire')
