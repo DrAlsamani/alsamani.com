@@ -1476,6 +1476,12 @@ html.sn-lockscroll{overflow:hidden}
 .sn-sc{margin:0 0 6px!important;color:var(--ink)!important;font-weight:500}
 .sn-fab{position:fixed;bottom:calc(16px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);z-index:70;box-shadow:0 8px 24px rgba(0,0,0,.2);padding:13px 28px!important}
 html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
+
+.sn-ink{display:flex;align-items:center;gap:8px;margin:2px 0 12px;font-size:.875rem;color:var(--muted)}
+.sn-ink span{margin-inline-end:4px}
+.sn-ink button{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:99px;padding:5px 12px 5px 10px;font:inherit;font-size:.8125rem;cursor:pointer}
+.sn-ink button i{width:14px;height:14px;border-radius:50%;background:var(--c)}
+.sn-ink button[aria-checked=true]{border-color:var(--c);box-shadow:0 0 0 2px color-mix(in srgb,var(--c) 25%,transparent)}
 </style>
 <div id="sn" class="sn" data-api="https://script.google.com/macros/s/AKfycbx8-M5oOYDU-TaWyLaySlqZHvBffRiDI6QH85_hBh5y_9uYrvUdxwD3hKNzGoJ4K7UOXQ/exec"><noscript><span class="ar">تعمل هذه الأداة مع تفعيل JavaScript.</span><span class="en">This tool needs JavaScript.</span></noscript></div>
 <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
@@ -1866,25 +1872,31 @@ async function snDetectPage(page,pi,OPS){
       let saved = store.get('sigs', null); if (!saved) { const one = store.get('sig', null); saved = one ? [one] : []; store.set('sigs', saved); }
       const sh = sheet(`<h3>${title}</h3>
         ${saved.length ? `<p class="sn-st">${B('تواقيعي المحفوظة · اضغط لاستخدامه', 'My saved signatures · tap one to use it')}</p><div class="sn-sigs">${saved.map((x, k) => `<div class="sn-sg"><button type="button" class="sn-sgb" data-use="${k}"><img src="${x}" alt=""></button><button type="button" class="sn-sgx" data-rm="${k}" aria-label="remove">×</button></div>`).join('')}</div><p class="sn-or">${B('أو توقيع جديد', 'or a new signature')}</p>` : ''}
+        <div class="sn-ink" role="radiogroup" aria-label="ink"><span>${B('لون الحبر', 'Ink')}</span>${Object.keys(INKS).map(k => `<button type="button" role="radio" data-ink="${k}" aria-checked="${store.get('ink', 'blue') === k}" style="--c:${INKS[k]}"><i></i>${k === 'blue' ? B('أزرق', 'Blue') : B('أسود', 'Black')}</button>`).join('')}</div>
         <div class="sn-tabs" role="tablist"><button type="button" role="tab" aria-selected="true" data-t="draw">${B('ارسم', 'Draw')}</button><button type="button" role="tab" aria-selected="false" data-t="img">${B('صورة التوقيع', 'Photo of signature')}</button></div>
         <div class="sn-pad" data-p="draw"><canvas></canvas><button type="button" class="sn-lnk" data-act="clear">${B('مسح', 'Clear')}</button><p class="sn-hint">${B('وقّع بإصبعك داخل المربع', 'Sign with your finger inside the box')}</p></div>
         <div class="sn-img" data-p="img" hidden><input type="file" accept="image/*" hidden><button type="button" class="btn ghost" data-act="pick">${B('اختيار صورة', 'Choose a photo')}</button><p class="sn-hint">${B('صوّر توقيعك على ورقة بيضاء؛ تُزال الخلفية تلقائيًا.', 'Photograph your signature on white paper; the background is removed automatically.')}</p><canvas hidden></canvas></div>
         <label class="sn-keep"><input type="checkbox" checked> ${B('احفظ توقيعي في هذا الجهاز للمرات القادمة', 'Keep my signature on this device for next time')}</label>
         <div class="sn-sb"><button type="button" class="btn solid" data-act="ok">${B('اعتماد التوقيع', 'Confirm signature')}</button><button type="button" class="btn ghost" data-act="x">${B('إلغاء', 'Cancel')}</button></div>`);
       const pad = makePad(sh.querySelector('.sn-pad canvas'));
+      sh.querySelectorAll('[data-ink]').forEach(bt => bt.onclick = async () => {
+        store.set('ink', bt.dataset.ink); sh.querySelectorAll('[data-ink]').forEach(x => x.setAttribute('aria-checked', x === bt)); pad.color();
+        if (img) { img = await recolor(img); const im = new Image(); im.onload = () => { ic.getContext('2d').clearRect(0, 0, ic.width, ic.height); ic.getContext('2d').drawImage(im, 0, 0); }; im.src = img; }
+      });
       let img = null, tab = 'draw';
       sh.querySelectorAll('[role=tab]').forEach(t => t.onclick = () => { tab = t.dataset.t; sh.querySelectorAll('[role=tab]').forEach(x => x.setAttribute('aria-selected', x === t)); sh.querySelector('[data-p=draw]').hidden = tab !== 'draw'; sh.querySelector('[data-p=img]').hidden = tab !== 'img'; if (tab === 'draw') pad.fit(); });
       const fi = sh.querySelector('.sn-img input'), ic = sh.querySelector('.sn-img canvas');
       sh.querySelector('[data-act=pick]').onclick = () => fi.click();
-      fi.onchange = async () => { if (!fi.files[0]) return; img = await cleanPhoto(fi.files[0]); if (img) { const im = new Image(); im.onload = () => { ic.width = im.width; ic.height = im.height; ic.getContext('2d').drawImage(im, 0, 0); ic.hidden = false; }; im.src = img; } };
+      fi.onchange = async () => { if (!fi.files[0]) return; img = await cleanPhoto(fi.files[0]); if (img) img = await recolor(img); if (img) { const im = new Image(); im.onload = () => { ic.width = im.width; ic.height = im.height; ic.getContext('2d').drawImage(im, 0, 0); ic.hidden = false; }; im.src = img; } };
       sh.querySelector('[data-act=clear]').onclick = () => pad.clear();
-      const go = async png => {
+      const go = async (png, fromSaved) => {
         if (!png) { toast(B('لم يُرسم توقيع بعد.', 'No signature yet.'), 1); return; }
-        if (sh.querySelector('.sn-keep input').checked && !saved.includes(png)) { saved = [png].concat(saved).slice(0, 4); store.set('sigs', saved); }
+        png = await recolor(png);
+        if (!fromSaved && sh.querySelector('.sn-keep input').checked && !saved.includes(png)) { saved = [png].concat(saved).slice(0, 4); store.set('sigs', saved); }
         sh.classList.add('busy');
         try { await onPng(png); } catch (e) { sh.classList.remove('busy'); }
       };
-      sh.querySelectorAll('[data-use]').forEach(x => x.onclick = () => go(x.querySelector('img').getAttribute('src')));
+      sh.querySelectorAll('[data-use]').forEach(x => x.onclick = () => go(x.querySelector('img').getAttribute('src'), true));
       sh.querySelectorAll('[data-rm]').forEach(x => x.onclick = () => { const src = x.parentNode.querySelector('img').getAttribute('src'); saved = saved.filter(z => z !== src); store.set('sigs', saved); x.parentNode.remove(); if (!saved.length) sh.querySelectorAll('.sn-st,.sn-sigs,.sn-or').forEach(e => e.remove()); });
       sh.querySelector('[data-act=ok]').onclick = () => go(tab === 'draw' ? pad.png() : img);
       sh.querySelector('[data-act=x]').onclick = close;
@@ -1999,10 +2011,19 @@ async function snDetectPage(page,pi,OPS){
   }
   function close() { document.querySelectorAll('.sn-bg,.sn-sheet').forEach(x => x.remove()); document.documentElement.classList.remove('sn-lockscroll'); }
 
+  /* ---------- ink colour (blue or black), remembered per device ---------- */
+  const INKS = { blue: '#1d3a8f', black: '#111111' };
+  const ink = () => INKS[store.get('ink', 'blue')] || INKS.blue;
+  function recolor(png) {
+    return new Promise(res => { const im = new Image(); im.onload = () => {
+      const c = document.createElement('canvas'); c.width = im.width; c.height = im.height; const x = c.getContext('2d');
+      x.drawImage(im, 0, 0); x.globalCompositeOperation = 'source-in'; x.fillStyle = ink(); x.fillRect(0, 0, c.width, c.height);
+      res(c.toDataURL('image/png')); }; im.onerror = () => res(png); im.src = png; });
+  }
   /* ---------- signature pad ---------- */
   function makePad(cv) {
     const ctx = cv.getContext('2d'); let pts = [], drawn = false, down = false;
-    function fit() { const r = cv.getBoundingClientRect(), d = window.devicePixelRatio || 1; if (!r.width) return; const old = drawn ? cv.toDataURL() : null; cv.width = r.width * d; cv.height = r.height * d; ctx.setTransform(d, 0, 0, d, 0, 0); ctx.lineCap = ctx.lineJoin = 'round'; ctx.strokeStyle = '#13235f'; if (old) { const im = new Image(); im.onload = () => ctx.drawImage(im, 0, 0, r.width, r.height); im.src = old; } }
+    function fit() { const r = cv.getBoundingClientRect(), d = window.devicePixelRatio || 1; if (!r.width) return; const old = drawn ? cv.toDataURL() : null; cv.width = r.width * d; cv.height = r.height * d; ctx.setTransform(d, 0, 0, d, 0, 0); ctx.lineCap = ctx.lineJoin = 'round'; ctx.strokeStyle = ink(); if (old) { const im = new Image(); im.onload = () => ctx.drawImage(im, 0, 0, r.width, r.height); im.src = old; } }
     const pos = e => { const r = cv.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top, t: e.timeStamp, p: e.pressure || .5 }; };
     cv.addEventListener('pointerdown', e => { down = true; cv.setPointerCapture(e.pointerId); pts = [pos(e)]; e.preventDefault(); });
     cv.addEventListener('pointermove', e => {
@@ -2016,7 +2037,7 @@ async function snDetectPage(page,pi,OPS){
     const up = () => { down = false; };
     cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up);
     requestAnimationFrame(fit);
-    return { fit, clear() { ctx.clearRect(0, 0, cv.width, cv.height); drawn = false; }, png() { return drawn ? trim(cv) : null; } };
+    return { fit, color() { if (!drawn) { ctx.strokeStyle = ink(); return; } ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalCompositeOperation = 'source-in'; ctx.fillStyle = ink(); ctx.fillRect(0, 0, cv.width, cv.height); ctx.restore(); ctx.strokeStyle = ink(); }, clear() { ctx.clearRect(0, 0, cv.width, cv.height); drawn = false; }, png() { return drawn ? trim(cv) : null; } };
   }
   function trim(cv) {
     const ctx = cv.getContext('2d'), { width: w, height: h } = cv, d = ctx.getImageData(0, 0, w, h).data;
@@ -2040,7 +2061,7 @@ async function snDetectPage(page,pi,OPS){
         let sum = 0, sB = 0, wB = 0, mx = 0, th = 140; for (let t = 0; t < 256; t++) sum += t * hist[t];
         for (let t = 0; t < 256; t++) { wB += hist[t]; if (!wB) continue; const wF = L.length - wB; if (!wF) break; sB += t * hist[t]; const mB = sB / wB, mF = (sum - sB) / wF, v = wB * wF * (mB - mF) * (mB - mF); if (v > mx) { mx = v; th = t; } }
         th = Math.min(th, 185);
-        for (let i = 0; i < L.length; i++) { if (L[i] > th) d[i * 4 + 3] = 0; else { const a = Math.min(255, Math.round((th - L[i]) / th * 255 * 1.6)); d[i * 4] = 19; d[i * 4 + 1] = 35; d[i * 4 + 2] = 95; d[i * 4 + 3] = a; } }
+        for (let i = 0; i < L.length; i++) { if (L[i] > th) d[i * 4 + 3] = 0; else { const a = Math.min(255, Math.round((th - L[i]) / th * 255 * 1.6)); d[i * 4] = 0; d[i * 4 + 1] = 0; d[i * 4 + 2] = 0; d[i * 4 + 3] = a; } }
         x.putImageData(id, 0, 0); URL.revokeObjectURL(im.src); res(trim(c));
       };
       im.onerror = () => res(null); im.src = URL.createObjectURL(file);
