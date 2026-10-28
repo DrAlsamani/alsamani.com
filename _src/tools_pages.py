@@ -82,7 +82,7 @@ def _tag(t):
     if t is METHODS: return bi('دليل مرجعي', 'Reference guide')
     if t is SIGN: return bi('للمقرر والأعضاء', 'For coordinators and members')
     if t is PASS: return bi('برابط واحد', 'One link')
-    if t is MEET: return bi('للتصويت على موعد', 'Vote on a time')
+    if t is MEET: return ''
     if t is ATTEND: return bi('برمز QR أو رابط', 'With a QR code or a link')
     if t is PDFT: return bi('داخل جهازك', 'On your device')
     if t is QRT: return bi('لا تنتهي صلاحيته', 'Does not expire')
@@ -92,7 +92,7 @@ def _go(t):
     if t in (JOURNEY, SIGN, PASS, MEET, ATTEND, PDFT, QRT): return bi('ابدأ', 'Begin')
     return bi('استخدم الأداة', 'Use the tool')
 def _card(t, pre):
-    return (f'<a class="tl-card" href="{pre}{t["slug"]}/index.html">{_icon(t["slug"])}<span class="tl-cn">{_tag(t)}</span>'
+    return (f'<a class="tl-card" href="{pre}{t["slug"]}/index.html">{_icon(t["slug"])}{f'<span class="tl-cn">{_tag(t)}</span>' if _tag(t) else ''}'
             f'<h3>{bi(e(t["t_ar"]), e(t["t_en"]))}</h3><p>{bi(e(t["q_ar"]), e(t["q_en"]))}</p><span class="tl-go">{_go(t)} <i class="chev"></i></span></a>')
 SHOW = 3
 def tools_index():
