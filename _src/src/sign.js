@@ -127,7 +127,7 @@
       b.dataset.i = i;
       if (s.sig) { const im = new Image(); im.src = s.sig; im.alt = ''; b.appendChild(im); }
       if (opts.edit) {
-        b.innerHTML = '<span class="sn-bn">' + (i + 1) + '</span><i class="sn-rz" aria-hidden="true"></i><button type="button" class="sn-bx" aria-label="remove">×</button><input type="text" class="sn-nmi" maxlength="120" dir="auto" placeholder="' + (isAr() ? 'اسم العضو' : 'Member name') + '">';
+        b.innerHTML = '<span class="sn-bn">' + (i + 1) + '</span><i class="sn-rz" aria-hidden="true"></i><button type="button" class="sn-bx" aria-label="remove">×</button><input type="text" class="sn-nmi" maxlength="120" dir="auto" placeholder="' + (isAr() ? 'أضف الاسم هنا' : 'Add the name here') + '">';
         b.querySelector('.sn-nmi').value = s.n || ''; b.title = s.n || '';
       } else {
         b.type = 'button'; b.setAttribute('aria-label', (s.n || '') + (s.sig ? ' ✓' : ''));
@@ -194,16 +194,15 @@
       </div>
       <div id="snRev" hidden>
       <div class="sn-card">
-        <p>${B('اسحب أي خانة لتعديل موضعها، أو احذفها بعلامة ×، أو أضف خانة ثم اضغط على موضعها في الصفحة.', 'Drag a box to adjust it, remove it with ×, or add a box and tap where it goes on the page.')}</p>
+        <p>${B('اضغط على الصفحة حيث تريد مربع توقيع، ثم اكتب اسم العضو داخله. واسحب أي مربع لتعديل موضعه، أو احذفه بعلامة ×.', 'Tap the page where a signature box should go, then type the member’s name inside it. Drag a box to move it, or remove it with ×.')}</p>
         <details class="sn-det"${found ? '' : ' open'}><summary>${B('أسماء الأعضاء', 'Member names')} <b id="snNc"></b></summary><ol class="sn-list" id="snList"></ol></details>
-        <div class="sn-tools"><button type="button" class="btn ghost" id="snAdd" aria-pressed="false">${B('إضافة خانة', 'Add a box')}</button>
-        ${found ? `<button type="button" class="sn-lnk" id="snJump">${B('الانتقال إلى جدول التواقيع', 'Go to the signature table')}</button>` : ''}</div>
+        <div class="sn-tools">        ${found ? `<button type="button" class="sn-lnk" id="snJump">${B('الانتقال إلى جدول التواقيع', 'Go to the signature table')}</button>` : ''}</div>
       </div>
       <div class="sn-pages" id="snPagesHost"></div>
       <div class="sn-bar"><button type="button" class="btn solid" id="snCreate2">${B('إنشاء رابط التوقيع', 'Create the signing link')}</button></div>
       </div>`;
     const host = ed.querySelector('#snPagesHost');
-    let views = [], adding = false;
+    let views = [], adding = true;
     const list = ed.querySelector('#snList');
     function drawList() {
       ed.querySelector('#snNc').textContent = '(' + slots.length + ')';
@@ -222,18 +221,26 @@
     async function show() {
       views = await renderPages(doc, host, slots, { edit: 1 });
       place();
-      views.forEach(v => v.wrap.addEventListener('click', async e => {
-        if (!adding || e.target.closest('.sn-box')) return;
+      views.forEach(v => { v.wrap.addEventListener('pointerdown', () => { v.typing = document.activeElement && document.activeElement.classList.contains('sn-nmi'); }); v.wrap.addEventListener('click', async e => {
+        // a tap that only leaves a name field does not add a box
+        if (!adding || e.target.closest('.sn-box') || v.typing) { v.typing = false; return; }
         const rc = v.wrap.getBoundingClientRect(), x = e.clientX - rc.left, y = e.clientY - rc.top;
         const last = slots[slots.length - 1], w = last ? last.w : 110, h = last ? last.h : 22;
         const pt = v.vp.convertToPdfPoint(x, y);
         const s = { p: v.pi, n: '', r: '', x: pt[0] - w / 2, y: pt[1] - h / 2, w, h }; slots.push(s);
         s.n = await nameNear(v, s); drawList(); place();
         const nb = host.querySelector(`.sn-box[data-i="${slots.length - 1}"] .sn-nmi`); if (nb && !s.n) nb.focus({ preventScroll: true });
-      }));
+      }); });
     }
-    const add = ed.querySelector('#snAdd');
-    add.onclick = () => { adding = !adding; add.setAttribute('aria-pressed', adding); host.classList.toggle('adding', adding); };
+    host.classList.add('adding');
+    // with a mouse, a faint box follows the pointer to show where a new box would go
+    const ghost = document.createElement('div'); ghost.className = 'sn-ghost'; ghost.textContent = isAr() ? '+ إضافة مربع توقيع' : '+ Add a signature box';
+    host.addEventListener('pointermove', e => {
+      const wrap = e.target.closest('.sn-page'); if (e.pointerType !== 'mouse' || !wrap || e.target.closest('.sn-box')) { ghost.remove(); return; }
+      const v = views.find(x => x.wrap === wrap), last = slots[slots.length - 1], sc = v.vp.scale, w = (last ? last.w : 110) * sc, h = (last ? last.h : 22) * sc, rc = wrap.getBoundingClientRect();
+      Object.assign(ghost.style, { width: w + 'px', height: h + 'px', left: e.clientX - rc.left - w / 2 + 'px', top: e.clientY - rc.top - h / 2 + 'px' }); if (ghost.parentNode !== wrap) wrap.appendChild(ghost);
+    });
+    host.addEventListener('pointerleave', () => ghost.remove());
     drawList();
     let shown = false;
     const det = slots.slice(), ts = ed.querySelector('#snTpl');
