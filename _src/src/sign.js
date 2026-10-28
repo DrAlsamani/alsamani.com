@@ -232,10 +232,11 @@
         <div class="sn-prog"><div class="sn-meter"><i id="snMeter"></i></div><p id="snCount"></p></div>
         <p class="sn-sc" id="snSc" hidden></p>
         <div class="sn-me" id="snMe" hidden></div>
+        <p class="sn-tip" id="snTip">${B('للتوقيع: اضغط على خانتك أمام اسمك، أو على أي موضع في المحضر.', 'To sign, tap your box next to your name, or any spot in the minutes.')}</p>
         <div class="sn-names" id="snNames"></div>
         <div class="sn-acts">
           <button type="button" class="btn solid" id="snDl">${B('تحميل المحضر', 'Download the minutes')}</button>
-          <button type="button" class="btn ghost" id="snFree">${B('توقيع في موضع آخر', 'Sign somewhere else')}</button>
+
           ${admin ? `<button type="button" class="btn ghost" id="snRemind">${B('نسخ رسالة تذكير', 'Copy a reminder')}</button>
           <button type="button" class="btn ghost" id="snLock"></button>
           <button type="button" class="btn ghost sn-danger" id="snDelete">${B('حذف المحضر', 'Delete')}</button>` : ''}
@@ -271,13 +272,10 @@
       if (!me.hidden) { me.innerHTML = `<p>${B('خانتك:', 'Your box:')} <b><bdi>${esc(S.slots[mb].n)}</bdi></b></p><button type="button" class="btn solid">${B('وقّع الآن', 'Sign now')}</button>`; me.querySelector('button').onclick = () => openBox(mb, true); }
       const none = !n, signed = S.slots.filter(s => s.sig && !s.gone).length;
       root.querySelector('.sn-prog').hidden = none; root.querySelector('#snNames').hidden = none;
-      root.querySelector('#snFree').hidden = !!S.locked;
-      root.querySelector('#snFree').className = 'btn ' + (none ? 'solid' : 'ghost');
-      root.querySelector('#snFree').innerHTML = none ? B('أضف توقيعك', 'Add your signature') : B('توقيع في موضع آخر', 'Sign somewhere else');
-      root.querySelector('#snDl').className = 'btn ' + (none ? 'ghost' : 'solid');
+      root.querySelector('#snTip').hidden = !!S.locked;
+      root.querySelector('#snTip').innerHTML = none ? B('للتوقيع: اضغط على الموضع الذي تريده في المحضر.', 'To sign, tap the spot you want in the minutes.') : B('للتوقيع: اضغط على خانتك أمام اسمك، أو على أي موضع في المحضر.', 'To sign, tap your box next to your name, or any spot in the minutes.');
       const sc = root.querySelector('#snSc'); sc.hidden = !none; sc.innerHTML = S.locked ? B(`أُقفل المحضر · ${signed} توقيع`, `Locked · ${signed} signatures`) : B(`عدد التواقيع حتى الآن: ${signed}`, `Signatures so far: ${signed}`);
-      root.querySelector('#snFree').style.order = none ? -1 : 0;
-      const fab = document.getElementById('snFab'); if (fab) { fab.dataset.on = none && !S.locked ? '1' : ''; fab.hidden = !fab.dataset.on || fab.dataset.near === '1'; }
+
       if (admin) root.querySelector('#snLock').innerHTML = S.locked ? B('فتح التوقيع', 'Reopen signing') : B('إقفال المحضر', 'Lock');
       placeBoxes(views, S.slots, { mine, onBox: (b, i) => { b.onclick = () => openBox(i); } });
     }
@@ -327,37 +325,49 @@
       sh.querySelector('[data-act=ok]').onclick = () => go(tab === 'draw' ? pad.png() : img);
       sh.querySelector('[data-act=x]').onclick = close;
     }
+    // tap your box (or any spot) -> sign -> adjust size/position -> save
     function sheetSign(i) {
       const s = S.slots[i];
-      getSig(B('التوقيع', 'Sign') + (s.n ? ' · <bdi>' + esc(s.n) + '</bdi>' : ''), async png => {
-        try { const j = await call({ a: 'sign', id, i, png }); mine[i] = j.tok; store.set('mine.' + id, mine); if (s.n) store.set('me', s.n); S = j; close(); draw(); toast(B('تم توقيعك. شكرًا لك.', 'Signed. Thank you.')); }
-        catch (e) { toast(errMsg(e), 1); if (e.code === 'taken') { close(); refresh(); } throw e; }
-      });
+      getSig(B('التوقيع', 'Sign') + (s.n ? ' · <bdi>' + esc(s.n) + '</bdi>' : ''), async png => { close(); previewSlot(i, png); });
     }
-    /* a signature anywhere on the document: tap a spot, sign, then move or resize before fixing it */
-    let placing = false;
     function modeBar(html) {
       endMode(); const m = document.createElement('div'); m.className = 'sn-mode'; m.innerHTML = html; document.body.appendChild(m); return m;
     }
-    function endMode() { placing = false; host.classList.remove('adding'); document.querySelectorAll('.sn-mode,.sn-box.pending').forEach(x => x.remove()); }
-    root.querySelector('#snFree').onclick = () => {
-      if (S.locked) return toast(ERR.locked, 1);
-      const m = modeBar(`<p>${B('اضغط على الموضع الذي تريد التوقيع فيه في المحضر.', 'Tap the spot in the minutes where you want to sign.')}</p><button type="button" class="btn ghost" data-x>${B('إلغاء', 'Cancel')}</button>`);
+    function endMode() { document.querySelectorAll('.sn-mode,.sn-box.pending').forEach(x => x.remove()); host.querySelectorAll('.sn-box').forEach(x => x.style.visibility = ''); }
+    const ADJ = B('عدّل حجم التوقيع من الزاوية، واسحبه ليكون في موضعه، ثم احفظ.', 'Resize the signature from the corner and drag it into place, then save.');
+    const BAR = `<p>${ADJ}</p><div class="sn-sb"><button type="button" class="btn solid" data-ok>${B('حفظ', 'Save')}</button><button type="button" class="btn ghost" data-x>${B('خروج', 'Exit')}</button></div>`;
+    function previewSlot(i, png) {
+      const s = S.slots[i], v = views.find(v => v.pi === s.p), el = host.querySelector('.sn-box[data-i="' + i + '"]');
+      if (!v || !el) return;
+      const m = modeBar(BAR);
+      const b = document.createElement('div'); b.className = 'sn-box done pending slot';
+      ['left', 'top', 'width', 'height'].forEach(k => b.style[k] = el.style[k]);
+      const im = new Image(); im.src = png; b.appendChild(im); b.insertAdjacentHTML('beforeend', '<i class="sn-rz" aria-hidden="true"></i>');
+      el.style.visibility = 'hidden'; v.wrap.appendChild(b); b.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      const r0 = pdfRect(v, b);
+      draggable(b, null, false);
       m.querySelector('[data-x]').onclick = endMode;
-      placing = true; host.classList.add('adding');
-    };
+      m.querySelector('[data-ok]').onclick = async ev => {
+        const btn = ev.currentTarget; btn.disabled = true;
+        const r = pdfRect(v, b), moved = ['x', 'y', 'w', 'h'].some(k => Math.abs(r[k] - r0[k]) > .8);
+        try {
+          let j = await call({ a: 'sign', id, i, png }); mine[i] = j.tok; store.set('mine.' + id, mine); if (s.n) store.set('me', s.n);
+          if (moved) j = await call(Object.assign({ a: 'move', id, i, tok: mine[i] }, r));
+          S = j; endMode(); draw(); toast(B('تم توقيعك. شكرًا لك.', 'Signed. Thank you.'));
+        } catch (e) { btn.disabled = false; toast(errMsg(e), 1); if (e.code === 'taken') { endMode(); refresh(); } }
+      };
+    }
     host.addEventListener('click', e => {
-      if (!placing || e.target.closest('.sn-box')) return;
+      if (e.target.closest('.sn-box') || document.querySelector('.sn-mode') || S.locked) return;
       const wrap = e.target.closest('.sn-page'); if (!wrap) return;
       const v = views.find(v => v.wrap === wrap), rc = wrap.getBoundingClientRect(), x = e.clientX - rc.left, y = e.clientY - rc.top;
-      endMode();
       getSig(B('توقيع في هذا الموضع', 'Sign at this spot'), async png => { close(); preview(v, x, y, png); });
     });
     function preview(v, x, y, png) {
       const im = new Image();
       im.onload = () => {
         const w = Math.min(170, v.wrap.clientWidth * .32), h = w * im.height / im.width;
-        const m = modeBar(`<p>${B('اسحب التوقيع إلى موضعه، وكبّره أو صغّره من الزاوية.', 'Drag the signature into place; resize it from the corner.')}</p><div class="sn-sb"><button type="button" class="btn solid" data-ok>${B('تثبيت التوقيع', 'Fix the signature')}</button><button type="button" class="btn ghost" data-x>${B('إلغاء', 'Cancel')}</button></div>`);
+        const m = modeBar(BAR);
         const b = document.createElement('div'); b.className = 'sn-box free done pending';
         Object.assign(b.style, { left: x - w / 2 + 'px', top: y - h / 2 + 'px', width: w + 'px', height: h + 'px' });
         b.innerHTML = '<i class="sn-rz" aria-hidden="true"></i>'; b.prepend(im); v.wrap.appendChild(b);
@@ -410,7 +420,8 @@
         const pg = pdf.getPages();
         for (const s of S.slots) {
           if (!s.sig || s.gone || !pg[s.p]) continue;
-          const im = await pdf.embedPng(s.sig), k = Math.min(s.w / im.width, s.h / im.height), w = im.width * k, h = im.height * k;
+          // a signature may rise a little above and below its row, as a hand signature would (boxes only)
+          const H = s.free ? s.h : s.h * 1.8, im = await pdf.embedPng(s.sig), k = Math.min(s.w / im.width, H / im.height), w = im.width * k, h = im.height * k;
           pg[s.p].drawImage(im, { x: s.x + (s.w - w) / 2, y: s.y + (s.h - h) / 2, width: w, height: h });
         }
         const out = await pdf.save(), a = document.createElement('a');
@@ -434,9 +445,6 @@
         sh.querySelector('[data-act=del]').onclick = async () => { try { await call({ a: 'delete', id, k: key }); delete keys[id]; store.set('keys', keys); store.del('mine.' + id); location.href = './'; } catch (e) { toast(errMsg(e), 1); } };
       };
     }
-    const fab = document.createElement('button'); fab.type = 'button'; fab.id = 'snFab'; fab.className = 'btn solid sn-fab'; fab.hidden = true; fab.innerHTML = B('أضف توقيعك', 'Add your signature');
-    fab.onclick = () => root.querySelector('#snFree').click(); document.body.appendChild(fab);
-    new IntersectionObserver(es => { fab.dataset.near = es[0].isIntersecting ? '1' : ''; fab.hidden = !fab.dataset.on || fab.dataset.near === '1'; }).observe(root.querySelector('#snFree'));
     views = await renderPages(doc, host, S.slots, { mine });
     draw();
     let rw = window.innerWidth, rt; window.addEventListener('resize', () => { if (Math.abs(window.innerWidth - rw) < 40) return; rw = window.innerWidth; clearTimeout(rt); rt = setTimeout(async () => { endMode(); views = await renderPages(doc, host, S.slots, { mine }); draw(); }, 250); });
@@ -470,13 +478,21 @@
     function fit() { const r = cv.getBoundingClientRect(), d = window.devicePixelRatio || 1; if (!r.width) return; const old = drawn ? cv.toDataURL() : null; cv.width = r.width * d; cv.height = r.height * d; ctx.setTransform(d, 0, 0, d, 0, 0); ctx.lineCap = ctx.lineJoin = 'round'; ctx.strokeStyle = ink(); if (old) { const im = new Image(); im.onload = () => ctx.drawImage(im, 0, 0, r.width, r.height); im.src = old; } }
     const pos = e => { const r = cv.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top, t: e.timeStamp, p: e.pressure || .5 }; };
     cv.addEventListener('pointerdown', e => { down = true; cv.setPointerCapture(e.pointerId); pts = [pos(e)]; e.preventDefault(); });
+    let lw = 2.4;
     cv.addEventListener('pointermove', e => {
-      if (!down) return; const p = pos(e), a = pts[pts.length - 1]; pts.push(p);
-      const v = Math.hypot(p.x - a.x, p.y - a.y) / Math.max(1, p.t - a.t);
-      ctx.lineWidth = Math.max(1.4, Math.min(3.4, 3.2 - v * .9));
-      if (pts.length > 2) { const b = pts[pts.length - 3], m1 = { x: (b.x + a.x) / 2, y: (b.y + a.y) / 2 }, m2 = { x: (a.x + p.x) / 2, y: (a.y + p.y) / 2 }; ctx.beginPath(); ctx.moveTo(m1.x, m1.y); ctx.quadraticCurveTo(a.x, a.y, m2.x, m2.y); ctx.stroke(); }
-      else { ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(p.x, p.y); ctx.stroke(); }
-      drawn = true; e.preventDefault();
+      if (!down) return;
+      const evs = (e.getCoalescedEvents && e.getCoalescedEvents().length) ? e.getCoalescedEvents() : [e];
+      for (const ev of evs) {
+        const p = pos(ev), a = pts[pts.length - 1];
+        if (Math.hypot(p.x - a.x, p.y - a.y) < .6) continue;
+        pts.push(p);
+        const v = Math.hypot(p.x - a.x, p.y - a.y) / Math.max(1, p.t - a.t);
+        lw = lw * .75 + Math.max(1.5, Math.min(3, 3 - v * .6)) * .25; ctx.lineWidth = lw;
+        if (pts.length > 2) { const b = pts[pts.length - 3], m1 = { x: (b.x + a.x) / 2, y: (b.y + a.y) / 2 }, m2 = { x: (a.x + p.x) / 2, y: (a.y + p.y) / 2 }; ctx.beginPath(); ctx.moveTo(m1.x, m1.y); ctx.quadraticCurveTo(a.x, a.y, m2.x, m2.y); ctx.stroke(); }
+        else { ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(p.x, p.y); ctx.stroke(); }
+        drawn = true;
+      }
+      e.preventDefault();
     });
     const up = () => { down = false; };
     cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up);
