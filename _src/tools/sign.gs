@@ -173,7 +173,7 @@ function pload_(id) {
 function nk_(s) { return String(s || '').replace(/[\u064B-\u0652\u0640]/g, '').replace(/[أإآ]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي').replace(/^(د|أ|ا|م)\.?\s*/, '').replace(/\s+/g, ' ').trim(); }
 function ppub_(s, admin, mine) {
   const votes = Object.keys(s.votes).map(k => s.votes[k]);
-  const o = { ok: true, id: s.id, title: s.title, body: s.body, items: s.items, names: s.names, locked: !!s.locked, showAll: !!s.showAll, created: s.created, voted: votes.map(v => v.name), admin: !!admin };
+  const o = { ok: true, id: s.id, mode: s.mode || 'pass', title: s.title, body: s.body, items: s.items, names: s.names, locked: !!s.locked, showAll: !!s.showAll, created: s.created, voted: votes.map(v => v.name), admin: !!admin };
   if (admin || s.showAll) o.votes = votes.map(v => ({ name: v.name, ans: v.ans, notes: v.notes, t: v.t }));
   if (mine) o.mine = { name: mine.name, ans: mine.ans, notes: mine.notes, t: mine.t };
   return o;
@@ -181,11 +181,12 @@ function ppub_(s, admin, mine) {
 function poll_(d) {
   const a = d.a;
   if (a === 'pcreate') {
-    const items = (Array.isArray(d.items) ? d.items : []).map(x => clean_(x, 2000)).filter(x => x.trim()).slice(0, 30);
-    if (!items.length) return err_('bad_items');
+    const mode = ['pass', 'time', 'att'].indexOf(d.mode) >= 0 ? d.mode : 'pass';
+    const items = mode === 'att' ? [] : (Array.isArray(d.items) ? d.items : []).map(x => clean_(x, 2000)).filter(x => x.trim()).slice(0, 30);
+    if (!items.length && mode !== 'att') return err_('bad_items');
     const names = (Array.isArray(d.names) ? d.names : []).map(x => clean_(x, 120).trim()).filter(Boolean).slice(0, 150);
     const id = rid_(20), key = rid_(24);
-    const s = { id: id, key: hash_(key), title: clean_(d.title, 200), body: clean_(d.body, 3000), items: items, names: names, showAll: !!d.showAll, locked: false, created: new Date().toISOString(), votes: {} };
+    const s = { id: id, key: hash_(key), mode: mode, title: clean_(d.title, 200), body: clean_(d.body, 3000), items: items, names: names, showAll: !!d.showAll, locked: false, created: new Date().toISOString(), votes: {} };
     folder_().createFile('p_' + id + '.json', JSON.stringify(s), 'application/json');
     return out_({ ok: true, id: id, k: key });
   }

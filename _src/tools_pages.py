@@ -53,6 +53,8 @@ ICONS = {'research-journey': '<path d="M5 19c3-6 5-9 7-9s2 4 4 4 3-3 3-6"/><circ
          'research-methods': '<path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5z"/><path d="M4 5.5v16M9 8h7M9 12h7"/>',
          'sign': '<path d="M4 20h16"/><path d="M14.5 4.5l5 5L9 20H4v-5z"/>',
          'pass': '<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 9l2 2 4-4M8 16h8"/>',
+         'meet': '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4M9 15l2 2 4-4"/>',
+         'attend': '<path d="M16 20v-1.5A3.5 3.5 0 0 0 12.5 15h-5A3.5 3.5 0 0 0 4 18.5V20"/><circle cx="10" cy="8" r="3.5"/><path d="M16 11l2 2 4-4"/>',
          'pdf': '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/>',
          'initiative-card': '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 10h6M7 14h10"/>',
          'leader-mirror': '<circle cx="12" cy="8" r="3.5"/><path d="M5 20c1.2-3.5 4-5 7-5s5.8 1.5 7 5"/>',
@@ -65,7 +67,7 @@ def tools_index():
     secs, nav = [], []
     for g, a, b, da, db in GROUPS:
         ts = [t for t in TOOLS if t.get('group') == g]
-        extra = [JOURNEY, METHODS] if g == 'research' else ([SIGN] if sign_ready() else []) + ([PASS] if poll_ready() else []) + [PDFT] if g == 'work' else []
+        extra = [JOURNEY, METHODS] if g == 'research' else ([SIGN] if sign_ready() else []) + ([PASS, MEET, ATTEND] if poll_ready() else []) + [PDFT] if g == 'work' else []
         items = extra + ts
         if not items:
             continue
@@ -74,17 +76,19 @@ def tools_index():
             if t is METHODS: return bi('دليل مرجعي', 'Reference guide')
             if t is SIGN: return bi('للمقرر والأعضاء', 'For coordinators and members')
             if t is PASS: return bi('بديل جولات «أوافق»', 'Instead of “I agree” rounds')
+            if t is MEET: return bi('بديل «متى يناسبكم؟»', 'Instead of “when suits you?”')
+            if t is ATTEND: return bi('برمز QR في القاعة', 'With a QR code in the room')
             if t is PDFT: return bi('داخل جهازك', 'On your device')
             return bi(t['chn_ar'], t['chn_en'])
         def go(t):
             if t is METHODS: return bi('اقرأ', 'Read')
-            if t in (JOURNEY, SIGN, PASS, PDFT): return bi('ابدأ', 'Begin')
+            if t in (JOURNEY, SIGN, PASS, MEET, ATTEND, PDFT): return bi('ابدأ', 'Begin')
             return bi('استخدم الأداة', 'Use the tool')
         cards = ''.join(f'''<a class="tl-card" href="{t["slug"]}/index.html">{_icon(t["slug"])}<span class="tl-cn">{tag(t)}</span><h3>{bi(e(t["t_ar"]), e(t["t_en"]))}</h3><p>{bi(e(t["q_ar"]), e(t["q_en"]))}</p><span class="tl-go">{go(t)} <i class="chev"></i></span></a>''' for t in items)
         secs.append(f'''<div class="tl-group tl-n{len(items)}" id="{g}"><div class="tl-gh"><h3>{bi(a, b)} <span class="tl-gn">{len(items)}</span></h3>{('<p>' + bi(da, db) + '</p>') if da else ''}</div><div class="tl-cards">{cards}</div></div>''')
         nav.append(f'<a href="#{g}">{bi(a, b)}</a>')
     return f'''<section class="first tl-index"><div class="sec-head"><div><h2>{bi('الأدوات', 'Tools')}</h2><p class="tl-lead">{bi('أدوات تفاعلية تعمل في المتصفح مباشرة، دون تسجيل.', 'Interactive tools that run in the browser, with no sign-up.')}</p></div></div>
-{'<nav class="tl-gnav">' + ''.join(nav) + '</nav>' if len(nav) > 1 else ''}{('<div class="tl-row">' + ''.join(secs[:2]) + '</div>' + ''.join(secs[2:])) if len(secs) > 2 else ''.join(secs)}</section>'''
+{'<nav class="tl-gnav">' + ''.join(nav) + '</nav>' if len(nav) > 1 else ''}{('<div class="tl-row">' + ''.join(secs[:2]) + '</div>' + ''.join(secs[2:])) if len(secs) > 2 and all('tl-n1' in x or 'tl-n2' in x for x in secs[:2]) else ''.join(secs)}</section>'''
 
 JOURNEY = {'slug': 'research-journey', 't_ar': 'رحلة البحث', 't_en': 'The research journey',
            'q_ar': 'من الفكرة إلى المناقشة.',
@@ -158,6 +162,12 @@ def sign_body():
 PASS = {'slug': 'pass', 't_ar': 'تمرير قرار', 't_en': 'Decision by circulation',
         'q_ar': 'يصوّت كل عضو على القرار برابط واحد: موافق أو متحفظ أو غير موافق.',
         'q_en': 'Each member answers the decision from one link: agree, reservation or disagree.'}
+MEET = {'slug': 'meet', 't_ar': 'موعد الاجتماع', 't_en': 'Meeting time',
+        'q_ar': 'اقترح عدة مواعيد، ويختار كل عضو ما يناسبه، فيظهر الموعد الأنسب.',
+        'q_en': 'Suggest a few times; each member marks what works, and the best time stands out.'}
+ATTEND = {'slug': 'attend', 't_ar': 'تسجيل الحضور', 't_en': 'Attendance',
+        'q_ar': 'يسجّل كل حاضر حضوره من جواله، وتظهر لك قائمة الحاضرين ومن غاب.',
+        'q_en': 'Each attendee records presence from their phone; you see who came and who did not.'}
 PDFT = {'slug': 'pdf', 't_ar': 'ملفات PDF', 't_en': 'PDF files',
         'q_ar': 'دمج ملفات PDF وصور الأوراق في ملف واحد، وضغط الملفات الكبيرة.',
         'q_en': 'Merge PDFs and photos of pages into one file, and shrink large files.'}
@@ -169,11 +179,14 @@ def _tool_page(j, eyebrow, inner, css, scripts):
 {inner}
 {''.join(f'<script src="{x}"></script>' if x.startswith('http') else f'<script>{src(x)}</script>' for x in scripts)}
 </section>'''
-def pass_body():
+def _poll_body(j, mode, extra=()):
     api = os.environ.get('SIGN_API') or json.load(open(os.path.join(ROOT, 'data', 'sign.json')))['api']
-    return _tool_page(PASS, bi('للجان والمجالس', 'For committees and boards'),
-        f'<div id="ps" class="sn ps" data-api="{e(api)}"><noscript>{bi("تعمل هذه الأداة مع تفعيل JavaScript.", "This tool needs JavaScript.")}</noscript></div>',
-        ['sign.css', 'pdftool.css', 'pass.css'], ['pass.js'])
+    return _tool_page(j, bi('للجان والمجالس', 'For committees and boards'),
+        f'<div id="ps" class="sn ps" data-api="{e(api)}" data-mode="{mode}"><noscript>{bi("تعمل هذه الأداة مع تفعيل JavaScript.", "This tool needs JavaScript.")}</noscript></div>',
+        ['sign.css', 'pdftool.css', 'pass.css'], list(extra) + ['poll.js'])
+def pass_body(): return _poll_body(PASS, 'pass')
+def meet_body(): return _poll_body(MEET, 'time')
+def attend_body(): return _poll_body(ATTEND, 'att', ['https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js'])
 def pdf_body():
     return _tool_page(PDFT, bi('للجان والمجالس', 'For committees and boards'),
         f'<div id="pt" class="sn"><noscript>{bi("تعمل هذه الأداة مع تفعيل JavaScript.", "This tool needs JavaScript.")}</noscript></div>',

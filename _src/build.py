@@ -655,6 +655,10 @@ for _t in _tp.TOOLS:
     PAGES.append((f"tools/{_t['slug']}", 2, f"{_t['t_ar']} | {_t['t_en']} | Dr. Omar A. Alsamani", (lambda tt: (lambda: _tp.tool_body(tt)))(_t)))
 PAGES.append(('tools/research-journey', 2, 'رحلة البحث | The research journey | Dr. Omar A. Alsamani', _tp.journey_body))
 if _tp.poll_ready(): PAGES.append(('tools/pass', 2, 'تمرير قرار | Decision by circulation | Dr. Omar A. Alsamani', _tp.pass_body))
+if _tp.poll_ready(): PAGES.append(('tools/meet', 2, 'موعد الاجتماع | Meeting time | Dr. Omar A. Alsamani', _tp.meet_body))
+DESCS['tools/meet'] = 'Find a meeting time for a committee or board: suggest a few times, each member marks what works, and the best time stands out. تحديد موعد اجتماع اللجنة أو المجلس برابط واحد.'
+if _tp.poll_ready(): PAGES.append(('tools/attend', 2, 'تسجيل الحضور | Attendance | Dr. Omar A. Alsamani', _tp.attend_body))
+DESCS['tools/attend'] = 'Record attendance at a meeting: attendees scan a QR code or open one link, and the coordinator gets a printable list of who came. تسجيل حضور الاجتماعات برمز QR.'
 DESCS['tools/pass'] = 'Pass a committee or board decision by circulation: one link, each member answers agree, reservation or disagree, and the coordinator gets a printable result. تمرير قرار اللجان والمجالس برابط واحد.'
 PAGES.append(('tools/pdf', 2, 'ملفات PDF | PDF files | Dr. Omar A. Alsamani', _tp.pdf_body))
 DESCS['tools/pdf'] = 'Merge PDFs and photos of pages into one PDF, or shrink a large PDF to send it easily. Runs on your device; nothing is uploaded. دمج ملفات PDF وضغطها.'
