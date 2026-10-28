@@ -106,3 +106,5 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
 .sn-ink button{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:99px;padding:5px 12px 5px 10px;font:inherit;font-size:.8125rem;cursor:pointer}
 .sn-ink button i{width:14px;height:14px;border-radius:50%;background:var(--c)}
 .sn-ink button[aria-checked=true]{border-color:var(--c);box-shadow:0 0 0 2px color-mix(in srgb,var(--c) 25%,transparent)}
+
+.sn-sb3{flex-wrap:wrap}.sn-sb3 .btn{flex:1 1 150px}

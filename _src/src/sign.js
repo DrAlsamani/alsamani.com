@@ -286,8 +286,7 @@
       const el = host.querySelector('.sn-box[data-i="' + i + '"]');
       if (scroll && el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
       if (s.sig) {
-        if (mine[i] && !S.locked) return sheetSigned(i);
-        if (admin) return sheetAdmin(i);
+        if ((mine[i] && !S.locked) || admin) return sheetManage(i);
         return toast(s.free ? B('توقيع أُضيف في هذا الموضع.', 'A signature added here.') : B('هذه الخانة موقّعة.', 'This box is already signed.'));
       }
       if (S.locked) return toast(ERR.locked, 1);
@@ -373,18 +372,36 @@
       };
       im.src = png;
     }
-    function sheetSigned(i) {
-      const sh = sheet(`<h3>${B('توقيعك في هذه الخانة', 'Your signature in this box')}</h3><div class="sn-saved"><img src="${S.slots[i].sig}" alt=""></div>
-        <div class="sn-sb"><button type="button" class="btn ghost sn-danger" data-act="un">${B('سحب توقيعي', 'Withdraw my signature')}</button><button type="button" class="btn ghost" data-act="x">${B('إغلاق', 'Close')}</button></div>`);
+    // a signed box: its signer (same device) or the coordinator can move/resize it; signer withdraws, coordinator clears
+    function sheetSigned(i) { sheetManage(i); }
+    function sheetAdmin(i) { sheetManage(i); }
+    function sheetManage(i) {
+      const s = S.slots[i], own = !!mine[i] && !S.locked;
+      const sh = sheet(`<h3>${own ? B('توقيعك', 'Your signature') : esc(s.n || '') || B('توقيع', 'Signature')}</h3><div class="sn-saved"><img src="${s.sig}" alt=""></div>${admin && s.t ? `<p class="sn-hint">${new Date(s.t).toLocaleString(isAr() ? 'ar-SA-u-nu-latn' : 'en-GB')}</p>` : ''}
+        <div class="sn-sb sn-sb3"><button type="button" class="btn ghost" data-act="mv">${B('تعديل الموضع أو الحجم', 'Move or resize')}</button>
+        ${own ? `<button type="button" class="btn ghost sn-danger" data-act="un">${B('سحب توقيعي', 'Withdraw my signature')}</button>` : `<button type="button" class="btn ghost sn-danger" data-act="cl">${B('حذف هذا التوقيع', 'Delete this signature')}</button>`}
+        <button type="button" class="btn ghost" data-act="x">${B('إغلاق', 'Close')}</button></div>`);
       sh.querySelector('[data-act=x]').onclick = close;
-      sh.querySelector('[data-act=un]').onclick = async () => { try { S = await call({ a: 'unsign', id, i, tok: mine[i] }); delete mine[i]; store.set('mine.' + id, mine); close(); draw(); } catch (e) { toast(errMsg(e), 1); } };
+      const un = sh.querySelector('[data-act=un]'); if (un) un.onclick = async () => { try { S = await call({ a: 'unsign', id, i, tok: mine[i] }); delete mine[i]; store.set('mine.' + id, mine); close(); draw(); } catch (e) { toast(errMsg(e), 1); } };
+      const cl = sh.querySelector('[data-act=cl]'); if (cl) cl.onclick = async () => { try { S = await call({ a: 'clear', id, k: key, i }); close(); draw(); } catch (e) { toast(errMsg(e), 1); } };
+      sh.querySelector('[data-act=mv]').onclick = () => { close(); moveBox(i); };
     }
-    function sheetAdmin(i) {
-      const s = S.slots[i];
-      const sh = sheet(`<h3>${esc(s.n || '')}</h3><div class="sn-saved"><img src="${s.sig}" alt=""></div><p class="sn-hint">${s.t ? new Date(s.t).toLocaleString(isAr() ? 'ar-SA-u-nu-latn' : 'en-GB') : ''}</p>
-        <div class="sn-sb"><button type="button" class="btn ghost sn-danger" data-act="cl">${B('مسح هذا التوقيع', 'Clear this signature')}</button><button type="button" class="btn ghost" data-act="x">${B('إغلاق', 'Close')}</button></div>`);
-      sh.querySelector('[data-act=x]').onclick = close;
-      sh.querySelector('[data-act=cl]').onclick = async () => { try { S = await call({ a: 'clear', id, k: key, i }); close(); draw(); } catch (e) { toast(errMsg(e), 1); } };
+    function moveBox(i) {
+      const s = S.slots[i], v = views.find(v => v.pi === s.p), el = host.querySelector('.sn-box[data-i="' + i + '"]');
+      if (!v || !el) return;
+      const b = document.createElement('div'); b.className = 'sn-box done pending';
+      ['left', 'top', 'width', 'height'].forEach(k => b.style[k] = el.style[k]);
+      const im = new Image(); im.src = s.sig; b.appendChild(im); b.insertAdjacentHTML('beforeend', '<i class="sn-rz" aria-hidden="true"></i>');
+      const m = modeBar(`<p>${B('اسحب التوقيع إلى موضعه، وكبّره أو صغّره من الزاوية.', 'Drag the signature into place; resize it from the corner.')}</p><div class="sn-sb"><button type="button" class="btn solid" data-ok>${B('حفظ', 'Save')}</button><button type="button" class="btn ghost" data-x>${B('إلغاء', 'Cancel')}</button></div>`);
+      el.style.visibility = 'hidden'; v.wrap.appendChild(b); b.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      draggable(b, null, !!s.free);
+      const done = () => { el.style.visibility = ''; endMode(); };
+      m.querySelector('[data-x]').onclick = done;
+      m.querySelector('[data-ok]').onclick = async ev => {
+        const btn = ev.currentTarget; btn.disabled = true;
+        try { S = await call(Object.assign({ a: 'move', id, i, k: key, tok: mine[i] }, pdfRect(v, b))); done(); draw(); toast(B('حُفظ الموضع.', 'Position saved.')); }
+        catch (e) { btn.disabled = false; toast(errMsg(e), 1); }
+      };
     }
     root.querySelector('#snDl').onclick = async ev => {
       const btn = ev.currentTarget; btn.disabled = true;

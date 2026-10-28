@@ -96,6 +96,15 @@ function doPost(e) {
       x.sig = null; if (x.free) x.gone = true; save_(r);
       return out_(pub_(s));
     }
+    if (a === 'move') {             // reposition or resize a signature: its signer (token) or the coordinator
+      const x = s.slots[Number(d.i)];
+      if (!x || !x.sig) return err_('bad_slot');
+      const owner = d.tok && hash_(String(d.tok)) === x.sig.tok;
+      if (!admin && !(owner && !s.locked)) return err_('forbidden');
+      const b = slots_([d]); if (!b || !b.length) return err_('bad_slots');
+      x.x = b[0].x; x.y = b[0].y; x.w = b[0].w; x.h = b[0].h; save_(r);
+      return out_(Object.assign(pub_(s), { admin: !!admin }));
+    }
     if (!admin) return err_('forbidden');
     if (a === 'clear') {
       const x = s.slots[Number(d.i)];
