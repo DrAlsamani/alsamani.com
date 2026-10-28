@@ -65,6 +65,7 @@ ICONS = {'research-journey': '<path d="M5 19c3-6 5-9 7-9s2 4 4 4 3-3 3-6"/><circ
          'meet': '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4M9 15l2 2 4-4"/>',
          'attend': '<path d="M16 20v-1.5A3.5 3.5 0 0 0 12.5 15h-5A3.5 3.5 0 0 0 4 18.5V20"/><circle cx="10" cy="8" r="3.5"/><path d="M16 11l2 2 4-4"/>',
          'qr': '<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM20 14v.01M14 20h.01M17 20h4v-3"/>',
+         'certificates': '<rect x="3" y="4" width="18" height="13" rx="2"/><path d="M7 9h10M9 12.5h6"/><circle cx="12" cy="19" r="2.2"/>',
          'pdf': '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/>',
          'initiative-card': '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 10h6M7 14h10"/>',
          'leader-mirror': '<circle cx="12" cy="8" r="3.5"/><path d="M5 20c1.2-3.5 4-5 7-5s5.8 1.5 7 5"/>',
@@ -75,7 +76,7 @@ def _icon(slug):
     return f'<span class="tl-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">{ICONS.get(slug, "")}</svg></span>'
 def group_items(g):
     ts = [t for t in TOOLS if t.get('group') == g]
-    extra = [JOURNEY, METHODS] if g == 'research' else ([SIGN] if sign_ready() else []) + ([PASS, MEET, ATTEND] if poll_ready() else []) + [PDFT, QRT] if g == 'work' else []
+    extra = [JOURNEY, METHODS] if g == 'research' else ([SIGN] if sign_ready() else []) + ([PASS, MEET, ATTEND] if poll_ready() else []) + [PDFT, CERT, QRT] if g == 'work' else []
     return extra + ts
 def _tag(t):
     # a label only where it tells something the title does not
@@ -84,7 +85,7 @@ def _tag(t):
     return bi(t['chn_ar'], t['chn_en']) if t.get('chn_ar') else ''
 def _go(t):
     if t is METHODS: return bi('اقرأ', 'Read')
-    if t in (JOURNEY, SIGN, PASS, MEET, ATTEND, PDFT, QRT): return bi('ابدأ', 'Begin')
+    if t in (JOURNEY, SIGN, PASS, MEET, ATTEND, PDFT, QRT, CERT): return bi('ابدأ', 'Begin')
     return bi('استخدم الأداة', 'Use the tool')
 def _card(t, pre):
     return (f'<a class="tl-card" href="{pre}{t["slug"]}/index.html">{_icon(t["slug"])}{f'<span class="tl-cn">{_tag(t)}</span>' if _tag(t) else ''}'
@@ -193,6 +194,9 @@ ATTEND = {'slug': 'attend', 't_ar': 'تسجيل الحضور', 't_en': 'Attendan
 PDFT = {'slug': 'pdf', 't_ar': 'ملفات PDF', 't_en': 'PDF files',
         'q_ar': 'دمج ملفات PDF وصور الأوراق، وترتيب الصفحات وتدويرها وحذفها، وضغط الملفات الكبيرة.',
         'q_en': 'Merge PDFs and photos of pages, arrange, rotate or delete pages, and shrink large files.'}
+CERT = {'slug': 'certificates', 't_ar': 'الشهادات', 't_en': 'Certificates',
+        'q_ar': 'ارفع تصميم الشهادة والصق الأسماء، فتصدر شهادة لكل اسم.',
+        'q_en': 'Upload the certificate design and paste the names; a certificate is made for each name.'}
 QRT = {'slug': 'qr', 't_ar': 'رمز QR', 't_en': 'QR code',
        'q_ar': 'حوّل أي رابط إلى رمز QR جاهز للعروض والمطبوعات، ومنه رابط مجلد يجمع عدة ملفات.',
        'q_en': 'Turn any link into a QR code for slides and print, including a folder link that holds several files.'}
@@ -231,3 +235,8 @@ def qr_body():
     return _tool_page(QRT, bi('للجان والمجالس', 'For committees and boards'),
         f'<div id="qt" class="sn"><noscript>{bi("تعمل هذه الأداة مع تفعيل JavaScript.", "This tool needs JavaScript.")}</noscript></div>',
         ['sign.css', 'pdftool.css'], ['https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js', 'qrtool.js'])
+def cert_body():
+    return _tool_page(CERT, '',
+        f'<div id="ct" class="sn"><noscript>{bi("تعمل هذه الأداة مع تفعيل JavaScript.", "This tool needs JavaScript.")}</noscript></div>',
+        ['sign.css', 'pdftool.css'],
+        ['https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js', 'https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js', 'https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js', 'certs.js'])

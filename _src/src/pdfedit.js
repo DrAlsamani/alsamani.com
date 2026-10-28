@@ -115,7 +115,7 @@
           else { it.w = Math.max(6, o.w + dx); it.h = Math.max(4, o.h + dy); }
           place(it);
         };
-        const up = () => { el.removeEventListener('pointermove', mv); el.removeEventListener('pointerup', up); el.removeEventListener('pointercancel', up); if (!moved && !rz && it.t === 'text') editText(it); if (!moved && !rz && it.t === 'cover') editCover(it); };
+        const up = () => { el.removeEventListener('pointermove', mv); el.removeEventListener('pointerup', up); el.removeEventListener('pointercancel', up); if (!moved && !rz && it.t === 'text') editText(it); if (!moved && !rz && it.t === 'cover') editCover(it); else if (it.t === 'cover' && it.auto) { it.color = bgOf(it); place(it); } };
         el.addEventListener('pointermove', mv); el.addEventListener('pointerup', up); el.addEventListener('pointercancel', up);
       });
     }
@@ -127,8 +127,8 @@
         const it = { id: ++seq, t: 'text', p: t.v.i, x: t.x - 60, y: t.y - 10, text: '', font: last ? last.font : FONTS[0][0], size: last ? last.size : 14, color: last ? last.color : '#111111', bold: last ? last.bold : false, align: 'right' };
         await loadFont(it.font); editText(it, true);
       } else if (kind === 'cover') {
-        const it = { id: ++seq, t: 'cover', p: t.v.i, x: t.x - 60, y: t.y - 10, w: 120, h: 20, color: '#ffffff' };
-        items.push(it); mount(it); select(it);
+        const it = { id: ++seq, t: 'cover', p: t.v.i, x: t.x - 60, y: t.y - 10, w: 120, h: 20, color: '#ffffff', auto: true };
+        it.color = bgOf(it); items.push(it); mount(it); select(it);
       } else {
         const fi = root.querySelector('#peImg'); fi.value = '';
         fi.onchange = () => { const f = fi.files[0]; if (!f) return; const r = new FileReader(); r.onload = () => { const im = new Image(); im.onload = () => {
@@ -183,12 +183,24 @@
       };
       show(); setTimeout(() => ta.focus(), 50);
     }
+    // the page colour around a box: the most common colour on a ring just outside it
+    function bgOf(it) {
+      const v = views[it.p], c = v && v.wrap.firstChild; if (!c || !v.done) return '#ffffff';
+      const r = c.width / v.w, x0 = Math.max(0, Math.round((it.x - 3) * r)), y0 = Math.max(0, Math.round((it.y - 3) * r)), x1 = Math.min(c.width - 1, Math.round((it.x + it.w + 3) * r)), y1 = Math.min(c.height - 1, Math.round((it.y + it.h + 3) * r));
+      if (x1 <= x0 || y1 <= y0) return '#ffffff';
+      const d = c.getContext('2d').getImageData(x0, y0, x1 - x0 + 1, y1 - y0 + 1), W = d.width, H = d.height, n = {};
+      const add = (x, y) => { const i = (y * W + x) * 4, k = (d.data[i] >> 3) + ',' + (d.data[i + 1] >> 3) + ',' + (d.data[i + 2] >> 3), e = n[k] || (n[k] = [0, 0, 0, 0]); e[0]++; e[1] += d.data[i]; e[2] += d.data[i + 1]; e[3] += d.data[i + 2]; };
+      for (let x = 0; x < W; x += 2) { add(x, 0); add(x, H - 1); } for (let y = 0; y < H; y += 2) { add(0, y); add(W - 1, y); }
+      const e = n[Object.keys(n).sort((a, b) => n[b][0] - n[a][0])[0]], best = [1, 2, 3].map(j => Math.round(e[j] / e[0]));
+      return '#' + best.map(v => v.toString(16).padStart(2, '0')).join('');
+    }
     function editCover(it) {
-      const { sh, close } = sheet(`<h3>${B('لون الإخفاء', 'Cover colour')}</h3><p class="pt-fine">${B('اختر لونًا يطابق خلفية الصفحة، والأبيض يناسب أغلب الملفات.', 'Pick a colour that matches the page background; white suits most files.')}</p>
-        <div class="pe-row"><div class="pe-sw">${['#ffffff', '#f4f4f4', '#111111'].map(c => `<button type="button" data-c="${c}" style="--c:${c}" aria-checked="${c === it.color}"></button>`).join('')}<input type="color" id="peC" value="${it.color}"></div></div>
+      const { sh, close } = sheet(`<h3>${B('لون الإخفاء', 'Cover colour')}</h3><p class="pt-fine">${B('يأخذ المربع لون الصفحة حوله تلقائيًا، أو اختر لونًا بنفسك.', 'The box takes the colour of the page around it automatically, or pick one yourself.')}</p>
+        <div class="pe-row"><button type="button" class="btn ghost" id="peAuto"${it.auto ? ' aria-pressed="true"' : ''}>${B('مطابقة لون الخلفية', 'Match the background')}</button><div class="pe-sw">${['#ffffff', '#f4f4f4', '#111111'].map(c => `<button type="button" data-c="${c}" style="--c:${c}" aria-checked="${!it.auto && c === it.color}"></button>`).join('')}<input type="color" id="peC" value="${it.color}"></div></div>
         <div class="sn-two"><button type="button" class="btn solid" id="peOk">${B('تم', 'Done')}</button></div>`);
-      sh.querySelectorAll('[data-c]').forEach(b => b.onclick = () => { it.color = b.dataset.c; place(it); close(); });
-      sh.querySelector('#peC').oninput = e => { it.color = e.target.value; place(it); };
+      sh.querySelector('#peAuto').onclick = () => { it.auto = true; it.color = bgOf(it); place(it); close(); };
+      sh.querySelectorAll('[data-c]').forEach(b => b.onclick = () => { it.auto = false; it.color = b.dataset.c; place(it); close(); });
+      sh.querySelector('#peC').oninput = e => { it.auto = false; it.color = e.target.value; place(it); };
       sh.querySelector('#peOk').onclick = close;
     }
 

@@ -41,6 +41,15 @@ SEO = {
   'faq': [('هل تُرفع ملفاتي إلى خادم؟', 'Are my files uploaded to a server?', 'لا. تُعالج الملفات داخل جهازك فقط.', 'No. Files are processed on your device only.'),
           ('لماذا يتلخبط النص العربي عند تحرير PDF في برامج أخرى؟', 'Why does Arabic text break when editing a PDF elsewhere?', 'لأن الملف يحفظ أشكال الحروف لا الكلمات. هنا يُغطّى النص القديم ويُكتب الجديد بخط سليم، فلا يتلخبط.', 'Because a PDF stores letter shapes, not words. Here the old text is covered and the new text is written in a proper font, so it does not break.'),
           ('هل تعمل من الجوال؟', 'Does it work on a phone?', 'نعم، على الآيفون والأندرويد، ويُحفظ الملف أو يُشارك مباشرة.', 'Yes, on iPhone and Android; the file can be saved or shared directly.')]},
+ 'certificates': {
+  'title': ('إنشاء شهادات حضور بالأسماء مجانًا', 'Make certificates for a list of names for free'),
+  'how': [('ارفع تصميم الشهادة فارغًا من الأسماء، بصيغة PDF أو صورة.', 'Upload the certificate design without names, as a PDF or an image.'),
+          ('الصق الأسماء، أو الصق جدولًا من إكسل فيه الاسم والدورة وغيرهما.', 'Paste the names, or an Excel table with name, course and more.'),
+          ('ضع الحقول على الشهادة واختر الخط والحجم واللون، وأضف التوقيع أو الختم.', 'Place the fields, choose font, size and colour, and add a signature or stamp.'),
+          ('حمّل ملف PDF واحدًا للجميع، أو ملفًا لكل اسم.', 'Download one PDF for everyone, or a file per name.')],
+  'faq': [('هل يمكن استخدام خط غير موجود في القائمة؟', 'Can I use a font that is not in the list?', 'نعم، اختر «خط من جهازي» وارفع ملف الخط، فيُستخدم داخل جهازك فقط.', 'Yes. Choose “A font from my device” and load the font file; it is used on your device only.'),
+          ('ماذا لو كان الاسم طويلًا؟', 'What if a name is long?', 'يصغر الاسم تلقائيًا ليبقى داخل حقله.', 'It shrinks automatically to stay inside its field.'),
+          ('هل تُرفع الأسماء أو التصميم إلى خادم؟', 'Are the names or the design uploaded?', 'لا. كل شيء يُعالج داخل جهازك.', 'No. Everything is processed on your device.')]},
  'qr': {
   'title': ('إنشاء رمز QR مجاني لا تنتهي صلاحيته', 'Create a free QR code that does not expire'),
   'how': [('الصق الرابط أو النص.', 'Paste the link or text.'),
