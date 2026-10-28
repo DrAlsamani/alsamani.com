@@ -46,14 +46,15 @@ def tool_body(t):
 <script>window.TOOL={json.dumps(t, ensure_ascii=False)}</script>
 </section>'''
 
-GROUPS = [('work', 'للعمل اليومي', 'For everyday work', 'أدوات للجان والمجالس والأعمال المكتبية، تعمل من الجوال دون تسجيل.', 'For committees, boards and office work; they run on a phone with no sign-up.'),
+GROUPS = [('work', 'الاجتماعات والملفات', 'Meetings and files', 'أدوات للجان والمجالس والأعمال المكتبية، تعمل من الجوال دون تسجيل.', 'For committees, boards and office work; they run on a phone with no sign-up.'),
           ('research', 'للطالب الباحث', 'For student researchers', 'من الفكرة الأولى إلى اختيار المنهج والتصميم.', 'From the first idea to the choice of approach and design.'),
           ('leaders', 'للقادة والمؤسسات', 'For leaders and organizations', 'أدوات تشخيص من كتاب «إدارة الابتكار».', 'Diagnostic tools from <i>Innovation Management</i>.')]
 GPAGE = {'work': 'work', 'research': 'students', 'leaders': 'leaders'}
 def gname(g):
     x = next(r for r in GROUPS if r[0] == g); return x[1], x[2]
+GTITLE = {'work': ('أدوات الاجتماعات والملفات', 'Meeting and file tools'), 'research': ('أدوات للطالب الباحث', 'Tools for student researchers'), 'leaders': ('أدوات للقادة والمؤسسات', 'Tools for leaders and organizations')}
 def gtitle(g):
-    a, b = gname(g); return 'أدوات ' + a, 'Tools ' + b[0].lower() + b[1:]
+    return GTITLE[g]
 def crumb(j, g):
     a, b = gname(g)
     return f'<nav class="tl-crumb" aria-label="breadcrumb"><a href="../index.html">{bi("الأدوات", "Tools")}</a><i class="chev"></i><a href="../{GPAGE[g]}/index.html">{bi(a, b)}</a><i class="chev"></i><span>{bi(e(j["t_ar"]), e(j["t_en"]))}</span></nav>'
