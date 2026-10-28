@@ -231,14 +231,15 @@
     q('[data-tool=sig]').onclick = () => { if (!pages.length) { inp.click(); return; } if (tool === 'sig') { setTool(null); return; } sigSheet(png => { sigPng = png; setTool('sig'); }); };
     ['text', 'cover', 'img'].forEach(t => q(`[data-tool=${t}]`).onclick = () => { if (!pages.length) { inp.click(); return; } setTool(tool === t ? null : t); });
     function onPage(e, v) {
-      if (!tool || e.target.closest('.pe-it')) return;
+      const hit = e.target.closest('.pe-it'); if (!tool || (hit && !(hit.classList.contains('pe-cover') && !e.target.closest('.pe-h,.pe-mini')))) return;
+      e.stopPropagation(); // a new item stays selected
       if (tool.startsWith('draw')) { stroke(e, v); return; }
       const r = v.wrap.getBoundingClientRect(), x = (e.clientX - r.left) / v.k, y = (e.clientY - r.top) / v.k, pid = v.p.id;
       if (tool.startsWith('mark')) { const s = lastMark ? lastMark.w : 12; add({ id: ++seq, pid, t: 'mark', mk, x: x - s / 2, y: y - s / 2, w: s, h: s, color: lastMark ? lastMark.color : '#111111' }); return; }
       const t = tool; setTool(null);
       if (t === 'sig' && sigPng) { const im = new Image(); im.onload = () => { const w = Math.min(130, dispWH(v.p)[0] * .3), h = w * im.height / im.width; add({ id: ++seq, pid, t: 'img', x: x - w / 2, y: y - h / 2, w, h, ang: 0, src: sigPng }); refreshThumb(pid); }; im.src = sigPng; return; }
       if (t === 'text') { const last = items.filter(i => i.t === 'text').pop(); const it = { id: ++seq, pid, t: 'text', x: x - 4, y: y - 10, text: '', font: last ? last.font : FONTS[0][0], size: last ? last.size : 12, color: last ? last.color : '#111111', bold: last ? last.bold : false, align: 'right' }; loadFont(it.font).then(() => editText(it, true)); return; }
-      if (t === 'cover') { const it = { id: ++seq, pid, t: 'cover', x: x - 50, y: y - 9, w: 100, h: 18, auto: true, color: '#ffffff' }; it.color = bgOf(it); add(it); return; }
+      if (t === 'cover') { const it = { id: ++seq, pid, t: 'cover', x: x - 50, y: y - 9, w: 100, h: 18, auto: true, color: '#ffffff' }; coverLook(it); add(it); return; }
       if (t === 'img') { const fi = q('#peImg'); fi.value = ''; fi.onchange = async () => {
         const fs = [...fi.files]; if (!fs.length) return;
         const ims = []; for (const f of fs) { try { ims.push(Object.assign(await loadImg(f), { f })); } catch (e) { toast(B('تعذّر فتح صورة: ', 'Could not open an image: ') + esc(f.name), 1); } }
@@ -370,9 +371,9 @@
         Object.assign(el.style, { left: it.x * k + 'px', top: it.y * k + 'px', width: '', height: '' });
         it.w = s.offsetWidth / k; it.h = s.offsetHeight / k;
       } else {
-        Object.assign(el.style, { left: it.x * k + 'px', top: it.y * k + 'px', width: it.w * k + 'px', height: it.h * k + 'px' });
+        Object.assign(el.style, { left: it.x * k + 'px', top: it.y * k + 'px', width: it.w * k + 'px', height: it.h * k + 'px' }); el.classList.toggle('pe-sm', Math.min(it.w, it.h) * k < 40);
         if (it === sel) nearTop(it);
-        if (it.t === 'cover') el.style.background = it.color;
+        if (it.t === 'cover') el.style.background = it.patch ? `url(${it.patch}) center/100% 100% no-repeat` : it.color;
         if (it.t === 'mark') el.style.color = it.color;
         if (it.t === 'img') { const a = it.ang || 0, [iw, ih] = a % 180 ? [it.h, it.w] : [it.w, it.h]; Object.assign(el.querySelector('.pe-im').style, { width: iw * k + 'px', height: ih * k + 'px', transform: `translate(-50%,-50%) rotate(${a}deg)` }); }
       }
@@ -424,6 +425,7 @@
       const el = it.el;
       el.addEventListener('pointerdown', e => {
         if (e.target.closest('.pe-mini')) return;
+        if (tool && it.t === 'cover' && !e.target.closest('.pe-h')) return; // with a tool on, a tap on a cover adds on top of it
         e.preventDefault(); e.stopPropagation(); select(it); markThumb(it.pid);
         const v = views.get(it.pid), hd = e.target.dataset && e.target.dataset.h, rz = !!hd, sx = e.clientX, sy = e.clientY, o = { x: it.x, y: it.y, w: it.w, h: it.h, size: it.size };
         const hx = !hd ? 0 : /e/.test(hd) ? 1 : /w/.test(hd) ? -1 : 0, hy = !hd ? 0 : /s/.test(hd) ? 1 : /n/.test(hd) ? -1 : 0, [PW, PH] = dispWH(v.p);
@@ -458,7 +460,7 @@
             }
           }
           if (!moved && !rz && it.t === 'text') editText(it);
-          else if (it.t === 'cover' && it.auto && moved) { it.color = bgOf(it); place(it); }
+          else if (it.t === 'cover' && it.auto && (moved || rz)) { coverLook(it); place(it); }
           if (it.t === 'mark') lastMark = it;
           if (it.t === 'img' && moved) refreshThumb(it.pid);
         };
@@ -466,6 +468,37 @@
       });
     }
     // the page colour around a box: the most common colour on a ring just outside it
+    function coverLook(it) {
+      const r = ring(it); it.color = r.color;
+      it.patch = it.mode === 'flat' ? null : (it.mode === 'clone' || !r.plain) ? patchFor(it) : null;
+    }
+    // a piece of the page next to the box, the same size, with as little writing in it as possible
+    function patchFor(it) {
+      const v = views.get(it.pid), c = v && v.wrap.querySelector('.pe-cvs'); if (!c) return null;
+      const s = c.width / v.W * v.k, [W, H] = dispWH(v.p), g = 2, cands = [[it.x - it.w - g, it.y], [it.x + it.w + g, it.y], [it.x, it.y - it.h - g], [it.x, it.y + it.h + g], [it.x - 2 * it.w - g, it.y], [it.x + 2 * it.w + g, it.y]];
+      let best = null, bs = 1e18; const x = c.getContext('2d');
+      cands.forEach(([cx, cy]) => {
+        if (cx < 0 || cy < 0 || cx + it.w > W || cy + it.h > H) return;
+        const X = Math.round(cx * s), Y = Math.round(cy * s), w = Math.max(1, Math.round(it.w * s)), h = Math.max(1, Math.round(it.h * s)), d = x.getImageData(X, Y, w, h).data;
+        let sum = 0, sq = 0, n = 0; for (let i = 0; i < d.length; i += 16) { const L = .299 * d[i] + .587 * d[i + 1] + .114 * d[i + 2]; sum += L; sq += L * L; n++; }
+        const mean = sum / n, varc = sq / n - mean * mean, score = varc - mean * 2;
+        if (score < bs) { bs = score; best = [X, Y, w, h]; }
+      });
+      if (!best) return null;
+      const o = document.createElement('canvas'); o.width = best[2]; o.height = best[3]; o.getContext('2d').drawImage(c, best[0], best[1], best[2], best[3], 0, 0, best[2], best[3]);
+      return o.toDataURL('image/png');
+    }
+    // the colour around the box, and whether that surround is plain
+    function ring(it) {
+      const v = views.get(it.pid), c = v && v.wrap.querySelector('.pe-cvs'); if (!c) return { color: '#ffffff', plain: true };
+      const s = c.width / v.W * v.k, x0 = Math.max(0, Math.round((it.x - 3) * s)), y0 = Math.max(0, Math.round((it.y - 3) * s)), x1 = Math.min(c.width - 1, Math.round((it.x + it.w + 3) * s)), y1 = Math.min(c.height - 1, Math.round((it.y + it.h + 3) * s));
+      if (x1 <= x0 || y1 <= y0) return { color: '#ffffff', plain: true };
+      const d = c.getContext('2d').getImageData(x0, y0, x1 - x0 + 1, y1 - y0 + 1), W = d.width, H = d.height, n = {}; let tot = 0;
+      const add = (x, y) => { const i = (y * W + x) * 4, k = (d.data[i] >> 3) + ',' + (d.data[i + 1] >> 3) + ',' + (d.data[i + 2] >> 3), e = n[k] || (n[k] = [0, 0, 0, 0]); e[0]++; tot++; e[1] += d.data[i]; e[2] += d.data[i + 1]; e[3] += d.data[i + 2]; };
+      for (let x = 0; x < W; x += 2) { add(x, 0); add(x, H - 1); } for (let y = 0; y < H; y += 2) { add(0, y); add(W - 1, y); }
+      const e = n[Object.keys(n).sort((a, b) => n[b][0] - n[a][0])[0]];
+      return { color: '#' + [1, 2, 3].map(j => Math.round(e[j] / e[0]).toString(16).padStart(2, '0')).join(''), plain: e[0] / tot > .8 };
+    }
     function bgOf(it) {
       const v = views.get(it.pid), c = v && v.wrap.querySelector('.pe-cvs'); if (!c) return '#ffffff';
       const s = c.width / v.W * v.k, x0 = Math.max(0, Math.round((it.x - 3) * s)), y0 = Math.max(0, Math.round((it.y - 3) * s)), x1 = Math.min(c.width - 1, Math.round((it.x + it.w + 3) * s)), y1 = Math.min(c.height - 1, Math.round((it.y + it.h + 3) * s));
@@ -566,14 +599,16 @@
       toast(B(`أُخذ الحجم ${st.size} واللون والخط الأقرب.`, `Took size ${st.size}, the colour and the closest font.`));
     }, true);
     function editCover(it) {
-      const { sh, close } = sheet(`<h3>${B('لون الإخفاء', 'Cover colour')}</h3><p class="pt-fine">${B('يأخذ المربع لون الصفحة حوله تلقائيًا، أو اختر لونًا بنفسك.', 'The box takes the colour of the page around it automatically, or pick one yourself.')}</p>
-        <div class="pe-row"><button type="button" class="btn ghost" id="peAuto">${B('مطابقة لون الخلفية', 'Match the background')}</button><div class="pe-sw">${['#ffffff', '#f4f4f4', '#111111'].map(c => `<button type="button" data-c="${c}" style="--c:${c}" aria-checked="${!it.auto && c === it.color}"></button>`).join('')}<input type="color" id="peC" value="${it.color}"></div></div>
+      const { sh, close } = sheet(`<h3>${B('الإخفاء', 'Cover')}</h3><p class="pt-fine">${B('تلقائيًا: لون الصفحة إن كانت سادة، ونسخة من نقشها إن لم تكن.', 'Automatic: the page colour on plain pages, a copy of the texture on patterned ones.')}</p>
+        <div class="pe-row"><button type="button" class="btn ghost" data-m="auto">${B('تلقائي', 'Automatic')}</button><button type="button" class="btn ghost" data-m="clone">${B('نسخ نقش الخلفية', 'Copy the background texture')}</button><button type="button" class="btn ghost" data-m="flat">${B('لون الخلفية فقط', 'Background colour only')}</button></div>
+        <div class="pe-row"><div class="pe-sw">${['#ffffff', '#f4f4f4', '#111111'].map(c => `<button type="button" data-c="${c}" style="--c:${c}" aria-checked="${!it.auto && c === it.color}"></button>`).join('')}<input type="color" id="peC" value="${it.color}"></div></div>
         <div class="sn-two"><button type="button" class="btn solid" id="peOk">${B('تم', 'Done')}</button></div>`);
-      sh.querySelector('#peAuto').onclick = () => { it.auto = true; it.color = bgOf(it); place(it); close(); };
-      sh.querySelectorAll('[data-c]').forEach(b => b.onclick = () => { it.auto = false; it.color = b.dataset.c; place(it); close(); });
-      sh.querySelector('#peC').oninput = e => { it.auto = false; it.color = e.target.value; place(it); };
+      sh.querySelectorAll('[data-m]').forEach(b => b.onclick = () => { it.auto = true; it.mode = b.dataset.m === 'auto' ? null : b.dataset.m; coverLook(it); place(it); close(); });
+      sh.querySelectorAll('[data-c]').forEach(b => b.onclick = () => { it.auto = false; it.patch = null; it.color = b.dataset.c; place(it); close(); });
+      sh.querySelector('#peC').oninput = e => { it.auto = false; it.patch = null; it.color = e.target.value; place(it); };
       sh.querySelector('#peOk').onclick = close;
     }
+
 
     /* ---------- save ---------- */
     function textPng(it) {
@@ -618,6 +653,7 @@
               pg.drawImage(img, { x: ax, y: ay, width: iw, height: ih, rotate: PDFLib.degrees(R - a) }); continue;
             }
             const [ax, ay] = toPdf(p, it.x, it.y + it.h), o = { x: ax, y: ay, width: it.w, height: it.h, rotate: PDFLib.degrees(R) };
+            if (it.t === 'cover' && it.patch) { pg.drawImage(await out.embedPng(it.patch), o); continue; }
             if (it.t === 'cover') { const h = it.color.replace('#', ''), n = i => parseInt(h.substr(i, 2), 16) / 255; pg.drawRectangle(Object.assign(o, { color: PDFLib.rgb(n(0), n(2), n(4)) })); continue; }
             const png = it.t === 'text' ? textPng(it) : it.t === 'draw' ? await svgPng(drawSvg(it), it.w, it.h) : await markPng(it);
             if (!png) continue;

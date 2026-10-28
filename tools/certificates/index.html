@@ -1624,6 +1624,7 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
 .pe-h{position:absolute;width:14px;height:14px;margin:-7px;border-radius:50%;background:#fff;border:2px solid #0071E3;display:none;touch-action:none;z-index:3;box-sizing:border-box}
 .pe-it.on .pe-h{display:block}
 .pe-h-nw{left:0;top:0;cursor:nwse-resize}.pe-h-se{left:100%;top:100%;cursor:nwse-resize}.pe-h-ne{left:100%;top:0;cursor:nesw-resize}.pe-h-sw{left:0;top:100%;cursor:nesw-resize}
+.pe-h-nw,.pe-h-ne,.pe-h-sw,.pe-h-se{z-index:4}
 .pe-h-n{left:50%;top:0;cursor:ns-resize}.pe-h-s{left:50%;top:100%;cursor:ns-resize}.pe-h-e{left:100%;top:50%;cursor:ew-resize}.pe-h-w{left:0;top:50%;cursor:ew-resize}
 .pe-below .pe-mini{bottom:auto;top:calc(100% + 8px)}
 .pe-inside .pe-mini{bottom:auto;top:8px}
@@ -1640,6 +1641,13 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
 .pe-float textarea{font-size:16px}.pe-float .pe-row{margin:8px 0}.pe-float .pe-sz{flex:0 0 96px;min-width:0}
 .pe-match{border:1px solid var(--line);background:var(--bg);color:var(--accent);border-radius:99px;padding:6px 12px;font:inherit;font-size:.8125rem;cursor:pointer}
 .pe-picking{opacity:.35;pointer-events:none}.pe-picking .pe-match{pointer-events:auto}
+.pe-cover{z-index:1}.pe-it:not(.pe-cover){z-index:2}.pe-it.on{z-index:3}
+
+/* small items: no side handles; small corner handles sit outside the box so they never hide it */
+.pe-it.pe-sm .pe-h-n,.pe-it.pe-sm .pe-h-s,.pe-it.pe-sm .pe-h-e,.pe-it.pe-sm .pe-h-w{display:none!important}
+.pe-it.pe-sm .pe-h{width:10px!important;height:10px!important;margin:0!important;border-width:1.5px}
+.pe-it.pe-sm .pe-h-nw{transform:translate(-100%,-100%)}.pe-it.pe-sm .pe-h-ne{transform:translate(0,-100%)}.pe-it.pe-sm .pe-h-sw{transform:translate(-100%,0)}
+@media (pointer:coarse){.pe-it.pe-sm .pe-h{width:16px!important;height:16px!important}}
 </style>
 <div id="ct" class="sn"><noscript><span class="ar">تعمل هذه الأداة مع تفعيل JavaScript.</span><span class="en">This tool needs JavaScript.</span></noscript></div>
 <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script><script>/* alsamani.com/tools/certificates — one certificate per name from a design and a list. Runs on the device.
