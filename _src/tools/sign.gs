@@ -202,7 +202,6 @@ function poll_(d) {
       if (s.locked) return err_('locked');
       const name = clean_(d.name, 120).trim(), key = nk_(name);
       if (!key) return err_('bad_name');
-      if (s.names.length && !s.names.some(n => nk_(n) === key)) return err_('bad_name');
       const prev = s.votes[key];
       if (prev && !(d.tok && hash_(String(d.tok)) === prev.tok)) return err_('voted');
       const ans = (Array.isArray(d.ans) ? d.ans : []).slice(0, s.items.length).map(x => [0, 1, 2].indexOf(Number(x)) >= 0 ? Number(x) : null);
