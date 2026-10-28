@@ -1649,6 +1649,10 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
 .pe-it.pe-sm .pe-h-nw{transform:translate(-100%,-100%)}.pe-it.pe-sm .pe-h-ne{transform:translate(0,-100%)}.pe-it.pe-sm .pe-h-sw{transform:translate(-100%,0)}
 @media (pointer:coarse){.pe-it.pe-sm .pe-h{width:16px!important;height:16px!important}}
 .pe-empty .sn-two{justify-content:center}
+.pe-grip{width:44px;height:5px;border-radius:9px;background:var(--line);margin:-6px auto 10px;cursor:grab;touch-action:none;position:relative}
+.pe-grip::before{content:"";position:absolute;inset:-12px -30px}
+.pe-sheet .pe-row [aria-pressed=true]{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+.pe-picking .pe-grip{pointer-events:auto}
 </style>
 <div id="pt" class="sn"><noscript><span class="ar">تعمل هذه الأداة مع تفعيل JavaScript.</span><span class="en">This tool needs JavaScript.</span></noscript></div>
 <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script><script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script><script>/* alsamani.com/tools/pdf — shared helpers; the editor itself (write, fill, merge, arrange, shrink) is in pdfedit.js. Everything runs on the device. */
@@ -2170,7 +2174,7 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
     // the page colour around a box: the most common colour on a ring just outside it
     function coverLook(it) {
       const r = ring(it); it.color = r.color;
-      it.patch = it.mode === 'flat' ? null : (it.mode === 'clone' || !r.plain) ? patchFor(it) : null;
+      it.patch = it.mode === 'clone' ? patchFor(it) : null; // plain colour by default; the texture copy only when asked
     }
     // a piece of the page next to the box, the same size, with as little writing in it as possible
     function patchFor(it) {
@@ -2211,11 +2215,23 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
     }
 
     /* ---------- sheets ---------- */
-    function sheet(html) {
-      document.querySelectorAll('.pe-sheet,.pe-bg').forEach(x => x.remove());
-      const bg = document.createElement('div'); bg.className = 'pe-bg'; const sh = document.createElement('div'); sh.className = 'pe-sheet'; sh.innerHTML = html;
-      document.body.append(bg, sh); bg.onclick = () => { bg.remove(); sh.remove(); };
-      return { sh, close: () => { bg.remove(); sh.remove(); } };
+    function sheet(html, float) {
+      document.querySelectorAll('.pe-sheet,.pe-bg').forEach(x => x.remove()); matching = picking = null;
+      const bg = document.createElement('div'); bg.className = 'pe-bg'; const sh = document.createElement('div'); sh.className = 'pe-sheet' + (float ? ' pe-float pe-fbot' : ''); sh.innerHTML = html;
+      if (float) document.body.append(sh); else { document.body.append(bg, sh); bg.onclick = () => { bg.remove(); sh.remove(); }; }
+      movable(sh);
+      return { sh, close: () => { picking = null; hint.hidden = !tool; bg.remove(); sh.remove(); } };
+    }
+    // every panel can be dragged by its grip, so the page under it can be seen or tapped
+    function movable(sh) {
+      const g = document.createElement('div'); g.className = 'pe-grip'; g.title = isAr() ? 'اسحب لتحريك النافذة' : 'Drag to move'; sh.prepend(g);
+      g.addEventListener('pointerdown', e => {
+        e.preventDefault(); const r = sh.getBoundingClientRect(), dx = e.clientX - r.left, dy = e.clientY - r.top; g.setPointerCapture(e.pointerId);
+        Object.assign(sh.style, { left: r.left + 'px', top: r.top + 'px', right: 'auto', bottom: 'auto', margin: 0, transform: 'none', width: r.width + 'px' });
+        const mv = ev => { sh.style.left = Math.min(Math.max(0, ev.clientX - dx), innerWidth - 60) + 'px'; sh.style.top = Math.min(Math.max(0, ev.clientY - dy), innerHeight - 40) + 'px'; };
+        const up = () => { g.removeEventListener('pointermove', mv); g.removeEventListener('pointerup', up); };
+        g.addEventListener('pointermove', mv); g.addEventListener('pointerup', up);
+      });
     }
     // a floating panel for text: no dark backdrop, placed away from the text, and every change shows on the page at once
     function editText(it, isNew) {
@@ -2224,7 +2240,7 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
       if (isNew) { it.text = it.text || ''; items.push(it); mount(it); }
       const v = views.get(it.pid), r = it.el && it.el.getBoundingClientRect(), low = r ? r.top + r.height / 2 > window.innerHeight * .5 : false;
       document.querySelectorAll('.pe-sheet,.pe-bg').forEach(x => x.remove());
-      const sh = document.createElement('div'); sh.className = 'pe-sheet pe-float ' + (low ? 'pe-ftop' : 'pe-fbot');
+      const sh = document.createElement('div'); sh.className = 'pe-sheet pe-float ' + (low ? 'pe-ftop' : 'pe-fbot'); requestAnimationFrame(() => movable(sh));
       sh.innerHTML = `<div class="pe-fh"><h3>${B('النص', 'Text')}</h3><button type="button" class="pe-match" id="peM" title="${isAr() ? 'خذ الخط والحجم واللون من نص في الملف' : 'Take font, size and colour from text in the file'}">◎ ${B('مطابقة نص في الملف', 'Match text in the file')}</button></div>
         <textarea id="peT" rows="2" dir="auto" placeholder="${isAr() ? 'اكتب هنا' : 'Type here'}">${esc(it.text)}</textarea>
         <div class="pe-row"><label>${B('الخط', 'Font')}<select id="peF">${list.map(f => `<option value="${esc(f[0])}"${f[0] === it.font ? ' selected' : ''}>${esc(isAr() ? f[1] : fam(f[0]))}</option>`).join('')}<option value="+">${isAr() ? 'خط من جهازي…' : 'A font from my device…'}</option></select></label>
@@ -2263,7 +2279,7 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
       live(); setTimeout(() => { ta.focus(); ta.setSelectionRange(ta.value.length, ta.value.length); }, 50);
     }
     /* ---------- reading the style of text already in the PDF ---------- */
-    let matching = null;
+    let matching = null, picking = null;
     const GUESS = [[/naskh|traditional|sakkal|majalla|lotus|times|badr|mitra|nazanin|zar|yagut|roman|serif|amiri|scheherazade/i, 'Noto Naskh Arabic'], [/kufi|kufam|reem|droid/i, 'Reem Kufi'], [/cairo/i, 'Cairo'], [/tajawal/i, 'Tajawal'], [/ruqaa|diwani/i, 'Aref Ruqaa']];
     async function textAt(v, cx, cy) {
       const p = v.p; if (!p.s.pdf) return null;
@@ -2290,6 +2306,15 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
         if (top) color = '#' + [1, 2, 3].map(j => Math.round(top[j] / top[0]).toString(16).padStart(2, '0')).join(''); }
       return { font, size: Math.round(best.sz * 2) / 2, bold, color };
     }
+    // the colour under a tap, averaged over a few pixels
+    host.addEventListener('pointerdown', e => {
+      if (!picking) return; const wrap = e.target.closest('.pe-pg'); if (!wrap) return;
+      e.preventDefault(); e.stopPropagation();
+      const v = [...views.values()].find(x => x.wrap === wrap), c = wrap.querySelector('.pe-cvs'), r = c.getBoundingClientRect(), sx = c.width / r.width;
+      const X = Math.max(0, Math.round((e.clientX - r.left) * sx) - 2), Y = Math.max(0, Math.round((e.clientY - r.top) * sx) - 2), d = c.getContext('2d').getImageData(X, Y, 5, 5).data, m = [0, 0, 0];
+      for (let i = 0; i < d.length; i += 4) { m[0] += d[i]; m[1] += d[i + 1]; m[2] += d[i + 2]; }
+      const fn = picking; picking = null; hint.hidden = !tool; fn('#' + m.map(x => Math.round(x / (d.length / 4)).toString(16).padStart(2, '0')).join(''));
+    }, true);
     host.addEventListener('pointerdown', async e => {
       if (!matching) return; const wrap = e.target.closest('.pe-pg'); if (!wrap) return;
       e.preventDefault(); e.stopPropagation();
@@ -2299,15 +2324,20 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
       toast(B(`أُخذ الحجم ${st.size} واللون والخط الأقرب.`, `Took size ${st.size}, the colour and the closest font.`));
     }, true);
     function editCover(it) {
-      const { sh, close } = sheet(`<h3>${B('الإخفاء', 'Cover')}</h3><p class="pt-fine">${B('تلقائيًا: لون الصفحة إن كانت سادة، ونسخة من نقشها إن لم تكن.', 'Automatic: the page colour on plain pages, a copy of the texture on patterned ones.')}</p>
-        <div class="pe-row"><button type="button" class="btn ghost" data-m="auto">${B('تلقائي', 'Automatic')}</button><button type="button" class="btn ghost" data-m="clone">${B('نسخ نقش الخلفية', 'Copy the background texture')}</button><button type="button" class="btn ghost" data-m="flat">${B('لون الخلفية فقط', 'Background colour only')}</button></div>
-        <div class="pe-row"><div class="pe-sw">${['#ffffff', '#f4f4f4', '#111111'].map(c => `<button type="button" data-c="${c}" style="--c:${c}" aria-checked="${!it.auto && c === it.color}"></button>`).join('')}<input type="color" id="peC" value="${it.color}"></div></div>
-        <div class="sn-two"><button type="button" class="btn solid" id="peOk">${B('تم', 'Done')}</button></div>`);
-      sh.querySelectorAll('[data-m]').forEach(b => b.onclick = () => { it.auto = true; it.mode = b.dataset.m === 'auto' ? null : b.dataset.m; coverLook(it); place(it); close(); });
-      sh.querySelectorAll('[data-c]').forEach(b => b.onclick = () => { it.auto = false; it.patch = null; it.color = b.dataset.c; place(it); close(); });
-      sh.querySelector('#peC').oninput = e => { it.auto = false; it.patch = null; it.color = e.target.value; place(it); };
+      const { sh, close } = sheet(`<h3>${B('الإخفاء', 'Cover')}</h3>
+        <div class="pe-row"><button type="button" class="btn ghost" data-m="flat" aria-pressed="${it.mode !== 'clone'}">${B('لون الخلفية', 'Background colour')}</button><button type="button" class="btn ghost" data-m="clone" aria-pressed="${it.mode === 'clone'}">${B('نسخ نقش الخلفية', 'Copy the background texture')}</button></div>
+        <div class="pe-row"><div class="pe-sw">${['#ffffff', '#f4f4f4', '#111111'].map(c => `<button type="button" data-c="${c}" style="--c:${c}" aria-checked="${!it.auto && c === it.color}"></button>`).join('')}<input type="color" id="peC" value="${it.color}"></div><button type="button" class="pe-match" id="pePk">◎ ${B('لون من الصفحة', 'Colour from the page')}</button></div>
+        <div class="sn-two"><button type="button" class="btn solid" id="peOk">${B('تم', 'Done')}</button></div>`, true);
+      const mark = () => sh.querySelectorAll('[data-m]').forEach(b => b.setAttribute('aria-pressed', String((b.dataset.m === 'clone') === (it.mode === 'clone') && !!it.auto)));
+      const set = c => { it.auto = false; it.mode = null; it.patch = null; it.color = c; sh.querySelector('#peC').value = c; place(it); mark(); };
+      sh.querySelectorAll('[data-m]').forEach(b => b.onclick = () => { it.auto = true; it.mode = b.dataset.m === 'clone' ? 'clone' : null; coverLook(it); place(it); sh.querySelector('#peC').value = it.color; mark(); });
+      sh.querySelectorAll('[data-c]').forEach(b => b.onclick = () => set(b.dataset.c));
+      sh.querySelector('#peC').oninput = e => set(e.target.value);
+      sh.querySelector('#pePk').onclick = () => { picking = c => { set(c); sh.classList.remove('pe-picking'); };
+        sh.classList.add('pe-picking'); hint.hidden = false; hint.innerHTML = B('اضغط على الصفحة لأخذ لونها.', 'Tap the page to take its colour.'); };
       sh.querySelector('#peOk').onclick = close;
     }
+
 
 
     /* ---------- save ---------- */

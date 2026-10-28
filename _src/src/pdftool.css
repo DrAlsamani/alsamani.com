@@ -137,3 +137,7 @@
 .pe-it.pe-sm .pe-h-nw{transform:translate(-100%,-100%)}.pe-it.pe-sm .pe-h-ne{transform:translate(0,-100%)}.pe-it.pe-sm .pe-h-sw{transform:translate(-100%,0)}
 @media (pointer:coarse){.pe-it.pe-sm .pe-h{width:16px!important;height:16px!important}}
 .pe-empty .sn-two{justify-content:center}
+.pe-grip{width:44px;height:5px;border-radius:9px;background:var(--line);margin:-6px auto 10px;cursor:grab;touch-action:none;position:relative}
+.pe-grip::before{content:"";position:absolute;inset:-12px -30px}
+.pe-sheet .pe-row [aria-pressed=true]{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+.pe-picking .pe-grip{pointer-events:auto}
