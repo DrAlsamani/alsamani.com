@@ -228,6 +228,7 @@
       <div class="sn-card sn-head">
         <h2 id="snT"></h2>
         <div class="sn-prog"><div class="sn-meter"><i id="snMeter"></i></div><p id="snCount"></p></div>
+        <div class="sn-me" id="snMe" hidden></div>
         <div class="sn-names" id="snNames"></div>
         <div class="sn-acts">
           <button type="button" class="btn solid" id="snDl">${B('تحميل المحضر', 'Download the minutes')}</button>
@@ -246,6 +247,15 @@
       root.querySelector('#snAdminCopy').onclick = () => copy(link + '#k=' + key, B('نُسخ رابط الإدارة. لا ترسله في القروب.', 'Management link copied. Do not share it with the group.'));
       root.querySelector('#snWa').href = 'https://wa.me/?text=' + encodeURIComponent((S.title ? S.title + '\n' : '') + (isAr() ? 'رابط توقيع المحضر: ' : 'Sign the minutes here: ') + link);
     }
+    // a member who signed before on this device: offer their own box straight away
+    const nk = x => snNorm(x || '').replace(/^(د|أ|ا|م|الدكتور|الأستاذ|الاستاذ|المهندس)\.?\s*/, '').replace(/\s(بن|بنت)\s/g, ' ').replace(/[^\u0621-\u064aA-Za-z ]/g, '').replace(/\s+/g, ' ').trim();
+    function myBox() {
+      const me = nk(store.get('me', '')); if (!me) return -1;
+      const w = me.split(' '), first = w[0], last = w[w.length - 1];
+      let best = -1, sc = 0;
+      S.slots.forEach((x, i) => { const t = nk(x.n).split(' '); if (!t[0]) return; let v = 0; if (t[0] === first) v += 2; if (t[t.length - 1] === last) v += 2; w.forEach(z => { if (t.includes(z)) v++; }); if (v > sc && v >= 5) { sc = v; best = i; } });
+      return best;
+    }
     function draw() {
       const n = S.slots.length, d = S.slots.filter(s => s.sig).length;
       root.querySelector('#snT').textContent = S.title || (isAr() ? 'محضر' : 'Minutes');
@@ -253,6 +263,9 @@
       root.querySelector('#snCount').innerHTML = S.locked ? B(`أُقفل المحضر · وقّع ${d} من ${n}`, `Locked · ${d} of ${n} signed`) : d === n ? B(`اكتملت التواقيع (${n})`, `All ${n} have signed`) : B(`وقّع ${d} من ${n}`, `${d} of ${n} signed`);
       root.querySelector('#snNames').innerHTML = S.slots.map((s, i) => `<button type="button" class="sn-chip${s.sig ? ' done' : ''}${mine[i] ? ' mine' : ''}" data-i="${i}">${s.sig ? '✓ ' : ''}${esc(s.n || ((isAr() ? 'خانة ' : 'Box ') + (i + 1)))}</button>`).join('');
       root.querySelectorAll('.sn-chip').forEach(c => c.onclick = () => openBox(+c.dataset.i, true));
+      const mb = myBox(), me = root.querySelector('#snMe');
+      me.hidden = !(mb >= 0 && !S.slots[mb].sig && !S.locked);
+      if (!me.hidden) { me.innerHTML = `<p>${B('خانتك:', 'Your box:')} <b><bdi>${esc(S.slots[mb].n)}</bdi></b></p><button type="button" class="btn solid">${B('وقّع الآن', 'Sign now')}</button>`; me.querySelector('button').onclick = () => openBox(mb, true); }
       if (admin) root.querySelector('#snLock').innerHTML = S.locked ? B('فتح التوقيع', 'Reopen signing') : B('إقفال المحضر', 'Lock');
       placeBoxes(views, S.slots, { mine, onBox: (b, i) => { b.onclick = () => openBox(i); } });
     }
@@ -289,7 +302,7 @@
         if (!png) { toast(B('لم يُرسم توقيع بعد.', 'No signature yet.'), 1); return; }
         if (sh.querySelector('.sn-keep input') && sh.querySelector('.sn-keep input').checked) store.set('sig', png);
         sh.classList.add('busy');
-        try { const j = await call({ a: 'sign', id, i, png }); mine[i] = j.tok; store.set('mine.' + id, mine); S = j; close(); draw(); toast(B('تم توقيعك. شكرًا لك.', 'Signed. Thank you.')); }
+        try { const j = await call({ a: 'sign', id, i, png }); mine[i] = j.tok; store.set('mine.' + id, mine); if (s.n) store.set('me', s.n); S = j; close(); draw(); toast(B('تم توقيعك. شكرًا لك.', 'Signed. Thank you.')); }
         catch (e) { sh.classList.remove('busy'); toast(errMsg(e), 1); if (e.code === 'taken') { close(); refresh(); } }
       };
       const ub = sh.querySelector('[data-act=use]'); if (ub) ub.onclick = () => go(saved);
