@@ -115,3 +115,4 @@
 .pe-h-n{left:50%;top:0;cursor:ns-resize}.pe-h-s{left:50%;top:100%;cursor:ns-resize}.pe-h-e{left:100%;top:50%;cursor:ew-resize}.pe-h-w{left:0;top:50%;cursor:ew-resize}
 .pe-below .pe-mini{bottom:auto;top:calc(100% + 8px)}
 .pe-inside .pe-mini{bottom:auto;top:8px}
+.pe-sizes{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}.pe-sizes .btn{padding:8px 14px}

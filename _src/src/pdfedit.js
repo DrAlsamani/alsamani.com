@@ -105,7 +105,8 @@
       const [dw, dh] = dispWH(p), k = W / dw, c = document.createElement('canvas');
       c.width = Math.round(dw * k); c.height = Math.round(dh * k);
       const x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height);
-      if (p.s.pdf) await p.pg.render({ canvasContext: x, viewport: p.pg.getViewport({ scale: k, rotation: rotOf(p) }) }).promise;
+      if (p.s.pdf) { const f = p.fs || 1, [ow, oh] = p.o0 ? (rotOf(p) % 180 ? [p.o0.h0, p.o0.w0] : [p.o0.w0, p.o0.h0]) : [dw, dh];
+        await p.pg.render({ canvasContext: x, viewport: p.pg.getViewport({ scale: k * f, rotation: rotOf(p) }), transform: [1, 0, 0, 1, (dw - ow * f) / 2 * k, (dh - oh * f) / 2 * k] }).promise; }
       return c;
     }
     const views = new Map();
@@ -138,13 +139,14 @@
     /* ---------- side panel ---------- */
     let sortable = null;
     function drawThumbs() {
-      thumbs.innerHTML = pages.map((p, n) => `<div class="pe-th" data-id="${p.id}"><div class="pe-thi"></div><div class="pe-tha"><span>${n + 1}</span><button type="button" data-rot title="${isAr() ? 'تدوير' : 'Rotate'}">↻</button><button type="button" data-del title="${isAr() ? 'حذف' : 'Delete'}">×</button></div></div>`).join('');
+      thumbs.innerHTML = pages.map((p, n) => `<div class="pe-th" data-id="${p.id}"><div class="pe-thi"></div><div class="pe-tha"><span>${n + 1}</span><button type="button" data-size title="${isAr() ? 'حجم الصفحة' : 'Page size'}">⤢</button><button type="button" data-rot title="${isAr() ? 'تدوير' : 'Rotate'}">↻</button><button type="button" data-del title="${isAr() ? 'حذف' : 'Delete'}">×</button></div></div>`).join('');
       thumbs.querySelectorAll('.pe-th').forEach(el => {
         const p = pages.find(x => x.id === +el.dataset.id);
         (p.th ? Promise.resolve(p.th) : thumbOf(p).then(u => (p.th = u))).then(u => { el.querySelector('.pe-thi').innerHTML = `<img src="${u}" alt="">`; });
         if (p.id === curPid) el.classList.add('cur');
         el.querySelector('.pe-thi').onclick = () => { markThumb(p.id); const v = views.get(p.id); if (v) v.wrap.scrollIntoView({ behavior: 'smooth', block: 'start' }); if (window.innerWidth < 900) setPanel(false); };
         el.querySelector('[data-rot]').onclick = () => rotate(p);
+        el.querySelector('[data-size]').onclick = () => sizeSheet(p);
         el.querySelector('[data-del]').onclick = () => { const at = pages.indexOf(p); pages.splice(at, 1); trash.push({ at, p, its: items.filter(i => i.pid === p.id) }); items = items.filter(i => i.pid !== p.id); layout(); };
       });
       if (window.Sortable && !sortable) sortable = Sortable.create(thumbs, { animation: 160, delay: 160, delayOnTouchOnly: true, filter: 'button', preventOnFilter: false, ghostClass: 'pt-ghost',
@@ -175,6 +177,34 @@
       // items turn with the page, around their centres
       items.filter(i => i.pid === p.id).forEach(i => { const cx = i.x + i.w / 2, cy = i.y + i.h / 2; i.x = dh - cy - i.w / 2; i.y = cx - i.h / 2; });
       p.rot = (p.rot + 90) % 360; p.th = null; layout();
+    }
+    /* ---------- page size: common sizes, or the size of the photo on the page ---------- */
+    const SIZES = [['a4p', 'A4 عمودي', 'A4 portrait', 595.28, 841.89], ['a4l', 'A4 أفقي', 'A4 landscape', 841.89, 595.28], ['ltp', 'Letter عمودي', 'Letter portrait', 612, 792], ['ltl', 'Letter أفقي', 'Letter landscape', 792, 612], ['a5p', 'A5 عمودي', 'A5 portrait', 419.53, 595.28]];
+    function resize(p, W, H) {
+      // W, H as shown; the content (PDF page and items) scales to fit and stays centred
+      const [dw, dh] = dispWH(p), f = Math.min(W / dw, H / dh), ox = (W - dw * f) / 2, oy = (H - dh * f) / 2;
+      items.filter(i => i.pid === p.id).forEach(i => { i.x = ox + i.x * f; i.y = oy + i.y * f; if (i.t === 'text') i.size *= f; else { i.w *= f; i.h *= f; } if (i.vb) i.vb = i.vb; });
+      if (p.s.pdf && !p.o0) p.o0 = { w0: p.w0, h0: p.h0, ox: p.ox, oy: p.oy };
+      if (p.s.pdf) p.fs = (p.fs || 1) * f;
+      const sw = rotOf(p) % 180; p.w0 = sw ? H : W; p.h0 = sw ? W : H; p.ox = 0; p.oy = 0; p.th = null;
+      if (p.s.pdf && p.o0 && Math.abs(p.w0 - p.o0.w0) < .5 && Math.abs(p.h0 - p.o0.h0) < .5 && Math.abs(p.fs - 1) < .001) { Object.assign(p, p.o0); delete p.o0; delete p.fs; }
+    }
+    function sizeSheet(p) {
+      const one = items.filter(i => i.pid === p.id), img = one.length === 1 && one[0].t === 'img' ? one[0] : null, [dw, dh] = dispWH(p);
+      const { sh, close } = sheet(`<h3>${B('حجم الصفحة', 'Page size')}</h3><p class="pt-fine">${B(`الحالي: ${Math.round(dw / 72 * 25.4)} × ${Math.round(dh / 72 * 25.4)} مم. يتسع المحتوى ليناسب الحجم الجديد ويبقى في الوسط.`, `Now: ${Math.round(dw / 72 * 25.4)} × ${Math.round(dh / 72 * 25.4)} mm. The content scales to fit the new size and stays centred.`)}</p>
+        <div class="pe-sizes">${SIZES.map(z => `<button type="button" class="btn ghost" data-z="${z[0]}">${B(z[1], z[2])}</button>`).join('')}${img ? `<button type="button" class="btn ghost" data-z="img">${B('على مقاس الصورة', 'The size of the photo')}</button>` : ''}${p.o0 ? `<button type="button" class="btn ghost" data-z="orig">${B('الحجم الأصلي', 'Original size')}</button>` : ''}</div>
+        <label class="sn-keep"><input type="checkbox" id="peZall"> ${B('طبّقه على كل الصفحات', 'Apply to all pages')}</label>
+        <div class="sn-two"><button type="button" class="btn ghost" id="peNo">${B('إغلاق', 'Close')}</button></div>`);
+      sh.querySelector('#peNo').onclick = close;
+      sh.querySelectorAll('[data-z]').forEach(b => b.onclick = () => {
+        const z = b.dataset.z, all = sh.querySelector('#peZall').checked, list = all ? pages.slice() : [p];
+        list.forEach(pp => {
+          if (z === 'orig') { if (pp.o0) { const o = pp.o0, sw = rotOf(pp) % 180; resize(pp, sw ? o.h0 : o.w0, sw ? o.w0 : o.h0); } return; }
+          if (z === 'img') { const im = items.find(i => i.pid === pp.id && i.t === 'img'); if (!im || pp !== p) return; const [W, H] = [im.w, im.h]; im.x = 0; im.y = 0; const sw = rotOf(pp) % 180; pp.w0 = sw ? H : W; pp.h0 = sw ? W : H; pp.th = null; return; }
+          const d = SIZES.find(x => x[0] === z); resize(pp, d[3], d[4]);
+        });
+        close(); layout();
+      });
     }
     function setPanel(on) { panel = on; body.classList.toggle('pe-open', on); q('[data-tool=pages]').setAttribute('aria-pressed', on); setTimeout(layout, 60); }
 
@@ -466,13 +496,15 @@
     // saving: the file is built first, then a small sheet offers the name and the size (as is, or smaller)
     async function build() {
       // nothing changed in a single file: hand back the original, untouched
-      if (srcs.length === 1 && srcs[0].pdf && !items.length && pages.length === srcs[0].doc.numPages && pages.every((p, i) => p.s === srcs[0] && p.i === i && !p.rot)) return new Uint8Array(srcs[0].buf.slice(0));
+      if (srcs.length === 1 && srcs[0].pdf && !items.length && pages.length === srcs[0].doc.numPages && pages.every((p, i) => p.s === srcs[0] && p.i === i && !p.rot && !p.o0)) return new Uint8Array(srcs[0].buf.slice(0));
         const out = await PDFLib.PDFDocument.create(), libs = new Map();
         for (const p of pages) {
           let pg;
           if (p.s.pdf) {
             if (!libs.has(p.s)) libs.set(p.s, await PDFLib.PDFDocument.load(p.s.buf, { ignoreEncryption: true }));
             [pg] = await out.copyPages(libs.get(p.s), [p.i]); out.addPage(pg);
+            if (p.o0) { const o = p.o0, f = p.fs, tx = (p.w0 - o.w0 * f) / 2 - o.ox * f, ty = (p.h0 - o.h0 * f) / 2 - o.oy * f;
+              pg.scaleContent(f, f); pg.translateContent(tx, ty); pg.setMediaBox(0, 0, p.w0, p.h0); pg.setCropBox(0, 0, p.w0, p.h0); pg.setTrimBox(0, 0, p.w0, p.h0); pg.setBleedBox(0, 0, p.w0, p.h0); pg.setArtBox(0, 0, p.w0, p.h0); }
           } else pg = out.addPage([p.w0, p.h0]);
           const R = rotOf(p); pg.setRotation(PDFLib.degrees(R));
           const its = items.filter(i => i.pid === p.id);
