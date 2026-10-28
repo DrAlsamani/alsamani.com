@@ -484,43 +484,87 @@
       document.body.append(bg, sh); bg.onclick = () => { bg.remove(); sh.remove(); };
       return { sh, close: () => { bg.remove(); sh.remove(); } };
     }
+    // a floating panel for text: no dark backdrop, placed away from the text, and every change shows on the page at once
     function editText(it, isNew) {
       const list = FONTS.concat(it.font.startsWith('my:') ? [[it.font, fam(it.font)]] : []);
-      const { sh, close } = sheet(`<h3>${B('النص', 'Text')}</h3>
-        <textarea id="peT" rows="3" dir="auto" placeholder="${isAr() ? 'اكتب هنا' : 'Type here'}">${esc(it.text)}</textarea>
+      const before = { text: it.text, font: it.font, size: it.size, color: it.color, bold: it.bold, align: it.align };
+      if (isNew) { it.text = it.text || ''; items.push(it); mount(it); }
+      const v = views.get(it.pid), r = it.el && it.el.getBoundingClientRect(), low = r ? r.top + r.height / 2 > window.innerHeight * .5 : false;
+      document.querySelectorAll('.pe-sheet,.pe-bg').forEach(x => x.remove());
+      const sh = document.createElement('div'); sh.className = 'pe-sheet pe-float ' + (low ? 'pe-ftop' : 'pe-fbot');
+      sh.innerHTML = `<div class="pe-fh"><h3>${B('النص', 'Text')}</h3><button type="button" class="pe-match" id="peM" title="${isAr() ? 'خذ الخط والحجم واللون من نص في الملف' : 'Take font, size and colour from text in the file'}">◎ ${B('مطابقة نص في الملف', 'Match text in the file')}</button></div>
+        <textarea id="peT" rows="2" dir="auto" placeholder="${isAr() ? 'اكتب هنا' : 'Type here'}">${esc(it.text)}</textarea>
         <div class="pe-row"><label>${B('الخط', 'Font')}<select id="peF">${list.map(f => `<option value="${esc(f[0])}"${f[0] === it.font ? ' selected' : ''}>${esc(isAr() ? f[1] : fam(f[0]))}</option>`).join('')}<option value="+">${isAr() ? 'خط من جهازي…' : 'A font from my device…'}</option></select></label>
-          <label>${B('الحجم', 'Size')}<input type="number" id="peS" min="5" max="200" step="1" value="${Math.round(it.size)}"></label></div>
+          <label class="pe-sz">${B('الحجم', 'Size')}<input type="number" id="peS" min="4" max="200" step=".5" value="${Math.round(it.size * 2) / 2}"></label></div>
         <div class="pe-row"><div class="pe-sw">${COLORS.map(c => `<button type="button" data-c="${c}" style="--c:${c}" aria-checked="${c === it.color}"></button>`).join('')}<input type="color" id="peC" value="${it.color}"></div>
           <div class="pe-al"><button type="button" data-b aria-pressed="${it.bold}"><b>B</b></button>${['right', 'center', 'left'].map(a => `<button type="button" data-al="${a}" aria-pressed="${it.align === a}">${a === 'right' ? '⇥' : a === 'center' ? '↔' : '⇤'}</button>`).join('')}</div></div>
-        <p class="pe-prev" id="peP"></p>
-        <div class="sn-two"><button type="button" class="btn solid" id="peOk">${B('تم', 'Done')}</button><button type="button" class="btn ghost" id="peNo">${B('إلغاء', 'Cancel')}</button></div>`);
-      const st = { text: it.text, font: it.font, size: it.size, color: it.color, bold: it.bold, align: it.align };
-      const ta = sh.querySelector('#peT'), pv = sh.querySelector('#peP');
-      const show = () => { Object.assign(pv.style, { fontFamily: `"${fam(st.font)}", sans-serif`, fontWeight: st.bold ? 700 : 400, color: st.color, textAlign: st.align, direction: rtlOf(ta.value) ? 'rtl' : 'ltr' }); pv.textContent = ta.value || (isAr() ? 'معاينة الخط' : 'Font preview'); };
-      ta.oninput = show;
+        <div class="sn-two"><button type="button" class="btn solid" id="peOk">${B('تم', 'Done')}</button><button type="button" class="btn ghost" id="peNo">${B('إلغاء', 'Cancel')}</button></div>`;
+      document.body.appendChild(sh);
+      const ta = sh.querySelector('#peT');
+      const live = () => { it.text = ta.value || ''; place(it); select(it); };
+      const sync = () => { sh.querySelector('#peS').value = Math.round(it.size * 2) / 2; sh.querySelector('#peC').value = it.color; sh.querySelectorAll('[data-c]').forEach(x => x.setAttribute('aria-checked', x.dataset.c === it.color)); sh.querySelector('[data-b]').setAttribute('aria-pressed', it.bold);
+        const F = sh.querySelector('#peF'); if (![...F.options].some(o => o.value === it.font)) { const o = document.createElement('option'); o.value = it.font; o.textContent = fam(it.font); F.insertBefore(o, F.lastChild); } F.value = it.font; };
+      ta.oninput = live;
       sh.querySelector('#peF').onchange = async e => {
         if (e.target.value === '+') { const ff = q('#peFont'); ff.value = ''; ff.onchange = async () => {
-          const f = ff.files[0]; if (!f) { e.target.value = st.font; return; } const name = f.name.replace(/\.[^.]+$/, '');
-          try { const face = new FontFace(name, await f.arrayBuffer()); await face.load(); document.fonts.add(face); loaded.add('my:' + name); st.font = 'my:' + name;
-            const o = document.createElement('option'); o.value = st.font; o.textContent = name; e.target.insertBefore(o, e.target.lastChild); e.target.value = st.font; show(); }
-          catch (x) { toast(B('تعذّر قراءة ملف الخط.', 'The font file could not be read.'), 1); e.target.value = st.font; } }; ff.click(); return; }
-        st.font = e.target.value; await loadFont(st.font); show();
+          const f = ff.files[0]; if (!f) { e.target.value = it.font; return; } const name = f.name.replace(/\.[^.]+$/, '');
+          try { const face = new FontFace(name, await f.arrayBuffer()); await face.load(); document.fonts.add(face); loaded.add('my:' + name); it.font = 'my:' + name; sync(); live(); }
+          catch (x) { toast(B('تعذّر قراءة ملف الخط.', 'The font file could not be read.'), 1); e.target.value = it.font; } }; ff.click(); return; }
+        it.font = e.target.value; await loadFont(it.font); live();
       };
-      sh.querySelector('#peS').oninput = e => { st.size = Math.max(5, Math.min(200, +e.target.value || 12)); };
-      sh.querySelectorAll('[data-c]').forEach(b => b.onclick = () => { st.color = b.dataset.c; sh.querySelector('#peC').value = st.color; sh.querySelectorAll('[data-c]').forEach(x => x.setAttribute('aria-checked', x === b)); show(); });
-      sh.querySelector('#peC').oninput = e => { st.color = e.target.value; sh.querySelectorAll('[data-c]').forEach(x => x.setAttribute('aria-checked', 'false')); show(); };
-      sh.querySelector('[data-b]').onclick = e => { st.bold = !st.bold; e.currentTarget.setAttribute('aria-pressed', st.bold); show(); };
-      sh.querySelectorAll('[data-al]').forEach(b => b.onclick = () => { st.align = b.dataset.al; sh.querySelectorAll('[data-al]').forEach(x => x.setAttribute('aria-pressed', x === b)); show(); });
-      sh.querySelector('#peNo').onclick = close;
+      sh.querySelector('#peS').oninput = e => { it.size = Math.max(4, Math.min(200, +e.target.value || 12)); live(); };
+      sh.querySelectorAll('[data-c]').forEach(b => b.onclick = () => { it.color = b.dataset.c; sync(); live(); });
+      sh.querySelector('#peC').oninput = e => { it.color = e.target.value; sh.querySelectorAll('[data-c]').forEach(x => x.setAttribute('aria-checked', 'false')); live(); };
+      sh.querySelector('[data-b]').onclick = () => { it.bold = !it.bold; sync(); live(); };
+      sh.querySelectorAll('[data-al]').forEach(b => b.onclick = () => { it.align = b.dataset.al; sh.querySelectorAll('[data-al]').forEach(x => x.setAttribute('aria-pressed', x === b)); live(); });
+      // match: the next tap on the page reads the text there
+      sh.querySelector('#peM').onclick = () => { matching = st => { Object.assign(it, st); loadFont(it.font).then(() => { sync(); live(); }); sh.classList.remove('pe-picking'); };
+        sh.classList.add('pe-picking'); hint.hidden = false; hint.innerHTML = B('اضغط على نص في الصفحة لأخذ خطه وحجمه ولونه.', 'Tap text on the page to take its font, size and colour.'); };
+      const close = () => { matching = null; hint.hidden = !tool; sh.remove(); };
+      sh.querySelector('#peNo').onclick = () => { close(); if (isNew) remove(it); else { Object.assign(it, before); place(it); } };
       sh.querySelector('#peOk').onclick = async () => {
-        st.text = ta.value.replace(/\s+$/, ''); close();
-        if (!st.text) { if (!isNew) remove(it); return; }
-        await loadFont(st.font); Object.assign(it, st);
-        if (isNew) add(it); else place(it);
-        select(it);
+        it.text = ta.value.replace(/\s+$/, ''); close();
+        if (!it.text) { remove(it); return; }
+        await loadFont(it.font); place(it); select(it);
       };
-      show(); setTimeout(() => { ta.focus(); ta.setSelectionRange(ta.value.length, ta.value.length); }, 50);
+      live(); setTimeout(() => { ta.focus(); ta.setSelectionRange(ta.value.length, ta.value.length); }, 50);
     }
+    /* ---------- reading the style of text already in the PDF ---------- */
+    let matching = null;
+    const GUESS = [[/naskh|traditional|sakkal|majalla|lotus|times|badr|mitra|nazanin|zar|yagut|roman|serif|amiri|scheherazade/i, 'Noto Naskh Arabic'], [/kufi|kufam|reem|droid/i, 'Reem Kufi'], [/cairo/i, 'Cairo'], [/tajawal/i, 'Tajawal'], [/ruqaa|diwani/i, 'Aref Ruqaa']];
+    async function textAt(v, cx, cy) {
+      const p = v.p; if (!p.s.pdf) return null;
+      const tc = p.tc || (p.tc = await p.pg.getTextContent()), f = p.fs || 1, R = rotOf(p), [dw, dh] = dispWH(p);
+      const [ow, oh] = p.o0 ? (R % 180 ? [p.o0.h0, p.o0.w0] : [p.o0.w0, p.o0.h0]) : [dw, dh], vp = p.pg.getViewport({ scale: f, rotation: R }), offx = (dw - ow * f) / 2, offy = (dh - oh * f) / 2;
+      let best = null, bd = 1e9;
+      tc.items.forEach(t => {
+        if (!t.str || !t.str.trim()) return;
+        const sz = Math.hypot(t.transform[0], t.transform[1]) * f, [bx, by] = vp.convertToViewportPoint(t.transform[4], t.transform[5]), x0 = bx + offx, y1 = by + offy, w = (t.width || sz * t.str.length * .5) * f;
+        const xa = Math.min(x0, x0 + w), xb = Math.max(x0, x0 + w), ya = y1 - sz, yb = y1 + sz * .25;
+        const d = (cx < xa ? xa - cx : cx > xb ? cx - xb : 0) + (cy < ya ? ya - cy : cy > yb ? cy - yb : 0);
+        if (d < bd) { bd = d; best = { t, sz, box: [xa, ya, xb, yb] }; }
+      });
+      if (!best || bd > 12) return null;
+      let name = (tc.styles[best.t.fontName] || {}).fontFamily || '';
+      try { if (p.pg.commonObjs.has(best.t.fontName)) name += ' ' + (p.pg.commonObjs.get(best.t.fontName).name || ''); } catch (e) {}
+      const font = (GUESS.find(g => g[0].test(name)) || [0, /mono/i.test(name) ? 'IBM Plex Sans Arabic' : 'IBM Plex Sans Arabic'])[1];
+      const bold = /bold|black|heavy|semibold|demi/i.test(name);
+      // the colour: the most common dark colour in the text's box on the drawn page
+      let color = '#111111'; const c = v.wrap.querySelector('.pe-cvs');
+      if (c) { const s = c.width / v.W * v.k, [xa, ya, xb, yb] = best.box, X = Math.max(0, Math.round(xa * s)), Y = Math.max(0, Math.round(ya * s)), W = Math.max(1, Math.min(c.width - X, Math.round((xb - xa) * s))), H = Math.max(1, Math.min(c.height - Y, Math.round((yb - ya) * s)));
+        const d = c.getContext('2d').getImageData(X, Y, W, H).data, n = {}; let top = null;
+        for (let i = 0; i < d.length; i += 4) { const L = .299 * d[i] + .587 * d[i + 1] + .114 * d[i + 2]; if (L > 170) continue; const k = (d[i] >> 4) + ',' + (d[i + 1] >> 4) + ',' + (d[i + 2] >> 4), e = n[k] || (n[k] = [0, 0, 0, 0]); e[0]++; e[1] += d[i]; e[2] += d[i + 1]; e[3] += d[i + 2]; if (!top || e[0] > top[0]) top = e; }
+        if (top) color = '#' + [1, 2, 3].map(j => Math.round(top[j] / top[0]).toString(16).padStart(2, '0')).join(''); }
+      return { font, size: Math.round(best.sz * 2) / 2, bold, color };
+    }
+    host.addEventListener('pointerdown', async e => {
+      if (!matching) return; const wrap = e.target.closest('.pe-pg'); if (!wrap) return;
+      e.preventDefault(); e.stopPropagation();
+      const v = [...views.values()].find(x => x.wrap === wrap), r = wrap.getBoundingClientRect(), st = await textAt(v, (e.clientX - r.left) / v.k, (e.clientY - r.top) / v.k);
+      if (!st) { toast(B('لم أجد نصًا هنا. اضغط على كلمة مكتوبة في الملف.', 'No text found there. Tap a word written in the file.'), 1); return; }
+      const fn = matching; matching = null; hint.hidden = !tool; fn(st);
+      toast(B(`أُخذ الحجم ${st.size} واللون والخط الأقرب.`, `Took size ${st.size}, the colour and the closest font.`));
+    }, true);
     function editCover(it) {
       const { sh, close } = sheet(`<h3>${B('لون الإخفاء', 'Cover colour')}</h3><p class="pt-fine">${B('يأخذ المربع لون الصفحة حوله تلقائيًا، أو اختر لونًا بنفسك.', 'The box takes the colour of the page around it automatically, or pick one yourself.')}</p>
         <div class="pe-row"><button type="button" class="btn ghost" id="peAuto">${B('مطابقة لون الخلفية', 'Match the background')}</button><div class="pe-sw">${['#ffffff', '#f4f4f4', '#111111'].map(c => `<button type="button" data-c="${c}" style="--c:${c}" aria-checked="${!it.auto && c === it.color}"></button>`).join('')}<input type="color" id="peC" value="${it.color}"></div></div>
