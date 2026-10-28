@@ -136,15 +136,24 @@
     }
   }
 
+  // the coordinator's boxes are remembered on this device and can be reused for the next minutes of the same format
+  const tpls = () => store.get('tpl', []);
+  function applyTpl(t, doc, slots) {
+    slots.length = 0;
+    t.slots.forEach(x => slots.push({ p: Math.max(0, Math.min(doc.numPages - 1, doc.numPages - 1 - x.pe)), n: x.n, r: x.r || '', x: x.x, y: x.y, w: x.w, h: x.h }));
+  }
   function editor(doc, buf, slots, title) {
     const ed = root.querySelector('#snEdit'); ed.hidden = false;
+    const T = tpls(); let used = null;
+    if (!slots.length && T.length) { applyTpl(T[0], doc, slots); used = T[0]; }
     const found = slots.length;
     ed.innerHTML = `
       <div class="sn-card">
         <p class="sn-step">${B('٢', '2')}</p>
         <h2>${B('إنشاء الرابط', 'Create the link')}</h2>
         <label class="sn-lbl">${B('عنوان المحضر', 'Title')}<input type="text" id="snTitle" maxlength="200" value="${esc(title)}"></label>
-        <p class="sn-found">${found ? B(`حددت الأداة ${found} خانة توقيع أمام الأسماء، وستظهر للأعضاء جاهزة. ويستطيع أي عضو أيضًا التوقيع في الموضع الذي يختاره.`, `The tool marked ${found} signature boxes next to the names; members will see them ready. Any member can also sign wherever they choose.`) : B('لم تُحدَّد خانات توقيع تلقائيًا، ولا بأس: يضع كل عضو توقيعه في الموضع الذي يختاره من المحضر.', 'No signature boxes were detected, which is fine: each member places their signature wherever they choose.')}</p>
+        ${T.length ? `<label class="sn-lbl">${B('خانات محفوظة من محاضر سابقة', 'Boxes saved from earlier minutes')}<select id="snTpl"><option value="">${isAr() ? 'تحديد تلقائي من هذا الملف' : 'Detect from this file'}</option>${T.map((t, k) => `<option value="${k}"${used === t ? ' selected' : ''}>${esc(t.title)} · ${t.slots.length} ${isAr() ? 'خانة' : 'boxes'}</option>`).join('')}</select></label>` : ''}
+        <p class="sn-found">${used ? B(`استُخدمت خانات «${esc(used.title)}» وأسماؤها. راجعها إن تغيّر شكل المحضر.`, `Boxes and names from “${esc(used.title)}” were applied. Review them if the layout changed.`) : found ? B(`حددت الأداة ${found} خانة توقيع أمام الأسماء، وستظهر للأعضاء جاهزة. ويستطيع أي عضو أيضًا التوقيع في الموضع الذي يختاره.`, `The tool marked ${found} signature boxes next to the names; members will see them ready. Any member can also sign wherever they choose.`) : B('لم تُحدَّد خانات توقيع تلقائيًا، ولا بأس: يضع كل عضو توقيعه في الموضع الذي يختاره من المحضر.', 'No signature boxes were detected, which is fine: each member places their signature wherever they choose.')}</p>
         <div class="sn-two"><button type="button" class="btn solid" id="snCreate">${B('إنشاء الرابط الآن', 'Create the link now')}</button>
         <button type="button" class="btn ghost" id="snRevBtn" aria-expanded="false">${found ? B('مراجعة الخانات أولًا', 'Review the boxes first') : B('تحديد الخانات بنفسي', 'Mark the boxes myself')}</button></div>
       </div>
@@ -190,6 +199,11 @@
     add.onclick = () => { adding = !adding; add.setAttribute('aria-pressed', adding); host.classList.toggle('adding', adding); };
     drawList();
     let shown = false;
+    const det = slots.slice(), ts = ed.querySelector('#snTpl');
+    if (ts) ts.onchange = () => {
+      if (ts.value === '') { slots.length = 0; (used ? [] : det).forEach(x => slots.push(x)); } else applyTpl(T[+ts.value], doc, slots);
+      drawList(); if (shown) place(); toast(B(`${slots.length} خانة`, `${slots.length} boxes`));
+    };
     const rb = ed.querySelector('#snRevBtn');
     rb.onclick = () => { const o = ed.querySelector('#snRev').hidden; ed.querySelector('#snRev').hidden = !o; rb.setAttribute('aria-expanded', o); if (o && !shown) { shown = true; show().then(() => { const x = host.querySelector('.sn-box'); (x || host).scrollIntoView({ behavior: 'smooth', block: 'center' }); }); } };
     const jb = ed.querySelector('#snJump'); if (jb) jb.onclick = () => { const x = host.querySelector('.sn-box'); if (x) x.scrollIntoView({ behavior: 'smooth', block: 'center' }); };
@@ -200,6 +214,11 @@
       try {
         const j = await call({ a: 'create', title: ed.querySelector('#snTitle').value.trim() || title, pdf: b64(buf), slots: slots.map(s => ({ p: s.p, n: s.n.trim(), r: s.r || '', x: s.x, y: s.y, w: s.w, h: s.h })) });
         const keys = store.get('keys', {}); keys[j.id] = j.k; store.set('keys', keys);
+        if (slots.length) {
+          const t = { title: ed.querySelector('#snTitle').value.trim() || title, pages: doc.numPages, slots: slots.map(s => ({ pe: doc.numPages - 1 - s.p, n: s.n.trim(), r: s.r || '', x: s.x, y: s.y, w: s.w, h: s.h })) };
+          const key = JSON.stringify(t.slots.map(s => [s.pe, Math.round(s.x), Math.round(s.y)]));
+          store.set('tpl', [t].concat(tpls().filter(o => JSON.stringify(o.slots.map(s => [s.pe, Math.round(s.x), Math.round(s.y)])) !== key)).slice(0, 8));
+        }
         location.href = '?s=' + j.id + '&new=1#k=' + j.k;
       } catch (e) { toast(errMsg(e), 1); btn.disabled = false; btn.classList.remove('busy'); }
     };
