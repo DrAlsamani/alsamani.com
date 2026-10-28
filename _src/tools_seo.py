@@ -38,7 +38,7 @@ SEO = {
           ('اكتب على الصفحات، وضع علامات ✓ و✕ لتعبئة النماذج، وأضف صورة أو ختمًا.', 'Write on pages, add ✓ and ✕ marks to fill forms, and add an image or stamp.'),
           ('أخفِ نصًا قديمًا بمربع يأخذ لون الصفحة، واكتب بدله.', 'Cover old text with a box that takes the page colour, and write over it.'),
           ('رتّب الصفحات من اللوحة الجانبية، ودوّرها أو احذفها، ثم احفظ ملفًا واحدًا.', 'Arrange, rotate or delete pages from the side panel, then save one file.'),
-          ('ولضغط ملف كبير: اختر «ضغط ملف».', 'To make a large file smaller, choose “Shrink a file”.')],
+          ('عند الحفظ يمكنك تصغير حجم الملف ليسهل إرساله.', 'When saving, you can make the file smaller so it is easy to send.')],
   'faq': [('هل تُرفع ملفاتي إلى خادم؟', 'Are my files uploaded to a server?', 'لا. تُعالج الملفات داخل جهازك فقط.', 'No. Files are processed on your device only.'),
           ('لماذا يتلخبط النص العربي عند تحرير PDF في برامج أخرى؟', 'Why does Arabic text break when editing a PDF elsewhere?', 'لأن الملف يحفظ أشكال الحروف لا الكلمات. هنا يُغطّى النص القديم ويُكتب الجديد بخط سليم.', 'Because a PDF stores letter shapes, not words. Here the old text is covered and the new text is written in a proper font.'),
           ('كيف أكرر نصًا بالتنسيق نفسه، مثل التاريخ؟', 'How do I repeat text with the same format, such as a date?', 'اضغط النص ثم «تكرار»، وعدّل النسخة. وفي الحاسب: Ctrl أو ⌘ مع C ثم V.', 'Tap the text, then Duplicate, and edit the copy. On a computer: Ctrl or ⌘ with C, then V.'),

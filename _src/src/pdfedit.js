@@ -33,8 +33,8 @@
 
   window.PTEdit = function (initial) {
     const srcs = [], pages = [], trash = [];
-    let items = [], seq = 0, sel = null, tool = null, clip = null, panel = window.innerWidth >= 900, lastMark = null;
-    root.innerHTML = `${back}<div class="pe-app">
+    let fname = '', items = [], seq = 0, sel = null, tool = null, clip = null, panel = window.innerWidth >= 900, lastMark = null;
+    root.innerHTML = `<div class="pe-app">
       <div class="pe-bar" id="peBar">
         <button type="button" data-tool="pages" aria-pressed="${panel}"><b>☰</b>${B('الصفحات', 'Pages')}</button><i class="pe-sep"></i>
         <button type="button" data-tool="text"><b>T</b>${B('نص', 'Text')}</button>
@@ -50,7 +50,6 @@
           <button type="button" class="sn-lnk pe-undo" id="peUndo" hidden>${B('تراجع عن الحذف', 'Undo delete')}</button></aside>
         <div class="pe-pages" id="pePages"><div class="pe-empty" id="peEmpty"><div class="sn-two"><button type="button" class="btn solid" id="pePick">${B('اختيار ملف PDF', 'Choose a PDF')}</button><button type="button" class="btn ghost" id="pePickI">${B('صور الأوراق', 'Photos of pages')}</button></div><p class="pt-fine">${B('يمكن فتح أكثر من ملف ودمجها، ثم الكتابة عليها.', 'You can open several files to merge them, then write on them.')}</p></div></div>
       </div>
-      <label class="sn-lbl pe-name" id="peNameL" hidden>${B('اسم الملف', 'File name')}<input type="text" id="peName" maxlength="120"></label>
     </div>
     <input type="file" id="peIn" accept="application/pdf,.pdf" multiple hidden><input type="file" id="peInI" accept="image/*" multiple hidden><input type="file" id="peImg" accept="image/*" hidden><input type="file" id="peFont" accept=".ttf,.otf,.woff,.woff2" hidden>`;
     const q = s => root.querySelector(s), host = q('#pePages'), thumbs = q('#peThumbs'), body = q('#peBody');
@@ -84,7 +83,7 @@
           srcs.push(s);
         } catch (e) { toast(/\.hei[cf]$/i.test(f.name) ? B('هذه صورة بصيغة HEIC لا يقرؤها هذا المتصفح. افتح الأداة من Safari، أو حوّل الصورة إلى JPG.', 'This HEIC photo cannot be read by this browser. Use Safari, or convert the photo to JPG.') : B('تعذّر فتح ملف: ', 'Could not open: ') + esc(f.name), 1); }
       }
-      if (!q('#peName').value && srcs[0]) q('#peName').value = baseName(srcs[0].f.name);
+      if (!fname && srcs[0]) fname = baseName(srcs[0].f.name);
       layout();
     }
     // draws one page as shown (rotation included) into a canvas of the given width
@@ -102,7 +101,7 @@
     const views = new Map();
     let io = null;
     function layout() {
-      q('#peEmpty').hidden = pages.length > 0; q('#peNameL').hidden = !pages.length; q('#peUndo').hidden = !trash.length;
+      q('#peEmpty').hidden = pages.length > 0; q('#peUndo').hidden = !trash.length;
       const W = Math.max(240, Math.min(host.clientWidth || 700, 900));
       if (io) io.disconnect();
       io = new IntersectionObserver(es => es.forEach(en => { if (!en.isIntersecting) return; const v = [...views.values()].find(x => x.wrap === en.target); if (v && !v.drawn) draw(v); }), { rootMargin: '500px' });
@@ -225,8 +224,7 @@
       else if (e.key.startsWith('Arrow')) { e.preventDefault(); sel.x += e.key === 'ArrowLeft' ? -st : e.key === 'ArrowRight' ? st : 0; sel.y += e.key === 'ArrowUp' ? -st : e.key === 'ArrowDown' ? st : 0; place(sel); }
     };
     document.addEventListener('keydown', onKey);
-    q('[data-back]').onclick = () => { window.removeEventListener('resize', onResize); document.removeEventListener('pointerdown', onDoc); document.removeEventListener('keydown', onKey); home(); };
-    function drag(it) {
+        function drag(it) {
       const el = it.el;
       el.addEventListener('pointerdown', e => {
         if (e.target.closest('.pe-mini')) return;
@@ -333,10 +331,10 @@
     const markPng = it => new Promise(res => { const im = new Image(), S = 240; im.onload = () => { const c = document.createElement('canvas'); c.width = c.height = S; c.getContext('2d').drawImage(im, 0, 0, S, S); res(c.toDataURL('image/png')); };
       im.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(markSvg(it.mk).replace('<svg ', `<svg xmlns="http://www.w3.org/2000/svg" width="${S}" height="${S}" color="${it.color}" `)); });
     const toPng = src => new Promise(res => { const im = new Image(); im.onload = () => { const c = document.createElement('canvas'); c.width = im.naturalWidth; c.height = im.naturalHeight; c.getContext('2d').drawImage(im, 0, 0); res(c.toDataURL('image/png')); }; im.src = src; });
-    q('#peSave').onclick = async ev => {
-      if (!pages.length) { inp.click(); return; }
-      const btn = ev.currentTarget; btn.disabled = true;
-      try {
+    // saving: the file is built first, then a small sheet offers the name and the size (as is, or smaller)
+    async function build() {
+      // nothing changed in a single file: hand back the original, untouched
+      if (srcs.length === 1 && srcs[0].pdf && !items.length && pages.length === srcs[0].doc.numPages && pages.every((p, i) => p.s === srcs[0] && p.i === i && !p.rot)) return new Uint8Array(srcs[0].buf.slice(0));
         const out = await PDFLib.PDFDocument.create(), libs = new Map();
         for (const p of pages) {
           let pg;
@@ -358,11 +356,53 @@
             pg.drawImage(await out.embedPng(png), o);
           }
         }
-        const bytes = await out.save(), name = (q('#peName').value.trim() || 'document').replace(/[\\/:*?"<>|]+/g, ' ') + '.pdf';
-        deliver(bytes, name, btn);
-      } catch (e) { toast(B('تعذّر حفظ الملف. قد يكون أحد الملفات محميًا بكلمة مرور.', 'The file could not be saved. One of the files may be password-protected.'), 1); }
+        return await out.save();
+    }
+    const kb = n => n < 1048576 ? Math.max(1, Math.round(n / 1024)) + ' KB' : (n / 1048576).toFixed(1) + ' MB';
+    const LV = [{ dpi: 200, q: .85 }, { dpi: 150, q: .75 }, { dpi: 110, q: .62 }];
+    async function shrinkBytes(bytes, L, st) {
+      const doc = await pdfjsLib.getDocument(Object.assign({ data: new Uint8Array(bytes) }, OPT)).promise, out = await PDFLib.PDFDocument.create();
+      for (let i = 1; i <= doc.numPages; i++) {
+        st.textContent = (isAr() ? 'جارٍ التصغير… صفحة ' : 'Shrinking… page ') + i + ' / ' + doc.numPages;
+        const pg = await doc.getPage(i), v1 = pg.getViewport({ scale: 1 }), vp = pg.getViewport({ scale: L.dpi / 72 });
+        const c = document.createElement('canvas'); c.width = Math.round(vp.width); c.height = Math.round(vp.height);
+        const x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height);
+        await pg.render({ canvasContext: x, viewport: vp }).promise;
+        const jb = await new Promise(r => c.toBlob(r, 'image/jpeg', L.q)), im = await out.embedJpg(await jb.arrayBuffer());
+        out.addPage([v1.width, v1.height]).drawImage(im, { x: 0, y: 0, width: v1.width, height: v1.height }); c.width = c.height = 0;
+      }
+      return await out.save();
+    }
+    q('#peSave').onclick = async ev => {
+      if (!pages.length) { inp.click(); return; }
+      const btn = ev.currentTarget; btn.disabled = true; let bytes;
+      try { bytes = await build(); }
+      catch (e) { btn.disabled = false; toast(B('تعذّر حفظ الملف. قد يكون أحد الملفات محميًا بكلمة مرور.', 'The file could not be saved. One of the files may be password-protected.'), 1); return; }
       btn.disabled = false;
+      let lv = 1;
+      const { sh, close } = sheet(`<h3>${B('حفظ الملف', 'Save the file')}</h3>
+        <label class="sn-lbl">${B('اسم الملف', 'File name')}<input type="text" id="peN" maxlength="120" value="${esc(fname || 'document')}"></label>
+        <p class="pt-fine pe-size">${B(`${pages.length} صفحة · ${kb(bytes.length)}`, `${pages.length} pages · ${kb(bytes.length)}`)}</p>
+        <div class="sn-two"><button type="button" class="btn solid" id="peGo">${B('حفظ', 'Save')}</button></div>
+        <details class="pe-shr"><summary>${B('تصغير الحجم للإرسال', 'Make it smaller to send')}</summary>
+          <div class="pt-lv" role="radiogroup">${[['خفيف', 'Light', 'أوضح جودة', 'Best quality'], ['متوسط', 'Medium', 'مناسب للواتساب', 'Good for WhatsApp'], ['قوي', 'Strong', 'أصغر حجم', 'Smallest']].map((l, i) => `<button type="button" role="radio" data-l="${i}" aria-checked="${i === lv}"><b>${B(l[0], l[1])}</b><span>${B(l[2], l[3])}</span></button>`).join('')}</div>
+          <p class="pt-fine">${B('تتحول الصفحات إلى صور، فلا يمكن تحديد النص أو نسخه في الملف المصغّر.', 'Pages become images, so text in the smaller file cannot be selected or copied.')}</p>
+          <div class="sn-two"><button type="button" class="btn ghost" id="peSm">${B('حفظ نسخة مصغّرة', 'Save a smaller copy')}</button></div><p class="pt-status" id="peSt" aria-live="polite"></p></details>`);
+      const name = () => { fname = sh.querySelector('#peN').value.trim() || 'document'; return fname.replace(/[\\/:*?"<>|]+/g, ' ') + '.pdf'; };
+      sh.querySelector('#peGo').onclick = e => { deliver(bytes, name(), e.currentTarget); setTimeout(close, 600); };
+      sh.querySelectorAll('[data-l]').forEach(b => b.onclick = () => { lv = +b.dataset.l; sh.querySelectorAll('[data-l]').forEach(x => x.setAttribute('aria-checked', x === b)); });
+      sh.querySelector('#peSm').onclick = async e => {
+        const b = e.currentTarget, st = sh.querySelector('#peSt'); b.disabled = true;
+        try {
+          const small = await shrinkBytes(bytes, LV[lv], st);
+          if (small.length >= bytes.length * .95) { st.innerHTML = B('الملف صغير أصلًا ولم يصغر أكثر. احفظه كما هو.', 'The file is already small; it did not get smaller. Save it as it is.'); b.disabled = false; return; }
+          st.innerHTML = B(`من ${kb(bytes.length)} إلى ${kb(small.length)}`, `From ${kb(bytes.length)} to ${kb(small.length)}`);
+          b.disabled = false; b.innerHTML = B('حفظ النسخة المصغّرة', 'Save the smaller copy');
+          const n = name().replace(/\.pdf$/, (isAr() ? ' - مصغّر' : ' - small') + '.pdf');
+          b.onclick = ev2 => deliver(small, n, ev2.currentTarget); deliver(small, n, b);
+        } catch (x) { st.textContent = ''; b.disabled = false; toast(B('تعذّر تصغير الملف.', 'The file could not be made smaller.'), 1); }
+      };
     };
-    if (initial && initial.length) addFiles(initial); else inp.click();
+    if (initial && initial.length) addFiles(initial);
   };
 })();

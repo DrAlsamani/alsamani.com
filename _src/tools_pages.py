@@ -76,7 +76,7 @@ def _icon(slug):
     return f'<span class="tl-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">{ICONS.get(slug, "")}</svg></span>'
 def group_items(g):
     ts = [t for t in TOOLS if t.get('group') == g]
-    extra = [JOURNEY, METHODS] if g == 'research' else ([SIGN] if sign_ready() else []) + ([PASS, MEET, ATTEND] if poll_ready() else []) + [PDFT, CERT, QRT] if g == 'work' else []
+    extra = [JOURNEY, METHODS] if g == 'research' else ([SIGN] if sign_ready() else []) + [PDFT] + ([PASS, MEET, ATTEND] if poll_ready() else []) + [CERT, QRT] if g == 'work' else []
     return extra + ts
 def _tag(t):
     # a label only where it tells something the title does not
@@ -191,7 +191,7 @@ MEET = {'slug': 'meet', 't_ar': 'موعد الاجتماع', 't_en': 'Meeting ti
 ATTEND = {'slug': 'attend', 't_ar': 'تسجيل الحضور', 't_en': 'Attendance',
         'q_ar': 'يسجّل كل حاضر حضوره من جواله، وتظهر لك قائمة الحاضرين ومن غاب.',
         'q_en': 'Each attendee records presence from their phone; you see who came and who did not.'}
-PDFT = {'slug': 'pdf', 't_ar': 'ملفات PDF', 't_en': 'PDF files',
+PDFT = {'slug': 'pdf', 't_ar': 'محرر PDF', 't_en': 'PDF editor',
         'q_ar': 'حرّر ملفات PDF وعبّئها بالكتابة والعلامات، وادمجها ورتّب صفحاتها، واضغط الملفات الكبيرة.',
         'q_en': 'Edit and fill PDFs with text and marks, merge them and arrange their pages, and shrink large files.'}
 CERT = {'slug': 'certificates', 't_ar': 'الشهادات', 't_en': 'Certificates',

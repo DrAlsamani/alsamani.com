@@ -1384,8 +1384,8 @@ html[dir=ltr] .jr-dch.fd .jr-fold::before{transform:rotate(-45deg)}
 <a href="../../contact/index.html"><span class="ar">تواصل</span><span class="en">Contact</span></a></nav>
 </header>
 <main data-base="../../">
-<section class="first tl-page sn-page-wrap"><nav class="tl-crumb" aria-label="breadcrumb"><a href="../index.html"><span class="ar">الأدوات</span><span class="en">Tools</span></a><i class="chev"></i><a href="../work/index.html"><span class="ar">الاجتماعات والملفات</span><span class="en">Meetings and files</span></a><i class="chev"></i><span><span class="ar">ملفات PDF</span><span class="en">PDF files</span></span></nav>
-<header class="tl-head"><h1><span class="ar">ملفات PDF</span><span class="en">PDF files</span></h1></header>
+<section class="first tl-page sn-page-wrap"><nav class="tl-crumb" aria-label="breadcrumb"><a href="../index.html"><span class="ar">الأدوات</span><span class="en">Tools</span></a><i class="chev"></i><a href="../work/index.html"><span class="ar">الاجتماعات والملفات</span><span class="en">Meetings and files</span></a><i class="chev"></i><span><span class="ar">محرر PDF</span><span class="en">PDF editor</span></span></nav>
+<header class="tl-head"><h1><span class="ar">محرر PDF</span><span class="en">PDF editor</span></h1></header>
 <style>.sn{max-width:900px;margin:0 auto;display:grid;gap:18px}
 .sn-card{background:var(--surface);border-radius:18px;padding:28px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
 .sn-card h2{font-size:1.375rem;font-weight:600;margin:0 0 8px}
@@ -1607,9 +1607,10 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
 #pt{min-width:0;max-width:100%}.pe-app,.pe-body,.pe-side,.pe-thumbs,.pe-pages{min-width:0;max-width:100%}
 @media (max-width:600px){.pe-bar button{padding:8px 7px;font-size:.8125rem}.pe-bar .pe-save{padding:8px 10px}}
 .pe-adds{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}.pe-adds .pe-addf{margin:0}
+@media (pointer:coarse){.pe-rz{width:28px;height:28px;right:-14px;bottom:-14px}.pe-mini button{padding:8px 11px}}
 </style>
 <div id="pt" class="sn"><noscript><span class="ar">تعمل هذه الأداة مع تفعيل JavaScript.</span><span class="en">This tool needs JavaScript.</span></noscript></div>
-<script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script><script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script><script>/* alsamani.com/tools/pdf — home and shrinking; the editor (merge, arrange, write) is in pdfedit.js. Everything runs on the device. */
+<script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script><script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script><script>/* alsamani.com/tools/pdf — shared helpers; the editor itself (write, fill, merge, arrange, shrink) is in pdfedit.js. Everything runs on the device. */
 (function () {
   const root = document.getElementById('pt');
   if (!root) return;
@@ -1652,80 +1653,12 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
     });
   }
 
-  function home() {
-    root.innerHTML = `
-      <div class="pt-choices">
-        <button type="button" class="pt-choice" data-go="edit"><span class="pt-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 14l5-5 2 2-5 5H9z"/></svg></span>
-          <h2>${B('محرر PDF', 'PDF editor')}</h2><p>${B('اكتب على الصفحات وعبّئ النماذج بعلامات ✓، وأضف صورة أو ختمًا، وادمج الملفات ورتّب صفحاتها.', 'Write on pages and fill forms with ✓ marks, add an image or stamp, and merge files and arrange their pages.')}</p></button>
-        <button type="button" class="pt-choice" data-go="shrink"><span class="pt-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14h6v6M20 10h-6V4M14 10l7-7M3 21l7-7"/></svg></span>
-          <h2>${B('ضغط ملف', 'Shrink a file')}</h2><p>${B('تصغير حجم ملف PDF كبير ليُرسل بسهولة.', 'Make a large PDF smaller so it is easy to send.')}</p></button>
-      </div>
-      <p class="pt-fine">${B('تُعالَج الملفات داخل جهازك، ولا تُرفع إلى أي مكان.', 'Files are processed on your device and are not uploaded anywhere.')}</p>`;
-    root.querySelector('[data-go=shrink]').onclick = shrink;
-    root.querySelector('[data-go=edit]').onclick = () => window.PTEdit && window.PTEdit();
-  }
+  const home = () => window.PTEdit && window.PTEdit();
   const back = `<button type="button" class="sn-lnk pt-back" data-back>${B('الرجوع', 'Back')}</button>`;
-
-  /* ---------- shrink a PDF: pages are redrawn as compressed images ---------- */
-  function shrink() {
-    root.innerHTML = `${back}<div class="sn-card">
-      <h2>${B('ضغط ملف', 'Shrink a file')}</h2>
-      <input type="file" id="ptIn" accept="application/pdf,.pdf" hidden>
-      <div class="sn-two"><button type="button" class="btn ghost" id="ptPick">${B('اختيار ملف PDF', 'Choose a PDF')}</button></div>
-      <p class="pt-file" id="ptFile" hidden></p>
-      <div class="pt-lv" id="ptLv" hidden role="radiogroup">
-        <button type="button" role="radio" aria-checked="false" data-l="0"><b>${B('خفيف', 'Light')}</b><span>${B('أوضح جودة', 'Best quality')}</span></button>
-        <button type="button" role="radio" aria-checked="true" data-l="1"><b>${B('متوسط', 'Medium')}</b><span>${B('مناسب للواتساب', 'Good for WhatsApp')}</span></button>
-        <button type="button" role="radio" aria-checked="false" data-l="2"><b>${B('قوي', 'Strong')}</b><span>${B('أصغر حجم', 'Smallest size')}</span></button>
-      </div>
-      <p class="pt-fine" id="ptNote" hidden>${B('تتحول الصفحات إلى صور مضغوطة، فلا يمكن تحديد النص أو نسخه في الملف الناتج.', 'Pages become compressed images, so text in the result cannot be selected or copied.')}</p>
-      <div class="sn-two"><button type="button" class="btn solid" id="ptGo" hidden>${B('ضغط الملف', 'Shrink the file')}</button></div>
-      <p class="pt-status" id="ptSt" aria-live="polite"></p>
-    </div>`;
-    root.querySelector('[data-back]').onclick = home;
-    const inp = root.querySelector('#ptIn'), go = root.querySelector('#ptGo'), st = root.querySelector('#ptSt');
-    let file = null, lv = 1;
-    const LV = [{ dpi: 150, q: .78 }, { dpi: 110, q: .62 }, { dpi: 80, q: .5 }];
-    root.querySelector('#ptPick').onclick = () => inp.click();
-    root.querySelectorAll('[data-l]').forEach(b => b.onclick = () => { lv = +b.dataset.l; root.querySelectorAll('[data-l]').forEach(x => x.setAttribute('aria-checked', x === b)); });
-    inp.onchange = () => {
-      file = inp.files[0]; if (!file) return;
-      root.querySelector('#ptFile').hidden = false; root.querySelector('#ptFile').innerHTML = `<bdi>${esc(file.name)}</bdi> · ${kb(file.size)}`;
-      ['#ptLv', '#ptNote', '#ptGo'].forEach(s => root.querySelector(s).hidden = false); st.textContent = '';
-      go.innerHTML = B('ضغط الملف', 'Shrink the file'); go.onclick = run;
-    };
-    async function run() {
-      go.disabled = true;
-      try {
-        const buf = await readBuf(file), doc = await pdfjsLib.getDocument({ data: new Uint8Array(buf.slice(0)), cMapUrl: PDFJS + 'cmaps/', cMapPacked: true, standardFontDataUrl: PDFJS + 'standard_fonts/', disableFontFace: true }).promise;
-        const out = await PDFLib.PDFDocument.create(), L = LV[lv];
-        for (let p = 1; p <= doc.numPages; p++) {
-          st.textContent = (isAr() ? 'جارٍ الضغط… صفحة ' : 'Shrinking… page ') + p + ' / ' + doc.numPages;
-          const page = await doc.getPage(p), vp1 = page.getViewport({ scale: 1 }), vp = page.getViewport({ scale: L.dpi / 72 });
-          const c = document.createElement('canvas'); c.width = Math.round(vp.width); c.height = Math.round(vp.height);
-          const x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height);
-          await page.render({ canvasContext: x, viewport: vp }).promise;
-          const jb = await new Promise(r => c.toBlob(r, 'image/jpeg', L.q)), im = await out.embedJpg(await jb.arrayBuffer());
-          out.addPage([vp1.width, vp1.height]).drawImage(im, { x: 0, y: 0, width: vp1.width, height: vp1.height });
-          c.width = c.height = 0;
-        }
-        const bytes = await out.save(), name = baseName(file.name) + (isAr() ? ' - مضغوط' : ' - small') + '.pdf';
-        if (bytes.length >= file.size * .95) {
-          st.innerHTML = B('الملف صغير أصلًا، ولم يُنتج الضغط حجمًا أقل. جرّب مستوى «قوي» أو أرسل الملف كما هو.', 'The file is already small; shrinking did not reduce it. Try “Strong”, or send the file as it is.');
-          go.disabled = false; return;
-        }
-        st.innerHTML = B(`من ${kb(file.size)} إلى ${kb(bytes.length)}`, `From ${kb(file.size)} to ${kb(bytes.length)}`);
-        go.innerHTML = B('حفظ أو مشاركة الملف', 'Save or share the file'); go.disabled = false;
-        go.onclick = () => deliver(bytes, name, go);
-        deliver(bytes, name, go);
-      } catch (e) { go.disabled = false; st.innerHTML = B('تعذّر ضغط الملف. قد يكون محميًا بكلمة مرور.', 'The file could not be shrunk. It may be password-protected.'); }
-    }
-    inp.click();
-  }
 
   window.PTK = { root, B, isAr, esc, toast, deliver, baseName, PDFJS, back, home, readBuf, imgToJpeg, A4 };
   const mode = new URLSearchParams(location.search).get('m');
-  if (mode === 'shrink') shrink(); else if (mode === 'edit' || mode === 'merge') setTimeout(() => window.PTEdit && window.PTEdit()); else home();
+  setTimeout(() => window.PTEdit && window.PTEdit());
 })();
 </script><script>/* alsamani.com/tools/pdf — one editor for PDF files, in the manner of a desktop viewer:
    a side panel of pages (add files, reorder, rotate, delete) and the pages themselves, where you write,
@@ -1762,8 +1695,8 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
 
   window.PTEdit = function (initial) {
     const srcs = [], pages = [], trash = [];
-    let items = [], seq = 0, sel = null, tool = null, clip = null, panel = window.innerWidth >= 900, lastMark = null;
-    root.innerHTML = `${back}<div class="pe-app">
+    let fname = '', items = [], seq = 0, sel = null, tool = null, clip = null, panel = window.innerWidth >= 900, lastMark = null;
+    root.innerHTML = `<div class="pe-app">
       <div class="pe-bar" id="peBar">
         <button type="button" data-tool="pages" aria-pressed="${panel}"><b>☰</b>${B('الصفحات', 'Pages')}</button><i class="pe-sep"></i>
         <button type="button" data-tool="text"><b>T</b>${B('نص', 'Text')}</button>
@@ -1779,7 +1712,6 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
           <button type="button" class="sn-lnk pe-undo" id="peUndo" hidden>${B('تراجع عن الحذف', 'Undo delete')}</button></aside>
         <div class="pe-pages" id="pePages"><div class="pe-empty" id="peEmpty"><div class="sn-two"><button type="button" class="btn solid" id="pePick">${B('اختيار ملف PDF', 'Choose a PDF')}</button><button type="button" class="btn ghost" id="pePickI">${B('صور الأوراق', 'Photos of pages')}</button></div><p class="pt-fine">${B('يمكن فتح أكثر من ملف ودمجها، ثم الكتابة عليها.', 'You can open several files to merge them, then write on them.')}</p></div></div>
       </div>
-      <label class="sn-lbl pe-name" id="peNameL" hidden>${B('اسم الملف', 'File name')}<input type="text" id="peName" maxlength="120"></label>
     </div>
     <input type="file" id="peIn" accept="application/pdf,.pdf" multiple hidden><input type="file" id="peInI" accept="image/*" multiple hidden><input type="file" id="peImg" accept="image/*" hidden><input type="file" id="peFont" accept=".ttf,.otf,.woff,.woff2" hidden>`;
     const q = s => root.querySelector(s), host = q('#pePages'), thumbs = q('#peThumbs'), body = q('#peBody');
@@ -1813,7 +1745,7 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
           srcs.push(s);
         } catch (e) { toast(/\.hei[cf]$/i.test(f.name) ? B('هذه صورة بصيغة HEIC لا يقرؤها هذا المتصفح. افتح الأداة من Safari، أو حوّل الصورة إلى JPG.', 'This HEIC photo cannot be read by this browser. Use Safari, or convert the photo to JPG.') : B('تعذّر فتح ملف: ', 'Could not open: ') + esc(f.name), 1); }
       }
-      if (!q('#peName').value && srcs[0]) q('#peName').value = baseName(srcs[0].f.name);
+      if (!fname && srcs[0]) fname = baseName(srcs[0].f.name);
       layout();
     }
     // draws one page as shown (rotation included) into a canvas of the given width
@@ -1831,7 +1763,7 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
     const views = new Map();
     let io = null;
     function layout() {
-      q('#peEmpty').hidden = pages.length > 0; q('#peNameL').hidden = !pages.length; q('#peUndo').hidden = !trash.length;
+      q('#peEmpty').hidden = pages.length > 0; q('#peUndo').hidden = !trash.length;
       const W = Math.max(240, Math.min(host.clientWidth || 700, 900));
       if (io) io.disconnect();
       io = new IntersectionObserver(es => es.forEach(en => { if (!en.isIntersecting) return; const v = [...views.values()].find(x => x.wrap === en.target); if (v && !v.drawn) draw(v); }), { rootMargin: '500px' });
@@ -1954,8 +1886,7 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
       else if (e.key.startsWith('Arrow')) { e.preventDefault(); sel.x += e.key === 'ArrowLeft' ? -st : e.key === 'ArrowRight' ? st : 0; sel.y += e.key === 'ArrowUp' ? -st : e.key === 'ArrowDown' ? st : 0; place(sel); }
     };
     document.addEventListener('keydown', onKey);
-    q('[data-back]').onclick = () => { window.removeEventListener('resize', onResize); document.removeEventListener('pointerdown', onDoc); document.removeEventListener('keydown', onKey); home(); };
-    function drag(it) {
+        function drag(it) {
       const el = it.el;
       el.addEventListener('pointerdown', e => {
         if (e.target.closest('.pe-mini')) return;
@@ -2062,10 +1993,10 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
     const markPng = it => new Promise(res => { const im = new Image(), S = 240; im.onload = () => { const c = document.createElement('canvas'); c.width = c.height = S; c.getContext('2d').drawImage(im, 0, 0, S, S); res(c.toDataURL('image/png')); };
       im.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(markSvg(it.mk).replace('<svg ', `<svg xmlns="http://www.w3.org/2000/svg" width="${S}" height="${S}" color="${it.color}" `)); });
     const toPng = src => new Promise(res => { const im = new Image(); im.onload = () => { const c = document.createElement('canvas'); c.width = im.naturalWidth; c.height = im.naturalHeight; c.getContext('2d').drawImage(im, 0, 0); res(c.toDataURL('image/png')); }; im.src = src; });
-    q('#peSave').onclick = async ev => {
-      if (!pages.length) { inp.click(); return; }
-      const btn = ev.currentTarget; btn.disabled = true;
-      try {
+    // saving: the file is built first, then a small sheet offers the name and the size (as is, or smaller)
+    async function build() {
+      // nothing changed in a single file: hand back the original, untouched
+      if (srcs.length === 1 && srcs[0].pdf && !items.length && pages.length === srcs[0].doc.numPages && pages.every((p, i) => p.s === srcs[0] && p.i === i && !p.rot)) return new Uint8Array(srcs[0].buf.slice(0));
         const out = await PDFLib.PDFDocument.create(), libs = new Map();
         for (const p of pages) {
           let pg;
@@ -2087,16 +2018,58 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
             pg.drawImage(await out.embedPng(png), o);
           }
         }
-        const bytes = await out.save(), name = (q('#peName').value.trim() || 'document').replace(/[\\/:*?"<>|]+/g, ' ') + '.pdf';
-        deliver(bytes, name, btn);
-      } catch (e) { toast(B('تعذّر حفظ الملف. قد يكون أحد الملفات محميًا بكلمة مرور.', 'The file could not be saved. One of the files may be password-protected.'), 1); }
+        return await out.save();
+    }
+    const kb = n => n < 1048576 ? Math.max(1, Math.round(n / 1024)) + ' KB' : (n / 1048576).toFixed(1) + ' MB';
+    const LV = [{ dpi: 200, q: .85 }, { dpi: 150, q: .75 }, { dpi: 110, q: .62 }];
+    async function shrinkBytes(bytes, L, st) {
+      const doc = await pdfjsLib.getDocument(Object.assign({ data: new Uint8Array(bytes) }, OPT)).promise, out = await PDFLib.PDFDocument.create();
+      for (let i = 1; i <= doc.numPages; i++) {
+        st.textContent = (isAr() ? 'جارٍ التصغير… صفحة ' : 'Shrinking… page ') + i + ' / ' + doc.numPages;
+        const pg = await doc.getPage(i), v1 = pg.getViewport({ scale: 1 }), vp = pg.getViewport({ scale: L.dpi / 72 });
+        const c = document.createElement('canvas'); c.width = Math.round(vp.width); c.height = Math.round(vp.height);
+        const x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height);
+        await pg.render({ canvasContext: x, viewport: vp }).promise;
+        const jb = await new Promise(r => c.toBlob(r, 'image/jpeg', L.q)), im = await out.embedJpg(await jb.arrayBuffer());
+        out.addPage([v1.width, v1.height]).drawImage(im, { x: 0, y: 0, width: v1.width, height: v1.height }); c.width = c.height = 0;
+      }
+      return await out.save();
+    }
+    q('#peSave').onclick = async ev => {
+      if (!pages.length) { inp.click(); return; }
+      const btn = ev.currentTarget; btn.disabled = true; let bytes;
+      try { bytes = await build(); }
+      catch (e) { btn.disabled = false; toast(B('تعذّر حفظ الملف. قد يكون أحد الملفات محميًا بكلمة مرور.', 'The file could not be saved. One of the files may be password-protected.'), 1); return; }
       btn.disabled = false;
+      let lv = 1;
+      const { sh, close } = sheet(`<h3>${B('حفظ الملف', 'Save the file')}</h3>
+        <label class="sn-lbl">${B('اسم الملف', 'File name')}<input type="text" id="peN" maxlength="120" value="${esc(fname || 'document')}"></label>
+        <p class="pt-fine pe-size">${B(`${pages.length} صفحة · ${kb(bytes.length)}`, `${pages.length} pages · ${kb(bytes.length)}`)}</p>
+        <div class="sn-two"><button type="button" class="btn solid" id="peGo">${B('حفظ', 'Save')}</button></div>
+        <details class="pe-shr"><summary>${B('تصغير الحجم للإرسال', 'Make it smaller to send')}</summary>
+          <div class="pt-lv" role="radiogroup">${[['خفيف', 'Light', 'أوضح جودة', 'Best quality'], ['متوسط', 'Medium', 'مناسب للواتساب', 'Good for WhatsApp'], ['قوي', 'Strong', 'أصغر حجم', 'Smallest']].map((l, i) => `<button type="button" role="radio" data-l="${i}" aria-checked="${i === lv}"><b>${B(l[0], l[1])}</b><span>${B(l[2], l[3])}</span></button>`).join('')}</div>
+          <p class="pt-fine">${B('تتحول الصفحات إلى صور، فلا يمكن تحديد النص أو نسخه في الملف المصغّر.', 'Pages become images, so text in the smaller file cannot be selected or copied.')}</p>
+          <div class="sn-two"><button type="button" class="btn ghost" id="peSm">${B('حفظ نسخة مصغّرة', 'Save a smaller copy')}</button></div><p class="pt-status" id="peSt" aria-live="polite"></p></details>`);
+      const name = () => { fname = sh.querySelector('#peN').value.trim() || 'document'; return fname.replace(/[\\/:*?"<>|]+/g, ' ') + '.pdf'; };
+      sh.querySelector('#peGo').onclick = e => { deliver(bytes, name(), e.currentTarget); setTimeout(close, 600); };
+      sh.querySelectorAll('[data-l]').forEach(b => b.onclick = () => { lv = +b.dataset.l; sh.querySelectorAll('[data-l]').forEach(x => x.setAttribute('aria-checked', x === b)); });
+      sh.querySelector('#peSm').onclick = async e => {
+        const b = e.currentTarget, st = sh.querySelector('#peSt'); b.disabled = true;
+        try {
+          const small = await shrinkBytes(bytes, LV[lv], st);
+          if (small.length >= bytes.length * .95) { st.innerHTML = B('الملف صغير أصلًا ولم يصغر أكثر. احفظه كما هو.', 'The file is already small; it did not get smaller. Save it as it is.'); b.disabled = false; return; }
+          st.innerHTML = B(`من ${kb(bytes.length)} إلى ${kb(small.length)}`, `From ${kb(bytes.length)} to ${kb(small.length)}`);
+          b.disabled = false; b.innerHTML = B('حفظ النسخة المصغّرة', 'Save the smaller copy');
+          const n = name().replace(/\.pdf$/, (isAr() ? ' - مصغّر' : ' - small') + '.pdf');
+          b.onclick = ev2 => deliver(small, n, ev2.currentTarget); deliver(small, n, b);
+        } catch (x) { st.textContent = ''; b.disabled = false; toast(B('تعذّر تصغير الملف.', 'The file could not be made smaller.'), 1); }
+      };
     };
-    if (initial && initial.length) addFiles(initial); else inp.click();
+    if (initial && initial.length) addFiles(initial);
   };
 })();
 </script>
-<section class="tl-about"><h2><span class="ar">كيف تعمل؟</span><span class="en">How it works</span></h2><ol class="tl-steps"><li><span class="ar">افتح ملف PDF أو أكثر، أو صور الأوراق.</span><span class="en">Open one or more PDFs, or photos of pages.</span></li><li><span class="ar">اكتب على الصفحات، وضع علامات ✓ و✕ لتعبئة النماذج، وأضف صورة أو ختمًا.</span><span class="en">Write on pages, add ✓ and ✕ marks to fill forms, and add an image or stamp.</span></li><li><span class="ar">أخفِ نصًا قديمًا بمربع يأخذ لون الصفحة، واكتب بدله.</span><span class="en">Cover old text with a box that takes the page colour, and write over it.</span></li><li><span class="ar">رتّب الصفحات من اللوحة الجانبية، ودوّرها أو احذفها، ثم احفظ ملفًا واحدًا.</span><span class="en">Arrange, rotate or delete pages from the side panel, then save one file.</span></li><li><span class="ar">ولضغط ملف كبير: اختر «ضغط ملف».</span><span class="en">To make a large file smaller, choose “Shrink a file”.</span></li></ol>
+<section class="tl-about"><h2><span class="ar">كيف تعمل؟</span><span class="en">How it works</span></h2><ol class="tl-steps"><li><span class="ar">افتح ملف PDF أو أكثر، أو صور الأوراق.</span><span class="en">Open one or more PDFs, or photos of pages.</span></li><li><span class="ar">اكتب على الصفحات، وضع علامات ✓ و✕ لتعبئة النماذج، وأضف صورة أو ختمًا.</span><span class="en">Write on pages, add ✓ and ✕ marks to fill forms, and add an image or stamp.</span></li><li><span class="ar">أخفِ نصًا قديمًا بمربع يأخذ لون الصفحة، واكتب بدله.</span><span class="en">Cover old text with a box that takes the page colour, and write over it.</span></li><li><span class="ar">رتّب الصفحات من اللوحة الجانبية، ودوّرها أو احذفها، ثم احفظ ملفًا واحدًا.</span><span class="en">Arrange, rotate or delete pages from the side panel, then save one file.</span></li><li><span class="ar">عند الحفظ يمكنك تصغير حجم الملف ليسهل إرساله.</span><span class="en">When saving, you can make the file smaller so it is easy to send.</span></li></ol>
 <h2><span class="ar">أسئلة شائعة</span><span class="en">Common questions</span></h2><details class="tl-faq"><summary><span class="ar">هل تُرفع ملفاتي إلى خادم؟</span><span class="en">Are my files uploaded to a server?</span></summary><p><span class="ar">لا. تُعالج الملفات داخل جهازك فقط.</span><span class="en">No. Files are processed on your device only.</span></p></details><details class="tl-faq"><summary><span class="ar">لماذا يتلخبط النص العربي عند تحرير PDF في برامج أخرى؟</span><span class="en">Why does Arabic text break when editing a PDF elsewhere?</span></summary><p><span class="ar">لأن الملف يحفظ أشكال الحروف لا الكلمات. هنا يُغطّى النص القديم ويُكتب الجديد بخط سليم.</span><span class="en">Because a PDF stores letter shapes, not words. Here the old text is covered and the new text is written in a proper font.</span></p></details><details class="tl-faq"><summary><span class="ar">كيف أكرر نصًا بالتنسيق نفسه، مثل التاريخ؟</span><span class="en">How do I repeat text with the same format, such as a date?</span></summary><p><span class="ar">اضغط النص ثم «تكرار»، وعدّل النسخة. وفي الحاسب: Ctrl أو ⌘ مع C ثم V.</span><span class="en">Tap the text, then Duplicate, and edit the copy. On a computer: Ctrl or ⌘ with C, then V.</span></p></details><details class="tl-faq"><summary><span class="ar">هل تعمل من الجوال؟</span><span class="en">Does it work on a phone?</span></summary><p><span class="ar">نعم، على الآيفون والأندرويد، ويُحفظ الملف أو يُشارك مباشرة.</span><span class="en">Yes, on iPhone and Android; the file can be saved or shared directly.</span></p></details>
 <p class="tl-also"><a href="../work/index.html"><span class="ar">أدوات الاجتماعات والملفات الأخرى</span><span class="en">More meeting and file tools</span></a></p></section>
 </section>

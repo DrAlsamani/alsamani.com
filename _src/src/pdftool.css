@@ -95,3 +95,4 @@
 #pt{min-width:0;max-width:100%}.pe-app,.pe-body,.pe-side,.pe-thumbs,.pe-pages{min-width:0;max-width:100%}
 @media (max-width:600px){.pe-bar button{padding:8px 7px;font-size:.8125rem}.pe-bar .pe-save{padding:8px 10px}}
 .pe-adds{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}.pe-adds .pe-addf{margin:0}
+@media (pointer:coarse){.pe-rz{width:28px;height:28px;right:-14px;bottom:-14px}.pe-mini button{padding:8px 11px}}
