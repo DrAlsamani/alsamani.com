@@ -169,8 +169,8 @@ ATTEND = {'slug': 'attend', 't_ar': 'تسجيل الحضور', 't_en': 'Attendan
         'q_ar': 'يسجّل كل حاضر حضوره من جواله، وتظهر لك قائمة الحاضرين ومن غاب.',
         'q_en': 'Each attendee records presence from their phone; you see who came and who did not.'}
 PDFT = {'slug': 'pdf', 't_ar': 'ملفات PDF', 't_en': 'PDF files',
-        'q_ar': 'دمج ملفات PDF وصور الأوراق في ملف واحد، وضغط الملفات الكبيرة.',
-        'q_en': 'Merge PDFs and photos of pages into one file, and shrink large files.'}
+        'q_ar': 'دمج ملفات PDF وصور الأوراق، وترتيب الصفحات وتدويرها وحذفها، وضغط الملفات الكبيرة.',
+        'q_en': 'Merge PDFs and photos of pages, arrange, rotate or delete pages, and shrink large files.'}
 def _tool_page(j, eyebrow, inner, css, scripts):
     src = lambda f: open(os.path.join(ROOT, 'src', f)).read()
     return f'''<section class="first tl-page sn-page-wrap"><nav class="tl-crumb" aria-label="breadcrumb"><a href="../index.html">{bi('الأدوات', 'Tools')}</a><i class="chev"></i><span>{bi(j["t_ar"], j["t_en"])}</span></nav>
@@ -191,4 +191,4 @@ def pdf_body():
     return _tool_page(PDFT, bi('للجان والمجالس', 'For committees and boards'),
         f'<div id="pt" class="sn"><noscript>{bi("تعمل هذه الأداة مع تفعيل JavaScript.", "This tool needs JavaScript.")}</noscript></div>',
         ['sign.css', 'pdftool.css'],
-        ['https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js', 'https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js', 'pdftool.js'])
+        ['https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js', 'https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js', 'https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js', 'pdftool.js'])

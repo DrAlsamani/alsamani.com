@@ -1515,9 +1515,23 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
 .pt-lv button{display:grid;gap:2px;border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:10px 6px;cursor:pointer;font:inherit;color:var(--ink);text-align:center}
 .pt-lv button span{font-size:.75rem;color:var(--muted)}
 .pt-lv button[aria-checked=true]{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+.pt-bar{display:flex;align-items:center;gap:6px;margin:6px 0 12px}.pt-sp{flex:1}.pt-cnt{color:var(--muted);font-size:.875rem}
+.pt-tb{min-width:36px;height:36px;padding:0 10px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-size:1rem;cursor:pointer}.pt-tb:disabled{opacity:.35;cursor:default}
+.pt-grid{--pt-w:140px;display:grid;grid-template-columns:repeat(auto-fill,minmax(var(--pt-w),1fr));gap:12px;margin:0 0 14px}
+.pt-grid:empty{display:none}
+.pt-pg{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:8px;cursor:grab;user-select:none;-webkit-user-select:none;touch-action:manipulation}
+.pt-th{aspect-ratio:1/1.3;display:grid;place-items:center;overflow:hidden;border-radius:6px;cursor:zoom-in}
+.pt-th img{max-width:100%;max-height:100%;box-shadow:0 1px 4px rgba(0,0,0,.18);background:#fff;transform:rotate(var(--r,0deg));transition:transform .2s;pointer-events:none;-webkit-user-drag:none}
+.pt-th[style*="90deg"] img,.pt-th[style*="270deg"] img{max-width:76%;max-height:76%}
+.pt-pf{display:flex;align-items:center;gap:4px;margin-top:6px}.pt-pf span{flex:1;font-size:.8125rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.pt-pf button{width:30px;height:30px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;font-size:1rem;line-height:1}
+.pt-ghost{opacity:.35}
+.pt-big{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.8);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:16px}
+.pt-bigin{flex:1;min-height:0;width:100%;display:grid;place-items:center}.pt-bigin img{max-width:100%;max-height:100%;background:#fff;transform:rotate(var(--r,0deg))}
+.pt-big .btn{background:#fff}
 </style>
 <div id="pt" class="sn"><noscript><span class="ar">تعمل هذه الأداة مع تفعيل JavaScript.</span><span class="en">This tool needs JavaScript.</span></noscript></div>
-<script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script><script>/* alsamani.com/tools/pdf — merge PDFs and photos into one PDF, or shrink a PDF. Everything runs on the device. */
+<script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script><script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script><script>/* alsamani.com/tools/pdf — merge and arrange pages of PDFs and photos, or shrink a PDF. Everything runs on the device. */
 (function () {
   const root = document.getElementById('pt');
   if (!root) return;
@@ -1564,7 +1578,7 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
     root.innerHTML = `
       <div class="pt-choices">
         <button type="button" class="pt-choice" data-go="merge"><span class="pt-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="10" height="13" rx="2"/><rect x="11" y="8" width="10" height="13" rx="2"/></svg></span>
-          <h2>${B('دمج وتحويل', 'Merge and convert')}</h2><p>${B('عدة ملفات PDF أو صور أوراق في ملف PDF واحد، بالترتيب الذي تريده.', 'Several PDFs or photos of pages into one PDF, in the order you choose.')}</p></button>
+          <h2>${B('دمج وترتيب الصفحات', 'Merge and arrange pages')}</h2><p>${B('ملفات PDF وصور الأوراق في ملف واحد: رتّب الصفحات بالسحب، ودوّرها، واحذف ما لا تريد.', 'PDFs and photos of pages in one file: drag pages into order, rotate them, and delete what you do not need.')}</p></button>
         <button type="button" class="pt-choice" data-go="shrink"><span class="pt-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14h6v6M20 10h-6V4M14 10l7-7M3 21l7-7"/></svg></span>
           <h2>${B('ضغط ملف', 'Shrink a file')}</h2><p>${B('تصغير حجم ملف PDF كبير ليُرسل بسهولة.', 'Make a large PDF smaller so it is easy to send.')}</p></button>
       </div>
@@ -1574,55 +1588,106 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
   }
   const back = `<button type="button" class="sn-lnk pt-back" data-back>${B('الرجوع', 'Back')}</button>`;
 
-  /* ---------- merge PDFs and images ---------- */
+  /* ---------- merge and arrange: every page of every file as a card ---------- */
   function merge() {
-    const items = [];
+    const srcs = [], pages = [], trash = [];
+    let seq = 0, zi = 1;
+    const ZW = [96, 140, 200, 280];
     root.innerHTML = `${back}<div class="sn-card">
-      <h2>${B('دمج وتحويل', 'Merge and convert')}</h2>
-      <p>${B('أضف ملفات PDF أو صورًا، ورتّبها بالأسهم، ثم أنشئ الملف.', 'Add PDFs or photos, order them with the arrows, then create the file.')}</p>
+      <h2>${B('دمج وترتيب الصفحات', 'Merge and arrange pages')}</h2>
+      <p>${B('أضف ملفات PDF أو صورًا. اسحب الصفحة لتغيير مكانها، ودوّرها أو احذفها، واضغطها لعرضها مكبّرة.', 'Add PDFs or photos. Drag a page to move it, rotate or delete it, and tap it to see it large.')}</p>
       <input type="file" id="ptIn" accept="application/pdf,.pdf,image/*" multiple hidden>
-      <ol class="pt-list" id="ptList"></ol>
+      <div class="pt-bar" id="ptBar" hidden><span class="pt-cnt" id="ptCnt"></span><span class="pt-sp"></span>
+        <button type="button" class="pt-tb" id="ptUndo" hidden>${B('تراجع', 'Undo')}</button>
+        <button type="button" class="pt-tb" id="ptZo" aria-label="smaller">−</button><button type="button" class="pt-tb" id="ptZi" aria-label="larger">+</button></div>
+      <div class="pt-grid" id="ptGrid"></div>
       <div class="sn-two"><button type="button" class="btn ghost" id="ptAdd">${B('إضافة ملفات', 'Add files')}</button></div>
       <label class="sn-lbl" id="ptNameL" hidden>${B('اسم الملف', 'File name')}<input type="text" id="ptName" maxlength="120"></label>
       <div class="sn-two"><button type="button" class="btn solid" id="ptGo" hidden>${B('إنشاء ملف PDF', 'Create the PDF')}</button></div>
       <p class="pt-status" id="ptSt" aria-live="polite"></p>
     </div>`;
     root.querySelector('[data-back]').onclick = home;
-    const inp = root.querySelector('#ptIn'), list = root.querySelector('#ptList'), go = root.querySelector('#ptGo'), st = root.querySelector('#ptSt');
+    const inp = root.querySelector('#ptIn'), grid = root.querySelector('#ptGrid'), go = root.querySelector('#ptGo'), st = root.querySelector('#ptSt');
     root.querySelector('#ptAdd').onclick = () => inp.click();
+    const setZ = () => { grid.style.setProperty('--pt-w', ZW[zi] + 'px'); root.querySelector('#ptZo').disabled = !zi; root.querySelector('#ptZi').disabled = zi === ZW.length - 1; };
+    root.querySelector('#ptZo').onclick = () => { zi = Math.max(0, zi - 1); setZ(); };
+    root.querySelector('#ptZi').onclick = () => { zi = Math.min(ZW.length - 1, zi + 1); setZ(); };
+    root.querySelector('#ptUndo').onclick = () => { const t = trash.pop(); if (t) { pages.splice(Math.min(t.at, pages.length), 0, t.pg); draw(); } };
+    setZ();
     inp.onchange = async () => {
+      st.textContent = isAr() ? 'جارٍ فتح الملفات…' : 'Opening files…';
       for (const f of inp.files) {
         const pdf = /pdf$/i.test(f.type) || /\.pdf$/i.test(f.name), img = /^image\//.test(f.type) || /\.(jpe?g|png|heic|webp)$/i.test(f.name);
         if (!pdf && !img) { toast(B('يُقبل PDF والصور فقط.', 'Only PDFs and images are accepted.'), 1); continue; }
-        const it = { f, pdf, pages: img ? 1 : null };
-        if (pdf) { try { const d = await pdfjsLib.getDocument({ data: new Uint8Array(await readBuf(f)) }).promise; it.pages = d.numPages; d.destroy(); } catch (e) { toast(B('تعذّر فتح ملف: ', 'Could not open: ') + esc(f.name), 1); continue; } }
-        items.push(it);
+        const s = { f, pdf };
+        if (pdf) {
+          try { s.buf = await readBuf(f); s.doc = await pdfjsLib.getDocument({ data: new Uint8Array(s.buf.slice(0)), cMapUrl: PDFJS + 'cmaps/', cMapPacked: true, standardFontDataUrl: PDFJS + 'standard_fonts/', disableFontFace: true }).promise; }
+          catch (e) { toast(B('تعذّر فتح ملف: ', 'Could not open: ') + esc(f.name), 1); continue; }
+          srcs.push(s); for (let i = 0; i < s.doc.numPages; i++) pages.push({ id: ++seq, s, i, rot: 0 });
+        } else { s.url = URL.createObjectURL(f); srcs.push(s); pages.push({ id: ++seq, s, i: 0, rot: 0 }); }
       }
-      inp.value = ''; draw();
-      const nm = root.querySelector('#ptName'); if (!nm.value && items[0]) nm.value = baseName(items[0].f.name);
+      inp.value = ''; st.textContent = ''; draw();
+      const nm = root.querySelector('#ptName'); if (!nm.value && srcs[0]) nm.value = baseName(srcs[0].f.name);
     };
+    // thumbnails are rendered once per page, when they scroll into view
+    const io = new IntersectionObserver(es => es.forEach(en => { if (en.isIntersecting) { io.unobserve(en.target); thumb(en.target); } }), { rootMargin: '300px' });
+    async function render(pg, w) {
+      const page = await pg.s.doc.getPage(pg.i + 1), vp1 = page.getViewport({ scale: 1 }), vp = page.getViewport({ scale: w / vp1.width });
+      const c = document.createElement('canvas'); c.width = Math.round(vp.width); c.height = Math.round(vp.height);
+      const x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height);
+      await page.render({ canvasContext: x, viewport: vp }).promise; return c;
+    }
+    async function thumb(el) {
+      const pg = pages.find(p => p.id === +el.dataset.id); if (!pg) return;
+      const box = el.querySelector('.pt-th');
+      if (!pg.s.pdf) { box.innerHTML = `<img src="${pg.s.url}" alt="">`; return; }
+      try { if (!pg.c) pg.c = await render(pg, 420); box.innerHTML = ''; const im = new Image(); im.src = pg.c.toDataURL('image/jpeg', .8); im.alt = ''; box.appendChild(im); } catch (e) {}
+    }
     function draw() {
-      list.innerHTML = items.map((it, i) => `<li><span class="pt-k">${it.pdf ? 'PDF' : B('صورة', 'Image')}</span><span class="pt-n"><bdi>${esc(it.f.name)}</bdi><small>${it.pdf ? it.pages + (isAr() ? ' صفحة · ' : ' pages · ') : ''}${kb(it.f.size)}</small></span>
-        <span class="pt-act"><button type="button" data-u="${i}" aria-label="up"${i ? '' : ' disabled'}>↑</button><button type="button" data-d="${i}" aria-label="down"${i < items.length - 1 ? '' : ' disabled'}>↓</button><button type="button" data-r="${i}" aria-label="remove">×</button></span></li>`).join('');
-      list.querySelectorAll('[data-u]').forEach(b => b.onclick = () => { const i = +b.dataset.u; [items[i - 1], items[i]] = [items[i], items[i - 1]]; draw(); });
-      list.querySelectorAll('[data-d]').forEach(b => b.onclick = () => { const i = +b.dataset.d; [items[i + 1], items[i]] = [items[i], items[i + 1]]; draw(); });
-      list.querySelectorAll('[data-r]').forEach(b => b.onclick = () => { items.splice(+b.dataset.r, 1); draw(); });
-      go.hidden = !items.length; root.querySelector('#ptNameL').hidden = !items.length;
+      grid.innerHTML = pages.map((pg, n) => `<div class="pt-pg" data-id="${pg.id}"><div class="pt-th" style="--r:${pg.rot}deg"></div>
+        <div class="pt-pf"><span>${n + 1}</span><button type="button" data-rot aria-label="rotate" title="${isAr() ? 'تدوير' : 'Rotate'}">↻</button><button type="button" data-del aria-label="delete" title="${isAr() ? 'حذف' : 'Delete'}">×</button></div></div>`).join('');
+      grid.querySelectorAll('.pt-pg').forEach(el => {
+        const pg = pages.find(p => p.id === +el.dataset.id);
+        if (pg.c) { const im = new Image(); im.src = pg.c.toDataURL('image/jpeg', .8); el.querySelector('.pt-th').appendChild(im); }
+        else if (!pg.s.pdf) el.querySelector('.pt-th').innerHTML = `<img src="${pg.s.url}" alt="">`;
+        else io.observe(el);
+        el.querySelector('[data-rot]').onclick = () => { pg.rot = (pg.rot + 90) % 360; el.querySelector('.pt-th').style.setProperty('--r', pg.rot + 'deg'); };
+        el.querySelector('[data-del]').onclick = () => { const at = pages.indexOf(pg); pages.splice(at, 1); trash.push({ at, pg }); draw(); };
+        el.querySelector('.pt-th').onclick = () => big(pg);
+      });
+      if (window.Sortable && !grid._s) grid._s = Sortable.create(grid, { animation: 160, delay: 160, delayOnTouchOnly: true, filter: 'button', preventOnFilter: false, ghostClass: 'pt-ghost',
+        onEnd: () => { const ord = [...grid.children].map(x => +x.dataset.id); pages.sort((a, b) => ord.indexOf(a.id) - ord.indexOf(b.id)); grid.querySelectorAll('.pt-pf span').forEach((s, n) => s.textContent = n + 1); } });
+      const n = pages.length;
+      root.querySelector('#ptBar').hidden = !n; root.querySelector('#ptUndo').hidden = !trash.length;
+      root.querySelector('#ptCnt').innerHTML = B(n + ' صفحة', n + (n === 1 ? ' page' : ' pages'));
+      go.hidden = !n; root.querySelector('#ptNameL').hidden = !n;
       go.innerHTML = B('إنشاء ملف PDF', 'Create the PDF'); go.onclick = make; st.textContent = '';
-      root.querySelector('#ptAdd').innerHTML = items.length ? B('إضافة ملفات أخرى', 'Add more files') : B('إضافة ملفات', 'Add files');
+      root.querySelector('#ptAdd').innerHTML = n ? B('إضافة ملفات أخرى', 'Add more files') : B('إضافة ملفات', 'Add files');
+    }
+    async function big(pg) {
+      const ov = document.createElement('div'); ov.className = 'pt-big';
+      ov.innerHTML = `<div class="pt-bigin" style="--r:${pg.rot}deg"></div><button type="button" class="btn ghost">${B('إغلاق', 'Close')}</button>`;
+      ov.onclick = () => ov.remove(); document.body.appendChild(ov);
+      const box = ov.querySelector('.pt-bigin');
+      if (!pg.s.pdf) { box.innerHTML = `<img src="${pg.s.url}" alt="">`; return; }
+      try { const c = await render(pg, Math.min(1600, Math.max(window.innerWidth, window.innerHeight) * (window.devicePixelRatio || 1))); const im = new Image(); im.src = c.toDataURL('image/jpeg', .9); box.appendChild(im); } catch (e) {}
     }
     async function make() {
       go.disabled = true; st.textContent = isAr() ? 'جارٍ إنشاء الملف…' : 'Creating the file…';
       try {
-        const out = await PDFLib.PDFDocument.create();
-        for (const it of items) {
-          if (it.pdf) {
-            const src = await PDFLib.PDFDocument.load(await readBuf(it.f), { ignoreEncryption: true });
-            (await out.copyPages(src, src.getPageIndices())).forEach(p => out.addPage(p));
+        const out = await PDFLib.PDFDocument.create(), libs = new Map();
+        for (const pg of pages) {
+          let p;
+          if (pg.s.pdf) {
+            if (!libs.has(pg.s)) libs.set(pg.s, await PDFLib.PDFDocument.load(pg.s.buf, { ignoreEncryption: true }));
+            [p] = await out.copyPages(libs.get(pg.s), [pg.i]); out.addPage(p);
+            p.setRotation(PDFLib.degrees((p.getRotation().angle + pg.rot) % 360));
           } else {
-            const j = await imgToJpeg(it.f, 2200), im = await out.embedJpg(j.buf);
+            if (!pg.s.jpg) pg.s.jpg = await imgToJpeg(pg.s.f, 2200);
+            const j = pg.s.jpg, im = await out.embedJpg(j.buf);
             const land = j.w > j.h, W = land ? A4[1] : A4[0], H = land ? A4[0] : A4[1], m = 18, k = Math.min((W - 2 * m) / j.w, (H - 2 * m) / j.h);
-            const pg = out.addPage([W, H]); pg.drawImage(im, { x: (W - j.w * k) / 2, y: (H - j.h * k) / 2, width: j.w * k, height: j.h * k });
+            p = out.addPage([W, H]); p.drawImage(im, { x: (W - j.w * k) / 2, y: (H - j.h * k) / 2, width: j.w * k, height: j.h * k });
+            if (pg.rot) p.setRotation(PDFLib.degrees(pg.rot));
           }
         }
         const bytes = await out.save(), name = (root.querySelector('#ptName').value.trim() || 'merged').replace(/[\\/:*?"<>|]+/g, ' ') + '.pdf';
