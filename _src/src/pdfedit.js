@@ -211,11 +211,12 @@
       if (it.el) it.el.remove();
       const el = document.createElement('div'); el.className = 'pe-it pe-' + it.t; it.el = el;
       el.innerHTML = (it.t === 'text' ? '<span class="pe-tx"></span>' : it.t === 'img' ? `<img class="pe-im" src="${it.src}" alt="">` : it.t === 'mark' ? markSvg(it.mk) : '') +
-        `<i class="pe-rz" aria-hidden="true"></i><span class="pe-mini">${it.t === 'mark' ? COLORS.map(c => `<button type="button" data-col="${c}" style="--c:${c}" aria-label="colour"></button>`).join('') : ''}${it.t === 'img' ? `<button type="button" data-a="rl" title="${isAr() ? 'تدوير لليسار' : 'Rotate left'}">↺</button><button type="button" data-a="rr" title="${isAr() ? 'تدوير لليمين' : 'Rotate right'}">↻</button>` : ''}${it.t === 'text' || it.t === 'cover' ? `<button type="button" data-a="edit">${B('تعديل', 'Edit')}</button>` : ''}<button type="button" data-a="dup">${B('تكرار', 'Duplicate')}</button><button type="button" data-a="del">${B('حذف', 'Delete')}</button></span>`;
+        `<i class="pe-rz" aria-hidden="true"></i><span class="pe-mini">${it.t === 'mark' ? COLORS.map(c => `<button type="button" data-col="${c}" style="--c:${c}" aria-label="colour"></button>`).join('') : ''}${it.t === 'img' ? `<button type="button" data-a="rl" title="${isAr() ? 'تدوير لليسار' : 'Rotate left'}">↺</button><button type="button" data-a="rr" title="${isAr() ? 'تدوير لليمين' : 'Rotate right'}">↻</button>` : ''}${it.t === 'text' || it.t === 'cover' ? `<button type="button" data-a="edit">${B('تعديل', 'Edit')}</button>` : ''}<button type="button" data-a="dup">${B('تكرار', 'Duplicate')}</button><button type="button" data-a="to">${B('نسخ إلى صفحات', 'Copy to pages')}</button><button type="button" data-a="del">${B('حذف', 'Delete')}</button></span>`;
       v.wrap.appendChild(el); place(it); drag(it);
       el.querySelectorAll('.pe-mini button').forEach(b => b.addEventListener('pointerdown', ev => ev.stopPropagation()));
       el.querySelector('[data-a=del]').onclick = ev => { ev.stopPropagation(); remove(it); };
       el.querySelector('[data-a=dup]').onclick = ev => { ev.stopPropagation(); dup(it, 0, it.h + 4); };
+      el.querySelector('[data-a=to]').onclick = ev => { ev.stopPropagation(); copyTo(it); };
       if (el.querySelector('[data-a=edit]')) el.querySelector('[data-a=edit]').onclick = ev => { ev.stopPropagation(); it.t === 'text' ? editText(it) : editCover(it); };
       el.querySelectorAll('[data-col]').forEach(b => b.onclick = ev => { ev.stopPropagation(); it.color = b.dataset.col; place(it); lastMark = it; });
       el.querySelectorAll('[data-a=rl],[data-a=rr]').forEach(b => b.onclick = ev => { ev.stopPropagation(); turn(it, b.dataset.a === 'rr' ? 90 : -90); });
@@ -244,10 +245,22 @@
     function select(it) { sel = it; root.querySelectorAll('.pe-it').forEach(x => x.classList.toggle('on', x === (it && it.el))); }
     function remove(it) { items = items.filter(x => x !== it); it.el && it.el.remove(); if (sel === it) sel = null; if (it.t === 'img') refreshThumb(it.pid); }
     // a copy keeps every setting; for text it opens straight away so the content (a date, say) can be changed
-    function dup(it, dx, dy) {
-      const c = Object.assign({}, it, { id: ++seq, el: null, x: it.x + dx, y: it.y + dy });
+    function dup(it, dx, dy, pid) {
+      const c = Object.assign({}, it, { id: ++seq, el: null, x: it.x + dx, y: it.y + dy, pid: pid || it.pid });
       const v = views.get(c.pid); if (v && c.y + c.h > dispWH(v.p)[1]) c.y = Math.max(0, it.y - it.h - 4);
-      items.push(c); mount(c); select(c); return c;
+      items.push(c); mount(c); select(c); if (c.t === 'img') refreshThumb(c.pid); return c;
+    }
+    // the same item, in the same place, on other pages (a stamp or a date on every page, say)
+    function copyTo(it) {
+      const { sh, close } = sheet(`<h3>${B('نسخ إلى صفحات', 'Copy to pages')}</h3><p class="pt-fine">${B('يُنسخ في الموضع نفسه من كل صفحة تختارها.', 'It is copied to the same place on each page you choose.')}</p>
+        <label class="sn-keep"><input type="checkbox" id="peAll"> ${B('كل الصفحات', 'All pages')}</label>
+        <div class="pe-pgs">${pages.map((p, n) => p.id === it.pid ? '' : `<label><input type="checkbox" value="${p.id}"> ${n + 1}</label>`).join('')}</div>
+        <div class="sn-two"><button type="button" class="btn solid" id="peOk">${B('نسخ', 'Copy')}</button><button type="button" class="btn ghost" id="peNo">${B('إلغاء', 'Cancel')}</button></div>`);
+      const boxes = [...sh.querySelectorAll('.pe-pgs input')];
+      sh.querySelector('#peAll').onchange = e => boxes.forEach(b => b.checked = e.target.checked);
+      sh.querySelector('#peNo').onclick = close;
+      sh.querySelector('#peOk').onclick = () => { const ids = boxes.filter(b => b.checked).map(b => +b.value); close(); ids.forEach(id => dup(it, 0, 0, id)); select(it);
+        if (ids.length) toast(B(`نُسخ إلى ${ids.length} صفحة.`, `Copied to ${ids.length} page${ids.length > 1 ? 's' : ''}.`)); };
     }
     const onDoc = e => { if (sel && !e.target.closest('.pe-it') && !e.target.closest('.pe-sheet')) select(null); if (!e.target.closest('.pe-mk')) mkPop.hidden = true; };
     document.addEventListener('pointerdown', onDoc);
@@ -255,7 +268,7 @@
       if (!document.body.contains(root.querySelector('.pe-app')) || document.querySelector('.pe-sheet') || /input|textarea|select/i.test(e.target.tagName)) return;
       const m = e.metaKey || e.ctrlKey, st = e.shiftKey ? 10 : 1;
       if (e.key === 'Escape') { setTool(null); select(null); return; }
-      if (m && e.key === 'v' && clip && clip.el) { e.preventDefault(); dup(clip, 10, 10); return; }
+      if (m && e.key === 'v' && clip && clip.el) { e.preventDefault(); const other = curPid && curPid !== clip.pid && pages.some(p => p.id === curPid); dup(clip, other ? 0 : 10, other ? 0 : 10, other ? curPid : null); return; }
       if (!sel) return;
       if (e.key === 'Delete' || e.key === 'Backspace') { e.preventDefault(); remove(sel); }
       else if (m && e.key === 'd') { e.preventDefault(); dup(sel, 0, sel.h + 4); }
@@ -269,7 +282,7 @@
         if (e.target.closest('.pe-mini')) return;
         e.preventDefault(); e.stopPropagation(); select(it); markThumb(it.pid);
         const v = views.get(it.pid), rz = e.target.classList.contains('pe-rz'), sx = e.clientX, sy = e.clientY, o = { x: it.x, y: it.y, w: it.w, h: it.h, size: it.size };
-        let moved = false; el.setPointerCapture(e.pointerId);
+        let moved = false; el.setPointerCapture(e.pointerId); v.wrap.style.zIndex = 5;
         const mv = ev => {
           const dx = (ev.clientX - sx) / v.k, dy = (ev.clientY - sy) / v.k; if (Math.abs(dx) + Math.abs(dy) > 1) moved = true;
           if (!rz) { it.x = o.x + dx; it.y = o.y + dy; }
@@ -278,8 +291,17 @@
           else { it.w = Math.max(6, o.w + dx); it.h = Math.max(4, o.h + dy); }
           place(it);
         };
-        const up = () => {
-          el.removeEventListener('pointermove', mv); el.removeEventListener('pointerup', up); el.removeEventListener('pointercancel', up);
+        const up = ev => {
+          el.removeEventListener('pointermove', mv); el.removeEventListener('pointerup', up); el.removeEventListener('pointercancel', up); v.wrap.style.zIndex = '';
+          if (moved && !rz && ev && ev.clientX != null) {
+            const nv = [...views.values()].find(x => { const r = x.wrap.getBoundingClientRect(); return ev.clientX >= r.left && ev.clientX <= r.right && ev.clientY >= r.top && ev.clientY <= r.bottom; });
+            if (nv && nv.p.id !== it.pid) {
+              const r = el.getBoundingClientRect(), nr = nv.wrap.getBoundingClientRect(), from = it.pid;
+              it.pid = nv.p.id; it.x = (r.left - nr.left) / nv.k; it.y = (r.top - nr.top) / nv.k; mount(it); select(it); markThumb(it.pid);
+              if (it.t === 'img') { refreshThumb(from); refreshThumb(it.pid); }
+              return;
+            }
+          }
           if (!moved && !rz && it.t === 'text') editText(it);
           else if (it.t === 'cover' && it.auto && moved) { it.color = bgOf(it); place(it); }
           if (it.t === 'mark') lastMark = it;
