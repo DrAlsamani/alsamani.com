@@ -9,7 +9,7 @@ const MAX_PDF_B64 = 14 * 1024 * 1024;   // ~10 MB PDF
 const MAX_SIG = 250 * 1024;             // one signature image (data URL)
 const MAX_SLOTS = 80;
 // whole-service daily ceiling, so nobody can fill the Drive: new sessions/polls per day, and megabytes written per day
-const DAY_MAX_NEW = 300, DAY_MAX_MB = 1000, MAX_VOTES = 300;
+const DAY_MAX_NEW = 300, DAY_MAX_MB = 1000, MAX_VOTES = 300, MAX_ATT = 3000;
 
 // permanent delete (Drive advanced service); falls back to the trash if the service is off
 function del_(f) {
@@ -208,7 +208,7 @@ function poll_(d) {
     const mode = ['pass', 'time', 'att'].indexOf(d.mode) >= 0 ? d.mode : 'pass';
     const items = mode === 'att' ? [] : (Array.isArray(d.items) ? d.items : []).map(x => clean_(x, 2000)).filter(x => x.trim()).slice(0, 30);
     if (!items.length && mode !== 'att') return err_('bad_items');
-    const names = (Array.isArray(d.names) ? d.names : []).map(x => clean_(x, 120).trim()).filter(Boolean).slice(0, 150);
+    const names = (Array.isArray(d.names) ? d.names : []).map(x => clean_(x, 120).trim()).filter(Boolean).slice(0, mode === 'att' ? 3000 : 300);
     if (!quota_(20000, true)) return err_('busy');
     const id = rid_(20), key = rid_(24);
     const s = { id: id, key: hash_(key), mode: mode, title: clean_(d.title, 200), body: clean_(d.body, 3000), items: items, names: names, showAll: !!d.showAll, locked: false, created: new Date().toISOString(), votes: {} };
@@ -229,7 +229,7 @@ function poll_(d) {
       if (!key) return err_('bad_name');
       const prev = s.votes[key];
       if (prev && !(d.tok && hash_(String(d.tok)) === prev.tok)) return err_('voted');
-      if (!prev && Object.keys(s.votes).length >= MAX_VOTES) return err_('full');
+      if (!prev && Object.keys(s.votes).length >= (s.mode === 'att' ? MAX_ATT : MAX_VOTES)) return err_('full');
       const ans = (Array.isArray(d.ans) ? d.ans : []).slice(0, s.items.length).map(x => [0, 1, 2].indexOf(Number(x)) >= 0 ? Number(x) : null);
       if (ans.length !== s.items.length || ans.some(x => x === null)) return err_('bad_ans');
       const notes = s.items.map((_, i) => clean_((d.notes || [])[i], 500));
