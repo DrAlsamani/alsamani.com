@@ -1585,11 +1585,11 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
 .pe-tx{display:block;pointer-events:none;color:#111}
 .pe-img img{width:100%;height:100%;display:block;pointer-events:none}.pe-mark svg{width:100%;height:100%;display:block;pointer-events:none}
 .pe-cover{background:#fff}
-.pe-rz{position:absolute;right:-8px;bottom:-8px;width:16px;height:16px;border-radius:50%;background:#0071E3;border:2px solid #fff;cursor:nwse-resize;display:none;touch-action:none}
+
 .pe-mini{position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);display:none;gap:2px;background:#1d1d1f;border-radius:10px;padding:3px;white-space:nowrap;z-index:6;box-shadow:0 4px 14px rgba(0,0,0,.25)}
 .pe-mini button{border:0;background:transparent;color:#fff;font:inherit;font-size:.8125rem;padding:5px 9px;border-radius:7px;cursor:pointer}.pe-mini button:hover{background:rgba(255,255,255,.15)}
 .pe-mini [data-col]{width:22px;height:22px;padding:0;border-radius:50%;background:var(--c);border:2px solid #fff;margin:3px 2px}
-.pe-it.on .pe-rz{display:block}.pe-it.on .pe-mini{display:flex}
+.pe-it.on .pe-mini{display:flex}
 .pe-name{margin-top:8px}
 .pe-bg{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:70}
 .pe-sheet{position:fixed;inset:auto 0 0 0;z-index:71;background:var(--surface);border-radius:20px 20px 0 0;padding:20px;max-width:560px;margin:0 auto;box-shadow:0 -8px 30px rgba(0,0,0,.2);max-height:88vh;overflow:auto}
@@ -1607,7 +1607,7 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
 #pt{min-width:0;max-width:100%}.pe-app,.pe-body,.pe-side,.pe-thumbs,.pe-pages{min-width:0;max-width:100%}
 @media (max-width:600px){.pe-bar button{padding:8px 7px;font-size:.8125rem}.pe-bar .pe-save{padding:8px 10px}}
 .pe-adds{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}.pe-adds .pe-addf{margin:0}
-@media (pointer:coarse){.pe-rz{width:28px;height:28px;right:-14px;bottom:-14px}.pe-mini button{padding:8px 11px}}
+@media (pointer:coarse){.pe-h{width:24px!important;height:24px!important;margin:-12px!important}.pe-mini button{padding:8px 11px}}
 .pe-img{overflow:visible}.pe-img .pe-im{position:absolute;left:50%;top:50%;width:100%;height:100%;max-width:none;display:block;pointer-events:none}
 .pe-th.cur{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
 .pe-adds{grid-template-columns:1fr 1fr}.pe-adds #peBlank{grid-column:1/-1}
@@ -1620,6 +1620,13 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
 .pe-live{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:4}
 .pe-draw svg{width:100%;height:100%;display:block;pointer-events:none;overflow:visible}
 .pe-drawing .pe-it{pointer-events:none}
+.pe-pg{overflow:hidden}.pe-pg.pe-moving{overflow:visible}
+.pe-h{position:absolute;width:14px;height:14px;margin:-7px;border-radius:50%;background:#fff;border:2px solid #0071E3;display:none;touch-action:none;z-index:3;box-sizing:border-box}
+.pe-it.on .pe-h{display:block}
+.pe-h-nw{left:0;top:0;cursor:nwse-resize}.pe-h-se{left:100%;top:100%;cursor:nwse-resize}.pe-h-ne{left:100%;top:0;cursor:nesw-resize}.pe-h-sw{left:0;top:100%;cursor:nesw-resize}
+.pe-h-n{left:50%;top:0;cursor:ns-resize}.pe-h-s{left:50%;top:100%;cursor:ns-resize}.pe-h-e{left:100%;top:50%;cursor:ew-resize}.pe-h-w{left:0;top:50%;cursor:ew-resize}
+.pe-below .pe-mini{bottom:auto;top:calc(100% + 8px)}
+.pe-inside .pe-mini{bottom:auto;top:8px}
 </style>
 <div id="qt" class="sn"><noscript><span class="ar">تعمل هذه الأداة مع تفعيل JavaScript.</span><span class="en">This tool needs JavaScript.</span></noscript></div>
 <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script><script>/* alsamani.com/tools/qr — turn a link or text into a QR code; PNG for slides and documents, SVG for print. Runs on the device. */

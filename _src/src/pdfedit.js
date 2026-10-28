@@ -264,7 +264,7 @@
       if (it.el) it.el.remove();
       const el = document.createElement('div'); el.className = 'pe-it pe-' + it.t; it.el = el;
       el.innerHTML = (it.t === 'text' ? '<span class="pe-tx"></span>' : it.t === 'img' ? `<img class="pe-im" src="${it.src}" alt="">` : it.t === 'mark' ? markSvg(it.mk) : it.t === 'draw' ? drawSvg(it) : '') +
-        `<i class="pe-rz" aria-hidden="true"></i><span class="pe-mini">${it.t === 'mark' ? COLORS.map(c => `<button type="button" data-col="${c}" style="--c:${c}" aria-label="colour"></button>`).join('') : ''}${it.t === 'img' ? `<button type="button" data-a="rl" title="${isAr() ? 'تدوير لليسار' : 'Rotate left'}">↺</button><button type="button" data-a="rr" title="${isAr() ? 'تدوير لليمين' : 'Rotate right'}">↻</button>` : ''}${it.t === 'text' || it.t === 'cover' ? `<button type="button" data-a="edit">${B('تعديل', 'Edit')}</button>` : ''}<button type="button" data-a="dup">${B('تكرار', 'Duplicate')}</button><button type="button" data-a="to">${B('نسخ إلى صفحات', 'Copy to pages')}</button><button type="button" data-a="del">${B('حذف', 'Delete')}</button></span>`;
+        ['nw', 'ne', 'sw', 'se'].concat(it.t === 'cover' || it.t === 'draw' ? ['n', 's', 'e', 'w'] : []).map(h => `<i class="pe-h pe-h-${h}" data-h="${h}" aria-hidden="true"></i>`).join('') + `<span class="pe-mini">${it.t === 'mark' ? COLORS.map(c => `<button type="button" data-col="${c}" style="--c:${c}" aria-label="colour"></button>`).join('') : ''}${it.t === 'img' ? `<button type="button" data-a="rl" title="${isAr() ? 'تدوير لليسار' : 'Rotate left'}">↺</button><button type="button" data-a="rr" title="${isAr() ? 'تدوير لليمين' : 'Rotate right'}">↻</button>` : ''}${it.t === 'text' || it.t === 'cover' ? `<button type="button" data-a="edit">${B('تعديل', 'Edit')}</button>` : ''}<button type="button" data-a="dup">${B('تكرار', 'Duplicate')}</button><button type="button" data-a="to">${B('نسخ إلى صفحات', 'Copy to pages')}</button><button type="button" data-a="del">${B('حذف', 'Delete')}</button></span>`;
       v.wrap.appendChild(el); place(it); drag(it);
       el.querySelectorAll('.pe-mini button').forEach(b => b.addEventListener('pointerdown', ev => ev.stopPropagation()));
       el.querySelector('[data-a=del]').onclick = ev => { ev.stopPropagation(); remove(it); };
@@ -284,6 +284,7 @@
         it.w = s.offsetWidth / k; it.h = s.offsetHeight / k;
       } else {
         Object.assign(el.style, { left: it.x * k + 'px', top: it.y * k + 'px', width: it.w * k + 'px', height: it.h * k + 'px' });
+        if (it === sel) nearTop(it);
         if (it.t === 'cover') el.style.background = it.color;
         if (it.t === 'mark') el.style.color = it.color;
         if (it.t === 'img') { const a = it.ang || 0, [iw, ih] = a % 180 ? [it.h, it.w] : [it.w, it.h]; Object.assign(el.querySelector('.pe-im').style, { width: iw * k + 'px', height: ih * k + 'px', transform: `translate(-50%,-50%) rotate(${a}deg)` }); }
@@ -295,7 +296,10 @@
       const v = views.get(it.pid); if (v) { const [W, H] = dispWH(v.p), k = Math.min(1, (W - 8) / it.w, (H - 8) / it.h); it.w *= k; it.h *= k; it.x = Math.min(Math.max(4, cx - it.w / 2), W - 4 - it.w); it.y = Math.min(Math.max(4, cy - it.h / 2), H - 4 - it.h); }
       else { it.x = cx - it.w / 2; it.y = cy - it.h / 2; }
       place(it); refreshThumb(it.pid); }
-    function select(it) { sel = it; root.querySelectorAll('.pe-it').forEach(x => x.classList.toggle('on', x === (it && it.el))); }
+    // the small toolbar goes above the item, below it near the top of the page, or inside it when the item fills the page
+    const nearTop = it => { const v = views.get(it.pid); if (!it.el || !v) return; const k = v.k, top = it.y * k >= 44, bot = (dispWH(v.p)[1] - it.y - it.h) * k >= 44;
+      it.el.classList.toggle('pe-below', !top && bot); it.el.classList.toggle('pe-inside', !top && !bot); };
+    function select(it) { if (it) nearTop(it); sel = it; root.querySelectorAll('.pe-it').forEach(x => x.classList.toggle('on', x === (it && it.el))); }
     function remove(it) { items = items.filter(x => x !== it); it.el && it.el.remove(); if (sel === it) sel = null; if (it.t === 'img') refreshThumb(it.pid); }
     // a copy keeps every setting; for text it opens straight away so the content (a date, say) can be changed
     function dup(it, dx, dy, pid) {
@@ -334,18 +338,29 @@
       el.addEventListener('pointerdown', e => {
         if (e.target.closest('.pe-mini')) return;
         e.preventDefault(); e.stopPropagation(); select(it); markThumb(it.pid);
-        const v = views.get(it.pid), rz = e.target.classList.contains('pe-rz'), sx = e.clientX, sy = e.clientY, o = { x: it.x, y: it.y, w: it.w, h: it.h, size: it.size };
+        const v = views.get(it.pid), hd = e.target.dataset && e.target.dataset.h, rz = !!hd, sx = e.clientX, sy = e.clientY, o = { x: it.x, y: it.y, w: it.w, h: it.h, size: it.size };
+        const hx = !hd ? 0 : /e/.test(hd) ? 1 : /w/.test(hd) ? -1 : 0, hy = !hd ? 0 : /s/.test(hd) ? 1 : /n/.test(hd) ? -1 : 0, [PW, PH] = dispWH(v.p);
+        if (!rz) v.wrap.classList.add('pe-moving');
         let moved = false; el.setPointerCapture(e.pointerId); v.wrap.style.zIndex = 5;
         const mv = ev => {
           const dx = (ev.clientX - sx) / v.k, dy = (ev.clientY - sy) / v.k; if (Math.abs(dx) + Math.abs(dy) > 1) moved = true;
-          if (!rz) { it.x = o.x + dx; it.y = o.y + dy; }
-          else if (it.t === 'text') it.size = Math.max(5, Math.min(200, o.size * (o.w + dx) / o.w));
-          else if (it.t === 'img' || it.t === 'mark') { const s = Math.max(.05, ((o.w / 2 + dx) * (o.w / 2) + (o.h / 2 + dy) * (o.h / 2)) / ((o.w / 2) ** 2 + (o.h / 2) ** 2)); it.w = Math.max(5, o.w * s); it.h = it.w * o.h / o.w; it.x = o.x + (o.w - it.w) / 2; it.y = o.y + (o.h - it.h) / 2; }
-          else { it.w = Math.max(6, o.w + dx); it.h = Math.max(4, o.h + dy); }
+          if (!rz) { it.x = o.x + dx; it.y = o.y + dy; place(it); return; }
+          // the opposite corner or side stays put; the item never grows past the page edge
+          const room = { r: PW - o.x, l: o.x + o.w, b: PH - o.y, t: o.y + o.h };
+          if (it.t === 'cover' || it.t === 'draw') {
+            if (hx) { const w = Math.max(6, Math.min(hx > 0 ? room.r : room.l, o.w + hx * dx)); it.w = w; it.x = hx > 0 ? o.x : o.x + o.w - w; }
+            if (hy) { const h = Math.max(4, Math.min(hy > 0 ? room.b : room.t, o.h + hy * dy)); it.h = h; it.y = hy > 0 ? o.y : o.y + o.h - h; }
+            place(it); return;
+          }
+          let f = Math.max((o.w + hx * dx) / o.w, (o.h + hy * dy) / o.h);
+          f = Math.min(f, (hx > 0 ? room.r : room.l) / o.w, (hy > 0 ? room.b : room.t) / o.h); f = Math.max(f, 6 / Math.min(o.w, o.h));
+          if (it.t === 'text') { it.size = Math.max(5, Math.min(200, o.size * f)); place(it); }
+          else { it.w = o.w * f; it.h = o.h * f; }
+          it.x = hx > 0 ? o.x : o.x + o.w - it.w; it.y = hy > 0 ? o.y : o.y + o.h - it.h;
           place(it);
         };
         const up = ev => {
-          el.removeEventListener('pointermove', mv); el.removeEventListener('pointerup', up); el.removeEventListener('pointercancel', up); v.wrap.style.zIndex = '';
+          el.removeEventListener('pointermove', mv); el.removeEventListener('pointerup', up); el.removeEventListener('pointercancel', up); v.wrap.style.zIndex = ''; v.wrap.classList.remove('pe-moving');
           if (moved && !rz && ev && ev.clientX != null) {
             const nv = [...views.values()].find(x => { const r = x.wrap.getBoundingClientRect(); return ev.clientX >= r.left && ev.clientX <= r.right && ev.clientY >= r.top && ev.clientY <= r.bottom; });
             if (nv && nv.p.id !== it.pid) {
