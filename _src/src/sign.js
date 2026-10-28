@@ -16,9 +16,16 @@
   };
   const b64 = buf => { let s = ''; const u = new Uint8Array(buf); for (let i = 0; i < u.length; i += 0x8000) s += String.fromCharCode.apply(null, u.subarray(i, i + 0x8000)); return btoa(s); };
   const unb64 = s => { const b = atob(s), u = new Uint8Array(b.length); for (let i = 0; i < b.length; i++) u[i] = b.charCodeAt(i); return u; };
-  async function call(body) {
-    const r = await fetch(API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body) });
-    const j = await r.json();
+  async function call(body, tries) {
+    let j;
+    try {
+      const ac = new AbortController(), to = setTimeout(() => ac.abort(), 45000);
+      const r = await fetch(API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body), signal: ac.signal });
+      j = await r.json(); clearTimeout(to);
+    } catch (e) {
+      if ((body.a === 'get' || body.a === 'pdf') && !tries) return call(body, 1);
+      throw e;
+    }
     if (!j.ok) { const e = new Error(j.error || 'error'); e.code = j.error; throw e; }
     return j;
   }
@@ -38,9 +45,10 @@
   };
 
   /* ---------- page rendering with boxes ---------- */
-  async function renderPages(doc, host, slots, opts) {
+  async function renderPages(doc, host, slots, opts, Z) {
     host.innerHTML = '';
-    const out = [], W = Math.min(host.clientWidth || 600, 900), dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+    host.classList.toggle('zoomed', (Z || 1) > 1);
+    const out = [], W = Math.min(host.clientWidth || 600, 900) * (Z || 1), dpr = Math.min(window.devicePixelRatio || 1, 2.5);
     for (let pi = 0; pi < doc.numPages; pi++) {
       const page = await doc.getPage(pi + 1), vp0 = page.getViewport({ scale: 1 }), vp = page.getViewport({ scale: W / vp0.width });
       const wrap = document.createElement('div'); wrap.className = 'sn-page'; wrap.style.width = vp.width + 'px'; wrap.style.height = vp.height + 'px';
@@ -207,7 +215,7 @@
     const rb = ed.querySelector('#snRevBtn');
     rb.onclick = () => { const o = ed.querySelector('#snRev').hidden; ed.querySelector('#snRev').hidden = !o; rb.setAttribute('aria-expanded', o); if (o && !shown) { shown = true; show().then(() => { const x = host.querySelector('.sn-box'); (x || host).scrollIntoView({ behavior: 'smooth', block: 'center' }); }); } };
     const jb = ed.querySelector('#snJump'); if (jb) jb.onclick = () => { const x = host.querySelector('.sn-box'); if (x) x.scrollIntoView({ behavior: 'smooth', block: 'center' }); };
-    let rw = window.innerWidth, rt; window.addEventListener('resize', () => { if (!shown || Math.abs(window.innerWidth - rw) < 40) return; rw = window.innerWidth; clearTimeout(rt); rt = setTimeout(show, 250); });
+    let rw = document.documentElement.clientWidth, rt; window.addEventListener('resize', () => { const w = document.documentElement.clientWidth; if (!shown || Math.abs(w - rw) < 40) return; rw = w; clearTimeout(rt); rt = setTimeout(show, 250); });
     ed.querySelector('#snCreate2').onclick = () => ed.querySelector('#snCreate').click();
     ed.querySelector('#snCreate').onclick = async ev => {
       const btn = ev.currentTarget; btn.disabled = true; btn.classList.add('busy');
@@ -349,32 +357,53 @@
       const s = S.slots[i];
       getSig(B('التوقيع', 'Sign') + (s.n ? ' · <bdi>' + esc(s.n) + '</bdi>' : ''), async png => { close(); previewSlot(i, png); });
     }
-    function modeBar(html) {
-      endMode(); const m = document.createElement('div'); m.className = 'sn-mode'; m.innerHTML = html; document.body.appendChild(m); return m;
+    /* adjusting a signature: one pending element kept in PDF coordinates, so zooming or re-rendering never loses it */
+    let Z = 1, pend = null;
+    const viewOf = pi => views.find(v => v.pi === pi);
+    function modeBar(html) { document.querySelectorAll('.sn-mode').forEach(x => x.remove()); const m = document.createElement('div'); m.className = 'sn-mode'; m.innerHTML = html; document.body.appendChild(m); return m; }
+    function endMode() { pend = null; document.querySelectorAll('.sn-mode,.sn-box.pending').forEach(x => x.remove()); host.querySelectorAll('.sn-box').forEach(x => x.style.visibility = ''); }
+    function mountPending() {
+      const v = viewOf(pend.pi); if (!v) return null;
+      host.querySelectorAll('.sn-box.pending').forEach(x => x.remove());
+      if (pend.hide != null) { const el = host.querySelector('.sn-box[data-i="' + pend.hide + '"]'); if (el) el.style.visibility = 'hidden'; }
+      const r = rectOf(v.vp, pend.rect), b = document.createElement('div');
+      b.className = 'sn-box done pending' + (pend.cls ? ' ' + pend.cls : '');
+      Object.assign(b.style, { left: r.l + 'px', top: r.t + 'px', width: r.w + 'px', height: r.h + 'px' });
+      const im = new Image(); im.src = pend.png; im.alt = ''; b.appendChild(im); b.insertAdjacentHTML('beforeend', '<i class="sn-rz" aria-hidden="true"></i>');
+      v.wrap.appendChild(b); pend.b = b; pend.v = v;
+      draggable(b, () => { if (pend) pend.rect = pdfRect(v, b); }, pend.ratio);
+      return b;
     }
-    function endMode() { document.querySelectorAll('.sn-mode,.sn-box.pending').forEach(x => x.remove()); host.querySelectorAll('.sn-box').forEach(x => x.style.visibility = ''); }
-    const ADJ = B('عدّل حجم التوقيع من الزاوية، واسحبه ليكون في موضعه، ثم احفظ.', 'Resize the signature from the corner and drag it into place, then save.');
-    const BAR = `<p>${ADJ}</p><div class="sn-sb"><button type="button" class="btn solid" data-ok>${B('حفظ', 'Save')}</button><button type="button" class="btn ghost" data-x>${B('خروج', 'Exit')}</button></div>`;
-    function previewSlot(i, png) {
-      const s = S.slots[i], v = views.find(v => v.pi === s.p), el = host.querySelector('.sn-box[data-i="' + i + '"]');
-      if (!v || !el) return;
-      const m = modeBar(BAR);
-      const b = document.createElement('div'); b.className = 'sn-box done pending slot';
-      ['left', 'top', 'width', 'height'].forEach(k => b.style[k] = el.style[k]);
-      const im = new Image(); im.src = png; b.appendChild(im); b.insertAdjacentHTML('beforeend', '<i class="sn-rz" aria-hidden="true"></i>');
-      el.style.visibility = 'hidden'; v.wrap.appendChild(b); b.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      const r0 = pdfRect(v, b);
-      draggable(b, null, false);
+    async function rerender() {
+      if (pend && pend.b) pend.rect = pdfRect(pend.v, pend.b);
+      views = await renderPages(doc, host, S.slots, { mine }, Z); draw();
+      if (pend) { const b = mountPending(); if (b) b.scrollIntoView({ block: 'center', inline: 'center' }); }
+      document.querySelectorAll('.sn-zoom span').forEach(x => x.textContent = Math.round(Z * 100) + '%');
+    }
+    const ZS = [1, 1.5, 2, 3];
+    async function zoom(d) { const k = Math.max(0, Math.min(ZS.length - 1, ZS.indexOf(Z) + d)); if (ZS[k] === Z) return; Z = ZS[k]; await rerender(); }
+    const ADJ = B('كبّر الصفحة أو صغّرها من الزرين، وعدّل حجم التوقيع من الزاوية واسحبه إلى موضعه، ثم احفظ.', 'Zoom the page with the buttons, resize the signature from the corner and drag it into place, then save.');
+    async function startAdjust(state, onSave) {
+      pend = state;
+      const m = modeBar(`<p>${ADJ}</p><div class="sn-zoom"><button type="button" data-z="-1" aria-label="zoom out">−</button><span>${Math.round(Z * 100)}%</span><button type="button" data-z="1" aria-label="zoom in">+</button></div><div class="sn-sb"><button type="button" class="btn solid" data-ok>${B('حفظ', 'Save')}</button><button type="button" class="btn ghost" data-x>${B('خروج', 'Exit')}</button></div>`);
+      m.querySelectorAll('[data-z]').forEach(bt => bt.onclick = () => zoom(+bt.dataset.z));
       m.querySelector('[data-x]').onclick = endMode;
       m.querySelector('[data-ok]').onclick = async ev => {
         const btn = ev.currentTarget; btn.disabled = true;
-        const r = pdfRect(v, b), moved = ['x', 'y', 'w', 'h'].some(k => Math.abs(r[k] - r0[k]) > .8);
-        try {
-          let j = await call({ a: 'sign', id, i, png }); mine[i] = j.tok; store.set('mine.' + id, mine); if (s.n) store.set('me', s.n);
-          if (moved) j = await call(Object.assign({ a: 'move', id, i, tok: mine[i] }, r));
-          S = j; endMode(); draw(); toast(B('تم توقيعك. شكرًا لك.', 'Signed. Thank you.'));
-        } catch (e) { btn.disabled = false; toast(errMsg(e), 1); if (e.code === 'taken') { endMode(); refresh(); } }
+        if (pend.b) pend.rect = pdfRect(pend.v, pend.b);
+        try { await onSave(pend.rect); } catch (e) { btn.disabled = false; toast(errMsg(e), 1); if (e.code === 'taken') { endMode(); refresh(); } }
       };
+      if (document.documentElement.clientWidth < 700 && Z < 2) { Z = 2; await rerender(); }
+      else { const b = mountPending(); if (b) b.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' }); }
+    }
+    function previewSlot(i, png) {
+      const s = S.slots[i], r0 = { x: s.x, y: s.y, w: s.w, h: s.h };
+      startAdjust({ pi: s.p, rect: Object.assign({}, r0), png, cls: 'slot', ratio: false, hide: i }, async r => {
+        const moved = ['x', 'y', 'w', 'h'].some(k => Math.abs(r[k] - r0[k]) > .8);
+        let j = await call({ a: 'sign', id, i, png }); mine[i] = j.tok; store.set('mine.' + id, mine); if (s.n) store.set('me', s.n);
+        if (moved) j = await call(Object.assign({ a: 'move', id, i, tok: mine[i] }, r));
+        S = j; endMode(); draw(); toast(B('تم توقيعك. شكرًا لك.', 'Signed. Thank you.'));
+      });
     }
     host.addEventListener('click', e => {
       if (e.target.closest('.sn-box') || document.querySelector('.sn-mode') || S.locked) return;
@@ -385,19 +414,11 @@
     function preview(v, x, y, png) {
       const im = new Image();
       im.onload = () => {
-        const w = Math.min(170, v.wrap.clientWidth * .32), h = w * im.height / im.width;
-        const m = modeBar(BAR);
-        const b = document.createElement('div'); b.className = 'sn-box free done pending';
-        Object.assign(b.style, { left: x - w / 2 + 'px', top: y - h / 2 + 'px', width: w + 'px', height: h + 'px' });
-        b.innerHTML = '<i class="sn-rz" aria-hidden="true"></i>'; b.prepend(im); v.wrap.appendChild(b);
-        draggable(b, null, true);
-        m.querySelector('[data-x]').onclick = endMode;
-        m.querySelector('[data-ok]').onclick = async ev => {
-          const btn = ev.currentTarget; btn.disabled = true;
-          const r = pdfRect(v, b);
-          try { const j = await call(Object.assign({ a: 'place', id, p: v.pi, png, n: store.get('me', '') }, r)); mine[j.i] = j.tok; store.set('mine.' + id, mine); S = j; endMode(); draw(); toast(B('أُضيف توقيعك.', 'Your signature was added.')); }
-          catch (e) { btn.disabled = false; toast(errMsg(e), 1); }
-        };
+        const wp = Math.min(170, v.wrap.clientWidth * .32) / v.vp.scale, hp = wp * im.height / im.width, pt = v.vp.convertToPdfPoint(x, y);
+        startAdjust({ pi: v.pi, rect: { x: pt[0] - wp / 2, y: pt[1] - hp / 2, w: wp, h: hp }, png, cls: 'free', ratio: true }, async r => {
+          const j = await call(Object.assign({ a: 'place', id, p: v.pi, png, n: store.get('me', '') }, r)); mine[j.i] = j.tok; store.set('mine.' + id, mine);
+          S = j; endMode(); draw(); toast(B('أُضيف توقيعك.', 'Your signature was added.'));
+        });
       };
       im.src = png;
     }
@@ -416,21 +437,10 @@
       sh.querySelector('[data-act=mv]').onclick = () => { close(); moveBox(i); };
     }
     function moveBox(i) {
-      const s = S.slots[i], v = views.find(v => v.pi === s.p), el = host.querySelector('.sn-box[data-i="' + i + '"]');
-      if (!v || !el) return;
-      const b = document.createElement('div'); b.className = 'sn-box done pending';
-      ['left', 'top', 'width', 'height'].forEach(k => b.style[k] = el.style[k]);
-      const im = new Image(); im.src = s.sig; b.appendChild(im); b.insertAdjacentHTML('beforeend', '<i class="sn-rz" aria-hidden="true"></i>');
-      const m = modeBar(`<p>${B('اسحب التوقيع إلى موضعه، وكبّره أو صغّره من الزاوية.', 'Drag the signature into place; resize it from the corner.')}</p><div class="sn-sb"><button type="button" class="btn solid" data-ok>${B('حفظ', 'Save')}</button><button type="button" class="btn ghost" data-x>${B('إلغاء', 'Cancel')}</button></div>`);
-      el.style.visibility = 'hidden'; v.wrap.appendChild(b); b.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      draggable(b, null, !!s.free);
-      const done = () => { el.style.visibility = ''; endMode(); };
-      m.querySelector('[data-x]').onclick = done;
-      m.querySelector('[data-ok]').onclick = async ev => {
-        const btn = ev.currentTarget; btn.disabled = true;
-        try { S = await call(Object.assign({ a: 'move', id, i, k: key, tok: mine[i] }, pdfRect(v, b))); done(); draw(); toast(B('حُفظ الموضع.', 'Position saved.')); }
-        catch (e) { btn.disabled = false; toast(errMsg(e), 1); }
-      };
+      const s = S.slots[i];
+      startAdjust({ pi: s.p, rect: { x: s.x, y: s.y, w: s.w, h: s.h }, png: s.sig, cls: s.free ? 'free' : 'slot', ratio: !!s.free, hide: i }, async r => {
+        S = await call(Object.assign({ a: 'move', id, i, k: key, tok: mine[i] }, r)); endMode(); draw(); toast(B('حُفظ الموضع.', 'Position saved.'));
+      });
     }
     root.querySelector('#snDl').onclick = async ev => {
       const btn = ev.currentTarget; btn.disabled = true;
@@ -473,7 +483,7 @@
     }
     views = await renderPages(doc, host, S.slots, { mine });
     draw();
-    let rw = window.innerWidth, rt; window.addEventListener('resize', () => { if (Math.abs(window.innerWidth - rw) < 40) return; rw = window.innerWidth; clearTimeout(rt); rt = setTimeout(async () => { endMode(); views = await renderPages(doc, host, S.slots, { mine }); draw(); }, 250); });
+    let rw = document.documentElement.clientWidth, rt; window.addEventListener('resize', () => { const w = document.documentElement.clientWidth; if (Math.abs(w - rw) < 40) return; rw = w; clearTimeout(rt); rt = setTimeout(rerender, 250); });
     setInterval(() => { if (!document.hidden && !document.querySelector('.sn-sheet,.sn-mode')) refresh(); }, 15000);
   }
 

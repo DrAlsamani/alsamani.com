@@ -114,3 +114,9 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
 .sn-box.pending.slot img{top:-40%;height:180%}
 .sn-tip{margin:12px 0 0!important;color:var(--accent)!important;font-weight:500;font-size:.9375rem}
 .sn-page{cursor:copy}
+
+.sn-pages{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:6px}
+.sn-pages.zoomed{justify-items:start}
+.sn-zoom{display:flex;align-items:center;justify-content:center;gap:12px}
+.sn-zoom button{width:40px;height:36px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font-size:1.25rem;line-height:1;cursor:pointer}
+.sn-zoom span{min-width:52px;text-align:center;font-variant-numeric:tabular-nums;color:var(--muted);font-size:.875rem}
