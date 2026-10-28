@@ -1510,10 +1510,9 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
 .sn-zoom span{min-width:52px;text-align:center;font-variant-numeric:tabular-nums;color:var(--muted);font-size:.875rem}
 .sn-pen{margin-top:-4px}.sn-pen button{padding:5px 12px}.sn-pen button b{display:inline-block;width:16px;border-radius:2px;background:currentColor}.sn-pen button[aria-checked=true]{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
 .sn-keep{display:flex!important;gap:10px;align-items:flex-start;text-align:start}.sn-keep input{width:auto;flex:none;margin-top:5px}
-.sn-nmi{position:absolute;top:calc(100% + 4px);inset-inline-start:0;width:max(100%,150px);box-sizing:border-box;font:inherit;font-size:16px;font-weight:400;padding:4px 8px;border:1px solid var(--accent);border-radius:8px;background:var(--surface);color:var(--ink);z-index:4;cursor:text}
-.sn-nmi:placeholder-shown{border-style:dashed}
-.sn-box:not(:hover):not(:focus-within):not(.act) .sn-nmi:not(:placeholder-shown){display:none}
-.sn-pages.adding .sn-nmi:not(:focus){pointer-events:none;opacity:.9}
+.sn-box input.sn-nmi{position:absolute;inset:2px 14px;width:calc(100% - 28px);height:calc(100% - 4px);box-sizing:border-box;font:inherit;font-size:16px;font-weight:500;padding:0;border:0!important;background:transparent!important;box-shadow:none!important;border-radius:0;color:var(--accent);text-align:center;z-index:2;cursor:text;outline:0;min-width:0;touch-action:none}
+.sn-nmi::placeholder{color:var(--accent);opacity:.45;font-weight:400}
+.sn-box.act input.sn-nmi:focus{background:rgba(255,255,255,.7)!important;border-radius:4px}
 </style>
 <div id="sn" class="sn" data-api="https://script.google.com/macros/s/AKfycbx8-M5oOYDU-TaWyLaySlqZHvBffRiDI6QH85_hBh5y_9uYrvUdxwD3hKNzGoJ4K7UOXQ/exec"><noscript><span class="ar">تعمل هذه الأداة مع تفعيل JavaScript.</span><span class="en">This tool needs JavaScript.</span></noscript></div>
 <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
@@ -1675,20 +1674,23 @@ async function snDetectPage(page,pi,OPS){
   }
   // drag to move, corner handle to resize (keepRatio for signature images)
   function draggable(b, onEnd, keepRatio) {
-    let mode = null, sx, sy, r0;
+    let mode = null, sx, sy, r0, pid;
     b.addEventListener('pointerdown', e => {
-      if (e.target.closest('.sn-bx,.sn-nmi')) return;
-      mode = e.target.classList.contains('sn-rz') ? 'rz' : 'mv'; sx = e.clientX; sy = e.clientY;
-      r0 = { l: b.offsetLeft, t: b.offsetTop, w: b.offsetWidth, h: b.offsetHeight };
+      if (e.target.closest('.sn-bx')) return;
+      sx = e.clientX; sy = e.clientY; r0 = { l: b.offsetLeft, t: b.offsetTop, w: b.offsetWidth, h: b.offsetHeight }; pid = e.pointerId;
+      // on the name field a tap types and a drag moves the box
+      if (e.target.closest('.sn-nmi')) { mode = 'wait'; return; }
+      mode = e.target.classList.contains('sn-rz') ? 'rz' : 'mv';
       b.setPointerCapture(e.pointerId); e.preventDefault();
     });
     b.addEventListener('pointermove', e => {
       if (!mode) return; const dx = e.clientX - sx, dy = e.clientY - sy;
+      if (mode === 'wait') { if (Math.abs(dx) + Math.abs(dy) < 6) return; mode = 'mv'; try { b.setPointerCapture(pid); } catch (er) {} const f = b.querySelector('.sn-nmi'); if (f) f.blur(); }
       if (mode === 'mv') { b.style.left = r0.l + dx + 'px'; b.style.top = r0.t + dy + 'px'; return; }
       let w = Math.max(30, r0.w + (isAr() ? -dx : dx)), h = keepRatio ? w * r0.h / r0.w : Math.max(14, r0.h + dy);
       b.style.width = w + 'px'; b.style.height = h + 'px'; if (isAr()) b.style.left = r0.l + r0.w - w + 'px';
     });
-    const up = () => { if (!mode) return; mode = null; onEnd && onEnd(); };
+    const up = () => { if (!mode) return; const m = mode; mode = null; if (m !== 'wait') onEnd && onEnd(); };
     b.addEventListener('pointerup', up); b.addEventListener('pointercancel', up);
   }
   // the name written on the same row as a box, if the file has its text
@@ -1706,7 +1708,10 @@ async function snDetectPage(page,pi,OPS){
       while (lo > 0 && pcs[lo].transform[4] - (pcs[lo - 1].transform[4] + pcs[lo - 1].width) < 10) lo--;
       while (hi < pcs.length - 1 && pcs[hi + 1].transform[4] - (pcs[hi].transform[4] + pcs[hi].width) < 10) hi++;
       const g = pcs.slice(lo, hi + 1), rtl = g.some(t => /[\u0600-\u06FF]/.test(t.str));
-      return (rtl ? g.reverse() : g).map(t => t.str.trim()).join(' ').replace(/\s+/g, ' ').trim().slice(0, 120);
+      const out = (rtl ? g.reverse() : g).map(t => t.str.trim()).join(' ').replace(/\s+/g, ' ').trim().slice(0, 120);
+      // files whose fonts hide the real letters give symbols instead of a name
+      const L = (out.match(/[\p{L}\p{M}]/gu) || []).length, odd = /[¥¡¦~<>^|{}\[\]\\@#$%&*_=+]/.test(out);
+      return !odd && L >= 2 && L / out.replace(/\s/g, '').length > .7 ? out : '';
     } catch (e) { return ''; }
   }
   function pdfRect(v, b) {

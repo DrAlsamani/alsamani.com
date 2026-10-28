@@ -71,20 +71,23 @@
   }
   // drag to move, corner handle to resize (keepRatio for signature images)
   function draggable(b, onEnd, keepRatio) {
-    let mode = null, sx, sy, r0;
+    let mode = null, sx, sy, r0, pid;
     b.addEventListener('pointerdown', e => {
-      if (e.target.closest('.sn-bx,.sn-nmi')) return;
-      mode = e.target.classList.contains('sn-rz') ? 'rz' : 'mv'; sx = e.clientX; sy = e.clientY;
-      r0 = { l: b.offsetLeft, t: b.offsetTop, w: b.offsetWidth, h: b.offsetHeight };
+      if (e.target.closest('.sn-bx')) return;
+      sx = e.clientX; sy = e.clientY; r0 = { l: b.offsetLeft, t: b.offsetTop, w: b.offsetWidth, h: b.offsetHeight }; pid = e.pointerId;
+      // on the name field a tap types and a drag moves the box
+      if (e.target.closest('.sn-nmi')) { mode = 'wait'; return; }
+      mode = e.target.classList.contains('sn-rz') ? 'rz' : 'mv';
       b.setPointerCapture(e.pointerId); e.preventDefault();
     });
     b.addEventListener('pointermove', e => {
       if (!mode) return; const dx = e.clientX - sx, dy = e.clientY - sy;
+      if (mode === 'wait') { if (Math.abs(dx) + Math.abs(dy) < 6) return; mode = 'mv'; try { b.setPointerCapture(pid); } catch (er) {} const f = b.querySelector('.sn-nmi'); if (f) f.blur(); }
       if (mode === 'mv') { b.style.left = r0.l + dx + 'px'; b.style.top = r0.t + dy + 'px'; return; }
       let w = Math.max(30, r0.w + (isAr() ? -dx : dx)), h = keepRatio ? w * r0.h / r0.w : Math.max(14, r0.h + dy);
       b.style.width = w + 'px'; b.style.height = h + 'px'; if (isAr()) b.style.left = r0.l + r0.w - w + 'px';
     });
-    const up = () => { if (!mode) return; mode = null; onEnd && onEnd(); };
+    const up = () => { if (!mode) return; const m = mode; mode = null; if (m !== 'wait') onEnd && onEnd(); };
     b.addEventListener('pointerup', up); b.addEventListener('pointercancel', up);
   }
   // the name written on the same row as a box, if the file has its text
@@ -102,7 +105,10 @@
       while (lo > 0 && pcs[lo].transform[4] - (pcs[lo - 1].transform[4] + pcs[lo - 1].width) < 10) lo--;
       while (hi < pcs.length - 1 && pcs[hi + 1].transform[4] - (pcs[hi].transform[4] + pcs[hi].width) < 10) hi++;
       const g = pcs.slice(lo, hi + 1), rtl = g.some(t => /[\u0600-\u06FF]/.test(t.str));
-      return (rtl ? g.reverse() : g).map(t => t.str.trim()).join(' ').replace(/\s+/g, ' ').trim().slice(0, 120);
+      const out = (rtl ? g.reverse() : g).map(t => t.str.trim()).join(' ').replace(/\s+/g, ' ').trim().slice(0, 120);
+      // files whose fonts hide the real letters give symbols instead of a name
+      const L = (out.match(/[\p{L}\p{M}]/gu) || []).length, odd = /[¥¡¦~<>^|{}\[\]\\@#$%&*_=+]/.test(out);
+      return !odd && L >= 2 && L / out.replace(/\s/g, '').length > .7 ? out : '';
     } catch (e) { return ''; }
   }
   function pdfRect(v, b) {
