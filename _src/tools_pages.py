@@ -55,6 +55,7 @@ ICONS = {'research-journey': '<path d="M5 19c3-6 5-9 7-9s2 4 4 4 3-3 3-6"/><circ
          'pass': '<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 9l2 2 4-4M8 16h8"/>',
          'meet': '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4M9 15l2 2 4-4"/>',
          'attend': '<path d="M16 20v-1.5A3.5 3.5 0 0 0 12.5 15h-5A3.5 3.5 0 0 0 4 18.5V20"/><circle cx="10" cy="8" r="3.5"/><path d="M16 11l2 2 4-4"/>',
+         'qr': '<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM20 14v.01M14 20h.01M17 20h4v-3"/>',
          'pdf': '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/>',
          'initiative-card': '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 10h6M7 14h10"/>',
          'leader-mirror': '<circle cx="12" cy="8" r="3.5"/><path d="M5 20c1.2-3.5 4-5 7-5s5.8 1.5 7 5"/>',
@@ -67,7 +68,7 @@ def tools_index():
     secs, nav = [], []
     for g, a, b, da, db in GROUPS:
         ts = [t for t in TOOLS if t.get('group') == g]
-        extra = [JOURNEY, METHODS] if g == 'research' else ([SIGN] if sign_ready() else []) + ([PASS, MEET, ATTEND] if poll_ready() else []) + [PDFT] if g == 'work' else []
+        extra = [JOURNEY, METHODS] if g == 'research' else ([SIGN] if sign_ready() else []) + ([PASS, MEET, ATTEND] if poll_ready() else []) + [PDFT, QRT] if g == 'work' else []
         items = extra + ts
         if not items:
             continue
@@ -79,10 +80,11 @@ def tools_index():
             if t is MEET: return bi('بديل «متى يناسبكم؟»', 'Instead of “when suits you?”')
             if t is ATTEND: return bi('برمز QR أو رابط', 'With a QR code or a link')
             if t is PDFT: return bi('داخل جهازك', 'On your device')
+            if t is QRT: return bi('لا تنتهي صلاحيته', 'Does not expire')
             return bi(t['chn_ar'], t['chn_en'])
         def go(t):
             if t is METHODS: return bi('اقرأ', 'Read')
-            if t in (JOURNEY, SIGN, PASS, MEET, ATTEND, PDFT): return bi('ابدأ', 'Begin')
+            if t in (JOURNEY, SIGN, PASS, MEET, ATTEND, PDFT, QRT): return bi('ابدأ', 'Begin')
             return bi('استخدم الأداة', 'Use the tool')
         cards = ''.join(f'''<a class="tl-card" href="{t["slug"]}/index.html">{_icon(t["slug"])}<span class="tl-cn">{tag(t)}</span><h3>{bi(e(t["t_ar"]), e(t["t_en"]))}</h3><p>{bi(e(t["q_ar"]), e(t["q_en"]))}</p><span class="tl-go">{go(t)} <i class="chev"></i></span></a>''' for t in items)
         secs.append(f'''<div class="tl-group tl-n{len(items)}" id="{g}"><div class="tl-gh"><h3>{bi(a, b)} <span class="tl-gn">{len(items)}</span></h3>{('<p>' + bi(da, db) + '</p>') if da else ''}</div><div class="tl-cards">{cards}</div></div>''')
@@ -171,6 +173,9 @@ ATTEND = {'slug': 'attend', 't_ar': 'تسجيل الحضور', 't_en': 'Attendan
 PDFT = {'slug': 'pdf', 't_ar': 'ملفات PDF', 't_en': 'PDF files',
         'q_ar': 'دمج ملفات PDF وصور الأوراق، وترتيب الصفحات وتدويرها وحذفها، وضغط الملفات الكبيرة.',
         'q_en': 'Merge PDFs and photos of pages, arrange, rotate or delete pages, and shrink large files.'}
+QRT = {'slug': 'qr', 't_ar': 'رمز QR', 't_en': 'QR code',
+       'q_ar': 'حوّل أي رابط إلى رمز QR جاهز للعروض والمطبوعات، ومنه رابط مجلد يجمع عدة ملفات.',
+       'q_en': 'Turn any link into a QR code for slides and print, including a folder link that holds several files.'}
 def _tool_page(j, eyebrow, inner, css, scripts):
     src = lambda f: open(os.path.join(ROOT, 'src', f)).read()
     return f'''<section class="first tl-page sn-page-wrap"><nav class="tl-crumb" aria-label="breadcrumb"><a href="../index.html">{bi('الأدوات', 'Tools')}</a><i class="chev"></i><span>{bi(j["t_ar"], j["t_en"])}</span></nav>
@@ -192,3 +197,7 @@ def pdf_body():
         f'<div id="pt" class="sn"><noscript>{bi("تعمل هذه الأداة مع تفعيل JavaScript.", "This tool needs JavaScript.")}</noscript></div>',
         ['sign.css', 'pdftool.css'],
         ['https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js', 'https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js', 'https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js', 'pdftool.js'])
+def qr_body():
+    return _tool_page(QRT, bi('للجان والمجالس', 'For committees and boards'),
+        f'<div id="qt" class="sn"><noscript>{bi("تعمل هذه الأداة مع تفعيل JavaScript.", "This tool needs JavaScript.")}</noscript></div>',
+        ['sign.css', 'pdftool.css'], ['https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js', 'qrtool.js'])

@@ -659,9 +659,11 @@ if _tp.poll_ready(): PAGES.append(('tools/meet', 2, 'موعد الاجتماع |
 DESCS['tools/meet'] = 'Find a meeting time for a committee or board: suggest a few times, each member marks what works, and the best time stands out. تحديد موعد اجتماع اللجنة أو المجلس برابط واحد.'
 if _tp.poll_ready(): PAGES.append(('tools/attend', 2, 'تسجيل الحضور | Attendance | Dr. Omar A. Alsamani', _tp.attend_body))
 DESCS['tools/attend'] = 'Record attendance at a meeting: attendees scan a QR code or open one link, and the coordinator gets a printable list of who came. تسجيل حضور الاجتماعات برمز QR.'
+PAGES.append(('tools/qr', 2, 'رمز QR | QR code | Dr. Omar A. Alsamani', _tp.qr_body))
+DESCS['tools/qr'] = 'Turn a link or text into a QR code that does not expire: PNG for slides and documents, SVG for print. تحويل الروابط إلى رمز QR.'
 DESCS['tools/pass'] = 'Pass a committee or board decision by circulation: one link, each member answers agree, reservation or disagree, and the coordinator gets a printable result. تمرير قرار اللجان والمجالس برابط واحد.'
 PAGES.append(('tools/pdf', 2, 'ملفات PDF | PDF files | Dr. Omar A. Alsamani', _tp.pdf_body))
-DESCS['tools/pdf'] = 'Merge PDFs and photos of pages into one PDF, or shrink a large PDF to send it easily. Runs on your device; nothing is uploaded. دمج ملفات PDF وضغطها.'
+DESCS['tools/pdf'] = 'Merge PDFs and photos of pages, arrange, rotate or delete pages, or shrink a large PDF to send it easily. Runs on your device; nothing is uploaded. دمج ملفات PDF وضغطها.'
 if _tp.sign_ready(): PAGES.append(('tools/sign', 2, 'توقيع المحاضر | Signing the minutes | Dr. Omar A. Alsamani', _tp.sign_body))
 DESCS['tools/sign'] = 'Sign meeting minutes together: upload the PDF once, share one link, and each member signs in their own box from their phone. توقيع المحاضر: نسخة واحدة وكل عضو يوقّع في خانته.'
 PAGES.append(('tools/research-methods', 2, 'مناهج البحث وتصاميمها | Research approaches and designs | Dr. Omar A. Alsamani', _tp.methods_body))
