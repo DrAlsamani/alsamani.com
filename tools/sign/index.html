@@ -1622,6 +1622,8 @@ async function snDetectPage(page,pi,OPS){
     return j;
   }
   const ERR = {
+    busy: B('بلغت الخدمة حدّها اليومي. حاول مرة أخرى غدًا.', 'The service has reached its daily limit. Please try again tomorrow.'),
+    full: B('اكتمل العدد المسموح في هذا الرابط.', 'This link has reached its limit.'),
     taken: B('سبقك أحد إلى التوقيع في هذه الخانة. حدّث الصفحة وتأكد من خانتك.', 'Someone has already signed in this box. Refresh and check your box.'),
     locked: B('أُقفل المحضر، ولم يعد التوقيع متاحًا.', 'The minutes are locked; signing is closed.'),
     not_found: B('لم يُعثر على المحضر. ربما حُذف أو انتهت مدته.', 'These minutes were not found. They may have been deleted or expired.'),

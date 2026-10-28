@@ -1625,6 +1625,8 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
     return j;
   }
   const ERR = {
+    busy: B('بلغت الخدمة حدّها اليومي. حاول مرة أخرى غدًا.', 'The service has reached its daily limit. Please try again tomorrow.'),
+    full: B('اكتمل العدد المسموح في هذا الرابط.', 'This link has reached its limit.'),
     voted: B('سُجّل هذا الاسم من جهاز آخر. إن كان خطأ فاطلب من المنسق حذفه.', 'This name was recorded from another device. If this is a mistake, ask the coordinator to remove it.'),
     locked: B('أُغلق الرابط.', 'This link is closed.'),
     not_found: B('لم يُعثر على الرابط. ربما حُذف أو انتهت مدته.', 'Not found. It may have been deleted or expired.'),
