@@ -1,7 +1,7 @@
 /* alsamani.com — one engine for three committee tools, chosen by #ps[data-mode]:
    pass  : passing a decision (agree / reservation / disagree)
    time  : choosing a meeting time (works / maybe / does not work)
-   att   : attendance (each attendee records presence; QR for the room) */
+   att   : attendance (each attendee records presence; QR code to scan) */
 (function () {
   const root = document.getElementById('ps');
   if (!root) return;
@@ -123,10 +123,10 @@
     function render() {
       const ans = S.mine ? S.mine.ans.slice() : S.items.map(() => null), notes = S.mine ? S.mine.notes.slice() : S.items.map(() => '');
       const share = admin && /new=1/.test(location.search) ? `<div class="sn-card sn-share"><h2>${B('الرابط جاهز', 'The link is ready')}</h2>
-        <p>${MODE === 'att' ? B('اعرض الرمز في القاعة ليمسحه الحاضرون، أو أرسل الرابط:', 'Show the code in the room for attendees to scan, or send the link:') : B('أرسله في قروب المجلس أو اللجنة:', 'Send it to the board or committee group:')}</p>
+        <p>${MODE === 'att' ? B('اعرض رمز QR ليمسحه الحاضرون، أو أرسل الرابط:', 'Show the QR code for attendees to scan, or send the link:') : B('أرسله في قروب المجلس أو اللجنة:', 'Send it to the board or committee group:')}</p>
         <div class="sn-link"><input type="text" readonly value="${link}" id="psLink"><button type="button" class="btn solid" id="psCopy">${B('نسخ', 'Copy')}</button><a class="btn ghost" id="psWa" target="_blank" rel="noopener">${B('واتساب', 'WhatsApp')}</a></div>
         <p class="sn-fine">${B('النتيجة تظهر لك في هذا الجهاز. لمتابعتها من جهاز آخر احفظ رابط الإدارة:', 'Results appear on this device. To follow them from another device, keep the management link:')} <button type="button" class="sn-lnk" id="psAdm">${B('نسخ رابط الإدارة', 'Copy management link')}</button></p></div>` : '';
-      const head = `<div class="sn-card"><h2>${esc(title())}</h2>${S.locked ? `<p class="ps-closed">${B('أُغلق الرابط.', 'This link is closed.')}</p>` : ''}${admin && MODE === 'att' ? `<div class="sn-two"><button type="button" class="btn ghost" id="psQr">${B('عرض رمز QR للقاعة', 'Show QR code for the room')}</button></div>` : ''}</div>`;
+      const head = `<div class="sn-card"><h2>${esc(title())}</h2>${S.locked ? `<p class="ps-closed">${B('أُغلق الرابط.', 'This link is closed.')}</p>` : ''}${admin && MODE === 'att' ? `<div class="sn-two"><button type="button" class="btn ghost" id="psQr">${B('رمز QR', 'QR code')}</button></div>` : ''}</div>`;
       let form = '';
       if (!S.locked && (editing || !S.mine)) {
         const inList = n => S.names.some(x => x === n);
@@ -225,8 +225,20 @@
     function qr() {
       const q = qrcode(0, 'M'); q.addData(link); q.make();
       const ov = document.createElement('div'); ov.className = 'ps-qr';
-      ov.innerHTML = `<div><h2>${esc(title())}</h2><p>${B('امسح الرمز بكاميرا الجوال لتسجيل حضورك', 'Scan with your phone camera to record your attendance')}</p>${q.createSvgTag({ cellSize: 8, margin: 2, scalable: true })}<p class="ps-qrl" dir="ltr">${esc(link.replace(/^https?:\/\//, ''))}</p><button type="button" class="btn ghost">${B('إغلاق', 'Close')}</button></div>`;
-      ov.querySelector('button').onclick = () => ov.remove(); ov.onclick = e => { if (e.target === ov) ov.remove(); };
+      ov.innerHTML = `<div><h2>${esc(title())}</h2><p>${B('امسح الرمز بكاميرا الجوال لتسجيل حضورك', 'Scan with your phone camera to record your attendance')}</p>${q.createSvgTag({ cellSize: 8, margin: 2, scalable: true })}<p class="ps-qrl" dir="ltr">${esc(link.replace(/^https?:\/\//, ''))}</p><div class="ps-qrb"><button type="button" class="btn solid" data-png>${B('تحميل الصورة', 'Download image')}</button><button type="button" class="btn ghost" data-x>${B('إغلاق', 'Close')}</button></div></div>`;
+      ov.querySelector('[data-x]').onclick = () => ov.remove(); ov.onclick = e => { if (e.target === ov) ov.remove(); };
+      // a sharp PNG with a white margin, ready for slides or print
+      ov.querySelector('[data-png]').onclick = () => {
+        const n = q.getModuleCount(), cell = Math.ceil(1200 / (n + 8)), m = cell * 4, c = document.createElement('canvas');
+        c.width = c.height = n * cell + 2 * m;
+        const x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height); x.fillStyle = '#000';
+        for (let r = 0; r < n; r++) for (let k = 0; k < n; k++) if (q.isDark(r, k)) x.fillRect(m + k * cell, m + r * cell, cell, cell);
+        c.toBlob(bl => {
+          const name = 'QR - ' + title().replace(/[\\/:*?"<>|]+/g, ' ').slice(0, 60) + '.png', f = new File([bl], name, { type: 'image/png' });
+          if (/iP(hone|ad|od)|Android/i.test(navigator.userAgent) && navigator.canShare && navigator.canShare({ files: [f] })) { navigator.share({ files: [f] }).catch(() => {}); return; }
+          const a = document.createElement('a'); a.href = URL.createObjectURL(f); a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 4000);
+        }, 'image/png');
+      };
       document.body.appendChild(ov);
     }
     function printView() {

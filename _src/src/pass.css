@@ -37,3 +37,4 @@
 .ps-names summary{cursor:pointer;font-weight:500;color:var(--accent)}.ps-names[open] summary{margin-bottom:8px}.ps-names .sn-fine{margin:0 0 8px}
 .ps .sn-keep{display:flex;gap:10px;align-items:flex-start;text-align:start;margin:14px 0}.ps .sn-keep input{width:auto;flex:none;margin-top:5px}
 #psOther{margin-top:8px}
+.ps-qrb{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:4px}.ps-qr .ps-qrb .btn{margin:0}

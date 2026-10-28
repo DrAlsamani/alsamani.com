@@ -77,7 +77,7 @@ def tools_index():
             if t is SIGN: return bi('للمقرر والأعضاء', 'For coordinators and members')
             if t is PASS: return bi('بديل جولات «أوافق»', 'Instead of “I agree” rounds')
             if t is MEET: return bi('بديل «متى يناسبكم؟»', 'Instead of “when suits you?”')
-            if t is ATTEND: return bi('برمز QR في القاعة', 'With a QR code in the room')
+            if t is ATTEND: return bi('برمز QR أو رابط', 'With a QR code or a link')
             if t is PDFT: return bi('داخل جهازك', 'On your device')
             return bi(t['chn_ar'], t['chn_en'])
         def go(t):
