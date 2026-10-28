@@ -654,6 +654,8 @@ PAGES.append(('tools', 1, 'Interactive tools | Innovation Management | Dr. Omar 
 for _t in _tp.TOOLS:
     PAGES.append((f"tools/{_t['slug']}", 2, f"{_t['t_ar']} | {_t['t_en']} | Dr. Omar A. Alsamani", (lambda tt: (lambda: _tp.tool_body(tt)))(_t)))
 PAGES.append(('tools/research-journey', 2, 'رحلة البحث | The research journey | Dr. Omar A. Alsamani', _tp.journey_body))
+if _tp.sign_ready(): PAGES.append(('tools/sign', 2, 'توقيع المحاضر | Signing the minutes | Dr. Omar A. Alsamani', _tp.sign_body))
+DESCS['tools/sign'] = 'Sign meeting minutes together: upload the PDF once, share one link, and each member signs in their own box from their phone. توقيع المحاضر: نسخة واحدة وكل عضو يوقّع في خانته.'
 PAGES.append(('tools/research-methods', 2, 'مناهج البحث وتصاميمها | Research approaches and designs | Dr. Omar A. Alsamani', _tp.methods_body))
 DESCS['tools/research-methods'] = 'A reference guide to research approaches and designs for graduate students: descriptive, correlational, causal-comparative, experimental, single-case, qualitative (phenomenology, case study, grounded theory, ethnography, narrative), mixed methods, systematic and scoping reviews. مناهج البحث وتصاميمها.'
 DESCS['tools/research-journey'] = 'A guided research journey for graduate students: from the first idea to the problem, questions and approach, with quality checks, a live Chapter One draft and supervisor review. رحلة البحث للطالب الباحث.'
