@@ -46,21 +46,41 @@ def tool_body(t):
 <script>window.TOOL={json.dumps(t, ensure_ascii=False)}</script>
 </section>'''
 
-GROUPS = [('leaders', 'للقادة والمؤسسات', 'For leaders and organizations', 'من كتاب «إدارة الابتكار».', 'From <i>Innovation Management</i>.'),
-          ('research', 'للطالب الباحث', 'For student researchers', '', ''),
-          ('work', 'للجان والمجالس', 'For committees and boards', '', '')]
+GROUPS = [('research', 'للطالب الباحث', 'For student researchers', 'من الفكرة الأولى إلى اختيار المنهج والتصميم.', 'From the first idea to the choice of approach and design.'),
+          ('work', 'للجان والمجالس', 'For committees and boards', 'لأعمال اللجان والمجالس اليومية.', 'For the everyday work of committees and boards.'),
+          ('leaders', 'للقادة والمؤسسات', 'For leaders and organizations', 'أدوات تشخيص من كتاب «إدارة الابتكار».', 'Diagnostic tools from <i>Innovation Management</i>.')]
+ICONS = {'research-journey': '<path d="M5 19c3-6 5-9 7-9s2 4 4 4 3-3 3-6"/><circle cx="5" cy="19" r="1.6"/><circle cx="19" cy="8" r="1.6"/>',
+         'research-methods': '<path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5z"/><path d="M4 5.5v16M9 8h7M9 12h7"/>',
+         'sign': '<path d="M4 20h16"/><path d="M14.5 4.5l5 5L9 20H4v-5z"/>',
+         'initiative-card': '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 10h6M7 14h10"/>',
+         'leader-mirror': '<circle cx="12" cy="8" r="3.5"/><path d="M5 20c1.2-3.5 4-5 7-5s5.8 1.5 7 5"/>',
+         'system-health': '<path d="M3 12h4l2.5-6 4 12 2.5-6H21"/>',
+         'scale-readiness': '<path d="M4 20V14M10 20V9M16 20V4"/><path d="M3 20h18"/>',
+         'university-ecosystem': '<circle cx="12" cy="12" r="2.5"/><circle cx="5" cy="6" r="2"/><circle cx="19" cy="6" r="2"/><circle cx="12" cy="20" r="2"/><path d="M6.6 7.3 10 10.5M17.4 7.3 14 10.5M12 14.5V18"/>'}
+def _icon(slug):
+    return f'<span class="tl-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">{ICONS.get(slug, "")}</svg></span>'
 def tools_index():
-    secs = []
+    secs, nav = [], []
     for g, a, b, da, db in GROUPS:
         ts = [t for t in TOOLS if t.get('group') == g]
         extra = [JOURNEY, METHODS] if g == 'research' else [SIGN] if g == 'work' and sign_ready() else []
-        if not ts and not extra:
+        items = extra + ts
+        if not items:
             continue
-        cards = ''.join(f'''<a class="tl-card" href="{t["slug"]}/index.html"><span class="tl-cn">{bi('تسع مراحل', 'Nine stages') if t is JOURNEY else bi('أداة عامة', 'Open tool') if t is SIGN else bi('دليل مرجعي', 'Reference guide')}</span><h3>{bi(e(t["t_ar"]), e(t["t_en"]))}</h3><p>{bi(e(t["q_ar"]), e(t["q_en"]))}</p><span class="tl-go">{bi('ابدأ', 'Begin') if t is JOURNEY or t is SIGN else bi('اقرأ', 'Read')} <i class="chev"></i></span></a>''' for t in extra) + ''.join(f'''<a class="tl-card" href="{t["slug"]}/index.html"><span class="tl-cn">{bi(t["chn_ar"], t["chn_en"])}</span><h3>{bi(e(t["t_ar"]), e(t["t_en"]))}</h3><p>{bi(e(t["q_ar"]), e(t["q_en"]))}</p><span class="tl-go">{bi('استخدم الأداة', 'Use the tool')} <i class="chev"></i></span></a>''' for t in ts)
-        secs.append(f'''<div class="tl-group" id="{g}"><div class="tl-gh"><h3>{bi(a, b)}</h3>{('<p>' + bi(da, db) + '</p>') if da else ''}<span class="tl-gn">{len(ts) + len(extra)}</span></div><div class="tl-cards">{cards}</div></div>''')
-    nav = ''.join(f'<a href="#{g}">{bi(a, b)}</a>' for g, a, b, *_ in GROUPS if g == 'research' or (g == 'work' and sign_ready()) or any(t.get('group') == g for t in TOOLS))
-    return f'''<section class="first"><div class="sec-head"><div><h2>{bi('الأدوات', 'Tools')}</h2></div></div>
-{'<nav class="tl-gnav">' + nav + '</nav>' if nav.count('<a ') > 1 else ''}{''.join(secs)}</section>'''
+        def tag(t):
+            if t is JOURNEY: return bi('تسع مراحل', 'Nine stages')
+            if t is METHODS: return bi('دليل مرجعي', 'Reference guide')
+            if t is SIGN: return bi('للمقرر والأعضاء', 'For coordinators and members')
+            return bi(t['chn_ar'], t['chn_en'])
+        def go(t):
+            if t is METHODS: return bi('اقرأ', 'Read')
+            if t in (JOURNEY, SIGN): return bi('ابدأ', 'Begin')
+            return bi('استخدم الأداة', 'Use the tool')
+        cards = ''.join(f'''<a class="tl-card" href="{t["slug"]}/index.html">{_icon(t["slug"])}<span class="tl-cn">{tag(t)}</span><h3>{bi(e(t["t_ar"]), e(t["t_en"]))}</h3><p>{bi(e(t["q_ar"]), e(t["q_en"]))}</p><span class="tl-go">{go(t)} <i class="chev"></i></span></a>''' for t in items)
+        secs.append(f'''<div class="tl-group tl-n{len(items)}" id="{g}"><div class="tl-gh"><h3>{bi(a, b)} <span class="tl-gn">{len(items)}</span></h3>{('<p>' + bi(da, db) + '</p>') if da else ''}</div><div class="tl-cards">{cards}</div></div>''')
+        nav.append(f'<a href="#{g}">{bi(a, b)}</a>')
+    return f'''<section class="first tl-index"><div class="sec-head"><div><h2>{bi('الأدوات', 'Tools')}</h2><p class="tl-lead">{bi('أدوات تفاعلية تعمل في المتصفح مباشرة، دون تسجيل.', 'Interactive tools that run in the browser, with no sign-up.')}</p></div></div>
+{'<nav class="tl-gnav">' + ''.join(nav) + '</nav>' if len(nav) > 1 else ''}{('<div class="tl-row">' + ''.join(secs[:2]) + '</div>' + ''.join(secs[2:])) if len(secs) > 2 else ''.join(secs)}</section>'''
 
 JOURNEY = {'slug': 'research-journey', 't_ar': 'رحلة البحث', 't_en': 'The research journey',
            'q_ar': 'من الفكرة إلى المناقشة.',
@@ -111,8 +131,8 @@ def journey_body():
 </section>'''
 
 SIGN = {'slug': 'sign', 't_ar': 'توقيع المحاضر', 't_en': 'Signing the minutes',
-        'q_ar': 'نسخة واحدة من المحضر، وكل عضو يوقّع في خانته من جواله.',
-        'q_en': 'One copy of the minutes; each member signs in their own box from their phone.'}
+        'q_ar': 'ارفع المحضر، وأرسل رابطًا واحدًا يوقّع منه الأعضاء.',
+        'q_en': 'Upload the minutes and share one link for members to sign.'}
 def sign_ready():
     return (os.environ.get('SIGN_API') or json.load(open(os.path.join(ROOT, 'data', 'sign.json')))['api']).startswith('http')
 def sign_body():
@@ -120,7 +140,7 @@ def sign_body():
     src = lambda f: open(os.path.join(ROOT, 'src', f)).read()
     j = SIGN
     return f'''<section class="first tl-page sn-page-wrap"><nav class="tl-crumb" aria-label="breadcrumb"><a href="../index.html">{bi('الأدوات', 'Tools')}</a><i class="chev"></i><span>{bi(j["t_ar"], j["t_en"])}</span></nav>
-<header class="tl-head"><p class="eyebrow">{bi('للجان والمجالس', 'For committees and boards')}</p><h1>{bi(j["t_ar"], j["t_en"])}</h1><p class="tl-q">{bi(j["q_ar"], j["q_en"])}</p></header>
+<header class="tl-head"><p class="eyebrow">{bi('للجان والمجالس', 'For committees and boards')}</p><h1>{bi(j["t_ar"], j["t_en"])}</h1></header>
 <style>{src('sign.css')}</style>
 <div id="sn" class="sn" data-api="{e(api)}"><noscript>{bi('تعمل هذه الأداة مع تفعيل JavaScript.', 'This tool needs JavaScript.')}</noscript></div>
 <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>

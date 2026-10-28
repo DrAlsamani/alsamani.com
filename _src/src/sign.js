@@ -38,33 +38,56 @@
   };
 
   /* ---------- page rendering with boxes ---------- */
-  async function renderPages(doc, host, pages, slots, opts) {
+  async function renderPages(doc, host, slots, opts) {
     host.innerHTML = '';
-    const out = [];
-    const W = Math.min(host.clientWidth || 600, 900);
-    for (const pi of pages) {
-      const page = await doc.getPage(pi + 1);
-      const vp0 = page.getViewport({ scale: 1 });
-      const scale = W / vp0.width, vp = page.getViewport({ scale });
+    const out = [], W = Math.min(host.clientWidth || 600, 900), dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+    for (let pi = 0; pi < doc.numPages; pi++) {
+      const page = await doc.getPage(pi + 1), vp0 = page.getViewport({ scale: 1 }), vp = page.getViewport({ scale: W / vp0.width });
       const wrap = document.createElement('div'); wrap.className = 'sn-page'; wrap.style.width = vp.width + 'px'; wrap.style.height = vp.height + 'px';
-      const cv = document.createElement('canvas'), dpr = Math.min(window.devicePixelRatio || 1, 2.5);
-      cv.width = Math.floor(vp.width * dpr); cv.height = Math.floor(vp.height * dpr); cv.style.width = vp.width + 'px'; cv.style.height = vp.height + 'px';
-      wrap.appendChild(cv);
-      const lab = document.createElement('span'); lab.className = 'sn-pn'; lab.textContent = (isAr() ? 'صفحة ' : 'Page ') + (pi + 1); wrap.appendChild(lab);
-      host.appendChild(wrap);
-      await page.render({ canvasContext: cv.getContext('2d'), viewport: vp, transform: dpr !== 1 ? [dpr, 0, 0, dpr, 0, 0] : null }).promise;
-      out.push({ pi, wrap, vp, page });
+      const lab = document.createElement('span'); lab.className = 'sn-pn'; lab.textContent = (isAr() ? 'صفحة ' : 'Page ') + (pi + 1) + ' / ' + doc.numPages; wrap.appendChild(lab);
+      host.appendChild(wrap); out.push({ pi, wrap, vp, page, done: false });
     }
+    const paint = async v => {
+      if (v.done) return; v.done = true;
+      const cv = document.createElement('canvas'); cv.width = Math.floor(v.vp.width * dpr); cv.height = Math.floor(v.vp.height * dpr); cv.style.width = v.vp.width + 'px'; cv.style.height = v.vp.height + 'px';
+      v.wrap.prepend(cv);
+      await v.page.render({ canvasContext: cv.getContext('2d'), viewport: v.vp, transform: dpr !== 1 ? [dpr, 0, 0, dpr, 0, 0] : null }).promise;
+    };
+    const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { io.unobserve(e.target); paint(out.find(v => v.wrap === e.target)); } }), { rootMargin: '1500px 0px' });
+    out.forEach(v => io.observe(v.wrap));
     placeBoxes(out, slots, opts);
     return out;
+  }
+  // drag to move, corner handle to resize (keepRatio for signature images)
+  function draggable(b, onEnd, keepRatio) {
+    let mode = null, sx, sy, r0;
+    b.addEventListener('pointerdown', e => {
+      if (e.target.closest('.sn-bx')) return;
+      mode = e.target.classList.contains('sn-rz') ? 'rz' : 'mv'; sx = e.clientX; sy = e.clientY;
+      r0 = { l: b.offsetLeft, t: b.offsetTop, w: b.offsetWidth, h: b.offsetHeight };
+      b.setPointerCapture(e.pointerId); e.preventDefault();
+    });
+    b.addEventListener('pointermove', e => {
+      if (!mode) return; const dx = e.clientX - sx, dy = e.clientY - sy;
+      if (mode === 'mv') { b.style.left = r0.l + dx + 'px'; b.style.top = r0.t + dy + 'px'; return; }
+      let w = Math.max(30, r0.w + (isAr() ? -dx : dx)), h = keepRatio ? w * r0.h / r0.w : Math.max(14, r0.h + dy);
+      b.style.width = w + 'px'; b.style.height = h + 'px'; if (isAr()) b.style.left = r0.l + r0.w - w + 'px';
+    });
+    const up = () => { if (!mode) return; mode = null; onEnd && onEnd(); };
+    b.addEventListener('pointerup', up); b.addEventListener('pointercancel', up);
+  }
+  function pdfRect(v, b) {
+    const l = b.offsetLeft, t = b.offsetTop, w = b.offsetWidth, h = b.offsetHeight;
+    const a = v.vp.convertToPdfPoint(l, t + h), c = v.vp.convertToPdfPoint(l + w, t);
+    return { x: Math.min(a[0], c[0]), y: Math.min(a[1], c[1]), w: Math.abs(c[0] - a[0]), h: Math.abs(c[1] - a[1]) };
   }
   function rectOf(vp, s) { const r = vp.convertToViewportRectangle([s.x, s.y, s.x + s.w, s.y + s.h]); return { l: Math.min(r[0], r[2]), t: Math.min(r[1], r[3]), w: Math.abs(r[2] - r[0]), h: Math.abs(r[3] - r[1]) }; }
   function placeBoxes(views, slots, opts) {
     views.forEach(v => v.wrap.querySelectorAll('.sn-box').forEach(b => b.remove()));
     slots.forEach((s, i) => {
-      const v = views.find(v => v.pi === s.p); if (!v) return;
+      const v = views.find(v => v.pi === s.p); if (!v || s.gone) return;
       const r = rectOf(v.vp, s), b = document.createElement(opts.edit ? 'div' : 'button');
-      b.className = 'sn-box' + (s.sig ? ' done' : '') + (opts.mine && opts.mine[i] ? ' mine' : '');
+      b.className = 'sn-box' + (s.free ? ' free' : '') + (s.sig ? ' done' : '') + (opts.mine && opts.mine[i] ? ' mine' : '');
       b.style.left = r.l + 'px'; b.style.top = r.t + 'px'; b.style.width = r.w + 'px'; b.style.height = r.h + 'px';
       b.dataset.i = i;
       if (s.sig) { const im = new Image(); im.src = s.sig; im.alt = ''; b.appendChild(im); }
@@ -117,25 +140,25 @@
   function editor(doc, buf, slots, title) {
     const ed = root.querySelector('#snEdit'); ed.hidden = false;
     const found = slots.length;
-    let pages = [...new Set(slots.map(s => s.p))];
-    if (!pages.length) pages = [doc.numPages - 1];
     ed.innerHTML = `
       <div class="sn-card">
         <p class="sn-step">${B('٢', '2')}</p>
-        <h2>${B('راجع الخانات', 'Check the boxes')}</h2>
-        <p class="sn-found">${found ? B(`وُجدت ${found} خانة توقيع وحُددت في الصفحة أدناه. اسحب أي خانة لتعديل موضعها، أو احذفها بعلامة ×.`, `${found} signature boxes were found and marked on the page below. Drag a box to adjust it, or remove it with ×.`) : B('لم يُعثر على جدول تواقيع تلقائيًا. اضغط «إضافة خانة» ثم اضغط على مكان التوقيع في الصفحة.', 'No signature table was found. Tap “Add a box”, then tap where the signature goes on the page.')}</p>
+        <h2>${B('إنشاء الرابط', 'Create the link')}</h2>
         <label class="sn-lbl">${B('عنوان المحضر', 'Title')}<input type="text" id="snTitle" maxlength="200" value="${esc(title)}"></label>
+        <p class="sn-found">${found ? B(`حددت الأداة ${found} خانة توقيع أمام الأسماء، وستظهر للأعضاء جاهزة. ويستطيع أي عضو أيضًا التوقيع في الموضع الذي يختاره.`, `The tool marked ${found} signature boxes next to the names; members will see them ready. Any member can also sign wherever they choose.`) : B('لم تُحدَّد خانات توقيع تلقائيًا، ولا بأس: يضع كل عضو توقيعه في الموضع الذي يختاره من المحضر.', 'No signature boxes were detected, which is fine: each member places their signature wherever they choose.')}</p>
+        <div class="sn-two"><button type="button" class="btn solid" id="snCreate">${B('إنشاء الرابط الآن', 'Create the link now')}</button>
+        <button type="button" class="btn ghost" id="snRevBtn" aria-expanded="false">${found ? B('مراجعة الخانات أولًا', 'Review the boxes first') : B('تحديد الخانات بنفسي', 'Mark the boxes myself')}</button></div>
+      </div>
+      <div id="snRev" hidden>
+      <div class="sn-card">
+        <p>${B('اسحب أي خانة لتعديل موضعها، أو احذفها بعلامة ×، أو أضف خانة ثم اضغط على موضعها في الصفحة.', 'Drag a box to adjust it, remove it with ×, or add a box and tap where it goes on the page.')}</p>
         <details class="sn-det"${found ? '' : ' open'}><summary>${B('أسماء الأعضاء', 'Member names')} <b id="snNc"></b></summary><ol class="sn-list" id="snList"></ol></details>
         <div class="sn-tools"><button type="button" class="btn ghost" id="snAdd" aria-pressed="false">${B('إضافة خانة', 'Add a box')}</button>
-        <label class="sn-pg">${B('الصفحات المعروضة', 'Pages shown')} <select id="snPages"></select></label></div>
+        ${found ? `<button type="button" class="sn-lnk" id="snJump">${B('الانتقال إلى جدول التواقيع', 'Go to the signature table')}</button>` : ''}</div>
       </div>
       <div class="sn-pages" id="snPagesHost"></div>
-      <div class="sn-bar"><button type="button" class="btn solid" id="snCreate">${B('إنشاء رابط التوقيع', 'Create the signing link')}</button></div>`;
-    const sel = ed.querySelector('#snPages');
-    const opt = (v, t) => { const o = document.createElement('option'); o.value = v; o.textContent = t; return o; };
-    sel.appendChild(opt('auto', isAr() ? 'صفحات التواقيع' : 'Signature pages'));
-    sel.appendChild(opt('all', isAr() ? 'كل الصفحات' : 'All pages'));
-    for (let p = 0; p < doc.numPages; p++) sel.appendChild(opt(String(p), (isAr() ? 'صفحة ' : 'Page ') + (p + 1)));
+      <div class="sn-bar"><button type="button" class="btn solid" id="snCreate2">${B('إنشاء رابط التوقيع', 'Create the signing link')}</button></div>
+      </div>`;
     const host = ed.querySelector('#snPagesHost');
     let views = [], adding = false;
     const list = ed.querySelector('#snList');
@@ -148,37 +171,14 @@
     function place() {
       placeBoxes(views, slots, { edit: 1, onBox: (b, i, v) => {
         b.querySelector('.sn-bx').onclick = e => { e.stopPropagation(); slots.splice(i, 1); drawList(); place(); };
-        dragBox(b, v, i);
+        draggable(b, () => Object.assign(slots[i], pdfRect(v, b)));
       } });
     }
-    function dragBox(b, v, i) {
-      let mode = null, sx, sy, r0;
-      b.addEventListener('pointerdown', e => {
-        if (e.target.classList.contains('sn-bx')) return;
-        mode = e.target.classList.contains('sn-rz') ? 'rz' : 'mv'; sx = e.clientX; sy = e.clientY;
-        r0 = { l: b.offsetLeft, t: b.offsetTop, w: b.offsetWidth, h: b.offsetHeight };
-        b.setPointerCapture(e.pointerId); e.preventDefault();
-      });
-      b.addEventListener('pointermove', e => {
-        if (!mode) return; const dx = e.clientX - sx, dy = e.clientY - sy;
-        if (mode === 'mv') { b.style.left = r0.l + dx + 'px'; b.style.top = r0.t + dy + 'px'; }
-        else { b.style.width = Math.max(30, r0.w + (isAr() ? -dx : dx)) + 'px'; if (isAr()) b.style.left = r0.l + dx + 'px'; b.style.height = Math.max(14, r0.h + dy) + 'px'; }
-      });
-      const up = () => {
-        if (!mode) return; mode = null;
-        const l = b.offsetLeft, t = b.offsetTop, w = b.offsetWidth, h = b.offsetHeight;
-        const a = v.vp.convertToPdfPoint(l, t + h), c = v.vp.convertToPdfPoint(l + w, t);
-        Object.assign(slots[i], { x: Math.min(a[0], c[0]), y: Math.min(a[1], c[1]), w: Math.abs(c[0] - a[0]), h: Math.abs(c[1] - a[1]) });
-      };
-      b.addEventListener('pointerup', up); b.addEventListener('pointercancel', up);
-    }
     async function show() {
-      const m = sel.value;
-      const pg = m === 'auto' ? pages : m === 'all' ? [...Array(doc.numPages).keys()] : [+m];
-      views = await renderPages(doc, host, pg, slots, { edit: 1 });
+      views = await renderPages(doc, host, slots, { edit: 1 });
       place();
       views.forEach(v => v.wrap.addEventListener('click', e => {
-        if (!adding || e.target !== v.wrap.querySelector('canvas')) return;
+        if (!adding || e.target.closest('.sn-box')) return;
         const rc = v.wrap.getBoundingClientRect(), x = e.clientX - rc.left, y = e.clientY - rc.top;
         const last = slots[slots.length - 1], w = last ? last.w : 110, h = last ? last.h : 30;
         const pt = v.vp.convertToPdfPoint(x, y);
@@ -189,11 +189,14 @@
     }
     const add = ed.querySelector('#snAdd');
     add.onclick = () => { adding = !adding; add.setAttribute('aria-pressed', adding); host.classList.toggle('adding', adding); };
-    sel.onchange = show;
-    drawList(); show();
-    let rt; window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(show, 250); });
+    drawList();
+    let shown = false;
+    const rb = ed.querySelector('#snRevBtn');
+    rb.onclick = () => { const o = ed.querySelector('#snRev').hidden; ed.querySelector('#snRev').hidden = !o; rb.setAttribute('aria-expanded', o); if (o && !shown) { shown = true; show().then(() => { const x = host.querySelector('.sn-box'); (x || host).scrollIntoView({ behavior: 'smooth', block: 'center' }); }); } };
+    const jb = ed.querySelector('#snJump'); if (jb) jb.onclick = () => { const x = host.querySelector('.sn-box'); if (x) x.scrollIntoView({ behavior: 'smooth', block: 'center' }); };
+    let rw = window.innerWidth, rt; window.addEventListener('resize', () => { if (!shown || Math.abs(window.innerWidth - rw) < 40) return; rw = window.innerWidth; clearTimeout(rt); rt = setTimeout(show, 250); });
+    ed.querySelector('#snCreate2').onclick = () => ed.querySelector('#snCreate').click();
     ed.querySelector('#snCreate').onclick = async ev => {
-      if (!slots.length) { toast(B('أضف خانة توقيع واحدة على الأقل.', 'Add at least one signature box.'), 1); return; }
       const btn = ev.currentTarget; btn.disabled = true; btn.classList.add('busy');
       try {
         const j = await call({ a: 'create', title: ed.querySelector('#snTitle').value.trim() || title, pdf: b64(buf), slots: slots.map(s => ({ p: s.p, n: s.n.trim(), r: s.r || '', x: s.x, y: s.y, w: s.w, h: s.h })) });
@@ -228,10 +231,12 @@
       <div class="sn-card sn-head">
         <h2 id="snT"></h2>
         <div class="sn-prog"><div class="sn-meter"><i id="snMeter"></i></div><p id="snCount"></p></div>
+        <p class="sn-sc" id="snSc" hidden></p>
         <div class="sn-me" id="snMe" hidden></div>
         <div class="sn-names" id="snNames"></div>
         <div class="sn-acts">
           <button type="button" class="btn solid" id="snDl">${B('تحميل المحضر', 'Download the minutes')}</button>
+          <button type="button" class="btn ghost" id="snFree">${B('توقيع في موضع آخر', 'Sign somewhere else')}</button>
           ${admin ? `<button type="button" class="btn ghost" id="snRemind">${B('نسخ رسالة تذكير', 'Copy a reminder')}</button>
           <button type="button" class="btn ghost" id="snLock"></button>
           <button type="button" class="btn ghost sn-danger" id="snDelete">${B('حذف المحضر', 'Delete')}</button>` : ''}
@@ -239,7 +244,6 @@
       </div>
       <div class="sn-pages" id="snPagesHost"></div>`;
     const host = root.querySelector('#snPagesHost');
-    const pages = [...new Set(S.slots.map(s => s.p))].sort((a, b) => a - b);
     let views = [];
     const copy = async (txt, okMsg) => { try { await navigator.clipboard.writeText(txt); toast(okMsg); } catch (e) { prompt('', txt); } };
     if (root.querySelector('#snCopy')) {
@@ -253,19 +257,28 @@
       const me = nk(store.get('me', '')); if (!me) return -1;
       const w = me.split(' '), first = w[0], last = w[w.length - 1];
       let best = -1, sc = 0;
-      S.slots.forEach((x, i) => { const t = nk(x.n).split(' '); if (!t[0]) return; let v = 0; if (t[0] === first) v += 2; if (t[t.length - 1] === last) v += 2; w.forEach(z => { if (t.includes(z)) v++; }); if (v > sc && v >= 5) { sc = v; best = i; } });
+      S.slots.forEach((x, i) => { if (x.free || x.gone) return; const t = nk(x.n).split(' '); if (!t[0]) return; let v = 0; if (t[0] === first) v += 2; if (t[t.length - 1] === last) v += 2; w.forEach(z => { if (t.includes(z)) v++; }); if (v > sc && v >= 5) { sc = v; best = i; } });
       return best;
     }
     function draw() {
-      const n = S.slots.length, d = S.slots.filter(s => s.sig).length;
+      const base = S.slots.map((s, i) => [s, i]).filter(([s]) => !s.free && !s.gone), n = base.length, d = base.filter(([s]) => s.sig).length;
       root.querySelector('#snT').textContent = S.title || (isAr() ? 'محضر' : 'Minutes');
       root.querySelector('#snMeter').style.width = (n ? d / n * 100 : 0) + '%';
       root.querySelector('#snCount').innerHTML = S.locked ? B(`أُقفل المحضر · وقّع ${d} من ${n}`, `Locked · ${d} of ${n} signed`) : d === n ? B(`اكتملت التواقيع (${n})`, `All ${n} have signed`) : B(`وقّع ${d} من ${n}`, `${d} of ${n} signed`);
-      root.querySelector('#snNames').innerHTML = S.slots.map((s, i) => `<button type="button" class="sn-chip${s.sig ? ' done' : ''}${mine[i] ? ' mine' : ''}" data-i="${i}">${s.sig ? '✓ ' : ''}${esc(s.n || ((isAr() ? 'خانة ' : 'Box ') + (i + 1)))}</button>`).join('');
+      root.querySelector('#snNames').innerHTML = base.map(([s, i]) => `<button type="button" class="sn-chip${s.sig ? ' done' : ''}${mine[i] ? ' mine' : ''}" data-i="${i}">${s.sig ? '✓ ' : ''}${esc(s.n || ((isAr() ? 'خانة ' : 'Box ') + (i + 1)))}</button>`).join('');
       root.querySelectorAll('.sn-chip').forEach(c => c.onclick = () => openBox(+c.dataset.i, true));
       const mb = myBox(), me = root.querySelector('#snMe');
       me.hidden = !(mb >= 0 && !S.slots[mb].sig && !S.locked);
       if (!me.hidden) { me.innerHTML = `<p>${B('خانتك:', 'Your box:')} <b><bdi>${esc(S.slots[mb].n)}</bdi></b></p><button type="button" class="btn solid">${B('وقّع الآن', 'Sign now')}</button>`; me.querySelector('button').onclick = () => openBox(mb, true); }
+      const none = !n, signed = S.slots.filter(s => s.sig && !s.gone).length;
+      root.querySelector('.sn-prog').hidden = none; root.querySelector('#snNames').hidden = none;
+      root.querySelector('#snFree').hidden = !!S.locked;
+      root.querySelector('#snFree').className = 'btn ' + (none ? 'solid' : 'ghost');
+      root.querySelector('#snFree').innerHTML = none ? B('أضف توقيعك', 'Add your signature') : B('توقيع في موضع آخر', 'Sign somewhere else');
+      root.querySelector('#snDl').className = 'btn ' + (none ? 'ghost' : 'solid');
+      const sc = root.querySelector('#snSc'); sc.hidden = !none; sc.innerHTML = S.locked ? B(`أُقفل المحضر · ${signed} توقيع`, `Locked · ${signed} signatures`) : B(`عدد التواقيع حتى الآن: ${signed}`, `Signatures so far: ${signed}`);
+      root.querySelector('#snFree').style.order = none ? -1 : 0;
+      const fab = document.getElementById('snFab'); if (fab) { fab.dataset.on = none && !S.locked ? '1' : ''; fab.hidden = !fab.dataset.on || fab.dataset.near === '1'; }
       if (admin) root.querySelector('#snLock').innerHTML = S.locked ? B('فتح التوقيع', 'Reopen signing') : B('إقفال المحضر', 'Lock');
       placeBoxes(views, S.slots, { mine, onBox: (b, i) => { b.onclick = () => openBox(i); } });
     }
@@ -276,16 +289,17 @@
       if (s.sig) {
         if (mine[i] && !S.locked) return sheetSigned(i);
         if (admin) return sheetAdmin(i);
-        return toast(B('هذه الخانة موقّعة.', 'This box is already signed.'));
+        return toast(s.free ? B('توقيع أُضيف في هذا الموضع.', 'A signature added here.') : B('هذه الخانة موقّعة.', 'This box is already signed.'));
       }
       if (S.locked) return toast(ERR.locked, 1);
       sheetSign(i);
     }
     async function refresh() { try { const g = await call({ a: 'get', id, k: key }); S = g; draw(); } catch (e) {} }
-    function sheetSign(i) {
-      const s = S.slots[i], saved = store.get('sig', null);
-      const sh = sheet(`<h3>${B('التوقيع', 'Sign')}${s.n ? ' · <bdi>' + esc(s.n) + '</bdi>' : ''}</h3>
-        ${saved ? `<div class="sn-saved"><img src="${saved}" alt=""><button type="button" class="btn solid" data-act="use">${B('استخدام توقيعي المحفوظ', 'Use my saved signature')}</button></div><p class="sn-or">${B('أو توقيع جديد', 'or a new signature')}</p>` : ''}
+    function getSig(title, onPng) {
+      // several saved signatures per device (e.g. full signature and initials), newest first
+      let saved = store.get('sigs', null); if (!saved) { const one = store.get('sig', null); saved = one ? [one] : []; store.set('sigs', saved); }
+      const sh = sheet(`<h3>${title}</h3>
+        ${saved.length ? `<p class="sn-st">${B('تواقيعي المحفوظة · اضغط لاستخدامه', 'My saved signatures · tap one to use it')}</p><div class="sn-sigs">${saved.map((x, k) => `<div class="sn-sg"><button type="button" class="sn-sgb" data-use="${k}"><img src="${x}" alt=""></button><button type="button" class="sn-sgx" data-rm="${k}" aria-label="remove">×</button></div>`).join('')}</div><p class="sn-or">${B('أو توقيع جديد', 'or a new signature')}</p>` : ''}
         <div class="sn-tabs" role="tablist"><button type="button" role="tab" aria-selected="true" data-t="draw">${B('ارسم', 'Draw')}</button><button type="button" role="tab" aria-selected="false" data-t="img">${B('صورة التوقيع', 'Photo of signature')}</button></div>
         <div class="sn-pad" data-p="draw"><canvas></canvas><button type="button" class="sn-lnk" data-act="clear">${B('مسح', 'Clear')}</button><p class="sn-hint">${B('وقّع بإصبعك داخل المربع', 'Sign with your finger inside the box')}</p></div>
         <div class="sn-img" data-p="img" hidden><input type="file" accept="image/*" hidden><button type="button" class="btn ghost" data-act="pick">${B('اختيار صورة', 'Choose a photo')}</button><p class="sn-hint">${B('صوّر توقيعك على ورقة بيضاء؛ تُزال الخلفية تلقائيًا.', 'Photograph your signature on white paper; the background is removed automatically.')}</p><canvas hidden></canvas></div>
@@ -300,14 +314,59 @@
       sh.querySelector('[data-act=clear]').onclick = () => pad.clear();
       const go = async png => {
         if (!png) { toast(B('لم يُرسم توقيع بعد.', 'No signature yet.'), 1); return; }
-        if (sh.querySelector('.sn-keep input') && sh.querySelector('.sn-keep input').checked) store.set('sig', png);
+        if (sh.querySelector('.sn-keep input').checked && !saved.includes(png)) { saved = [png].concat(saved).slice(0, 4); store.set('sigs', saved); }
         sh.classList.add('busy');
-        try { const j = await call({ a: 'sign', id, i, png }); mine[i] = j.tok; store.set('mine.' + id, mine); if (s.n) store.set('me', s.n); S = j; close(); draw(); toast(B('تم توقيعك. شكرًا لك.', 'Signed. Thank you.')); }
-        catch (e) { sh.classList.remove('busy'); toast(errMsg(e), 1); if (e.code === 'taken') { close(); refresh(); } }
+        try { await onPng(png); } catch (e) { sh.classList.remove('busy'); }
       };
-      const ub = sh.querySelector('[data-act=use]'); if (ub) ub.onclick = () => go(saved);
+      sh.querySelectorAll('[data-use]').forEach(x => x.onclick = () => go(x.querySelector('img').getAttribute('src')));
+      sh.querySelectorAll('[data-rm]').forEach(x => x.onclick = () => { const src = x.parentNode.querySelector('img').getAttribute('src'); saved = saved.filter(z => z !== src); store.set('sigs', saved); x.parentNode.remove(); if (!saved.length) sh.querySelectorAll('.sn-st,.sn-sigs,.sn-or').forEach(e => e.remove()); });
       sh.querySelector('[data-act=ok]').onclick = () => go(tab === 'draw' ? pad.png() : img);
       sh.querySelector('[data-act=x]').onclick = close;
+    }
+    function sheetSign(i) {
+      const s = S.slots[i];
+      getSig(B('التوقيع', 'Sign') + (s.n ? ' · <bdi>' + esc(s.n) + '</bdi>' : ''), async png => {
+        try { const j = await call({ a: 'sign', id, i, png }); mine[i] = j.tok; store.set('mine.' + id, mine); if (s.n) store.set('me', s.n); S = j; close(); draw(); toast(B('تم توقيعك. شكرًا لك.', 'Signed. Thank you.')); }
+        catch (e) { toast(errMsg(e), 1); if (e.code === 'taken') { close(); refresh(); } throw e; }
+      });
+    }
+    /* a signature anywhere on the document: tap a spot, sign, then move or resize before fixing it */
+    let placing = false;
+    function modeBar(html) {
+      endMode(); const m = document.createElement('div'); m.className = 'sn-mode'; m.innerHTML = html; document.body.appendChild(m); return m;
+    }
+    function endMode() { placing = false; host.classList.remove('adding'); document.querySelectorAll('.sn-mode,.sn-box.pending').forEach(x => x.remove()); }
+    root.querySelector('#snFree').onclick = () => {
+      if (S.locked) return toast(ERR.locked, 1);
+      const m = modeBar(`<p>${B('اضغط على الموضع الذي تريد التوقيع فيه في المحضر.', 'Tap the spot in the minutes where you want to sign.')}</p><button type="button" class="btn ghost" data-x>${B('إلغاء', 'Cancel')}</button>`);
+      m.querySelector('[data-x]').onclick = endMode;
+      placing = true; host.classList.add('adding');
+    };
+    host.addEventListener('click', e => {
+      if (!placing || e.target.closest('.sn-box')) return;
+      const wrap = e.target.closest('.sn-page'); if (!wrap) return;
+      const v = views.find(v => v.wrap === wrap), rc = wrap.getBoundingClientRect(), x = e.clientX - rc.left, y = e.clientY - rc.top;
+      endMode();
+      getSig(B('توقيع في هذا الموضع', 'Sign at this spot'), async png => { close(); preview(v, x, y, png); });
+    });
+    function preview(v, x, y, png) {
+      const im = new Image();
+      im.onload = () => {
+        const w = Math.min(170, v.wrap.clientWidth * .32), h = w * im.height / im.width;
+        const m = modeBar(`<p>${B('اسحب التوقيع إلى موضعه، وكبّره أو صغّره من الزاوية.', 'Drag the signature into place; resize it from the corner.')}</p><div class="sn-sb"><button type="button" class="btn solid" data-ok>${B('تثبيت التوقيع', 'Fix the signature')}</button><button type="button" class="btn ghost" data-x>${B('إلغاء', 'Cancel')}</button></div>`);
+        const b = document.createElement('div'); b.className = 'sn-box free done pending';
+        Object.assign(b.style, { left: x - w / 2 + 'px', top: y - h / 2 + 'px', width: w + 'px', height: h + 'px' });
+        b.innerHTML = '<i class="sn-rz" aria-hidden="true"></i>'; b.prepend(im); v.wrap.appendChild(b);
+        draggable(b, null, true);
+        m.querySelector('[data-x]').onclick = endMode;
+        m.querySelector('[data-ok]').onclick = async ev => {
+          const btn = ev.currentTarget; btn.disabled = true;
+          const r = pdfRect(v, b);
+          try { const j = await call(Object.assign({ a: 'place', id, p: v.pi, png, n: store.get('me', '') }, r)); mine[j.i] = j.tok; store.set('mine.' + id, mine); S = j; endMode(); draw(); toast(B('أُضيف توقيعك.', 'Your signature was added.')); }
+          catch (e) { btn.disabled = false; toast(errMsg(e), 1); }
+        };
+      };
+      im.src = png;
     }
     function sheetSigned(i) {
       const sh = sheet(`<h3>${B('توقيعك في هذه الخانة', 'Your signature in this box')}</h3><div class="sn-saved"><img src="${S.slots[i].sig}" alt=""></div>
@@ -328,20 +387,20 @@
         const pdf = await PDFLib.PDFDocument.load(bytes, { ignoreEncryption: true });
         const pg = pdf.getPages();
         for (const s of S.slots) {
-          if (!s.sig || !pg[s.p]) continue;
+          if (!s.sig || s.gone || !pg[s.p]) continue;
           const im = await pdf.embedPng(s.sig), k = Math.min(s.w / im.width, s.h / im.height), w = im.width * k, h = im.height * k;
           pg[s.p].drawImage(im, { x: s.x + (s.w - w) / 2, y: s.y + (s.h - h) / 2, width: w, height: h });
         }
         const out = await pdf.save(), a = document.createElement('a');
         a.href = URL.createObjectURL(new Blob([out], { type: 'application/pdf' }));
-        a.download = (S.title || 'minutes').replace(/[\\/:*?"<>|]+/g, ' ') + (S.slots.every(s => s.sig) ? (isAr() ? ' - موقّع' : ' - signed') : '') + '.pdf';
+        a.download = (S.title || 'minutes').replace(/[\\/:*?"<>|]+/g, ' ') + (S.slots.every(s => s.sig || s.free || s.gone) ? (isAr() ? ' - موقّع' : ' - signed') : '') + '.pdf';
         document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 2000);
       } catch (e) { toast(B('تعذّر إنشاء الملف.', 'The file could not be created.'), 1); }
       btn.disabled = false;
     };
     if (admin) {
       root.querySelector('#snRemind').onclick = () => {
-        const left = S.slots.filter(s => !s.sig).map(s => '• ' + (s.n || ''));
+        const left = S.slots.filter(s => !s.sig && !s.free && !s.gone).map(s => '• ' + (s.n || ''));
         const t = isAr() ? `نأمل التكرم بتوقيع ${S.title || 'المحضر'}:\n${link}\n\nلم يوقّع بعد:\n${left.join('\n')}` : `Please sign ${S.title || 'the minutes'}:\n${link}\n\nNot yet signed:\n${left.join('\n')}`;
         copy(t, B('نُسخت رسالة التذكير.', 'Reminder copied.'));
       };
@@ -353,10 +412,13 @@
         sh.querySelector('[data-act=del]').onclick = async () => { try { await call({ a: 'delete', id, k: key }); delete keys[id]; store.set('keys', keys); store.del('mine.' + id); location.href = './'; } catch (e) { toast(errMsg(e), 1); } };
       };
     }
-    views = await renderPages(doc, host, pages, S.slots, { mine });
+    const fab = document.createElement('button'); fab.type = 'button'; fab.id = 'snFab'; fab.className = 'btn solid sn-fab'; fab.hidden = true; fab.innerHTML = B('أضف توقيعك', 'Add your signature');
+    fab.onclick = () => root.querySelector('#snFree').click(); document.body.appendChild(fab);
+    new IntersectionObserver(es => { fab.dataset.near = es[0].isIntersecting ? '1' : ''; fab.hidden = !fab.dataset.on || fab.dataset.near === '1'; }).observe(root.querySelector('#snFree'));
+    views = await renderPages(doc, host, S.slots, { mine });
     draw();
-    let rt; window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(async () => { views = await renderPages(doc, host, pages, S.slots, { mine }); draw(); }, 250); });
-    setInterval(() => { if (!document.hidden && !document.querySelector('.sn-sheet')) refresh(); }, 15000);
+    let rw = window.innerWidth, rt; window.addEventListener('resize', () => { if (Math.abs(window.innerWidth - rw) < 40) return; rw = window.innerWidth; clearTimeout(rt); rt = setTimeout(async () => { endMode(); views = await renderPages(doc, host, S.slots, { mine }); draw(); }, 250); });
+    setInterval(() => { if (!document.hidden && !document.querySelector('.sn-sheet,.sn-mode')) refresh(); }, 15000);
   }
 
   /* ---------- bottom sheet ---------- */

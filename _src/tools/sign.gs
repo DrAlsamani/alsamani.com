@@ -44,7 +44,7 @@ function load_(id) {
 function save_(r) { r.file.setContent(JSON.stringify(r.s)); }
 function pub_(s) {
   return { ok: true, id: s.id, title: s.title, created: s.created, locked: !!s.locked, ver: s.ver || 1,
-           slots: s.slots.map(x => ({ n: x.n, r: x.r, p: x.p, x: x.x, y: x.y, w: x.w, h: x.h, sig: x.sig ? x.sig.png : null, t: x.sig ? x.sig.t : null })) };
+           slots: s.slots.map(x => x.gone ? { gone: true, free: !!x.free, p: x.p } : ({ n: x.n, r: x.r, p: x.p, x: x.x, y: x.y, w: x.w, h: x.h, free: !!x.free, sig: x.sig ? x.sig.png : null, t: x.sig ? x.sig.t : null })) };
 }
 
 function doGet(e) { return out_({ ok: true, service: 'alsamani-sign' }); }
@@ -77,17 +77,29 @@ function doPost(e) {
       save_(r);
       return out_(Object.assign(pub_(s), { tok: tok }));
     }
+    if (a === 'place') {            // a signature placed anywhere on the document by a member
+      if (s.locked) return err_('locked');
+      if (s.slots.length >= MAX_SLOTS * 2) return err_('full');
+      const png = String(d.png || '');
+      if (!/^data:image\/png;base64,[A-Za-z0-9+/=]+$/.test(png) || png.length > MAX_SIG) return err_('bad_sig');
+      const box = slots_([d]);
+      if (!box || !box.length) return err_('bad_slots');
+      const tok = rid_(24), x = box[0];
+      x.free = true; x.sig = { png: png, t: new Date().toISOString(), tok: hash_(tok) };
+      s.slots.push(x); save_(r);
+      return out_(Object.assign(pub_(s), { tok: tok, i: s.slots.length - 1 }));
+    }
     if (a === 'unsign') {           // the signer may withdraw a signature from the same device while the session is open
       if (s.locked) return err_('locked');
       const x = s.slots[Number(d.i)];
       if (!x || !x.sig || !d.tok || hash_(String(d.tok)) !== x.sig.tok) return err_('forbidden');
-      x.sig = null; save_(r);
+      x.sig = null; if (x.free) x.gone = true; save_(r);
       return out_(pub_(s));
     }
     if (!admin) return err_('forbidden');
     if (a === 'clear') {
       const x = s.slots[Number(d.i)];
-      if (x) { x.sig = null; save_(r); }
+      if (x) { x.sig = null; if (x.free) x.gone = true; save_(r); }
       return out_(Object.assign(pub_(s), { admin: true }));
     }
     if (a === 'lock') { s.locked = !!d.on; save_(r); return out_(Object.assign(pub_(s), { admin: true })); }
@@ -110,7 +122,7 @@ function doPost(e) {
 }
 
 function slots_(arr) {
-  if (!Array.isArray(arr) || !arr.length || arr.length > MAX_SLOTS) return null;
+  if (!Array.isArray(arr) || arr.length > MAX_SLOTS) return null;
   const n = v => Math.round(Number(v) * 100) / 100;
   return arr.map(x => ({ n: clean_(x.n, 120), r: clean_(x.r, 80), p: Math.max(0, Math.floor(Number(x.p) || 0)), x: n(x.x), y: n(x.y), w: n(x.w), h: n(x.h), sig: null }));
 }

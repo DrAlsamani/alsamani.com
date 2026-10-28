@@ -988,6 +988,28 @@ html[lang="ar"] .bk-st button span.en,html[lang="en"] .bk-st button span.ar{disp
 .tl-group .tl-cards{margin-top:18px}
 @media print{.tl-source{display:block!important;border-top:1px solid #ccc}.tl-result::after{content:"alsamani.com";display:block;margin-top:6px;font-size:11px;color:#888}}
 .tl-head .eyebrow{justify-content:center;text-align:center;display:block}
+
+/* tools index */
+.tl-index .sec-head{text-align:center}.tl-lead{color:var(--muted);margin:8px 0 0}
+.tl-index .tl-gnav{position:sticky;top:60px;z-index:4;background:var(--bg);padding:10px 0;margin:14px 0 0}
+.tl-index .tl-group{margin-top:40px}
+.tl-index .tl-gh{display:block;border-bottom:0;padding-bottom:0}
+.tl-index .tl-gh h3{display:flex;align-items:center;gap:10px;font-size:1.375rem}
+.tl-index .tl-gn{font-size:.8125rem;font-weight:600;color:var(--muted);background:var(--alt);border-radius:99px;padding:2px 10px;line-height:1.6}
+.tl-index .tl-gh p{margin:4px 0 0;color:var(--muted)}
+.tl-index .tl-cards{grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr));margin-top:16px}
+.tl-index .tl-card{border:1px solid transparent;transition:transform .2s,border-color .2s;gap:4px}
+.tl-index .tl-card:hover{border-color:var(--line);transform:translateY(-2px)}
+.tl-ic{display:grid;place-items:center;width:42px;height:42px;border-radius:12px;background:var(--surface);color:var(--accent);margin-bottom:10px}
+.tl-ic svg{width:22px;height:22px}
+.tl-index .tl-card h3{font-size:1.125rem}
+
+@media (min-width:900px){
+  .tl-row{display:grid;grid-template-columns:2fr 1fr;gap:28px;align-items:start}
+  .tl-row .tl-cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .tl-row .tl-n1 .tl-cards{grid-template-columns:minmax(0,1fr)}
+  .tl-index .tl-n5 .tl-cards,.tl-index .tl-group:not(.tl-row .tl-group) .tl-cards{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
 /* research journey */
 .jr{max-width:1180px;margin:28px auto 0}
 .jr-card{background:var(--alt);border-radius:20px;padding:24px 26px;margin:0 auto 16px;max-width:820px}
