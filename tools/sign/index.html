@@ -2023,10 +2023,17 @@ async function snDetectPage(page,pi,OPS){
           const H = s.free ? s.h : s.h * 1.8, im = await pdf.embedPng(s.sig), k = Math.min(s.w / im.width, H / im.height), w = im.width * k, h = im.height * k;
           pg[s.p].drawImage(im, { x: s.x + (s.w - w) / 2, y: s.y + (s.h - h) / 2, width: w, height: h });
         }
-        const out = await pdf.save(), a = document.createElement('a');
-        a.href = URL.createObjectURL(new Blob([out], { type: 'application/pdf' }));
-        a.download = (S.title || 'minutes').replace(/[\\/:*?"<>|]+/g, ' ') + (S.slots.every(s => s.sig || s.free || s.gone) ? (isAr() ? ' - موقّع' : ' - signed') : '') + '.pdf';
-        document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 2000);
+        const out = await pdf.save();
+        const name = (S.title || 'minutes').replace(/[\\/:*?"<>|]+/g, ' ').trim() + (S.slots.every(s => s.sig || s.free || s.gone) ? (isAr() ? ' - موقّع' : ' - signed') : '') + '.pdf';
+        const file = new File([out], name, { type: 'application/pdf' });
+        const save = () => { const a = document.createElement('a'); a.href = URL.createObjectURL(file); a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 4000); };
+        // phones: the system share sheet (WhatsApp, Files, Mail…) with a real PDF file
+        const canShare = navigator.canShare && navigator.canShare({ files: [file] }) && /iP(hone|ad|od)|Android/i.test(navigator.userAgent);
+        if (canShare) {
+          const share = () => navigator.share({ files: [file], title: name }).catch(e => { if (e.name === 'NotAllowedError') ask(); });
+          const ask = () => { const sh = sheet(`<h3>${B('المحضر جاهز', 'The minutes are ready')}</h3><p class="sn-hint"><bdi>${esc(name)}</bdi></p><div class="sn-sb"><button type="button" class="btn solid" data-act="sh">${B('مشاركة أو حفظ الملف', 'Share or save the file')}</button><button type="button" class="btn ghost" data-act="x">${B('إغلاق', 'Close')}</button></div>`); sh.querySelector('[data-act=sh]').onclick = () => { close(); navigator.share({ files: [file], title: name }).catch(() => {}); }; sh.querySelector('[data-act=x]').onclick = close; };
+          share();
+        } else save();
       } catch (e) { toast(B('تعذّر إنشاء الملف.', 'The file could not be created.'), 1); }
       btn.disabled = false;
     };
