@@ -623,6 +623,11 @@ def seo(name, title):
         if rr.get('pdf'):
             extra += f'<meta name="citation_pdf_url" content="{e(rr["pdf"])}">\n'
         extra += f'<meta name="keywords" content="{e("; ".join(x for x in (rr.get("keywords_en", ""), rr.get("keywords_ar", "")) if x))}">\n'
+    elif name.startswith('tools/') and name[6:] in _SEO:
+        d = _SEO[name[6:]]
+        ld.append({"@context": "https://schema.org", "@type": "WebApplication", "name": d['title'][0], "alternateName": d['title'][1], "url": url, "applicationCategory": "BusinessApplication", "operatingSystem": "Any (web browser)", "inLanguage": ["ar", "en"], "isAccessibleForFree": True, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "SAR"}, "description": desc, "author": {"@id": SITE + "#person"}})
+        ld.append({"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, _, a, _ in d['faq']]})
+        ld.append({"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "الأدوات", "item": SITE + "tools/"}, {"@type": "ListItem", "position": 2, "name": "أدوات الاجتماعات والملفات", "item": SITE + "tools/work/"}, {"@type": "ListItem", "position": 3, "name": d['title'][0], "item": url}]})
     elif name in ('index', 'about'):
         ld.append({"@context": "https://schema.org", **PERSON})
         if name == 'index':
@@ -681,6 +686,8 @@ DESCS['tools/research-journey'] = 'A guided research journey for graduate studen
 DESCS['tools'] = "Free interactive tools by Dr. Omar A. Alsamani: for everyday work (signing minutes, decisions by circulation, meeting times, attendance, PDF files, QR codes), for student researchers, and for leaders and organizations. أدوات تفاعلية مجانية."
 for _t in _tp.TOOLS:
     DESCS['tools/' + _t['slug']] = _t['q_en'] + ' ' + _t['q_ar'] + ' — ' + _t['intro_en']
+from tools_seo import SEO as _SEO
+PAGES = [(n, d, (' | '.join(_SEO[n[6:]]['title']) + ' | Dr. Omar A. Alsamani') if n.startswith('tools/') and n[6:] in _SEO else t, f) for n, d, t, f in PAGES]
 for target, full in (('dist', True), ('preview', False)):
     for name, depth, title, fn in PAGES:
         body = fn()

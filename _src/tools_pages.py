@@ -183,6 +183,7 @@ def sign_body():
 <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
 <script>{src('sign_detect.js')}</script>
 <script>{src('sign.js')}</script>
+{about_html('sign')}
 </section>'''
 
 PASS = {'slug': 'pass', 't_ar': 'تمرير قرار', 't_en': 'Decision by circulation',
@@ -200,6 +201,15 @@ PDFT = {'slug': 'pdf', 't_ar': 'ملفات PDF', 't_en': 'PDF files',
 QRT = {'slug': 'qr', 't_ar': 'رمز QR', 't_en': 'QR code',
        'q_ar': 'حوّل أي رابط إلى رمز QR جاهز للعروض والمطبوعات، ومنه رابط مجلد يجمع عدة ملفات.',
        'q_en': 'Turn any link into a QR code for slides and print, including a folder link that holds several files.'}
+from tools_seo import SEO
+def about_html(slug):
+    d = SEO.get(slug)
+    if not d: return ''
+    steps = ''.join(f'<li>{bi(e(a), e(b))}</li>' for a, b in d['how'])
+    faq = ''.join(f'<details class="tl-faq"><summary>{bi(e(qa), e(qe))}</summary><p>{bi(e(aa), e(ae))}</p></details>' for qa, qe, aa, ae in d['faq'])
+    return f'''<section class="tl-about"><h2>{bi('كيف تعمل؟', 'How it works')}</h2><ol class="tl-steps">{steps}</ol>
+<h2>{bi('أسئلة شائعة', 'Common questions')}</h2>{faq}
+<p class="tl-also"><a href="../work/index.html">{bi('أدوات الاجتماعات والملفات الأخرى', 'More meeting and file tools')}</a></p></section>'''
 def _tool_page(j, eyebrow, inner, css, scripts):
     src = lambda f: open(os.path.join(ROOT, 'src', f)).read()
     return f'''<section class="first tl-page sn-page-wrap">{crumb(j, 'work')}
@@ -207,6 +217,7 @@ def _tool_page(j, eyebrow, inner, css, scripts):
 <style>{''.join(src(c) for c in css)}</style>
 {inner}
 {''.join(f'<script src="{x}"></script>' if x.startswith('http') else f'<script>{src(x)}</script>' for x in scripts)}
+{about_html(j['slug'])}
 </section>'''
 def _poll_body(j, mode, extra=()):
     api = os.environ.get('SIGN_API') or json.load(open(os.path.join(ROOT, 'data', 'sign.json')))['api']
