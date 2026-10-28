@@ -8,6 +8,25 @@ const KEEP_DAYS = 7;
 const MAX_PDF_B64 = 14 * 1024 * 1024;   // ~10 MB PDF
 const MAX_SIG = 250 * 1024;             // one signature image (data URL)
 const MAX_SLOTS = 80;
+// whole-service daily ceiling, so nobody can fill the Drive: new sessions/polls per day, and megabytes written per day
+const DAY_MAX_NEW = 300, DAY_MAX_MB = 1000, MAX_VOTES = 300;
+
+// permanent delete (Drive advanced service); falls back to the trash if the service is off
+function del_(f) {
+  const id = typeof f === 'string' ? f : f.getId();
+  try { Drive.Files.remove(id); return; } catch (x) {}
+  try { (typeof f === 'string' ? DriveApp.getFileById(id) : f).setTrashed(true); } catch (x) {}
+}
+// counts today's usage; returns false once the ceiling is reached
+function quota_(bytes, isNew) {
+  const lock = LockService.getScriptLock(); lock.waitLock(10000);
+  try {
+    const p = PropertiesService.getScriptProperties(), k = 'q_' + Utilities.formatDate(new Date(), 'GMT', 'yyyyMMdd');
+    const q = JSON.parse(p.getProperty(k) || '{"n":0,"b":0}');
+    if ((isNew && q.n + 1 > DAY_MAX_NEW) || q.b + bytes > DAY_MAX_MB * 1048576) return false;
+    if (isNew) q.n++; q.b += bytes; p.setProperty(k, JSON.stringify(q)); return true;
+  } finally { lock.releaseLock(); }
+}
 
 function setup() {
   folder_();
@@ -73,6 +92,7 @@ function doPost(e) {
       if (x.sig) return err_('taken');
       const png = String(d.png || '');
       if (!/^data:image\/png;base64,[A-Za-z0-9+/=]+$/.test(png) || png.length > MAX_SIG) return err_('bad_sig');
+      if (!quota_(png.length, false)) return err_('busy');
       const tok = rid_(24);
       x.sig = { png: png, t: new Date().toISOString(), tok: hash_(tok) };
       save_(r);
@@ -83,6 +103,7 @@ function doPost(e) {
       if (s.slots.length >= MAX_SLOTS * 2) return err_('full');
       const png = String(d.png || '');
       if (!/^data:image\/png;base64,[A-Za-z0-9+/=]+$/.test(png) || png.length > MAX_SIG) return err_('bad_sig');
+      if (!quota_(png.length, false)) return err_('busy');
       const box = slots_([d]);
       if (!box || !box.length) return err_('bad_slots');
       const tok = rid_(24), x = box[0];
@@ -116,7 +137,8 @@ function doPost(e) {
     if (a === 'replace') {          // a new version of the minutes: all signatures are cleared
       const pdf = String(d.pdf || '');
       if (!pdf || pdf.length > MAX_PDF_B64) return err_('bad_pdf');
-      try { DriveApp.getFileById(s.pdf).setTrashed(true); } catch (x) {}
+      if (!quota_(pdf.length * .75, false)) return err_('busy');
+      del_(s.pdf);
       s.pdf = folder_().createFile(Utilities.newBlob(Utilities.base64Decode(pdf), 'application/pdf', s.id + '.pdf')).getId();
       s.slots = slots_(d.slots);
       if (!s.slots) return err_('bad_slots');
@@ -142,6 +164,7 @@ function create_(d) {
   if (!pdf || pdf.length > MAX_PDF_B64) return err_('bad_pdf');
   const slots = slots_(d.slots);
   if (!slots) return err_('bad_slots');
+  if (!quota_(pdf.length * .75, true)) return err_('busy');
   const id = rid_(20), key = rid_(24), f = folder_();
   const pf = f.createFile(Utilities.newBlob(Utilities.base64Decode(pdf), 'application/pdf', id + '.pdf'));
   const s = { id: id, key: hash_(key), title: clean_(d.title, 200), created: new Date().toISOString(), pdf: pf.getId(), slots: slots, locked: false, ver: 1 };
@@ -150,16 +173,17 @@ function create_(d) {
 }
 
 function remove_(file, s) {
-  try { DriveApp.getFileById(s.pdf).setTrashed(true); } catch (x) {}
-  file.setTrashed(true);
+  del_(s.pdf); del_(file);
 }
 
 function cleanup() {
   const cut = Date.now() - KEEP_DAYS * 864e5, it = folder_().getFiles();
   while (it.hasNext()) {
     const f = it.next();
-    if (f.getDateCreated().getTime() < cut || f.getLastUpdated().getTime() < cut) f.setTrashed(true);
+    if (f.getDateCreated().getTime() < cut || f.getLastUpdated().getTime() < cut) del_(f);
   }
+  const p = PropertiesService.getScriptProperties();
+  p.getKeys().forEach(k => { if (k.indexOf('q_') === 0 && k < 'q_' + Utilities.formatDate(new Date(Date.now() - 3 * 864e5), 'GMT', 'yyyyMMdd')) p.deleteProperty(k); });
 }
 
 /* ---------- passing a decision (alsamani.com/tools/pass): members answer agree / reservation / disagree ---------- */
@@ -185,6 +209,7 @@ function poll_(d) {
     const items = mode === 'att' ? [] : (Array.isArray(d.items) ? d.items : []).map(x => clean_(x, 2000)).filter(x => x.trim()).slice(0, 30);
     if (!items.length && mode !== 'att') return err_('bad_items');
     const names = (Array.isArray(d.names) ? d.names : []).map(x => clean_(x, 120).trim()).filter(Boolean).slice(0, 150);
+    if (!quota_(20000, true)) return err_('busy');
     const id = rid_(20), key = rid_(24);
     const s = { id: id, key: hash_(key), mode: mode, title: clean_(d.title, 200), body: clean_(d.body, 3000), items: items, names: names, showAll: !!d.showAll, locked: false, created: new Date().toISOString(), votes: {} };
     folder_().createFile('p_' + id + '.json', JSON.stringify(s), 'application/json');
@@ -204,6 +229,7 @@ function poll_(d) {
       if (!key) return err_('bad_name');
       const prev = s.votes[key];
       if (prev && !(d.tok && hash_(String(d.tok)) === prev.tok)) return err_('voted');
+      if (!prev && Object.keys(s.votes).length >= MAX_VOTES) return err_('full');
       const ans = (Array.isArray(d.ans) ? d.ans : []).slice(0, s.items.length).map(x => [0, 1, 2].indexOf(Number(x)) >= 0 ? Number(x) : null);
       if (ans.length !== s.items.length || ans.some(x => x === null)) return err_('bad_ans');
       const notes = s.items.map((_, i) => clean_((d.notes || [])[i], 500));
@@ -215,7 +241,7 @@ function poll_(d) {
     if (!admin) return err_('forbidden');
     if (a === 'plock') { s.locked = !!d.on; save_(r); return out_(ppub_(s, true)); }
     if (a === 'pclear') { delete s.votes[nk_(d.name)]; save_(r); return out_(ppub_(s, true)); }
-    if (a === 'pdelete') { r.file.setTrashed(true); return out_({ ok: true, deleted: true }); }
+    if (a === 'pdelete') { del_(r.file); return out_({ ok: true, deleted: true }); }
     return err_('bad_action');
   } finally {
     try { lock.releaseLock(); } catch (x) {}
