@@ -133,3 +133,4 @@
 .rv-no{color:#b0533a!important}
 .rv-pub{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line,#e5e5ea)}
 .qz-rev{display:block!important}.qz-rev>*+*{margin-top:12px}
+.qz-msteps{margin:0;padding-inline-start:20px;display:grid;gap:8px;line-height:1.7}
