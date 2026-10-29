@@ -28,7 +28,8 @@
     const a = document.createElement('a'); a.href = URL.createObjectURL(f); a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 4000);
   };
   // a time that suits the length: what has to be read decides it
-  const suggest = q => { const n = (q.q + ' ' + q.opts.join(' ')).length + (q.img ? 60 : 0); return n < 70 ? 20 : n < 160 ? 30 : n < 260 ? 45 : 60; };
+  // 20 seconds unless the host changes it
+  const suggest = () => 20;
   const norm = q => Object.assign({ id: uid(), type: 'mc', q: '', opts: ['', ''], ok: [], pts: 1, img: null, timeSet: false }, q, { opts: (q.opts && q.opts.length ? q.opts : ['', '']).slice(0, 6) }, q.time ? { time: q.time, timeSet: true } : {});
 
   let list = store.get('list', []), Q = null;
@@ -38,11 +39,14 @@
   /* ---------- home: saved quizzes ---------- */
   function home() {
     Q = null;
-    root.innerHTML = `<div class="sn-card qz-home">
+    const P = window.MDLive && MDLive.pending();
+    root.innerHTML = `${P ? `<div class="sn-card qz-resume"><p>⏸ ${B('مسابقة متوقفة', 'A paused quiz')}: <b>${esc(P.quiz.title || T('بلا عنوان', 'Untitled'))}</b> · ${B('أُنهي', 'done')} ${P.i + 1} ${T('من', 'of')} ${P.quiz.qs.length} · ${B('الرمز', 'code')} <span dir="ltr">${P.pin}</span></p>
+        <div class="sn-two"><button type="button" class="btn solid" id="qzRes">${B('متابعة المسابقة ▶', 'Resume ▶')}</button><button type="button" class="btn ghost" id="qzDrop2">${B('إنهاؤها وحذفها', 'End and remove it')}</button></div></div>` : ''}<div class="sn-card qz-home">
       <button type="button" class="btn solid" id="qzNew">${B('مسابقة جديدة', 'New quiz')}</button>
       ${list.length ? `<h2 class="qz-h">${B('مسابقاتك', 'Your quizzes')}</h2><ul class="qz-list">${list.map(x => `<li><button type="button" data-open="${x.id}"><b>${esc(x.title || T('بلا عنوان', 'Untitled'))}</b><small>${T('الأسئلة: ', 'Questions: ')}${x.qs.length}</small></button></li>`).join('')}</ul>` : ''}
       <label class="qz-imp btn ghost">${B('فتح نسخة محفوظة', 'Open a saved copy')}<input type="file" accept=".json,application/json" hidden id="qzImp"></label>
       <p class="pt-fine">${B('تُحفظ المسابقات في هذا المتصفح. تشغيلها مع المشاركين قريبًا.', 'Quizzes are kept in this browser. Running them live with players is coming soon.')}</p></div>`;
+    if (P) { root.querySelector('#qzRes').onclick = () => MDLive.resume(); root.querySelector('#qzDrop2').onclick = async () => { await MDLive.discard(); home(); }; }
     root.querySelector('#qzNew').onclick = () => { Q = { id: uid(), title: '', qs: [] }; editor(); };
     root.querySelectorAll('[data-open]').forEach(b => b.onclick = () => { Q = JSON.parse(JSON.stringify(list.find(x => x.id === b.dataset.open))); Q.qs = Q.qs.map(norm); editor(); });
     root.querySelector('#qzImp').onchange = async e => {
@@ -409,5 +413,8 @@ False *`;
     paint();
   }
 
-  home();
+  // after a live game closes or pauses, the list shows whether one is waiting
+  document.addEventListener('md:closed', () => { if (!Q) home(); else editor(); });
+  // the live part loads after this file, so the list waits for it to know about a paused game
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', home); else setTimeout(home, 0);
 })();
