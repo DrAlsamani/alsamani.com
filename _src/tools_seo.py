@@ -17,7 +17,7 @@ SEO = {
           ('بعد الاجتماع: حسّن الصياغة بالذكاء الاصطناعي، وراجع ما ينقص، ثم نزّله Word أو PDF أو أرسله للتوقيع، وأبلغ المكلّفين.', 'After: polish the wording with AI, check what is missing, then download Word or PDF or send it for signing, and notify task owners.')],
   'faq': [('أين تُحفظ المحاضر؟', 'Where are the minutes kept?', 'في متصفحك على جهازك فقط، ولا تُرفع إلى أي خادم.', 'In your browser on your device only; they are never uploaded.'),
           ('هل أعيد كتابة الأعضاء في كل اجتماع؟', 'Do I retype the members every meeting?', 'لا. احفظ اللجنة مرة، وابدأ منها كل محضر جديد برقم الجلسة التالي ومتابعة مهام المحضر السابق.', 'No. Save the committee once and start each new minutes from it, with the next number and the last tasks to follow up.'),
-          ('كيف تتحقق الأداة من المواد النظامية؟', 'How are cited articles checked?', 'إذا لصقت نص اللائحة، تتأكد الأداة أن النص المقتبس بين «» موجود فيها حرفيًا، وتنبهك إن لم تجده.', 'If you paste the regulations, the tool checks that the text quoted in «» appears in them word for word, and warns you if not.')]},
+          ('كيف تساعد الأداة في الاستناد النظامي؟', 'How does it help cite the regulations?', 'الصق نص اللائحة مرة واحدة في الإعدادات، ثم اكتب رقم المادة فقط، مثل «المادة (12)»، فتعرض الأداة نصها وتدرجه بضغطة، وتنبهك إن لم تكن المادة موجودة.', 'Paste the regulations once in the settings, then write just the article number; the tool shows its text, inserts it in one tap, and warns you if the article does not exist.')]},
  'sign': {
   'title': ('توقيع المحاضر إلكترونيًا مجانًا', 'Sign meeting minutes online for free'),
   'how': [('ارفع المحضر بصيغة PDF، فتُكتشف خانات التوقيع تلقائيًا.', 'Upload the minutes as a PDF; signature boxes are detected automatically.'),

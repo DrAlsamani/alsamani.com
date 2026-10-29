@@ -206,7 +206,7 @@
         <p><b>المناقشة:</b> ${E(P + 'disc', T('اكتب ما دار باختصار…', 'What was said, briefly…'), 1)}</p>
         <div class="mp-kinds${stage === 'after' ? ' mp-fade' : ''}">${KINDS.filter(k => k[0] !== 'free').map(([k, l]) => `<button type="button" data-act="kind" data-id="${id}" data-k="${k}" aria-pressed="${!it.edited && it.kind === k}">${l}</button>`).join('')}${it.edited ? `<button type="button" class="mp-reset" data-act="reset" data-id="${id}" title="${T('أعد الصيغة المقترحة', 'Reset the wording')}">↺</button>` : ''}</div>
         <p class="mo-dec"><b>القرار رقم (<bdi dir="ltr" data-d="no:${id}"></bdi>):</b> ${E(P + 'text', T('نص القرار', 'The decision'), 1, decText(it))}</p>
-        ${show(it, 'basis') ? `<p class="mo-basis"><b>الاستناد النظامي:</b> ${E(P + 'basis', 'المادة (…) من …: «نص المادة»', 1)}<small class="mp-chk" data-d="basis:${id}"></small></p>` : ''}
+        ${show(it, 'basis') ? `<p class="mo-basis"><b>الاستناد النظامي:</b> ${E(P + 'basis', T('مثال: المادة (12) من لائحة الدراسات العليا', 'e.g. Article 12 of the graduate regulations'), 1)}<small class="mp-chk" data-d="basis:${id}"></small></p>` : ''}
         ${vote ? `<p><b>التصويت:</b> <button type="button" class="mp-link" data-act="vote" data-id="${id}">${vote}</button>${it.vote === 'maj' ? ` (موافق: ${E(P + 'yes', '…')}، غير موافق: ${E(P + 'no', '…')})` : ''}</p>` : ''}
         ${it.dis.map((x, j) => `<p class="mo-dis mp-row"><b><button type="button" class="mp-link" data-act="disk" data-id="${id}" data-j="${j}">${x.k === 'no' ? 'رأي مخالف' : 'تحفظ'}</button>:</b> <select class="mp-sel" data-p="${P}dis:${j}:n"><option value="">${T('العضو', 'Member')}</option>${named().map(m => `<option${m.n === x.n ? ' selected' : ''}>${esc(m.n)}</option>`).join('')}</select> — ${E(P + 'dis:' + j + ':note', T('السبب كما أبداه', 'The reason given'))} ${ico('rmDis', T('حذف', 'Remove'), '✕', ` data-id="${id}" data-j="${j}"`)}</p>`).join('')}
         ${it.tasks.map((t, j) => `<p class="mp-row"><b>التكليف:</b> ${E(P + 'tasks:' + j + ':t', T('المهمة', 'Task'))} — ${E(P + 'tasks:' + j + ':who', T('المسؤول', 'Owner'))} (${E(P + 'tasks:' + j + ':due', T('الموعد', 'Due'))}) ${ico('rmTask', T('حذف', 'Remove'), '✕', ` data-id="${id}" data-j="${j}"`)}</p>`).join('')}
@@ -264,13 +264,30 @@
     set('sigs', M.sigL === 'grid' ? `<table class="mo-t mo-grid">${sig.reduce((r, m, j) => (j % 2 ? r[r.length - 1].push(m) : r.push([m]), r), []).map(row => `<tr>${row.map(m => `<td class="mo-card"><b>${esc(m.r)}</b><div class="mo-sigbox"></div>${esc(m.n)}</td>`).join('')}${row.length < 2 ? '<td class="mo-card"></td>' : ''}</tr>`).join('')}</table>`
       : `<table class="mo-t mo-sig"><tr><th>م</th><th>الاسم</th><th>الصفة</th><th>التوقيع</th></tr>${sig.map((m, j) => `<tr><td>${j + 1}</td><td>${esc(m.n)}</td><td>${esc(m.r)}</td><td class="mo-sigbox"></td></tr>`).join('')}</table>`);
   }
-  // the quoted text of a cited article should be found, word for word, in the regulations pasted in the settings
-  const normA = s => String(s || '').replace(/[ً-ْـ]/g, '').replace(/[أإآ]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي').replace(/[«»"“”'().,،:؛\-]/g, ' ').replace(/\s+/g, ' ').trim();
+  // an article cited by its number is looked up in the regulations pasted in the settings, and its text is shown
+  const normA = s => String(s || '').replace(/[ً-ْـ]/g, '').replace(/[أإآ]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي').replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[«»"“”'().,،:؛\-\[\]]/g, ' ').replace(/\s+/g, ' ').trim();
+  const ORDS = (() => { const u = ['', 'الاولي', 'الثانيه', 'الثالثه', 'الرابعه', 'الخامسه', 'السادسه', 'السابعه', 'الثامنه', 'التاسعه'], t = ['', 'العاشره', 'العشرون', 'الثلاثون', 'الاربعون', 'الخمسون', 'الستون', 'السبعون', 'الثمانون', 'التسعون'], m = [];
+    for (let n = 1; n < 100; n++) { const a = n % 10, b = Math.floor(n / 10), ua = a === 1 && n > 10 ? 'الحاديه' : u[a]; m.push([n < 10 ? u[a] : n === 10 ? t[1] : n < 20 ? ua + ' عشره' : a ? ua + ' و' + t[b] : t[b], n]); }
+    return m.sort((x, y) => y[0].length - x[0].length); })();
+  function articleNo(s) {
+    const x = normA(s), d = x.match(/الماده\s*(?:رقم\s*)?(\d+)/); if (d) return +d[1];
+    const w = ORDS.find(([nm]) => x.includes('الماده ' + nm)); return w ? w[1] : 0;
+  }
+  let artCache = { reg: null, map: {} };
+  function articles() {
+    if (artCache.reg === M.reg) return artCache.map;
+    const map = {}; let cur = 0;
+    M.reg.split(/\n/).forEach(l => { const h = /^\s*الماده/.test(normA(l)) ? articleNo(l.slice(0, 70)) : 0; if (h) { cur = h; map[h] = map[h] || []; map[h].push(l.trim()); } else if (cur && l.trim()) map[cur].push(l.trim()); });
+    Object.keys(map).forEach(k => map[k] = map[k].join('\n')); artCache = { reg: M.reg, map }; return map;
+  }
+  const artBody = t => t.replace(/^\s*المادة\s*[^:：\n]{0,30}[:：\-–]\s*/, '').replace(/^\s*المادة[^\n]{0,30}\n/, '').trim();
   function basisState(it) {
-    const qs = (String(it.basis).match(/[«"“]([^»"”]{12,})[»"”]/g) || []).map(q => q.slice(1, -1));
     if (!it.basis.trim() || !M.reg.trim()) return ['', ''];
-    if (!qs.length) return ['warn', T('ضع نص المادة بين «» ليُتحقق منه في اللائحة.', 'Put the article’s text in «» to check it.')];
-    const R = normA(M.reg); return qs.every(x => R.includes(normA(x))) ? ['ok', '✓ ' + T('النص موجود في اللائحة.', 'Found in the regulations.')] : ['bad', '⚠ ' + T('لم أجد هذا النص في اللائحة؛ تحقّق منه.', 'Not found in the regulations; check it.')];
+    const n = articleNo(it.basis); if (!n) return ['', ''];
+    const a = articles()[n];
+    if (!a) return ['bad', '⚠ ' + T(`لم أجد المادة (${n}) في اللائحة الملصقة؛ تحقّق من رقمها.`, `Article ${n} is not in the pasted regulations; check its number.`)];
+    const body = artBody(a), has = normA(it.basis).includes(normA(body).slice(0, 40));
+    return ['ok', `✓ ${T(`نص المادة (${n})`, `Article ${n}`)}: «${esc(body.length > 260 ? body.slice(0, 260) + '…' : body)}»${has ? '' : ` <button type="button" class="mp-add" data-act="insArt" data-id="${it.id}">${T('أدرج نصها', 'Insert its text')}</button>`}`];
   }
 
   function act(a, d, btn) {
@@ -300,6 +317,7 @@
       case 'prevOn': M.prev.on = true; break;
       case 'logo': { const f = document.createElement('input'); f.type = 'file'; f.accept = 'image/*'; f.onchange = async () => { if (!f.files[0]) return; M.logo = await shrink(f.files[0], 360); paint(); later(); }; f.click(); return; }
       case 'rmLogo': M.logo = ''; break;
+      case 'insArt': { const n = articleNo(it.basis), t = articles()[n]; if (!t) return; it.basis = it.basis.replace(/[:：]?\s*«[\s\S]*»\s*$/, '').trim() + ': «' + artBody(t) + '»'; break; }
       default: return;
     }
     paint(focus); later();
@@ -335,7 +353,7 @@
       if (/…/.test(decText(it))) w.push(T(`البند ${n}: في نص القرار «…» تحتاج إكمالًا.`, `Item ${n}: the decision has a “…” to fill.`));
       if (it.vote === 'maj' && !(it.yes || it.no)) w.push(T(`البند ${n}: اكتب عدد الأصوات.`, `Item ${n}: give the vote count.`));
       it.tasks.forEach(t => { if (t.t.trim() && (!t.who.trim() || !t.due.trim())) w.push(T(`البند ${n}: تكليف بلا مسؤول أو موعد.`, `Item ${n}: a task without owner or date.`)); });
-      if (basisState(it)[0] === 'bad') w.push(T(`البند ${n}: نص المادة غير موجود في اللائحة.`, `Item ${n}: the quoted article is not in the regulations.`)); });
+      if (basisState(it)[0] === 'bad') w.push(T(`البند ${n}: المادة المستند إليها غير موجودة في اللائحة.`, `Item ${n}: the cited article is not in the regulations.`)); });
     const open = box.dataset.open === '1';
     box.innerHTML = `<div class="mp-checks">${w.length ? `<button type="button" class="mp-ck-b" id="mpCk">⚠ ${w.length} ${B('ملاحظات قبل الاعتماد', 'notes before approval')} <i>${open ? '▴' : '▾'}</i></button>${open ? `<ul>${w.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : ''}` : `<span class="mp-ok">✓ ${B('المحضر مكتمل', 'Nothing missing')}</span>`}
       <label class="mp-status">${B('الحالة', 'Status')} <select id="mpStatus"><option value="draft"${M.status === 'draft' ? ' selected' : ''}>${T('مسودة', 'Draft')}</option><option value="final"${M.status === 'final' ? ' selected' : ''}>${T('معتمد', 'Approved')}</option></select></label></div>`;
@@ -351,7 +369,7 @@
       <label class="sn-lbl">${B('التوقيعات', 'Signatures')}<select id="sG"><option value="table"${M.sigL === 'table' ? ' selected' : ''}>${T('جدول', 'Table')}</option><option value="grid"${M.sigL === 'grid' ? ' selected' : ''}>${T('بطاقات', 'Cards')}</option></select></label>
       <label class="mn-ck"><input type="checkbox" id="sB"${M.bsm ? ' checked' : ''}> ${B('البسملة أعلى المحضر', 'Basmala at the top')}</label>
       <label class="mn-ck"><input type="checkbox" id="sA"${M.agenda ? ' checked' : ''}> ${B('جدول الأعمال في أول المحضر', 'Agenda table at the start')}</label>
-      <label class="sn-lbl">${B('نص اللائحة (اختياري): يُتحقق منه من المواد المستشهد بها، ويُستند إليه في تحسين الصياغة', 'Regulations (optional): used to check cited articles and when polishing the wording')}<textarea id="sR" rows="4">${esc(M.reg)}</textarea></label>
+      <label class="sn-lbl">${B('نص اللائحة (اختياري): الصقه مرة واحدة، فإذا كتبت رقم مادة في «الاستناد النظامي» عرضت لك الأداة نصها', 'Regulations (optional): paste them once; when you cite an article number, its text is shown')}<textarea id="sR" rows="4">${esc(M.reg)}</textarea></label>
       <div class="sn-two"><button type="button" class="btn solid" id="sOk">${B('تم', 'Done')}</button></div>`);
     m.querySelector('#sOk').onclick = () => { M.type = m.querySelector('#sT').value; M.numFmt = m.querySelector('#sN').value.trim() || '{n}/{i}'; M.sigL = m.querySelector('#sG').value; M.bsm = m.querySelector('#sB').checked; M.agenda = m.querySelector('#sA').checked; M.reg = m.querySelector('#sR').value;
       if (M.type === 'committee') M.members.forEach(x => x.r = x.r.replace('رئيس المجلس', 'رئيس اللجنة').replace('أمين المجلس', 'مقرر اللجنة')); else M.members.forEach(x => x.r = x.r.replace('رئيس اللجنة', 'رئيس المجلس').replace('مقرر اللجنة', 'أمين المجلس'));
