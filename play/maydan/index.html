@@ -2108,16 +2108,15 @@ if (typeof module !== 'undefined') module.exports = QZParse;
   const LIB = { zip: 'https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js', xlsx: 'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js', pdf: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js' };
   // options are marked by letters, as on a written exam: أ ب ج د in Arabic, A B C D in English
   const LET = () => isAr() ? ['أ', 'ب', 'ج', 'د', 'هـ', 'و'] : ['A', 'B', 'C', 'D', 'E', 'F'];
-  const TIMES = [5, 10, 20, 30, 45, 60, 90, 120];
+  const TIMES = [5, 10, 15, 20, 25, 30, 45, 60, 90, 120];
   const uid = () => Math.random().toString(36).slice(2, 10);
   const save = (blob, name) => {
     const f = new File([blob], name, { type: blob.type });
     if (/iP(hone|ad|od)|Android/i.test(navigator.userAgent) && navigator.canShare && navigator.canShare({ files: [f] })) { navigator.share({ files: [f] }).catch(() => {}); return; }
     const a = document.createElement('a'); a.href = URL.createObjectURL(f); a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 4000);
   };
-  // a time that suits the length: what has to be read decides it
-  // 20 seconds unless the host changes it
-  const suggest = () => 20;
+  // each kind gets the time it needs: typing or arranging takes longer than a tap
+  const suggest = x => ({ tf: 15, mc: 20, poll: 20, num: 25, word: 30, order: 30, open: 30 }[x && x.type] || 20);
   const norm = q => Object.assign({ id: uid(), type: 'mc', q: '', opts: ['', ''], ok: [], pts: 1, img: null, timeSet: false }, q, { opts: (q.opts && q.opts.length ? q.opts : ['', '']).slice(0, 6) }, q.time ? { time: q.time, timeSet: true } : {});
 
   let list = store.get('list', []), Q = null;
