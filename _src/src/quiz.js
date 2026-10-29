@@ -78,7 +78,7 @@
       </div>
       <div id="qzQs" class="qz-qs"></div>
       <div class="qz-addq"><button type="button" class="btn ghost" id="qzAddQ">${B('+ سؤال', '+ Question')}</button><button type="button" class="btn ghost" id="qzAddTF">${B('+ صح أو خطأ', '+ True or false')}</button></div>
-      <div class="qz-bar"><div class="qz-chk" id="qzChk"></div><div class="qz-bar-b"><button type="button" class="btn ghost" id="qzPv">${B('معاينة', 'Preview')}</button><button type="button" class="btn ghost" id="qzExp">${B('حفظ نسخة', 'Save a copy')}</button></div></div>`;
+      <div class="qz-bar"><div class="qz-chk" id="qzChk"></div><div class="qz-bar-b"><button type="button" class="btn solid md-go" id="qzGo">${B('ابدأ المسابقة ▶', 'Start the quiz ▶')}</button><button type="button" class="btn ghost" id="qzPv">${B('معاينة', 'Preview')}</button><button type="button" class="btn ghost" id="qzExp">${B('حفظ نسخة', 'Save a copy')}</button></div></div>`;
     const q = s => root.querySelector(s);
     q('#qzBack').onclick = () => { persist(); home(); };
     q('#qzTitle').oninput = e => { Q.title = e.target.value; later(); };
@@ -112,6 +112,14 @@
     q('#qzAddQ').onclick = () => { Q.qs.push(norm({})); draw(); focusLast(); later(); };
     q('#qzAddTF').onclick = () => { Q.qs.push(norm({ type: 'tf', opts: [T('صح', 'True'), T('خطأ', 'False')] })); draw(); focusLast(); later(); };
     q('#qzPv').onclick = () => preview(0);
+    q('#qzGo').onclick = () => {
+      persist();
+      if (!Q.qs.length) { toast(B('أضف الأسئلة أولًا.', 'Add questions first.'), 1); return; }
+      const bad = checks();
+      if (bad) { toast(B('بعض الأسئلة تحتاج مراجعة قبل البدء.', 'Some questions need review before starting.'), 1); root.querySelector('#qzChk [data-go]') && root.querySelector('#qzChk [data-go]').click(); return; }
+      if (!window.MDLive) { toast(B('تعذّر تشغيل المسابقة الآن.', 'The quiz cannot start right now.'), 1); return; }
+      MDLive.start({ title: Q.title, qs: Q.qs.map(x => ({ type: x.type, q: x.q, opts: x.opts.filter(o => o.trim()), ok: x.ok.map(j => x.opts.slice(0, j).filter(o => o.trim()).length), pts: x.pts, img: x.img, time: x.timeSet ? x.time : suggest(x) })) });
+    };
     q('#qzExp').onclick = () => save(new Blob([JSON.stringify({ title: Q.title, qs: Q.qs.map(({ id, timeSet, ...r }) => r) }, null, 1)], { type: 'application/json' }), (Q.title || 'quiz').replace(/[\\/:*?"<>|]+/g, ' ').slice(0, 60) + '.json');
     draw(); checks();
     if (!Q.qs.length) q('#qzPaste').focus({ preventScroll: true });
@@ -202,7 +210,7 @@
 
   /* ---------- checks before playing ---------- */
   function checks() {
-    const box = root.querySelector('#qzChk'); if (!box) return;
+    const box = root.querySelector('#qzChk'); if (!box) return 0;
     const W = [];
     const seen = new Map();
     Q.qs.forEach((x, i) => {
@@ -229,6 +237,7 @@
     if (bias) box.innerHTML += `<button type="button" class="sn-lnk" id="qzShuf">${B('الإجابة الصحيحة في نفس الموضع كثيرًا — اخلط الخيارات', 'The right answer is often in the same place — shuffle options')}</button>`;
     const g = box.querySelector('[data-go]'); if (g) g.onclick = () => { const i = W.find(i => true); const el = root.querySelectorAll('.qz-q')[i]; el.scrollIntoView({ block: 'center', behavior: 'smooth' }); el.classList.add('flash'); setTimeout(() => el.classList.remove('flash'), 1200); };
     const s = box.querySelector('#qzShuf'); if (s) s.onclick = () => { Q.qs.forEach(x => { if (x.type !== 'mc') return; const idx = x.opts.map((_, j) => j); for (let j = idx.length - 1; j > 0; j--) { const r = Math.floor(Math.random() * (j + 1)); [idx[j], idx[r]] = [idx[r], idx[j]]; } x.ok = x.ok.map(k => idx.indexOf(k)).sort(); x.opts = idx.map(j => x.opts[j]); }); draw(); later(); toast(B('خُلطت الخيارات.', 'Options shuffled.')); };
+    return W.length;
   }
 
   /* ---------- files ---------- */

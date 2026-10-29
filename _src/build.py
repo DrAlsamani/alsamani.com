@@ -677,6 +677,8 @@ PAGES.append(('tools/certificates', 2, 'الشهادات | Certificates | Dr. Om
 DESCS['tools/certificates'] = 'Make certificates for a list of names from your own design: place the name and other fields, choose Arabic fonts, add a signature or stamp, and download one PDF or a file per name. Runs on your device. إنشاء شهادات الحضور بالأسماء.'
 PAGES.append(('play', 1, 'منصة الألعاب التفاعلية | Interactive games | Dr. Omar A. Alsamani', _tp.play_index))
 DESCS['play'] = 'Interactive games and quizzes to play together. منصة الألعاب التفاعلية.'
+PAGES.append(('m', 1, 'ميدان: ادخل المسابقة | Maydan: join | Dr. Omar A. Alsamani', _tp.maydan_join))
+DESCS['m'] = 'Join a Maydan live quiz with its six-digit code. ادخل مسابقة ميدان برمزها.'
 PAGES.append(('play/maydan', 2, 'ميدان: مسابقات تفاعلية حيّة | Maydan: live quizzes | Dr. Omar A. Alsamani', _tp.maydan_body))
 DESCS['play/maydan'] = 'Maydan: live interactive quizzes. Write the questions by pasting them, uploading Word, Excel or PDF, or asking an AI. ميدان: مسابقات تفاعلية حيّة.'
 PAGES.append(('tools/qr', 2, 'رمز QR | QR code | Dr. Omar A. Alsamani', _tp.qr_body))
@@ -714,7 +716,7 @@ import sys as _sys; _sys.path.insert(0, P('tools')); import scholar_meta
 print('scholar meta on', scholar_meta.run(P('dist')), 'book pages')
 print('library covers', scholar_meta.library_covers(P('dist')))
 from datetime import date
-urls = [SITE] + [SITE + n + '/' for n, *_ in PAGES if n not in ('index', 'play', 'play/maydan')]
+urls = [SITE] + [SITE + n + '/' for n, *_ in PAGES if n not in ('index', 'play', 'play/maydan', 'm')]
 import glob as _gs
 for _h in sorted(_gs.glob(P('dist', 'books', '**', '*.html'), recursive=True) + _gs.glob(P('dist', 'courses', '**', '*.html'), recursive=True)):
     _r = os.path.relpath(_h, P('dist')).replace(os.sep, '/')

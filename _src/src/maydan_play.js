@@ -1,0 +1,134 @@
+/* alsamani.com/m — a player's phone in Maydan: enter the code, pick a name, answer, see how you did. */
+(function () {
+  const root = document.getElementById('mp');
+  if (!root) return;
+  const CFG = window.MD_CFG;
+  const B = (a, e) => '<span class="ar">' + a + '</span><span class="en">' + e + '</span>';
+  const isAr = () => document.documentElement.lang === 'ar';
+  const T = (a, e) => isAr() ? a : e;
+  const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const LET = () => (Q && Q.L ? Q.L === 'ar' : isAr()) ? ['أ', 'ب', 'ج', 'د', 'هـ', 'و'] : ['A', 'B', 'C', 'D', 'E', 'F'];
+  const store = { get(k, d) { try { return localStorage.getItem('md.' + k) || d; } catch (e) { return d; } }, set(k, v) { try { localStorage.setItem('md.' + k, v); } catch (e) {} } };
+  const TS = firebase.database.ServerValue.TIMESTAMP;
+  let db, uid, off = 0, R = null, me = null, st = {}, Q = null, OK = null, SC = null, sent = null, tick = null;
+  const now = () => Date.now() + off;
+  const buzz = ms => { try { navigator.vibrate && navigator.vibrate(ms); } catch (e) {} };
+
+  async function ready() {
+    if (db) return;
+    firebase.initializeApp(CFG);
+    uid = (firebase.auth().currentUser || (await firebase.auth().signInAnonymously()).user).uid;
+    db = firebase.database();
+    db.ref('.info/serverTimeOffset').on('value', s => { off = s.val() || 0; });
+  }
+
+  /* ---------- the code and the name ---------- */
+  function codeScreen(err) {
+    const p = new URLSearchParams(location.search).get('p') || '';
+    root.innerHTML = `<div class="mp-card"><div class="mp-logo">${window.MD_MARK || ''}<b>${B('ميدان', 'Maydan')}</b></div>
+      <label class="mp-l">${B('رمز المسابقة', 'Quiz code')}<input id="mpPin" inputmode="numeric" autocomplete="off" maxlength="7" dir="ltr" placeholder="123 456" value="${esc(p)}"></label>
+      <p class="mp-err" ${err ? '' : 'hidden'}>${err || ''}</p>
+      <button type="button" class="btn solid mp-go" id="mpGo">${B('دخول', 'Enter')}</button></div>`;
+    const inp = root.querySelector('#mpPin'), go = root.querySelector('#mpGo');
+    inp.oninput = () => { inp.value = inp.value.replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[^\d ]/g, ''); };
+    inp.onkeydown = e => { if (e.key === 'Enter') go.click(); };
+    go.onclick = async () => {
+      const pin = inp.value.replace(/\D/g, '');
+      if (pin.length !== 6) return codeScreen(T('الرمز ستة أرقام.', 'The code has six digits.'));
+      go.disabled = true;
+      try {
+        await ready();
+        const s = await db.ref('rooms/' + pin + '/st').once('value');
+        if (!s.exists()) return codeScreen(T('لا توجد مسابقة بهذا الرمز. تأكد منه على الشاشة.', 'No quiz with this code. Check it on the screen.'));
+        R = db.ref('rooms/' + pin);
+        const mine = (await R.child('pl/' + uid).once('value')).val();
+        if (mine) { me = mine.n; return play(); }
+        if (s.val().lock) return codeScreen(T('أُقفل الدخول إلى هذه المسابقة.', 'This quiz is closed to new players.'));
+        nameScreen();
+      } catch (e) { codeScreen(T('تعذّر الاتصال. تأكد من الإنترنت.', 'Could not connect. Check the internet.')); }
+    };
+    if (p.replace(/\D/g, '').length === 6 && !err) setTimeout(() => go.click(), 50);
+  }
+  function nameScreen(err) {
+    root.innerHTML = `<div class="mp-card"><div class="mp-logo">${window.MD_MARK || ''}<b>${B('ميدان', 'Maydan')}</b></div>
+      <label class="mp-l">${B('اسمك أو لقبك', 'Your name or nickname')}<input id="mpName" maxlength="24" autocomplete="nickname" dir="auto" value="${esc(store.get('name', ''))}"></label>
+      <p class="mp-err" ${err ? '' : 'hidden'}>${err || ''}</p>
+      <button type="button" class="btn solid mp-go" id="mpGo">${B('ادخل الميدان', 'Join')}</button></div>`;
+    const inp = root.querySelector('#mpName'), go = root.querySelector('#mpGo');
+    inp.focus(); inp.onkeydown = e => { if (e.key === 'Enter') go.click(); };
+    go.onclick = async () => {
+      const n = inp.value.trim().replace(/\s+/g, ' ').slice(0, 24);
+      if (!n) return nameScreen(T('اكتب اسمًا يظهر على الشاشة.', 'Type a name to show on the screen.'));
+      go.disabled = true;
+      try { await R.child('pl/' + uid).set({ n, at: TS }); me = n; store.set('name', n); play(); }
+      catch (e) { nameScreen(T('تعذّر الدخول؛ ربما أُقفلت المسابقة.', 'Could not join; the quiz may be closed.')); }
+    };
+  }
+
+  /* ---------- the game: follow the room and draw what this phone should show ---------- */
+  function play() {
+    R.child('st').on('value', s => { st = s.val() || {}; if (!s.exists()) return gone(); draw(); });
+    R.child('q').on('value', s => { Q = s.val(); });
+    R.child('ok').on('value', s => { OK = s.val(); draw(); });
+    R.child('sc/' + uid).on('value', s => { SC = s.val(); draw(); });
+    R.child('pl/' + uid).on('value', s => { if (!s.exists() && me) kicked(); });
+  }
+  let shown = '';
+  function draw() {
+    const key = st.ph + ':' + st.i + ':' + (st.ph === 'rev' ? (SC ? SC.s : '') + (OK ? 'k' : '') : '');
+    if (key === shown) return; shown = key;
+    clearInterval(tick);
+    if (st.ph === 'lobby') return screen(`<div class="mp-wait"><p class="mp-big">${B('أنت في الميدان!', 'You are in!')}</p><p class="mp-me" dir="auto">${esc(me)}</p><p>${B('انظر إلى الشاشة؛ ستبدأ المسابقة قريبًا.', 'Watch the screen; the quiz will start soon.')}</p></div>`);
+    if (st.ph === 'ready') return screen(`<div class="mp-wait"><p>${B('استعد…', 'Get ready…')}</p><p class="mp-big">${B('السؤال', 'Question')} ${(st.i || 0) + 1}</p></div>`);
+    if (st.ph === 'q') return question();
+    if (st.ph === 'rev' || st.ph === 'lb') return result();
+    if (st.ph === 'end') return final();
+  }
+  function screen(html, cls) { root.innerHTML = `<div class="mp-play ${cls || ''}"><div class="mp-top"><span dir="auto">${esc(me)}</span><b>${SC ? SC.s : 0}</b></div>${html}</div>`; }
+  function question() {
+    if (!Q || Q.i !== st.i) { setTimeout(draw, 200); shown = ''; return; }
+    if (sent === st.i) return screen(`<div class="mp-wait"><p class="mp-big">${B('وصلت إجابتك', 'Answer sent')}</p><p>${B('انتظر النتيجة على الشاشة…', 'Wait for the result on the screen…')}</p></div>`);
+    const multi = !!Q.multi, pick = new Set();
+    screen(`<div class="mp-q"><div class="mp-bar"><i id="mpBar"></i></div><p class="mp-qt" dir="auto">${esc(Q.q)}</p>${multi ? `<p class="mp-hint">${B('اختر كل الإجابات الصحيحة ثم أرسل', 'Choose every right answer, then send')}</p>` : ''}
+      <div class="mp-btns n${Q.opts.length}">${Q.opts.map((o, j) => `<button type="button" data-j="${j}" style="--c:var(--qz${j})"><i>${LET()[j]}</i><span dir="auto">${esc(o)}</span></button>`).join('')}</div>
+      ${multi ? `<button type="button" class="btn solid mp-send" id="mpSend" disabled>${B('إرسال', 'Send')}</button>` : ''}</div>`, 'q');
+    const send = async a => {
+      sent = st.i; buzz(30);
+      try { await R.child('an/' + st.i + '/' + uid).set({ a, t: TS }); } catch (e) { /* the time ended first */ }
+      shown = ''; draw();
+    };
+    root.querySelectorAll('[data-j]').forEach(b => b.onclick = () => {
+      const j = +b.dataset.j;
+      if (!multi) return send(j);
+      pick.has(j) ? pick.delete(j) : pick.add(j); b.classList.toggle('on', pick.has(j)); root.querySelector('#mpSend').disabled = !pick.size;
+    });
+    if (multi) root.querySelector('#mpSend').onclick = () => send([...pick].sort());
+    const bar = root.querySelector('#mpBar');
+    tick = setInterval(() => {
+      const left = Math.max(0, st.dur - (now() - st.t0) / 1000);
+      if (bar) bar.style.width = (100 * left / st.dur) + '%';
+      if (left <= 0) { clearInterval(tick); root.querySelectorAll('[data-j]').forEach(b => b.disabled = true); }
+    }, 100);
+  }
+  function result() {
+    if (!SC || !OK) { if (st.ph === 'rev') screen(`<div class="mp-wait"><p>${B('لحظة…', 'One moment…')}</p></div>`); return; }
+    const ok = SC.c;
+    if (st.ph === 'rev') buzz(ok ? [40, 60, 40] : 200);
+    screen(`<div class="mp-res ${ok ? 'good' : 'bad'}"><p class="mp-sym">${ok ? '✓' : SC.a ? '✕' : '⏱'}</p>
+      <p class="mp-big">${ok ? B('إجابة صحيحة', 'Correct') : SC.a ? B('إجابة خاطئة', 'Not this time') : B('انتهى الوقت', 'Time’s up')}</p>
+      ${ok && SC.d ? `<p class="mp-plus">+${SC.d}</p>` : ''}${SC.k >= 2 ? `<p class="mp-streak">🔥 ${B(`${SC.k} إجابات صحيحة متتالية`, `${SC.k} right in a row`)}</p>` : ''}
+      <p class="mp-rank">${B(`مركزك: ${SC.r}`, `Your place: ${SC.r}`)}</p>
+      ${SC.gap != null && SC.r > 1 ? `<p class="mp-gap">${B(`خلف ${esc(SC.above)} بـ ${SC.gap} نقطة`, `${SC.gap} points behind ${esc(SC.above)}`)}</p>` : SC.r === 1 ? `<p class="mp-gap">${B('أنت في الصدارة!', 'You are in the lead!')}</p>` : ''}</div>`, ok ? 'good' : 'bad');
+  }
+  function final() {
+    const r = SC ? SC.r : null;
+    screen(`<div class="mp-res end"><p class="mp-sym">${r === 1 ? '🏆' : r === 2 ? '🥈' : r === 3 ? '🥉' : '🎉'}</p>
+      <p class="mp-big">${r && r <= 3 ? B('على منصة التتويج!', 'On the podium!') : B('انتهت المسابقة', 'The quiz is over')}</p>
+      ${r ? `<p class="mp-rank">${B(`مركزك النهائي: ${r}`, `Final place: ${r}`)}</p><p class="mp-plus">${SC.s} ${B('نقطة', 'points')}</p>` : ''}
+      <p>${B('شكرًا لمشاركتك.', 'Thanks for playing.')}</p></div>`, 'end');
+  }
+  function gone() { clearInterval(tick); R && R.off(); root.innerHTML = `<div class="mp-card"><p class="mp-big">${B('انتهت المسابقة', 'The quiz has ended')}</p><button type="button" class="btn ghost" id="mpAgain">${B('مسابقة أخرى', 'Another quiz')}</button></div>`; root.querySelector('#mpAgain').onclick = () => { history.replaceState(null, '', location.pathname); codeScreen(); }; }
+  function kicked() { R.off(); me = null; root.innerHTML = `<div class="mp-card"><p>${B('أخرجك المضيف من المسابقة.', 'The host removed you from the quiz.')}</p></div>`; }
+
+  codeScreen();
+})();
