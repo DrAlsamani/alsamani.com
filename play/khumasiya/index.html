@@ -1438,8 +1438,8 @@ html[dir=ltr] .jr-dch.fd .jr-fold::before{transform:rotate(-45deg)}
 .kh-cell.last::after{content:"";position:absolute;inset:0;border:3px solid #fff;border-radius:4px;animation:khLast 1.4s 2}
 @keyframes khLast{50%{border-color:var(--gold)}}
 .kc{display:grid;place-items:center;line-height:1;color:#1d2420;font-family:Georgia,"Times New Roman",serif}
-.kh-cell .kc{gap:0}.kh-cell .kc b{font-size:4.1cqi;font-weight:800;letter-spacing:-.04em;line-height:.95}.kh-cell .kc i{font-style:normal;font-size:4.4cqi;line-height:.9}
-.kc.r{color:#c0392b}.kh-cell .kc.star{color:#c9822b;font-size:6.5cqi}
+.kh-cell .kc{gap:0;font-family:"Arial Black","Helvetica Neue",Arial,sans-serif;color:#000}.kh-cell .kc b{font-size:4.7cqi;font-weight:900;letter-spacing:-.07em;line-height:.9}.kh-cell .kc i{font-style:normal;font-size:4.9cqi;line-height:.85;font-family:Arial,sans-serif}
+.kc.r{color:#d3140b}.kh-cell .kc.star{color:#c9822b;font-size:6.5cqi}
 .kh-chip{position:absolute;inset:5%;border-radius:50%;background:color-mix(in srgb,var(--c) 34%,transparent);border:3.5px solid var(--c);box-shadow:0 1px 3px rgba(0,0,0,.35)}
 .kh-chip.seq{background:color-mix(in srgb,var(--c) 55%,transparent);box-shadow:0 0 0 2.5px var(--gold),0 1px 3px rgba(0,0,0,.35)}
 .kh-hand{display:flex;gap:6px;justify-content:center;flex-wrap:nowrap}
@@ -1462,6 +1462,9 @@ html[dir=ltr] .jr-dch.fd .jr-fold::before{transform:rotate(-45deg)}
 
 /* the card stays readable on top of a chip */
 .kh-cell .kc{position:relative;z-index:1}.kh-cell:has(.kh-chip) .kc{color:#111;text-shadow:0 0 3px #fff,0 0 6px #fff}.kh-cell:has(.kh-chip) .kc.r{color:#a31d12}
+
+@media (max-width:600px){.kh-game{padding:8px;border-radius:16px}.kh-board{gap:2px;padding:3px}.kh-cell{border-radius:3px}}
+.kh-hc .kc{font-family:"Arial Black","Helvetica Neue",Arial,sans-serif;color:#000}.kh-hc .kc.r{color:#d3140b}.kh-hc .kc b{font-weight:900;letter-spacing:-.06em}.kh-hc .kc i{font-family:Arial,sans-serif}
 </style>
 <div id="kh" class="kh"><noscript><span class="ar">تعمل هذه اللعبة مع تفعيل JavaScript.</span><span class="en">This game needs JavaScript.</span></noscript></div>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script>window.MD_CFG={"apiKey": "AIzaSyA50i75DT1Is1a6Yn6snW1_JVObc8S3F0Y", "authDomain": "maydan-705ae.firebaseapp.com", "databaseURL": "https://maydan-705ae-default-rtdb.europe-west1.firebasedatabase.app", "projectId": "maydan-705ae", "appId": "1:342187013133:web:d5c2396f0db413f3c51144"};window.MD_MARK="<svg class=\"md-mark\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><rect x=\"4\" y=\"4\" width=\"40\" height=\"40\" rx=\"12\" fill=\"#23336F\"/><path d=\"M24 9l4.2 6.8 7.8-1.8-1.8 7.8L41 24l-6.8 4.2 1.8 7.8-7.8-1.8L24 39l-4.2-6.8-7.8 1.8 1.8-7.8L7 24l6.8-4.2-1.8-7.8 7.8 1.8z\" fill=\"#C9822B\"/><circle cx=\"24\" cy=\"24\" r=\"6.5\" fill=\"#23336F\"/><circle cx=\"24\" cy=\"24\" r=\"3\" fill=\"#F3E3C7\"/></svg>";</script><script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script><script>/* Khumasiya: the rules. Two packs of cards; a 10×10 board with every card except the jacks twice and four free corners.

@@ -38,8 +38,8 @@
 .kh-cell.last::after{content:"";position:absolute;inset:0;border:3px solid #fff;border-radius:4px;animation:khLast 1.4s 2}
 @keyframes khLast{50%{border-color:var(--gold)}}
 .kc{display:grid;place-items:center;line-height:1;color:#1d2420;font-family:Georgia,"Times New Roman",serif}
-.kh-cell .kc{gap:0}.kh-cell .kc b{font-size:4.1cqi;font-weight:800;letter-spacing:-.04em;line-height:.95}.kh-cell .kc i{font-style:normal;font-size:4.4cqi;line-height:.9}
-.kc.r{color:#c0392b}.kh-cell .kc.star{color:#c9822b;font-size:6.5cqi}
+.kh-cell .kc{gap:0;font-family:"Arial Black","Helvetica Neue",Arial,sans-serif;color:#000}.kh-cell .kc b{font-size:4.7cqi;font-weight:900;letter-spacing:-.07em;line-height:.9}.kh-cell .kc i{font-style:normal;font-size:4.9cqi;line-height:.85;font-family:Arial,sans-serif}
+.kc.r{color:#d3140b}.kh-cell .kc.star{color:#c9822b;font-size:6.5cqi}
 .kh-chip{position:absolute;inset:5%;border-radius:50%;background:color-mix(in srgb,var(--c) 34%,transparent);border:3.5px solid var(--c);box-shadow:0 1px 3px rgba(0,0,0,.35)}
 .kh-chip.seq{background:color-mix(in srgb,var(--c) 55%,transparent);box-shadow:0 0 0 2.5px var(--gold),0 1px 3px rgba(0,0,0,.35)}
 .kh-hand{display:flex;gap:6px;justify-content:center;flex-wrap:nowrap}
@@ -62,3 +62,6 @@
 
 /* the card stays readable on top of a chip */
 .kh-cell .kc{position:relative;z-index:1}.kh-cell:has(.kh-chip) .kc{color:#111;text-shadow:0 0 3px #fff,0 0 6px #fff}.kh-cell:has(.kh-chip) .kc.r{color:#a31d12}
+
+@media (max-width:600px){.kh-game{padding:8px;border-radius:16px}.kh-board{gap:2px;padding:3px}.kh-cell{border-radius:3px}}
+.kh-hc .kc{font-family:"Arial Black","Helvetica Neue",Arial,sans-serif;color:#000}.kh-hc .kc.r{color:#d3140b}.kh-hc .kc b{font-weight:900;letter-spacing:-.06em}.kh-hc .kc i{font-family:Arial,sans-serif}
