@@ -394,11 +394,227 @@ window.MDGames = (function () {
     }
   };
 
-  const LIST = [sort, shoot, pairs, stroop, seq, odd, count, math, whack, stack, fly, slide, letters];
+  /* ---------- tap race: as many taps as you can ---------- */
+  const taps = {
+    id: 'taps', icon: '👆', ar: 'سباق النقر', en: 'Tap race', kind: ['سرعة', 'Speed'],
+    howAr: 'انقر الزر الكبير بأسرع ما تستطيع حتى ينتهي الوقت. تحدٍّ ممتع للصغار والكبار.',
+    howEn: 'Tap the big button as fast as you can until the time runs out. Fun for all ages.',
+    play(el, ctx) {
+      const info = h('p', 'mg-info'), b = h('button', 'mg-big', '👆'); b.type = 'button'; el.append(info, b);
+      let n = 0, lastT = 0;
+      const show = () => { info.textContent = (ctx.ar ? 'النقرات: ' : 'Taps: ') + n; };
+      // a human finger tops out near 15 taps a second; faster ones are ignored
+      b.addEventListener('pointerdown', e => { e.preventDefault(); const t = performance.now(); if (t - lastT < 55) return; lastT = t; n++; b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop'); show(); });
+      show();
+      return { score: () => n * 10 };
+    }
+  };
+
+  /* ---------- reaction: tap the moment it turns green ---------- */
+  const react = {
+    id: 'react', icon: '⚡', ar: 'رد الفعل', en: 'Reaction', kind: ['سرعة', 'Speed'],
+    howAr: 'انتظر حتى يتحول المربع إلى الأخضر ثم اضغط فورًا. الضغط قبل الأخضر يخسرك الجولة.',
+    howEn: 'Wait for the box to turn green, then tap at once. Tapping too early loses the round.',
+    play(el, ctx) {
+      const r = rngOf(ctx.seed), info = h('p', 'mg-info'), b = h('button', 'mg-react'); b.type = 'button'; el.append(info, b);
+      let state = 'wait', t0 = 0, total = 0, rounds = 0, timer = null, stop = false;
+      const msg = (t, c) => { b.textContent = t; b.className = 'mg-react ' + c; };
+      function arm() { if (stop) return; state = 'wait'; msg(ctx.ar ? 'انتظر الأخضر…' : 'Wait for green…', 'red'); timer = setTimeout(() => { state = 'go'; t0 = performance.now(); msg(ctx.ar ? 'اضغط الآن!' : 'Tap now!', 'green'); }, 900 + r() * 2200); }
+      b.addEventListener('pointerdown', e => {
+        e.preventDefault(); if (stop) return;
+        if (state === 'wait') { clearTimeout(timer); ctx.bad(); state = 'pause'; msg(ctx.ar ? 'مبكرًا! ✋' : 'Too soon! ✋', 'gray'); setTimeout(arm, 900); return; }
+        if (state === 'go') { const ms = Math.round(performance.now() - t0); rounds++; total += Math.max(0, 1000 - ms); ctx.tick(); state = 'pause'; msg((ctx.ar ? 'زمنك: ' : 'Time: ') + ms + (ctx.ar ? ' ملّي ثانية' : ' ms'), 'blue'); info.textContent = (ctx.ar ? 'الجولات: ' : 'Rounds: ') + rounds; setTimeout(arm, 1000); }
+      });
+      info.textContent = (ctx.ar ? 'الجولات: ' : 'Rounds: ') + 0; arm();
+      return { score: () => Math.round(total / 10), stop: () => { stop = true; clearTimeout(timer); } };
+    }
+  };
+
+  /* ---------- remember the spots: some cells flash, then tap them ---------- */
+  const spots = {
+    id: 'spots', icon: '🟦', ar: 'تذكّر المواقع', en: 'Remember the spots', kind: ['ذاكرة', 'Memory'],
+    howAr: 'تضيء بعض الخانات لحظة ثم تنطفئ. اضغط الخانات التي أضاءت. يزيد عددها كلما نجحت.',
+    howEn: 'Some cells light up briefly, then go dark. Tap the cells that lit up. More each time you succeed.',
+    play(el, ctx) {
+      const r = rngOf(ctx.seed), info = h('p', 'mg-info'), grid = h('div', 'mg-spots'); el.append(info, grid);
+      let k = 3, best = 0, want, got, open = false;
+      const cells = Array.from({ length: 25 }, (_, i) => { const b = h('button', 'mg-sp'); b.type = 'button'; b.onclick = () => tap(i, b); grid.appendChild(b); return b; });
+      function round() {
+        open = false; got = new Set(); want = new Set(shuffle(Array.from({ length: 25 }, (_, i) => i), r).slice(0, k));
+        cells.forEach((c, i) => { c.className = 'mg-sp' + (want.has(i) ? ' on' : ''); });
+        info.textContent = (ctx.ar ? 'تذكّر ' : 'Remember ') + k;
+        setTimeout(() => { cells.forEach(c => { c.className = 'mg-sp'; }); open = true; info.textContent = ctx.ar ? 'أين كانت؟' : 'Where were they?'; }, 1300 + k * 120);
+      }
+      function tap(i, b) {
+        if (!open || got.has(i)) return;
+        if (want.has(i)) { got.add(i); b.classList.add('ok'); ctx.tick(); if (got.size === want.size) { best = Math.max(best, k); k++; open = false; setTimeout(round, 500); } }
+        else { b.classList.add('no'); ctx.bad(); open = false; cells.forEach((c, j) => { if (want.has(j) && !got.has(j)) c.classList.add('miss'); }); setTimeout(round, 900); }
+      }
+      round();
+      return { score: () => best * 100 };
+    }
+  };
+
+  /* ---------- which has more? compare two groups at a glance ---------- */
+  const more = {
+    id: 'more', icon: '⚖️', ar: 'أيهما أكثر؟', en: 'Which has more?', kind: ['انتباه', 'Attention'],
+    howAr: 'مجموعتان من النقاط؛ اضغط الجهة التي فيها نقاط أكثر، بسرعة ودون عدّ.',
+    howEn: 'Two groups of dots; tap the side with more, quickly and without counting.',
+    play(el, ctx) {
+      const r = rngOf(ctx.seed), info = h('p', 'mg-info'), row = h('div', 'mg-more'); el.append(info, row);
+      let ok = 0, bad = 0, lvl = 0;
+      const side = () => { const b = h('button', 'mg-ms'); b.type = 'button'; row.appendChild(b); return b; };
+      const L = side(), Rb = side();
+      function round() {
+        const a = 6 + Math.floor(r() * 14), diff = Math.max(1, Math.round(a * (.45 - Math.min(.35, lvl * .025)))), b = r() < .5 ? a + diff : Math.max(2, a - diff);
+        [[L, a], [Rb, b]].forEach(([el2, n]) => { el2.innerHTML = ''; el2.dataset.n = n; for (let k = 0; k < n; k++) { const d = h('i'); d.style.left = 6 + r() * 82 + '%'; d.style.top = 6 + r() * 82 + '%'; el2.appendChild(d); } });
+      }
+      [L, Rb].forEach(s => s.onclick = () => { const o = s === L ? Rb : L; if (+s.dataset.n > +o.dataset.n) { ok++; lvl++; ctx.tick(); } else { bad++; ctx.bad(); } info.textContent = (ctx.ar ? 'صحيح: ' : 'Right: ') + ok; round(); });
+      info.textContent = (ctx.ar ? 'صحيح: ' : 'Right: ') + 0; round();
+      return { score: () => Math.max(0, ok * 80 - bad * 40) };
+    }
+  };
+
+  /* ---------- the maze: reach the flag ---------- */
+  const maze = {
+    id: 'maze', icon: '🌀', ar: 'المتاهة', en: 'The maze', kind: ['لغز', 'Puzzle'],
+    howAr: 'حرّك النقطة بالأسهم حتى تصل إلى العلم 🚩. كلما أسرعت زادت نقاطك.',
+    howEn: 'Move the dot with the arrows until you reach the flag 🚩. Faster earns more.',
+    play(el, ctx) {
+      const r = rngOf(ctx.seed), N = 9, wall = Array.from({ length: N * N }, () => [1, 1, 1, 1]), seen = new Set([0]), st = [0];
+      // carve a perfect maze: one path between any two cells
+      while (st.length) { const c = st[st.length - 1], x = c % N, y = Math.floor(c / N), nb = [[0, -1, 0, 2], [1, 0, 1, 3], [0, 1, 2, 0], [-1, 0, 3, 1]].map(([dx, dy, a, b]) => [x + dx, y + dy, a, b]).filter(([nx, ny]) => nx >= 0 && ny >= 0 && nx < N && ny < N && !seen.has(ny * N + nx));
+        if (!nb.length) { st.pop(); continue; } const [nx, ny, a, b] = nb[Math.floor(r() * nb.length)], n = ny * N + nx; wall[c][a] = 0; wall[n][b] = 0; seen.add(n); st.push(n); }
+      const box = h('div', 'mg-maze'), pad = h('div', 'mg-arrows'); el.append(box, pad);
+      box.style.gridTemplateColumns = `repeat(${N},1fr)`;
+      const cells = wall.map(w => { const c = h('i'); c.style.borderWidth = w.map(v => v ? '2px' : '0').join(' '); box.appendChild(c); return c; });
+      let at = 0, done = false; const goal = N * N - 1; cells[goal].textContent = '🚩';
+      const draw = () => cells.forEach((c, i) => c.classList.toggle('me', i === at));
+      const move = d => { if (done || wall[at][d]) { if (!done) ctx.bad(); return; } at += [-N, 1, N, -1][d]; ctx.tick(); draw(); if (at === goal) { done = true; ctx.finish(score()); } };
+      [['▲', 0], ['◀', 3], ['▼', 2], ['▶', 1]].forEach(([t, d]) => { const b = h('button', 'mg-ar', t); b.type = 'button'; b.dataset.d = d; b.onclick = () => move(d); pad.appendChild(b); });
+      // a swipe on the maze moves too
+      let sx, sy; box.addEventListener('pointerdown', e => { sx = e.clientX; sy = e.clientY; });
+      box.addEventListener('pointerup', e => { const dx = e.clientX - sx, dy = e.clientY - sy; if (Math.max(Math.abs(dx), Math.abs(dy)) < 20) return; move(Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 1 : 3) : (dy > 0 ? 2 : 0)); });
+      const score = () => done ? 600 + Math.round(400 * ctx.left()) : Math.round(300 * (Math.floor(at / N) + at % N) / (2 * (N - 1)));
+      draw();
+      return { score };
+    }
+  };
+
+  /* ---------- complete the pattern: what comes next? ---------- */
+  const pattern = {
+    id: 'pattern', icon: '🧩', ar: 'أكمل النمط', en: 'Next in the pattern', kind: ['ذكاء', 'Logic'],
+    howAr: 'سلسلة أرقام تتبع قاعدة؛ اكتشفها واختر الرقم التالي.',
+    howEn: 'A series of numbers follows a rule; find it and pick the next number.',
+    play(el, ctx) {
+      const r = rngOf(ctx.seed); let k = 0;
+      return rounds(el, ctx, () => {
+        k++; const t = Math.floor(r() * Math.min(5, 2 + Math.floor(k / 2))), a = 1 + Math.floor(r() * 9), d = 2 + Math.floor(r() * 6); let s;
+        if (t === 0) s = Array.from({ length: 5 }, (_, i) => a + d * i);
+        else if (t === 1) s = Array.from({ length: 5 }, (_, i) => a * 2 ** i);
+        else if (t === 2) s = Array.from({ length: 5 }, (_, i) => a + d * i * (i + 1) / 2);
+        else if (t === 3) { s = [a, a + d]; while (s.length < 5) s.push(s[s.length - 1] + s[s.length - 2]); }
+        else s = Array.from({ length: 5 }, (_, i) => i % 2 ? a + d * Math.floor(i / 2) + 10 : a + d * (i / 2));
+        const ans = s.pop();
+        return { answer: ans, choices: choicesAround(ans, r, Math.max(3, Math.round(ans * .25))), show(stage, done) { stage.appendChild(h('p', 'mg-eq mg-ser', `<span dir="ltr">${s.join(' , ')} , ?</span>`)); done(); } };
+      });
+    }
+  };
+
+  /* ---------- lights out: every tap flips a cross ---------- */
+  const lights = {
+    id: 'lights', icon: '💡', ar: 'أطفئ الأنوار', en: 'Lights out', kind: ['لغز', 'Puzzle'],
+    howAr: 'الضغط على مصباح يقلبه ويقلب جيرانه الأربعة. أطفئ كل المصابيح.',
+    howEn: 'Tapping a light flips it and its four neighbours. Turn every light off.',
+    play(el, ctx) {
+      const r = rngOf(ctx.seed), N = 4, info = h('p', 'mg-info'), grid = h('div', 'mg-lights'); el.append(info, grid);
+      let on = Array(N * N).fill(false), done = false;
+      const flip = i => { const x = i % N, y = Math.floor(i / N); [[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1]].forEach(([dx, dy]) => { const nx = x + dx, ny = y + dy; if (nx >= 0 && ny >= 0 && nx < N && ny < N) on[ny * N + nx] = !on[ny * N + nx]; }); };
+      // made by pressing random lights from all-off, so it can always be solved
+      const presses = 4 + Math.floor(r() * 3); for (let k = 0; k < presses; k++) flip(Math.floor(r() * N * N)); if (!on.some(Boolean)) flip(5);
+      const start = on.filter(Boolean).length;
+      const cells = on.map((_, i) => { const b = h('button', 'mg-lt'); b.type = 'button'; b.onclick = () => { if (done) return; flip(i); ctx.tick(); draw(); if (!on.some(Boolean)) { done = true; ctx.finish(score()); } }; grid.appendChild(b); return b; });
+      const draw = () => { cells.forEach((c, i) => c.classList.toggle('on', on[i])); info.textContent = (ctx.ar ? 'مضاءة: ' : 'Lit: ') + on.filter(Boolean).length; };
+      const score = () => done ? 600 + Math.round(400 * ctx.left()) : Math.max(0, Math.round(200 * (1 - on.filter(Boolean).length / Math.max(start, 1))));
+      draw();
+      return { score };
+    }
+  };
+
+  /* ---------- catch the dates: move the basket, avoid the stones ---------- */
+  const catcher = {
+    id: 'catch', icon: '🧺', ar: 'التقط التمر', en: 'Catch the dates', kind: ['مهارة', 'Skill'],
+    howAr: 'حرّك السلة بإصبعك لتلتقط التمر المتساقط، وتجنّب الحجارة 🪨.',
+    howEn: 'Move the basket with your finger to catch the falling dates and avoid the stones 🪨.',
+    play(el, ctx) {
+      const r = rngOf(ctx.seed), info = h('p', 'mg-info'); el.appendChild(info);
+      const { cv, x, W, H } = canvasIn(el), BW = Math.max(70, W * .24);
+      let bx = W / 2, items = [], pts = 0, n = 0, next = 0, t = 0, last = performance.now(), stop = false;
+      const mv = e => { const b = cv.getBoundingClientRect(); bx = Math.max(BW / 2, Math.min(W - BW / 2, e.clientX - b.left)); };
+      cv.addEventListener('pointerdown', e => { cv.setPointerCapture(e.pointerId); mv(e); }); cv.addEventListener('pointermove', e => { if (e.buttons || e.pointerType === 'touch') mv(e); });
+      function frame(now) {
+        if (stop) return; const dt = Math.min(.04, (now - last) / 1000); last = now; t += dt;
+        if (t >= next) { n++; items.push({ x: 20 + r() * (W - 40), y: -20, v: H * (.35 + Math.min(.5, n * .012) + r() * .15), s: r() < .25 }); next = t + Math.max(.35, .9 - n * .01); }
+        x.clearRect(0, 0, W, H);
+        x.font = '30px sans-serif'; x.textAlign = 'center'; x.textBaseline = 'middle';
+        items = items.filter(it => { it.y += it.v * dt; if (it.y > H - 46 && it.y < H - 14 && Math.abs(it.x - bx) < BW / 2) { if (it.s) { pts = Math.max(0, pts - 2); ctx.bad(); } else { pts++; ctx.tick(); } return false; } x.fillText(it.s ? '🪨' : '🟤', it.x, it.y); return it.y < H + 20; });
+        x.font = `${BW * .55}px sans-serif`; x.fillText('🧺', bx, H - 28);
+        info.textContent = (ctx.ar ? 'التمر: ' : 'Dates: ') + pts;
+        requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+      return { score: () => pts * 50, stop: () => { stop = true; } };
+    }
+  };
+
+  /* ---------- find it: spot the shown symbol in the crowd ---------- */
+  const find = {
+    id: 'find', icon: '👀', ar: 'ابحث عنه', en: 'Find it', kind: ['انتباه', 'Attention'],
+    howAr: 'يظهر رمز في الأعلى؛ ابحث عنه بين الرموز واضغطه بأسرع ما تستطيع.',
+    howEn: 'A symbol shows at the top; find it among the others and tap it as fast as you can.',
+    play(el, ctx) {
+      const r = rngOf(ctx.seed), E = ['🐪', '🌴', '🦅', '⭐', '🌙', '🍉', '🐎', '⚽', '🎈', '🦋', '🍋', '🚀', '🐢', '🌵', '🍇', '🐟', '🎁', '🔑', '☕', '🌻'];
+      const info = h('p', 'mg-info'), want = h('div', 'mg-want'), grid = h('div', 'mg-find'); el.append(info, want, grid);
+      let ok = 0, lvl = 0;
+      function round() {
+        const n = Math.min(36, 12 + lvl * 3), pool = shuffle(E.slice(), r), target = pool[0], others = pool.slice(1, Math.min(pool.length, 6 + lvl)), at = Math.floor(r() * n);
+        want.textContent = target; grid.innerHTML = ''; grid.style.gridTemplateColumns = `repeat(${n > 25 ? 6 : n > 16 ? 5 : 4},1fr)`;
+        for (let k = 0; k < n; k++) { const b = h('button', 'mg-fe', k === at ? target : others[Math.floor(r() * others.length)]); b.type = 'button'; b.onclick = () => { if (k === at) { ok++; lvl++; ctx.tick(); info.textContent = (ctx.ar ? 'وجدت: ' : 'Found: ') + ok; round(); } else { ctx.bad(); b.classList.add('no'); } }; grid.appendChild(b); }
+      }
+      info.textContent = (ctx.ar ? 'وجدت: ' : 'Found: ') + 0; round();
+      return { score: () => ok * 100 };
+    }
+  };
+
+  /* ---------- moving targets: tap them before they shrink away ---------- */
+  const aim = {
+    id: 'aim', icon: '🎯', ar: 'الهدف المتحرك', en: 'Moving target', kind: ['سرعة', 'Speed'],
+    howAr: 'تظهر أهداف تتحرك وتصغر؛ اضغطها قبل أن تختفي. الضغط في الفراغ يُنقص النقاط.',
+    howEn: 'Targets appear, move and shrink; tap them before they vanish. Tapping empty space costs points.',
+    play(el, ctx) {
+      const r = rngOf(ctx.seed), info = h('p', 'mg-info'); el.appendChild(info);
+      const { cv, x, W, H } = canvasIn(el);
+      let tg = [], pts = 0, n = 0, next = 0, t = 0, last = performance.now(), stop = false;
+      cv.addEventListener('pointerdown', e => { const b = cv.getBoundingClientRect(), px = e.clientX - b.left, py = e.clientY - b.top; const k = tg.findIndex(o => Math.hypot(o.x - px, o.y - py) < o.r + 6); if (k >= 0) { tg.splice(k, 1); pts += 2; ctx.tick(); } else { pts = Math.max(0, pts - 1); ctx.bad(); } });
+      function frame(now) {
+        if (stop) return; const dt = Math.min(.04, (now - last) / 1000); last = now; t += dt;
+        if (t >= next) { n++; const R0 = Math.max(18, W * .09); tg.push({ x: R0 + r() * (W - 2 * R0), y: R0 + r() * (H - 2 * R0), vx: (r() - .5) * W * .5, vy: (r() - .5) * H * .4, r: R0, R0 }); next = t + Math.max(.4, 1 - n * .015); }
+        x.clearRect(0, 0, W, H);
+        tg = tg.filter(o => { o.x += o.vx * dt; o.y += o.vy * dt; if (o.x < o.r || o.x > W - o.r) o.vx *= -1; if (o.y < o.r || o.y > H - o.r) o.vy *= -1; o.r -= o.R0 * .3 * dt; if (o.r < 4) return false;
+          [[1, '#b0533a'], [.66, '#fff'], [.33, '#b0533a']].forEach(([f, c]) => { x.fillStyle = c; x.beginPath(); x.arc(o.x, o.y, o.r * f, 0, 7); x.fill(); }); return true; });
+        info.textContent = (ctx.ar ? 'النقاط: ' : 'Points: ') + pts;
+        requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+      return { score: () => pts * 40, stop: () => { stop = true; } };
+    }
+  };
+
+  const LIST = [sort, shoot, pairs, stroop, seq, odd, count, math, whack, stack, fly, slide, letters, taps, react, spots, more, maze, pattern, lights, catcher, find, aim];
   const byId = id => LIST.find(g => g.id === id) || LIST[0];
   // run a game in a box: returns {score(), stop()}; ctx.finish is called when a game ends early by being completed
   function run(id, box, opts) {
-    box.innerHTML = ''; const inner = h('div', 'mg mg-' + id); box.appendChild(inner);
+    box.innerHTML = ''; const inner = h('div', 'mg mg-g-' + id); box.appendChild(inner);
     const g = byId(id), ctx = Object.assign({ seed: 1, ar: true, left: () => 0, finish() {}, tick() {}, bad() {} }, opts);
     const api = g.play(inner, ctx);
     return { score: api.score, stop: api.stop || (() => {}) };
