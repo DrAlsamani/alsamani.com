@@ -76,13 +76,12 @@
       if (e.target.closest('.sn-bx')) return;
       sx = e.clientX; sy = e.clientY; r0 = { l: b.offsetLeft, t: b.offsetTop, w: b.offsetWidth, h: b.offsetHeight }; pid = e.pointerId;
       // on the name field a tap types and a drag moves the box
-      if (e.target.closest('.sn-nmi')) { mode = 'wait'; return; }
       mode = e.target.classList.contains('sn-rz') ? 'rz' : 'mv';
       b.setPointerCapture(e.pointerId); e.preventDefault();
     });
     b.addEventListener('pointermove', e => {
       if (!mode) return; const dx = e.clientX - sx, dy = e.clientY - sy;
-      if (mode === 'wait') { if (Math.abs(dx) + Math.abs(dy) < 6) return; mode = 'mv'; try { b.setPointerCapture(pid); } catch (er) {} const f = b.querySelector('.sn-nmi'); if (f) f.blur(); }
+
       if (mode === 'mv') { b.style.left = r0.l + dx + 'px'; b.style.top = r0.t + dy + 'px'; return; }
       let w = Math.max(30, r0.w + (isAr() ? -dx : dx)), h = keepRatio ? w * r0.h / r0.w : Math.max(14, r0.h + dy);
       b.style.width = w + 'px'; b.style.height = h + 'px'; if (isAr()) b.style.left = r0.l + r0.w - w + 'px';
@@ -127,8 +126,8 @@
       b.dataset.i = i;
       if (s.sig) { const im = new Image(); im.src = s.sig; im.alt = ''; b.appendChild(im); }
       if (opts.edit) {
-        b.innerHTML = '<span class="sn-bn">' + (i + 1) + '</span><i class="sn-rz" aria-hidden="true"></i><button type="button" class="sn-bx" aria-label="remove">×</button><input type="text" class="sn-nmi" maxlength="120" dir="auto" placeholder="' + (isAr() ? 'أضف الاسم هنا' : 'Add the name here') + '">';
-        b.querySelector('.sn-nmi').value = s.n || ''; b.title = s.n || '';
+        b.innerHTML = '<span class="sn-bn">' + (i + 1) + '</span><i class="sn-rz" aria-hidden="true"></i><button type="button" class="sn-bx" aria-label="remove">×</button><span class="sn-nmt" dir="auto"></span>';
+        b.querySelector('.sn-nmt').textContent = s.n || (isAr() ? 'أضف الاسم هنا' : 'Add the name here'); b.classList.toggle('noname', !s.n); b.title = s.n || '';
       } else {
         b.type = 'button'; b.setAttribute('aria-label', (s.n || '') + (s.sig ? ' ✓' : ''));
       }
@@ -208,21 +207,50 @@
     function drawList() {
       ed.querySelector('#snNc').textContent = '(' + slots.length + ')';
       list.innerHTML = slots.map((s, i) => `<li><span class="sn-n">${i + 1}</span><input type="text" value="${esc(s.n)}" data-i="${i}" placeholder="${isAr() ? 'الاسم' : 'Name'}" maxlength="120"><button type="button" class="sn-del" data-i="${i}" aria-label="remove">×</button></li>`).join('');
-      list.querySelectorAll('input').forEach(inp => inp.oninput = () => { slots[+inp.dataset.i].n = inp.value; const b = host.querySelector(`.sn-box[data-i="${inp.dataset.i}"] .sn-nmi`); if (b) b.value = inp.value; });
+      list.querySelectorAll('input').forEach(inp => inp.oninput = () => { slots[+inp.dataset.i].n = inp.value; setName(+inp.dataset.i); });
       list.querySelectorAll('.sn-del').forEach(b => b.onclick = () => { slots.splice(+b.dataset.i, 1); drawList(); place(); });
     }
     function place() {
       placeBoxes(views, slots, { edit: 1, onBox: (b, i, v) => {
         b.querySelector('.sn-bx').onclick = e => { e.stopPropagation(); slots.splice(i, 1); drawList(); place(); };
         draggable(b, () => Object.assign(slots[i], pdfRect(v, b)));
-        b.addEventListener('pointerdown', () => { host.querySelectorAll('.sn-box.act').forEach(x => x !== b && x.classList.remove('act')); b.classList.add('act'); });
-        const ni = b.querySelector('.sn-nmi'); ni.oninput = () => { slots[i].n = ni.value; const li = list.querySelector(`input[data-i="${i}"]`); if (li) li.value = ni.value; };
+        // a tap (not a drag) opens the name bar for this box
+        let px, py; b.addEventListener('pointerdown', e => { px = e.clientX; py = e.clientY; });
+        b.addEventListener('pointerup', e => { if (e.target.closest('.sn-bx') || Math.abs(e.clientX - px) + Math.abs(e.clientY - py) > 6) return; openBar(i, false); });
       } });
+      if (bar && cur >= 0 && cur < slots.length) mark(cur); else closeBar();
     }
+    // the name of a box is edited in a bar at the bottom: large, complete and above the keyboard
+    let bar = null, cur = -1;
+    const label = i => isAr() ? `الخانة ${i + 1} من ${slots.length}` : `Box ${i + 1} of ${slots.length}`;
+    function setName(i) {
+      const b = host.querySelector(`.sn-box[data-i="${i}"]`); if (b) { b.querySelector('.sn-nmt').textContent = slots[i].n || (isAr() ? 'أضف الاسم هنا' : 'Add the name here'); b.classList.toggle('noname', !slots[i].n); b.title = slots[i].n || ''; }
+      const li = list.querySelector(`input[data-i="${i}"]`); if (li && li.value !== slots[i].n) li.value = slots[i].n;
+      if (bar && cur === i) { const f = bar.querySelector('input'); if (f.value !== slots[i].n) f.value = slots[i].n; }
+    }
+    function mark(i) { host.querySelectorAll('.sn-box.act').forEach(x => x.classList.remove('act')); const b = host.querySelector(`.sn-box[data-i="${i}"]`); if (b) b.classList.add('act'); }
+    function fit() { if (!bar) return; const vv = window.visualViewport; bar.style.bottom = vv ? Math.max(0, innerHeight - vv.height - vv.offsetTop) + 'px' : '0'; }
+    function openBar(i, focus) {
+      if (!bar) {
+        bar = document.createElement('div'); bar.className = 'sn-nbar';
+        bar.innerHTML = `<div class="sn-nbh"><button type="button" data-g="-1" aria-label="${isAr() ? 'السابقة' : 'Previous'}">${isAr() ? '›' : '‹'}</button><span class="sn-nbl"></span><button type="button" data-g="1" aria-label="${isAr() ? 'التالية' : 'Next'}">${isAr() ? '‹' : '›'}</button><button type="button" class="sn-nbok">${B('تم', 'Done')}</button></div><input type="text" maxlength="120" dir="auto" enterkeyhint="next" placeholder="${isAr() ? 'اكتب اسم العضو' : 'Type the member’s name'}">`;
+        document.body.appendChild(bar);
+        const f = bar.querySelector('input');
+        f.oninput = () => { slots[cur].n = f.value; setName(cur); };
+        f.onkeydown = e => { if (e.key === 'Enter') { e.preventDefault(); if (cur < slots.length - 1) openBar(cur + 1, true); else closeBar(); } };
+        bar.querySelectorAll('[data-g]').forEach(x => x.onclick = () => { const n = cur + +x.dataset.g; if (n >= 0 && n < slots.length) openBar(n, document.activeElement === f); });
+        bar.querySelector('.sn-nbok').onclick = closeBar;
+        if (window.visualViewport) { visualViewport.addEventListener('resize', fit); visualViewport.addEventListener('scroll', fit); }
+      }
+      cur = i; mark(i); bar.querySelector('.sn-nbl').textContent = label(i);
+      const f = bar.querySelector('input'); f.value = slots[i].n || ''; if (focus) f.focus({ preventScroll: true }); fit();
+      const b = host.querySelector(`.sn-box[data-i="${i}"]`); if (b) setTimeout(() => b.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' }), focus ? 300 : 0);
+    }
+    function closeBar() { if (bar) { bar.remove(); bar = null; } cur = -1; host.querySelectorAll('.sn-box.act').forEach(x => x.classList.remove('act')); }
     async function show() {
       views = await renderPages(doc, host, slots, { edit: 1 });
       place();
-      views.forEach(v => { v.wrap.addEventListener('pointerdown', () => { v.typing = document.activeElement && document.activeElement.classList.contains('sn-nmi'); }); v.wrap.addEventListener('click', async e => {
+      views.forEach(v => { v.wrap.addEventListener('pointerdown', () => { v.typing = !!(document.activeElement && document.activeElement.closest && document.activeElement.closest('.sn-nbar')); }); v.wrap.addEventListener('click', async e => {
         // a tap that only leaves a name field does not add a box
         if (!adding || e.target.closest('.sn-box') || v.typing) { v.typing = false; return; }
         const rc = v.wrap.getBoundingClientRect(), x = e.clientX - rc.left, y = e.clientY - rc.top;
@@ -230,7 +258,7 @@
         const pt = v.vp.convertToPdfPoint(x, y);
         const s = { p: v.pi, n: '', r: '', x: pt[0] - w / 2, y: pt[1] - h / 2, w, h }; slots.push(s);
         s.n = await nameNear(v, s); drawList(); place();
-        const nb = host.querySelector(`.sn-box[data-i="${slots.length - 1}"] .sn-nmi`); if (nb && !s.n) nb.focus({ preventScroll: true });
+        openBar(slots.length - 1, !s.n);
       }); });
     }
     host.classList.add('adding');

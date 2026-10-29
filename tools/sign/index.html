@@ -1509,15 +1509,19 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
 .sn-zoom span{min-width:52px;text-align:center;font-variant-numeric:tabular-nums;color:var(--muted);font-size:.875rem}
 .sn-pen{margin-top:-4px}.sn-pen button{padding:5px 12px}.sn-pen button b{display:inline-block;width:16px;border-radius:2px;background:currentColor}.sn-pen button[aria-checked=true]{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
 .sn-keep{display:flex!important;gap:10px;align-items:flex-start;text-align:start}.sn-keep input{width:auto;flex:none;margin-top:5px}
-.sn-box input.sn-nmi{position:absolute;inset:2px 14px;width:calc(100% - 28px);height:calc(100% - 4px);box-sizing:border-box;font:inherit;font-size:16px;font-weight:500;padding:0;border:0!important;background:transparent!important;box-shadow:none!important;border-radius:0;color:var(--accent);text-align:center;z-index:2;cursor:text;outline:0;min-width:0;touch-action:none}
-.sn-nmi::placeholder{color:var(--accent);opacity:.45;font-weight:400}
-.sn-box.act input.sn-nmi:focus{background:rgba(255,255,255,.7)!important;border-radius:4px}
-.sn-ghost{position:absolute;box-sizing:border-box;border:2px dashed var(--accent);border-radius:6px;background:rgba(44,62,143,.06);color:var(--accent);display:grid;place-items:center;font-size:.75rem;white-space:nowrap;pointer-events:none;opacity:.75;z-index:1}
 .sn-opt{font-size:.75rem;opacity:.7;font-weight:400;margin-inline-start:4px}
 .sn-why{margin:12px 0 0}.sn-why summary{display:inline-flex;align-items:center;gap:6px;cursor:pointer;color:var(--accent);font-size:.875rem;list-style:none}
 .sn-why summary::-webkit-details-marker{display:none}.sn-why summary::before{content:"ⓘ";font-size:1rem}
 .sn-why p{background:var(--accent-soft);border-radius:12px;padding:12px 14px;font-size:.9375rem;line-height:1.8;margin:8px 0 0;animation:snWhy .25s ease}
 @keyframes snWhy{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.sn-nmt{position:absolute;inset:0 12px;display:block;text-align:center;line-height:var(--h,28px);top:50%;bottom:auto;transform:translateY(-50%);font-size:clamp(7px,1.6vw,13px);font-weight:500;color:var(--accent);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:none}
+.sn-box.noname .sn-nmt{opacity:.5;font-weight:400}
+.sn-box.act{border-style:solid;background:rgba(44,62,143,.16);box-shadow:0 0 0 3px rgba(44,62,143,.25)}
+.sn-nbar{position:fixed;left:0;right:0;bottom:0;z-index:95;background:var(--surface);border-top:1px solid var(--line);box-shadow:0 -6px 24px rgba(0,0,0,.12);padding:10px 14px calc(10px + env(safe-area-inset-bottom));display:grid;gap:8px;max-width:640px;margin:0 auto;border-radius:16px 16px 0 0}
+.sn-nbh{display:flex;align-items:center;gap:6px;font-size:.875rem;color:var(--muted)}.sn-nbl{flex:1;text-align:center}
+.sn-nbh button{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:10px;min-width:40px;height:36px;font:inherit;font-size:1.25rem;cursor:pointer}
+.sn-nbh .sn-nbok{background:var(--accent);color:#fff;border-color:var(--accent);font-size:.9375rem;padding:0 16px}
+.sn-nbar input{font:inherit;font-size:18px;font-weight:500;width:100%;box-sizing:border-box;border:1.5px solid var(--accent);border-radius:12px;padding:12px 14px;background:var(--bg);color:var(--ink)}
 </style>
 <div id="sn" class="sn" data-api="https://script.google.com/macros/s/AKfycbx8-M5oOYDU-TaWyLaySlqZHvBffRiDI6QH85_hBh5y_9uYrvUdxwD3hKNzGoJ4K7UOXQ/exec"><noscript><span class="ar">تعمل هذه الأداة مع تفعيل JavaScript.</span><span class="en">This tool needs JavaScript.</span></noscript></div>
 <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
@@ -1684,13 +1688,12 @@ async function snDetectPage(page,pi,OPS){
       if (e.target.closest('.sn-bx')) return;
       sx = e.clientX; sy = e.clientY; r0 = { l: b.offsetLeft, t: b.offsetTop, w: b.offsetWidth, h: b.offsetHeight }; pid = e.pointerId;
       // on the name field a tap types and a drag moves the box
-      if (e.target.closest('.sn-nmi')) { mode = 'wait'; return; }
       mode = e.target.classList.contains('sn-rz') ? 'rz' : 'mv';
       b.setPointerCapture(e.pointerId); e.preventDefault();
     });
     b.addEventListener('pointermove', e => {
       if (!mode) return; const dx = e.clientX - sx, dy = e.clientY - sy;
-      if (mode === 'wait') { if (Math.abs(dx) + Math.abs(dy) < 6) return; mode = 'mv'; try { b.setPointerCapture(pid); } catch (er) {} const f = b.querySelector('.sn-nmi'); if (f) f.blur(); }
+
       if (mode === 'mv') { b.style.left = r0.l + dx + 'px'; b.style.top = r0.t + dy + 'px'; return; }
       let w = Math.max(30, r0.w + (isAr() ? -dx : dx)), h = keepRatio ? w * r0.h / r0.w : Math.max(14, r0.h + dy);
       b.style.width = w + 'px'; b.style.height = h + 'px'; if (isAr()) b.style.left = r0.l + r0.w - w + 'px';
@@ -1735,8 +1738,8 @@ async function snDetectPage(page,pi,OPS){
       b.dataset.i = i;
       if (s.sig) { const im = new Image(); im.src = s.sig; im.alt = ''; b.appendChild(im); }
       if (opts.edit) {
-        b.innerHTML = '<span class="sn-bn">' + (i + 1) + '</span><i class="sn-rz" aria-hidden="true"></i><button type="button" class="sn-bx" aria-label="remove">×</button><input type="text" class="sn-nmi" maxlength="120" dir="auto" placeholder="' + (isAr() ? 'أضف الاسم هنا' : 'Add the name here') + '">';
-        b.querySelector('.sn-nmi').value = s.n || ''; b.title = s.n || '';
+        b.innerHTML = '<span class="sn-bn">' + (i + 1) + '</span><i class="sn-rz" aria-hidden="true"></i><button type="button" class="sn-bx" aria-label="remove">×</button><span class="sn-nmt" dir="auto"></span>';
+        b.querySelector('.sn-nmt').textContent = s.n || (isAr() ? 'أضف الاسم هنا' : 'Add the name here'); b.classList.toggle('noname', !s.n); b.title = s.n || '';
       } else {
         b.type = 'button'; b.setAttribute('aria-label', (s.n || '') + (s.sig ? ' ✓' : ''));
       }
@@ -1816,21 +1819,50 @@ async function snDetectPage(page,pi,OPS){
     function drawList() {
       ed.querySelector('#snNc').textContent = '(' + slots.length + ')';
       list.innerHTML = slots.map((s, i) => `<li><span class="sn-n">${i + 1}</span><input type="text" value="${esc(s.n)}" data-i="${i}" placeholder="${isAr() ? 'الاسم' : 'Name'}" maxlength="120"><button type="button" class="sn-del" data-i="${i}" aria-label="remove">×</button></li>`).join('');
-      list.querySelectorAll('input').forEach(inp => inp.oninput = () => { slots[+inp.dataset.i].n = inp.value; const b = host.querySelector(`.sn-box[data-i="${inp.dataset.i}"] .sn-nmi`); if (b) b.value = inp.value; });
+      list.querySelectorAll('input').forEach(inp => inp.oninput = () => { slots[+inp.dataset.i].n = inp.value; setName(+inp.dataset.i); });
       list.querySelectorAll('.sn-del').forEach(b => b.onclick = () => { slots.splice(+b.dataset.i, 1); drawList(); place(); });
     }
     function place() {
       placeBoxes(views, slots, { edit: 1, onBox: (b, i, v) => {
         b.querySelector('.sn-bx').onclick = e => { e.stopPropagation(); slots.splice(i, 1); drawList(); place(); };
         draggable(b, () => Object.assign(slots[i], pdfRect(v, b)));
-        b.addEventListener('pointerdown', () => { host.querySelectorAll('.sn-box.act').forEach(x => x !== b && x.classList.remove('act')); b.classList.add('act'); });
-        const ni = b.querySelector('.sn-nmi'); ni.oninput = () => { slots[i].n = ni.value; const li = list.querySelector(`input[data-i="${i}"]`); if (li) li.value = ni.value; };
+        // a tap (not a drag) opens the name bar for this box
+        let px, py; b.addEventListener('pointerdown', e => { px = e.clientX; py = e.clientY; });
+        b.addEventListener('pointerup', e => { if (e.target.closest('.sn-bx') || Math.abs(e.clientX - px) + Math.abs(e.clientY - py) > 6) return; openBar(i, false); });
       } });
+      if (bar && cur >= 0 && cur < slots.length) mark(cur); else closeBar();
     }
+    // the name of a box is edited in a bar at the bottom: large, complete and above the keyboard
+    let bar = null, cur = -1;
+    const label = i => isAr() ? `الخانة ${i + 1} من ${slots.length}` : `Box ${i + 1} of ${slots.length}`;
+    function setName(i) {
+      const b = host.querySelector(`.sn-box[data-i="${i}"]`); if (b) { b.querySelector('.sn-nmt').textContent = slots[i].n || (isAr() ? 'أضف الاسم هنا' : 'Add the name here'); b.classList.toggle('noname', !slots[i].n); b.title = slots[i].n || ''; }
+      const li = list.querySelector(`input[data-i="${i}"]`); if (li && li.value !== slots[i].n) li.value = slots[i].n;
+      if (bar && cur === i) { const f = bar.querySelector('input'); if (f.value !== slots[i].n) f.value = slots[i].n; }
+    }
+    function mark(i) { host.querySelectorAll('.sn-box.act').forEach(x => x.classList.remove('act')); const b = host.querySelector(`.sn-box[data-i="${i}"]`); if (b) b.classList.add('act'); }
+    function fit() { if (!bar) return; const vv = window.visualViewport; bar.style.bottom = vv ? Math.max(0, innerHeight - vv.height - vv.offsetTop) + 'px' : '0'; }
+    function openBar(i, focus) {
+      if (!bar) {
+        bar = document.createElement('div'); bar.className = 'sn-nbar';
+        bar.innerHTML = `<div class="sn-nbh"><button type="button" data-g="-1" aria-label="${isAr() ? 'السابقة' : 'Previous'}">${isAr() ? '›' : '‹'}</button><span class="sn-nbl"></span><button type="button" data-g="1" aria-label="${isAr() ? 'التالية' : 'Next'}">${isAr() ? '‹' : '›'}</button><button type="button" class="sn-nbok">${B('تم', 'Done')}</button></div><input type="text" maxlength="120" dir="auto" enterkeyhint="next" placeholder="${isAr() ? 'اكتب اسم العضو' : 'Type the member’s name'}">`;
+        document.body.appendChild(bar);
+        const f = bar.querySelector('input');
+        f.oninput = () => { slots[cur].n = f.value; setName(cur); };
+        f.onkeydown = e => { if (e.key === 'Enter') { e.preventDefault(); if (cur < slots.length - 1) openBar(cur + 1, true); else closeBar(); } };
+        bar.querySelectorAll('[data-g]').forEach(x => x.onclick = () => { const n = cur + +x.dataset.g; if (n >= 0 && n < slots.length) openBar(n, document.activeElement === f); });
+        bar.querySelector('.sn-nbok').onclick = closeBar;
+        if (window.visualViewport) { visualViewport.addEventListener('resize', fit); visualViewport.addEventListener('scroll', fit); }
+      }
+      cur = i; mark(i); bar.querySelector('.sn-nbl').textContent = label(i);
+      const f = bar.querySelector('input'); f.value = slots[i].n || ''; if (focus) f.focus({ preventScroll: true }); fit();
+      const b = host.querySelector(`.sn-box[data-i="${i}"]`); if (b) setTimeout(() => b.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' }), focus ? 300 : 0);
+    }
+    function closeBar() { if (bar) { bar.remove(); bar = null; } cur = -1; host.querySelectorAll('.sn-box.act').forEach(x => x.classList.remove('act')); }
     async function show() {
       views = await renderPages(doc, host, slots, { edit: 1 });
       place();
-      views.forEach(v => { v.wrap.addEventListener('pointerdown', () => { v.typing = document.activeElement && document.activeElement.classList.contains('sn-nmi'); }); v.wrap.addEventListener('click', async e => {
+      views.forEach(v => { v.wrap.addEventListener('pointerdown', () => { v.typing = !!(document.activeElement && document.activeElement.closest && document.activeElement.closest('.sn-nbar')); }); v.wrap.addEventListener('click', async e => {
         // a tap that only leaves a name field does not add a box
         if (!adding || e.target.closest('.sn-box') || v.typing) { v.typing = false; return; }
         const rc = v.wrap.getBoundingClientRect(), x = e.clientX - rc.left, y = e.clientY - rc.top;
@@ -1838,7 +1870,7 @@ async function snDetectPage(page,pi,OPS){
         const pt = v.vp.convertToPdfPoint(x, y);
         const s = { p: v.pi, n: '', r: '', x: pt[0] - w / 2, y: pt[1] - h / 2, w, h }; slots.push(s);
         s.n = await nameNear(v, s); drawList(); place();
-        const nb = host.querySelector(`.sn-box[data-i="${slots.length - 1}"] .sn-nmi`); if (nb && !s.n) nb.focus({ preventScroll: true });
+        openBar(slots.length - 1, !s.n);
       }); });
     }
     host.classList.add('adding');
