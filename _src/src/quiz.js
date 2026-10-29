@@ -296,6 +296,16 @@
     return out;
   }
   const newGame = g => norm({ type: 'game', g, time: gTime(g), opts: ['', ''] });
+  // ready prompts for the two kinds without a right answer, by the moment of the session
+  const IDEAS = {
+    poll: [['بداية اللقاء', 'Opening', [['كم تعرف عن موضوع اليوم؟', 'How much do you know about today’s topic?', ['كثيرًا', 'قليلًا', 'لا شيء تقريبًا'], ['A lot', 'A little', 'Almost nothing']], ['ما الذي تتوقعه من لقاء اليوم؟', 'What do you expect from today?', ['معلومات جديدة', 'مهارات عملية', 'تعارف ونقاش', 'لا أعرف بعد'], ['New knowledge', 'Practical skills', 'Meeting and discussion', 'Not sure yet']]]],
+      ['كسر الجليد', 'Ice-breaker', [['قهوة أم شاي؟', 'Coffee or tea?', ['قهوة', 'شاي', 'كلاهما', 'لا هذا ولا ذاك'], ['Coffee', 'Tea', 'Both', 'Neither']], ['متى تكون في أفضل تركيزك؟', 'When are you most focused?', ['الصباح', 'الظهر', 'المساء', 'الليل'], ['Morning', 'Midday', 'Evening', 'Night']]]],
+      ['الختام', 'Closing', [['ما مدى استفادتك من اللقاء؟', 'How useful was today for you?', ['كثيرًا', 'متوسطًا', 'قليلًا'], ['Very', 'Somewhat', 'A little']], ['هل تنصح غيرك بحضور مثل هذا اللقاء؟', 'Would you recommend a session like this?', ['نعم بالتأكيد', 'ربما', 'لا'], ['Definitely', 'Maybe', 'No']]]]],
+    open: [['بداية اللقاء', 'Opening', [['بكلمة: ماذا تتوقع من اللقاء؟', 'In a word: what do you expect today?'], ['ما أول كلمة تخطر لك عن موضوع اليوم؟', 'The first word that comes to mind about today’s topic?']]],
+      ['كسر الجليد', 'Ice-breaker', [['بكلمة: كيف تشعر الآن؟', 'In a word: how do you feel right now?'], ['اكتب كلمة تصف فريقك', 'A word that describes your team']]],
+      ['الختام', 'Closing', [['بكلمة: ماذا تعلّمت اليوم؟', 'In a word: what did you learn today?'], ['اكتب فكرة ستطبّقها بعد اللقاء', 'One idea you will put into practice']]]]
+  };
+  const ideas = x => !IDEAS[x.type] || (x.q || '').trim() ? '' : `<div class="qz-ideas"><b>💡 ${B('اقتراحات جاهزة', 'Ready suggestions')}</b>${IDEAS[x.type].map(([a, e, list], g) => `<div><small>${B(a, e)}</small>${list.map((it, k) => `<button type="button" data-idea="${g}-${k}">${isAr() ? it[0] : it[1]}</button>`).join('')}</div>`).join('')}</div>`;
   function card(x, i) {
     if (x.type === 'game') {
       const g = window.MDGames ? MDGames.byId(x.g) : { icon: '🎮', ar: '', en: '', howAr: '', howEn: '' }, t = x.time || 30;
@@ -322,9 +332,9 @@
         : x.type === 'word' ? `<div class="qz-row2"><label>${B('الكلمة', 'The word')}<input type="text" data-k="ans" maxlength="24" dir="auto" value="${esc(x.ans || '')}"></label></div><p class="qz-ghow">${B('تنكشف حروف الكلمة واحدًا بعد الآخر على الشاشة والجوالات، ومن يكتبها أسرع يكسب أكثر.', 'The letters show one by one on the screen and the phones; the quickest to type it earns most.')}</p>`
         : x.type === 'order' ? `<p class="qz-ghow">${B('اكتب العناصر بترتيبها الصحيح من الأول إلى الأخير؛ تظهر للمشاركين مخلوطة.', 'Write the items in their right order, first to last; players see them shuffled.')}</p><ol class="qz-items">${(x.items || []).map((v, j) => `<li><b>${j + 1}</b><input type="text" data-it="${j}" maxlength="60" dir="auto" value="${esc(v)}">${x.items.length > 2 ? `<button type="button" class="qz-x" data-irm="${j}" aria-label="remove">×</button>` : ''}</li>`).join('')}</ol>${(x.items || []).length < 6 ? `<button type="button" class="sn-lnk qz-more" data-a="item">${B('+ عنصر', '+ Item')}</button>` : ''}`
         : `<p class="qz-ghow">${B('يكتب كل مشارك كلمة أو جملة قصيرة، وتظهر الإجابات على الشاشة سحابة كلمات، والأكثر تكرارًا أكبر. بلا نقاط.', 'Everyone writes a word or a short phrase; the answers appear as a word cloud, the most common biggest. No points.')}</p>`;
-      return `<div class="qz-q qz-${x.type}" data-id="${x.id}">${head}${body}<p class="qz-warn" hidden></p></div>`;
+      return `<div class="qz-q qz-${x.type}" data-id="${x.id}">${head}${ideas(x)}${body}<p class="qz-warn" hidden></p></div>`;
     }
-    return `<div class="qz-q${poll ? ' qz-poll' : ''}" data-id="${x.id}">${head}
+    return `<div class="qz-q${poll ? ' qz-poll' : ''}" data-id="${x.id}">${head}${ideas(x)}
       <ol class="qz-opts">${x.opts.map((o, j) => `<li class="qz-o${x.ok.includes(j) ? ' ok' : ''}" style="--c:var(--qz${j})"><button type="button" class="qz-tick" data-ok="${j}" aria-pressed="${x.ok.includes(j)}" title="${T('الإجابة الصحيحة', 'Right answer')}"><i>${LET()[j]}</i></button>
         <input type="text" data-o="${j}" value="${esc(o)}" dir="auto" maxlength="120" placeholder="${T('خيار', 'Option')} ${j + 1}"${tf ? ' readonly' : ''}>${!tf && x.opts.length > 2 ? `<button type="button" class="qz-x" data-rm="${j}" aria-label="remove">×</button>` : ''}</li>`).join('')}</ol>
       ${!tf && x.opts.length < 6 ? `<button type="button" class="sn-lnk qz-more" data-a="opt">${B('+ خيار', '+ Option')}</button>` : ''}
@@ -343,7 +353,8 @@
       el.querySelector('[data-a=del]').onclick = () => { Q.qs.splice(Q.qs.indexOf(x), 1); draw(); later(); };
       return;
     }
-    el.querySelector('[data-k=q]').oninput = e => { x.q = e.target.value; tm(); later(); };
+    el.querySelector('[data-k=q]').oninput = e => { x.q = e.target.value; tm(); later(); const d = el.querySelector('.qz-ideas'); if (d) d.hidden = !!x.q.trim(); };
+    el.querySelectorAll('[data-idea]').forEach(b => b.onclick = () => { const [g, k] = b.dataset.idea.split('-').map(Number), it = IDEAS[x.type][g][2][k], ar = isAr(); x.q = ar ? it[0] : it[1]; if (x.type === 'poll') { x.opts = (ar ? it[2] : it[3]).slice(); x.ok = []; } re(); });
     const tm = () => { if (x.timeSet) return; const s = el.querySelector('[data-k=time]'), t = suggest(x); [...s.options].forEach(o => { o.selected = +o.value === t; o.textContent = o.value + ' ' + T('ث', 's') + (+o.value === t ? ' ✦' : ''); }); };
     el.querySelector('[data-k=type]').onchange = e => { setType(x, e.target.value); re(); };
     const f = k => el.querySelector(`[data-k=${k}]`);
