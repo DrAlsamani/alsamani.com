@@ -90,3 +90,7 @@
 .qz-gstart{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.qz-gstart label{display:flex;gap:6px;align-items:center;font-weight:600}
 .qz-gstart select,.qz-spr select{padding:6px 8px;border:1px solid var(--line,#ccc);border-radius:8px;background:var(--bg,#fff);color:inherit;font:inherit}
 .qz-spr{display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;margin:-74px 0 90px;font-weight:600}
+.qz-lib{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;width:100%}
+.qz-lc{display:flex;flex-direction:column;gap:6px;background:var(--surface,#fff);border:1px solid var(--line,#e5e5ea);border-radius:16px;padding:16px}
+.qz-li{font-size:2rem;line-height:1}.qz-lc b{font-size:1.0625rem}.qz-lc small{color:var(--muted);line-height:1.7;font-size:.875rem;flex:1}.qz-lc em{font-style:normal;font-size:.8125rem;color:#C9822B;font-weight:600}
+.qz-lb{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}.qz-lb .btn{padding:8px 14px;font-size:.875rem}

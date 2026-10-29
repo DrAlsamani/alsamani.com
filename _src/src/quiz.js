@@ -45,11 +45,17 @@
       <div class="qz-starts"><button type="button" class="btn solid" id="qzNew">${B('مسابقة أسئلة جديدة', 'New question quiz')}</button>
         <div class="qz-gstart"><button type="button" class="btn ghost" id="qzNewG">🎮 ${B('مسابقة ألعاب وتحديات', 'A games-only quiz')}</button><label>${B('عدد التحديات', 'Challenges')} <select id="qzGn">${[5, 8, 10, 12, 15, 20, 24].map(n => `<option${n === 10 ? ' selected' : ''}>${n}</option>`).join('')}</select></label></div>
         <p class="pt-fine">${B('في مسابقة الألعاب نختار لك تحديات متنوعة، وتقدر تغيّر أي واحد منها بزر 🔀 أو تختار غيره بنفسك.', 'We pick a varied set for you; swap any of them with 🔀 or choose another yourself.')}</p></div>
+      ${RLIB().length ? `<h2 class="qz-h" id="lib">📚 ${B('مكتبة ميدان: مسابقات جاهزة', 'The Maydan library: ready quizzes')}</h2><p class="pt-fine">${B('ابدأ أيًّا منها مباشرة، أو افتحها وعدّل عليها لتصير مسابقتك.', 'Start any of them now, or open one and make it your own.')}</p>
+      <div class="qz-lib">${RLIB().map(z => `<div class="qz-lc"><span class="qz-li">${z.icon}</span><b>${esc(z.title)}</b><small>${esc(z.desc)}</small><em>${esc(z.who)} · ${z.qs.length} ${z.qs.every(x => x.type === 'game') ? B('تحديات', 'challenges') : B('فقرة', 'items')}</em><span class="qz-lb"><button type="button" class="btn solid" data-lgo="${z.id}">${B('ابدأ الآن ▶', 'Start now ▶')}</button><button type="button" class="btn ghost" data-led="${z.id}">${B('افتحها وعدّلها', 'Open and edit')}</button></span></div>`).join('')}</div>` : ''}
       ${list.length ? `<h2 class="qz-h">${B('مسابقاتك', 'Your quizzes')}</h2><ul class="qz-list">${list.map(x => `<li><button type="button" data-open="${x.id}"><b>${esc(x.title || T('بلا عنوان', 'Untitled'))}</b><small>${T('الأسئلة: ', 'Questions: ')}${x.qs.length}</small></button></li>`).join('')}</ul>` : ''}
       <label class="qz-imp btn ghost">${B('فتح نسخة محفوظة', 'Open a saved copy')}<input type="file" accept=".json,application/json" hidden id="qzImp"></label>
       <p class="pt-fine">${B('تُحفظ المسابقات في هذا المتصفح.', 'Quizzes are kept in this browser.')}</p></div>`;
     if (P) { root.querySelector('#qzRes').onclick = () => MDLive.resume(); root.querySelector('#qzDrop2').onclick = async () => { await MDLive.discard(); home(); }; }
     root.querySelector('#qzNew').onclick = () => { Q = { id: uid(), title: '', qs: [] }; editor(); };
+    const fromLib = id => { const z = RLIB().find(v => v.id === id); return { id: uid(), title: z.title, qs: z.qs.map(x => norm(JSON.parse(JSON.stringify(x)))) }; };
+    root.querySelectorAll('[data-led]').forEach(b => b.onclick = () => { Q = fromLib(b.dataset.led); persist(); editor(); });
+    root.querySelectorAll('[data-lgo]').forEach(b => b.onclick = () => { if (!window.MDLive) return toast(B('تعذّر تشغيل المسابقة الآن.', 'The quiz cannot start right now.'), 1); MDLive.start(live(fromLib(b.dataset.lgo))); });
+    if (location.hash === '#lib') setTimeout(() => { const h = root.querySelector('#lib'); if (h) h.scrollIntoView({ block: 'start' }); }, 300);
     root.querySelector('#qzNewG').onclick = () => { Q = { id: uid(), title: T('مسابقة الألعاب والتحديات', 'Games and challenges'), qs: pickGames(+root.querySelector('#qzGn').value).map(newGame) }; persist(); editor(); };
     root.querySelectorAll('[data-open]').forEach(b => b.onclick = () => { Q = JSON.parse(JSON.stringify(list.find(x => x.id === b.dataset.open))); Q.qs = Q.qs.map(norm); editor(); });
     root.querySelector('#qzImp').onchange = async e => {
@@ -60,6 +66,8 @@
   }
 
   /* ---------- editor ---------- */
+  // the editor's quiz in the form the live screen plays
+  const live = Q => ({ title: Q.title, qs: Q.qs.map(x => x.type === 'game' ? { type: 'game', g: x.g, q: '', opts: [], ok: [], pts: x.pts, time: x.time || 30, seed: 1 + Math.floor(Math.random() * 1e9) } : ({ type: x.type, q: x.q, opts: TEXTY.includes(x.type) ? [] : x.opts.filter(o => o.trim()), ok: x.type === 'poll' || TEXTY.includes(x.type) ? [] : x.ok.map(j => x.opts.slice(0, j).filter(o => o.trim()).length), pts: x.type === 'open' || x.type === 'poll' ? 0 : x.pts, img: x.img, reveal: !!(x.reveal && x.img && x.type === 'mc'), ans: x.ans, unit: x.unit || '', items: x.type === 'order' ? x.items.filter(v => v.trim()) : null, time: x.timeSet ? x.time : suggest(x) })) });
   function editor() {
     root.innerHTML = `<div class="qz-top"><button type="button" class="sn-lnk" id="qzBack">${B('‹ مسابقاتي', '‹ My quizzes')}</button></div>
       <div class="sn-card"><label class="sn-lbl">${B('عنوان المسابقة', 'Quiz title')}<input type="text" id="qzTitle" maxlength="120" value="${esc(Q.title)}" placeholder="${T('مثال: مراجعة الوحدة الأولى', 'e.g. Unit 1 review')}"></label></div>
@@ -145,7 +153,7 @@
       const bad = checks();
       if (bad) { toast(B('بعض الأسئلة تحتاج مراجعة قبل البدء.', 'Some questions need review before starting.'), 1); root.querySelector('#qzChk [data-go]') && root.querySelector('#qzChk [data-go]').click(); return; }
       if (!window.MDLive) { toast(B('تعذّر تشغيل المسابقة الآن.', 'The quiz cannot start right now.'), 1); return; }
-      MDLive.start({ title: Q.title, qs: Q.qs.map(x => x.type === 'game' ? { type: 'game', g: x.g, q: '', opts: [], ok: [], pts: x.pts, time: x.time || 30, seed: 1 + Math.floor(Math.random() * 1e9) } : ({ type: x.type, q: x.q, opts: TEXTY.includes(x.type) ? [] : x.opts.filter(o => o.trim()), ok: x.type === 'poll' || TEXTY.includes(x.type) ? [] : x.ok.map(j => x.opts.slice(0, j).filter(o => o.trim()).length), pts: x.type === 'open' || x.type === 'poll' ? 0 : x.pts, img: x.img, reveal: !!(x.reveal && x.img && x.type === 'mc'), ans: x.ans, unit: x.unit || '', items: x.type === 'order' ? x.items.filter(v => v.trim()) : null, time: x.timeSet ? x.time : suggest(x) })) });
+      MDLive.start(live(Q));
     };
     q('#qzExp').onclick = () => save(new Blob([JSON.stringify({ title: Q.title, qs: Q.qs.map(({ id, timeSet, ...r }) => r) }, null, 1)], { type: 'application/json' }), (Q.title || 'quiz').replace(/[\\/:*?"<>|]+/g, ' ').slice(0, 60) + '.json');
     draw(); checks();
@@ -171,6 +179,7 @@
     box.querySelectorAll('.qz-q').forEach((el, i) => bind(el, Q.qs[i]));
     if (window.Sortable && !box._s) box._s = Sortable.create(box, { handle: '.qz-grip', animation: 150, onEnd: e => { const [m] = Q.qs.splice(e.oldIndex, 1); Q.qs.splice(e.newIndex, 0, m); draw(); later(); } });
   }
+  const RLIB = () => window.MDLib || [];
   const GAMES = () => window.MDGames ? MDGames.LIST : [];
   const KINDS = () => [['mc', T('اختيار من متعدد', 'Multiple choice')], ['tf', T('صح أو خطأ', 'True or false')], ['poll', T('تصويت (بلا إجابة صحيحة)', 'Poll (no right answer)')], ['num', T('الأقرب للرقم', 'Closest number')], ['word', T('خمّن الكلمة', 'Guess the word')], ['order', T('رتّب بالترتيب الصحيح', 'Put in order')], ['open', T('كتابة حرة (سحابة كلمات)', 'Free text (word cloud)')], ['game', T('تحدٍّ تفاعلي 🎮', 'Challenge 🎮')]];
   const typeSel = t => `<select data-k="type" aria-label="type">${KINDS().map(([v, l]) => `<option value="${v}"${v === t ? ' selected' : ''}>${l}</option>`).join('')}</select>`;

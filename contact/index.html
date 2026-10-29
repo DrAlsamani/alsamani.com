@@ -11,7 +11,7 @@
 <meta property="og:title" content="Contact | Dr. Omar A. Alsamani | تواصل">
 <meta property="og:description" content="Contact Dr. Omar A. Alsamani for research collaboration, training, consulting and media.">
 <meta property="og:url" content="https://alsamani.com/contact/">
-<meta property="og:image" content="https://alsamani.com/img/ph15.webp">
+<meta property="og:image" content="https://alsamani.com/img/og/site.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="author" content="Omar Abdullah Alsamani">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%232C3E8F'/%3E%3Ctext x='16' y='22' font-size='16' text-anchor='middle' fill='%23fff' font-family='sans-serif'%3EOA%3C/text%3E%3C/svg%3E">
@@ -880,6 +880,17 @@ html[lang="ar"] .bk-st button span.en,html[lang="en"] .bk-st button span.ar{disp
 .nform .consent{display:flex;gap:10px;align-items:flex-start;font-size:.875rem;color:var(--muted);line-height:1.5}
 .nform .consent input{margin-top:3px;width:auto}
 .rcomments .sec-head p,#guestbook .sec-head p{max-width:40em;margin-inline:auto}
+/* home: the games band */
+.gband{background:#1f2a5c;box-shadow:0 0 0 100vmax #1f2a5c;clip-path:inset(0 -100vmax);color:#f4ead8;padding-block:56px;position:relative}
+.gband:before{content:"";position:absolute;inset:0 -100vmax;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cpath d='M30 12l5 13 13 5-13 5-5 13-5-13-13-5 13-5z' fill='none' stroke='%23ffffff' stroke-opacity='.07'/%3E%3C/svg%3E");pointer-events:none}
+.gb-in{position:relative;display:flex;gap:32px;align-items:center;max-width:980px;margin:0 auto}
+.gb-mark .md-mark{width:132px;height:132px;display:block}
+.gb-eye{margin:0;color:#e0a458;font-weight:600;font-size:.9375rem}
+.gband h2{margin:6px 0 10px;color:#fff;font-size:clamp(1.5rem,3vw,2.1rem)}
+.gb-txt>p:not(.gb-eye){margin:0;line-height:1.8;color:#d9dcea;max-width:620px}
+.gb-act{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.gband .gb-act .btn.solid{background:#e0a458!important;color:#1f2a5c!important;border-color:#e0a458!important}.gband .gb-act .btn.ghost{color:#fff!important;border:1px solid rgba(255,255,255,.55)!important;background:transparent!important}
+@media (max-width:700px){.gb-in{flex-direction:column;align-items:flex-start;gap:16px}.gb-mark .md-mark{width:72px;height:72px}}
 .pv{display:flex;justify-content:center;gap:4px;margin:14px auto 4px;grid-column:1/-1;width:100%}
 .bp-fin>p{text-align:center;width:100%}
 .pv[hidden]{display:none}

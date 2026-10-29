@@ -1,5 +1,16 @@
 [
  {
+  "date": "2026-10-29",
+  "type": "news",
+  "title_ar": "إطلاق منصة الألعاب التفاعلية ووحدتها الأولى «ميدان»",
+  "title_en": "Launching the interactive games platform and its first unit, Maydan",
+  "body_ar": "منصة تعليمية ترفيهية للتوظيف داخل بيئة التعلم والأنشطة والاجتماعات. في «ميدان» تُعرض الأسئلة على الشاشة ويجيب المشاركون من جوالاتهم، مع تحديات ألعاب وفرق ومكتبة مسابقات جاهزة.",
+  "body_en": "An educational and entertaining platform for learning, activities and meetings. In Maydan, questions appear on the screen and players answer from their phones, with game challenges, teams and a library of ready quizzes.",
+  "link": "play/maydan/index.html",
+  "link_label_ar": "جرّب ميدان",
+  "link_label_en": "Try Maydan"
+ },
+ {
   "date": "2026-10-20",
   "type": "publication",
   "title_ar": "دعم الكفاءة المستند إلى نقاط القوة في التربية البدنية للطلاب مزدوجي الاستثنائية ذوي الإعاقات الجسدية",

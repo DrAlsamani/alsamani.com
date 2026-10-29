@@ -249,8 +249,9 @@ MAYDAN_MARK = '<svg class="md-mark" viewBox="0 0 48 48" aria-hidden="true"><rect
 def play_index():
     return f'''<section class="first tl-page">
 <header class="tl-head"><h1>{bi('منصة الألعاب التفاعلية', 'Interactive games')}</h1><p class="tl-lede">{bi('منصة تعليمية ترفيهية للتوظيف داخل بيئة التعلم والأنشطة والاجتماعات.', 'An educational and entertaining platform to use in learning, activities and meetings.')}</p></header>
-<div class="md-units"><a class="md-unit" href="maydan/index.html">{MAYDAN_MARK}<span><b>{bi('ميدان', 'Maydan')}</b><small>{bi('مسابقات تفاعلية حيّة: سؤال على الشاشة، وكل مشارك يجيب من جواله، والأسرع والأدق يتصدّر.', 'Live quizzes: a question on the screen, everyone answers from their phone, and the fastest right answers lead.')}</small></span></a></div>
-<style>.md-units{{display:grid;gap:14px;max-width:760px;margin:0 auto}}.md-unit{{display:flex;gap:16px;align-items:center;background:var(--surface);border-radius:18px;padding:18px;text-decoration:none;color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.04)}}.md-unit:hover{{box-shadow:0 6px 22px rgba(0,0,0,.08)}}.md-unit .md-mark{{width:64px;height:64px;flex:none}}.md-unit b{{display:block;font-size:1.25rem;margin-bottom:4px}}.md-unit small{{color:var(--muted);font-size:.9375rem;line-height:1.7}}</style>
+<div class="md-units"><a class="md-unit" href="maydan/index.html">{MAYDAN_MARK}<span><b>{bi('ميدان', 'Maydan')}</b><small>{bi('مسابقات تفاعلية حيّة: سؤال على الشاشة، وكل مشارك يجيب من جواله، والأسرع والأدق يتصدّر.', 'Live quizzes: a question on the screen, everyone answers from their phone, and the fastest right answers lead.')}</small></span></a>
+<a class="md-unit md-unit2" href="maydan/index.html#lib"><span class="md-lib-ic">📚</span><span><b>{bi('مكتبة ميدان', 'The Maydan library')}</b><small>{bi('مسابقات جاهزة للتجربة فورًا: اليوم الوطني، الثقافة العامة، اللغة العربية، كسر الجليد، وتحديات الألعاب.', 'Ready quizzes to try at once: national day, general knowledge, Arabic, ice-breakers and game challenges.')}</small></span></a></div>
+<style>.md-units{{display:grid;gap:14px;max-width:760px;margin:0 auto}}.md-unit{{display:flex;gap:16px;align-items:center;background:var(--surface);border-radius:18px;padding:18px;text-decoration:none;color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.04)}}.md-unit:hover{{box-shadow:0 6px 22px rgba(0,0,0,.08)}}.md-unit .md-mark{{width:64px;height:64px;flex:none}}.md-unit b{{display:block;font-size:1.25rem;margin-bottom:4px}}.md-unit small{{color:var(--muted);font-size:.9375rem;line-height:1.7}}.md-lib-ic{{width:64px;height:64px;flex:none;display:grid;place-items:center;font-size:2.4rem;background:#f4ead8;border-radius:16px}}</style>
 </section>'''
 def maydan_body():
     src = lambda f: open(os.path.join(ROOT, 'src', f)).read()
@@ -259,7 +260,7 @@ def maydan_body():
 <header class="md-head">{MAYDAN_MARK}<div><h1>{bi('ميدان', 'Maydan')}</h1><p>{bi('مسابقات تفاعلية حيّة', 'Live interactive quizzes')}</p></div></header>
 <style>{src('sign.css')}{src('pdftool.css')}{src('quiz.css')}</style>
 <div id="qz" class="sn qz"><noscript>{bi("تعمل هذه الأداة مع تفعيل JavaScript.", "This tool needs JavaScript.")}</noscript></div>
-<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script><script>{src('quiz_parse.js')}</script><script>{src('quiz.js')}</script>
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script><script>{src('maydan_lib.js')}</script><script>{src('quiz_parse.js')}</script><script>{src('quiz.js')}</script>
 <style>{src('maydan.css')}</style>{MD_SCRIPTS()}<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script><script>{src('maydan_games.js')}</script><script>{src('maydan_live.js')}</script>
 </section>'''
 

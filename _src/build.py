@@ -119,6 +119,7 @@ def feed_html():
     return f'''{hero()}
 {research_cards()}
 {books_band()}
+{play_band()}
 {photo_band()}
 {upd}
 <section class="index-links one">
@@ -320,6 +321,16 @@ def carousel(ids, depth):
 
 HOME_SET = [15, 14, 24, 4, 16, 19, 12, 9, 11, 21, 22, 3, 13, 18]
 STRIP_SET = [20, 25, 1, 26, 8, 5, 23, 2, 7, 6, 10]
+def play_band():
+    # the interactive games platform: a navy band in Maydan's own colours
+    return f'''<section class="gband"><div class="gb-in">
+  <div class="gb-mark">{_tp.MAYDAN_MARK}</div>
+  <div class="gb-txt"><p class="gb-eye">{bi('منصة الألعاب التفاعلية', 'Interactive games')}</p>
+    <h2>{bi('ميدان: مسابقات تفاعلية حيّة', 'Maydan: live interactive quizzes')}</h2>
+    <p>{bi('سؤال على الشاشة، وكل مشارك يجيب من جواله: أسئلة متنوعة، وتحديات ألعاب، وفرق تتنافس. للتعلّم والأنشطة والاجتماعات.', 'A question on the screen and everyone answers from their phone: varied questions, game challenges and competing teams. For learning, activities and meetings.')}</p>
+    <div class="gb-act"><a class="btn solid" href="play/maydan/index.html">{bi('ابنِ مسابقتك', 'Build a quiz')}</a><a class="btn ghost" href="play/maydan/index.html#lib">{bi('جرّب مسابقة جاهزة', 'Try a ready quiz')}</a></div></div>
+</div></section>'''
+
 def photo_band():
     return f'''<section class="pband2">{carousel(HOME_SET, 0)}</section>'''
 
@@ -579,14 +590,16 @@ DESCS = {
 def og_page(name):
     # tools have their own share cards (img/og/tools-<slug>.jpg); other pages keep the photo
     f = name.replace('/', '-') + '.jpg'
-    return SITE + 'img/og/' + f if os.path.exists(P('img', 'og', f)) else SITE + 'img/ph15.webp'
+    if os.path.exists(P('img', 'og', f)): return SITE + 'img/og/' + f
+    # the photography page keeps a photograph; everything else shares the initials card
+    return SITE + ('img/ph15.webp' if name.startswith('photography') else 'img/og/site.jpg')
 def og_img_for(rr):
     d = P('img', 'research', rr['slug'])
     if os.path.isdir(d):
         figs = sorted(f for f in os.listdir(d) if f.startswith('fig') and f.endswith('.webp'))
         if figs:
             return SITE + 'img/research/' + rr['slug'] + '/' + figs[0]
-    return SITE + 'img/ph15.webp'
+    return SITE + 'img/og/site.jpg'
 
 # old addresses from the previous site -> the matching page here
 LEGACY = {'f/mothers’-experiences-of-recognizing-and-nurturing-talents-in-asd': 'research/mothers-talents-autism/',
@@ -716,7 +729,7 @@ import sys as _sys; _sys.path.insert(0, P('tools')); import scholar_meta
 print('scholar meta on', scholar_meta.run(P('dist')), 'book pages')
 print('library covers', scholar_meta.library_covers(P('dist')))
 from datetime import date
-urls = [SITE] + [SITE + n + '/' for n, *_ in PAGES if n not in ('index', 'play', 'play/maydan', 'm')]
+urls = [SITE] + [SITE + n + '/' for n, *_ in PAGES if n not in ('index', 'm')]
 import glob as _gs
 for _h in sorted(_gs.glob(P('dist', 'books', '**', '*.html'), recursive=True) + _gs.glob(P('dist', 'courses', '**', '*.html'), recursive=True)):
     _r = os.path.relpath(_h, P('dist')).replace(os.sep, '/')
