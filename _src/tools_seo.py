@@ -1,6 +1,15 @@
 # Search-friendly titles, a short "how it works", and common questions for each meeting and file tool.
 # Shown under the tool and given to search engines as WebApplication + FAQPage data.
 SEO = {
+ 'compare': {
+  'title': ('مقارنة ملفين وإظهار الفروق بينهما', 'Compare two documents and show the differences'),
+  'how': [('ارفع النسخة الأصلية والمعدّلة: Word أو PDF، أو الصق النص.', 'Add the original and the revised version: Word, PDF, or pasted text.'),
+          ('تظهر الإضافات بالأخضر والمحذوف بالأحمر، كلمةً كلمة.', 'Additions show in green and removals in red, word by word.'),
+          ('تُعلَّم كل فقرة تغيّر فيها رقم أو تاريخ، وتتنقّل بين التغييرات بالأسهم.', 'Every paragraph where a number or date changed is flagged, and you move between changes with the arrows.'),
+          ('اطبع تقرير المقارنة، أو جهّز تعليمات مراجعة الفروقات بالذكاء الاصطناعي.', 'Print the comparison report, or prepare instructions to review the changes with AI.')],
+  'faq': [('هل تُرفع الملفات إلى خادم؟', 'Are files uploaded?', 'لا. تُقرأ الملفات وتُقارن داخل متصفحك.', 'No. Files are read and compared inside your browser.'),
+          ('هل تعمل مع ملفات PDF الممسوحة ضوئيًا؟', 'Does it work with scanned PDFs?', 'لا، لأنها صور بلا نص. استخدم نسخة Word أو PDF المحفوظ من Word.', 'No, they are images without text. Use the Word file or a PDF saved from Word.'),
+          ('لماذا أتجاهل التشكيل والمسافات؟', 'Why ignore diacritics and spacing?', 'حتى لا تظهر فروق شكلية لا تغيّر المعنى، مثل الهمزات والمسافات الزائدة. ألغِ الخيار لترى كل فرق.', 'So cosmetic differences such as hamza forms or extra spaces do not show. Untick it to see every difference.')]},
  'minutes': {
   'title': ('بناء محضر اجتماع مجلس أو لجنة', 'Build council or committee meeting minutes'),
   'how': [('اكتب بيانات الاجتماع وأسماء الأعضاء، فيُحسب النصاب ويظهر التاريخ الهجري تلقائيًا.', 'Enter the meeting details and members; quorum and the Hijri date are worked out for you.'),

@@ -61,6 +61,7 @@ def crumb(j, g):
 ICONS = {'research-journey': '<path d="M5 19c3-6 5-9 7-9s2 4 4 4 3-3 3-6"/><circle cx="5" cy="19" r="1.6"/><circle cx="19" cy="8" r="1.6"/>',
          'research-methods': '<path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5z"/><path d="M4 5.5v16M9 8h7M9 12h7"/>',
          'minutes': '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M8.5 12h7M8.5 15.5h4.5"/><path d="M15.5 18.5l1.2 1.2 2.3-2.4"/>',
+         'compare': '<rect x="3" y="4" width="7.5" height="16" rx="1.5"/><rect x="13.5" y="4" width="7.5" height="16" rx="1.5"/><path d="M5.5 9h2.5M5.5 12.5h2.5M16 9h2.5M16 12.5h2.5"/>',
          'sign': '<path d="M4 20h16"/><path d="M14.5 4.5l5 5L9 20H4v-5z"/>',
          'pass': '<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 9l2 2 4-4M8 16h8"/>',
          'meet': '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4M9 15l2 2 4-4"/>',
@@ -77,16 +78,16 @@ def _icon(slug):
     return f'<span class="tl-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">{ICONS.get(slug, "")}</svg></span>'
 def group_items(g):
     ts = [t for t in TOOLS if t.get('group') == g]
-    extra = [JOURNEY, METHODS] if g == 'research' else [MINUTES] + ([SIGN] if sign_ready() else []) + [PDFT] + ([PASS, MEET, ATTEND] if poll_ready() else []) + [CERT, QRT] if g == 'work' else []
+    extra = [JOURNEY, METHODS] if g == 'research' else [MINUTES] + ([SIGN] if sign_ready() else []) + [PDFT, COMPARE] + ([PASS, MEET, ATTEND] if poll_ready() else []) + [CERT, QRT] if g == 'work' else []
     return extra + ts
 def _tag(t):
     # a label only where it tells something the title does not
-    if t is PDFT or t is MINUTES: return bi('داخل جهازك', 'On your device')
+    if t in (PDFT, MINUTES, COMPARE): return bi('داخل جهازك', 'On your device')
     if t is QRT: return bi('لا تنتهي صلاحيته', 'Does not expire')
     return bi(t['chn_ar'], t['chn_en']) if t.get('chn_ar') else ''
 def _go(t):
     if t is METHODS: return bi('اقرأ', 'Read')
-    if t in (JOURNEY, MINUTES, SIGN, PASS, MEET, ATTEND, PDFT, QRT, CERT): return bi('ابدأ', 'Begin')
+    if t in (JOURNEY, MINUTES, COMPARE, SIGN, PASS, MEET, ATTEND, PDFT, QRT, CERT): return bi('ابدأ', 'Begin')
     return bi('استخدم الأداة', 'Use the tool')
 def _card(t, pre):
     return (f'<a class="tl-card" href="{pre}{t["slug"]}/index.html">{_icon(t["slug"])}{f'<span class="tl-cn">{_tag(t)}</span>' if _tag(t) else ''}'
@@ -242,6 +243,13 @@ def minutes_body():
     return _tool_page(MINUTES, '',
         f'<div id="mn" class="sn mn"><noscript>{bi("تعمل هذه الأداة مع تفعيل JavaScript.", "This tool needs JavaScript.")}</noscript></div>',
         ['sign.css', 'minutes.css'], ['minutes.js'])
+COMPARE = {'slug': 'compare', 't_ar': 'مقارنة ملفين', 't_en': 'Compare two files',
+        'q_ar': 'ضع نسختين من محضر أو قرار أو خطاب، فتظهر لك الإضافات والحذف وكل رقم أو تاريخ تغيّر.',
+        'q_en': 'Put two versions of minutes, a decision or a letter side by side, and see what was added, removed, and every number or date that changed.'}
+def compare_body():
+    return _tool_page(COMPARE, '',
+        f'<div id="cm" class="sn cm"><noscript>{bi("تعمل هذه الأداة مع تفعيل JavaScript.", "This tool needs JavaScript.")}</noscript></div>',
+        ['sign.css', 'minutes.css', 'compare.css'], ['https://cdn.jsdelivr.net/npm/diff@5.2.0/dist/diff.min.js', 'compare.js'])
 def qr_body():
     return _tool_page(QRT, bi('للجان والمجالس', 'For committees and boards'),
         f'<div id="qt" class="sn"><noscript>{bi("تعمل هذه الأداة مع تفعيل JavaScript.", "This tool needs JavaScript.")}</noscript></div>',
