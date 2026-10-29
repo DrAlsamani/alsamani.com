@@ -103,3 +103,14 @@
 .kh-rxset label{display:flex;gap:8px;align-items:center;cursor:pointer}.kh-rxset div{display:flex;flex-wrap:wrap;gap:6px}
 .kh-rxset [data-blk]{border:1px solid rgba(255,255,255,.35);background:transparent;color:#fff;border-radius:99px;padding:4px 10px;font:inherit;cursor:pointer}.kh-rxset [data-blk][aria-pressed=true]{background:#b0533a;border-color:#b0533a}
 .kh-fan.blk{opacity:.4;text-decoration:line-through}
+/* tidy: one row of two buttons, panels on demand, a closed stands line */
+.kh-rx{gap:8px}.kh-rx>button.kh-tab{width:auto;height:auto;border-radius:99px;padding:7px 16px;font:inherit;font-size:.9rem;color:#fff;background:rgba(0,0,0,.22)}
+.kh-says{display:grid;gap:8px;width:100%;background:rgba(0,0,0,.22);border-radius:12px;padding:8px}.kh-says[hidden]{display:none}
+.kh-emo{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}.kh-emo button{border:0;background:rgba(255,255,255,.12);border-radius:99px;width:40px;height:40px;font-size:1.25rem;cursor:pointer}
+.kh-phr{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}.kh-phr button{border:1px solid rgba(255,255,255,.35);background:transparent;color:#fff;border-radius:99px;padding:5px 11px;font:inherit;font-size:.85rem;cursor:pointer}
+.kh-look{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.kh-stands{padding:0;background:transparent}.kh-stands>button{border:0;background:rgba(0,0,0,.18);color:#cfe0d6;border-radius:99px;padding:4px 12px;font:inherit;font-size:.8rem;cursor:pointer;justify-self:center;display:flex;gap:6px;align-items:center}
+.kh-stands>button small{background:rgba(255,255,255,.15);border-radius:99px;padding:0 7px}
+.kh-stands>div{display:none;justify-content:center;padding-top:4px}.kh-stands.open>div{display:flex}
+.kh-recent{color:#fff;font-weight:600;opacity:0}.kh-recent.go{animation:khRecent 2.6s ease}@keyframes khRecent{10%,75%{opacity:1}100%{opacity:0}}
+.kh-rxset label{display:flex!important;flex-direction:row!important;justify-content:flex-start!important;align-items:center;gap:8px;text-align:start;color:#fff;width:auto!important}.kh-rxset label input{margin:0;width:auto;flex:none}
