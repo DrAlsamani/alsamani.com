@@ -9,7 +9,7 @@ window.MDLive = (function () {
   const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   // the option letters follow the language of the questions, so the screen and every phone show the same ones
   const LET = () => G && G.ar ? ['أ', 'ب', 'ج', 'د', 'هـ', 'و'] : ['A', 'B', 'C', 'D', 'E', 'F'];
-  const TEAMS = () => G && G.ar ? ['الأزرق', 'الأحمر', 'الأخضر', 'الذهبي'] : ['Blue', 'Red', 'Green', 'Gold'];
+  const TEAMS = n => { const c = G && G.ar ? ['الأزرق', 'الأحمر', 'الأخضر', 'الذهبي', 'البنفسجي', 'الكحلي'] : ['Blue', 'Red', 'Green', 'Gold', 'Purple', 'Navy']; return Array.from({ length: n }, (_, k) => n <= 6 ? c[k] : (G && G.ar ? 'فريق ' : 'Team ') + (k + 1)); };
   const JOIN = 'alsamani.com/m';
   const SAVE = 'md.run';
   let db, uid, off = 0;
@@ -133,11 +133,17 @@ window.MDLive = (function () {
     return G.teams.map((name, k) => {
       const m = Object.keys(G.players).filter(u => G.team[u] === k), avg = m.length ? Math.round(m.reduce((a, u) => a + (G.score[u] || 0), 0) / m.length) : 0;
       return { k, name, n: m.length, avg };
-    }).sort((a, b) => b.avg - a.avg);
+    }).filter(t => t.n).sort((a, b) => b.avg - a.avg); // empty teams are left out
   }
   // players who joined before teams were set get the smallest team
-  function placeAll() {
+  function placeAll(shuffle) {
     if (!G.teams) return;
+    if (shuffle) {
+      const us = Object.keys(G.players).sort(() => Math.random() - .5);
+      us.forEach((u, k) => { G.team[u] = k % G.teams.length; });
+      G.ref.child('asg').set(Object.fromEntries(us.map(u => [u, G.team[u]])));
+      return;
+    }
     Object.keys(G.players).forEach(u => { if (G.team[u] == null || G.team[u] >= G.teams.length) { const c = G.teams.map((_, k) => Object.keys(G.players).filter(v => G.team[v] === k).length); G.team[u] = c.indexOf(Math.min(...c)); } });
   }
 
@@ -153,7 +159,8 @@ window.MDLive = (function () {
       <div class="md-count"><b id="mdN">0</b> ${B('مشارك', 'players')}</div><div class="md-names" id="mdNames"></div>
       <div class="md-set" id="mdSet" hidden>
         <h3>${B('إعدادات المسابقة', 'Quiz settings')}</h3>
-        <label>${B('الفرق', 'Teams')}<select data-o="teams"><option value="0">${T('بلا فرق', 'No teams')}</option>${[2, 3, 4].map(n => `<option value="${n}"${G.teams && G.teams.length === n ? ' selected' : ''}>${n} ${T('فرق', 'teams')}</option>`).join('')}</select></label>
+        <label>${B('الفرق', 'Teams')}<select data-o="teams"><option value="0">${T('بلا فرق', 'No teams')}</option>${[2, 3, 4, 5, 6, 8, 10, 12, 15, 20, 25, 30].map(n => `<option value="${n}"${G.teams && G.teams.length === n ? ' selected' : ''}>${n} ${T('فرق', 'teams')}</option>`).join('')}</select></label>
+        <label data-tmode hidden>${B('توزيع المشاركين', 'How players are placed')}<select data-o="tmode"><option value="pick"${G.opts.tmode !== 'auto' ? ' selected' : ''}>${T('يختار كل مشارك فريقه (مثل رقم الطاولة)', 'Each player picks a team (e.g. the table number)')}</option><option value="auto"${G.opts.tmode === 'auto' ? ' selected' : ''}>${T('توزيع عشوائي متوازن عند البدء', 'Random, balanced, at the start')}</option></select></label>
         <div class="md-tn" id="mdTn"></div>
         <label>${B('عرض الترتيب', 'Show the ranking')}<select data-o="every">${[[1, T('بعد كل سؤال', 'After every question')], [3, T('كل ٣ أسئلة', 'Every 3 questions')], [5, T('كل ٥ أسئلة', 'Every 5 questions')], [0, T('في النهاية فقط', 'Only at the end')]].map(([v, l]) => `<option value="${v}"${O.every === v ? ' selected' : ''}>${l}</option>`).join('')}</select></label>
         <label class="md-ck"><input type="checkbox" data-o="speed"${O.speed ? ' checked' : ''}> ${B('السرعة تزيد النقاط', 'Speed adds points')}</label>
@@ -168,7 +175,7 @@ window.MDLive = (function () {
     const chip = u => {
       let c = names.querySelector(`[data-u="${u}"]`);
       if (!c) { c = document.createElement('span'); c.className = 'md-chip'; c.dataset.u = u; c.title = T('اضغط لإخراجه', 'Tap to remove'); c.onclick = () => G.ref.child('pl/' + u).remove(); names.appendChild(c); }
-      c.textContent = G.players[u]; c.style.setProperty('--tc', G.teams && G.team[u] != null ? `var(--qz${G.team[u]})` : 'transparent');
+      c.textContent = G.players[u]; c.style.setProperty('--tc', G.teams && G.team[u] != null ? `var(--qz${(G.team[u]) % 6})` : 'transparent');
     };
     const count = () => { if (q('#mdN')) { q('#mdN').textContent = Object.keys(G.players).length; go.disabled = !Object.keys(G.players).length; } };
     sub(G.ref.child('pl'), 'child_added', s => {
@@ -178,13 +185,14 @@ window.MDLive = (function () {
     sub(G.ref.child('pl'), 'child_removed', s => { delete G.players[s.key]; delete G.score[s.key]; const c = names.querySelector(`[data-u="${s.key}"]`); if (c) c.remove(); count(); });
     reactions();
     const teamNames = () => {
-      const box = q('#mdTn'); if (!G.teams) { box.innerHTML = ''; return; }
-      box.innerHTML = G.teams.map((t, k) => `<input type="text" maxlength="20" data-tn="${k}" value="${esc(t)}" style="--c:var(--qz${k})" aria-label="team ${k + 1}">`).join('');
+      const box = q('#mdTn'), md = set.querySelector('[data-tmode]'); md.hidden = !G.teams; if (!G.teams || G.teams.length > 6) { box.innerHTML = ''; return; }
+      box.innerHTML = G.teams.map((t, k) => `<input type="text" maxlength="20" data-tn="${k}" value="${esc(t)}" style="--c:var(--qz${k % 6})" aria-label="team ${k + 1}">`).join('');
       box.querySelectorAll('[data-tn]').forEach(i => i.onchange = () => { G.teams[+i.dataset.tn] = i.value.trim() || TEAMS()[+i.dataset.tn]; G.ref.child('teams').set(G.teams); });
     };
     set.querySelectorAll('[data-o]').forEach(i => i.onchange = () => {
       const k = i.dataset.o;
-      if (k === 'teams') { const n = +i.value; G.teams = n ? TEAMS().slice(0, n).map((d, j) => (G.teams && G.teams[j]) || d) : null; G.ref.child('teams').set(G.teams); teamNames(); Object.keys(G.players).forEach(chip); }
+      if (k === 'teams') { const n = +i.value, d = TEAMS(n); G.teams = n ? d.map((x, j) => (G.teams && G.teams.length === n && G.teams[j]) || x) : null; G.ref.update({ teams: G.teams, tmode: G.teams ? O.tmode || 'pick' : null }); teamNames(); Object.keys(G.players).forEach(chip); }
+      else if (k === 'tmode') { O.tmode = i.value; G.ref.child('tmode').set(i.value); }
       else if (k === 'every') O.every = +i.value; else O[k] = i.checked;
       keep();
     });
@@ -193,7 +201,7 @@ window.MDLive = (function () {
     set.querySelector('[data-done]').onclick = () => { set.hidden = true; };
     q('[data-lock]').onchange = e => G.ref.child('st/lock').set(e.target.checked);
     go.onclick = () => {
-      G.ref.child('st/lock').set(true); placeAll();
+      G.ref.child('st/lock').set(true); placeAll(G.opts.tmode === 'auto');
       // the golden question falls somewhere in the middle, never first or last
       const n = G.quiz.qs.length; G.gold = O.gold && n >= 4 ? 1 + Math.floor(Math.random() * (n - 2 - (O.final ? 1 : 0))) : -1;
       keep(); next();
@@ -307,8 +315,8 @@ window.MDLive = (function () {
     const tt = teamTable(), tmax = Math.max(1, ...tt.map(t => t.avg));
     const q = frame(`<div class="md-lb${G.teams ? ' with-teams' : ''}">${note ? `<p class="md-note">${esc(note)}</p>` : ''}
         <h2>${decisive ? B('🏁 لحظة الحسم: بقي سؤال واحد بنقاط مضاعفة', '🏁 Decisive moment: one question left, worth double') : B('الترتيب', 'Ranking')}</h2>
-        ${G.teams ? `<div class="md-teams">${tt.map((t, k) => `<div class="md-team" style="--c:var(--qz${t.k});--w:${Math.round(100 * t.avg / tmax)}%;--d:${k * 120}ms"><b>${k + 1}</b><span dir="auto">${esc(t.name)}</span><i></i><em>${t.avg}</em></div>`).join('')}<small>${B('نتيجة الفريق متوسط نقاط أعضائه', 'A team’s score is its members’ average')}</small></div>` : ''}
-        <ol>${top.map((u, k) => `<li style="--d:${k * 90}ms">${G.teams && G.team[u] != null ? `<s style="--c:var(--qz${G.team[u]})"></s>` : ''}<b>${k + 1}</b><span dir="auto">${esc(G.players[u] || '')}</span>${decisive && k ? `<small>−${G.score[top[k - 1]] - G.score[u]}</small>` : ''}<em>${G.score[u]}</em>${G.streak[u] >= 3 ? `<i title="${T('إجابات صحيحة متتالية', 'right answers in a row')}">🔥${G.streak[u]}</i>` : ''}</li>`).join('')}</ol>
+        ${G.teams ? `<div class="md-teams">${tt.slice(0, 5).map((t, k) => `<div class="md-team" style="--c:var(--qz${(t.k) % 6});--w:${Math.round(100 * t.avg / tmax)}%;--d:${k * 120}ms"><b>${k + 1}</b><span dir="auto">${esc(t.name)}</span><i></i><em>${t.avg}</em></div>`).join('')}<small>${B('نتيجة الفريق متوسط نقاط أعضائه', 'A team’s score is its members’ average')}</small></div>` : ''}
+        <ol>${top.map((u, k) => `<li style="--d:${k * 90}ms">${G.teams && G.team[u] != null ? `<s style="--c:var(--qz${(G.team[u]) % 6})"></s>` : ''}<b>${k + 1}</b><span dir="auto">${esc(G.players[u] || '')}</span>${decisive && k ? `<small>−${G.score[top[k - 1]] - G.score[u]}</small>` : ''}<em>${G.score[u]}</em>${G.streak[u] >= 3 ? `<i title="${T('إجابات صحيحة متتالية', 'right answers in a row')}">🔥${G.streak[u]}</i>` : ''}</li>`).join('')}</ol>
         ${climb && best >= (order.length >= 6 ? 2 : 1) ? `<p class="md-climb">${B(`⬆ الصاعد: ${esc(G.players[climb])} تقدّم ${best} ${best === 1 ? 'مركزًا' : 'مراكز'}`, `⬆ Riser: ${esc(G.players[climb])} climbed ${best} place${best > 1 ? 's' : ''}`)}</p>` : ''}</div>`,
       `<button type="button" class="btn solid" data-next>${B('السؤال التالي', 'Next question')}</button>`, true);
     q('[data-next]').onclick = next;
@@ -321,7 +329,7 @@ window.MDLive = (function () {
     const order = Object.keys(G.score).filter(u => u in G.players).sort((a, b) => G.score[b] - G.score[a]), tt = teamTable();
     const p = k => order[k] ? `<div class="md-pod md-p${k + 1}"><span class="md-pn" dir="auto">${esc(G.players[order[k]] || '')}</span><b>${G.score[order[k]]}</b><div class="md-step">${k + 1}</div></div>` : '<div class="md-pod md-empty"></div>';
     const q = frame(`<div class="md-end"><h2>${esc(G.quiz.title || T('ميدان', 'Maydan'))}</h2>
-        ${tt.length ? `<p class="md-wteam" style="--c:var(--qz${tt[0].k})">${B(`🏆 الفريق الفائز: ${esc(tt[0].name)}`, `🏆 Winning team: ${esc(tt[0].name)}`)} <em>${tt[0].avg}</em></p>` : ''}
+        ${tt.length ? `<p class="md-wteam" style="--c:var(--qz${(tt[0].k) % 6})">${B(`🏆 الفريق الفائز: ${esc(tt[0].name)}`, `🏆 Winning team: ${esc(tt[0].name)}`)} <em>${tt[0].avg}</em></p>` : ''}
         <div class="md-podium">${p(1)}${p(0)}${p(2)}</div>
         <ol class="md-rest" start="4">${order.slice(3, 10).map(u => `<li><span dir="auto">${esc(G.players[u] || '')}</span><em>${G.score[u]}</em></li>`).join('')}</ol></div>`,
       `<button type="button" class="btn ghost" data-csv>${B('تحميل النتائج', 'Download results')}</button>`);

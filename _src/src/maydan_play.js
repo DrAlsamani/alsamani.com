@@ -10,7 +10,7 @@
   const LET = () => (Q && Q.L ? Q.L === 'ar' : isAr()) ? ['أ', 'ب', 'ج', 'د', 'هـ', 'و'] : ['A', 'B', 'C', 'D', 'E', 'F'];
   const store = { get(k, d) { try { return localStorage.getItem('md.' + k) || d; } catch (e) { return d; } }, set(k, v) { try { localStorage.setItem('md.' + k, v); } catch (e) {} } };
   const TS = firebase.database.ServerValue.TIMESTAMP;
-  let TEAMS = null, myTeam = null, bet = false, lastRx = 0;
+  let TEAMS = null, TMODE = 'pick', myTeam = null, bet = false, lastRx = 0;
   let db, uid, off = 0, R = null, me = null, st = {}, Q = null, OK = null, SC = null, sent = null, tick = null;
   const now = () => Date.now() + off;
   const buzz = ms => { try { navigator.vibrate && navigator.vibrate(ms); } catch (e) {} };
@@ -45,6 +45,7 @@
         const mine = (await R.child('pl/' + uid).once('value')).val();
         if (mine) { me = mine.n; return play(); }
         if (s.val().lock) return codeScreen(T('أُقفل الدخول إلى هذه المسابقة.', 'This quiz is closed to new players.'));
+        R.child('tmode').on('value', t => { TMODE = t.val() || 'pick'; const box = root.querySelector('#mpTeams'); if (box) teamPick(box); });
         R.child('teams').on('value', t => { TEAMS = t.val(); const box = root.querySelector('#mpTeams'); if (box) teamPick(box); });
         nameScreen();
       } catch (e) { codeScreen(T('تعذّر الاتصال. تأكد من الإنترنت.', 'Could not connect. Check the internet.')); }
@@ -63,17 +64,17 @@
     go.onclick = async () => {
       const n = inp.value.trim().replace(/\s+/g, ' ').slice(0, 24);
       if (!n) return nameScreen(T('اكتب اسمًا يظهر على الشاشة.', 'Type a name to show on the screen.'));
-      if (TEAMS && myTeam == null) { const e = root.querySelector('.mp-err'); e.hidden = false; e.textContent = T('اختر فريقك.', 'Choose your team.'); return; }
+      if (TEAMS && TMODE !== 'auto' && myTeam == null) { const e = root.querySelector('.mp-err'); e.hidden = false; e.textContent = T('اختر فريقك.', 'Choose your team.'); return; }
       go.disabled = true;
-      try { await R.child('pl/' + uid).set(Object.assign({ n, at: TS }, TEAMS ? { t: myTeam } : {})); me = n; store.set('name', n); play(); }
+      try { await R.child('pl/' + uid).set(Object.assign({ n, at: TS }, TEAMS && myTeam != null ? { t: myTeam } : {})); me = n; store.set('name', n); play(); }
       catch (e) { nameScreen(T('تعذّر الدخول؛ ربما أُقفلت المسابقة.', 'Could not join; the quiz may be closed.')); }
     };
   }
 
   function teamPick(box) {
     if (!box) return;
-    if (!TEAMS) { box.innerHTML = ''; myTeam = null; return; }
-    box.innerHTML = `<p>${B('اختر فريقك', 'Choose your team')}</p>` + TEAMS.map((t, k) => `<button type="button" data-t="${k}" style="--c:var(--qz${k})" aria-pressed="${myTeam === k}">${esc(t)}</button>`).join('');
+    if (!TEAMS || TMODE === 'auto') { box.innerHTML = TEAMS ? `<p>${B('سيُوزَّع المشاركون على الفرق عند البدء', 'Players will be placed in teams at the start')}</p>` : ''; myTeam = null; return; }
+    box.className = 'mp-teams' + (TEAMS.length > 6 ? ' many' : ''); box.innerHTML = `<p>${B('اختر فريقك', 'Choose your team')}</p>` + TEAMS.map((t, k) => `<button type="button" data-t="${k}" style="--c:var(--qz${k % 6})" aria-pressed="${myTeam === k}">${TEAMS.length > 6 ? k + 1 : esc(t)}</button>`).join('');
     box.querySelectorAll('[data-t]').forEach(b => b.onclick = () => { myTeam = +b.dataset.t; box.querySelectorAll('[data-t]').forEach(x => x.setAttribute('aria-pressed', x === b)); });
   }
   // a row of reactions that float up the big screen
@@ -92,6 +93,7 @@
     R.child('q').on('value', s => { Q = s.val(); });
     R.child('teams').on('value', t => { TEAMS = t.val(); });
     R.child('pl/' + uid + '/t').once('value', t => { if (t.val() != null) myTeam = +t.val(); });
+    R.child('asg/' + uid).on('value', t => { if (t.val() != null) { myTeam = +t.val(); shown = ''; draw(); } });
     R.child('ok').on('value', s => { OK = s.val(); draw(); });
     R.child('sc/' + uid).on('value', s => { SC = s.val(); draw(); });
     R.child('pl/' + uid).on('value', s => { if (!s.exists() && me) kicked(); });
@@ -101,14 +103,14 @@
     const key = st.ph + ':' + st.i + ':' + (st.ph === 'rev' ? (SC ? SC.s : '') + (OK ? 'k' : '') : '');
     if (key === shown) return; shown = key;
     clearInterval(tick);
-    if (st.ph === 'lobby') return screen(`<div class="mp-wait"><p class="mp-big">${B('أنت في الميدان!', 'You are in!')}</p><p class="mp-me" dir="auto">${esc(me)}</p>${TEAMS && myTeam != null ? `<p class="mp-tm" style="--c:var(--qz${myTeam})">${esc(TEAMS[myTeam])}</p>` : ''}<p>${B('انظر إلى الشاشة؛ ستبدأ المسابقة قريبًا.', 'Watch the screen; the quiz will start soon.')}</p></div>` + rxBar());
+    if (st.ph === 'lobby') return screen(`<div class="mp-wait"><p class="mp-big">${B('أنت في الميدان!', 'You are in!')}</p><p class="mp-me" dir="auto">${esc(me)}</p>${TEAMS && myTeam != null ? `<p class="mp-tm" style="--c:var(--qz${(myTeam) % 6})">${esc(TEAMS[myTeam])}</p>` : ''}<p>${B('انظر إلى الشاشة؛ ستبدأ المسابقة قريبًا.', 'Watch the screen; the quiz will start soon.')}</p></div>` + rxBar());
     if (st.ph === 'pause') return screen(`<div class="mp-wait"><p class="mp-big">⏸</p><p class="mp-big">${B('توقفت المسابقة مؤقتًا', 'The quiz is paused')}</p><p>${B('ابقَ على هذه الصفحة؛ ستُستأنف من حيث توقفت.', 'Stay on this page; it will continue where it stopped.')}</p></div>`);
     if (st.ph === 'ready') { if (!Q || Q.i !== st.i) { shown = ''; setTimeout(draw, 200); return; } bet = false; return screen(`<div class="mp-wait${Q.gold ? ' gold' : ''}"><p>${B('استعد…', 'Get ready…')}</p><p class="mp-big">${B('السؤال', 'Question')} ${(st.i || 0) + 1}</p>${Q.gold ? `<p class="mp-gold">${B('✨ السؤال الذهبي! نقاط مضاعفة', '✨ The golden question! Double points')}</p>` : Q.last ? `<p class="mp-gold">${B('🏁 السؤال الأخير — نقاط مضاعفة', '🏁 The last question — double points')}</p>` : ''}</div>`); }
     if (st.ph === 'q') return question();
     if (st.ph === 'rev' || st.ph === 'lb') return result();
     if (st.ph === 'end') return final();
   }
-  function screen(html, cls) { root.innerHTML = `<div class="mp-play ${cls || ''}"><div class="mp-top"><span dir="auto">${esc(me)}${TEAMS && myTeam != null ? ` <i style="--c:var(--qz${myTeam})">${esc(TEAMS[myTeam])}</i>` : ''}</span><b>${SC ? SC.s : 0}</b></div>${html}</div>`; if (R) rxBind(); }
+  function screen(html, cls) { root.innerHTML = `<div class="mp-play ${cls || ''}"><div class="mp-top"><span dir="auto">${esc(me)}${TEAMS && myTeam != null ? ` <i style="--c:var(--qz${(myTeam) % 6})">${esc(TEAMS[myTeam])}</i>` : ''}</span><b>${SC ? SC.s : 0}</b></div>${html}</div>`; if (R) rxBind(); }
   function question() {
     if (!Q || Q.i !== st.i) { setTimeout(draw, 200); shown = ''; return; }
     if (sent === st.i) return screen(`<div class="mp-wait"><p class="mp-big">${B('وصلت إجابتك', 'Answer sent')}</p><p>${B('انتظر النتيجة على الشاشة…', 'Wait for the result on the screen…')}</p></div>`);
@@ -144,7 +146,7 @@
       ${SC.d > 0 ? `<p class="mp-plus">+${SC.d}</p>` : SC.d < 0 ? `<p class="mp-plus neg">${SC.d}</p>` : ''}${SC.b ? `<p class="mp-streak">🎯 ${ok ? B('ربحت الرهان', 'You won the bet') : B('خسرت الرهان', 'You lost the bet')}</p>` : ''}${SC.k >= 2 ? `<p class="mp-streak">🔥 ${B(`${SC.k} إجابات صحيحة متتالية`, `${SC.k} right in a row`)}</p>` : ''}
       <p class="mp-rank">${B(`مركزك: ${SC.r}`, `Your place: ${SC.r}`)}</p>
       ${SC.gap != null && SC.r > 1 ? `<p class="mp-gap">🎯 ${B(`تحتاج ${SC.gap + 1} نقطة لتتجاوز ${esc(SC.above)}`, `You need ${SC.gap + 1} points to pass ${esc(SC.above)}`)}</p>` : SC.r === 1 ? `<p class="mp-gap">${B('أنت في الصدارة!', 'You are in the lead!')}</p>` : ''}
-      ${SC.tr ? `<p class="mp-tm" style="--c:var(--qz${SC.t})">${B(`فريقك ${esc(TEAMS ? TEAMS[SC.t] : '')} في المركز ${SC.tr}`, `Your team ${esc(TEAMS ? TEAMS[SC.t] : '')} is in place ${SC.tr}`)}</p>` : ''}</div>` + rxBar(), ok ? 'good' : 'bad');
+      ${SC.tr ? `<p class="mp-tm" style="--c:var(--qz${(SC.t) % 6})">${B(`فريقك ${esc(TEAMS ? TEAMS[SC.t] : '')} في المركز ${SC.tr}`, `Your team ${esc(TEAMS ? TEAMS[SC.t] : '')} is in place ${SC.tr}`)}</p>` : ''}</div>` + rxBar(), ok ? 'good' : 'bad');
   }
   function final() {
     const r = SC ? SC.r : null;

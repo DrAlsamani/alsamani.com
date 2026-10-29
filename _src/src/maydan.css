@@ -165,3 +165,4 @@ html.md-on{overflow:hidden}
 .mp-gold{font-weight:800;font-size:1.125rem}
 .mp-plus.neg{color:#ffd1c4}
 .md-set .md-ck{display:flex!important;justify-content:flex-start;text-align:start}.md-set .md-ck>span{flex:1;min-width:0}
+.mp-teams.many{grid-template-columns:repeat(5,1fr)}.mp-teams.many button{padding:10px 0}
