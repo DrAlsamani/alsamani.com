@@ -169,7 +169,7 @@
           <label class="sn-lbl">${B('الموضوع، أو الصق نص المحتوى الذي تريد بناء الأسئلة منه', 'The topic, or paste the content you want the questions built from')}<textarea id="qzTopic" rows="4" dir="auto" placeholder="${T('مثال: الفصل الثالث من مقرر ريادة الأعمال — نموذج العمل التجاري', 'e.g. Chapter 3 — the business model canvas')}"></textarea></label>
           <div class="qz-row"><label class="sn-lbl">${B('عدد الأسئلة', 'Questions')}<select id="qzN">${[5, 10, 15, 20, 30, 40, 50, 75, 100].map(n => `<option${n === 10 ? ' selected' : ''}>${n}</option>`).join('')}</select></label>
             <label class="sn-lbl">${B('المستوى', 'Level')}<select id="qzLv"><option value="mixed">${T('متنوع', 'Mixed')}</option><option value="easy">${T('سهل', 'Easy')}</option><option value="mid">${T('متوسط', 'Medium')}</option><option value="hard">${T('صعب', 'Hard')}</option></select></label>
-            <label class="sn-lbl">${B('النوع', 'Type')}<select id="qzTy"><option value="mc">${T('اختيار من متعدد', 'Multiple choice')}</option><option value="mix">${T('مزيج مع صح وخطأ', 'Mixed with true/false')}</option><option value="tf">${T('صح وخطأ', 'True/false')}</option></select></label>
+            <label class="sn-lbl">${B('النوع', 'Type')}<select id="qzTy"><option value="mc">${T('اختيار من متعدد', 'Multiple choice')}</option><option value="all" selected>${T('منوّعة: كل أنواع الأسئلة', 'Varied: every question kind')}</option><option value="mix">${T('مزيج مع صح وخطأ', 'Mixed with true/false')}</option><option value="tf">${T('صح وخطأ', 'True/false')}</option></select></label>
             <label class="sn-lbl">${B('اللغة', 'Language')}<select id="qzLg"><option value="ar">العربية</option><option value="en">English</option></select></label></div>
           <div class="sn-two"><button type="button" class="btn solid" id="qzCopy">${B('نسخ التعليمات', 'Copy the instructions')}</button><a class="btn ghost" id="qzGpt" target="_blank" rel="noopener">${B('افتح في ChatGPT', 'Open in ChatGPT')}</a><a class="btn ghost" id="qzCl" target="_blank" rel="noopener">${B('افتح في Claude', 'Open in Claude')}</a></div>
           <div class="qz-step2"><b>${B('٢', '2')}</b><p>${B('حين يكتب الأسئلة، انسخ رده كاملًا ثم اضغط:', 'When it has written them, copy its whole reply, then tap:')}</p><button type="button" class="btn solid" id="qzBack2">${B('لصق رد الذكاء الاصطناعي', 'Paste the AI’s reply')}</button></div></div>
@@ -189,8 +189,8 @@
     let found = [];
     const pa = q('#qzPaste'), fd = q('#qzFound'), pok = q('#qzPasteOk');
     pa.oninput = () => {
-      found = QZParse.fromText(pa.value).filter(x => x.q && x.opts.length >= 2);
-      const k = found.filter(x => x.ok.length).length;
+      found = QZParse.fromText(pa.value).filter(usable);
+      const k = found.filter(x => x.ok.length || !['mc', 'tf'].includes(x.type)).length;
       fd.innerHTML = !pa.value.trim() ? '' : !found.length ? B('لم أتعرّف على أسئلة بعد. اكتب كل سؤال ثم خياراته تحته.', 'No questions recognised yet. Write each question with its options under it.')
         : B(`الأسئلة التي تعرّفت عليها: ${found.length}${k < found.length ? `، منها ${found.length - k} بلا إجابة محددة تختارها بعد الإضافة` : '، كلها بإجاباتها'}.`, `Found ${found.length} question${found.length > 1 ? 's' : ''}${k < found.length ? `, ${found.length - k} without a marked answer to choose after adding` : ', all with answers'}.`);
       pok.disabled = !found.length;
@@ -245,7 +245,7 @@
   }
   const focusLast = () => { const t = root.querySelectorAll('.qz-q textarea'); if (t.length) { t[t.length - 1].focus(); t[t.length - 1].scrollIntoView({ block: 'center', behavior: 'smooth' }); } };
   function add(qs) {
-    qs = qs.filter(x => x.q && x.opts.filter(o => o.trim()).length >= 2);
+    qs = qs.filter(usable);
     if (!qs.length) { toast(B('لم أجد أسئلة في الملف. جرّب اللصق.', 'No questions found in the file. Try pasting.'), 1); return; }
     // an empty first question left from a new quiz is replaced
     if (Q.qs.length === 1 && !Q.qs[0].q && !Q.qs[0].opts.some(Boolean)) Q.qs = [];
@@ -519,22 +519,23 @@
   }
 
   /* ---------- the AI instructions ---------- */
+  const usable = x => x.q && (x.type === 'num' ? x.ans !== '' && x.ans != null : x.type === 'word' ? !!x.ans : x.type === 'order' ? (x.items || []).length >= 2 : x.type === 'open' ? true : x.opts.filter(o => o.trim()).length >= 2);
   function aiPrompt(topic, n, lv, ty, lg) {
-    const ar = lg === 'ar';
+    const ar = lg === 'ar', all = ty === 'all';
     const LV = { mixed: ar ? 'متنوعة الصعوبة (سهلة ومتوسطة وصعبة)' : 'of mixed difficulty (easy, medium and hard)', easy: ar ? 'سهلة' : 'easy', mid: ar ? 'متوسطة الصعوبة' : 'of medium difficulty', hard: ar ? 'صعبة تتطلب تفكيرًا' : 'hard, requiring thought' }[lv];
-    const TY = { mc: ar ? 'اختيار من متعدد بأربعة خيارات' : 'multiple choice with four options', mix: ar ? 'أغلبها اختيار من متعدد بأربعة خيارات، وبعضها صح أو خطأ' : 'mostly multiple choice with four options, some true or false', tf: ar ? 'صح أو خطأ' : 'true or false' }[ty];
-    if (ar) return `اكتب ${n} سؤالًا لمسابقة تفاعلية حيّة، ${LV}، من نوع ${TY}${topic ? `، عن الموضوع التالي:\n\n${topic}\n` : '.'}
-
-الشروط:
-- السؤال لا يتجاوز ١٢٠ حرفًا، والخيار لا يتجاوز ٧٥ حرفًا، لأنها تُعرض على شاشة.
-- خيار واحد صحيح في كل سؤال، والخيارات الخاطئة معقولة وليست واضحة الخطأ.
-- وزّع موضع الإجابة الصحيحة بين أ وب وج ود بالتساوي تقريبًا.
-- لا تكرر الأسئلة، ولا تضع «كل ما سبق» أو «لا شيء مما سبق».
-- إن لم يتسع رد واحد لكل الأسئلة، فتوقف بعد سؤال كامل، وأكمل الترقيم حين أكتب «أكمل».
-
-اكتبها بهذه الصيغة بالضبط، داخل صندوق نص واحد، دون أي شرح قبلها أو بعدها، وضع * بعد الإجابة الصحيحة:
-
-1. نص السؤال؟
+    const TY = { mc: ar ? 'من نوع اختيار من متعدد بأربعة خيارات' : 'multiple choice with four options', mix: ar ? 'أغلبها اختيار من متعدد بأربعة خيارات، وبعضها صح أو خطأ' : 'mostly multiple choice with four options, some true or false', tf: ar ? 'من نوع صح أو خطأ' : 'true or false', all: ar ? 'منوّعة الأنواع' : 'of varied kinds' }[ty];
+    const mix = ar ? `
+- نوّع الأنواع هكذا تقريبًا: نصفها اختيار من متعدد، والباقي موزّع على: صح أو خطأ، والأقرب للرقم، وخمّن الكلمة، والترتيب، واستطلاع واحد أو اثنان للرأي.
+- «الأقرب للرقم»: جوابه رقم واحد معروف ودقيق (سنة، عدد، طول…)، وتُذكر الوحدة بعده.
+- «خمّن الكلمة»: جوابه كلمة واحدة لا تزيد على ١٢ حرفًا، والسؤال تلميح عنها لا يذكرها.
+- «الترتيب»: من ٣ إلى ٥ عناصر قصيرة، تُكتب بترتيبها الصحيح (والمنصة تخلطها للمشاركين).
+- «الاستطلاع»: سؤال رأي بلا إجابة صحيحة، بخيارات دون علامة *.` : `
+- Mix the kinds roughly so: half multiple choice, the rest spread over true/false, closest number, guess the word, ordering, and one or two opinion polls.
+- “Closest number”: its answer is one exact, well-known number (a year, a count, a length…), with its unit after it.
+- “Guess the word”: its answer is one word of at most 12 letters; the question is a clue that does not contain it.
+- “Ordering”: 3 to 5 short items written in their right order (the platform shuffles them for players).
+- “Poll”: an opinion question with no right answer, options without *.`;
+    const exAr = `1. نص السؤال؟
 أ) خيار
 ب) خيار *
 ج) خيار
@@ -542,19 +543,24 @@
 
 2. عبارة صح أو خطأ (صح أو خطأ)
 صح
-خطأ *`;
-    return `Write ${n} questions for a live interactive quiz, ${LV}, ${TY}${topic ? `, on the following:\n\n${topic}\n` : '.'}
+خطأ *` + (all ? `
 
-Rules:
-- Each question at most 120 characters and each option at most 75 characters, as they are shown on a screen.
-- One right answer per question; wrong options should be plausible, not obviously wrong.
-- Spread the position of the right answer across a, b, c and d about evenly.
-- No repeated questions, no “all of the above” or “none of the above”.
-- If one reply cannot hold them all, stop after a complete question and continue the numbering when I write “continue”.
+3. كم عدد …؟ [رقم]
+الجواب: 13 منطقة
 
-Use exactly this format, in one plain-text box, with no explanation before or after, and put * after the right answer:
+4. تلميح عن الكلمة دون ذكرها [كلمة]
+الجواب: الدرعية
 
-1. Question text?
+5. رتّب من الأقدم إلى الأحدث [ترتيب]
+- العنصر الأول
+- العنصر الثاني
+- العنصر الثالث
+
+6. سؤال رأي؟ [استطلاع]
+أ) خيار
+ب) خيار
+ج) خيار` : '');
+    const exEn = `1. Question text?
 a) option
 b) option *
 c) option
@@ -562,7 +568,49 @@ d) option
 
 2. A true-or-false statement (true or false)
 True
-False *`;
+False *` + (all ? `
+
+3. How many …? [number]
+Answer: 13 regions
+
+4. A clue about the word without naming it [word]
+Answer: Riyadh
+
+5. Put these in order, oldest first [order]
+- first item
+- second item
+- third item
+
+6. An opinion question? [poll]
+a) option
+b) option
+c) option` : '');
+    if (ar) return `اكتب ${n} سؤالًا لمسابقة تفاعلية حيّة، ${LV}، ${TY}${topic ? `، عن الموضوع التالي:\n\n${topic}\n` : '.'}
+
+الشروط:
+- السؤال لا يتجاوز ١٢٠ حرفًا، والخيار لا يتجاوز ٧٥ حرفًا، لأنها تُعرض على شاشة.
+- خيار واحد صحيح في كل سؤال، والخيارات الخاطئة معقولة وليست واضحة الخطأ.
+- وزّع موضع الإجابة الصحيحة بين أ وب وج ود بالتساوي تقريبًا.
+- لا تكرر الأسئلة، ولا تضع «كل ما سبق» أو «لا شيء مما سبق».${all ? mix : ''}
+- تأكد من صحة كل معلومة وكل إجابة.
+- إن لم يتسع رد واحد لكل الأسئلة، فتوقف بعد سؤال كامل، وأكمل الترقيم حين أكتب «أكمل».
+
+اكتبها بهذه الصيغة بالضبط، داخل صندوق نص واحد، دون أي شرح قبلها أو بعدها، وضع * بعد الإجابة الصحيحة${all ? '، واكتب نوع السؤال بين معقوفين في آخره كما في الأمثلة' : ''}:
+
+${exAr}`;
+    return `Write ${n} questions for a live interactive quiz, ${LV}, ${TY}${topic ? `, on the following:\n\n${topic}\n` : '.'}
+
+Rules:
+- Each question at most 120 characters and each option at most 75 characters, as they are shown on a screen.
+- One right answer per question; wrong options should be plausible, not obviously wrong.
+- Spread the position of the right answer across a, b, c and d about evenly.
+- No repeated questions, no “all of the above” or “none of the above”.${all ? mix : ''}
+- Make sure every fact and every answer is correct.
+- If one reply cannot hold them all, stop after a whole question and continue the numbering when I write “continue”.
+
+Use exactly this format, in one plain-text box, with no explanation before or after, and put * after the right answer${all ? '; name the kind in square brackets at the end of the question, as in the examples' : ''}:
+
+${exEn}`;
   }
 
   /* ---------- preview: the big screen and a player's phone ---------- */

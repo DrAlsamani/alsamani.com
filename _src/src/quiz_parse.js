@@ -27,6 +27,9 @@ var QZParse = (function () {
   const KEYLINE = /^\s*(مفتاح الإجاب[ةه]|مفتاح الاجاب[ةه]|الإجابات الصحيحة|الاجابات الصحيحة|الإجابات|الاجابات|الحلول|answer key|answers|key)\s*[:：\-]?\s*(.*)$/i;
   const TFQ = /[(\[]\s*(صح\s*(?:أو|او|\/|-)\s*خطأ|صح\s*(?:أو|او|\/|-)\s*خطا|true\s*(?:or|\/)\s*false|t\s*\/\s*f)\s*[)\]]/i;
 
+  // the other kinds are named in brackets after the question: [رقم] [كلمة] [ترتيب] [استطلاع] [كتابة حرة]
+  const KIND = /\s*[(\[]\s*(رقم|الأقرب للرقم|الأقرب|كلمة|خمن الكلمة|خمّن الكلمة|ترتيب|رتب|رتّب|استطلاع|تصويت|كتابة حرة|كتابة|سؤال مفتوح|number|closest number|word|guess the word|order|poll|open|free text)\s*[)\]]\s*/i;
+  const kindOf = t => { t = t.toLowerCase(); return /رقم|الأقرب|number/.test(t) ? 'num' : /كلمة|word/.test(t) ? 'word' : /ترتيب|رت|order/.test(t) ? 'order' : /استطلاع|تصويت|poll/.test(t) ? 'poll' : 'open'; };
   function stripMark(s) { const m = MARK.test(s); return { s: m ? s.replace(MARK, '').trim() : s, m }; }
   function isTF(opts) { return opts.length === 2 && opts.some(o => TRUE.test(o.t)) && opts.some(o => FALSE.test(o.t)); }
 
@@ -75,6 +78,15 @@ var QZParse = (function () {
     // 3) settle each question: type, correct answers, warnings
     return qs.filter(q => q.q || q.opts.length).map((q, i) => {
       const n = q.n || i + 1;
+      const km = q.q.match(KIND);
+      if (km) {
+        const kind = kindOf(km[1]), text = q.q.replace(KIND, ' ').trim(), opts = q.opts.filter(o => o.t).map(o => o.t), a = clean(q.ans || key[n] || '');
+        if (kind === 'num') { const b = a.replace(/(\d),(?=\d)/g, '$1'), m = b.match(/-?\d+(?:\.\d+)?/); return { type: 'num', q: text, opts: [], ok: [], ans: m ? +m[0] : '', unit: m ? b.replace(m[0], '').trim() : '' }; }
+        if (kind === 'word') return { type: 'word', q: text, opts: [], ok: [], ans: a.replace(/[.،,]$/, '') };
+        if (kind === 'order') return { type: 'order', q: text, opts: [], ok: [], items: opts.slice(0, 6) };
+        if (kind === 'poll') return { type: 'poll', q: text, opts: opts.slice(0, 6), ok: [], pts: 0 };
+        return { type: 'open', q: text, opts: [], ok: [], pts: 0 };
+      }
       let opts = q.opts.filter(o => o.t);
       let type = 'mc';
       if (!opts.length && (TFQ.test(q.q) || (q.ans && (TRUE.test(q.ans) || FALSE.test(q.ans))) || (key[n] && (TRUE.test(key[n]) || FALSE.test(key[n]))))) {
