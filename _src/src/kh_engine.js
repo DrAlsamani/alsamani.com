@@ -127,19 +127,68 @@ window.KH = (function () {
     }
     return s;
   }
-  function botMove(st, id) {
+  // every run of L spaces through i, in the four directions
+  function windows(st, i) {
+    const out = [], r0 = Math.floor(i / 10), c0 = i % 10;
+    for (const [dr, dc] of DIRS) for (let s = -(st.L - 1); s <= 0; s++) {
+      const w = [];
+      for (let k = 0; k < st.L; k++) { const r = r0 + dr * (s + k), c = c0 + dc * (s + k); if (r < 0 || r > 9 || c < 0 || c > 9) break; w.push(r * 10 + c); }
+      if (w.length === st.L) out.push(w);
+    }
+    return out;
+  }
+  // how much a space is worth to team t: open runs it would grow, and how near they are to done
+  const W5 = [0, 1, 5, 30, 200, 5000], W4 = [0, 2, 12, 120, 5000];
+  function potential(st, t, i, cells) {
+    const W = st.L === 4 ? W4 : W5; let v = 0;
+    for (const w of windows(st, i)) {
+      let mine = 0, bad = false, used = 0;
+      for (const x of w) { if (x === i || owns(st, t, x)) mine++; else if (st.board[x] >= 0) { bad = true; break; } if (st.inseq[t][x]) used++; }
+      if (bad || used > 1) continue;
+      v += W[Math.min(mine, st.L)];
+      // the cards in hand that also fit this run make it worth more
+      if (cells) v += w.filter(x => x !== i && st.board[x] < 0 && cells.has(x)).length * W[Math.min(mine + 1, st.L)] * .25;
+    }
+    return v;
+  }
+  // level: 1 easy, 2 medium, 3 hard
+  function botMove(st, id, level) {
+    level = level || 2;
     const t = st.team[id], h = st.hands[id];
     const d = h.find(c => dead(st, c)); if (d && !st.swapped) return { swap: d };
-    let best = null;
-    for (const card of new Set(h)) for (const i of legal(st, card)) {
-      let v;
-      if (oneEyed(card)) { v = Math.max(...st.inseq.map((_, o) => o === st.board[i] ? lineScore(st, o, i) : 0)) * 1.1 - 6; }
-      else {
-        v = lineScore(st, t, i);
-        for (let o = 0; o < st.teams; o++) if (o !== t) v += lineScore(st, o, i) * .9;
-        if (twoEyed(card)) v -= v >= 1000 ? 0 : 14;
+    const moves = []; for (const card of new Set(h)) for (const i of legal(st, card)) moves.push({ card, i });
+    if (!moves.length) return null;
+    if (level === 1 && Math.random() < .55) return moves[Math.floor(Math.random() * moves.length)];
+    if (level < 3) {
+      let best = null;
+      for (const { card, i } of moves) {
+        let v;
+        if (oneEyed(card)) { v = Math.max(...st.inseq.map((_, o) => o === st.board[i] ? lineScore(st, o, i) : 0)) * 1.1 - 6; }
+        else { v = lineScore(st, t, i); for (let o = 0; o < st.teams; o++) if (o !== t) v += lineScore(st, o, i) * .9; if (twoEyed(card)) v -= v >= 1000 ? 0 : 14; }
+        v += Math.random() * (level === 1 ? 6 : .5);
+        if (!best || v > best.v) best = { card, i, v };
       }
-      v += Math.random() * .5;
+      return best;
+    }
+    // hard: builds with the whole hand in mind, blocks the rivals' near-finished runs first, and keeps its jacks
+    const cells = new Set(); h.forEach(c => { if (!twoEyed(c) && !oneEyed(c)) legal(st, c).forEach(x => cells.add(x)); });
+    const threat = (o, i) => { const W = st.L === 4 ? W4 : W5; let v = 0; for (const w of windows(st, i)) { let n = 0, bad = false; for (const x of w) { if (owns(st, o, x)) n++; else if (st.board[x] >= 0) { bad = true; break; } } if (!bad) v = Math.max(v, W[Math.min(n + 1, st.L)]); } return v; };
+    let best = null;
+    for (const { card, i } of moves) {
+      let v;
+      if (oneEyed(card)) {
+        // taking a chip away is worth what it breaks
+        const o = st.board[i]; st.board[i] = -1; const after = threat(o, i); st.board[i] = o;
+        v = after >= (st.L === 4 ? W4 : W5)[st.L - 1] ? 4000 : after * .6 - 30;
+      } else {
+        v = potential(st, t, i, cells);
+        let block = 0; for (let o = 0; o < st.teams; o++) if (o !== t) block = Math.max(block, threat(o, i));
+        v += block * (block >= 5000 ? 1.3 : 1);
+        if (twoEyed(card)) v -= v >= 4000 ? 0 : 60;
+        // a card with two open spaces can wait; one whose other space is gone should be used
+        if (!twoEyed(card) && legal(st, card).length === 1) v += 2;
+      }
+      v += Math.random() * .3;
       if (!best || v > best.v) best = { card, i, v };
     }
     return best;

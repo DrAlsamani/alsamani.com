@@ -40,8 +40,8 @@
 .kc{display:grid;place-items:center;line-height:1;color:#1d2420;font-family:Georgia,"Times New Roman",serif}
 .kh-cell .kc{gap:0}.kh-cell .kc b{font-size:4.1cqi;font-weight:800;letter-spacing:-.04em;line-height:.95}.kh-cell .kc i{font-style:normal;font-size:4.4cqi;line-height:.9}
 .kc.r{color:#c0392b}.kh-cell .kc.star{color:#c9822b;font-size:6.5cqi}
-.kh-chip{position:absolute;inset:12%;border-radius:50%;background:var(--c);box-shadow:inset 0 -3px 0 rgba(0,0,0,.25),0 2px 4px rgba(0,0,0,.35);border:2px solid rgba(255,255,255,.75)}
-.kh-chip.seq{border-color:var(--gold);box-shadow:0 0 0 2px var(--gold),inset 0 -3px 0 rgba(0,0,0,.25)}
+.kh-chip{position:absolute;inset:5%;border-radius:50%;background:color-mix(in srgb,var(--c) 34%,transparent);border:3.5px solid var(--c);box-shadow:0 1px 3px rgba(0,0,0,.35)}
+.kh-chip.seq{background:color-mix(in srgb,var(--c) 55%,transparent);box-shadow:0 0 0 2.5px var(--gold),0 1px 3px rgba(0,0,0,.35)}
 .kh-hand{display:flex;gap:6px;justify-content:center;flex-wrap:nowrap}
 .kh-hc{width:min(68px,calc((100% - 36px) / 7));aspect-ratio:5/7;border:2px solid transparent;border-radius:9px;background:var(--cream);cursor:pointer;padding:3px;position:relative;box-shadow:0 3px 8px rgba(0,0,0,.3);transition:transform .15s}
 .kh-hc .kc b{font-size:1.25rem}.kh-hc .kc i{font-style:normal;font-size:1.3rem}.kh-hc .kc u{text-decoration:none;font-size:.8rem}.kh-hc .kc em{display:none}
@@ -59,3 +59,6 @@
 .kh-help .kh-rules{background:rgba(0,0,0,.18);border-color:transparent;color:var(--cream)}.kh-help .kh-rules summary{color:#fff}.kh-wait+.kh-rules{max-width:460px;margin:0 auto}
 .kh-clock{display:inline-block;min-width:3.4em;border-radius:99px;padding:2px 10px;background:rgba(255,255,255,.15);font-weight:700;font-variant-numeric:tabular-nums}.kh-clock.hot{background:#d64545;color:#fff;animation:khHot .8s infinite}@keyframes khHot{50%{transform:scale(1.08)}}
 .kh-hc{box-sizing:border-box;flex:none}
+
+/* the card stays readable on top of a chip */
+.kh-cell .kc{position:relative;z-index:1}.kh-cell:has(.kh-chip) .kc{color:#111;text-shadow:0 0 3px #fff,0 0 6px #fff}.kh-cell:has(.kh-chip) .kc.r{color:#a31d12}

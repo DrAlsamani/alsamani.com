@@ -72,10 +72,11 @@
 
   /* ---------- a new game: teams, row length, and who this device is ---------- */
   function setup(bot) {
-    const o = Object.assign({ teams: 2, L: 5, role: 'play', tt: 45 }, store.get('cfg', {}));
+    const o = Object.assign({ teams: 2, L: 5, role: 'play', tt: 45, lv: 2 }, store.get('cfg', {}));
     root.innerHTML = `<div class="kh-card"><h2>${bot ? '🤖 ' + B('العب ضد الجهاز', 'Play the computer') : '👥 ' + B('لعبة جديدة', 'A new game')}</h2>
       <div class="kh-opt"><span>${B('عدد الفرق', 'Teams')}</span><div class="kh-seg" data-k="teams"><button type="button" data-v="2">${B('فريقان', 'Two')}</button><button type="button" data-v="3">${B('ثلاثة فرق', 'Three')}</button></div></div>
       <div class="kh-opt"><span>${B('طول الصف', 'Row length')}</span><div class="kh-seg" data-k="L"><button type="button" data-v="5">${B('خمس (الأصلية)', 'Five (classic)')}</button><button type="button" data-v="4">${B('أربع (أسرع وللصغار)', 'Four (quicker, for children)')}</button></div></div>
+      ${bot ? `<div class="kh-opt"><span>${B('مستوى الجهاز', 'Computer level')}</span><div class="kh-seg" data-k="lv"><button type="button" data-v="1">${B('سهل', 'Easy')}</button><button type="button" data-v="2">${B('متوسط', 'Medium')}</button><button type="button" data-v="3">${B('صعب', 'Hard')}</button></div></div>` : ''}
       ${bot ? '' : `<div class="kh-opt"><span>${B('وقت الدور', 'Time per turn')}</span><div class="kh-seg" data-k="tt"><button type="button" data-v="30">${B('٣٠ ثانية', '30 s')}</button><button type="button" data-v="45">${B('٤٥ ثانية', '45 s')}</button><button type="button" data-v="60">${B('دقيقة', '1 min')}</button><button type="button" data-v="0">${B('بلا وقت', 'No limit')}</button></div></div>`}
       ${bot ? '' : `<div class="kh-opt"><span>${B('هذا الجهاز', 'This device')}</span><div class="kh-seg" data-k="role"><button type="button" data-v="play">${B('ألعب منه', 'I play on it')}</button><button type="button" data-v="screen">${B('شاشة عرض فقط', 'A display screen only')}</button></div></div>`}
       <label class="kh-opt kh-name" ${!bot && o.role === 'screen' ? 'hidden' : ''}><span>${B('اسمك', 'Your name')}</span><input id="khN" maxlength="24" dir="auto" value="${esc(store.get('name', ''))}"></label>
@@ -106,7 +107,7 @@
     G = { mode: 'local', st, me: 'me', off: [], names: { me: name, b1: T('الجهاز', 'Computer') + (o.teams === 3 ? ' ١' : ''), b2: T('الجهاز ٢', 'Computer 2') } };
     const act = (k, c, i) => { const e = k === 'p' ? KH.play(st, 'me', c, i) : k === 's' ? KH.swap(st, 'me', c) : KH.pass(st, 'me'); if (e) return; after(); };
     const after = () => { show(); if (st.win === -1 && KH.cur(st) !== 'me') G.botT = setTimeout(botTurn, 750); };
-    const botTurn = () => { if (!G || st.win !== -1) return; const id = KH.cur(st); if (id === 'me') return; const m = KH.botMove(st, id); if (!m) KH.pass(st, id); else if (m.swap) { KH.swap(st, id, m.swap); return botTurn(); } else KH.play(st, id, m.card, m.i); after(); };
+    const botTurn = () => { if (!G || st.win !== -1) return; const id = KH.cur(st); if (id === 'me') return; const m = KH.botMove(st, id, o.lv || 2); if (!m) KH.pass(st, id); else if (m.swap) { KH.swap(st, id, m.swap); return botTurn(); } else KH.play(st, id, m.card, m.i); after(); };
     const show = () => view({ P: KH.pub(st), hand: st.hands.me, me: 'me', names: G.names, act, again: () => local(o, name) });
     after();
   }

@@ -1440,8 +1440,8 @@ html[dir=ltr] .jr-dch.fd .jr-fold::before{transform:rotate(-45deg)}
 .kc{display:grid;place-items:center;line-height:1;color:#1d2420;font-family:Georgia,"Times New Roman",serif}
 .kh-cell .kc{gap:0}.kh-cell .kc b{font-size:4.1cqi;font-weight:800;letter-spacing:-.04em;line-height:.95}.kh-cell .kc i{font-style:normal;font-size:4.4cqi;line-height:.9}
 .kc.r{color:#c0392b}.kh-cell .kc.star{color:#c9822b;font-size:6.5cqi}
-.kh-chip{position:absolute;inset:12%;border-radius:50%;background:var(--c);box-shadow:inset 0 -3px 0 rgba(0,0,0,.25),0 2px 4px rgba(0,0,0,.35);border:2px solid rgba(255,255,255,.75)}
-.kh-chip.seq{border-color:var(--gold);box-shadow:0 0 0 2px var(--gold),inset 0 -3px 0 rgba(0,0,0,.25)}
+.kh-chip{position:absolute;inset:5%;border-radius:50%;background:color-mix(in srgb,var(--c) 34%,transparent);border:3.5px solid var(--c);box-shadow:0 1px 3px rgba(0,0,0,.35)}
+.kh-chip.seq{background:color-mix(in srgb,var(--c) 55%,transparent);box-shadow:0 0 0 2.5px var(--gold),0 1px 3px rgba(0,0,0,.35)}
 .kh-hand{display:flex;gap:6px;justify-content:center;flex-wrap:nowrap}
 .kh-hc{width:min(68px,calc((100% - 36px) / 7));aspect-ratio:5/7;border:2px solid transparent;border-radius:9px;background:var(--cream);cursor:pointer;padding:3px;position:relative;box-shadow:0 3px 8px rgba(0,0,0,.3);transition:transform .15s}
 .kh-hc .kc b{font-size:1.25rem}.kh-hc .kc i{font-style:normal;font-size:1.3rem}.kh-hc .kc u{text-decoration:none;font-size:.8rem}.kh-hc .kc em{display:none}
@@ -1459,6 +1459,9 @@ html[dir=ltr] .jr-dch.fd .jr-fold::before{transform:rotate(-45deg)}
 .kh-help .kh-rules{background:rgba(0,0,0,.18);border-color:transparent;color:var(--cream)}.kh-help .kh-rules summary{color:#fff}.kh-wait+.kh-rules{max-width:460px;margin:0 auto}
 .kh-clock{display:inline-block;min-width:3.4em;border-radius:99px;padding:2px 10px;background:rgba(255,255,255,.15);font-weight:700;font-variant-numeric:tabular-nums}.kh-clock.hot{background:#d64545;color:#fff;animation:khHot .8s infinite}@keyframes khHot{50%{transform:scale(1.08)}}
 .kh-hc{box-sizing:border-box;flex:none}
+
+/* the card stays readable on top of a chip */
+.kh-cell .kc{position:relative;z-index:1}.kh-cell:has(.kh-chip) .kc{color:#111;text-shadow:0 0 3px #fff,0 0 6px #fff}.kh-cell:has(.kh-chip) .kc.r{color:#a31d12}
 </style>
 <div id="kh" class="kh"><noscript><span class="ar">تعمل هذه اللعبة مع تفعيل JavaScript.</span><span class="en">This game needs JavaScript.</span></noscript></div>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script>window.MD_CFG={"apiKey": "AIzaSyA50i75DT1Is1a6Yn6snW1_JVObc8S3F0Y", "authDomain": "maydan-705ae.firebaseapp.com", "databaseURL": "https://maydan-705ae-default-rtdb.europe-west1.firebasedatabase.app", "projectId": "maydan-705ae", "appId": "1:342187013133:web:d5c2396f0db413f3c51144"};window.MD_MARK="<svg class=\"md-mark\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><rect x=\"4\" y=\"4\" width=\"40\" height=\"40\" rx=\"12\" fill=\"#23336F\"/><path d=\"M24 9l4.2 6.8 7.8-1.8-1.8 7.8L41 24l-6.8 4.2 1.8 7.8-7.8-1.8L24 39l-4.2-6.8-7.8 1.8 1.8-7.8L7 24l6.8-4.2-1.8-7.8 7.8 1.8z\" fill=\"#C9822B\"/><circle cx=\"24\" cy=\"24\" r=\"6.5\" fill=\"#23336F\"/><circle cx=\"24\" cy=\"24\" r=\"3\" fill=\"#F3E3C7\"/></svg>";</script><script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script><script>/* Khumasiya: the rules. Two packs of cards; a 10×10 board with every card except the jacks twice and four free corners.
@@ -1590,19 +1593,68 @@ window.KH = (function () {
     }
     return s;
   }
-  function botMove(st, id) {
+  // every run of L spaces through i, in the four directions
+  function windows(st, i) {
+    const out = [], r0 = Math.floor(i / 10), c0 = i % 10;
+    for (const [dr, dc] of DIRS) for (let s = -(st.L - 1); s <= 0; s++) {
+      const w = [];
+      for (let k = 0; k < st.L; k++) { const r = r0 + dr * (s + k), c = c0 + dc * (s + k); if (r < 0 || r > 9 || c < 0 || c > 9) break; w.push(r * 10 + c); }
+      if (w.length === st.L) out.push(w);
+    }
+    return out;
+  }
+  // how much a space is worth to team t: open runs it would grow, and how near they are to done
+  const W5 = [0, 1, 5, 30, 200, 5000], W4 = [0, 2, 12, 120, 5000];
+  function potential(st, t, i, cells) {
+    const W = st.L === 4 ? W4 : W5; let v = 0;
+    for (const w of windows(st, i)) {
+      let mine = 0, bad = false, used = 0;
+      for (const x of w) { if (x === i || owns(st, t, x)) mine++; else if (st.board[x] >= 0) { bad = true; break; } if (st.inseq[t][x]) used++; }
+      if (bad || used > 1) continue;
+      v += W[Math.min(mine, st.L)];
+      // the cards in hand that also fit this run make it worth more
+      if (cells) v += w.filter(x => x !== i && st.board[x] < 0 && cells.has(x)).length * W[Math.min(mine + 1, st.L)] * .25;
+    }
+    return v;
+  }
+  // level: 1 easy, 2 medium, 3 hard
+  function botMove(st, id, level) {
+    level = level || 2;
     const t = st.team[id], h = st.hands[id];
     const d = h.find(c => dead(st, c)); if (d && !st.swapped) return { swap: d };
-    let best = null;
-    for (const card of new Set(h)) for (const i of legal(st, card)) {
-      let v;
-      if (oneEyed(card)) { v = Math.max(...st.inseq.map((_, o) => o === st.board[i] ? lineScore(st, o, i) : 0)) * 1.1 - 6; }
-      else {
-        v = lineScore(st, t, i);
-        for (let o = 0; o < st.teams; o++) if (o !== t) v += lineScore(st, o, i) * .9;
-        if (twoEyed(card)) v -= v >= 1000 ? 0 : 14;
+    const moves = []; for (const card of new Set(h)) for (const i of legal(st, card)) moves.push({ card, i });
+    if (!moves.length) return null;
+    if (level === 1 && Math.random() < .55) return moves[Math.floor(Math.random() * moves.length)];
+    if (level < 3) {
+      let best = null;
+      for (const { card, i } of moves) {
+        let v;
+        if (oneEyed(card)) { v = Math.max(...st.inseq.map((_, o) => o === st.board[i] ? lineScore(st, o, i) : 0)) * 1.1 - 6; }
+        else { v = lineScore(st, t, i); for (let o = 0; o < st.teams; o++) if (o !== t) v += lineScore(st, o, i) * .9; if (twoEyed(card)) v -= v >= 1000 ? 0 : 14; }
+        v += Math.random() * (level === 1 ? 6 : .5);
+        if (!best || v > best.v) best = { card, i, v };
       }
-      v += Math.random() * .5;
+      return best;
+    }
+    // hard: builds with the whole hand in mind, blocks the rivals' near-finished runs first, and keeps its jacks
+    const cells = new Set(); h.forEach(c => { if (!twoEyed(c) && !oneEyed(c)) legal(st, c).forEach(x => cells.add(x)); });
+    const threat = (o, i) => { const W = st.L === 4 ? W4 : W5; let v = 0; for (const w of windows(st, i)) { let n = 0, bad = false; for (const x of w) { if (owns(st, o, x)) n++; else if (st.board[x] >= 0) { bad = true; break; } } if (!bad) v = Math.max(v, W[Math.min(n + 1, st.L)]); } return v; };
+    let best = null;
+    for (const { card, i } of moves) {
+      let v;
+      if (oneEyed(card)) {
+        // taking a chip away is worth what it breaks
+        const o = st.board[i]; st.board[i] = -1; const after = threat(o, i); st.board[i] = o;
+        v = after >= (st.L === 4 ? W4 : W5)[st.L - 1] ? 4000 : after * .6 - 30;
+      } else {
+        v = potential(st, t, i, cells);
+        let block = 0; for (let o = 0; o < st.teams; o++) if (o !== t) block = Math.max(block, threat(o, i));
+        v += block * (block >= 5000 ? 1.3 : 1);
+        if (twoEyed(card)) v -= v >= 4000 ? 0 : 60;
+        // a card with two open spaces can wait; one whose other space is gone should be used
+        if (!twoEyed(card) && legal(st, card).length === 1) v += 2;
+      }
+      v += Math.random() * .3;
       if (!best || v > best.v) best = { card, i, v };
     }
     return best;
@@ -1690,10 +1742,11 @@ window.KH = (function () {
 
   /* ---------- a new game: teams, row length, and who this device is ---------- */
   function setup(bot) {
-    const o = Object.assign({ teams: 2, L: 5, role: 'play', tt: 45 }, store.get('cfg', {}));
+    const o = Object.assign({ teams: 2, L: 5, role: 'play', tt: 45, lv: 2 }, store.get('cfg', {}));
     root.innerHTML = `<div class="kh-card"><h2>${bot ? '🤖 ' + B('العب ضد الجهاز', 'Play the computer') : '👥 ' + B('لعبة جديدة', 'A new game')}</h2>
       <div class="kh-opt"><span>${B('عدد الفرق', 'Teams')}</span><div class="kh-seg" data-k="teams"><button type="button" data-v="2">${B('فريقان', 'Two')}</button><button type="button" data-v="3">${B('ثلاثة فرق', 'Three')}</button></div></div>
       <div class="kh-opt"><span>${B('طول الصف', 'Row length')}</span><div class="kh-seg" data-k="L"><button type="button" data-v="5">${B('خمس (الأصلية)', 'Five (classic)')}</button><button type="button" data-v="4">${B('أربع (أسرع وللصغار)', 'Four (quicker, for children)')}</button></div></div>
+      ${bot ? `<div class="kh-opt"><span>${B('مستوى الجهاز', 'Computer level')}</span><div class="kh-seg" data-k="lv"><button type="button" data-v="1">${B('سهل', 'Easy')}</button><button type="button" data-v="2">${B('متوسط', 'Medium')}</button><button type="button" data-v="3">${B('صعب', 'Hard')}</button></div></div>` : ''}
       ${bot ? '' : `<div class="kh-opt"><span>${B('وقت الدور', 'Time per turn')}</span><div class="kh-seg" data-k="tt"><button type="button" data-v="30">${B('٣٠ ثانية', '30 s')}</button><button type="button" data-v="45">${B('٤٥ ثانية', '45 s')}</button><button type="button" data-v="60">${B('دقيقة', '1 min')}</button><button type="button" data-v="0">${B('بلا وقت', 'No limit')}</button></div></div>`}
       ${bot ? '' : `<div class="kh-opt"><span>${B('هذا الجهاز', 'This device')}</span><div class="kh-seg" data-k="role"><button type="button" data-v="play">${B('ألعب منه', 'I play on it')}</button><button type="button" data-v="screen">${B('شاشة عرض فقط', 'A display screen only')}</button></div></div>`}
       <label class="kh-opt kh-name" ${!bot && o.role === 'screen' ? 'hidden' : ''}><span>${B('اسمك', 'Your name')}</span><input id="khN" maxlength="24" dir="auto" value="${esc(store.get('name', ''))}"></label>
@@ -1724,7 +1777,7 @@ window.KH = (function () {
     G = { mode: 'local', st, me: 'me', off: [], names: { me: name, b1: T('الجهاز', 'Computer') + (o.teams === 3 ? ' ١' : ''), b2: T('الجهاز ٢', 'Computer 2') } };
     const act = (k, c, i) => { const e = k === 'p' ? KH.play(st, 'me', c, i) : k === 's' ? KH.swap(st, 'me', c) : KH.pass(st, 'me'); if (e) return; after(); };
     const after = () => { show(); if (st.win === -1 && KH.cur(st) !== 'me') G.botT = setTimeout(botTurn, 750); };
-    const botTurn = () => { if (!G || st.win !== -1) return; const id = KH.cur(st); if (id === 'me') return; const m = KH.botMove(st, id); if (!m) KH.pass(st, id); else if (m.swap) { KH.swap(st, id, m.swap); return botTurn(); } else KH.play(st, id, m.card, m.i); after(); };
+    const botTurn = () => { if (!G || st.win !== -1) return; const id = KH.cur(st); if (id === 'me') return; const m = KH.botMove(st, id, o.lv || 2); if (!m) KH.pass(st, id); else if (m.swap) { KH.swap(st, id, m.swap); return botTurn(); } else KH.play(st, id, m.card, m.i); after(); };
     const show = () => view({ P: KH.pub(st), hand: st.hands.me, me: 'me', names: G.names, act, again: () => local(o, name) });
     after();
   }
