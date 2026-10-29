@@ -69,12 +69,12 @@
           <div class="sn-two"><button type="button" class="btn ghost" id="qzTpl">${B('تنزيل قالب Excel', 'Download an Excel template')}</button></div></div>
         <div data-pane="ai" hidden>
           <label class="sn-lbl">${B('الموضوع، أو الصق نص الدرس', 'The topic, or paste the lesson text')}<textarea id="qzTopic" rows="4" dir="auto" placeholder="${T('مثال: الفصل الثالث من مقرر ريادة الأعمال — نموذج العمل التجاري', 'e.g. Chapter 3 — the business model canvas')}"></textarea></label>
-          <div class="qz-row"><label class="sn-lbl">${B('عدد الأسئلة', 'Questions')}<select id="qzN">${[5, 10, 15, 20, 30].map(n => `<option${n === 10 ? ' selected' : ''}>${n}</option>`).join('')}</select></label>
+          <div class="qz-row"><label class="sn-lbl">${B('عدد الأسئلة', 'Questions')}<select id="qzN">${[5, 10, 15, 20, 30, 40, 50, 75, 100].map(n => `<option${n === 10 ? ' selected' : ''}>${n}</option>`).join('')}</select></label>
             <label class="sn-lbl">${B('المستوى', 'Level')}<select id="qzLv"><option value="mixed">${T('متنوع', 'Mixed')}</option><option value="easy">${T('سهل', 'Easy')}</option><option value="mid">${T('متوسط', 'Medium')}</option><option value="hard">${T('صعب', 'Hard')}</option></select></label>
             <label class="sn-lbl">${B('النوع', 'Type')}<select id="qzTy"><option value="mc">${T('اختيار من متعدد', 'Multiple choice')}</option><option value="mix">${T('مزيج مع صح وخطأ', 'Mixed with true/false')}</option><option value="tf">${T('صح وخطأ', 'True/false')}</option></select></label>
             <label class="sn-lbl">${B('اللغة', 'Language')}<select id="qzLg"><option value="ar">العربية</option><option value="en">English</option></select></label></div>
           <div class="sn-two"><button type="button" class="btn solid" id="qzCopy">${B('نسخ التعليمات', 'Copy the instructions')}</button><a class="btn ghost" id="qzGpt" target="_blank" rel="noopener">${B('افتح في ChatGPT', 'Open in ChatGPT')}</a><a class="btn ghost" id="qzCl" target="_blank" rel="noopener">${B('افتح في Claude', 'Open in Claude')}</a></div>
-          <p class="pt-fine">${B('بعد أن يكتب الأسئلة، انسخ رده والصقه في «لصق».', 'When it has written them, copy its reply and paste it under “Paste”.')}</p></div>
+          <div class="qz-step2"><b>${B('٢', '2')}</b><p>${B('حين يكتب الأسئلة، انسخ رده كاملًا ثم اضغط:', 'When it has written them, copy its whole reply, then tap:')}</p><button type="button" class="btn solid" id="qzBack2">${B('لصق رد الذكاء الاصطناعي', 'Paste the AI’s reply')}</button></div></div>
       </div>
       <div id="qzQs" class="qz-qs"></div>
       <div class="qz-addq"><button type="button" class="btn ghost" id="qzAddQ">${B('+ سؤال', '+ Question')}</button><button type="button" class="btn ghost" id="qzAddTF">${B('+ صح أو خطأ', '+ True or false')}</button></div>
@@ -108,6 +108,13 @@
     const prompt = () => aiPrompt(q('#qzTopic').value.trim(), +q('#qzN').value, q('#qzLv').value, q('#qzTy').value, q('#qzLg').value);
     const links = () => { const p = encodeURIComponent(prompt()); q('#qzGpt').href = 'https://chatgpt.com/?q=' + p; q('#qzCl').href = 'https://claude.ai/new?q=' + p; };
     ['#qzTopic', '#qzN', '#qzLv', '#qzTy', '#qzLg'].forEach(s => { q(s).oninput = q(s).onchange = links; }); links();
+    // step 2: bring the AI's reply into the paste box (straight from the clipboard where the browser allows it)
+    q('#qzBack2').onclick = async () => {
+      root.querySelector('[data-tab=paste]').click();
+      try { const t = await navigator.clipboard.readText(); if (t && t.trim()) { pa.value = t; pa.oninput(); pa.scrollIntoView({ block: 'center', behavior: 'smooth' }); return; } } catch (e) {}
+      pa.focus(); pa.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      toast(B('الصق رد الذكاء الاصطناعي في المربع (اضغط مطولًا ثم «لصق»).', 'Paste the AI’s reply into the box (long-press, then Paste).'));
+    };
     q('#qzCopy').onclick = async () => { try { await navigator.clipboard.writeText(prompt()); toast(B('نُسخت التعليمات. الصقها في ChatGPT أو Claude.', 'Copied. Paste it into ChatGPT or Claude.')); } catch (er) { toast(B('تعذّر النسخ.', 'Could not copy.'), 1); } };
     q('#qzAddQ').onclick = () => { Q.qs.push(norm({})); draw(); focusLast(); later(); };
     q('#qzAddTF').onclick = () => { Q.qs.push(norm({ type: 'tf', opts: [T('صح', 'True'), T('خطأ', 'False')] })); draw(); focusLast(); later(); };
@@ -340,6 +347,7 @@
 - خيار واحد صحيح في كل سؤال، والخيارات الخاطئة معقولة وليست واضحة الخطأ.
 - وزّع موضع الإجابة الصحيحة بين أ وب وج ود بالتساوي تقريبًا.
 - لا تكرر الأسئلة، ولا تضع «كل ما سبق» أو «لا شيء مما سبق».
+- إن لم يتسع رد واحد لكل الأسئلة، فتوقف بعد سؤال كامل، وأكمل الترقيم حين أكتب «أكمل».
 
 اكتبها بهذه الصيغة بالضبط، داخل صندوق نص واحد، دون أي شرح قبلها أو بعدها، وضع * بعد الإجابة الصحيحة:
 
@@ -359,6 +367,7 @@ Rules:
 - One right answer per question; wrong options should be plausible, not obviously wrong.
 - Spread the position of the right answer across a, b, c and d about evenly.
 - No repeated questions, no “all of the above” or “none of the above”.
+- If one reply cannot hold them all, stop after a complete question and continue the numbering when I write “continue”.
 
 Use exactly this format, in one plain-text box, with no explanation before or after, and put * after the right answer:
 

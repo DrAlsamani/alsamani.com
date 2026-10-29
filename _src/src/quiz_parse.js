@@ -105,7 +105,10 @@ var QZParse = (function () {
       return { type, q: q.q, opts: opts.map(o => o.t), ok };
     });
   }
-  function fromText(text) { return parse(String(text || '').split(/\r?\n/).map(s => ({ s }))); }
+  // replies from ChatGPT or Claude come in a code box and with markdown: drop the fences, bold marks and headings
+  function fromText(text) {
+    return parse(String(text || '').split(/\r?\n/).filter(l => !/^\s*```/.test(l)).map(l => l.replace(/\*\*(.+?)\*\*/g, '$1').replace(/^\s*#{1,6}\s+/, '').replace(/^\s*>\s?/, '')).map(s => ({ s })));
+  }
 
   // rows from Excel/CSV: a header row is recognised in Arabic or English (Kahoot's template included); without one,
   // the columns are: question, answers..., then the correct answer and time if they look like it

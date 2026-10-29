@@ -78,3 +78,4 @@
 .md-head{display:flex;align-items:center;justify-content:center;gap:14px;margin:6px 0 22px}
 .md-head .md-mark{width:58px;height:58px}.md-head h1{margin:0;font-size:2rem}.md-head p{margin:2px 0 0;color:var(--muted)}
 .md-page .qz-n{background:#23336F}
+.qz-step2{display:grid;justify-items:center;gap:6px;margin-top:16px;padding-top:14px;border-top:1px dashed var(--line);text-align:center}.qz-step2>b{width:26px;height:26px;border-radius:50%;background:#23336F;color:#fff;display:grid;place-items:center;font-size:.8125rem}.qz-step2 p{margin:0;color:var(--muted);font-size:.9375rem}
