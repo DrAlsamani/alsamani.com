@@ -469,7 +469,7 @@ window.MDLive = (function () {
         const c = x.type === 'match' ? k === n : k / n >= .7; sc[u] = { c, d: m && k ? Math.round(speed(a) * k / n) : 0, a: true, g: k, n }; if (k === n) full.push(u); if (c) right++; });
       full.sort((a, b) => ans[a].t - ans[b].t);
       body = x.type === 'match' ? `<div class="md-pairs">${x.pairs.map((p, j) => `<div><span dir="auto">${esc(p[0])}</span><i>↔</i><span dir="auto">${esc(p[1])}</span><small>${Math.round(100 * per[j] / Math.max(1, Object.keys(ans).length))}%</small></div>`).join('')}</div>`
-        : `<ol class="md-rlist">${x.items.map((v, j) => `<li class="${x.truth[j] ? 't' : 'f'}"><b>${x.truth[j] ? T('صح', 'True') : T('خطأ', 'False')}</b><span dir="auto">${esc(v)}</span><small>${Math.round(100 * per[j] / Math.max(1, Object.keys(ans).length))}%</small></li>`).join('')}</ol>`;
+        : `<ol class="md-rlist${x.items.length > 8 ? ' many' : ''}">${x.items.map((v, j) => `<li class="${x.truth[j] ? 't' : 'f'}"><b>${x.truth[j] ? T('صح', 'True') : T('خطأ', 'False')}</b><span dir="auto">${esc(v)}</span><small>${Math.round(100 * per[j] / Math.max(1, Object.keys(ans).length))}%</small></li>`).join('')}</ol>`;
       body += full.length ? `<p class="md-stat">⚡ ${B('العلامة الكاملة', 'Full marks')}: ${full.slice(0, 3).map(u => esc(G.players[u])).join('، ')}</p>` : '';
     } else if (x.type === 'open') {
       const cnt = {}; us.forEach(u => { const a = ans[u]; if (!a || typeof a.a !== 'string') return; const w = a.a.trim().slice(0, 40); if (!w) return; const k = normW(w); cnt[k] = cnt[k] || { w, n: 0 }; cnt[k].n++; sc[u] = { c: true, d: 0, a: true }; });

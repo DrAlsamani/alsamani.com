@@ -84,7 +84,7 @@ var QZParse = (function () {
         if (kind === 'num') { const b = a.replace(/(\d),(?=\d)/g, '$1'), m = b.match(/-?\d+(?:\.\d+)?/); return { type: 'num', q: text, opts: [], ok: [], ans: m ? +m[0] : '', unit: m ? b.replace(m[0], '').trim() : '' }; }
         if (kind === 'word') return { type: 'word', q: text, opts: [], ok: [], ans: a.replace(/[.،,]$/, '') };
         if (kind === 'match') return { type: 'match', q: text, opts: [], ok: [], pairs: opts.map(o => o.split(/\s*(?:=|↔|⟷|<->|:)\s*/)).filter(p => p.length >= 2 && p[0] && p[1]).map(p => [p[0].trim(), p.slice(1).join(' ').trim()]).slice(0, 5) };
-        if (kind === 'rapid') { const st = q.opts.filter(o => o.t).slice(0, 10).map(o => { const f = /\s*[(\[]\s*(خطأ|خطا|خاطئ|false)\s*[)\]]\s*$/i.test(o.t); return { t: o.t.replace(/\s*[(\[]\s*(خطأ|خطا|خاطئ|false|صح|true)\s*[)\]]\s*$/i, '').trim(), v: !f }; }); return { type: 'rapid', q: text, opts: [], ok: [], items: st.map(z => z.t), truth: st.map(z => z.v) }; }
+        if (kind === 'rapid') { const st = q.opts.filter(o => o.t).slice(0, 20).map(o => { const f = /\s*[(\[]\s*(خطأ|خطا|خاطئ|false)\s*[)\]]\s*$/i.test(o.t); return { t: o.t.replace(/\s*[(\[]\s*(خطأ|خطا|خاطئ|false|صح|true)\s*[)\]]\s*$/i, '').trim(), v: !f }; }); return { type: 'rapid', q: text, opts: [], ok: [], items: st.map(z => z.t), truth: st.map(z => z.v) }; }
         if (kind === 'order') return { type: 'order', q: text, opts: [], ok: [], items: opts.slice(0, 6) };
         if (kind === 'poll') return { type: 'poll', q: text, opts: opts.slice(0, 6), ok: [], pts: 0 };
         return { type: 'open', q: text, opts: [], ok: [], pts: 0 };

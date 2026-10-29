@@ -323,3 +323,4 @@ html.md-on{overflow:hidden}
 .mp-rtf{display:grid;grid-template-columns:1fr 1fr;gap:12px}.mp-rtf button{border:0;border-radius:18px;padding:30px 0;font:inherit;font-size:1.5rem;font-weight:800;color:#fff;cursor:pointer;touch-action:manipulation}.mp-rtf .t{background:#2f7d5b}.mp-rtf .f{background:#b0533a}.mp-rtf button:active{transform:scale(.96)}
 .md-surv{margin:2vh auto 0;text-align:center;font-size:clamp(1.1rem,2.2vw,1.7rem);font-weight:700;color:#e0a458}.md-surv small{display:block;font-size:.65em;font-weight:500;color:#d9dcea;margin-top:4px}
 .mp-surv{margin:0 0 10px;text-align:center;font-weight:700;border-radius:12px;padding:8px;background:color-mix(in srgb,#e0a458 20%,transparent)}.mp-surv.out{background:color-mix(in srgb,#b0533a 22%,transparent)}
+.md-rlist.many{grid-template-columns:1fr 1fr;width:min(1200px,96vw);gap:6px}.md-rlist.many li{padding:6px 12px;font-size:clamp(.8rem,1.3vw,1.05rem)}
