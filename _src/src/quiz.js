@@ -37,11 +37,51 @@
   let tSave; const later = () => { clearTimeout(tSave); tSave = setTimeout(() => { persist(); checks(); }, 400); };
 
   /* ---------- home: saved quizzes ---------- */
+  // the landing: what Maydan is, where it fits, and how it works
+  function intro() {
+    const card = (i, a, e, da, de) => `<div class="qi-c"><span>${i}</span><b>${B(a, e)}</b><small>${B(da, de)}</small></div>`;
+    return `<div class="qi">
+      <section class="qi-hero"><p class="qi-eye">${B('منصة الألعاب التفاعلية', 'Interactive games')}</p>
+        <h2>${B('اجعل كل لقاء ميدانًا للتفاعل', 'Turn any gathering into a lively contest')}</h2>
+        <p>${B('سؤال أو تحدٍّ على الشاشة، وكل مشارك يجيب من جواله دون تطبيق ولا تسجيل. الأسرع والأدق يتصدّر، والفرق تتنافس، والنتائج تظهر فورًا.', 'A question or a challenge on the screen, and everyone answers from their phone with no app and no sign-up. The quickest right answers lead, teams compete, and results show at once.')}</p>
+        <div class="qi-act"><a class="btn solid" href="#build">${B('ابنِ مسابقتك', 'Build a quiz')}</a><a class="btn ghost" href="#lib">${B('جرّب مسابقة جاهزة', 'Try a ready quiz')}</a></div>
+        <div class="qi-stats"><span><b>8</b>${B('أنواع أسئلة', 'question kinds')}</span><span><b>24</b>${B('تحديًا تفاعليًا', 'game challenges')}</span><span><b>30</b>${B('فريقًا كحدٍّ أعلى', 'teams at most')}</span><span><b>100</b>${B('سؤال في المسابقة', 'questions a quiz')}</span></div></section>
+
+      <section><h3>${B('أين تستخدمه؟', 'Where to use it')}</h3><div class="qi-grid">
+        ${card('🏫', 'الفصول والقاعات', 'Classrooms and halls', 'مراجعة الدرس، وتقويم سريع، ومنافسة بين المجموعات.', 'Lesson review, quick checks and contests between groups.')}
+        ${card('🎭', 'المسارح والفعاليات الكبيرة', 'Theatres and big events', 'شاشة واحدة كبيرة ومئة مشارك من جوالاتهم في الوقت نفسه.', 'One big screen and up to a hundred players on their phones at once.')}
+        ${card('💼', 'الاجتماعات والورش', 'Meetings and workshops', 'افتتاح اللقاء بكسر الجليد، واستطلاع آراء، وسحابة كلمات.', 'Open with an ice-breaker, take a poll, gather a word cloud.')}
+        ${card('📱', 'عن بُعد: واتساب والمجموعات', 'Remote: WhatsApp and groups', 'لا يلزم أن تكونوا في مكان واحد: أرسل رابط الدخول في المجموعة، فيظهر السؤال والخيارات والنتيجة على جوال كل مشارك.', 'No need to be in one place: send the join link to the group, and each phone shows the question, the options and the result.')}
+        ${card('👨‍👩‍👧', 'العائلة والأصدقاء', 'Family and friends', 'سهرات ومناسبات ورحلات بمسابقات ألعاب للصغار والكبار.', 'Evenings, occasions and trips with game contests for all ages.')}
+        ${card('🎓', 'الأنشطة الطلابية والمخيمات', 'Student activities and camps', 'فرق تتنافس طوال البرنامج، والنتيجة النهائية مع منصة التتويج.', 'Teams compete through the programme, with a final podium.')}
+      </div></section>
+
+      <section><h3>${B('كيف يعمل؟', 'How it works')}</h3><ol class="qi-steps">
+        <li><b>${B('اكتب أو اختر', 'Write or pick')}</b><small>${B('ابنِ أسئلتك، أو اختر مسابقة من المكتبة، أو اطلب من الذكاء الاصطناعي كتابتها.', 'Build your questions, pick one from the library, or have an AI write them.')}</small></li>
+        <li><b>${B('اعرض الرمز', 'Show the code')}</b><small>${B('يدخل المشاركون من جوالاتهم بالرمز أو رمز QR أو رابط ترسله لهم.', 'Players join on their phones by code, QR code or a link you send.')}</small></li>
+        <li><b>${B('العبوا', 'Play')}</b><small>${B('أسئلة وتحديات ونقاط وترتيب بعد كل جولة، حتى منصة التتويج.', 'Questions, challenges, points and a ranking after each round, up to the podium.')}</small></li></ol></section>
+
+      <section class="qi-ai"><h3>✨ ${B('أسئلتك جاهزة في دقيقة بمساعدة الذكاء الاصطناعي', 'Your questions ready in a minute with AI')}</h3><ol class="qi-steps">
+        <li><b>${B('اكتب الموضوع', 'Type the topic')}</b><small>${B('مثل «٣٠ سؤالًا في الثقافة الإسلامية» أو الصق نص الدرس، واختر العدد والمستوى.', 'Like “30 questions on world capitals”, or paste the lesson, and choose the count and level.')}</small></li>
+        <li><b>${B('انسخ التعليمات', 'Copy the instructions')}</b><small>${B('اضغط «نسخ التعليمات» والصقها في ChatGPT أو Claude أو أي مساعد.', 'Tap “Copy the instructions” and paste them into ChatGPT, Claude or any assistant.')}</small></li>
+        <li><b>${B('الصق الرد', 'Paste the reply')}</b><small>${B('انسخ رده كاملًا واضغط «لصق رد الذكاء الاصطناعي»، فتُبنى الأسئلة بخياراتها وإجاباتها.', 'Copy its whole reply and tap “Paste the AI’s reply”; the questions are built with their options and answers.')}</small></li></ol>
+        <p class="qi-note">${B('ويمكنك أيضًا لصق أسئلتك مكتوبة، أو رفع ملف Word أو Excel أو PDF، فيتعرّف ميدان على الأسئلة والإجابات.', 'You can also paste written questions or upload a Word, Excel or PDF file, and Maydan recognises the questions and answers.')}</p></section>
+
+      <section><h3>${B('ما الذي يميّزه؟', 'What sets it apart')}</h3><div class="qi-grid">
+        ${card('🧩', 'أنواع أسئلة كثيرة', 'Many question kinds', 'اختيار من متعدد، وصح وخطأ، وخمّن الكلمة، والأقرب للرقم، والترتيب، والصورة المخفية، والاستطلاع، وسحابة الكلمات.', 'Multiple choice, true/false, guess the word, closest number, ordering, hidden picture, polls and word clouds.')}
+        ${card('🎮', 'تحديات ألعاب بين الأسئلة', 'Game challenges between questions', '٢٤ تحديًا للذكاء والذاكرة والسرعة والمهارة، منها شدّ الحبل بين فريقين. وزّعها بين أسئلتك بضغطة.', '24 challenges of logic, memory, speed and skill, including a team tug of war. Spread them between your questions in one tap.')}
+        ${card('👥', 'فرق أو أفراد', 'Teams or individuals', 'من فريقين إلى ثلاثين، بأسماء تكتبها، ويختار المشارك فريقه أو توزّعهم أنت.', 'From two to thirty teams with your own names; players choose, or you place them.')}
+        ${card('🔥', 'حماس حتى آخر سؤال', 'Excitement to the last question', 'سؤال ذهبي مفاجئ، ولحظة حسم بنقاط مضاعفة، ورهان الثقة، وتفاعلات المشاركين على الشاشة.', 'A surprise golden question, a double-points finale, confidence bets, and live reactions on the screen.')}
+        ${card('📽', 'مع شاشة أو بدونها', 'With or without a screen', 'إن تعطّل جهاز العرض استمرت المسابقة، فكل جوال يعرض السؤال والنتيجة والترتيب.', 'If the projector fails the quiz goes on: every phone shows the question, the result and the ranking.')}
+        ${card('⏸', 'أوقف وأكمل لاحقًا', 'Pause and resume', 'أوقف المسابقة متى شئت وأكملها من حيث توقفت، ونزّل النتائج ملف CSV.', 'Pause any time and pick up where you left off; download the results as CSV.')}
+      </div></section></div>`;
+  }
   function home() {
     Q = null;
     const P = window.MDLive && MDLive.pending();
-    root.innerHTML = `${P ? `<div class="sn-card qz-resume"><p>⏸ ${B('مسابقة متوقفة', 'A paused quiz')}: <b>${esc(P.quiz.title || T('بلا عنوان', 'Untitled'))}</b> · ${B('أُنهي', 'done')} ${P.i + 1} ${T('من', 'of')} ${P.quiz.qs.length} · ${B('الرمز', 'code')} <span dir="ltr">${P.pin}</span></p>
-        <div class="sn-two"><button type="button" class="btn solid" id="qzRes">${B('متابعة المسابقة ▶', 'Resume ▶')}</button><button type="button" class="btn ghost" id="qzDrop2">${B('إنهاؤها وحذفها', 'End and remove it')}</button></div></div>` : ''}<div class="sn-card qz-home">
+    root.innerHTML = intro() + `${P ? `<div class="sn-card qz-resume"><p>⏸ ${B('مسابقة متوقفة', 'A paused quiz')}: <b>${esc(P.quiz.title || T('بلا عنوان', 'Untitled'))}</b> · ${B('أُنهي', 'done')} ${P.i + 1} ${T('من', 'of')} ${P.quiz.qs.length} · ${B('الرمز', 'code')} <span dir="ltr">${P.pin}</span></p>
+        <div class="sn-two"><button type="button" class="btn solid" id="qzRes">${B('متابعة المسابقة ▶', 'Resume ▶')}</button><button type="button" class="btn ghost" id="qzDrop2">${B('إنهاؤها وحذفها', 'End and remove it')}</button></div></div>` : ''}<div class="sn-card qz-home" id="build">
+      <h2 class="qz-h">🛠 ${B('ابنِ مسابقتك', 'Build your quiz')}</h2>
       <div class="qz-starts"><button type="button" class="btn solid" id="qzNew">${B('مسابقة أسئلة جديدة', 'New question quiz')}</button>
         <div class="qz-gstart"><button type="button" class="btn ghost" id="qzNewG">🎮 ${B('مسابقة ألعاب وتحديات', 'A games-only quiz')}</button><label>${B('عدد التحديات', 'Challenges')} <select id="qzGn">${[5, 8, 10, 12, 15, 20, 24].map(n => `<option${n === 10 ? ' selected' : ''}>${n}</option>`).join('')}</select></label></div>
         <p class="pt-fine">${B('في مسابقة الألعاب نختار لك تحديات متنوعة، وتقدر تغيّر أي واحد منها بزر 🔀 أو تختار غيره بنفسك.', 'We pick a varied set for you; swap any of them with 🔀 or choose another yourself.')}</p></div>
@@ -131,7 +171,7 @@
       pa.focus(); pa.scrollIntoView({ block: 'center', behavior: 'smooth' });
       toast(B('الصق رد الذكاء الاصطناعي في المربع (اضغط مطولًا ثم «لصق»).', 'Paste the AI’s reply into the box (long-press, then Paste).'));
     };
-    q('#qzCopy').onclick = async () => { try { await navigator.clipboard.writeText(prompt()); toast(B('نُسخت التعليمات. الصقها في ChatGPT أو Claude.', 'Copied. Paste it into ChatGPT or Claude.')); } catch (er) { toast(B('تعذّر النسخ.', 'Could not copy.'), 1); } };
+    q('#qzCopy').onclick = async e => { const b = e.currentTarget, was = b.innerHTML; try { await navigator.clipboard.writeText(prompt()); b.innerHTML = '✓ ' + B('تم النسخ — الصقها الآن في المساعد', 'Copied — now paste it into the assistant'); b.classList.add('qz-done'); setTimeout(() => { b.innerHTML = was; b.classList.remove('qz-done'); }, 3500); toast(B('نُسخت التعليمات. الصقها في ChatGPT أو Claude.', 'Copied. Paste it into ChatGPT or Claude.')); } catch (er) { toast(B('تعذّر النسخ.', 'Could not copy.'), 1); } };
     q('#qzAddQ').onclick = () => { Q.qs.push(norm({})); draw(); focusLast(); later(); };
     q('#qzAddG').onclick = () => { const g = pickGames(1, Q.qs.filter(z => z.type === 'game').map(z => z.g))[0] || 'sort'; Q.qs.push(newGame(g)); draw(); const c = root.querySelectorAll('.qz-q'); c[c.length - 1].scrollIntoView({ block: 'center', behavior: 'smooth' }); later(); };
     // spreading replaces the challenges already placed, so pressing it again simply re-deals them
