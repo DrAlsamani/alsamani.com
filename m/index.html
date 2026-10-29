@@ -1722,6 +1722,7 @@ html.md-on{overflow:hidden}
 .md-surv{margin:2vh auto 0;text-align:center;font-size:clamp(1.1rem,2.2vw,1.7rem);font-weight:700;color:#e0a458}.md-surv small{display:block;font-size:.65em;font-weight:500;color:#d9dcea;margin-top:4px}
 .mp-surv{margin:0 0 10px;text-align:center;font-weight:700;border-radius:12px;padding:8px;background:color-mix(in srgb,#e0a458 20%,transparent)}.mp-surv.out{background:color-mix(in srgb,#b0533a 22%,transparent)}
 .md-rlist.many{grid-template-columns:1fr 1fr;width:min(1200px,96vw);gap:6px}.md-rlist.many li{padding:6px 12px;font-size:clamp(.8rem,1.3vw,1.05rem)}
+.mp-in.bad{border-color:#c0392b;animation:mpShake .3s}@keyframes mpShake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
 </style>
 <div id="mp" class="sn mp"><noscript><span class="ar">تعمل هذه الصفحة مع تفعيل JavaScript.</span><span class="en">This page needs JavaScript.</span></noscript></div>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script>window.MD_CFG={"apiKey": "AIzaSyA50i75DT1Is1a6Yn6snW1_JVObc8S3F0Y", "authDomain": "maydan-705ae.firebaseapp.com", "databaseURL": "https://maydan-705ae-default-rtdb.europe-west1.firebasedatabase.app", "projectId": "maydan-705ae", "appId": "1:342187013133:web:d5c2396f0db413f3c51144"};window.MD_MARK="<svg class=\"md-mark\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><rect x=\"4\" y=\"4\" width=\"40\" height=\"40\" rx=\"12\" fill=\"#23336F\"/><path d=\"M24 9l4.2 6.8 7.8-1.8-1.8 7.8L41 24l-6.8 4.2 1.8 7.8-7.8-1.8L24 39l-4.2-6.8-7.8 1.8 1.8-7.8L7 24l6.8-4.2-1.8-7.8 7.8 1.8z\" fill=\"#C9822B\"/><circle cx=\"24\" cy=\"24\" r=\"6.5\" fill=\"#23336F\"/><circle cx=\"24\" cy=\"24\" r=\"3\" fill=\"#F3E3C7\"/></svg>";</script><script>/* Maydan challenges: short games played on every phone at once. Every phone gets the same level (same seed),
@@ -2403,7 +2404,7 @@ window.MDGames = (function () {
       <p class="mp-err" ${err ? '' : 'hidden'}>${err || ''}</p>
       <button type="button" class="btn solid mp-go" id="mpGo">${B('دخول', 'Enter')}</button></div>`;
     const inp = root.querySelector('#mpPin'), go = root.querySelector('#mpGo');
-    inp.oninput = () => { inp.value = inp.value.replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[^\d ]/g, ''); };
+    inp.oninput = () => { inp.value = inp.value.replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[^\d ]/g, ''); };
     inp.onkeydown = e => { if (e.key === 'Enter') go.click(); };
     go.onclick = async () => {
       const pin = inp.value.replace(/\D/g, '');
@@ -2515,10 +2516,15 @@ window.MDGames = (function () {
       if (left <= 0) { clearInterval(tick); send(g.score()); }
     }, 100);
   }
+  // a number typed in any digits: Arabic (١٢٣), Persian (۱۲۳) or English, with ٫ or , as the decimal mark
+  function toNum(v) {
+    const t = String(v).replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[٬\s]/g, '').replace(/[٫،,]/g, '.').replace(/[−–]/g, '-');
+    if (!/^-?\d*\.?\d+$/.test(t) && !/^-?\d+\.$/.test(t)) return null; return parseFloat(t);
+  }
   // the kinds answered by typing or arranging
   function textQ() {
     const T2 = Q.type, pic = Q.img ? `<img class="mp-img" src="${Q.img}" alt="">` : '';
-    const inner = T2 === 'num' ? `<input class="mp-in" id="mpIn" type="number" inputmode="decimal" step="any" placeholder="${isAr() ? 'اكتب رقمًا' : 'Type a number'}">${Q.unit ? `<p class="mp-hint">${esc(Q.unit)}</p>` : ''}`
+    const inner = T2 === 'num' ? `<input class="mp-in" id="mpIn" type="text" inputmode="decimal" autocomplete="off" dir="ltr" placeholder="${isAr() ? 'اكتب رقمًا' : 'Type a number'}">${Q.unit ? `<p class="mp-hint">${esc(Q.unit)}</p>` : ''}`
       : T2 === 'word' ? `<p class="mp-mask" id="mpW" dir="auto">${esc(Q.wl || '')}</p><input class="mp-in" id="mpIn" maxlength="24" dir="auto" autocomplete="off" placeholder="${isAr() ? 'اكتب الكلمة' : 'Type the word'}">`
       : T2 === 'open' ? `<input class="mp-in" id="mpIn" maxlength="40" dir="auto" autocomplete="off" placeholder="${isAr() ? 'اكتب إجابتك' : 'Write your answer'}">`
       : T2 === 'match' ? `<div class="mp-mrows" id="mpMr">${(Q.items || []).map((v, j) => `<button type="button" class="mp-mrow" data-l="${j}" style="--c:var(--qz${j % 6})"><span dir="auto">${esc(v)}</span><i>↔</i><b dir="auto">…</b></button>`).join('')}</div><p class="mp-hint" id="mpMh"></p><div class="mp-ord" id="mpOrd">${(Q.opts2 || []).map((v, j) => `<button type="button" data-o="${j}" style="--c:#6b7393"><span dir="auto">${esc(v)}</span></button>`).join('')}</div><button type="button" class="mg-btn" id="mpUndo">${B('⌫ تراجع', '⌫ Undo')}</button>`
@@ -2535,7 +2541,8 @@ window.MDGames = (function () {
       if (T2 === 'rapid') return send(picked.slice());
       if (T2 === 'order') { if (picked.length !== (Q.items || []).length) return; return send(picked.slice()); }
       const v = inp.value.trim(); if (!v) return;
-      send(T2 === 'num' ? +v : v);
+      if (T2 === 'num') { const n = toNum(v); if (n === null) { inp.classList.add('bad'); setTimeout(() => inp.classList.remove('bad'), 600); return; } return send(n); }
+      send(v);
     };
     if (T2 === 'order') {
       const pk = root.querySelector('#mpPk'), paint = () => { pk.innerHTML = picked.map(j => `<li dir="auto">${esc(Q.items[j])}</li>`).join(''); root.querySelectorAll('[data-o]').forEach(b => b.disabled = picked.includes(+b.dataset.o)); go.disabled = picked.length !== Q.items.length; };

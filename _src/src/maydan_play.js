@@ -31,7 +31,7 @@
       <p class="mp-err" ${err ? '' : 'hidden'}>${err || ''}</p>
       <button type="button" class="btn solid mp-go" id="mpGo">${B('دخول', 'Enter')}</button></div>`;
     const inp = root.querySelector('#mpPin'), go = root.querySelector('#mpGo');
-    inp.oninput = () => { inp.value = inp.value.replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[^\d ]/g, ''); };
+    inp.oninput = () => { inp.value = inp.value.replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[^\d ]/g, ''); };
     inp.onkeydown = e => { if (e.key === 'Enter') go.click(); };
     go.onclick = async () => {
       const pin = inp.value.replace(/\D/g, '');
@@ -143,10 +143,15 @@
       if (left <= 0) { clearInterval(tick); send(g.score()); }
     }, 100);
   }
+  // a number typed in any digits: Arabic (١٢٣), Persian (۱۲۳) or English, with ٫ or , as the decimal mark
+  function toNum(v) {
+    const t = String(v).replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[٬\s]/g, '').replace(/[٫،,]/g, '.').replace(/[−–]/g, '-');
+    if (!/^-?\d*\.?\d+$/.test(t) && !/^-?\d+\.$/.test(t)) return null; return parseFloat(t);
+  }
   // the kinds answered by typing or arranging
   function textQ() {
     const T2 = Q.type, pic = Q.img ? `<img class="mp-img" src="${Q.img}" alt="">` : '';
-    const inner = T2 === 'num' ? `<input class="mp-in" id="mpIn" type="number" inputmode="decimal" step="any" placeholder="${isAr() ? 'اكتب رقمًا' : 'Type a number'}">${Q.unit ? `<p class="mp-hint">${esc(Q.unit)}</p>` : ''}`
+    const inner = T2 === 'num' ? `<input class="mp-in" id="mpIn" type="text" inputmode="decimal" autocomplete="off" dir="ltr" placeholder="${isAr() ? 'اكتب رقمًا' : 'Type a number'}">${Q.unit ? `<p class="mp-hint">${esc(Q.unit)}</p>` : ''}`
       : T2 === 'word' ? `<p class="mp-mask" id="mpW" dir="auto">${esc(Q.wl || '')}</p><input class="mp-in" id="mpIn" maxlength="24" dir="auto" autocomplete="off" placeholder="${isAr() ? 'اكتب الكلمة' : 'Type the word'}">`
       : T2 === 'open' ? `<input class="mp-in" id="mpIn" maxlength="40" dir="auto" autocomplete="off" placeholder="${isAr() ? 'اكتب إجابتك' : 'Write your answer'}">`
       : T2 === 'match' ? `<div class="mp-mrows" id="mpMr">${(Q.items || []).map((v, j) => `<button type="button" class="mp-mrow" data-l="${j}" style="--c:var(--qz${j % 6})"><span dir="auto">${esc(v)}</span><i>↔</i><b dir="auto">…</b></button>`).join('')}</div><p class="mp-hint" id="mpMh"></p><div class="mp-ord" id="mpOrd">${(Q.opts2 || []).map((v, j) => `<button type="button" data-o="${j}" style="--c:#6b7393"><span dir="auto">${esc(v)}</span></button>`).join('')}</div><button type="button" class="mg-btn" id="mpUndo">${B('⌫ تراجع', '⌫ Undo')}</button>`
@@ -163,7 +168,8 @@
       if (T2 === 'rapid') return send(picked.slice());
       if (T2 === 'order') { if (picked.length !== (Q.items || []).length) return; return send(picked.slice()); }
       const v = inp.value.trim(); if (!v) return;
-      send(T2 === 'num' ? +v : v);
+      if (T2 === 'num') { const n = toNum(v); if (n === null) { inp.classList.add('bad'); setTimeout(() => inp.classList.remove('bad'), 600); return; } return send(n); }
+      send(v);
     };
     if (T2 === 'order') {
       const pk = root.querySelector('#mpPk'), paint = () => { pk.innerHTML = picked.map(j => `<li dir="auto">${esc(Q.items[j])}</li>`).join(''); root.querySelectorAll('[data-o]').forEach(b => b.disabled = picked.includes(+b.dataset.o)); go.disabled = picked.length !== Q.items.length; };

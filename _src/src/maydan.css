@@ -324,3 +324,4 @@ html.md-on{overflow:hidden}
 .md-surv{margin:2vh auto 0;text-align:center;font-size:clamp(1.1rem,2.2vw,1.7rem);font-weight:700;color:#e0a458}.md-surv small{display:block;font-size:.65em;font-weight:500;color:#d9dcea;margin-top:4px}
 .mp-surv{margin:0 0 10px;text-align:center;font-weight:700;border-radius:12px;padding:8px;background:color-mix(in srgb,#e0a458 20%,transparent)}.mp-surv.out{background:color-mix(in srgb,#b0533a 22%,transparent)}
 .md-rlist.many{grid-template-columns:1fr 1fr;width:min(1200px,96vw);gap:6px}.md-rlist.many li{padding:6px 12px;font-size:clamp(.8rem,1.3vw,1.05rem)}
+.mp-in.bad{border-color:#c0392b;animation:mpShake .3s}@keyframes mpShake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}

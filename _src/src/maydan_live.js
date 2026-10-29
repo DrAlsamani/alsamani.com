@@ -443,7 +443,7 @@ window.MDLive = (function () {
     q('[data-next]').onclick = () => lastQ ? finish() : showBoard ? board() : next();
   }
   // Arabic answers match whatever the hamza, taa marbuta or alif maqsura
-  const normW = s => String(s || '').trim().toLowerCase().replace(/[\u064B-\u0652\u0640]/g, '').replace(/[أإآ]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي').replace(/\s+/g, ' ');
+  const normW = s => String(s || '').trim().toLowerCase().replace(/[\u064B-\u0652\u0640]/g, '').replace(/[أإآ]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي').replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/\s+/g, ' ');
   async function revealText(x, m, ans) {
     const sc = {}, us = Object.keys(G.players), N = us.length;
     const before = Object.keys(G.score).sort(byRank); G.prev = {}; before.forEach((u, k) => { G.prev[u] = k + 1; });
