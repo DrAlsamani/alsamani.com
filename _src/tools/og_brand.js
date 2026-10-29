@@ -21,12 +21,12 @@ body:after{content:"";position:absolute;inset:auto 0 0 0;height:14px;background:
 .q{font-size:30px;color:#d9dcea;line-height:1.6;margin-top:30px;max-width:1000px}.f{position:absolute;bottom:42px;inset-inline:96px;display:flex;justify-content:space-between;font-size:24px;color:#aab0cc}.f span{direction:ltr}</style></head>
 <body><div class="r">${MARK}<div><p class="e">منصة الألعاب التفاعلية</p><h1>${h}</h1><p class="en">${en}</p></div></div><p class="q">${sub}</p><div class="f"><b>${foot}</b><span>alsamani.com</span></div></body></html>`;
 const khMark = `<svg class="md-mark" viewBox="0 0 48 48"><rect x="4" y="4" width="40" height="40" rx="12" fill="#0b3b2c"/><g fill="#e0a458"><circle cx="12" cy="36" r="4"/><circle cx="18" cy="30" r="4"/><circle cx="24" cy="24" r="4"/><circle cx="30" cy="18" r="4"/><circle cx="36" cy="12" r="4"/></g></svg>`;
-const kh = game('تسلسل', 'على طريقة لعبة سيكوينس المعروفة: كوّن صفوفك من أربع أو خمس قبل خصمك، مع الأصدقاء والفرق. على شاشة وجوالات، أو عن بُعد، أو ضد الجهاز.', 'Tasalsul · rows of four or five', 'د. عمر عبدالله الصمعاني').replace(MARK, khMark).replace(/background:#1f2a5c/, 'background:#0f4d3a');
+const kh = game('تسلسل', 'على طريقة لعبة سيكوينس المعروفة: كوّن صفوفك من أربع أو خمس قبل خصمك، مع الأصدقاء والفرق. على شاشة وجوالات، أو عن بُعد، أو ضد الجهاز.', 'Tasalsul · rows of four or five', '').replace(MARK, khMark).replace(/background:#1f2a5c/, 'background:#0f4d3a');
 const only = process.argv[2];
 const cards = [
   ['site', site], ['site-oa', oaOnly],
-  ['play', game('منصة الألعاب التفاعلية'.replace('منصة ', ''), 'منصة تعليمية ترفيهية للتوظيف داخل بيئة التعلم والأنشطة والاجتماعات.', 'Interactive games', 'د. عمر عبدالله الصمعاني')],
-  ['play-maydan', game('ميدان', 'مسابقات تفاعلية حيّة: سؤال على الشاشة، والجميع يجيب من جواله. أسئلة وتحديات وفرق ومكتبة جاهزة.', 'Maydan · live quizzes', 'د. عمر عبدالله الصمعاني')],
+  ['play', game('منصة الألعاب التفاعلية'.replace('منصة ', ''), 'منصة تعليمية ترفيهية للتوظيف داخل بيئة التعلم والأنشطة والاجتماعات.', 'Interactive games', '')],
+  ['play-maydan', game('ميدان', 'مسابقات تفاعلية حيّة: سؤال على الشاشة، والجميع يجيب من جواله. أسئلة وتحديات وفرق ومكتبة جاهزة.', 'Maydan · live quizzes', '')],
   ['play-tasalsul', kh],
   ['m', game('ادخل الميدان', 'اكتب رمز المسابقة الظاهر على الشاشة، ثم اسمك، وابدأ اللعب.', 'Maydan · join the quiz', 'ميدان')]];
 (async () => {
