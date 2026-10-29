@@ -693,7 +693,7 @@ DESCS['play'] = 'Interactive games and quizzes to play together. منصة الأ
 PAGES.append(('m', 1, 'ميدان: ادخل المسابقة | Maydan: join | Dr. Omar A. Alsamani', _tp.maydan_join))
 DESCS['m'] = 'Join a Maydan live quiz with its six-digit code. ادخل مسابقة ميدان برمزها.'
 PAGES.append(('play/khumasiya', 2, 'خماسية: لعبة خمس في صف للفرق | Khumasiya: five in a row | Dr. Omar A. Alsamani', _tp.khumasiya_body))
-DESCS['play/khumasiya'] = 'Khumasiya: a card and board game for teams. Make five in a row before the others, with friends on a big screen and phones, remotely, or against the computer. خماسية: لعبة ورق ولوح للفرق.'
+DESCS['play/khumasiya'] = 'Khumasiya: make five in a row before the others, with friends on a big screen and phones, remotely, or against the computer. خماسية: خمس في صف قبل خصمك.'
 PAGES.append(('play/maydan', 2, 'ميدان: مسابقات تفاعلية حيّة | Maydan: live quizzes | Dr. Omar A. Alsamani', _tp.maydan_body))
 DESCS['play/maydan'] = 'Maydan: live interactive quizzes. Write the questions by pasting them, uploading Word, Excel or PDF, or asking an AI. ميدان: مسابقات تفاعلية حيّة.'
 PAGES.append(('tools/qr', 2, 'رمز QR | QR code | Dr. Omar A. Alsamani', _tp.qr_body))

@@ -65,3 +65,11 @@
 
 @media (max-width:600px){.kh-game{padding:8px;border-radius:16px}.kh-board{gap:2px;padding:3px}.kh-cell{border-radius:3px}}
 .kh-hc .kc{font-family:"Arial Black","Helvetica Neue",Arial,sans-serif;color:#000}.kh-hc .kc.r{color:#d3140b}.kh-hc .kc b{font-weight:900;letter-spacing:-.06em}.kh-hc .kc i{font-family:Arial,sans-serif}
+/* reactions */
+.kh-rx{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;position:relative}
+.kh-rx>button{border:0;background:rgba(0,0,0,.2);border-radius:99px;width:40px;height:40px;font-size:1.25rem;cursor:pointer;touch-action:manipulation}.kh-rx>button:active{transform:scale(.88)}
+.kh-says{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;width:100%}.kh-says[hidden]{display:none}.kh-says button{border:1px solid rgba(255,255,255,.35);background:rgba(0,0,0,.2);color:#fff;border-radius:99px;padding:6px 12px;font:inherit;font-size:.875rem;cursor:pointer}
+.kh-fly{position:fixed;z-index:80;pointer-events:none;transform:translateX(-50%);animation:khFly 3.1s ease-out forwards;text-align:center}
+.kh-fly.emo{font-size:2.6rem;line-height:1}.kh-fly.emo small{display:block;font-size:.8rem;color:#fff;background:rgba(0,0,0,.55);border-radius:99px;padding:1px 8px;margin-top:2px;white-space:nowrap}
+.kh-fly.say{background:#fbf6ea;color:#13281f;border-radius:14px;padding:6px 12px;font-size:.95rem;box-shadow:0 6px 18px rgba(0,0,0,.35);white-space:nowrap}.kh-fly.say b{color:#0f4d3a}
+@keyframes khFly{0%{opacity:0;margin-top:20px}12%{opacity:1}80%{opacity:1}100%{opacity:0;margin-top:-220px}}
