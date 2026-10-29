@@ -40,8 +40,8 @@
 .kc{display:grid;place-items:center;line-height:1;color:#1d2420;font-family:Georgia,"Times New Roman",serif}
 .kh-cell .kc{gap:0;font-family:"Arial Black","Helvetica Neue",Arial,sans-serif;color:#000}.kh-cell .kc b{font-size:4.7cqi;font-weight:900;letter-spacing:-.07em;line-height:.9}.kh-cell .kc i{font-style:normal;font-size:4.9cqi;line-height:.85;font-family:Arial,sans-serif}
 .kc.r{color:#d3140b}.kh-cell .kc.star{color:#c9822b;font-size:6.5cqi}
-.kh-chip{position:absolute;inset:5%;border-radius:50%;background:color-mix(in srgb,var(--c) 34%,transparent);border:3.5px solid var(--c);box-shadow:0 1px 3px rgba(0,0,0,.35)}
-.kh-chip.seq{background:color-mix(in srgb,var(--c) 55%,transparent);box-shadow:0 0 0 2.5px var(--gold),0 1px 3px rgba(0,0,0,.35)}
+.kh-chip{position:absolute;inset:5%;border-radius:50%;background:color-mix(in srgb,var(--c) 62%,transparent);border:4.5px solid var(--c);box-shadow:0 1px 3px rgba(0,0,0,.35)}
+.kh-chip.seq{background:color-mix(in srgb,var(--c) 72%,transparent);box-shadow:0 0 0 2.5px var(--gold),0 1px 3px rgba(0,0,0,.35)}
 .kh-hand{display:flex;gap:6px;justify-content:center;flex-wrap:nowrap}
 .kh-hc{width:min(68px,calc((100% - 36px) / 7));aspect-ratio:5/7;border:2px solid transparent;border-radius:9px;background:var(--cream);cursor:pointer;padding:3px;position:relative;box-shadow:0 3px 8px rgba(0,0,0,.3);transition:transform .15s}
 .kh-hc .kc b{font-size:1.25rem}.kh-hc .kc i{font-style:normal;font-size:1.3rem}.kh-hc .kc u{text-decoration:none;font-size:.8rem}.kh-hc .kc em{display:none}
@@ -61,7 +61,7 @@
 .kh-hc{box-sizing:border-box;flex:none}
 
 /* the card stays readable on top of a chip */
-.kh-cell .kc{position:relative;z-index:1}.kh-cell:has(.kh-chip) .kc{color:#111;text-shadow:0 0 3px #fff,0 0 6px #fff}.kh-cell:has(.kh-chip) .kc.r{color:#a31d12}
+.kh-cell .kc{position:relative;z-index:1}.kh-cell:has(.kh-chip) .kc{color:#111}.kh-cell:has(.kh-chip) .kc.r{color:#a31d12}
 
 @media (max-width:600px){.kh-game{padding:8px;border-radius:16px}.kh-board{gap:2px;padding:3px}.kh-cell{border-radius:3px}}
 .kh-hc .kc{font-family:"Arial Black","Helvetica Neue",Arial,sans-serif;color:#000}.kh-hc .kc.r{color:#d3140b}.kh-hc .kc b{font-weight:900;letter-spacing:-.06em}.kh-hc .kc i{font-family:Arial,sans-serif}
@@ -116,3 +116,5 @@
 .kh-rxset label{display:flex!important;flex-direction:row!important;justify-content:flex-start!important;align-items:center;gap:8px;text-align:start;color:#fff;width:auto!important}.kh-rxset label input{margin:0;width:auto;flex:none}
 /* the other space of the chosen card, already taken: shown, not playable */
 .kh-board.picking .kh-cell.twin,.kh-board .kh-cell.twin{opacity:1;box-shadow:inset 0 0 0 3px #fff;outline:2px dashed var(--gold);outline-offset:-6px}
+
+.kh-cell:has(.kh-chip) .kc{text-shadow:0 0 1.5px #fff,0 0 1.5px #fff}
