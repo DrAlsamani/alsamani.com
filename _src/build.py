@@ -675,8 +675,10 @@ if _tp.poll_ready(): PAGES.append(('tools/attend', 2, 'تسجيل الحضور |
 DESCS['tools/attend'] = 'Record attendance at a meeting: attendees scan a QR code or open one link, and the coordinator gets a printable list of who came. تسجيل حضور الاجتماعات برمز QR.'
 PAGES.append(('tools/certificates', 2, 'الشهادات | Certificates | Dr. Omar A. Alsamani', _tp.cert_body))
 DESCS['tools/certificates'] = 'Make certificates for a list of names from your own design: place the name and other fields, choose Arabic fonts, add a signature or stamp, and download one PDF or a file per name. Runs on your device. إنشاء شهادات الحضور بالأسماء.'
-PAGES.append(('tools/quiz', 2, 'المسابقة التفاعلية | Live quiz | Dr. Omar A. Alsamani', _tp.quiz_body))
-DESCS['tools/quiz'] = 'Write the questions of a live quiz: paste them, upload Word, Excel or PDF, or ask an AI. كتابة أسئلة المسابقات التفاعلية.'
+PAGES.append(('play', 1, 'منصة الألعاب التفاعلية | Interactive games | Dr. Omar A. Alsamani', _tp.play_index))
+DESCS['play'] = 'Interactive games and quizzes to play together. منصة الألعاب التفاعلية.'
+PAGES.append(('play/maydan', 2, 'ميدان: مسابقات تفاعلية حيّة | Maydan: live quizzes | Dr. Omar A. Alsamani', _tp.maydan_body))
+DESCS['play/maydan'] = 'Maydan: live interactive quizzes. Write the questions by pasting them, uploading Word, Excel or PDF, or asking an AI. ميدان: مسابقات تفاعلية حيّة.'
 PAGES.append(('tools/qr', 2, 'رمز QR | QR code | Dr. Omar A. Alsamani', _tp.qr_body))
 DESCS['tools/qr'] = 'Turn a link or text into a QR code that does not expire: PNG for slides and documents, SVG for print. تحويل الروابط إلى رمز QR.'
 DESCS['tools/pass'] = 'Pass a committee or board decision by circulation: one link, each member answers agree, reservation or disagree, and the coordinator gets a printable result. تمرير قرار اللجان والمجالس برابط واحد.'
@@ -712,7 +714,7 @@ import sys as _sys; _sys.path.insert(0, P('tools')); import scholar_meta
 print('scholar meta on', scholar_meta.run(P('dist')), 'book pages')
 print('library covers', scholar_meta.library_covers(P('dist')))
 from datetime import date
-urls = [SITE] + [SITE + n + '/' for n, *_ in PAGES if n not in ('index', 'tools/quiz')]
+urls = [SITE] + [SITE + n + '/' for n, *_ in PAGES if n not in ('index', 'play', 'play/maydan')]
 import glob as _gs
 for _h in sorted(_gs.glob(P('dist', 'books', '**', '*.html'), recursive=True) + _gs.glob(P('dist', 'courses', '**', '*.html'), recursive=True)):
     _r = os.path.relpath(_h, P('dist')).replace(os.sep, '/')

@@ -18,7 +18,8 @@
   };
   const load = src => new Promise((ok, no) => { if (document.querySelector(`script[src="${src}"]`)) return ok(); const s = document.createElement('script'); s.src = src; s.onload = ok; s.onerror = no; document.head.appendChild(s); });
   const LIB = { zip: 'https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js', xlsx: 'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js', pdf: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js' };
-  const SHAPES = ['▲', '◆', '●', '■', '★', '⬟'];
+  // options are marked by letters, as on a written exam: أ ب ج د in Arabic, A B C D in English
+  const LET = () => isAr() ? ['أ', 'ب', 'ج', 'د', 'هـ', 'و'] : ['A', 'B', 'C', 'D', 'E', 'F'];
   const TIMES = [5, 10, 20, 30, 45, 60, 90, 120];
   const uid = () => Math.random().toString(36).slice(2, 10);
   const save = (blob, name) => {
@@ -145,7 +146,7 @@
         <span class="qz-act"><label class="qz-ib" title="${T('صورة', 'Image')}">🖼<input type="file" accept="image/*" hidden data-k="img"></label><button type="button" class="qz-ib" data-a="dup" title="${T('تكرار', 'Duplicate')}">⧉</button><button type="button" class="qz-ib" data-a="del" title="${T('حذف', 'Delete')}">✕</button></span></div>
       <textarea data-k="q" rows="2" dir="auto" maxlength="300" placeholder="${T('اكتب السؤال', 'Type the question')}">${esc(x.q)}</textarea>
       ${x.img ? `<div class="qz-img"><img src="${x.img}" alt=""><button type="button" data-a="noimg">${B('إزالة الصورة', 'Remove image')}</button></div>` : ''}
-      <ol class="qz-opts">${x.opts.map((o, j) => `<li class="qz-o${x.ok.includes(j) ? ' ok' : ''}" style="--c:var(--qz${j})"><button type="button" class="qz-tick" data-ok="${j}" aria-pressed="${x.ok.includes(j)}" title="${T('الإجابة الصحيحة', 'Right answer')}"><i>${SHAPES[j]}</i></button>
+      <ol class="qz-opts">${x.opts.map((o, j) => `<li class="qz-o${x.ok.includes(j) ? ' ok' : ''}" style="--c:var(--qz${j})"><button type="button" class="qz-tick" data-ok="${j}" aria-pressed="${x.ok.includes(j)}" title="${T('الإجابة الصحيحة', 'Right answer')}"><i>${LET()[j]}</i></button>
         <input type="text" data-o="${j}" value="${esc(o)}" dir="auto" maxlength="120" placeholder="${T('خيار', 'Option')} ${j + 1}"${tf ? ' readonly' : ''}>${!tf && x.opts.length > 2 ? `<button type="button" class="qz-x" data-rm="${j}" aria-label="remove">×</button>` : ''}</li>`).join('')}</ol>
       ${!tf && x.opts.length < 6 ? `<button type="button" class="sn-lnk qz-more" data-a="opt">${B('+ خيار', '+ Option')}</button>` : ''}
       <p class="qz-warn" hidden></p></div>`;
@@ -378,8 +379,8 @@ False *`;
         <div class="qz-pvh"><b>${B('معاينة', 'Preview')} · ${i + 1} / ${Q.qs.length}</b><span><button type="button" data-g="-1" aria-label="previous">${isAr() ? '›' : '‹'}</button><button type="button" data-g="1" aria-label="next">${isAr() ? '‹' : '›'}</button><button type="button" class="qz-show" aria-pressed="${show}">${B('إظهار الإجابة', 'Show answer')}</button><button type="button" data-x aria-label="close">✕</button></span></div>
         <div class="qz-stage">
           <div class="qz-screen"><p class="qz-sq" dir="auto">${esc(x.q) || '…'}</p>${x.img ? `<img src="${x.img}" alt="">` : ''}<div class="qz-timer">${t}</div>${x.pts === 2 ? `<span class="qz-x2">×2</span>` : ''}
-            <div class="qz-tiles">${opts.map(z => `<div class="qz-tile${show ? (x.ok.includes(z.j) ? ' right' : ' wrong') : ''}" style="--c:var(--qz${z.j})"><i>${SHAPES[z.j]}</i><span dir="auto">${esc(z.o)}</span>${show && x.ok.includes(z.j) ? '<b>✓</b>' : ''}</div>`).join('')}</div></div>
-          <div class="qz-phone"><div class="qz-ph-top">${B('السؤال', 'Question')} ${i + 1}</div><div class="qz-btns">${opts.map(z => `<div class="qz-pb" style="--c:var(--qz${z.j})"><i>${SHAPES[z.j]}</i><span dir="auto">${esc(z.o)}</span></div>`).join('')}</div></div>
+            <div class="qz-tiles">${opts.map(z => `<div class="qz-tile${show ? (x.ok.includes(z.j) ? ' right' : ' wrong') : ''}" style="--c:var(--qz${z.j})"><i>${LET()[z.j]}</i><span dir="auto">${esc(z.o)}</span>${show && x.ok.includes(z.j) ? '<b>✓</b>' : ''}</div>`).join('')}</div></div>
+          <div class="qz-phone"><div class="qz-ph-top">${B('السؤال', 'Question')} ${i + 1}</div><div class="qz-btns">${opts.map(z => `<div class="qz-pb" style="--c:var(--qz${z.j})"><i>${LET()[z.j]}</i><span dir="auto">${esc(z.o)}</span></div>`).join('')}</div></div>
         </div></div>`;
       v.querySelectorAll('[data-g]').forEach(b => b.onclick = () => go(+b.dataset.g));
       v.querySelector('[data-x]').onclick = close;
