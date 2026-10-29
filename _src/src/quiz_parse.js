@@ -28,8 +28,8 @@ var QZParse = (function () {
   const TFQ = /[(\[]\s*(صح\s*(?:أو|او|\/|-)\s*خطأ|صح\s*(?:أو|او|\/|-)\s*خطا|true\s*(?:or|\/)\s*false|t\s*\/\s*f)\s*[)\]]/i;
 
   // the other kinds are named in brackets after the question: [رقم] [كلمة] [ترتيب] [استطلاع] [كتابة حرة]
-  const KIND = /\s*[(\[]\s*(رقم|الأقرب للرقم|الأقرب|كلمة|خمن الكلمة|خمّن الكلمة|ترتيب|رتب|رتّب|استطلاع|تصويت|كتابة حرة|كتابة|سؤال مفتوح|number|closest number|word|guess the word|order|poll|open|free text)\s*[)\]]\s*/i;
-  const kindOf = t => { t = t.toLowerCase(); return /رقم|الأقرب|number/.test(t) ? 'num' : /كلمة|word/.test(t) ? 'word' : /ترتيب|رت|order/.test(t) ? 'order' : /استطلاع|تصويت|poll/.test(t) ? 'poll' : 'open'; };
+  const KIND = /\s*[(\[]\s*(وصّل|وصل|مطابقة|الجولة الخاطفة|خاطفة|match|rapid|rapid round|رقم|الأقرب للرقم|الأقرب|كلمة|خمن الكلمة|خمّن الكلمة|ترتيب|رتب|رتّب|استطلاع|تصويت|كتابة حرة|كتابة|سؤال مفتوح|number|closest number|word|guess the word|order|poll|open|free text)\s*[)\]]\s*/i;
+  const kindOf = t => { t = t.toLowerCase(); return /وص|مطابقة|match/.test(t) ? 'match' : /خاطفة|rapid/.test(t) ? 'rapid' : /رقم|الأقرب|number/.test(t) ? 'num' : /كلمة|word/.test(t) ? 'word' : /ترتيب|رت|order/.test(t) ? 'order' : /استطلاع|تصويت|poll/.test(t) ? 'poll' : 'open'; };
   function stripMark(s) { const m = MARK.test(s); return { s: m ? s.replace(MARK, '').trim() : s, m }; }
   function isTF(opts) { return opts.length === 2 && opts.some(o => TRUE.test(o.t)) && opts.some(o => FALSE.test(o.t)); }
 
@@ -83,6 +83,8 @@ var QZParse = (function () {
         const kind = kindOf(km[1]), text = q.q.replace(KIND, ' ').trim(), opts = q.opts.filter(o => o.t).map(o => o.t), a = clean(q.ans || key[n] || '');
         if (kind === 'num') { const b = a.replace(/(\d),(?=\d)/g, '$1'), m = b.match(/-?\d+(?:\.\d+)?/); return { type: 'num', q: text, opts: [], ok: [], ans: m ? +m[0] : '', unit: m ? b.replace(m[0], '').trim() : '' }; }
         if (kind === 'word') return { type: 'word', q: text, opts: [], ok: [], ans: a.replace(/[.،,]$/, '') };
+        if (kind === 'match') return { type: 'match', q: text, opts: [], ok: [], pairs: opts.map(o => o.split(/\s*(?:=|↔|⟷|<->|:)\s*/)).filter(p => p.length >= 2 && p[0] && p[1]).map(p => [p[0].trim(), p.slice(1).join(' ').trim()]).slice(0, 5) };
+        if (kind === 'rapid') { const st = q.opts.filter(o => o.t).slice(0, 10).map(o => { const f = /\s*[(\[]\s*(خطأ|خطا|خاطئ|false)\s*[)\]]\s*$/i.test(o.t); return { t: o.t.replace(/\s*[(\[]\s*(خطأ|خطا|خاطئ|false|صح|true)\s*[)\]]\s*$/i, '').trim(), v: !f }; }); return { type: 'rapid', q: text, opts: [], ok: [], items: st.map(z => z.t), truth: st.map(z => z.v) }; }
         if (kind === 'order') return { type: 'order', q: text, opts: [], ok: [], items: opts.slice(0, 6) };
         if (kind === 'poll') return { type: 'poll', q: text, opts: opts.slice(0, 6), ok: [], pts: 0 };
         return { type: 'open', q: text, opts: [], ok: [], pts: 0 };

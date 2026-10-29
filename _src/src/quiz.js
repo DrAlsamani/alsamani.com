@@ -28,7 +28,7 @@
     const a = document.createElement('a'); a.href = URL.createObjectURL(f); a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 4000);
   };
   // each kind gets the time it needs: typing or arranging takes longer than a tap
-  const suggest = x => ({ tf: 15, mc: 20, poll: 20, num: 25, word: 30, order: 30, open: 30 }[x && x.type] || 20);
+  const suggest = x => x && x.type === 'rapid' ? Math.min(60, Math.max(20, 4 * (x.items || []).length)) : ({ tf: 15, mc: 20, poll: 20, num: 25, word: 30, order: 30, open: 30, match: 40 }[x && x.type] || 20);
   const norm = q => Object.assign({ id: uid(), type: 'mc', q: '', opts: ['', ''], ok: [], pts: 1, img: null, timeSet: false }, q, { opts: (q.opts && q.opts.length ? q.opts : ['', '']).slice(0, 6) }, q.time ? { time: q.time, timeSet: true } : {});
 
   let list = store.get('list', []), Q = null;
@@ -87,7 +87,7 @@
         <h2>${B('اجعل كل لقاء ميدانًا للتفاعل', 'Turn any gathering into a lively contest')}</h2>
         <p>${B('سؤال أو تحدٍّ على الشاشة، وكل مشارك يجيب من جواله دون تطبيق ولا تسجيل. الأسرع والأدق يتصدّر، والفرق تتنافس، والنتائج تظهر فورًا.', 'A question or a challenge on the screen, and everyone answers from their phone with no app and no sign-up. The quickest right answers lead, teams compete, and results show at once.')}</p>
         <div class="qi-act"><a class="btn solid" href="#build">${B('ابنِ مسابقتك', 'Build a quiz')}</a><a class="btn ghost" href="#lib">${B('جرّب مسابقة جاهزة', 'Try a ready quiz')}</a></div>
-        <div class="qi-stats"><span><b>8</b>${B('أنواع أسئلة', 'question kinds')}</span><span><b>24</b>${B('تحديًا تفاعليًا', 'game challenges')}</span><span><b>30</b>${B('فريقًا كحدٍّ أعلى', 'teams at most')}</span><span><b>100</b>${B('سؤال في المسابقة', 'questions a quiz')}</span></div></section>
+        <div class="qi-stats"><span><b>10</b>${B('أنواع أسئلة', 'question kinds')}</span><span><b>24</b>${B('تحديًا تفاعليًا', 'game challenges')}</span><span><b>30</b>${B('فريقًا كحدٍّ أعلى', 'teams at most')}</span><span><b>100</b>${B('سؤال في المسابقة', 'questions a quiz')}</span></div></section>
 
       <section><h3>${B('أين تستخدمه؟', 'Where to use it')}</h3><div class="qi-grid">
         ${card('🏫', 'الفصول والقاعات', 'Classrooms and halls', 'مراجعة الدرس، وتقويم سريع، ومنافسة بين المجموعات.', 'Lesson review, quick checks and contests between groups.')}
@@ -110,10 +110,10 @@
         <p class="qi-note">${B('ويمكنك أيضًا لصق أسئلتك مكتوبة، أو رفع ملف Word أو Excel أو PDF، فيتعرّف ميدان على الأسئلة والإجابات.', 'You can also paste written questions or upload a Word, Excel or PDF file, and Maydan recognises the questions and answers.')}</p></section>
 
       <section><h3>${B('ما الذي يميّزه؟', 'What sets it apart')}</h3><div class="qi-grid">
-        ${card('🧩', 'أنواع أسئلة كثيرة', 'Many question kinds', 'اختيار من متعدد، وصح وخطأ، وخمّن الكلمة، والأقرب للرقم، والترتيب، والصورة المخفية، والاستطلاع، وسحابة الكلمات.', 'Multiple choice, true/false, guess the word, closest number, ordering, hidden picture, polls and word clouds.')}
+        ${card('🧩', 'أنواع أسئلة كثيرة', 'Many question kinds', 'اختيار من متعدد، وصح وخطأ، وخمّن الكلمة، والأقرب للرقم، والترتيب، ووصّل، والجولة الخاطفة، والصورة المخفية، والاستطلاع، وسحابة الكلمات.', 'Multiple choice, true/false, guess the word, closest number, ordering, matching, rapid rounds, hidden picture, polls and word clouds.')}
         ${card('🎮', 'تحديات ألعاب بين الأسئلة', 'Game challenges between questions', '٢٤ تحديًا للذكاء والذاكرة والسرعة والمهارة، منها شدّ الحبل بين فريقين. وزّعها بين أسئلتك بضغطة.', '24 challenges of logic, memory, speed and skill, including a team tug of war. Spread them between your questions in one tap.')}
         ${card('👥', 'فرق أو أفراد', 'Teams or individuals', 'من فريقين إلى ثلاثين، بأسماء تكتبها، ويختار المشارك فريقه أو توزّعهم أنت.', 'From two to thirty teams with your own names; players choose, or you place them.')}
-        ${card('🔥', 'حماس حتى آخر سؤال', 'Excitement to the last question', 'سؤال ذهبي مفاجئ، ولحظة حسم بنقاط مضاعفة، ورهان الثقة، وتفاعلات المشاركين على الشاشة.', 'A surprise golden question, a double-points finale, confidence bets, and live reactions on the screen.')}
+        ${card('🔥', 'حماس حتى آخر سؤال', 'Excitement to the last question', 'سؤال ذهبي مفاجئ، ولحظة حسم بنقاط مضاعفة، ورهان الثقة، ووضع «الناجي الأخير» الذي يُخرج من يخطئ، وتفاعلات المشاركين على الشاشة.', 'A surprise golden question, a double-points finale, confidence bets, a last-survivor mode, and live reactions on the screen.')}
         ${card('📽', 'مع شاشة أو بدونها', 'With or without a screen', 'إن تعطّل جهاز العرض استمرت المسابقة، فكل جوال يعرض السؤال والنتيجة والترتيب.', 'If the projector fails the quiz goes on: every phone shows the question, the result and the ranking.')}
         ${card('⏸', 'أوقف وأكمل لاحقًا', 'Pause and resume', 'أوقف المسابقة متى شئت وأكملها من حيث توقفت، ونزّل النتائج ملف CSV.', 'Pause any time and pick up where you left off; download the results as CSV.')}
       </div></section></div>`;
@@ -149,7 +149,7 @@
 
   /* ---------- editor ---------- */
   // the editor's quiz in the form the live screen plays
-  const live = Q => ({ title: Q.title, qs: Q.qs.map(x => x.type === 'game' ? { type: 'game', g: x.g, q: '', opts: [], ok: [], pts: x.pts, time: x.time || 30, seed: 1 + Math.floor(Math.random() * 1e9) } : ({ type: x.type, q: x.q, opts: TEXTY.includes(x.type) ? [] : x.opts.filter(o => o.trim()), ok: x.type === 'poll' || TEXTY.includes(x.type) ? [] : x.ok.map(j => x.opts.slice(0, j).filter(o => o.trim()).length), pts: x.type === 'open' || x.type === 'poll' ? 0 : x.pts, img: x.img, reveal: !!(x.reveal && x.img && x.type === 'mc'), ans: x.ans, unit: x.unit || '', items: x.type === 'order' ? x.items.filter(v => v.trim()) : null, time: x.timeSet ? x.time : suggest(x) })) });
+  const live = Q => ({ title: Q.title, qs: Q.qs.map(x => x.type === 'game' ? { type: 'game', g: x.g, q: '', opts: [], ok: [], pts: x.pts, time: x.time || 30, seed: 1 + Math.floor(Math.random() * 1e9) } : ({ type: x.type, q: x.q, opts: TEXTY.includes(x.type) ? [] : x.opts.filter(o => o.trim()), ok: x.type === 'poll' || TEXTY.includes(x.type) ? [] : x.ok.map(j => x.opts.slice(0, j).filter(o => o.trim()).length), pts: x.type === 'open' || x.type === 'poll' ? 0 : x.pts, img: x.img, reveal: !!(x.reveal && x.img && x.type === 'mc'), ans: x.ans, unit: x.unit || '', items: x.type === 'order' ? x.items.filter(v => v.trim()) : x.type === 'rapid' ? x.items.filter(v => v.trim()) : null, truth: x.type === 'rapid' ? x.items.map((v, j) => v.trim() ? !!x.truth[j] : null).filter(v => v != null) : null, pairs: x.type === 'match' ? x.pairs.filter(p => p[0].trim() && p[1].trim()).map(p => [p[0].trim(), p[1].trim()]) : null, time: x.timeSet ? x.time : suggest(x) })) });
   function editor() {
     root.innerHTML = `<div class="qz-top"><button type="button" class="sn-lnk" id="qzBack">${B('‹ مسابقاتي', '‹ My quizzes')}</button></div>
       <div class="sn-card"><label class="sn-lbl">${B('عنوان المسابقة', 'Quiz title')}<input type="text" id="qzTitle" maxlength="120" value="${esc(Q.title)}" placeholder="${T('مثال: مراجعة الوحدة الأولى', 'e.g. Unit 1 review')}"></label></div>
@@ -264,9 +264,9 @@
   }
   const RLIB = () => window.MDLib || [];
   const GAMES = () => window.MDGames ? MDGames.LIST : [];
-  const KINDS = () => [['mc', T('اختيار من متعدد', 'Multiple choice')], ['tf', T('صح أو خطأ', 'True or false')], ['poll', T('تصويت (بلا إجابة صحيحة)', 'Poll (no right answer)')], ['num', T('الأقرب للرقم', 'Closest number')], ['word', T('خمّن الكلمة', 'Guess the word')], ['order', T('رتّب بالترتيب الصحيح', 'Put in order')], ['open', T('كتابة حرة (سحابة كلمات)', 'Free text (word cloud)')], ['game', T('تحدٍّ تفاعلي 🎮', 'Challenge 🎮')]];
+  const KINDS = () => [['mc', T('اختيار من متعدد', 'Multiple choice')], ['tf', T('صح أو خطأ', 'True or false')], ['poll', T('تصويت (بلا إجابة صحيحة)', 'Poll (no right answer)')], ['num', T('الأقرب للرقم', 'Closest number')], ['word', T('خمّن الكلمة', 'Guess the word')], ['order', T('رتّب بالترتيب الصحيح', 'Put in order')], ['match', T('وصّل (مطابقة)', 'Match the pairs')], ['rapid', T('الجولة الخاطفة (صح أو خطأ متتالية)', 'Rapid round (true/false in a row)')], ['open', T('كتابة حرة (سحابة كلمات)', 'Free text (word cloud)')], ['game', T('تحدٍّ تفاعلي 🎮', 'Challenge 🎮')]];
   const typeSel = t => `<select data-k="type" aria-label="type">${KINDS().map(([v, l]) => `<option value="${v}"${v === t ? ' selected' : ''}>${l}</option>`).join('')}</select>`;
-  const TEXTY = ['num', 'word', 'order', 'open'];
+  const TEXTY = ['num', 'word', 'order', 'open', 'match', 'rapid'];
   function setType(x, t) {
     const was = x.type;
     if (t === 'game') { x.g = x.g || pickGames(1, Q.qs.filter(z => z.type === 'game').map(z => z.g))[0] || 'sort'; x.time = gTime(x.g); }
@@ -274,6 +274,8 @@
     if ((t === 'mc' || t === 'poll') && (was === 'tf' || was === 'game' || TEXTY.includes(was))) { x.opts = x.keep && x.keep.length ? x.keep : (x.opts && x.opts.some(o => o.trim()) && was !== 'tf' ? x.opts : ['', '', '', '']); if (was === 'tf') x.ok = []; }
     if (t === 'poll') x.ok = [];
     if (t === 'order' && !(x.items && x.items.length)) x.items = ['', '', ''];
+    if (t === 'match' && !(x.pairs && x.pairs.length)) x.pairs = [['', ''], ['', ''], ['', '']];
+    if (t === 'rapid') { if (!(x.items && x.items.length) || was === 'order') x.items = ['', '', '', '', '']; x.truth = (x.truth || []).slice(0, x.items.length); while (x.truth.length < x.items.length) x.truth.push(true); }
     if (t === 'open') x.pts = 0; else if (was === 'open' && !x.pts) x.pts = 1;
     x.type = t;
   }
@@ -331,6 +333,8 @@
       const body = x.type === 'num' ? `<div class="qz-row2"><label>${B('الجواب (رقم)', 'The answer (a number)')}<input type="number" data-k="ans" step="any" value="${esc(x.ans == null ? '' : x.ans)}"></label><label>${B('الوحدة (اختياري)', 'Unit (optional)')}<input type="text" data-k="unit" maxlength="20" value="${esc(x.unit || '')}" placeholder="${T('متر، سنة…', 'metres, years…')}"></label></div><p class="qz-ghow">${B('يكتب كل مشارك رقمًا، والأقرب إلى الجواب يكسب أكثر.', 'Everyone types a number; the closest earns most.')}</p>`
         : x.type === 'word' ? `<div class="qz-row2"><label>${B('الكلمة', 'The word')}<input type="text" data-k="ans" maxlength="24" dir="auto" value="${esc(x.ans || '')}"></label></div><p class="qz-ghow">${B('تنكشف حروف الكلمة واحدًا بعد الآخر على الشاشة والجوالات، ومن يكتبها أسرع يكسب أكثر.', 'The letters show one by one on the screen and the phones; the quickest to type it earns most.')}</p>`
         : x.type === 'order' ? `<p class="qz-ghow">${B('اكتب العناصر بترتيبها الصحيح من الأول إلى الأخير؛ تظهر للمشاركين مخلوطة.', 'Write the items in their right order, first to last; players see them shuffled.')}</p><ol class="qz-items">${(x.items || []).map((v, j) => `<li><b>${j + 1}</b><input type="text" data-it="${j}" maxlength="60" dir="auto" value="${esc(v)}">${x.items.length > 2 ? `<button type="button" class="qz-x" data-irm="${j}" aria-label="remove">×</button>` : ''}</li>`).join('')}</ol>${(x.items || []).length < 6 ? `<button type="button" class="sn-lnk qz-more" data-a="item">${B('+ عنصر', '+ Item')}</button>` : ''}`
+        : x.type === 'match' ? `<p class="qz-ghow">${B('اكتب كل زوج في سطر: الطرف الأول وما يقابله. تظهر الأطراف المقابلة للمشاركين مخلوطة، فيصلون كل طرف بما يقابله.', 'Write each pair on a row: an item and its match. Players see the matches shuffled and link each item to its match.')}</p><ol class="qz-pairs">${(x.pairs || []).map((p, j) => `<li><b>${j + 1}</b><input type="text" data-pa="${j}-0" maxlength="40" dir="auto" value="${esc(p[0])}" placeholder="${T('مثال: الرياض', 'e.g. Paris')}"><i>↔</i><input type="text" data-pa="${j}-1" maxlength="40" dir="auto" value="${esc(p[1])}" placeholder="${T('مثال: عاصمة المملكة', 'e.g. France')}">${x.pairs.length > 2 ? `<button type="button" class="qz-x" data-prm="${j}" aria-label="remove">×</button>` : ''}</li>`).join('')}</ol>${(x.pairs || []).length < 5 ? `<button type="button" class="sn-lnk qz-more" data-a="pair">${B('+ زوج', '+ Pair')}</button>` : ''}`
+        : x.type === 'rapid' ? `<p class="qz-ghow">${B('عبارات تظهر للمشارك واحدة بعد أخرى، فيجيب صح أو خطأ بسرعة. حدّد الإجابة الصحيحة لكل عبارة.', 'Statements come one after another; players answer true or false fast. Mark the right answer of each.')}</p><ol class="qz-rapid">${(x.items || []).map((v, j) => `<li><b>${j + 1}</b><input type="text" data-it="${j}" maxlength="90" dir="auto" value="${esc(v)}" placeholder="${T('عبارة', 'A statement')}"><button type="button" class="qz-tv${x.truth[j] ? ' t' : ' f'}" data-tv="${j}">${x.truth[j] ? T('صح', 'True') : T('خطأ', 'False')}</button>${x.items.length > 3 ? `<button type="button" class="qz-x" data-irm="${j}" aria-label="remove">×</button>` : ''}</li>`).join('')}</ol>${(x.items || []).length < 10 ? `<button type="button" class="sn-lnk qz-more" data-a="item">${B('+ عبارة', '+ Statement')}</button>` : ''}`
         : `<p class="qz-ghow">${B('يكتب كل مشارك كلمة أو جملة قصيرة، وتظهر الإجابات على الشاشة سحابة كلمات، والأكثر تكرارًا أكبر. بلا نقاط.', 'Everyone writes a word or a short phrase; the answers appear as a word cloud, the most common biggest. No points.')}</p>`;
       return `<div class="qz-q qz-${x.type}" data-id="${x.id}">${head}${ideas(x)}${body}<p class="qz-warn" hidden></p></div>`;
     }
@@ -361,8 +365,11 @@
     if (f('ans')) f('ans').oninput = e => { x.ans = x.type === 'num' ? (e.target.value === '' ? null : +e.target.value) : e.target.value; later(); };
     if (f('unit')) f('unit').oninput = e => { x.unit = e.target.value; later(); };
     if (f('reveal')) f('reveal').onchange = e => { x.reveal = e.target.checked; later(); };
-    el.querySelectorAll('[data-it]').forEach(i => { i.oninput = () => { x.items[+i.dataset.it] = i.value; later(); }; i.onkeydown = e => { if (e.key === 'Enter' && !e.isComposing) { e.preventDefault(); const j = +i.dataset.it; if (j < x.items.length - 1) el.querySelector(`[data-it="${j + 1}"]`).focus(); else if (x.items.length < 6) { x.items.push(''); re().querySelector(`[data-it="${j + 1}"]`).focus(); } } }; });
-    el.querySelectorAll('[data-irm]').forEach(b => b.onclick = () => { x.items.splice(+b.dataset.irm, 1); re(); });
+    el.querySelectorAll('[data-it]').forEach(i => { i.oninput = () => { x.items[+i.dataset.it] = i.value; later(); }; i.onkeydown = e => { if (e.key === 'Enter' && !e.isComposing) { e.preventDefault(); const j = +i.dataset.it; if (j < x.items.length - 1) el.querySelector(`[data-it="${j + 1}"]`).focus(); else if (x.items.length < (x.type === 'rapid' ? 10 : 6)) { x.items.push(''); if (x.type === 'rapid') x.truth.push(true); re().querySelector(`[data-it="${j + 1}"]`).focus(); } } }; });
+    el.querySelectorAll('[data-irm]').forEach(b => b.onclick = () => { x.items.splice(+b.dataset.irm, 1); if (x.truth) x.truth.splice(+b.dataset.irm, 1); re(); });
+    el.querySelectorAll('[data-tv]').forEach(b => b.onclick = () => { const j = +b.dataset.tv; x.truth[j] = !x.truth[j]; b.className = 'qz-tv ' + (x.truth[j] ? 't' : 'f'); b.textContent = x.truth[j] ? T('صح', 'True') : T('خطأ', 'False'); later(); });
+    el.querySelectorAll('[data-pa]').forEach(i => { i.oninput = () => { const [j, k] = i.dataset.pa.split('-').map(Number); x.pairs[j][k] = i.value; later(); }; i.onkeydown = e => { if (e.key === 'Enter' && !e.isComposing) { e.preventDefault(); const [j, k] = i.dataset.pa.split('-').map(Number); const nx = el.querySelector(`[data-pa="${k ? j + 1 : j}-${k ? 0 : 1}"]`); if (nx) nx.focus(); else if (x.pairs.length < 5) { x.pairs.push(['', '']); re().querySelector(`[data-pa="${j + 1}-0"]`).focus(); } } }; });
+    el.querySelectorAll('[data-prm]').forEach(b => b.onclick = () => { x.pairs.splice(+b.dataset.prm, 1); re(); });
     el.querySelector('[data-k=time]').onchange = e => { x.time = +e.target.value; x.timeSet = true; later(); };
     el.querySelector('[data-k=pts]').onchange = e => { x.pts = +e.target.value; later(); };
     el.querySelector('[data-k=img]').onchange = async e => { const f = e.target.files[0]; if (f) { x.img = await shrink(f); re(); } };
@@ -388,7 +395,8 @@
     el.querySelector('[data-k=q]').onkeydown = e => { if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) { e.preventDefault(); const f = el.querySelector('[data-o="0"]'); if (f) f.focus(); } };
     el.querySelectorAll('[data-rm]').forEach(b => b.onclick = () => { const j = +b.dataset.rm; x.opts.splice(j, 1); x.ok = x.ok.filter(k => k !== j).map(k => k > j ? k - 1 : k); re(); });
     const a = s => el.querySelector(`[data-a=${s}]`);
-    if (a('item')) a('item').onclick = () => { x.items.push(''); re().querySelector(`[data-it="${x.items.length - 1}"]`).focus(); };
+    if (a('pair')) a('pair').onclick = () => { x.pairs.push(['', '']); re().querySelector(`[data-pa="${x.pairs.length - 1}-0"]`).focus(); };
+    if (a('item')) a('item').onclick = () => { x.items.push(''); if (x.type === 'rapid') x.truth.push(true); re().querySelector(`[data-it="${x.items.length - 1}"]`).focus(); };
     if (a('opt')) a('opt').onclick = () => { x.opts.push(''); const c = re(); c.querySelector(`[data-o="${x.opts.length - 1}"]`).focus(); };
     if (a('noimg')) a('noimg').onclick = () => { x.img = null; re(); };
     a('dup').onclick = () => { const c = norm(JSON.parse(JSON.stringify(Object.assign({}, x, { id: uid() })))); c.timeSet = x.timeSet; Q.qs.splice(Q.qs.indexOf(x) + 1, 0, c); draw(); later(); };
@@ -416,6 +424,8 @@
       if (x.type === 'num' && (x.ans == null || isNaN(x.ans))) w.push(T('اكتب الجواب رقمًا', 'type the answer as a number'));
       if (x.type === 'word' && !(x.ans || '').trim()) w.push(T('اكتب الكلمة', 'type the word'));
       if (x.type === 'order' && (x.items || []).filter(v => v.trim()).length < 2) w.push(T('يحتاج عنصرين على الأقل', 'needs at least two items'));
+      if (x.type === 'match') { const ps = (x.pairs || []).filter(p => p[0].trim() || p[1].trim()); if (ps.length < 2) w.push(T('يحتاج زوجين على الأقل', 'needs at least two pairs')); if (ps.some(p => !p[0].trim() || !p[1].trim())) w.push(T('زوج ناقص', 'a pair is incomplete')); const r = ps.map(p => p[1].trim().toLowerCase()); if (new Set(r).size < r.length) w.push(T('طرفان متطابقان', 'two matches are the same')); }
+      if (x.type === 'rapid' && (x.items || []).filter(v => v.trim()).length < 3) w.push(T('يحتاج ثلاث عبارات على الأقل', 'needs at least three statements'));
       if (choice && filled.length < 2) w.push(T('يحتاج خيارين على الأقل', 'needs at least two options'));
       if (choice && x.type !== 'poll' && !x.ok.length) w.push(T('لم تُحدَّد الإجابة الصحيحة', 'no right answer chosen'));
       else if (x.ok.some(j => !(x.opts[j] || '').trim())) w.push(T('الإجابة الصحيحة خيار فارغ', 'the right answer is an empty option'));
@@ -529,22 +539,26 @@
   }
 
   /* ---------- the AI instructions ---------- */
-  const usable = x => x.q && (x.type === 'num' ? x.ans !== '' && x.ans != null : x.type === 'word' ? !!x.ans : x.type === 'order' ? (x.items || []).length >= 2 : x.type === 'open' ? true : x.opts.filter(o => o.trim()).length >= 2);
+  const usable = x => x.q && (x.type === 'match' ? (x.pairs || []).length >= 2 : x.type === 'rapid' ? (x.items || []).length >= 3 : x.type === 'num' ? x.ans !== '' && x.ans != null : x.type === 'word' ? !!x.ans : x.type === 'order' ? (x.items || []).length >= 2 : x.type === 'open' ? true : x.opts.filter(o => o.trim()).length >= 2);
   function aiPrompt(topic, n, lv, ty, lg) {
     const ar = lg === 'ar', all = ty === 'all';
     const LV = { mixed: ar ? 'متنوعة الصعوبة (سهلة ومتوسطة وصعبة)' : 'of mixed difficulty (easy, medium and hard)', easy: ar ? 'سهلة' : 'easy', mid: ar ? 'متوسطة الصعوبة' : 'of medium difficulty', hard: ar ? 'صعبة تتطلب تفكيرًا' : 'hard, requiring thought' }[lv];
     const TY = { mc: ar ? 'من نوع اختيار من متعدد بأربعة خيارات' : 'multiple choice with four options', mix: ar ? 'أغلبها اختيار من متعدد بأربعة خيارات، وبعضها صح أو خطأ' : 'mostly multiple choice with four options, some true or false', tf: ar ? 'من نوع صح أو خطأ' : 'true or false', all: ar ? 'منوّعة الأنواع' : 'of varied kinds' }[ty];
     const mix = ar ? `
-- نوّع الأنواع هكذا تقريبًا: نصفها اختيار من متعدد، والباقي موزّع على: صح أو خطأ، والأقرب للرقم، وخمّن الكلمة، والترتيب، واستطلاع واحد أو اثنان للرأي.
+- نوّع الأنواع هكذا تقريبًا: نصفها اختيار من متعدد، والباقي موزّع على: صح أو خطأ، والأقرب للرقم، وخمّن الكلمة، والترتيب، ووصّل، وجولة خاطفة واحدة، واستطلاع واحد أو اثنان للرأي.
 - «الأقرب للرقم»: جوابه رقم واحد معروف ودقيق (سنة، عدد، طول…)، وتُذكر الوحدة بعده.
 - «خمّن الكلمة»: جوابه كلمة واحدة لا تزيد على ١٢ حرفًا، والسؤال تلميح عنها لا يذكرها.
 - «الترتيب»: من ٣ إلى ٥ عناصر قصيرة، تُكتب بترتيبها الصحيح (والمنصة تخلطها للمشاركين).
-- «الاستطلاع»: سؤال رأي بلا إجابة صحيحة، بخيارات دون علامة *.` : `
-- Mix the kinds roughly so: half multiple choice, the rest spread over true/false, closest number, guess the word, ordering, and one or two opinion polls.
+- «الاستطلاع»: سؤال رأي بلا إجابة صحيحة، بخيارات دون علامة *.
+- «وصّل»: من ٣ إلى ٥ أزواج قصيرة، كل زوج في سطر: الطرف = ما يقابله.
+- «الجولة الخاطفة»: من ٥ إلى ٨ عبارات قصيرة صحيحة أو خاطئة، وبعد كل عبارة (صح) أو (خطأ).` : `
+- Mix the kinds roughly so: half multiple choice, the rest spread over true/false, closest number, guess the word, ordering, matching, one rapid round, and one or two opinion polls.
 - “Closest number”: its answer is one exact, well-known number (a year, a count, a length…), with its unit after it.
 - “Guess the word”: its answer is one word of at most 12 letters; the question is a clue that does not contain it.
 - “Ordering”: 3 to 5 short items written in their right order (the platform shuffles them for players).
-- “Poll”: an opinion question with no right answer, options without *.`;
+- “Poll”: an opinion question with no right answer, options without *.
+- “Match”: 3 to 5 short pairs, one per line: item = its match.
+- “Rapid round”: 5 to 8 short true-or-false statements, each followed by (true) or (false).`;
     const exAr = `1. نص السؤال؟
 أ) خيار
 ب) خيار *
@@ -569,7 +583,17 @@
 6. سؤال رأي؟ [استطلاع]
 أ) خيار
 ب) خيار
-ج) خيار` : '');
+ج) خيار
+
+7. صِل كل عنصر بما يقابله [وصّل]
+- الطرف الأول = ما يقابله
+- الطرف الثاني = ما يقابله
+- الطرف الثالث = ما يقابله
+
+8. الجولة الخاطفة [خاطفة]
+- عبارة صحيحة (صح)
+- عبارة خاطئة (خطأ)
+- عبارة صحيحة (صح)` : '');
     const exEn = `1. Question text?
 a) option
 b) option *
@@ -594,7 +618,17 @@ Answer: Riyadh
 6. An opinion question? [poll]
 a) option
 b) option
-c) option` : '');
+c) option
+
+7. Match each item [match]
+- first item = its match
+- second item = its match
+- third item = its match
+
+8. Rapid round [rapid]
+- a true statement (true)
+- a false statement (false)
+- a true statement (true)` : '');
     if (ar) return `اكتب ${n} سؤالًا لمسابقة تفاعلية حيّة، ${LV}، ${TY}${topic ? `، عن الموضوع التالي:\n\n${topic}\n` : '.'}
 
 الشروط:
@@ -646,7 +680,7 @@ ${exEn}`;
         return;
       }
       if (TEXTY.includes(Q.qs[i].type)) {
-        const x = Q.qs[i], ph = x.type === 'num' ? `<input class="qz-pin" placeholder="${T('اكتب رقمًا', 'Type a number')}" disabled><p class="qz-pans">${B('الجواب', 'Answer')}: ${esc(x.ans)} ${esc(x.unit || '')}</p>` : x.type === 'word' ? `<p class="qz-pw">${[...(x.ans || '')].map(c => c === ' ' ? ' ' : '_').join(' ')}</p><input class="qz-pin" placeholder="${T('اكتب الكلمة', 'Type the word')}" disabled>` : x.type === 'order' ? (x.items || []).slice().sort(() => Math.random() - .5).map(v => `<div class="qz-pb" style="--c:var(--qz1)"><span dir="auto">${esc(v)}</span></div>`).join('') : `<input class="qz-pin" placeholder="${T('اكتب إجابتك', 'Type your answer')}" disabled>`;
+        const x = Q.qs[i], ph = x.type === 'num' ? `<input class="qz-pin" placeholder="${T('اكتب رقمًا', 'Type a number')}" disabled><p class="qz-pans">${B('الجواب', 'Answer')}: ${esc(x.ans)} ${esc(x.unit || '')}</p>` : x.type === 'word' ? `<p class="qz-pw">${[...(x.ans || '')].map(c => c === ' ' ? ' ' : '_').join(' ')}</p><input class="qz-pin" placeholder="${T('اكتب الكلمة', 'Type the word')}" disabled>` : x.type === 'order' ? (x.items || []).slice().sort(() => Math.random() - .5).map(v => `<div class="qz-pb" style="--c:var(--qz1)"><span dir="auto">${esc(v)}</span></div>`).join('') : x.type === 'match' ? (x.pairs || []).map((p, j) => `<div class="qz-pmatch"><span dir="auto">${esc(p[0])}</span><i>↔</i><span dir="auto">${esc(((x.pairs || [])[(j + 1) % x.pairs.length] || [])[1] || '')}</span></div>`).join('') : x.type === 'rapid' ? `<p class="qz-pw" dir="auto">${esc((x.items || [])[0] || '')}</p><div class="qz-row2"><div class="qz-pb" style="--c:var(--qz2)"><span>${T('صح', 'True')}</span></div><div class="qz-pb" style="--c:var(--qz1)"><span>${T('خطأ', 'False')}</span></div></div><p class="qz-pans">1 / ${(x.items || []).length}</p>` : `<input class="qz-pin" placeholder="${T('اكتب إجابتك', 'Type your answer')}" disabled>`;
         v.innerHTML = `<div class="qz-pvb"><div class="qz-pvh"><b>${B('معاينة', 'Preview')} · ${i + 1} / ${Q.qs.length}</b><span><button type="button" data-g="-1" aria-label="previous">${isAr() ? '›' : '‹'}</button><button type="button" data-g="1" aria-label="next">${isAr() ? '‹' : '›'}</button><button type="button" data-x aria-label="close">✕</button></span></div>
           <div class="qz-stage"><div class="qz-screen"><p class="qz-sq" dir="auto">${esc(x.q) || '…'}</p>${x.img ? `<img src="${x.img}" alt="">` : ''}<div class="qz-timer">${x.timeSet ? x.time : suggest(x)}</div></div>
           <div class="qz-phone"><div class="qz-ph-top">${KINDS().find(k => k[0] === x.type)[1]}</div><div class="qz-tx">${ph}</div></div></div></div>`;

@@ -1816,6 +1816,12 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
 .qz-ideas{display:grid;gap:6px;margin:8px 0 4px;padding:10px 12px;border-radius:12px;background:color-mix(in srgb,#e0a458 12%,transparent);font-size:.875rem}
 .qz-ideas>b{font-size:.875rem}.qz-ideas div{display:flex;flex-wrap:wrap;gap:6px;align-items:center}.qz-ideas small{color:var(--muted);min-width:84px}
 .qz-ideas button{border:1px solid color-mix(in srgb,#C9822B 45%,transparent);background:var(--bg,#fff);color:var(--ink);border-radius:99px;padding:5px 11px;font:inherit;font-size:.8125rem;cursor:pointer}.qz-ideas button:hover{border-color:#C9822B}
+.qz-pairs,.qz-rapid{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:8px}
+.qz-pairs li,.qz-rapid li{display:flex;gap:8px;align-items:center}.qz-pairs b,.qz-rapid b{min-width:18px;color:var(--muted);font-size:.8125rem}
+.qz-pairs input,.qz-rapid input{flex:1;min-width:0;font:inherit;padding:9px 11px;border:1px solid var(--line,#dce1dd);border-radius:10px;background:var(--bg,#fff);color:var(--ink)}
+.qz-pairs i{font-style:normal;color:#C9822B;font-weight:700}
+.qz-tv{border:0;border-radius:99px;padding:7px 14px;font:inherit;font-size:.8125rem;font-weight:700;color:#fff;cursor:pointer;min-width:58px}.qz-tv.t{background:#2f7d5b}.qz-tv.f{background:#b0533a}
+.qz-pmatch{display:flex;gap:6px;align-items:center;justify-content:space-between;font-size:.8125rem;background:rgba(0,0,0,.05);border-radius:8px;padding:6px 8px;margin-bottom:6px}.qz-pmatch i{font-style:normal;color:#C9822B}
 </style>
 <div id="qz" class="sn qz"><noscript><span class="ar">تعمل هذه الأداة مع تفعيل JavaScript.</span><span class="en">This tool needs JavaScript.</span></noscript></div>
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script><script>/* Maydan library: ready quizzes to start at once or open and edit. Written in the editor's own format. */
@@ -1828,6 +1834,8 @@ window.MDLib = (function () {
   const open = q => ({ type: 'open', q, pts: 0, opts: ['', ''], ok: [] });
   const poll = (q, opts) => ({ type: 'poll', q, opts, ok: [], pts: 0 });
   const g = (id, time) => ({ type: 'game', g: id, time, opts: ['', ''], ok: [] });
+  const match = (q, pairs) => ({ type: 'match', q, pairs, opts: ['', ''], ok: [] });
+  const rapid = (q, list) => ({ type: 'rapid', q, items: list.map(z => z[0]), truth: list.map(z => z[1]), opts: ['', ''], ok: [] });
   return [
     { id: 'lib-national', icon: '🇸🇦', title: 'اليوم الوطني السعودي', desc: 'تاريخ الوطن ورموزه في أسئلة متنوعة، مع تحديَي شدّ الحبل والتقاط التمر.', who: 'للجميع', qs: [
       mc('من مؤسس المملكة العربية السعودية؟', ['الملك عبدالعزيز بن عبدالرحمن آل سعود', 'الملك سعود بن عبدالعزيز', 'الإمام محمد بن سعود', 'الإمام تركي بن عبدالله'], 0),
@@ -1887,6 +1895,79 @@ window.MDLib = (function () {
       order('رتّب أقسام الكلمة كما يذكرها النحاة', ['اسم', 'فعل', 'حرف']),
       tf('«إنّ» تنصب المبتدأ وترفع الخبر.', true),
       mc('الفعل «كتبَ» فعل:', ['مضارع', 'أمر', 'ماضٍ', 'مصدر'], 2)] },
+    { id: 'lib-geo', icon: '🗺', title: 'جغرافيا المملكة', desc: 'مناطق ومدن وبحار وصحارى، مع توصيل وجولة خاطفة.', who: 'للجميع', qs: [
+      mc('على أي بحر تقع مدينة جدة؟', ['الخليج العربي', 'البحر الأحمر', 'بحر العرب', 'البحر المتوسط'], 1),
+      mc('ما أكبر صحراء رملية في المملكة؟', ['النفود الكبير', 'الدهناء', 'الربع الخالي', 'الجافورة'], 2),
+      mc('في أي منطقة تقع محافظة العُلا؟', ['تبوك', 'حائل', 'الجوف', 'المدينة المنورة'], 3),
+      mc('مدينة «أبها» عاصمة منطقة:', ['عسير', 'جازان', 'الباحة', 'نجران'], 0),
+      word('عاصمة منطقة الجوف', 'سكاكا'),
+      match('صِل كل منطقة بعاصمتها', [['المنطقة الشرقية', 'الدمام'], ['منطقة القصيم', 'بريدة'], ['منطقة الحدود الشمالية', 'عرعر'], ['منطقة عسير', 'أبها']]),
+      g('maze', 45),
+      num('كم دولة تحدّ المملكة برًا؟', 7, 'دول'),
+      mc('في أي منطقة تقع مدينة الطائف؟', ['الرياض', 'مكة المكرمة', 'الباحة', 'المدينة المنورة'], 1),
+      order('رتّب المدن من الشمال إلى الجنوب', ['تبوك', 'المدينة المنورة', 'مكة المكرمة', 'جازان']),
+      tf('في المملكة أنهار دائمة الجريان.', false),
+      rapid('جولة خاطفة في جغرافيا المملكة', [['الرياض عاصمة المملكة', true], ['ينبع تطل على الخليج العربي', false], ['جزر فرسان في البحر الأحمر', true], ['تبوك في جنوب المملكة', false], ['الأحساء من أكبر الواحات في العالم', true]]),
+      mc('أي خليج يطل على المنطقة الشرقية؟', ['خليج العقبة', 'خليج عدن', 'الخليج العربي', 'خليج عُمان'], 2),
+      poll('أي منطقة تحب زيارتها أكثر؟', ['الجنوب', 'الشمال', 'الساحل الغربي', 'المنطقة الشرقية'])] },
+    { id: 'lib-proverbs', icon: '🗣', title: 'أكمل المثل', desc: 'أمثال شعبية وعربية مشهورة: أكملها قبل غيرك!', who: 'للجميع والعائلة', qs: [
+      mc('أكمل المثل: «اللي ما يعرف الصقر …»', ['يطيّره', 'يشويه', 'يبيعه', 'يتركه'], 1),
+      mc('أكمل المثل: «الجار قبل …»', ['الدار', 'الأهل', 'المال', 'الطريق'], 0),
+      word('أكمل المثل: «الصديق وقت …»', 'الضيق'),
+      mc('أكمل المثل: «القرد في عين أمه …»', ['أسد', 'قمر', 'غزال', 'نجم'], 2),
+      mc('أكمل المثل: «كل تأخيرة فيها …»', ['درس', 'عبرة', 'فرصة', 'خيرة'], 3),
+      match('صِل بداية المثل بنهايته', [['من جدّ', 'وجد'], ['يا غريب', 'كن أديب'], ['اللي فات', 'مات'], ['كل إناء', 'بما فيه ينضح']]),
+      g('letters', 45),
+      mc('أكمل المثل: «عصفور في اليد ولا عشرة على …»', ['الشجرة', 'السطح', 'الجبل', 'الطريق'], 0),
+      mc('أكمل المثل: «درهم وقاية خير من قنطار …»', ['ذهب', 'علاج', 'مال', 'فضة'], 1),
+      word('أكمل المثل: «الوقت كالسيف إن لم تقطعه …»', 'قطعك'),
+      mc('أكمل المثل: «من شبّ على شيء …»', ['تركه', 'نسيه', 'شاب عليه', 'ملّه'], 2),
+      rapid('صح أم خطأ: هل هذه أمثال صحيحة؟', [['«من جدّ وجد»', true], ['«الجار قبل المال»', false], ['«الصديق وقت الضيق»', true], ['«كل تأخيرة فيها عبرة»', false], ['«اللي فات مات»', true]]),
+      poll('أي مثل تردده كثيرًا؟', ['الصديق وقت الضيق', 'كل تأخيرة فيها خيرة', 'من جدّ وجد', 'اللي فات مات'])] },
+    { id: 'lib-heritage', icon: '🍲', title: 'التراث والموروث', desc: 'أكلات شعبية وأزياء وفنون من موروث المملكة.', who: 'للجميع', qs: [
+      mc('ما المكوّن الأساسي في «الجريش»؟', ['الأرز', 'القمح المجروش', 'الذرة', 'العدس'], 1),
+      mc('بماذا تُقدَّم القهوة السعودية عادةً؟', ['التمر', 'الخبز', 'الحلوى الغربية', 'المكسرات المملحة'], 0),
+      word('الإناء الذي تُصبّ منه القهوة العربية', 'الدلة'),
+      mc('ما «السدو»؟', ['رقصة شعبية', 'نوع من الخبز', 'نسيج بدوي تقليدي', 'آلة موسيقية'], 2),
+      match('صِل كل طبق بوصفه', [['الكبسة', 'أرز ولحم بالبهارات'], ['المرقوق', 'رقائق عجين في مرق خضار ولحم'], ['الحنيني', 'خبز وتمر وسمن'], ['الجريش', 'قمح مجروش مطبوخ']]),
+      g('catch', 30),
+      mc('ما «البشت»؟', ['غطاء رأس', 'عباءة رجالية تُلبس فوق الثوب', 'حزام تقليدي', 'حذاء جلدي'], 1),
+      mc('فن «المزمار» الشعبي مشهور في منطقة:', ['الحجاز', 'نجد', 'الجوف', 'الحدود الشمالية'], 0),
+      mc('«القط العسيري» هو:', ['طبق حلو', 'نوع من الصقور', 'لهجة جنوبية', 'نقش وزخرفة جدارية تزيّن بها النساء البيوت'], 3),
+      rapid('جولة خاطفة في الموروث', [['الدلة لصبّ القهوة', true], ['السدو فن غنائي', false], ['البشت يُلبس فوق الثوب', true], ['الجريش من الأرز', false], ['التمر يُقدَّم مع القهوة', true]]),
+      tf('الشماغ غطاء رأس رجالي.', true),
+      poll('أي طبق شعبي تفضّل؟', ['الكبسة', 'الجريش', 'المرقوق', 'الحنيني']),
+      open('بكلمة واحدة: ماذا يعني لك التراث؟')] },
+    { id: 'lib-entre', icon: '🚀', title: 'ريادة الأعمال والابتكار', desc: 'مفاهيم ريادة الأعمال والابتكار للطلاب والورش.', who: 'للطلاب والورش', qs: [
+      mc('ماذا يعني «MVP» في ريادة الأعمال؟', ['أفضل لاعب في الفريق', 'المنتج الأولي بأقل الخصائص اللازمة', 'خطة التسويق الكاملة', 'القيمة السوقية للشركة'], 1),
+      mc('أداة من تسع خانات لوصف نموذج العمل في صفحة واحدة:', ['تحليل SWOT', 'خريطة التعاطف', 'نموذج العمل التجاري (Business Model Canvas)', 'مخطط جانت'], 2),
+      mc('«عرض القيمة» هو:', ['سعر المنتج', 'الفائدة التي يقدّمها المنتج لحل مشكلة العميل', 'تكلفة الإنتاج', 'الإعلان عن المنتج'], 1),
+      tf('الشركة الناشئة «يونيكورن» تُقدَّر قيمتها بمليار دولار أو أكثر.', true),
+      match('صِل المصطلح بمعناه', [['Pivot', 'تغيير اتجاه نموذج العمل'], ['Bootstrapping', 'التمويل الذاتي'], ['Burn rate', 'معدل إنفاق النقد'], ['Exit', 'خروج المؤسسين أو المستثمرين ببيع أو طرح']]),
+      g('stack', 30),
+      mc('«التمويل الجماعي» يعني:', ['قرضًا من بنك واحد', 'جمع مبالغ صغيرة من عدد كبير من الناس', 'استثمار الحكومة', 'بيع أسهم في البورصة'], 1),
+      mc('بمن يرتبط مفهوم «الابتكار المزعزِع»؟', ['بيتر دراكر', 'مايكل بورتر', 'كلايتون كريستنسن', 'فيليب كوتلر'], 2),
+      order('رتّب مراحل التفكير التصميمي', ['التعاطف', 'تحديد المشكلة', 'توليد الأفكار', 'النموذج الأولي', 'الاختبار']),
+      mc('ماذا يحلّل «SWOT»؟', ['التدفقات النقدية', 'نقاط القوة والضعف والفرص والتهديدات', 'رضا الموظفين', 'أسعار المنافسين'], 1),
+      word('ما يتحمّله رائد الأعمال مقابل فرصة الربح', 'المخاطرة'),
+      rapid('جولة خاطفة في ريادة الأعمال', [['الفكرة وحدها تكفي لنجاح المشروع', false], ['فهم العميل يسبق بناء المنتج', true], ['المنتج الأولي (MVP) منتج نهائي متكامل', false], ['العميل محور عرض القيمة', true], ['الفشل المبكر قد يكون فرصة للتعلّم', true]]),
+      poll('ما أكبر تحدٍّ يواجه المشاريع الناشئة في رأيك؟', ['التمويل', 'التسويق', 'بناء الفريق', 'المنافسة']),
+      open('اكتب فكرة مشروع بكلمتين')] },
+    { id: 'lib-math', icon: '🧮', title: 'الحساب الذهني', desc: 'ضرب وقسمة ونسب وكسور بسرعة، مع تحدي الحساب السريع.', who: 'للطلاب', qs: [
+      mc('7 × 8 = ؟', ['54', '56', '58', '63'], 1),
+      num('25 × 4 = ؟', 100),
+      mc('144 ÷ 12 = ؟', ['11', '14', '12', '13'], 2),
+      num('نصف العدد 250 = ؟', 125),
+      g('math', 30),
+      mc('15٪ من 200 = ؟', ['30', '15', '20', '35'], 0),
+      match('صِل الكسر بالنسبة المئوية', [['1/2', '50٪'], ['1/4', '25٪'], ['3/4', '75٪'], ['1/5', '20٪']]),
+      num('1000 − 375 = ؟', 625),
+      mc('أي هذه الأعداد أوّلي؟', ['15', '21', '27', '17'], 3),
+      rapid('صح أم خطأ بسرعة!', [['6 × 7 = 42', true], ['12 × 12 = 124', false], ['81 ÷ 9 = 9', true], ['8 × 7 = 54', false], ['15 + 27 = 42', true], ['100 − 37 = 63', false]]),
+      order('رتّب من الأصغر إلى الأكبر', ['0.5', '3/4', '0.8', '1']),
+      num('مربّع العدد 13 = ؟', 169),
+      g('count', 30),
+      tf('9 × 9 = 81', true)] },
     { id: 'lib-ice', icon: '🤝', title: 'كسر الجليد للاجتماعات والورش', desc: 'استطلاعات وسحابة كلمات وتحديات قصيرة تفتح اللقاء بروح خفيفة. بلا إجابات صحيحة.', who: 'للاجتماعات والورش', qs: [
       open('بكلمة واحدة: كيف تشعر الآن؟'),
       poll('قهوة أم شاي؟', ['قهوة عربية', 'قهوة مختصة', 'شاي', 'لا هذا ولا ذاك']),
@@ -1947,8 +2028,8 @@ var QZParse = (function () {
   const TFQ = /[(\[]\s*(صح\s*(?:أو|او|\/|-)\s*خطأ|صح\s*(?:أو|او|\/|-)\s*خطا|true\s*(?:or|\/)\s*false|t\s*\/\s*f)\s*[)\]]/i;
 
   // the other kinds are named in brackets after the question: [رقم] [كلمة] [ترتيب] [استطلاع] [كتابة حرة]
-  const KIND = /\s*[(\[]\s*(رقم|الأقرب للرقم|الأقرب|كلمة|خمن الكلمة|خمّن الكلمة|ترتيب|رتب|رتّب|استطلاع|تصويت|كتابة حرة|كتابة|سؤال مفتوح|number|closest number|word|guess the word|order|poll|open|free text)\s*[)\]]\s*/i;
-  const kindOf = t => { t = t.toLowerCase(); return /رقم|الأقرب|number/.test(t) ? 'num' : /كلمة|word/.test(t) ? 'word' : /ترتيب|رت|order/.test(t) ? 'order' : /استطلاع|تصويت|poll/.test(t) ? 'poll' : 'open'; };
+  const KIND = /\s*[(\[]\s*(وصّل|وصل|مطابقة|الجولة الخاطفة|خاطفة|match|rapid|rapid round|رقم|الأقرب للرقم|الأقرب|كلمة|خمن الكلمة|خمّن الكلمة|ترتيب|رتب|رتّب|استطلاع|تصويت|كتابة حرة|كتابة|سؤال مفتوح|number|closest number|word|guess the word|order|poll|open|free text)\s*[)\]]\s*/i;
+  const kindOf = t => { t = t.toLowerCase(); return /وص|مطابقة|match/.test(t) ? 'match' : /خاطفة|rapid/.test(t) ? 'rapid' : /رقم|الأقرب|number/.test(t) ? 'num' : /كلمة|word/.test(t) ? 'word' : /ترتيب|رت|order/.test(t) ? 'order' : /استطلاع|تصويت|poll/.test(t) ? 'poll' : 'open'; };
   function stripMark(s) { const m = MARK.test(s); return { s: m ? s.replace(MARK, '').trim() : s, m }; }
   function isTF(opts) { return opts.length === 2 && opts.some(o => TRUE.test(o.t)) && opts.some(o => FALSE.test(o.t)); }
 
@@ -2002,6 +2083,8 @@ var QZParse = (function () {
         const kind = kindOf(km[1]), text = q.q.replace(KIND, ' ').trim(), opts = q.opts.filter(o => o.t).map(o => o.t), a = clean(q.ans || key[n] || '');
         if (kind === 'num') { const b = a.replace(/(\d),(?=\d)/g, '$1'), m = b.match(/-?\d+(?:\.\d+)?/); return { type: 'num', q: text, opts: [], ok: [], ans: m ? +m[0] : '', unit: m ? b.replace(m[0], '').trim() : '' }; }
         if (kind === 'word') return { type: 'word', q: text, opts: [], ok: [], ans: a.replace(/[.،,]$/, '') };
+        if (kind === 'match') return { type: 'match', q: text, opts: [], ok: [], pairs: opts.map(o => o.split(/\s*(?:=|↔|⟷|<->|:)\s*/)).filter(p => p.length >= 2 && p[0] && p[1]).map(p => [p[0].trim(), p.slice(1).join(' ').trim()]).slice(0, 5) };
+        if (kind === 'rapid') { const st = q.opts.filter(o => o.t).slice(0, 10).map(o => { const f = /\s*[(\[]\s*(خطأ|خطا|خاطئ|false)\s*[)\]]\s*$/i.test(o.t); return { t: o.t.replace(/\s*[(\[]\s*(خطأ|خطا|خاطئ|false|صح|true)\s*[)\]]\s*$/i, '').trim(), v: !f }; }); return { type: 'rapid', q: text, opts: [], ok: [], items: st.map(z => z.t), truth: st.map(z => z.v) }; }
         if (kind === 'order') return { type: 'order', q: text, opts: [], ok: [], items: opts.slice(0, 6) };
         if (kind === 'poll') return { type: 'poll', q: text, opts: opts.slice(0, 6), ok: [], pts: 0 };
         return { type: 'open', q: text, opts: [], ok: [], pts: 0 };
@@ -2119,7 +2202,7 @@ if (typeof module !== 'undefined') module.exports = QZParse;
     const a = document.createElement('a'); a.href = URL.createObjectURL(f); a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 4000);
   };
   // each kind gets the time it needs: typing or arranging takes longer than a tap
-  const suggest = x => ({ tf: 15, mc: 20, poll: 20, num: 25, word: 30, order: 30, open: 30 }[x && x.type] || 20);
+  const suggest = x => x && x.type === 'rapid' ? Math.min(60, Math.max(20, 4 * (x.items || []).length)) : ({ tf: 15, mc: 20, poll: 20, num: 25, word: 30, order: 30, open: 30, match: 40 }[x && x.type] || 20);
   const norm = q => Object.assign({ id: uid(), type: 'mc', q: '', opts: ['', ''], ok: [], pts: 1, img: null, timeSet: false }, q, { opts: (q.opts && q.opts.length ? q.opts : ['', '']).slice(0, 6) }, q.time ? { time: q.time, timeSet: true } : {});
 
   let list = store.get('list', []), Q = null;
@@ -2178,7 +2261,7 @@ if (typeof module !== 'undefined') module.exports = QZParse;
         <h2>${B('اجعل كل لقاء ميدانًا للتفاعل', 'Turn any gathering into a lively contest')}</h2>
         <p>${B('سؤال أو تحدٍّ على الشاشة، وكل مشارك يجيب من جواله دون تطبيق ولا تسجيل. الأسرع والأدق يتصدّر، والفرق تتنافس، والنتائج تظهر فورًا.', 'A question or a challenge on the screen, and everyone answers from their phone with no app and no sign-up. The quickest right answers lead, teams compete, and results show at once.')}</p>
         <div class="qi-act"><a class="btn solid" href="#build">${B('ابنِ مسابقتك', 'Build a quiz')}</a><a class="btn ghost" href="#lib">${B('جرّب مسابقة جاهزة', 'Try a ready quiz')}</a></div>
-        <div class="qi-stats"><span><b>8</b>${B('أنواع أسئلة', 'question kinds')}</span><span><b>24</b>${B('تحديًا تفاعليًا', 'game challenges')}</span><span><b>30</b>${B('فريقًا كحدٍّ أعلى', 'teams at most')}</span><span><b>100</b>${B('سؤال في المسابقة', 'questions a quiz')}</span></div></section>
+        <div class="qi-stats"><span><b>10</b>${B('أنواع أسئلة', 'question kinds')}</span><span><b>24</b>${B('تحديًا تفاعليًا', 'game challenges')}</span><span><b>30</b>${B('فريقًا كحدٍّ أعلى', 'teams at most')}</span><span><b>100</b>${B('سؤال في المسابقة', 'questions a quiz')}</span></div></section>
 
       <section><h3>${B('أين تستخدمه؟', 'Where to use it')}</h3><div class="qi-grid">
         ${card('🏫', 'الفصول والقاعات', 'Classrooms and halls', 'مراجعة الدرس، وتقويم سريع، ومنافسة بين المجموعات.', 'Lesson review, quick checks and contests between groups.')}
@@ -2201,10 +2284,10 @@ if (typeof module !== 'undefined') module.exports = QZParse;
         <p class="qi-note">${B('ويمكنك أيضًا لصق أسئلتك مكتوبة، أو رفع ملف Word أو Excel أو PDF، فيتعرّف ميدان على الأسئلة والإجابات.', 'You can also paste written questions or upload a Word, Excel or PDF file, and Maydan recognises the questions and answers.')}</p></section>
 
       <section><h3>${B('ما الذي يميّزه؟', 'What sets it apart')}</h3><div class="qi-grid">
-        ${card('🧩', 'أنواع أسئلة كثيرة', 'Many question kinds', 'اختيار من متعدد، وصح وخطأ، وخمّن الكلمة، والأقرب للرقم، والترتيب، والصورة المخفية، والاستطلاع، وسحابة الكلمات.', 'Multiple choice, true/false, guess the word, closest number, ordering, hidden picture, polls and word clouds.')}
+        ${card('🧩', 'أنواع أسئلة كثيرة', 'Many question kinds', 'اختيار من متعدد، وصح وخطأ، وخمّن الكلمة، والأقرب للرقم، والترتيب، ووصّل، والجولة الخاطفة، والصورة المخفية، والاستطلاع، وسحابة الكلمات.', 'Multiple choice, true/false, guess the word, closest number, ordering, matching, rapid rounds, hidden picture, polls and word clouds.')}
         ${card('🎮', 'تحديات ألعاب بين الأسئلة', 'Game challenges between questions', '٢٤ تحديًا للذكاء والذاكرة والسرعة والمهارة، منها شدّ الحبل بين فريقين. وزّعها بين أسئلتك بضغطة.', '24 challenges of logic, memory, speed and skill, including a team tug of war. Spread them between your questions in one tap.')}
         ${card('👥', 'فرق أو أفراد', 'Teams or individuals', 'من فريقين إلى ثلاثين، بأسماء تكتبها، ويختار المشارك فريقه أو توزّعهم أنت.', 'From two to thirty teams with your own names; players choose, or you place them.')}
-        ${card('🔥', 'حماس حتى آخر سؤال', 'Excitement to the last question', 'سؤال ذهبي مفاجئ، ولحظة حسم بنقاط مضاعفة، ورهان الثقة، وتفاعلات المشاركين على الشاشة.', 'A surprise golden question, a double-points finale, confidence bets, and live reactions on the screen.')}
+        ${card('🔥', 'حماس حتى آخر سؤال', 'Excitement to the last question', 'سؤال ذهبي مفاجئ، ولحظة حسم بنقاط مضاعفة، ورهان الثقة، ووضع «الناجي الأخير» الذي يُخرج من يخطئ، وتفاعلات المشاركين على الشاشة.', 'A surprise golden question, a double-points finale, confidence bets, a last-survivor mode, and live reactions on the screen.')}
         ${card('📽', 'مع شاشة أو بدونها', 'With or without a screen', 'إن تعطّل جهاز العرض استمرت المسابقة، فكل جوال يعرض السؤال والنتيجة والترتيب.', 'If the projector fails the quiz goes on: every phone shows the question, the result and the ranking.')}
         ${card('⏸', 'أوقف وأكمل لاحقًا', 'Pause and resume', 'أوقف المسابقة متى شئت وأكملها من حيث توقفت، ونزّل النتائج ملف CSV.', 'Pause any time and pick up where you left off; download the results as CSV.')}
       </div></section></div>`;
@@ -2240,7 +2323,7 @@ if (typeof module !== 'undefined') module.exports = QZParse;
 
   /* ---------- editor ---------- */
   // the editor's quiz in the form the live screen plays
-  const live = Q => ({ title: Q.title, qs: Q.qs.map(x => x.type === 'game' ? { type: 'game', g: x.g, q: '', opts: [], ok: [], pts: x.pts, time: x.time || 30, seed: 1 + Math.floor(Math.random() * 1e9) } : ({ type: x.type, q: x.q, opts: TEXTY.includes(x.type) ? [] : x.opts.filter(o => o.trim()), ok: x.type === 'poll' || TEXTY.includes(x.type) ? [] : x.ok.map(j => x.opts.slice(0, j).filter(o => o.trim()).length), pts: x.type === 'open' || x.type === 'poll' ? 0 : x.pts, img: x.img, reveal: !!(x.reveal && x.img && x.type === 'mc'), ans: x.ans, unit: x.unit || '', items: x.type === 'order' ? x.items.filter(v => v.trim()) : null, time: x.timeSet ? x.time : suggest(x) })) });
+  const live = Q => ({ title: Q.title, qs: Q.qs.map(x => x.type === 'game' ? { type: 'game', g: x.g, q: '', opts: [], ok: [], pts: x.pts, time: x.time || 30, seed: 1 + Math.floor(Math.random() * 1e9) } : ({ type: x.type, q: x.q, opts: TEXTY.includes(x.type) ? [] : x.opts.filter(o => o.trim()), ok: x.type === 'poll' || TEXTY.includes(x.type) ? [] : x.ok.map(j => x.opts.slice(0, j).filter(o => o.trim()).length), pts: x.type === 'open' || x.type === 'poll' ? 0 : x.pts, img: x.img, reveal: !!(x.reveal && x.img && x.type === 'mc'), ans: x.ans, unit: x.unit || '', items: x.type === 'order' ? x.items.filter(v => v.trim()) : x.type === 'rapid' ? x.items.filter(v => v.trim()) : null, truth: x.type === 'rapid' ? x.items.map((v, j) => v.trim() ? !!x.truth[j] : null).filter(v => v != null) : null, pairs: x.type === 'match' ? x.pairs.filter(p => p[0].trim() && p[1].trim()).map(p => [p[0].trim(), p[1].trim()]) : null, time: x.timeSet ? x.time : suggest(x) })) });
   function editor() {
     root.innerHTML = `<div class="qz-top"><button type="button" class="sn-lnk" id="qzBack">${B('‹ مسابقاتي', '‹ My quizzes')}</button></div>
       <div class="sn-card"><label class="sn-lbl">${B('عنوان المسابقة', 'Quiz title')}<input type="text" id="qzTitle" maxlength="120" value="${esc(Q.title)}" placeholder="${T('مثال: مراجعة الوحدة الأولى', 'e.g. Unit 1 review')}"></label></div>
@@ -2355,9 +2438,9 @@ if (typeof module !== 'undefined') module.exports = QZParse;
   }
   const RLIB = () => window.MDLib || [];
   const GAMES = () => window.MDGames ? MDGames.LIST : [];
-  const KINDS = () => [['mc', T('اختيار من متعدد', 'Multiple choice')], ['tf', T('صح أو خطأ', 'True or false')], ['poll', T('تصويت (بلا إجابة صحيحة)', 'Poll (no right answer)')], ['num', T('الأقرب للرقم', 'Closest number')], ['word', T('خمّن الكلمة', 'Guess the word')], ['order', T('رتّب بالترتيب الصحيح', 'Put in order')], ['open', T('كتابة حرة (سحابة كلمات)', 'Free text (word cloud)')], ['game', T('تحدٍّ تفاعلي 🎮', 'Challenge 🎮')]];
+  const KINDS = () => [['mc', T('اختيار من متعدد', 'Multiple choice')], ['tf', T('صح أو خطأ', 'True or false')], ['poll', T('تصويت (بلا إجابة صحيحة)', 'Poll (no right answer)')], ['num', T('الأقرب للرقم', 'Closest number')], ['word', T('خمّن الكلمة', 'Guess the word')], ['order', T('رتّب بالترتيب الصحيح', 'Put in order')], ['match', T('وصّل (مطابقة)', 'Match the pairs')], ['rapid', T('الجولة الخاطفة (صح أو خطأ متتالية)', 'Rapid round (true/false in a row)')], ['open', T('كتابة حرة (سحابة كلمات)', 'Free text (word cloud)')], ['game', T('تحدٍّ تفاعلي 🎮', 'Challenge 🎮')]];
   const typeSel = t => `<select data-k="type" aria-label="type">${KINDS().map(([v, l]) => `<option value="${v}"${v === t ? ' selected' : ''}>${l}</option>`).join('')}</select>`;
-  const TEXTY = ['num', 'word', 'order', 'open'];
+  const TEXTY = ['num', 'word', 'order', 'open', 'match', 'rapid'];
   function setType(x, t) {
     const was = x.type;
     if (t === 'game') { x.g = x.g || pickGames(1, Q.qs.filter(z => z.type === 'game').map(z => z.g))[0] || 'sort'; x.time = gTime(x.g); }
@@ -2365,6 +2448,8 @@ if (typeof module !== 'undefined') module.exports = QZParse;
     if ((t === 'mc' || t === 'poll') && (was === 'tf' || was === 'game' || TEXTY.includes(was))) { x.opts = x.keep && x.keep.length ? x.keep : (x.opts && x.opts.some(o => o.trim()) && was !== 'tf' ? x.opts : ['', '', '', '']); if (was === 'tf') x.ok = []; }
     if (t === 'poll') x.ok = [];
     if (t === 'order' && !(x.items && x.items.length)) x.items = ['', '', ''];
+    if (t === 'match' && !(x.pairs && x.pairs.length)) x.pairs = [['', ''], ['', ''], ['', '']];
+    if (t === 'rapid') { if (!(x.items && x.items.length) || was === 'order') x.items = ['', '', '', '', '']; x.truth = (x.truth || []).slice(0, x.items.length); while (x.truth.length < x.items.length) x.truth.push(true); }
     if (t === 'open') x.pts = 0; else if (was === 'open' && !x.pts) x.pts = 1;
     x.type = t;
   }
@@ -2422,6 +2507,8 @@ if (typeof module !== 'undefined') module.exports = QZParse;
       const body = x.type === 'num' ? `<div class="qz-row2"><label>${B('الجواب (رقم)', 'The answer (a number)')}<input type="number" data-k="ans" step="any" value="${esc(x.ans == null ? '' : x.ans)}"></label><label>${B('الوحدة (اختياري)', 'Unit (optional)')}<input type="text" data-k="unit" maxlength="20" value="${esc(x.unit || '')}" placeholder="${T('متر، سنة…', 'metres, years…')}"></label></div><p class="qz-ghow">${B('يكتب كل مشارك رقمًا، والأقرب إلى الجواب يكسب أكثر.', 'Everyone types a number; the closest earns most.')}</p>`
         : x.type === 'word' ? `<div class="qz-row2"><label>${B('الكلمة', 'The word')}<input type="text" data-k="ans" maxlength="24" dir="auto" value="${esc(x.ans || '')}"></label></div><p class="qz-ghow">${B('تنكشف حروف الكلمة واحدًا بعد الآخر على الشاشة والجوالات، ومن يكتبها أسرع يكسب أكثر.', 'The letters show one by one on the screen and the phones; the quickest to type it earns most.')}</p>`
         : x.type === 'order' ? `<p class="qz-ghow">${B('اكتب العناصر بترتيبها الصحيح من الأول إلى الأخير؛ تظهر للمشاركين مخلوطة.', 'Write the items in their right order, first to last; players see them shuffled.')}</p><ol class="qz-items">${(x.items || []).map((v, j) => `<li><b>${j + 1}</b><input type="text" data-it="${j}" maxlength="60" dir="auto" value="${esc(v)}">${x.items.length > 2 ? `<button type="button" class="qz-x" data-irm="${j}" aria-label="remove">×</button>` : ''}</li>`).join('')}</ol>${(x.items || []).length < 6 ? `<button type="button" class="sn-lnk qz-more" data-a="item">${B('+ عنصر', '+ Item')}</button>` : ''}`
+        : x.type === 'match' ? `<p class="qz-ghow">${B('اكتب كل زوج في سطر: الطرف الأول وما يقابله. تظهر الأطراف المقابلة للمشاركين مخلوطة، فيصلون كل طرف بما يقابله.', 'Write each pair on a row: an item and its match. Players see the matches shuffled and link each item to its match.')}</p><ol class="qz-pairs">${(x.pairs || []).map((p, j) => `<li><b>${j + 1}</b><input type="text" data-pa="${j}-0" maxlength="40" dir="auto" value="${esc(p[0])}" placeholder="${T('مثال: الرياض', 'e.g. Paris')}"><i>↔</i><input type="text" data-pa="${j}-1" maxlength="40" dir="auto" value="${esc(p[1])}" placeholder="${T('مثال: عاصمة المملكة', 'e.g. France')}">${x.pairs.length > 2 ? `<button type="button" class="qz-x" data-prm="${j}" aria-label="remove">×</button>` : ''}</li>`).join('')}</ol>${(x.pairs || []).length < 5 ? `<button type="button" class="sn-lnk qz-more" data-a="pair">${B('+ زوج', '+ Pair')}</button>` : ''}`
+        : x.type === 'rapid' ? `<p class="qz-ghow">${B('عبارات تظهر للمشارك واحدة بعد أخرى، فيجيب صح أو خطأ بسرعة. حدّد الإجابة الصحيحة لكل عبارة.', 'Statements come one after another; players answer true or false fast. Mark the right answer of each.')}</p><ol class="qz-rapid">${(x.items || []).map((v, j) => `<li><b>${j + 1}</b><input type="text" data-it="${j}" maxlength="90" dir="auto" value="${esc(v)}" placeholder="${T('عبارة', 'A statement')}"><button type="button" class="qz-tv${x.truth[j] ? ' t' : ' f'}" data-tv="${j}">${x.truth[j] ? T('صح', 'True') : T('خطأ', 'False')}</button>${x.items.length > 3 ? `<button type="button" class="qz-x" data-irm="${j}" aria-label="remove">×</button>` : ''}</li>`).join('')}</ol>${(x.items || []).length < 10 ? `<button type="button" class="sn-lnk qz-more" data-a="item">${B('+ عبارة', '+ Statement')}</button>` : ''}`
         : `<p class="qz-ghow">${B('يكتب كل مشارك كلمة أو جملة قصيرة، وتظهر الإجابات على الشاشة سحابة كلمات، والأكثر تكرارًا أكبر. بلا نقاط.', 'Everyone writes a word or a short phrase; the answers appear as a word cloud, the most common biggest. No points.')}</p>`;
       return `<div class="qz-q qz-${x.type}" data-id="${x.id}">${head}${ideas(x)}${body}<p class="qz-warn" hidden></p></div>`;
     }
@@ -2452,8 +2539,11 @@ if (typeof module !== 'undefined') module.exports = QZParse;
     if (f('ans')) f('ans').oninput = e => { x.ans = x.type === 'num' ? (e.target.value === '' ? null : +e.target.value) : e.target.value; later(); };
     if (f('unit')) f('unit').oninput = e => { x.unit = e.target.value; later(); };
     if (f('reveal')) f('reveal').onchange = e => { x.reveal = e.target.checked; later(); };
-    el.querySelectorAll('[data-it]').forEach(i => { i.oninput = () => { x.items[+i.dataset.it] = i.value; later(); }; i.onkeydown = e => { if (e.key === 'Enter' && !e.isComposing) { e.preventDefault(); const j = +i.dataset.it; if (j < x.items.length - 1) el.querySelector(`[data-it="${j + 1}"]`).focus(); else if (x.items.length < 6) { x.items.push(''); re().querySelector(`[data-it="${j + 1}"]`).focus(); } } }; });
-    el.querySelectorAll('[data-irm]').forEach(b => b.onclick = () => { x.items.splice(+b.dataset.irm, 1); re(); });
+    el.querySelectorAll('[data-it]').forEach(i => { i.oninput = () => { x.items[+i.dataset.it] = i.value; later(); }; i.onkeydown = e => { if (e.key === 'Enter' && !e.isComposing) { e.preventDefault(); const j = +i.dataset.it; if (j < x.items.length - 1) el.querySelector(`[data-it="${j + 1}"]`).focus(); else if (x.items.length < (x.type === 'rapid' ? 10 : 6)) { x.items.push(''); if (x.type === 'rapid') x.truth.push(true); re().querySelector(`[data-it="${j + 1}"]`).focus(); } } }; });
+    el.querySelectorAll('[data-irm]').forEach(b => b.onclick = () => { x.items.splice(+b.dataset.irm, 1); if (x.truth) x.truth.splice(+b.dataset.irm, 1); re(); });
+    el.querySelectorAll('[data-tv]').forEach(b => b.onclick = () => { const j = +b.dataset.tv; x.truth[j] = !x.truth[j]; b.className = 'qz-tv ' + (x.truth[j] ? 't' : 'f'); b.textContent = x.truth[j] ? T('صح', 'True') : T('خطأ', 'False'); later(); });
+    el.querySelectorAll('[data-pa]').forEach(i => { i.oninput = () => { const [j, k] = i.dataset.pa.split('-').map(Number); x.pairs[j][k] = i.value; later(); }; i.onkeydown = e => { if (e.key === 'Enter' && !e.isComposing) { e.preventDefault(); const [j, k] = i.dataset.pa.split('-').map(Number); const nx = el.querySelector(`[data-pa="${k ? j + 1 : j}-${k ? 0 : 1}"]`); if (nx) nx.focus(); else if (x.pairs.length < 5) { x.pairs.push(['', '']); re().querySelector(`[data-pa="${j + 1}-0"]`).focus(); } } }; });
+    el.querySelectorAll('[data-prm]').forEach(b => b.onclick = () => { x.pairs.splice(+b.dataset.prm, 1); re(); });
     el.querySelector('[data-k=time]').onchange = e => { x.time = +e.target.value; x.timeSet = true; later(); };
     el.querySelector('[data-k=pts]').onchange = e => { x.pts = +e.target.value; later(); };
     el.querySelector('[data-k=img]').onchange = async e => { const f = e.target.files[0]; if (f) { x.img = await shrink(f); re(); } };
@@ -2479,7 +2569,8 @@ if (typeof module !== 'undefined') module.exports = QZParse;
     el.querySelector('[data-k=q]').onkeydown = e => { if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) { e.preventDefault(); const f = el.querySelector('[data-o="0"]'); if (f) f.focus(); } };
     el.querySelectorAll('[data-rm]').forEach(b => b.onclick = () => { const j = +b.dataset.rm; x.opts.splice(j, 1); x.ok = x.ok.filter(k => k !== j).map(k => k > j ? k - 1 : k); re(); });
     const a = s => el.querySelector(`[data-a=${s}]`);
-    if (a('item')) a('item').onclick = () => { x.items.push(''); re().querySelector(`[data-it="${x.items.length - 1}"]`).focus(); };
+    if (a('pair')) a('pair').onclick = () => { x.pairs.push(['', '']); re().querySelector(`[data-pa="${x.pairs.length - 1}-0"]`).focus(); };
+    if (a('item')) a('item').onclick = () => { x.items.push(''); if (x.type === 'rapid') x.truth.push(true); re().querySelector(`[data-it="${x.items.length - 1}"]`).focus(); };
     if (a('opt')) a('opt').onclick = () => { x.opts.push(''); const c = re(); c.querySelector(`[data-o="${x.opts.length - 1}"]`).focus(); };
     if (a('noimg')) a('noimg').onclick = () => { x.img = null; re(); };
     a('dup').onclick = () => { const c = norm(JSON.parse(JSON.stringify(Object.assign({}, x, { id: uid() })))); c.timeSet = x.timeSet; Q.qs.splice(Q.qs.indexOf(x) + 1, 0, c); draw(); later(); };
@@ -2507,6 +2598,8 @@ if (typeof module !== 'undefined') module.exports = QZParse;
       if (x.type === 'num' && (x.ans == null || isNaN(x.ans))) w.push(T('اكتب الجواب رقمًا', 'type the answer as a number'));
       if (x.type === 'word' && !(x.ans || '').trim()) w.push(T('اكتب الكلمة', 'type the word'));
       if (x.type === 'order' && (x.items || []).filter(v => v.trim()).length < 2) w.push(T('يحتاج عنصرين على الأقل', 'needs at least two items'));
+      if (x.type === 'match') { const ps = (x.pairs || []).filter(p => p[0].trim() || p[1].trim()); if (ps.length < 2) w.push(T('يحتاج زوجين على الأقل', 'needs at least two pairs')); if (ps.some(p => !p[0].trim() || !p[1].trim())) w.push(T('زوج ناقص', 'a pair is incomplete')); const r = ps.map(p => p[1].trim().toLowerCase()); if (new Set(r).size < r.length) w.push(T('طرفان متطابقان', 'two matches are the same')); }
+      if (x.type === 'rapid' && (x.items || []).filter(v => v.trim()).length < 3) w.push(T('يحتاج ثلاث عبارات على الأقل', 'needs at least three statements'));
       if (choice && filled.length < 2) w.push(T('يحتاج خيارين على الأقل', 'needs at least two options'));
       if (choice && x.type !== 'poll' && !x.ok.length) w.push(T('لم تُحدَّد الإجابة الصحيحة', 'no right answer chosen'));
       else if (x.ok.some(j => !(x.opts[j] || '').trim())) w.push(T('الإجابة الصحيحة خيار فارغ', 'the right answer is an empty option'));
@@ -2620,22 +2713,26 @@ if (typeof module !== 'undefined') module.exports = QZParse;
   }
 
   /* ---------- the AI instructions ---------- */
-  const usable = x => x.q && (x.type === 'num' ? x.ans !== '' && x.ans != null : x.type === 'word' ? !!x.ans : x.type === 'order' ? (x.items || []).length >= 2 : x.type === 'open' ? true : x.opts.filter(o => o.trim()).length >= 2);
+  const usable = x => x.q && (x.type === 'match' ? (x.pairs || []).length >= 2 : x.type === 'rapid' ? (x.items || []).length >= 3 : x.type === 'num' ? x.ans !== '' && x.ans != null : x.type === 'word' ? !!x.ans : x.type === 'order' ? (x.items || []).length >= 2 : x.type === 'open' ? true : x.opts.filter(o => o.trim()).length >= 2);
   function aiPrompt(topic, n, lv, ty, lg) {
     const ar = lg === 'ar', all = ty === 'all';
     const LV = { mixed: ar ? 'متنوعة الصعوبة (سهلة ومتوسطة وصعبة)' : 'of mixed difficulty (easy, medium and hard)', easy: ar ? 'سهلة' : 'easy', mid: ar ? 'متوسطة الصعوبة' : 'of medium difficulty', hard: ar ? 'صعبة تتطلب تفكيرًا' : 'hard, requiring thought' }[lv];
     const TY = { mc: ar ? 'من نوع اختيار من متعدد بأربعة خيارات' : 'multiple choice with four options', mix: ar ? 'أغلبها اختيار من متعدد بأربعة خيارات، وبعضها صح أو خطأ' : 'mostly multiple choice with four options, some true or false', tf: ar ? 'من نوع صح أو خطأ' : 'true or false', all: ar ? 'منوّعة الأنواع' : 'of varied kinds' }[ty];
     const mix = ar ? `
-- نوّع الأنواع هكذا تقريبًا: نصفها اختيار من متعدد، والباقي موزّع على: صح أو خطأ، والأقرب للرقم، وخمّن الكلمة، والترتيب، واستطلاع واحد أو اثنان للرأي.
+- نوّع الأنواع هكذا تقريبًا: نصفها اختيار من متعدد، والباقي موزّع على: صح أو خطأ، والأقرب للرقم، وخمّن الكلمة، والترتيب، ووصّل، وجولة خاطفة واحدة، واستطلاع واحد أو اثنان للرأي.
 - «الأقرب للرقم»: جوابه رقم واحد معروف ودقيق (سنة، عدد، طول…)، وتُذكر الوحدة بعده.
 - «خمّن الكلمة»: جوابه كلمة واحدة لا تزيد على ١٢ حرفًا، والسؤال تلميح عنها لا يذكرها.
 - «الترتيب»: من ٣ إلى ٥ عناصر قصيرة، تُكتب بترتيبها الصحيح (والمنصة تخلطها للمشاركين).
-- «الاستطلاع»: سؤال رأي بلا إجابة صحيحة، بخيارات دون علامة *.` : `
-- Mix the kinds roughly so: half multiple choice, the rest spread over true/false, closest number, guess the word, ordering, and one or two opinion polls.
+- «الاستطلاع»: سؤال رأي بلا إجابة صحيحة، بخيارات دون علامة *.
+- «وصّل»: من ٣ إلى ٥ أزواج قصيرة، كل زوج في سطر: الطرف = ما يقابله.
+- «الجولة الخاطفة»: من ٥ إلى ٨ عبارات قصيرة صحيحة أو خاطئة، وبعد كل عبارة (صح) أو (خطأ).` : `
+- Mix the kinds roughly so: half multiple choice, the rest spread over true/false, closest number, guess the word, ordering, matching, one rapid round, and one or two opinion polls.
 - “Closest number”: its answer is one exact, well-known number (a year, a count, a length…), with its unit after it.
 - “Guess the word”: its answer is one word of at most 12 letters; the question is a clue that does not contain it.
 - “Ordering”: 3 to 5 short items written in their right order (the platform shuffles them for players).
-- “Poll”: an opinion question with no right answer, options without *.`;
+- “Poll”: an opinion question with no right answer, options without *.
+- “Match”: 3 to 5 short pairs, one per line: item = its match.
+- “Rapid round”: 5 to 8 short true-or-false statements, each followed by (true) or (false).`;
     const exAr = `1. نص السؤال؟
 أ) خيار
 ب) خيار *
@@ -2660,7 +2757,17 @@ if (typeof module !== 'undefined') module.exports = QZParse;
 6. سؤال رأي؟ [استطلاع]
 أ) خيار
 ب) خيار
-ج) خيار` : '');
+ج) خيار
+
+7. صِل كل عنصر بما يقابله [وصّل]
+- الطرف الأول = ما يقابله
+- الطرف الثاني = ما يقابله
+- الطرف الثالث = ما يقابله
+
+8. الجولة الخاطفة [خاطفة]
+- عبارة صحيحة (صح)
+- عبارة خاطئة (خطأ)
+- عبارة صحيحة (صح)` : '');
     const exEn = `1. Question text?
 a) option
 b) option *
@@ -2685,7 +2792,17 @@ Answer: Riyadh
 6. An opinion question? [poll]
 a) option
 b) option
-c) option` : '');
+c) option
+
+7. Match each item [match]
+- first item = its match
+- second item = its match
+- third item = its match
+
+8. Rapid round [rapid]
+- a true statement (true)
+- a false statement (false)
+- a true statement (true)` : '');
     if (ar) return `اكتب ${n} سؤالًا لمسابقة تفاعلية حيّة، ${LV}، ${TY}${topic ? `، عن الموضوع التالي:\n\n${topic}\n` : '.'}
 
 الشروط:
@@ -2737,7 +2854,7 @@ ${exEn}`;
         return;
       }
       if (TEXTY.includes(Q.qs[i].type)) {
-        const x = Q.qs[i], ph = x.type === 'num' ? `<input class="qz-pin" placeholder="${T('اكتب رقمًا', 'Type a number')}" disabled><p class="qz-pans">${B('الجواب', 'Answer')}: ${esc(x.ans)} ${esc(x.unit || '')}</p>` : x.type === 'word' ? `<p class="qz-pw">${[...(x.ans || '')].map(c => c === ' ' ? ' ' : '_').join(' ')}</p><input class="qz-pin" placeholder="${T('اكتب الكلمة', 'Type the word')}" disabled>` : x.type === 'order' ? (x.items || []).slice().sort(() => Math.random() - .5).map(v => `<div class="qz-pb" style="--c:var(--qz1)"><span dir="auto">${esc(v)}</span></div>`).join('') : `<input class="qz-pin" placeholder="${T('اكتب إجابتك', 'Type your answer')}" disabled>`;
+        const x = Q.qs[i], ph = x.type === 'num' ? `<input class="qz-pin" placeholder="${T('اكتب رقمًا', 'Type a number')}" disabled><p class="qz-pans">${B('الجواب', 'Answer')}: ${esc(x.ans)} ${esc(x.unit || '')}</p>` : x.type === 'word' ? `<p class="qz-pw">${[...(x.ans || '')].map(c => c === ' ' ? ' ' : '_').join(' ')}</p><input class="qz-pin" placeholder="${T('اكتب الكلمة', 'Type the word')}" disabled>` : x.type === 'order' ? (x.items || []).slice().sort(() => Math.random() - .5).map(v => `<div class="qz-pb" style="--c:var(--qz1)"><span dir="auto">${esc(v)}</span></div>`).join('') : x.type === 'match' ? (x.pairs || []).map((p, j) => `<div class="qz-pmatch"><span dir="auto">${esc(p[0])}</span><i>↔</i><span dir="auto">${esc(((x.pairs || [])[(j + 1) % x.pairs.length] || [])[1] || '')}</span></div>`).join('') : x.type === 'rapid' ? `<p class="qz-pw" dir="auto">${esc((x.items || [])[0] || '')}</p><div class="qz-row2"><div class="qz-pb" style="--c:var(--qz2)"><span>${T('صح', 'True')}</span></div><div class="qz-pb" style="--c:var(--qz1)"><span>${T('خطأ', 'False')}</span></div></div><p class="qz-pans">1 / ${(x.items || []).length}</p>` : `<input class="qz-pin" placeholder="${T('اكتب إجابتك', 'Type your answer')}" disabled>`;
         v.innerHTML = `<div class="qz-pvb"><div class="qz-pvh"><b>${B('معاينة', 'Preview')} · ${i + 1} / ${Q.qs.length}</b><span><button type="button" data-g="-1" aria-label="previous">${isAr() ? '›' : '‹'}</button><button type="button" data-g="1" aria-label="next">${isAr() ? '‹' : '›'}</button><button type="button" data-x aria-label="close">✕</button></span></div>
           <div class="qz-stage"><div class="qz-screen"><p class="qz-sq" dir="auto">${esc(x.q) || '…'}</p>${x.img ? `<img src="${x.img}" alt="">` : ''}<div class="qz-timer">${x.timeSet ? x.time : suggest(x)}</div></div>
           <div class="qz-phone"><div class="qz-ph-top">${KINDS().find(k => k[0] === x.type)[1]}</div><div class="qz-tx">${ph}</div></div></div></div>`;
@@ -3081,6 +3198,18 @@ html.md-on{overflow:hidden}
 .md-mvb{display:flex;justify-content:space-between;gap:8px}.md-mvb button{border:0;background:none;font:inherit;font-size:.875rem;cursor:pointer;color:#5a6664;padding:4px}.md-mvb .md-rm{color:#b0533a}
 .md-grade input{width:58px;margin-inline-start:6px;padding:4px 6px;border-radius:8px;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.1);color:inherit;font:inherit;text-align:center}
 .md-grade{color:#fff!important;opacity:1}.md-grade input{color:#fff!important;-moz-appearance:textfield}.md-grade input::-webkit-inner-spin-button{display:none}
+/* match and rapid round */
+.md-match{display:grid;grid-template-columns:1fr 1fr;gap:16px;width:min(1000px,94vw);margin:2vh auto 0}.md-match>div{display:grid;gap:10px;align-content:start}
+.md-pairs{display:grid;gap:10px;width:min(900px,92vw);margin:2vh auto}.md-pairs>div{display:grid;grid-template-columns:1fr auto 1fr auto;gap:14px;align-items:center;background:rgba(255,255,255,.1);border-radius:14px;padding:12px 18px;font-size:clamp(1rem,2vw,1.5rem)}.md-pairs i{font-style:normal;color:#e0a458}.md-pairs small{opacity:.75}
+.md-rlist{list-style:none;padding:0;display:grid;gap:8px;width:min(950px,94vw);margin:2vh auto}.md-rlist li{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;background:rgba(255,255,255,.08);border-radius:12px;padding:10px 16px;font-size:clamp(.95rem,1.8vw,1.35rem)}
+.md-rlist b{border-radius:99px;padding:3px 12px;font-size:.85em}.md-rlist .t b{background:#2f7d5b}.md-rlist .f b{background:#b0533a}.md-rlist small{opacity:.75}
+.md-rapid{font-size:clamp(1.2rem,2.6vw,2rem)!important;max-width:900px;margin-inline:auto}
+.mp-mrows{display:grid;gap:8px}.mp-mrow{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;border:2px solid transparent;border-inline-start:6px solid var(--c);background:var(--surface);color:var(--ink);border-radius:12px;padding:10px;font:inherit;text-align:start}
+.mp-mrow.on{border-color:#C9822B}.mp-mrow i{font-style:normal;color:#C9822B}.mp-mrow b{font-weight:600;color:var(--muted)}
+.mp-rk{margin:0;text-align:center;font-weight:700;color:#C9822B}.mp-rs{margin:6px 0 14px;text-align:center;font-size:1.35rem;font-weight:700;line-height:1.6;min-height:4.2em;display:grid;place-items:center}.mp-rs.in{animation:mdPop .3s ease}
+.mp-rtf{display:grid;grid-template-columns:1fr 1fr;gap:12px}.mp-rtf button{border:0;border-radius:18px;padding:30px 0;font:inherit;font-size:1.5rem;font-weight:800;color:#fff;cursor:pointer;touch-action:manipulation}.mp-rtf .t{background:#2f7d5b}.mp-rtf .f{background:#b0533a}.mp-rtf button:active{transform:scale(.96)}
+.md-surv{margin:2vh auto 0;text-align:center;font-size:clamp(1.1rem,2.2vw,1.7rem);font-weight:700;color:#e0a458}.md-surv small{display:block;font-size:.65em;font-weight:500;color:#d9dcea;margin-top:4px}
+.mp-surv{margin:0 0 10px;text-align:center;font-weight:700;border-radius:12px;padding:8px;background:color-mix(in srgb,#e0a458 20%,transparent)}.mp-surv.out{background:color-mix(in srgb,#b0533a 22%,transparent)}
 </style><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script>window.MD_CFG={"apiKey": "AIzaSyA50i75DT1Is1a6Yn6snW1_JVObc8S3F0Y", "authDomain": "maydan-705ae.firebaseapp.com", "databaseURL": "https://maydan-705ae-default-rtdb.europe-west1.firebasedatabase.app", "projectId": "maydan-705ae", "appId": "1:342187013133:web:d5c2396f0db413f3c51144"};window.MD_MARK="<svg class=\"md-mark\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><rect x=\"4\" y=\"4\" width=\"40\" height=\"40\" rx=\"12\" fill=\"#23336F\"/><path d=\"M24 9l4.2 6.8 7.8-1.8-1.8 7.8L41 24l-6.8 4.2 1.8 7.8-7.8-1.8L24 39l-4.2-6.8-7.8 1.8 1.8-7.8L7 24l6.8-4.2-1.8-7.8 7.8 1.8z\" fill=\"#C9822B\"/><circle cx=\"24\" cy=\"24\" r=\"6.5\" fill=\"#23336F\"/><circle cx=\"24\" cy=\"24\" r=\"3\" fill=\"#F3E3C7\"/></svg>";</script><script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script><script>/* Maydan challenges: short games played on every phone at once. Every phone gets the same level (same seed),
    so the race is fair. Each game reports a score; higher is better. */
 window.MDGames = (function () {
@@ -3766,7 +3895,7 @@ window.MDLive = (function () {
   };
 
   /* ---------- keeping a game so it can be resumed ---------- */
-  const keep = () => { if (!G) return; try { localStorage.setItem(SAVE, JSON.stringify({ pin: G.pin, quiz: G.quiz, i: G.done, score: G.score, qp: G.qp, streak: G.streak, team: G.team, teams: G.teams, opts: G.opts, gold: G.gold, players: G.players, at: Date.now() })); } catch (e) {} };
+  const keep = () => { if (!G) return; try { localStorage.setItem(SAVE, JSON.stringify({ pin: G.pin, quiz: G.quiz, i: G.done, score: G.score, qp: G.qp, out: G.out, streak: G.streak, team: G.team, teams: G.teams, opts: G.opts, gold: G.gold, players: G.players, at: Date.now() })); } catch (e) {} };
   const forget = () => { try { localStorage.removeItem(SAVE); } catch (e) {} };
   function pending() { try { const s = JSON.parse(localStorage.getItem(SAVE) || 'null'); return s && Date.now() - s.at < 7 * 864e5 ? s : null; } catch (e) { return null; } }
 
@@ -3784,7 +3913,7 @@ window.MDLive = (function () {
     const n = quiz.qs.length;
     const txt = quiz.qs.map(x => (x.q || '') + (x.opts || []).join('')).join('');
     // the screen's language: the questions' own, or the page's when there is no text (a games-only quiz)
-    G = { ar: /[؀-ۿ]/.test(txt) || (!/[a-z]/i.test(txt) && document.documentElement.lang !== 'en'), pin, quiz, el, ref: db.ref('rooms/' + pin), players: {}, score: {}, qp: {}, streak: {}, team: {}, teams: null, i: -1, done: -1,
+    G = { ar: /[؀-ۿ]/.test(txt) || (!/[a-z]/i.test(txt) && document.documentElement.lang !== 'en'), pin, quiz, el, ref: db.ref('rooms/' + pin), players: {}, score: {}, qp: {}, out: {}, streak: {}, team: {}, teams: null, i: -1, done: -1,
       opts: { every: 1, speed: true, gold: true, final: true, bet: false }, gold: -1, timer: null, subs: [] };
   }
   async function start(quiz) {
@@ -3809,7 +3938,7 @@ window.MDLive = (function () {
       const room = (await db.ref('rooms/' + s.pin).once('value')).val();
       if (!room || room.host !== uid) { forget(); el.innerHTML = `<div class="md-wait">${B('انتهت صلاحية هذه المسابقة ولم تعد موجودة.', 'This quiz is no longer available.')}<button type="button" class="btn ghost" data-x>${B('إغلاق', 'Close')}</button></div>`; el.querySelector('[data-x]').onclick = leave; return; }
       fresh(s.quiz, el, s.pin);
-      Object.assign(G, { score: s.score || {}, qp: s.qp || {}, streak: s.streak || {}, team: s.team || {}, teams: s.teams || null, opts: s.opts || G.opts, gold: s.gold, players: s.players || {}, i: s.i, done: s.i });
+      Object.assign(G, { score: s.score || {}, qp: s.qp || {}, out: s.out || {}, streak: s.streak || {}, team: s.team || {}, teams: s.teams || null, opts: s.opts || G.opts, gold: s.gold, players: s.players || {}, i: s.i, done: s.i });
       keepPlayers();
       if (G.i < 0) return lobby();
       await G.ref.child('st').set({ ph: 'lb', i: G.i, lock: true });
@@ -3829,7 +3958,28 @@ window.MDLive = (function () {
     G.subs.forEach(f => f()); G = null; leave();
   }
   const sub = (ref, ev, fn) => { ref.on(ev, fn); G.subs.push(() => ref.off(ev, fn)); };
+  /* ---------- last survivor: a wrong answer takes a player out of the race ---------- */
+  const outv = u => G.out[u] == null ? 1e9 : G.out[u];
+  const byRank = (a, b) => (G.opts.surv ? outv(b) - outv(a) : 0) || (G.score[b] || 0) - (G.score[a] || 0);
+  const alive = () => Object.keys(G.players).filter(u => G.out[u] == null);
+  function survive(x, sc) {
+    if (!G.opts.surv) return;
+    const live = alive(), judged = !['poll', 'open', 'game'].includes(x.type);
+    const lose = judged ? live.filter(u => !sc[u] || !sc[u].c) : [];
+    // when everyone still in would go out, they are all spared this time
+    const spared = lose.length && lose.length === live.length;
+    if (!spared) lose.forEach(u => { G.out[u] = G.i; });
+    const left = alive();
+    Object.keys(G.players).forEach(u => { sc[u] = sc[u] || { s: G.score[u] || 0, d: 0, c: false, a: false }; sc[u].out = G.out[u] != null; sc[u].left = left.length; });
+    const order = Object.keys(sc).sort(byRank);
+    order.forEach((u, k) => { sc[u].r = k + 1; sc[u].of = order.length; delete sc[u].gap; if (k && G.out[u] == null) { sc[u].gap = G.score[order[k - 1]] - G.score[u]; sc[u].above = G.players[order[k - 1]] || ''; } });
+    G.note = !judged ? `🏆 ${B(`الناجون: ${left.length}`, `Still in: ${left.length}`)}`
+      : spared ? `🛟 ${B(`أخطأ الجميع، فنجوا كلهم هذه المرة. الناجون: ${left.length}`, `Everyone missed, so all are spared this time. Still in: ${left.length}`)}`
+      : left.length <= 1 ? `🏆 ${B(`الناجي الأخير: ${esc(G.players[left[0]] || '')}! اضغط التالي لإعلان النتيجة`, `The last survivor: ${esc(G.players[left[0]] || '')}! Press next for the results`)}`
+      : `🏆 ${B(`خرج ${lose.length} · بقي ${left.length}`, `${lose.length} out · ${left.length} still in`)}${lose.length && lose.length <= 6 ? ` <small dir="auto">${lose.map(u => esc(G.players[u] || '')).join('، ')}</small>` : ''}`;
+  }
   function frame(inner, bar, canPause) {
+    if (G.note) { inner = inner.replace(/<\/div>\s*$/, `<p class="md-surv">${G.note}</p></div>`); G.note = null; }
     G.el.innerHTML = `<div class="md-scr">${inner}</div><div class="md-fx" aria-hidden="true"></div><div class="md-ctl">${bar || ''}<span class="md-sp"></span>${canPause ? `<button type="button" class="md-cb" data-pause>${B('إيقاف مؤقت', 'Pause')}</button>` : ''}<button type="button" class="md-cb" data-mute title="${T('الصوت', 'Sound')}">${mute ? '🔇' : '🔊'}</button><button type="button" class="md-cb" data-fs title="${T('ملء الشاشة', 'Full screen')}">⛶</button><button type="button" class="md-cb" data-end>${B('إنهاء', 'End')}</button></div>`;
     const q = s => G.el.querySelector(s);
     q('[data-mute]').onclick = e => { mute = !mute; e.currentTarget.textContent = mute ? '🔇' : '🔊'; };
@@ -3894,6 +4044,7 @@ window.MDLive = (function () {
         <label class="md-ck"><input type="checkbox" data-o="speed"${O.speed ? ' checked' : ''}> ${B('السرعة تزيد النقاط', 'Speed adds points')}</label>
         <label class="md-ck"><input type="checkbox" data-o="gold"${O.gold ? ' checked' : ''}> ${B('✨ سؤال ذهبي مفاجئ بنقاط مضاعفة', '✨ A surprise golden question with double points')}</label>
         <label class="md-ck"><input type="checkbox" data-o="final"${O.final ? ' checked' : ''}> ${B('🏁 لحظة الحسم: السؤال الأخير بنقاط مضاعفة', '🏁 The final question with double points')}</label>
+        <label class="md-ck"><input type="checkbox" data-o="surv"${O.surv ? ' checked' : ''}> ${B('🏆 الناجي الأخير: من يخطئ يخرج من المنافسة ويتابع متفرجًا، ويفوز من يصمد حتى النهاية', '🏆 Last survivor: a wrong answer takes you out to watch; whoever lasts wins')}</label>
         <label class="md-ck"><input type="checkbox" data-o="bet"${O.bet ? ' checked' : ''}> ${B('🎯 الثقة: يراهن المشارك على إجابته فيكسب أو يخسر نقاطًا إضافية', '🎯 Confidence: players can bet on their answer to win or lose extra points')}</label>
         <button type="button" class="btn solid" data-done>${B('تم', 'Done')}</button></div>
       <div class="md-set md-teamp" id="mdTeamP" hidden>
@@ -3980,6 +4131,7 @@ window.MDLive = (function () {
   const multOf = i => (G.quiz.qs[i].pts || 0) * (i === G.gold ? 2 : 1) * (G.opts.final && i === G.quiz.qs.length - 1 && G.quiz.qs.length > 1 ? 2 : 1);
   async function next() {
     G.i = G.done + 1;
+    if (G.opts.surv && G.i > 0 && alive().length <= 1) return finish();
     if (G.i >= G.quiz.qs.length) return finish();
     const x = G.quiz.qs[G.i], n = G.quiz.qs.length, m = multOf(G.i), gold = G.i === G.gold, last = G.opts.final && G.i === n - 1 && n > 1;
     // the question is read first, alone and large; then it moves up as the options and the clock appear.
@@ -4007,6 +4159,8 @@ window.MDLive = (function () {
     if (x.type === 'num') return `<p class="md-prompt">🔢 ${B('اكتب رقمًا على جوالك', 'Type a number on your phone')}${x.unit ? ` <small>(${esc(x.unit)})</small>` : ''}</p>`;
     if (x.type === 'word') { x._order = x._order || shuffleIdx([...x.ans].map((c, k) => c === ' ' ? -1 : k).filter(k => k >= 0)); return `<p class="md-mask" id="mdW" dir="auto">${mask(x, 0)}</p><p class="md-prompt">${B('خمّن الكلمة واكتبها على جوالك', 'Guess the word and type it on your phone')}</p>`; }
     if (x.type === 'order') { x._sh = x._sh || shuffleIdx(x.items.map((_, k) => k), true); return `<div class="md-order">${x._sh.map((k, j) => `<div class="md-tile" style="--c:var(--qz${j % 6});--d:${j * 80}ms"><i>${LET()[j]}</i><span dir="auto">${esc(x.items[k])}</span></div>`).join('')}</div><p class="md-prompt">${B('رتّبها على جوالك من الأول إلى الأخير', 'Put them in order on your phone, first to last')}</p>`; }
+    if (x.type === 'match') { x._mr = x._mr || shuffleIdx(x.pairs.map((_, k) => k), true); return `<div class="md-match"><div>${x.pairs.map((p, j) => `<div class="md-tile" style="--c:var(--qz${j % 6});--d:${j * 80}ms"><i>${j + 1}</i><span dir="auto">${esc(p[0])}</span></div>`).join('')}</div><div>${x._mr.map((k, j) => `<div class="md-tile" style="--c:#6b7393;--d:${(j + x.pairs.length) * 80}ms"><i>${LET()[j]}</i><span dir="auto">${esc(x.pairs[k][1])}</span></div>`).join('')}</div></div><p class="md-prompt">🔗 ${B('صِل كل عنصر بما يقابله على جوالك', 'Match each item on your phone')}</p>`; }
+    if (x.type === 'rapid') return `<p class="md-prompt md-rapid">⚡ ${B(`${x.items.length} عبارات تظهر على جوالك واحدة بعد أخرى: صح أم خطأ؟ أسرع وأدق!`, `${x.items.length} statements on your phone, one after another: true or false? Fast and right!`)}</p>`;
     if (x.type === 'open') return `<p class="md-prompt">✍️ ${B('اكتب إجابتك على جوالك', 'Write your answer on your phone')}</p>`;
     return `<div class="md-tiles">${x.opts.map((o, j) => `<div class="md-tile" style="--c:var(--qz${j});--d:${j * 80}ms"><i>${LET()[j]}</i><span dir="auto">${esc(o)}</span></div>`).join('')}</div>`;
   }
@@ -4017,6 +4171,8 @@ window.MDLive = (function () {
     if (x.type === 'num') return { unit: x.unit || '' };
     if (x.type === 'word') return { wl: mask(x, 0) };
     if (x.type === 'order') return { items: x._sh.map(k => x.items[k]) };
+    if (x.type === 'match') return { items: x.pairs.map(p => p[0]), opts2: x._mr.map(k => x.pairs[k][1]) };
+    if (x.type === 'rapid') return { items: x.items };
     return {};
   }
   // a challenge: the name and how to play, then everyone plays on their phone at once
@@ -4070,7 +4226,7 @@ window.MDLive = (function () {
     q('[data-skip]').disabled = false;
     const ring = q('#mdRing'), C = 2 * Math.PI * 44; ring.style.strokeDasharray = C;
     let got = 0, last = -1;
-    sub(G.ref.child('an/' + G.i), 'child_added', () => { got++; const a = q('#mdA'); if (a) a.textContent = got; if (got >= Object.keys(G.players).length) reveal(); });
+    sub(G.ref.child('an/' + G.i), 'child_added', () => { got++; const a = q('#mdA'); if (a) a.textContent = got; if (got >= (G.opts.surv ? alive() : Object.keys(G.players)).length) reveal(); });
     q('[data-skip]').onclick = () => reveal();
     if (x.g === 'tug') {
       let taps = {}, sentAt = 0;
@@ -4100,11 +4256,12 @@ window.MDLive = (function () {
     G.subs.forEach(f => f()); G.subs = [];
     keepPlayers(); reactions();
     const ans = (await G.ref.child('an/' + G.i).once('value')).val() || {};
+    if (G.opts.surv) Object.keys(ans).forEach(u => { if (G.out[u] != null) delete ans[u]; });
     if (x.type === 'game') return revealGame(x, m, ans);
-    if (['num', 'word', 'order', 'open', 'poll'].includes(x.type)) return revealText(x, m, ans);
+    if (['num', 'word', 'order', 'open', 'poll', 'match', 'rapid'].includes(x.type)) return revealText(x, m, ans);
     const counts = x.opts.map(() => 0), okSet = new Set(x.ok), sc = {};
     let right = 0;
-    const before = Object.keys(G.score).sort((a, b) => G.score[b] - G.score[a]); G.prev = {}; before.forEach((u, k) => { G.prev[u] = k + 1; });
+    const before = Object.keys(G.score).sort(byRank); G.prev = {}; before.forEach((u, k) => { G.prev[u] = k + 1; });
     Object.keys(G.players).forEach(u => {
       const a = ans[u], pick = a ? [].concat(a.a).map(Number) : [];
       pick.forEach(j => { if (counts[j] != null) counts[j]++; });
@@ -4121,13 +4278,14 @@ window.MDLive = (function () {
       sc[u] = { s: G.score[u], d, c: correct, k: G.streak[u], a: !!a, b: bet };
     });
     // ranks after this question, how far each player is behind the one above, and the team standing
-    const order = Object.keys(sc).sort((a, b) => G.score[b] - G.score[a]), tt = teamTable();
+    const order = Object.keys(sc).sort(byRank), tt = teamTable();
     order.forEach((u, k) => {
       sc[u].r = k + 1; sc[u].of = order.length;
       if (k) { sc[u].gap = G.score[order[k - 1]] - G.score[u]; sc[u].above = G.players[order[k - 1]] || ''; }
       if (G.teams && G.team[u] != null) { const r = tt.findIndex(t => t.k === G.team[u]); sc[u].t = G.team[u]; sc[u].tr = r + 1; }
     });
     G.done = G.i; keep();
+    survive(x, sc);
     Object.values(sc).forEach(v => { v.q = G.i; });
     await G.ref.update({ ok: x.ok, sc });
     SND.reveal();
@@ -4146,7 +4304,7 @@ window.MDLive = (function () {
   const normW = s => String(s || '').trim().toLowerCase().replace(/[\u064B-\u0652\u0640]/g, '').replace(/[أإآ]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي').replace(/\s+/g, ' ');
   async function revealText(x, m, ans) {
     const sc = {}, us = Object.keys(G.players), N = us.length;
-    const before = Object.keys(G.score).sort((a, b) => G.score[b] - G.score[a]); G.prev = {}; before.forEach((u, k) => { G.prev[u] = k + 1; });
+    const before = Object.keys(G.score).sort(byRank); G.prev = {}; before.forEach((u, k) => { G.prev[u] = k + 1; });
     const speed = a => Math.round(1000 * m * (G.opts.speed ? 1 - Math.max(0, Math.min(x.time, (a.t - G.t0) / 1000)) / x.time / 2 : 1));
     let body = '', right = 0;
     if (x.type === 'num') {
@@ -4160,6 +4318,17 @@ window.MDLive = (function () {
       fast.sort((a, b) => ans[a].t - ans[b].t);
       body = x.type === 'word' ? `<p class="md-big" dir="auto">${esc(x.ans)}</p>` : `<ol class="md-near md-ord">${x.items.map(v => `<li><span dir="auto">${esc(v)}</span></li>`).join('')}</ol>`;
       body += fast.length ? `<p class="md-stat">⚡ ${B('الأسرع', 'Fastest')}: ${fast.slice(0, 3).map(u => esc(G.players[u])).join('، ')}</p>` : '';
+    } else if (x.type === 'match' || x.type === 'rapid') {
+      // a share of the points for each right link or statement, still faster is better
+      const n = x.type === 'match' ? x.pairs.length : x.items.length, per = new Array(n).fill(0), full = [];
+      us.forEach(u => { const a = ans[u]; if (!a) return; const v = [].concat(a.a);
+        const hits = x.type === 'match' ? x.pairs.map((_, j) => x._mr[v[j]] === j) : x.truth.map((t, j) => v[j] === (t ? 1 : 0));
+        hits.forEach((h, j) => { if (h) per[j]++; }); const k = hits.filter(Boolean).length;
+        const c = x.type === 'match' ? k === n : k / n >= .7; sc[u] = { c, d: m && k ? Math.round(speed(a) * k / n) : 0, a: true, g: k, n }; if (k === n) full.push(u); if (c) right++; });
+      full.sort((a, b) => ans[a].t - ans[b].t);
+      body = x.type === 'match' ? `<div class="md-pairs">${x.pairs.map((p, j) => `<div><span dir="auto">${esc(p[0])}</span><i>↔</i><span dir="auto">${esc(p[1])}</span><small>${Math.round(100 * per[j] / Math.max(1, Object.keys(ans).length))}%</small></div>`).join('')}</div>`
+        : `<ol class="md-rlist">${x.items.map((v, j) => `<li class="${x.truth[j] ? 't' : 'f'}"><b>${x.truth[j] ? T('صح', 'True') : T('خطأ', 'False')}</b><span dir="auto">${esc(v)}</span><small>${Math.round(100 * per[j] / Math.max(1, Object.keys(ans).length))}%</small></li>`).join('')}</ol>`;
+      body += full.length ? `<p class="md-stat">⚡ ${B('العلامة الكاملة', 'Full marks')}: ${full.slice(0, 3).map(u => esc(G.players[u])).join('، ')}</p>` : '';
     } else if (x.type === 'open') {
       const cnt = {}; us.forEach(u => { const a = ans[u]; if (!a || typeof a.a !== 'string') return; const w = a.a.trim().slice(0, 40); if (!w) return; const k = normW(w); cnt[k] = cnt[k] || { w, n: 0 }; cnt[k].n++; sc[u] = { c: true, d: 0, a: true }; });
       const list = Object.values(cnt).sort((a, b) => b.n - a.n).slice(0, 40), mx = Math.max(1, ...list.map(v => v.n));
@@ -4177,22 +4346,23 @@ window.MDLive = (function () {
       G.score[u] = Math.max(0, (G.score[u] || 0) + r.d); G.qp[u] = Math.max(0, (G.qp[u] || 0) + r.d);
       sc[u] = Object.assign(r, { s: G.score[u], k: G.streak[u] || 0, b: bet });
     });
-    const order = us.slice().sort((a, b) => G.score[b] - G.score[a]), tt = teamTable();
+    const order = us.slice().sort(byRank), tt = teamTable();
     order.forEach((u, k) => { sc[u].r = k + 1; sc[u].of = order.length; if (k) { sc[u].gap = G.score[order[k - 1]] - G.score[u]; sc[u].above = G.players[order[k - 1]] || ''; } if (G.teams && G.team[u] != null) { sc[u].t = G.team[u]; sc[u].tr = tt.findIndex(t => t.k === G.team[u]) + 1; } });
     G.done = G.i; keep();
+    survive(x, sc);
     Object.values(sc).forEach(v => { v.q = G.i; });
-    await G.ref.update({ ok: x.type === 'num' || x.type === 'word' ? String(x.ans) : x.type === 'order' ? x.items : 'x', sc });
+    await G.ref.update({ ok: x.type === 'num' || x.type === 'word' ? String(x.ans) : x.type === 'order' ? x.items : x.type === 'match' ? x.pairs.map(p => p[0] + ' ↔ ' + p[1]) : x.type === 'rapid' ? x.truth.map(t => t ? 1 : 0) : 'x', sc });
     SND.reveal();
     const n = G.quiz.qs.length, lastQ = G.i === n - 1, showBoard = !lastQ && ((G.opts.every && (G.i + 1) % G.opts.every === 0) || (G.opts.final && G.i === n - 2 && n > 2));
     const q = frame(`<div class="md-q md-rev md-tx"><h2 class="md-qt" dir="auto">${esc(x.q)}</h2>${body}
-        ${x.type === 'open' || x.type === 'poll' ? `<p class="md-stat">${B(`شارك ${Object.keys(ans).length} من ${N}`, `${Object.keys(ans).length} of ${N} took part`)}</p>` : `<p class="md-stat">${B(`${x.type === 'num' ? 'الأقرب' : 'أصاب'} ${right} من ${N}`, `${right} of ${N} ${x.type === 'num' ? 'closest' : 'right'}`)}</p>`}</div>`,
+        ${x.type === 'open' || x.type === 'poll' ? `<p class="md-stat">${B(`شارك ${Object.keys(ans).length} من ${N}`, `${Object.keys(ans).length} of ${N} took part`)}</p>` : `<p class="md-stat">${x.type === 'match' ? B(`وصّل الكل صحيحًا ${right} من ${N}`, `${right} of ${N} matched all`) : x.type === 'rapid' ? B(`أصاب ٧٠٪ فأكثر ${right} من ${N}`, `${right} of ${N} got 70% or more`) : B(`${x.type === 'num' ? 'الأقرب' : 'أصاب'} ${right} من ${N}`, `${right} of ${N} ${x.type === 'num' ? 'closest' : 'right'}`)}</p>`}</div>`,
       `<button type="button" class="btn solid" data-next>${lastQ ? B('النتيجة النهائية', 'Final results') : showBoard ? B('الترتيب', 'Ranking') : B('التالي', 'Next')}</button>`, true);
     q('.md-cloud') && q('.md-cloud').querySelectorAll('span').forEach(e => e.onclick = () => e.remove());
     q('[data-next]').onclick = () => lastQ ? finish() : showBoard ? board() : next();
   }
   async function revealGame(x, m, ans) {
     const g = MDGames.byId(x.g), sc = {}, raw = {};
-    const before = Object.keys(G.score).sort((a, b) => G.score[b] - G.score[a]); G.prev = {}; before.forEach((u, k) => { G.prev[u] = k + 1; });
+    const before = Object.keys(G.score).sort(byRank); G.prev = {}; before.forEach((u, k) => { G.prev[u] = k + 1; });
     Object.keys(G.players).forEach(u => { const a = ans[u]; raw[u] = a ? Math.max(0, Number(a.a) || 0) : 0; });
     const best = Math.max(1, ...Object.values(raw));
     // tug of war: the winning side scores most; the other side still earns a little for its effort
@@ -4207,13 +4377,14 @@ window.MDLive = (function () {
       sc[u] = { s: G.score[u], d, c, k: G.streak[u], a: !!ans[u], g: raw[u] };
       if (tug) sc[u].tw = sd === win;
     });
-    const order = Object.keys(sc).sort((a, b) => G.score[b] - G.score[a]), tt = teamTable();
+    const order = Object.keys(sc).sort(byRank), tt = teamTable();
     order.forEach((u, k) => {
       sc[u].r = k + 1; sc[u].of = order.length;
       if (k) { sc[u].gap = G.score[order[k - 1]] - G.score[u]; sc[u].above = G.players[order[k - 1]] || ''; }
       if (G.teams && G.team[u] != null) { const r = tt.findIndex(t => t.k === G.team[u]); sc[u].t = G.team[u]; sc[u].tr = r + 1; }
     });
     G.done = G.i; keep();
+    survive(x, sc);
     Object.values(sc).forEach(v => { v.q = G.i; });
     await G.ref.update({ ok: 'game', sc });
     SND.reveal();
@@ -4234,7 +4405,7 @@ window.MDLive = (function () {
   /* ---------- ranking: teams, the top five, who climbed most ---------- */
   function board(note) {
     G.ref.child('st').update({ ph: 'lb' });
-    const order = Object.keys(G.score).filter(u => u in G.players).sort((a, b) => G.score[b] - G.score[a]), top = order.slice(0, 5), n = G.quiz.qs.length;
+    const order = Object.keys(G.score).filter(u => u in G.players).sort(byRank), top = order.slice(0, 5), n = G.quiz.qs.length;
     const decisive = G.opts.final && G.done === n - 2 && n > 2;
     let climb = null, best = 0;
     order.forEach((u, k) => { const was = (G.prev || {})[u]; if (was && was - (k + 1) > best) { best = was - (k + 1); climb = u; } });
@@ -4252,7 +4423,7 @@ window.MDLive = (function () {
   /* ---------- the end: the winning team, then the podium from third to first ---------- */
   async function finish() {
     G.ended = true; clearInterval(G.timer); forget();
-    const order = Object.keys(G.score).filter(u => u in G.players).sort((a, b) => G.score[b] - G.score[a]), tt = teamTable();
+    const order = Object.keys(G.score).filter(u => u in G.players).sort(byRank), tt = teamTable();
     await G.ref.child('top').set({ p: order.slice(0, 5).map(u => ({ n: G.players[u] || '', s: G.score[u] })), t: tt.slice(0, 5).map(t => ({ n: t.name, s: t.avg, k: t.k })) });
     await G.ref.child('st').set({ ph: 'end', i: G.i, lock: true });
     const p = k => order[k] ? `<div class="md-pod md-p${k + 1}"><span class="md-pn" dir="auto">${esc(G.players[order[k]] || '')}</span><b>${G.score[order[k]]}</b><div class="md-step">${k + 1}</div></div>` : '<div class="md-pod md-empty"></div>';
