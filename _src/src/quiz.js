@@ -39,46 +39,7 @@
 
   /* ---------- sharing to the library: anyone can send a quiz; it shows only after the owner approves it ---------- */
   const ADMIN = 'umar.photo@gmail.com';
-  function modal(html) {
-    const m = document.createElement('div'); m.className = 'qz-modal'; m.innerHTML = `<div class="qz-mbox">${html}</div>`;
-    document.body.appendChild(m); m.addEventListener('click', e => { if (e.target === m || e.target.closest('[data-mx]')) m.remove(); });
-    return m;
-  }
-  const INBOX = 'o.alsamani@uoh.edu.sa';
-  function shareForm() {
-    persist();
-    if (!Q.qs.length) return toast(B('أضف الأسئلة أولًا.', 'Add questions first.'), 1);
-    if (checks()) return toast(B('راجع الأسئلة التي تحتاج مراجعة قبل مشاركتها.', 'Fix the questions that need review before sharing.'), 1);
-    const m = modal(`<h3>📤 ${B('اقترح مسابقتك لمكتبة ميدان', 'Suggest your quiz for the Maydan library')}</h3>
-      <p class="qz-mnote">${B('تُحفظ مسابقتك ملفًا، وترسله بالبريد. تُراجَع، وإذا كان محتواها مناسبًا تُنشر في المكتبة باسمك.', 'Your quiz is saved as a file that you email. It is reviewed and, if suitable, published in the library under your name.')}</p>
-      <label class="sn-lbl">${B('عنوان المسابقة', 'Title')}<input id="shT" maxlength="80" dir="auto" value="${esc(Q.title || '')}"></label>
-      <label class="sn-lbl">${B('اسمك كما يظهر مع المسابقة', 'Your name as shown with the quiz')}<input id="shB" maxlength="40" dir="auto" value="${esc(store.get('by', ''))}"></label>
-      <p class="qz-merr" hidden></p>
-      <div class="sn-two"><button type="button" class="btn solid" id="shGo">${B('احفظ الملف وأرسله', 'Save the file and send it')}</button><button type="button" class="btn ghost" data-mx>${B('إلغاء', 'Cancel')}</button></div>`);
-    const v = s2 => m.querySelector(s2).value.trim(), err = t => { const e = m.querySelector('.qz-merr'); e.hidden = false; e.innerHTML = t; };
-    m.querySelector('#shGo').onclick = async () => {
-      if (!v('#shT')) return err(B('اكتب عنوان المسابقة.', 'Write a title.'));
-      if (!v('#shB')) return err(B('اكتب اسمك ليظهر مع المسابقة.', 'Write your name to show with the quiz.'));
-      store.set('by', v('#shB'));
-      const title = v('#shT'), by = v('#shB'), name = ('ميدان - ' + title + ' - ' + by).replace(/[\\/:*?"<>|]+/g, ' ').slice(0, 90) + '.json';
-      const f = new File([JSON.stringify({ title, by, qs: Q.qs.map(({ id, timeSet, keep, _order, _sh, gtSet, ...r }) => r) }, null, 1)], name, { type: 'application/json' });
-      const subj = 'مسابقة مقترحة لمكتبة ميدان: ' + title, body = `السلام عليكم،\nأقترح مسابقتي «${title}» لمكتبة ميدان، وملفها مرفق.\nالاسم: ${by}\n`;
-      const mail = `mailto:${INBOX}?subject=${encodeURIComponent(subj)}&body=${encodeURIComponent(body)}`;
-      // phones can hand the file straight to the mail app; elsewhere it is downloaded and the mail opens to attach it
-      if (/iP(hone|ad|od)|Android/i.test(navigator.userAgent) && navigator.canShare && navigator.canShare({ files: [f] })) {
-        try { await navigator.clipboard.writeText(INBOX); } catch (e) {}
-        try { await navigator.share({ files: [f], title: subj, text: body + '\nإلى: ' + INBOX }); } catch (e) { return; }
-      } else {
-        const a = document.createElement('a'); a.href = URL.createObjectURL(f); a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 2000);
-      }
-      m.querySelector('.qz-mbox').innerHTML = `<h3>${B('خطوة أخيرة: أرسل الملف بالبريد', 'Last step: email the file')}</h3>
-        <ol class="qz-msteps"><li>${B(`حُفظ ملف المسابقة <b dir="auto">${esc(name)}</b> في جهازك.`, `The quiz file <b>${esc(name)}</b> is saved on your device.`)}</li>
-        <li>${B('أرسله مرفقًا إلى:', 'Send it as an attachment to:')} <b dir="ltr">${INBOX}</b> <button type="button" class="sn-lnk" id="shCp">${B('نسخ', 'Copy')}</button></li></ol>
-        <div class="sn-two"><a class="btn solid" href="${mail}">${B('افتح البريد', 'Open mail')}</a><button type="button" class="btn ghost" data-mx>${B('تم', 'Done')}</button></div>
-        <p class="qz-mnote">${B('شكرًا لك؛ ستُراجَع وتُنشر إن كانت مناسبة.', 'Thank you; it will be reviewed and published if suitable.')}</p>`;
-      m.querySelector('#shCp').onclick = async e => { try { await navigator.clipboard.writeText(INBOX); e.currentTarget.textContent = '✓'; } catch (er) {} };
-    };
-  }
+
   // the landing: what Maydan is, where it fits, and how it works
   function intro() {
     const card = (i, a, e, da, de) => `<div class="qi-c"><span>${i}</span><b>${B(a, e)}</b><small>${B(da, de)}</small></div>`;
@@ -185,7 +146,7 @@
       <div id="qzQs" class="qz-qs"></div>
       <div class="qz-addq"><button type="button" class="btn ghost" id="qzAddQ">${B('+ سؤال', '+ Question')}</button><button type="button" class="btn ghost" id="qzAddTF">${B('+ صح أو خطأ', '+ True or false')}</button><button type="button" class="btn ghost" id="qzAddG">${B('+ تحدٍّ تفاعلي 🎮', '+ Challenge 🎮')}</button></div>
       <div class="qz-spr"><span>🎲 ${B('وزّع تحديات بين الأسئلة: تحدٍّ بعد كل', 'Spread challenges between the questions: one after every')}</span><select id="qzEvery">${[1, 2, 3, 5, 10].map(n => `<option value="${n}"${n === 3 ? ' selected' : ''}>${n === 1 ? T('سؤال واحد', '1 question') : n === 2 ? T('سؤالين', '2 questions') : n + ' ' + T('أسئلة', 'questions')}</option>`).join('')}</select><button type="button" class="btn ghost" id="qzSpr">${B('وزّع', 'Spread')}</button></div>
-      <div class="qz-bar"><div class="qz-chk" id="qzChk"></div><div class="qz-bar-b"><button type="button" class="btn solid md-go" id="qzGo">${B('ابدأ المسابقة ▶', 'Start the quiz ▶')}</button><button type="button" class="btn ghost" id="qzPv">${B('معاينة', 'Preview')}</button><button type="button" class="btn ghost" id="qzShare">📤 ${B('اقترحها للمكتبة', 'Suggest for the library')}</button><button type="button" class="btn ghost" id="qzExp">${B('حفظ نسخة', 'Save a copy')}</button></div></div>`;
+      <div class="qz-bar"><div class="qz-chk" id="qzChk"></div><div class="qz-bar-b"><button type="button" class="btn solid md-go" id="qzGo">${B('ابدأ المسابقة ▶', 'Start the quiz ▶')}</button><button type="button" class="btn ghost" id="qzPv">${B('معاينة', 'Preview')}</button><button type="button" class="btn ghost" id="qzExp">${B('حفظ نسخة', 'Save a copy')}</button></div></div>`;
     const q = s => root.querySelector(s);
     q('#qzBack').onclick = () => { persist(); home(); };
     q('#qzTitle').oninput = e => { Q.title = e.target.value; later(); };
@@ -246,7 +207,6 @@
       if (!window.MDLive) { toast(B('تعذّر تشغيل المسابقة الآن.', 'The quiz cannot start right now.'), 1); return; }
       MDLive.start(live(Q));
     };
-    q('#qzShare').onclick = shareForm;
     q('#qzExp').onclick = () => save(new Blob([JSON.stringify({ title: Q.title, qs: Q.qs.map(({ id, timeSet, ...r }) => r) }, null, 1)], { type: 'application/json' }), (Q.title || 'quiz').replace(/[\\/:*?"<>|]+/g, ' ').slice(0, 60) + '.json');
     draw(); checks();
     if (!Q.qs.length) q('#qzPaste').focus({ preventScroll: true });
