@@ -37,6 +37,86 @@
   let tSave; const later = () => { clearTimeout(tSave); tSave = setTimeout(() => { persist(); checks(); }, 400); };
 
   /* ---------- home: saved quizzes ---------- */
+
+  /* ---------- sharing to the library: anyone can send a quiz; it shows only after the owner approves it ---------- */
+  const ADMIN = 'umar.photo@gmail.com';
+  let fdb = null, remote = [], remoteAsked = false;
+  async function fb(anon) {
+    if (!window.firebase || !window.MD_CFG) throw new Error('nofb');
+    if (!firebase.apps.length) firebase.initializeApp(MD_CFG);
+    if (anon && !firebase.auth().currentUser) await firebase.auth().signInAnonymously();
+    fdb = fdb || firebase.database(); return fdb;
+  }
+  // a quiz as it travels: no ids, no local flags
+  const pack = Q => JSON.stringify(Q.qs.map(({ id, timeSet, keep, _order, _sh, gtSet, ...r }) => r));
+  function loadRemote() {
+    if (remoteAsked) return; remoteAsked = true;
+    fb(true).then(d => d.ref('lib').once('value')).then(v => {
+      remote = Object.entries(v.val() || {}).map(([k, z]) => { try { return { id: 'pub-' + k, key: k, icon: z.icon || '⭐', title: z.title, desc: z.desc || T('مسابقة شاركها أحد مستخدمي ميدان.', 'A quiz shared by a Maydan user.'), who: T('من', 'by') + ' ' + z.by, qs: JSON.parse(z.qs), at: z.at }; } catch (e) { return null; } }).filter(Boolean).sort((a, b) => b.at - a.at);
+      if (remote.length && !Q && root.querySelector('#lib')) home();
+    }).catch(() => {});
+  }
+  function modal(html) {
+    const m = document.createElement('div'); m.className = 'qz-modal'; m.innerHTML = `<div class="qz-mbox">${html}</div>`;
+    document.body.appendChild(m); m.addEventListener('click', e => { if (e.target === m || e.target.closest('[data-mx]')) m.remove(); });
+    return m;
+  }
+  function shareForm() {
+    persist();
+    if (!Q.qs.length) return toast(B('أضف الأسئلة أولًا.', 'Add questions first.'), 1);
+    if (checks()) return toast(B('راجع الأسئلة التي تحتاج مراجعة قبل مشاركتها.', 'Fix the questions that need review before sharing.'), 1);
+    const data = pack(Q);
+    if (data.length > 600000) return toast(B('المسابقة كبيرة بسبب الصور؛ صغّر الصور أو احذف بعضها ثم شاركها.', 'The quiz is too large because of its images; shrink or remove some.'), 1);
+    const m = modal(`<h3>📤 ${B('شارك مسابقتك في مكتبة ميدان', 'Share your quiz in the Maydan library')}</h3>
+      <p class="qz-mnote">${B('تُراجَع المسابقة قبل نشرها، ثم تظهر للجميع في المكتبة باسمك.', 'Your quiz is reviewed first, then shown to everyone in the library under your name.')}</p>
+      <label class="sn-lbl">${B('عنوان المسابقة', 'Title')}<input id="shT" maxlength="80" dir="auto" value="${esc(Q.title || '')}"></label>
+      <label class="sn-lbl">${B('اسمك كما يظهر مع المسابقة', 'Your name as shown with the quiz')}<input id="shB" maxlength="40" dir="auto" value="${esc(store.get('by', ''))}"></label>
+      <p class="qz-merr" hidden></p>
+      <div class="sn-two"><button type="button" class="btn solid" id="shGo">${B('أرسلها للمراجعة', 'Send for review')}</button><button type="button" class="btn ghost" data-mx>${B('إلغاء', 'Cancel')}</button></div>`);
+    const v = s2 => m.querySelector(s2).value.trim(), err = t => { const e = m.querySelector('.qz-merr'); e.hidden = false; e.innerHTML = t; };
+    m.querySelector('#shGo').onclick = async e => {
+      if (!v('#shT')) return err(B('اكتب عنوان المسابقة.', 'Write a title.'));
+      if (!v('#shB')) return err(B('اكتب اسمك ليظهر مع المسابقة.', 'Write your name to show with the quiz.'));
+      e.currentTarget.disabled = true; store.set('by', v('#shB'));
+      try {
+        const d = await fb(true);
+        await d.ref('subs').push({ title: v('#shT'), by: v('#shB'), icon: Q.qs.every(x => x.type === 'game') ? '🎮' : '⭐', n: Q.qs.length, qs: data, at: firebase.database.ServerValue.TIMESTAMP });
+        m.querySelector('.qz-mbox').innerHTML = `<p class="qz-mok">✓</p><h3>${B('وصلت مسابقتك، شكرًا لك', 'Your quiz has arrived, thank you')}</h3><p class="qz-mnote">${B('ستظهر في المكتبة بعد مراجعتها.', 'It will appear in the library once reviewed.')}</p><button type="button" class="btn solid" data-mx>${B('حسنًا', 'OK')}</button>`;
+      } catch (er) { e.currentTarget.disabled = false; err(B('تعذّر الإرسال الآن. تأكد من الإنترنت وحاول مرة أخرى.', 'Could not send now. Check the internet and try again.')); }
+    };
+  }
+  // the owner's review page: alsamani.com/play/maydan/#review
+  async function review() {
+    root.innerHTML = `<div class="sn-card qz-rev"><h2 class="qz-h">🗂 ${B('مراجعة مسابقات المكتبة', 'Review library submissions')}</h2><div id="rvBody"><p>${B('لحظة…', 'One moment…')}</p></div><button type="button" class="btn ghost" id="rvBack">${B('رجوع', 'Back')}</button></div>`;
+    root.querySelector('#rvBack').onclick = () => { history.replaceState(null, '', location.pathname); home(); };
+    const body = root.querySelector('#rvBody');
+    try { await fb(false); } catch (e) { body.innerHTML = B('تعذّر الاتصال.', 'Could not connect.'); return; }
+    const u = firebase.auth().currentUser;
+    if (!u || u.isAnonymous || u.email !== ADMIN) {
+      body.innerHTML = `<p>${B('هذه الصفحة لصاحب المنصة فقط. سجّل الدخول بحساب Google المعتمد.', 'This page is for the platform owner. Sign in with the approved Google account.')}</p>${u && u.email && u.email !== ADMIN ? `<p class="qz-merr">${B('هذا الحساب غير مخوّل.', 'This account is not allowed.')}</p>` : ''}<button type="button" class="btn solid" id="rvIn">${B('الدخول بحساب Google', 'Sign in with Google')}</button>`;
+      body.querySelector('#rvIn').onclick = async () => { try { await firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider()); review(); } catch (e) { toast(B('لم يكتمل الدخول.', 'Sign-in did not complete.'), 1); } };
+      return;
+    }
+    const [sv, lv] = await Promise.all([fdb.ref('subs').once('value'), fdb.ref('lib').once('value')]);
+    const subs = Object.entries(sv.val() || {}).sort((a, b) => a[1].at - b[1].at), pubs = Object.entries(lv.val() || {}).sort((a, b) => b[1].at - a[1].at);
+    const kindName = x => ({ mc: T('اختيار', 'choice'), tf: T('صح/خطأ', 'T/F'), num: T('رقم', 'number'), word: T('كلمة', 'word'), order: T('ترتيب', 'order'), open: T('كتابة حرة', 'open'), poll: T('استطلاع', 'poll') }[x.type] || '');
+    const show = z => { let qs = []; try { qs = JSON.parse(z.qs); } catch (e) {}
+      return `<ol class="rv-qs">${qs.map(x => x.type === 'game' ? `<li>🎮 ${esc((GAMES().find(g => g.id === x.g) || {}).ar || x.g)}</li>` : `<li><small>${kindName(x)}</small> <span dir="auto">${esc(x.q)}</span>${x.opts && !['num', 'word', 'order', 'open'].includes(x.type) ? `<em dir="auto">${x.opts.filter(o => o).map((o, j) => (x.ok || []).includes(j) ? `<b>✓ ${esc(o)}</b>` : esc(o)).join(' · ')}</em>` : x.ans != null ? `<em>${B('الجواب', 'Answer')}: ${esc(x.ans)} ${esc(x.unit || '')}</em>` : x.items ? `<em>${x.items.map(esc).join(' ← ')}</em>` : ''}</li>`).join('')}</ol>`; };
+    body.innerHTML = `<p class="pt-fine">${B(`مسجّل باسم ${esc(u.email)}`, `Signed in as ${esc(u.email)}`)} · <button type="button" class="sn-lnk" id="rvOut">${B('خروج', 'Sign out')}</button></p>
+      <h3>${B('بانتظار المراجعة', 'Waiting for review')} (${subs.length})</h3>
+      ${subs.length ? subs.map(([k, z]) => `<details class="rv-it" data-k="${k}"><summary><span>${esc(z.icon || '⭐')}</span><b dir="auto">${esc(z.title)}</b><small dir="auto">${esc(z.by)} · ${z.n || ''} ${T('فقرة', 'items')} · ${new Date(z.at).toLocaleDateString('ar-SA-u-nu-latn')}</small></summary>
+        ${show(z)}
+        <div class="sn-two"><button type="button" class="btn solid" data-ok="${k}">✓ ${B('اعتمدها وانشرها', 'Approve and publish')}</button><button type="button" class="btn ghost" data-try="${k}">${B('جرّبها', 'Try it')}</button><button type="button" class="btn ghost rv-no" data-no="${k}">${B('ارفضها', 'Reject')}</button></div></details>`).join('') : `<p>${B('لا توجد مسابقات جديدة.', 'Nothing new.')}</p>`}
+      <h3>${B('المنشورة في المكتبة', 'Published in the library')} (${pubs.length})</h3>
+      ${pubs.map(([k, z]) => `<div class="rv-pub"><span>${esc(z.icon || '⭐')} <b dir="auto">${esc(z.title)}</b> <small dir="auto">${esc(z.by)}</small></span><button type="button" class="sn-lnk rv-no" data-rm="${k}">${B('إزالة من المكتبة', 'Remove')}</button></div>`).join('') || `<p>${B('لم يُنشر شيء بعد.', 'Nothing published yet.')}</p>`}`;
+    body.querySelector('#rvOut').onclick = async () => { await firebase.auth().signOut(); review(); };
+    const subOf = k => subs.find(x => x[0] === k)[1];
+    body.querySelectorAll('[data-ok]').forEach(b => b.onclick = async () => { const k = b.dataset.ok, z = subOf(k); b.disabled = true;
+      try { await fdb.ref().update({ ['lib/' + k]: Object.assign({}, z, { at: firebase.database.ServerValue.TIMESTAMP }), ['subs/' + k]: null }); toast(B('نُشرت في المكتبة.', 'Published.')); review(); } catch (e) { b.disabled = false; toast(B('تعذّر النشر.', 'Could not publish.'), 1); } });
+    body.querySelectorAll('[data-no]').forEach(b => b.onclick = async () => { if (!confirm(T('رفض هذه المسابقة وحذفها؟', 'Reject and delete this quiz?'))) return; await fdb.ref('subs/' + b.dataset.no).remove(); review(); });
+    body.querySelectorAll('[data-rm]').forEach(b => b.onclick = async () => { if (!confirm(T('إزالتها من المكتبة؟', 'Remove it from the library?'))) return; await fdb.ref('lib/' + b.dataset.rm).remove(); review(); });
+    body.querySelectorAll('[data-try]').forEach(b => b.onclick = () => { const z = subOf(b.dataset.try); try { Q = { id: uid(), title: z.title, qs: JSON.parse(z.qs).map(x => norm(x)) }; editor(); toast(B('فُتحت للتجربة. لن تُحفظ في مكتبتك إلا إذا عدّلت عليها.', 'Opened to try.')); } catch (e) {} });
+  }
   // the landing: what Maydan is, where it fits, and how it works
   function intro() {
     const card = (i, a, e, da, de) => `<div class="qi-c"><span>${i}</span><b>${B(a, e)}</b><small>${B(da, de)}</small></div>`;
@@ -76,8 +156,11 @@
         ${card('⏸', 'أوقف وأكمل لاحقًا', 'Pause and resume', 'أوقف المسابقة متى شئت وأكملها من حيث توقفت، ونزّل النتائج ملف CSV.', 'Pause any time and pick up where you left off; download the results as CSV.')}
       </div></section></div>`;
   }
+  addEventListener('hashchange', () => { if (location.hash === '#review') { document.querySelectorAll('.qz-modal').forEach(m => m.remove()); review(); } });
   function home() {
     Q = null;
+    if (location.hash === '#review') return review();
+    loadRemote();
     const P = window.MDLive && MDLive.pending();
     root.innerHTML = intro() + `${P ? `<div class="sn-card qz-resume"><p>⏸ ${B('مسابقة متوقفة', 'A paused quiz')}: <b>${esc(P.quiz.title || T('بلا عنوان', 'Untitled'))}</b> · ${B('أُنهي', 'done')} ${P.i + 1} ${T('من', 'of')} ${P.quiz.qs.length} · ${B('الرمز', 'code')} <span dir="ltr">${P.pin}</span></p>
         <div class="sn-two"><button type="button" class="btn solid" id="qzRes">${B('متابعة المسابقة ▶', 'Resume ▶')}</button><button type="button" class="btn ghost" id="qzDrop2">${B('إنهاؤها وحذفها', 'End and remove it')}</button></div></div>` : ''}<div class="sn-card qz-home" id="build">
@@ -86,7 +169,7 @@
         <div class="qz-gstart"><button type="button" class="btn ghost" id="qzNewG">🎮 ${B('مسابقة ألعاب وتحديات', 'A games-only quiz')}</button><label>${B('عدد التحديات', 'Challenges')} <select id="qzGn">${[5, 8, 10, 12, 15, 20, 24].map(n => `<option${n === 10 ? ' selected' : ''}>${n}</option>`).join('')}</select></label></div>
         <p class="pt-fine">${B('في مسابقة الألعاب نختار لك تحديات متنوعة، وتقدر تغيّر أي واحد منها بزر 🔀 أو تختار غيره بنفسك.', 'We pick a varied set for you; swap any of them with 🔀 or choose another yourself.')}</p></div>
       ${RLIB().length ? `<h2 class="qz-h" id="lib">📚 ${B('مكتبة ميدان: مسابقات جاهزة', 'The Maydan library: ready quizzes')}</h2><p class="pt-fine">${B('ابدأ أيًّا منها مباشرة، أو افتحها وعدّل عليها لتصير مسابقتك.', 'Start any of them now, or open one and make it your own.')}</p>
-      <div class="qz-lib">${RLIB().map(z => `<div class="qz-lc"><span class="qz-li">${z.icon}</span><b>${esc(z.title)}</b><small>${esc(z.desc)}</small><em>${esc(z.who)} · ${z.qs.length} ${z.qs.every(x => x.type === 'game') ? B('تحديات', 'challenges') : B('فقرة', 'items')}</em><span class="qz-lb"><button type="button" class="btn solid" data-lgo="${z.id}">${B('ابدأ الآن ▶', 'Start now ▶')}</button><button type="button" class="btn ghost" data-led="${z.id}">${B('افتحها وعدّلها', 'Open and edit')}</button></span></div>`).join('')}</div>` : ''}
+      <div class="qz-lib">${RLIB().map(z => `<div class="qz-lc${z.key ? ' qz-pub' : ''}"><span class="qz-li">${z.icon}</span><b>${esc(z.title)}</b><small>${esc(z.desc)}</small><em>${esc(z.who)} · ${z.qs.length} ${z.qs.every(x => x.type === 'game') ? B('تحديات', 'challenges') : B('فقرة', 'items')}</em><span class="qz-lb"><button type="button" class="btn solid" data-lgo="${z.id}">${B('ابدأ الآن ▶', 'Start now ▶')}</button><button type="button" class="btn ghost" data-led="${z.id}">${B('افتحها وعدّلها', 'Open and edit')}</button></span></div>`).join('')}</div>` : ''}
       ${list.length ? `<h2 class="qz-h">${B('مسابقاتك', 'Your quizzes')}</h2><ul class="qz-list">${list.map(x => `<li><button type="button" data-open="${x.id}"><b>${esc(x.title || T('بلا عنوان', 'Untitled'))}</b><small>${T('الأسئلة: ', 'Questions: ')}${x.qs.length}</small></button></li>`).join('')}</ul>` : ''}
       <label class="qz-imp btn ghost">${B('فتح نسخة محفوظة', 'Open a saved copy')}<input type="file" accept=".json,application/json" hidden id="qzImp"></label>
       <p class="pt-fine">${B('تُحفظ المسابقات في هذا المتصفح.', 'Quizzes are kept in this browser.')}</p></div>`;
@@ -134,7 +217,7 @@
       <div id="qzQs" class="qz-qs"></div>
       <div class="qz-addq"><button type="button" class="btn ghost" id="qzAddQ">${B('+ سؤال', '+ Question')}</button><button type="button" class="btn ghost" id="qzAddTF">${B('+ صح أو خطأ', '+ True or false')}</button><button type="button" class="btn ghost" id="qzAddG">${B('+ تحدٍّ تفاعلي 🎮', '+ Challenge 🎮')}</button></div>
       <div class="qz-spr"><span>🎲 ${B('وزّع تحديات بين الأسئلة: تحدٍّ بعد كل', 'Spread challenges between the questions: one after every')}</span><select id="qzEvery">${[1, 2, 3, 5, 10].map(n => `<option value="${n}"${n === 3 ? ' selected' : ''}>${n === 1 ? T('سؤال واحد', '1 question') : n === 2 ? T('سؤالين', '2 questions') : n + ' ' + T('أسئلة', 'questions')}</option>`).join('')}</select><button type="button" class="btn ghost" id="qzSpr">${B('وزّع', 'Spread')}</button></div>
-      <div class="qz-bar"><div class="qz-chk" id="qzChk"></div><div class="qz-bar-b"><button type="button" class="btn solid md-go" id="qzGo">${B('ابدأ المسابقة ▶', 'Start the quiz ▶')}</button><button type="button" class="btn ghost" id="qzPv">${B('معاينة', 'Preview')}</button><button type="button" class="btn ghost" id="qzExp">${B('حفظ نسخة', 'Save a copy')}</button></div></div>`;
+      <div class="qz-bar"><div class="qz-chk" id="qzChk"></div><div class="qz-bar-b"><button type="button" class="btn solid md-go" id="qzGo">${B('ابدأ المسابقة ▶', 'Start the quiz ▶')}</button><button type="button" class="btn ghost" id="qzPv">${B('معاينة', 'Preview')}</button><button type="button" class="btn ghost" id="qzShare">📤 ${B('شاركها في المكتبة', 'Share to the library')}</button><button type="button" class="btn ghost" id="qzExp">${B('حفظ نسخة', 'Save a copy')}</button></div></div>`;
     const q = s => root.querySelector(s);
     q('#qzBack').onclick = () => { persist(); home(); };
     q('#qzTitle').oninput = e => { Q.title = e.target.value; later(); };
@@ -195,6 +278,7 @@
       if (!window.MDLive) { toast(B('تعذّر تشغيل المسابقة الآن.', 'The quiz cannot start right now.'), 1); return; }
       MDLive.start(live(Q));
     };
+    q('#qzShare').onclick = shareForm;
     q('#qzExp').onclick = () => save(new Blob([JSON.stringify({ title: Q.title, qs: Q.qs.map(({ id, timeSet, ...r }) => r) }, null, 1)], { type: 'application/json' }), (Q.title || 'quiz').replace(/[\\/:*?"<>|]+/g, ' ').slice(0, 60) + '.json');
     draw(); checks();
     if (!Q.qs.length) q('#qzPaste').focus({ preventScroll: true });
@@ -219,7 +303,7 @@
     box.querySelectorAll('.qz-q').forEach((el, i) => bind(el, Q.qs[i]));
     if (window.Sortable && !box._s) box._s = Sortable.create(box, { handle: '.qz-grip', animation: 150, onEnd: e => { const [m] = Q.qs.splice(e.oldIndex, 1); Q.qs.splice(e.newIndex, 0, m); draw(); later(); } });
   }
-  const RLIB = () => window.MDLib || [];
+  const RLIB = () => (window.MDLib || []).concat(remote);
   const GAMES = () => window.MDGames ? MDGames.LIST : [];
   const KINDS = () => [['mc', T('اختيار من متعدد', 'Multiple choice')], ['tf', T('صح أو خطأ', 'True or false')], ['poll', T('تصويت (بلا إجابة صحيحة)', 'Poll (no right answer)')], ['num', T('الأقرب للرقم', 'Closest number')], ['word', T('خمّن الكلمة', 'Guess the word')], ['order', T('رتّب بالترتيب الصحيح', 'Put in order')], ['open', T('كتابة حرة (سحابة كلمات)', 'Free text (word cloud)')], ['game', T('تحدٍّ تفاعلي 🎮', 'Challenge 🎮')]];
   const typeSel = t => `<select data-k="type" aria-label="type">${KINDS().map(([v, l]) => `<option value="${v}"${v === t ? ' selected' : ''}>${l}</option>`).join('')}</select>`;
