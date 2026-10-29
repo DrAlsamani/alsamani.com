@@ -22,10 +22,24 @@
   const persist = () => { if (!M) return; M.at = Date.now(); const i = list.findIndex(x => x.id === M.id); if (i >= 0) list[i] = M; else list.unshift(M); if (!store.set('list', list.slice(0, 40))) toast(B('امتلأت مساحة الحفظ في المتصفح؛ احذف محاضر قديمة أو صغّر الشعار.', 'Browser storage is full; delete old minutes or use a smaller logo.'), 1); };
   let tSave; const later = () => { clearTimeout(tSave); tSave = setTimeout(() => { persist(); saveCommittee(); paintChecks(); }, 400); };
   const today = () => new Date().toISOString().slice(0, 10);
-  const blank = () => ({ id: uid(), type: 'council', org: '', unit: '', committee: '', logo: '', no: '', year: '', date: today(), from: '', to: '', place: '', mode: 'in', numFmt: '{n}/{i}',
+  const blank = () => normM({ id: uid(), type: 'council', org: '', unit: '', committee: '', logo: '', no: '', year: '', date: today(), from: '', to: '', place: '', mode: 'in', numFmt: '{n}/{i}',
     members: [{ id: uid(), n: '', r: 'رئيس المجلس', st: 'p' }, { id: uid(), n: '', r: 'عضو', st: 'p' }, { id: uid(), n: '', r: 'عضو', st: 'p' }, { id: uid(), n: '', r: 'أمين المجلس', st: 'p' }],
     guests: '', att: '', bsm: true, agenda: true, sigL: 'table', prev: { on: true, note: '' }, follow: [], items: [newItem()], misc: '', recs: '', next: '', status: 'draft', reg: '' });
   function newItem() { return { id: uid(), title: '', ref: '', disc: '', kind: 'approve', to: '', reason: '', text: '', edited: false, basis: '', vote: 'all', yes: '', no: '', dis: [], tasks: [] }; }
+  // the parts of the minutes, each can be turned off; and the default wording of each heading
+  const SECS = [['bsm', 'البسملة'], ['logo', 'الشعار'], ['info', 'جدول بيانات الاجتماع'], ['intro', 'فقرة الافتتاح'], ['att', 'جدول الحضور'], ['quorum', 'عبارة النصاب'], ['agenda', 'جدول الأعمال'],
+    ['disc', 'المناقشة في كل بند'], ['vote', 'التصويت'], ['recs', 'التوصيات'], ['sum', 'ملخص القرارات والتكليفات'], ['close', 'الاختتام'], ['sig', 'التوقيعات'], ['num', 'ترقيم العناوين: أولًا، ثانيًا']];
+  const DH = { intro: '', att: 'الحضور واكتمال النصاب', agenda: 'جدول الأعمال', decs: 'المناقشات والقرارات', recs: 'التوصيات', sum: 'ملخص القرارات والتكليفات', close: 'اختتام الاجتماع', sig: 'توقيعات الحضور' };
+  const head = k => (M.heads[k] != null && M.heads[k].trim() !== '' ? M.heads[k] : DH[k]);
+  function normM(x) {
+    x.show = Object.assign({ bsm: x.bsm !== false, logo: true, info: true, intro: true, att: true, quorum: true, agenda: x.agenda !== false, disc: true, vote: true, recs: true, sum: true, close: true, sig: true, num: true }, x.show || {});
+    x.heads = Object.assign({}, x.heads || {});
+    if (!x.info) { x.info = [{ id: uid(), k: 'التاريخ', t: 'date' }, { id: uid(), k: 'الوقت', t: 'time' }, { id: uid(), k: 'المكان', t: 'place' }];
+      if ((x.year || '').trim()) x.info.push({ id: uid(), k: 'العام أو الدورة', v: x.year }); if ((x.att || '').trim()) x.info.push({ id: uid(), k: 'المرفقات', v: x.att }); x.year = ''; x.att = ''; }
+    return x;
+  }
+  const infoVal = r => { const d = dates(), when = M.mode === 'remote' ? 'عن بُعد' : M.mode === 'mix' ? 'حضوري وعن بُعد' : '';
+    return r.t === 'date' ? (M.date ? `${d.day} ${d.h} هـ، الموافق ${d.g}` : '') : r.t === 'time' ? (M.from ? 'من ' + t12(M.from) : '') + (M.to ? ' إلى ' + t12(M.to) : '') : r.t === 'place' ? [M.place.trim(), when].filter(Boolean).join('، ') : (r.v || ''); };
   const body = () => M.type === 'committee' ? { the: 'اللجنة', verb: 'قررت', noted: 'أحيطت', head: 'رئيس اللجنة' } : { the: 'المجلس', verb: 'قرر', noted: 'أحيط', head: 'رئيس المجلس' };
   // the decision in the usual wording, from its kind
   function phrase(it) {
@@ -35,7 +49,7 @@
       note: `${b.noted} ${b.the} علمًا بـ${t}.`, free: '' })[it.kind] || '';
   }
   const decText = it => it.edited || it.kind === 'free' ? it.text : phrase(it);
-  const decNo = (i) => (M.numFmt || '{n}/{i}').replace('{n}', M.no || '…').replace('{i}', i + 1).replace('{y}', M.year || '…');
+  const decNo = (i) => (M.numFmt || '{n}/{i}').replace('{n}', M.no || '…').replace('{i}', i + 1).replace('{y}', (M.info.find(r => /عام|دورة|سنة/.test(r.k) && (r.v || '').trim()) || {}).v || (dates().h.match(/\d{4}/) || ['…'])[0]);
   const present = () => M.members.filter(m => m.n.trim() && (m.st === 'p' || m.st === 'r'));
   const STL = { p: 'حاضر', r: 'حاضر عن بُعد', x: 'معتذر', a: 'غائب' };
   const named = () => M.members.filter(m => m.n.trim());
@@ -52,8 +66,8 @@
   const li = x => { x = String(x).trim(); return /^ال/.test(x) ? 'ل' + x.slice(1) : 'ل' + x; };
   const HEADS = ['أولًا', 'ثانيًا', 'ثالثًا', 'رابعًا', 'خامسًا', 'سادسًا', 'سابعًا', 'ثامنًا', 'تاسعًا', 'عاشرًا'];
   function doc() {
-    const b = body(), d = dates(), q = quorum(), chair = present().find(m => /رئيس/.test(m.r) && !/نائب/.test(m.r));
-    let k = 0, h = 0; const sec = [], rows = [], H = t => `<h2>${HEADS[h++] || ''}: ${t}</h2>`;
+    const b = body(), q = quorum(), S = M.show, chair = present().find(m => /رئيس/.test(m.r) && !/نائب/.test(m.r));
+    let k = 0, h = 0; const sec = [], rows = [], H = key => `<h2>${S.num ? (HEADS[h++] || '') + ': ' : ''}${esc(head(key))}</h2>`;
     const agenda = [];
     if (M.prev.on) { agenda.push('اعتماد محضر الجلسة السابقة'); sec.push(`<div class="mo-item"><h3>${k + 1}. اعتماد محضر الجلسة السابقة</h3><p class="mo-dec"><b>القرار:</b> ${b.verb} ${b.the} اعتماد محضر الجلسة السابقة${M.prev.note.trim() ? '، ' + esc(M.prev.note.trim()) : ' دون ملاحظات'}.</p></div>`); k++; }
     const fl = M.follow.filter(f => f.t.trim());
@@ -65,10 +79,10 @@
       const tk = (it.tasks || []).filter(t => t.t.trim() || t.who.trim());
       sec.push(`<div class="mo-item"><h3>${k + 1}. ${esc(it.title)}</h3>
         ${it.ref.trim() ? `<p class="mo-ref"><b>المرجع:</b> ${esc(it.ref)}</p>` : ''}
-        ${it.disc.trim() ? `<p><b>المناقشة:</b> ${nl(it.disc)}</p>` : ''}
+        ${S.disc && it.disc.trim() ? `<p><b>المناقشة:</b> ${nl(it.disc)}</p>` : ''}
         <p class="mo-dec"><b>القرار رقم (<bdi dir="ltr">${esc(decNo(i))}</bdi>):</b> ${nl(decText(it))}</p>
         ${it.basis.trim() ? `<p class="mo-basis"><b>الاستناد النظامي:</b> ${nl(it.basis)}</p>` : ''}
-        ${vote ? `<p><b>التصويت:</b> صدر القرار ${vote}.</p>` : ''}
+        ${S.vote && vote ? `<p><b>التصويت:</b> صدر القرار ${vote}.</p>` : ''}
         ${(it.dis || []).filter(x => x.n.trim()).map(x => `<p class="mo-dis"><b>${x.k === 'no' ? 'رأي مخالف' : 'تحفظ'}:</b> ${esc(x.n)}${x.note.trim() ? ' — ' + esc(x.note) : ''}</p>`).join('')}
         ${tk.length ? `<p><b>التكليف:</b> ${tk.map(t => esc(t.t) + (t.who ? ' — ' + esc(t.who) : '') + (t.due ? ' (' + esc(t.due) + ')' : '')).join('؛ ')}.</p>` : ''}
       </div>`);
@@ -77,33 +91,37 @@
     });
     if (M.misc.trim()) { agenda.push('ما يستجد من أعمال'); sec.push(`<div class="mo-item"><h3>${k + 1}. ما يستجد من أعمال</h3><p>${nl(M.misc)}</p></div>`); k++; }
     const recs = M.recs.split(/\n/).map(x => x.replace(/^\s*[-•\d٠-٩]+[.)\-]?\s*/, '').trim()).filter(Boolean);
-    const sig = present(), when = M.mode === 'remote' ? 'عن بُعد' : M.mode === 'mix' ? 'حضوريًا وعن بُعد' : '';
+    const sig = present(), info = M.info.map(r => [r.k, infoVal(r)]).filter(r => String(r[1]).trim());
     const sigs = M.sigL === 'grid'
       ? `<table class="mo-t mo-grid">${sig.reduce((r, m, j) => (j % 2 ? r[r.length - 1].push(m) : r.push([m]), r), []).map(row => `<tr>${row.map(m => `<td class="mo-card"><b>${esc(m.r)}</b><div class="mo-sigbox" data-n="${esc(m.n)}" data-r="${esc(m.r)}"></div>${esc(m.n)}</td>`).join('')}${row.length < 2 ? '<td class="mo-card"></td>' : ''}</tr>`).join('')}</table>`
       : `<table class="mo-t mo-sig"><tr><th>م</th><th>الاسم</th><th>الصفة</th><th>التوقيع</th></tr>${sig.map((m, j) => `<tr><td>${j + 1}</td><td>${esc(m.n)}</td><td>${esc(m.r)}</td><td class="mo-sigbox" data-n="${esc(m.n)}" data-r="${esc(m.r)}"></td></tr>`).join('')}</table>`;
     return `<div class="mo-doc${M.status === 'draft' ? ' draft' : ''}" dir="rtl">
-      <table class="mo-hd"><tr><td class="mo-org">${M.org ? `<b>${esc(M.org)}</b><br>` : ''}${M.unit ? `${esc(M.unit)}<br>` : ''}${M.committee ? esc(M.committee) : ''}</td><td class="mo-bsm">${M.bsm ? 'بسم الله الرحمن الرحيم' : ''}</td><td class="mo-logo">${M.logo ? `<img src="${M.logo}" alt="" height="64">` : ''}</td></tr></table>
-      <h1>محضر الاجتماع${M.no ? ` رقم (${esc(M.no)})` : ''}${M.committee ? '<br>' + esc(li(M.committee)) : ''}${M.year ? ` للعام ${esc(M.year)}` : ''}</h1>
-      <table class="mo-t mo-info"><tr><th>اليوم والتاريخ</th><td>${esc(d.day)} ${esc(d.h)}${d.h ? ' هـ' : ''}، الموافق ${esc(d.g)}</td></tr>
-        <tr><th>الوقت</th><td>${M.from ? 'من ' + t12(M.from) : ''}${M.to ? ' إلى ' + t12(M.to) : ''}</td></tr>
-        <tr><th>المكان</th><td>${esc(M.place)}${when ? ` (${when})` : ''}</td></tr>
-        ${M.att.trim() ? `<tr><th>المرفقات</th><td>${esc(M.att)}</td></tr>` : ''}</table>
-      <p>${M.date ? `في يوم ${esc(d.day)} ${esc(d.h)}${d.h ? ' هـ' : ''}` : ''}${M.from ? `، عند الساعة ${t12(M.from)}` : ''}، عُقد الاجتماع ${M.no ? `رقم (${esc(M.no)}) ` : ''}${M.committee ? esc(li(M.committee)) : ''}${when ? ' ' + when : ''}${M.place.trim() ? ` في ${esc(M.place.trim())}` : ''}${chair ? `، برئاسة ${esc(chair.n)}، ${esc(chair.r)}` : ''}.</p>
-      ${H('الحضور واكتمال النصاب')}
-      <table class="mo-t"><tr><th>م</th><th>الاسم</th><th>الصفة</th><th>الحضور</th></tr>${named().map((m, j) => `<tr><td>${j + 1}</td><td>${esc(m.n)}</td><td>${esc(m.r)}</td><td>${STL[m.st] || ''}</td></tr>`).join('')}</table>
-      ${M.guests.trim() ? `<p><b>المدعوون من غير الأعضاء:</b> ${esc(M.guests)}</p>` : ''}
-      <p class="mo-q">${q.n ? (q.ok ? `وبعد التحقق من اكتمال النصاب النظامي بحضور (${q.p}) من أصل (${q.n}) أعضاء، رحّب ${chair ? 'رئيس الاجتماع' : b.head} بالحاضرين، واستُعرض جدول الأعمال.` : `لم يكتمل النصاب النظامي: حضر (${q.p}) من أصل (${q.n})، والمطلوب (${q.need}).`) : ''}</p>
-      ${M.agenda && agenda.length ? `${H('جدول الأعمال')}<table class="mo-t"><tr><th>م</th><th>الموضوع</th></tr>${agenda.map((t, j) => `<tr><td>${j + 1}</td><td>${esc(t)}</td></tr>`).join('')}</table>` : ''}
-      ${H('المناقشات والقرارات')}
+      <table class="mo-hd"><tr><td class="mo-org">${M.org ? `<b>${esc(M.org)}</b><br>` : ''}${M.unit ? `${esc(M.unit)}` : ''}</td><td class="mo-bsm">${S.bsm ? 'بسم الله الرحمن الرحيم' : ''}</td><td class="mo-logo">${M.logo && S.logo ? `<img src="${M.logo}" alt="" height="64">` : ''}</td></tr></table>
+      <h1>محضر الاجتماع${M.no ? ` رقم (${esc(M.no)})` : ''}${M.committee ? '<br>' + esc(li(M.committee)) : ''}</h1>
+      ${S.info && info.length ? `<table class="mo-t mo-info">${info.map(([a, v]) => `<tr><th>${esc(a)}</th><td>${esc(v)}</td></tr>`).join('')}</table>` : ''}
+      ${S.intro ? `${head('intro').trim() ? `<h2>${esc(head('intro'))}</h2>` : ''}<p>${introText()}</p>` : ''}
+      ${S.att ? `${H('att')}<table class="mo-t"><tr><th>م</th><th>الاسم</th><th>الصفة</th><th>الحضور</th></tr>${named().map((m, j) => `<tr><td>${j + 1}</td><td>${esc(m.n)}</td><td>${esc(m.r)}</td><td>${STL[m.st] || ''}</td></tr>`).join('')}</table>
+      ${M.guests.trim() ? `<p><b>المدعوون من غير الأعضاء:</b> ${esc(M.guests)}</p>` : ''}` : ''}
+      ${S.quorum ? `<p class="mo-q">${quorumText(chair)}</p>` : ''}
+      ${S.agenda && agenda.length ? `${H('agenda')}<table class="mo-t"><tr><th>م</th><th>الموضوع</th></tr>${agenda.map((t, j) => `<tr><td>${j + 1}</td><td>${esc(t)}</td></tr>`).join('')}</table>` : ''}
+      ${H('decs')}
       ${sec.join('')}
-      ${recs.length ? `${H('التوصيات')}${recs.map((r, j) => `<p class="mo-rec">${j + 1}. ${esc(r)}</p>`).join('')}` : ''}
-      ${rows.length ? `${H('ملخص القرارات والتكليفات')}<table class="mo-t mo-sum"><tr><th>رقم القرار</th><th>القرار والتكليف</th><th>المكلّف</th><th>الموعد</th></tr>${rows.join('')}</table>` : ''}
-      ${H('اختتام الاجتماع')}
-      <p>واختُتم الاجتماع${M.to ? ' في تمام الساعة ' + t12(M.to) : ''}${M.next.trim() ? '، على أن يُعقد الاجتماع القادم ' + esc(M.next.trim()) : ''}، والله ولي التوفيق.</p>
-      ${H('توقيعات الحضور')}
-      ${sigs}
+      ${S.recs && recs.length ? `${H('recs')}${recs.map((r, j) => `<p class="mo-rec">${j + 1}. ${esc(r)}</p>`).join('')}` : ''}
+      ${S.sum && rows.length ? `${H('sum')}<table class="mo-t mo-sum"><tr><th>رقم القرار</th><th>القرار والتكليف</th><th>المكلّف</th><th>الموعد</th></tr>${rows.join('')}</table>` : ''}
+      ${S.close ? `${H('close')}<p>${closeText()}</p>` : ''}
+      ${S.sig ? `${H('sig')}${sigs}` : ''}
     </div>`;
   }
+  // the sentences written for you, shared by the page and the exports
+  function introText() {
+    const d = dates(), chair = present().find(m => /رئيس/.test(m.r) && !/نائب/.test(m.r)), when = M.mode === 'remote' ? 'عن بُعد' : M.mode === 'mix' ? 'حضوريًا وعن بُعد' : '';
+    return `${M.date ? `في يوم ${esc(d.day)} ${esc(d.h)}${d.h ? ' هـ' : ''}، ` : ''}${M.from ? `عند الساعة ${t12(M.from)}، ` : ''}عُقد الاجتماع ${M.no ? `رقم (${esc(M.no)}) ` : ''}${M.committee.trim() ? esc(li(M.committee)) : ''}${when ? ' ' + when : ''}${M.place.trim() ? ` في ${esc(M.place.trim())}` : ''}${chair ? `، برئاسة ${esc(chair.n)}، ${esc(chair.r)}` : ''}.`;
+  }
+  function quorumText(chair) {
+    const q = quorum(), b = body();
+    return q.n ? (q.ok ? `وبعد التحقق من اكتمال النصاب النظامي بحضور (${q.p}) من أصل (${q.n}) أعضاء، رحّب ${chair ? 'رئيس الاجتماع' : b.head} بالحاضرين، واستُعرض جدول الأعمال.` : `لم يكتمل النصاب النظامي: حضر (${q.p}) من أصل (${q.n})، والمطلوب (${q.need}).`) : '';
+  }
+  const closeText = () => `واختُتم الاجتماع${M.to ? ' في تمام الساعة ' + t12(M.to) : ''}${M.next.trim() ? '، على أن يُعقد الاجتماع القادم ' + esc(M.next.trim()) : ''}، والله ولي التوفيق.`;
   const DOC_CSS = `.mo-doc,.mo-doc *{letter-spacing:0!important;word-spacing:normal!important}.mo-doc{font-family:"IBM Plex Sans Arabic","Traditional Arabic",Arial,sans-serif;color:#111;font-size:14px;line-height:1.85;background:#fff;position:relative}
     .mo-doc.draft::before{content:"مسودة";position:absolute;top:30%;left:50%;transform:translate(-50%,-50%) rotate(-24deg);font-size:110px;color:rgba(200,0,0,.07);font-weight:800;pointer-events:none}
     .mo-hd{width:100%;border-collapse:collapse;border-bottom:2px solid #1f3b5c;margin-bottom:12px}.mo-hd td{width:33%;vertical-align:middle;padding:0 0 10px}.mo-org{font-size:13px;text-align:right;line-height:1.6}.mo-org b{font-size:15px}.mo-bsm{text-align:center;font-size:17px;font-family:"Amiri","Traditional Arabic",serif}.mo-logo{text-align:left}.mo-logo img{max-height:70px;max-width:160px}
@@ -118,18 +136,21 @@
     M = null;
     const coms = store.get('coms', []);
     root.innerHTML = `<div class="sn-card mn-home">
-      <div class="sn-two"><button type="button" class="btn solid" id="mnNew">${B('محضر جديد', 'New minutes')}</button></div>
+      <div class="sn-two"><button type="button" class="btn solid" id="mnNew">${B('محضر جديد', 'New minutes')}</button><button type="button" class="btn ghost" id="mnMimic">📄 ${B('محضر على نمط محضر سابق', 'New minutes in the style of an old one')}</button></div>
+      <p class="sn-fine">${B('ارفع محضرًا سابقًا (Word أو PDF)، فيُبنى المحضر الجديد على نمطه: عناصره وعناوينه وخانات بياناته وأعضاؤه.', 'Upload an earlier minutes (Word or PDF) and the new one follows its pattern: sections, headings, detail rows and members.')}</p>
       ${coms.length ? `<h2 class="mn-h">${B('محضر جديد للجنة سابقة', 'New minutes for a past committee')}</h2><p class="sn-fine">${B('تُنقل البيانات والأعضاء، ويُرفع رقم الجلسة، وتنتقل مهام آخر محضر إلى «متابعة القرارات».', 'Details and members carry over, the number goes up, and the last tasks move to the follow-up.')}</p><div class="mn-coms">${coms.map(c => `<button type="button" class="mn-com" data-com="${c.id}"><b>${esc(c.committee || c.org || T('لجنة', 'Committee'))}</b><small>${esc(c.org || '')} · ${c.members.length} ${T('أعضاء', 'members')}</small></button>`).join('')}</div>` : ''}
       ${list.length ? `<h2 class="mn-h">${B('محاضرك', 'Your minutes')}</h2><ul class="mn-list">${list.map(x => `<li><button type="button" data-open="${x.id}"><b>${esc(x.committee || T('بلا عنوان', 'Untitled'))} ${x.no ? '(' + esc(x.no) + ')' : ''}</b><small>${esc(x.date || '')} · ${x.status === 'final' ? T('معتمد', 'Approved') : T('مسودة', 'Draft')}</small></button><button type="button" class="mn-x" data-del="${x.id}" aria-label="delete">✕</button></li>`).join('')}</ul>` : ''}
       <p class="sn-fine">🔒 ${B('تُحفظ المحاضر في هذا المتصفح فقط، ولا تُرفع إلى أي خادم.', 'Minutes are kept in this browser only and are never uploaded.')}</p></div>`;
     root.querySelector('#mnNew').onclick = () => { M = blank(); editor(); };
-    root.querySelectorAll('[data-open]').forEach(b => b.onclick = () => { M = Object.assign(blank(), JSON.parse(JSON.stringify(list.find(x => x.id === b.dataset.open)))); editor(); });
+    root.querySelector('#mnMimic').onclick = () => { const f = document.createElement('input'); f.type = 'file'; f.accept = '.docx,.pdf,.txt'; f.onchange = () => f.files[0] && mimicFile(f.files[0]); f.click(); };
+    root.querySelectorAll('[data-open]').forEach(b => b.onclick = () => { const x = JSON.parse(JSON.stringify(list.find(x => x.id === b.dataset.open))); M = normM(Object.assign(blank(), x, { show: x.show, heads: x.heads, info: x.info })); editor(); });
     root.querySelectorAll('[data-del]').forEach(b => b.onclick = () => { if (!confirm(T('حذف هذا المحضر؟', 'Delete these minutes?'))) return; list = list.filter(x => x.id !== b.dataset.del); store.set('list', list); home(); });
     root.querySelectorAll('[data-com]').forEach(b => b.onclick = () => fromCommittee(coms.find(c => c.id === b.dataset.com)));
   }
   function fromCommittee(c) {
     M = blank();
-    Object.assign(M, { type: c.type, org: c.org, unit: c.unit, committee: c.committee, logo: c.logo, year: c.year || '', place: c.place || '', mode: c.mode || 'in', numFmt: c.numFmt || M.numFmt, bsm: c.bsm !== false, agenda: c.agenda !== false, sigL: c.sigL || 'table' });
+    Object.assign(M, { type: c.type, org: c.org, unit: c.unit, committee: c.committee, logo: c.logo, year: c.year || '', place: c.place || '', mode: c.mode || 'in', numFmt: c.numFmt || M.numFmt, sigL: c.sigL || 'table' });
+    if (c.show) M.show = Object.assign({}, c.show); if (c.heads) M.heads = Object.assign({}, c.heads); if (c.info) M.info = c.info.map(r => ({ id: uid(), k: r.k, t: r.t, v: '' }));
     M.members = c.members.map(m => ({ id: uid(), n: m.n, r: m.r, st: 'p' }));
     // the last minutes of this committee: next number, and its tasks to follow up
     const last = list.filter(x => x.committee === c.committee && x.org === c.org).sort((a, b) => (b.date || '').localeCompare(a.date || ''))[0];
@@ -140,8 +161,97 @@
   function saveCommittee() {
     if (!M || !M.committee.trim() || !named().length) return;
     const coms = store.get('coms', []), key = (M.org + '|' + M.committee).trim();
-    const c = { id: (coms.find(x => (x.org + '|' + x.committee).trim() === key) || {}).id || uid(), type: M.type, org: M.org, unit: M.unit, committee: M.committee, logo: M.logo, year: M.year, place: M.place, mode: M.mode, numFmt: M.numFmt, bsm: M.bsm, agenda: M.agenda, sigL: M.sigL, members: named().map(m => ({ n: m.n, r: m.r })) };
+    const c = { id: (coms.find(x => (x.org + '|' + x.committee).trim() === key) || {}).id || uid(), type: M.type, org: M.org, unit: M.unit, committee: M.committee, logo: M.logo, year: M.year, place: M.place, mode: M.mode, numFmt: M.numFmt, sigL: M.sigL, show: M.show, heads: M.heads, info: M.info.map(r => ({ k: r.k, t: r.t })), members: named().map(m => ({ n: m.n, r: m.r })) };
     store.set('coms', [c].concat(coms.filter(x => x.id !== c.id)).slice(0, 12));
+  }
+
+  /* ---------- a new minutes in the pattern of an earlier one ---------- */
+  const PDFJS = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/';
+  async function readText(file) {
+    if (/\.docx$/i.test(file.name)) { await need('https://cdn.jsdelivr.net/npm/mammoth@1.8.0/mammoth.browser.min.js'); return (await mammoth.extractRawText({ arrayBuffer: await file.arrayBuffer() })).value; }
+    if (/\.pdf$/i.test(file.name)) {
+      await need(PDFJS + 'build/pdf.min.js'); pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS + 'build/pdf.worker.min.js';
+      const doc = await pdfjsLib.getDocument({ data: await file.arrayBuffer(), cMapUrl: PDFJS + 'cmaps/', cMapPacked: true }).promise, out = [];
+      for (let p = 1; p <= doc.numPages; p++) {
+        const items = (await (await doc.getPage(p)).getTextContent()).items.filter(x => x.str && x.str.trim()), lines = [];
+        items.forEach(it => { const y = it.transform[5], h = Math.abs(it.transform[3]) || 10; let l = lines.find(l => Math.abs(l.y - y) < h * .5); if (!l) lines.push(l = { y, h, it: [] }); l.it.push(it); });
+        lines.sort((a, b) => b.y - a.y).forEach(l => {
+          const ar = l.it.some(x => /[؀-ۿﭐ-﻿]/.test(x.str)); l.it.sort((a, b) => ar ? b.transform[4] - a.transform[4] : a.transform[4] - b.transform[4]);
+          let s = '', pe = null; l.it.forEach(x => { const x0 = x.transform[4], x1 = x0 + (x.width || 0); if (pe != null) s += (ar ? pe - x1 : x0 - pe) > l.h * .2 ? ' ' : ''; s += x.str; pe = ar ? x0 : x1; });
+          out.push(s.replace(/\s+/g, ' ').trim()); });
+      }
+      return out.join('\n').normalize('NFKC').replace(/ی/g, 'ي').replace(/ک/g, 'ك').replace(/ھ/g, 'ه').replace(/ا([أإآ])ل/g, 'ال$1').replace(/هللا/g, 'الله');
+    }
+    return file.text();
+  }
+  async function mimicFile(file) {
+    let text = '';
+    try { text = await readText(file); } catch (e) {}
+    if (text.replace(/\s/g, '').length < 80) return toast(B('لم أستطع قراءة نص الملف. إن كان PDF ممسوحًا ضوئيًا فاستخدم نسخة Word.', 'Could not read the text. If it is a scanned PDF, use the Word file.'), 1);
+    M = blank(); const got = mimic(text, M); editor();
+    toast(B(`بُني المحضر على نمط «${esc(file.name)}»: ${got.join('، ')}. راجع «عناصر المحضر» في الأعلى.`, `Built in the pattern of “${esc(file.name)}”. Check “What the minutes include” at the top.`));
+  }
+  function mimic(text, X) {
+    const lines = text.split(/\n/).map(l => l.replace(/\s+/g, ' ').trim()).filter(Boolean), N = normA, NS = x => N(x).replace(/\s+/g, ''), got = [];
+    const short = lines.filter(l => l.length < 70), has = re => lines.some(l => re.test(N(l)));
+    const ORDW = /^(اولا|ثانيا|ثالثا|رابعا|خامسا|سادسا|سابعا|ثامنا|تاسعا|عاشرا)/;
+    let numbered = false;
+    // a heading as written, without its number ("أولًا:", "1.") and its colon
+    const clean = l => { const m = l.match(/^([^:：]{0,14})[:：]\s*(\S[\s\S]*)$/); let x = m && (ORDW.test(NS(m[1])) || /^[\d٠-٩]+\s*[.\-)]?\s*$/.test(m[1].trim())) ? m[2] : l;
+      const ws = x.split(' '); for (let k = 2; k >= 1; k--) if (ws.length > k && /^(اولا|ثانيا|ثالثا|رابعا|خامسا|سادسا|سابعا|ثامنا|تاسعا|عاشرا)[:：]?$/.test(NS(ws.slice(0, k).join('')))) { x = ws.slice(k).join(' ').replace(/^[:：\-–]\s*/, ''); break; }
+      return x.replace(/^[\d٠-٩]+\s*[.\-)]\s*/, '').replace(/\s*[:：.]\s*$/, '').trim(); };
+    const find = (re, not) => { const l = short.find(x => re.test(N(x)) && !(not && not.test(N(x)))); if (l && ORDW.test(NS(l))) numbered = true; return l; };
+    const okHead = c => c && c.length <= 35 && !/^م\s/.test(c) && !/[.،]$/.test(c) && c.split(' ').length <= 6;
+    const sec = { intro: [/^(\S+ ?)?(تمهيد|تقديم|مقدمه)\b/], att: [/(الحضور|الاعضاء الحاضرون|اثبات النصاب)/, /توقيع|تم |وبعد/], agenda: [/جدول الاعمال/, /تم |استعراض/], decs: [/(المناقشات|المناقشه والقرارات|القرارات والتوصيات|ما تم مناقشته)/, /ملخص/],
+      recs: [/^(\S+ ?){0,2}التوصيات\s*$/], sum: [/ملخص (القرارات|التكليفات)/], close: [/(اختتام|ختام) الاجتماع/], sig: [/(توقيعات|التوقيعات|^التوقيع$|اعضاء اللجنه\s*$)/] };
+    Object.entries(sec).forEach(([k, [re, not]]) => {
+      const l = find(re, not), c = l ? clean(l) : '';
+      if (k === 'decs') { if (okHead(c)) X.heads.decs = c; return; }
+      if (k === 'intro') { X.show.intro = true; if (okHead(c)) X.heads.intro = c; return; }
+      if (k === 'agenda') X.show.agenda = !!l || has(/جدول الاعمال|الموضوعات/); else X.show[k] = !!l;
+      if (okHead(c)) X.heads[k] = c;
+    });
+    X.show.num = numbered; X.show.quorum = has(/النصاب/); X.show.vote = has(/(بالاجماع|بالاغلبيه|التصويت)/); X.show.disc = has(/المناقشه/) || !has(/القرار/);
+    got.push(T('العناصر والعناوين', 'sections and headings'));
+    // the meeting-details rows, as labelled in the old minutes
+    const LBL = [['date', /(^|\s)(التاريخ|اليوم والتاريخ|تاريخ الاجتماع)(\s|$)/, 'التاريخ'], ['time', /(^|\s)(الوقت|وقت الاجتماع)(\s|$)/, 'الوقت'], ['place', /(^|\s)(المكان|مكان الاجتماع|مكان الانعقاد|مقر الاجتماع|مقر الجمعيه|المقر)(\s|$)/, 'المكان'],
+      [null, /وسيله الانعقاد/, 'وسيلة الانعقاد'], [null, /نوع الاجتماع/, 'نوع الاجتماع'], [null, /^الدوره\s/, 'الدورة'], [null, /(^|\s)المرفقات(\s|$)/, 'المرفقات'], [null, /مده الاجتماع/, 'مدة الاجتماع']];
+    const rows = LBL.filter(([t, re]) => short.some(l => re.test(N(l))));
+    if (rows.length >= 2) { const mq = lines.find(l => /(مقر|مكان)/.test(N(l))); X.info = rows.map(([t, re, lab]) => ({ id: uid(), k: t === 'place' && mq && /مقر/.test(N(mq)) ? 'المقر' : lab, t: t || undefined, v: '' }));
+      if (!X.info.some(r => r.t === 'date')) X.info.unshift({ id: uid(), k: 'التاريخ', t: 'date' }); got.push(T(`${X.info.length} خانات للبيانات`, `${X.info.length} detail rows`)); }
+    // the name of the council or committee, from the title (which may run to the next line)
+    const ti = lines.findIndex(l => /^محضر\s/.test(N(l)));
+    if (ti >= 0) {
+      const ORD = /^(ال)?(اول|ثاني|ثالث|رابع|خامس|سادس|سابع|ثامن|تاسع|عاشر)(ه|ي)?$|^[(\[]?[\d٠-٩]+[)\]]?$|^رقم$/;
+      let w = lines[ti].split(' ').slice(1); while (w.length && (/(جتماع|جلسه)$/.test(N(w[0])) || ORD.test(N(w[0])))) w.shift();
+      let name = w.join(' '); const nx = lines[ti + 1] || '';
+      if (!name) name = nx; else if (/^(ل|و)/.test(nx) && nx.length < 70 && !/^لا\s/.test(nx)) name += ' ' + nx;
+      name = name.replace(/^ل(?=(مجلس|لجنة|جنة|الجمعية|ل))/, '').replace(/^لجنة/, 'لجنة').replace(/^ل(?=لجنة)/, '').replace(/\s*(المنعقد|المنعقدة)[\s\S]*$/, '').trim();
+      if (name && name.length < 110) { X.committee = name; if (/^(ال)?لجن/.test(N(name))) X.type = 'committee'; }
+    }
+    const org = lines.slice(0, 15).map(l => l.split(/\s*(?:\.{3,}|[:：])/)[0].trim()).find(l => /^(جامعه|جمعيه|وزاره|شركه|هيئه|مؤسسه)\s/.test(N(l)) && l.length < 50); if (org) X.org = org;
+    // members: a title (د. / أ. …) and a name, then a role; two-column tables give two people on one line
+    const TT = '(?:أ\\.\\s?د\\.?|أ\\.د|د\\.|أ\\.|م\\.|الدكتورة?|الأستاذة?)', TITLE = new RegExp('^' + TT + '\\s*'), SPLIT = new RegExp('\\s(?=' + TT + '\\s?\\S)');
+    const RW = '(?:رئيسة?|نائبة?|عضوة?|أمينة?|مقررة?|وكيلة?|عميدة?|مديرة?)', ROLE = new RegExp(RW + '[^\\n]{0,30}'), RSPLIT = new RegExp('\\s(?=' + RW + '\\s)');
+    const ST = /\s*(حاضرة?|معتذرة?|غائبة?|عن بعد|عن بُعد)(\s.*)?$/;
+    const mem = [], key = n => { const w = N(n).replace(TITLE, '').replace(/\b(بن|بنت|ابن)\b/g, ' ').split(' ').filter(Boolean); return w.length ? w[0] + '|' + w[w.length - 1] : ''; };
+    lines.forEach((l, i) => {
+      const t0 = l.replace(/^[\d٠-٩]+\s*/, ''); if (!TITLE.test(t0)) return;
+      const people = t0.split(SPLIT), around = (t0.split(SPLIT).length > 1 ? [lines[i - 1] || '', lines[i + 1] || ''] : [lines[i + 1] || '', lines[i - 1] || '']).find(x => x.length < 90 && !TITLE.test(x) && ROLE.test(x)) || '';
+      let roles = people.length > 1 ? around.split(RSPLIT) : [around];
+      if (people.length === 2 && roles.length !== 2 && around) { const w = around.split(' '), h = Math.ceil(w.length / 2); roles = [w.slice(0, h).join(' '), w.slice(h).join(' ')]; }
+      people.forEach((t, k) => {
+        let name = t.trim(), role = ''; const rm = t.slice(3).match(ROLE);
+        if (rm) { name = t.slice(0, 3 + rm.index).trim(); role = rm[0].replace(ST, '').trim(); } else role = (roles[k] || '').replace(ST, '').trim();
+        name = name.replace(ST, '').trim();
+        if (name.length < 6 || name.length > 50) return;
+        const ex = mem.find(m => key(m.n) === key(name)); if (ex) { if (name.length > ex.n.length) ex.n = name; if (!ex.r && role) ex.r = role; return; }
+        mem.push({ id: uid(), n: name, r: role, st: 'p' });
+      });
+    });
+    mem.forEach(m => m.r = m.r || 'عضو');
+    if (mem.length >= 2) { X.members = mem.slice(0, 40); got.push(T(`${mem.length} أعضاء`, `${mem.length} members`)); }
+    return got;
   }
 
   /* ---------- the paper: the minutes as they will look, written in place ---------- */
@@ -165,11 +275,14 @@
     root.innerHTML = `<div class="mp-top"><button type="button" class="sn-lnk" id="mpBack">${isAr() ? '→' : '←'} ${B('محاضري', 'My minutes')}</button>
         <nav class="mp-steps">${STAGES.map(([k, a, e], i) => `<button type="button" data-st="${k}"><b>${i + 1}</b>${B(a, e)}</button>`).join('')}</nav>
         <button type="button" class="mp-gear" id="mpSet" title="${T('إعدادات المحضر', 'Settings')}" aria-label="${T('إعدادات المحضر', 'Settings')}">⚙</button></div>
-      <p class="mp-hint" id="mpHint"></p><div id="mpChk"></div>
+      <p class="mp-hint" id="mpHint"></p>
+      <details class="mp-els" id="mpEls"><summary>☰ ${B('عناصر المحضر', 'What the minutes include')}</summary><div class="mp-elsb">${SECS.map(([k, l]) => `<label><input type="checkbox" data-sh="${k}"${M.show[k] ? ' checked' : ''}> ${l}</label>`).join('')}</div><p class="mp-elsn">${B('ألغِ علامة أي عنصر فلا يظهر في المحضر. وتستطيع تعديل أي عنوان أو خانة بالضغط عليها في الصفحة.', 'Untick anything to leave it out. Tap any heading or row on the page to change it.')}</p></details>
+      <div id="mpChk"></div>
       <div class="mp-paper" id="mpPaper"></div><div class="mn-bar" id="mpBar"></div>`;
     root.querySelector('#mpBack').onclick = () => { persist(); saveCommittee(); home(); };
     root.querySelectorAll('[data-st]').forEach(b => b.onclick = () => go(b.dataset.st));
     root.querySelector('#mpSet').onclick = settings;
+    root.querySelectorAll('[data-sh]').forEach(c => c.onchange = () => { M.show[c.dataset.sh] = c.checked; paint(); later(); });
     const P = root.querySelector('#mpPaper');
     P.addEventListener('input', e => { const el = e.target.closest('.ed'); if (!el) return; const p = el.dataset.p, v = el.innerText.replace(/\n+$/, '');
       const [o, k] = ref(p); if (!o) return; o[k] = v; if (k === 'text' && o.kind !== undefined) o.edited = true;
@@ -177,7 +290,7 @@
     P.addEventListener('keydown', e => { const el = e.target.closest('.ed'); if (el && !el.classList.contains('ml') && e.key === 'Enter') { e.preventDefault(); el.blur(); } });
     P.addEventListener('paste', e => { const el = e.target.closest('.ed'); if (!el) return; e.preventDefault(); const t = (e.clipboardData || window.clipboardData).getData('text/plain'); document.execCommand('insertText', false, el.classList.contains('ml') ? t : t.replace(/\s*\n\s*/g, ' ')); });
     P.addEventListener('change', e => { const el = e.target; if (el.dataset.f) { M[el.dataset.f] = el.value; } else if (el.dataset.p) { const [o, k] = ref(el.dataset.p); if (o) o[k] = el.value; } else return; derived(); later(); });
-    P.addEventListener('click', e => { const b = e.target.closest('[data-act]'); if (b) act(b.dataset.act, b.dataset, b); });
+    P.addEventListener('click', e => { if (e.target.matches('.mp-hid')) { try { e.target.showPicker(); } catch (er) {} return; } const b = e.target.closest('[data-act]'); if (b) act(b.dataset.act, b.dataset, b); });
     go(stage, true);
   }
   function go(st, first) {
@@ -191,7 +304,8 @@
   }
 
   function paper() {
-    const S = stage, during = S !== 'before', b = body();
+    const S = stage, during = S !== 'before', b = body(), V = M.show;
+    let h = 0; const HP = key => `<h2>${V.num ? (HEADS[h++] || '') + ': ' : ''}${E('heads:' + key, DH[key] || T('عنوان', 'Heading'), 0, head(key))}</h2>`;
     const memRows = M.members.map((m, j) => `<tr class="mp-row"><td>${j + 1}</td><td>${E('members:' + m.id + ':n', T('اسم العضو', 'Member name'))}</td><td>${E('members:' + m.id + ':r', T('الصفة', 'Role'))}</td>
       ${during ? `<td><button type="button" class="mp-att st-${m.st}" data-act="att" data-id="${m.id}">${STL[m.st]}</button></td>` : ''}<td class="mp-tc">${ico('rmMem', T('حذف العضو', 'Remove'), '✕', ` data-id="${m.id}"`)}</td></tr>`).join('');
     const follow = M.follow.length ? `<h2>${B('متابعة قرارات الجلسة السابقة', 'Follow-up of the last decisions')}</h2><table class="mo-t"><tr><th>م</th><th>القرار أو المهمة</th><th>الحالة</th><th class="mp-tc"></th></tr>${M.follow.map((f, j) => `<tr class="mp-row"><td>${j + 1}</td><td>${E('follow:' + f.id + ':t', T('القرار أو المهمة', 'Decision or task'))}</td><td><select class="mp-sel" data-p="follow:${f.id}:st">${Object.entries(FST).map(([v, l]) => `<option value="${v}"${f.st === v ? ' selected' : ''}>${l}</option>`).join('')}</select></td><td class="mp-tc">${ico('rmFol', T('حذف', 'Remove'), '✕', ` data-id="${f.id}"`)}</td></tr>`).join('')}</table>${add('addFol', T('قرار آخر', 'Another'))}` : '';
@@ -200,55 +314,61 @@
       <p class="mo-dec"><b>القرار:</b> ${b.verb} ${b.the} اعتماد محضر الجلسة السابقة${M.prev.note.trim() ? '، ' : ' '}${E('prev:note', T('دون ملاحظات', 'no notes'))}.</p></div>` : '';
     const items = M.items.map((it, i) => {
       const id = it.id, P = 'items:' + id + ':';
-      const vote = it.vote === 'all' ? 'صدر القرار بالإجماع' : it.vote === 'maj' ? 'صدر القرار بالأغلبية' : '';
+      const vote = V.vote ? (it.vote === 'all' ? 'صدر القرار بالإجماع' : it.vote === 'maj' ? 'صدر القرار بالأغلبية' : '') : '';
       return `<div class="mo-item mp-item mp-row" data-id="${id}"><h3>${++n}. ${E(P + 'title', T('موضوع البند', 'Subject'))}</h3>
         ${show(it, 'ref') ? `<p class="mo-ref"><b>المرجع:</b> ${E(P + 'ref', T('رقم المعاملة أو الخطاب وتاريخه', 'Reference no. and date'))}</p>` : ''}
-        <p><b>المناقشة:</b> ${E(P + 'disc', T('اكتب ما دار باختصار…', 'What was said, briefly…'), 1)}</p>
-        <div class="mp-kinds${stage === 'after' ? ' mp-fade' : ''}">${KINDS.filter(k => k[0] !== 'free').map(([k, l]) => `<button type="button" data-act="kind" data-id="${id}" data-k="${k}" aria-pressed="${!it.edited && it.kind === k}">${l}</button>`).join('')}${it.edited ? `<button type="button" class="mp-reset" data-act="reset" data-id="${id}" title="${T('أعد الصيغة المقترحة', 'Reset the wording')}">↺</button>` : ''}</div>
+        ${V.disc ? `<p><b>المناقشة:</b> ${E(P + 'disc', T('اكتب ما دار باختصار…', 'What was said, briefly…'), 1)}</p>` : ''}
+        <div class="mp-kinds${S === 'after' ? ' mp-fade' : ''}">${KINDS.filter(k => k[0] !== 'free').map(([k, l]) => `<button type="button" data-act="kind" data-id="${id}" data-k="${k}" aria-pressed="${!it.edited && it.kind === k}">${l}</button>`).join('')}${it.edited ? `<button type="button" class="mp-reset" data-act="reset" data-id="${id}" title="${T('أعد الصيغة المقترحة', 'Reset the wording')}">↺</button>` : ''}</div>
         <p class="mo-dec"><b>القرار رقم (<bdi dir="ltr" data-d="no:${id}"></bdi>):</b> ${E(P + 'text', T('نص القرار', 'The decision'), 1, decText(it))}</p>
         ${show(it, 'basis') ? `<p class="mo-basis"><b>الاستناد النظامي:</b> ${E(P + 'basis', T('مثال: المادة (12) من لائحة الدراسات العليا', 'e.g. Article 12 of the graduate regulations'), 1)}<small class="mp-chk" data-d="basis:${id}"></small></p>` : ''}
         ${vote ? `<p><b>التصويت:</b> <button type="button" class="mp-link" data-act="vote" data-id="${id}">${vote}</button>${it.vote === 'maj' ? ` (موافق: ${E(P + 'yes', '…')}، غير موافق: ${E(P + 'no', '…')})` : ''}</p>` : ''}
         ${it.dis.map((x, j) => `<p class="mo-dis mp-row"><b><button type="button" class="mp-link" data-act="disk" data-id="${id}" data-j="${j}">${x.k === 'no' ? 'رأي مخالف' : 'تحفظ'}</button>:</b> <select class="mp-sel" data-p="${P}dis:${j}:n"><option value="">${T('العضو', 'Member')}</option>${named().map(m => `<option${m.n === x.n ? ' selected' : ''}>${esc(m.n)}</option>`).join('')}</select> — ${E(P + 'dis:' + j + ':note', T('السبب كما أبداه', 'The reason given'))} ${ico('rmDis', T('حذف', 'Remove'), '✕', ` data-id="${id}" data-j="${j}"`)}</p>`).join('')}
         ${it.tasks.map((t, j) => `<p class="mp-row"><b>التكليف:</b> ${E(P + 'tasks:' + j + ':t', T('المهمة', 'Task'))} — ${E(P + 'tasks:' + j + ':who', T('المسؤول', 'Owner'))} (${E(P + 'tasks:' + j + ':due', T('الموعد', 'Due'))}) ${ico('rmTask', T('حذف', 'Remove'), '✕', ` data-id="${id}" data-j="${j}"`)}</p>`).join('')}
-        <div class="mp-opt">${show(it, 'ref') ? '' : add('open', T('المرجع', 'Reference'), ` data-id="${id}" data-f="ref"`)}${add('addTask', T('تكليف', 'Task'), ` data-id="${id}"`)}${add('addDis', T('تحفظ', 'Reservation'), ` data-id="${id}"`)}${show(it, 'basis') ? '' : add('open', T('الاستناد النظامي', 'Rule relied on'), ` data-id="${id}" data-f="basis"`)}${vote ? '' : add('vote', T('التصويت', 'Vote'), ` data-id="${id}"`)}
+        <div class="mp-opt">${show(it, 'ref') ? '' : add('open', T('المرجع', 'Reference'), ` data-id="${id}" data-f="ref"`)}${add('addTask', T('تكليف', 'Task'), ` data-id="${id}"`)}${add('addDis', T('تحفظ', 'Reservation'), ` data-id="${id}"`)}${show(it, 'basis') ? '' : add('open', T('الاستناد النظامي', 'Rule relied on'), ` data-id="${id}" data-f="basis"`)}${!V.vote || vote ? '' : add('vote', T('التصويت', 'Vote'), ` data-id="${id}"`)}
           <span class="mp-sp"></span>${i ? ico('upItem', T('إلى الأعلى', 'Move up'), '↑', ` data-id="${id}"`) : ''}${ico('rmItem', T('حذف البند', 'Remove item'), '🗑', ` data-id="${id}"`)}</div></div>`;
     }).join('');
     // before the meeting the agenda is where the items are written
     const agendaEdit = `<table class="mo-t"><tr><th>م</th><th>الموضوع</th><th class="mp-tc"></th></tr>
       ${M.prev.on ? `<tr class="mp-row"><td>1</td><td>اعتماد محضر الجلسة السابقة</td><td class="mp-tc">${ico('prevOff', T('حذف', 'Remove'), '✕')}</td></tr>` : ''}
       ${M.items.map((it, i) => `<tr class="mp-row"><td>${i + 1 + (M.prev.on ? 1 : 0)}</td><td>${E('items:' + it.id + ':title', T('موضوع البند', 'Subject'))}${show(it, 'ref') ? `<div class="mp-sub">المرجع: ${E('items:' + it.id + ':ref', T('رقم المعاملة أو الخطاب وتاريخه', 'Reference no. and date'))}</div>` : ''}</td><td class="mp-tc">${show(it, 'ref') ? '' : `<button type="button" class="mp-ic mp-ict" data-act="open" data-id="${it.id}" data-f="ref">+ ${T('المرجع', 'Reference')}</button>`}${i ? ico('upItem', T('إلى الأعلى', 'Move up'), '↑', ` data-id="${it.id}"`) : ''}${ico('rmItem', T('حذف', 'Remove'), '✕', ` data-id="${it.id}"`)}</td></tr>`).join('')}</table>`;
-    const extra = `<div class="mp-adds">${add('addItem', T('بند', 'Item'))}${M.prev.on ? '' : add('prevOn', T('اعتماد المحضر السابق', 'Approve the last minutes'))}${M.follow.length ? '' : add('addFol', T('متابعة قرارات سابقة', 'Follow-up of past decisions'))}${S === 'before' || M.recs.trim() || opened.has('recs') ? '' : add('recs', T('توصيات', 'Recommendations'))}</div>`;
+    const extra = `<div class="mp-adds">${add('addItem', T('بند', 'Item'))}${M.prev.on ? '' : add('prevOn', T('اعتماد المحضر السابق', 'Approve the last minutes'))}${M.follow.length ? '' : add('addFol', T('متابعة قرارات سابقة', 'Follow-up of past decisions'))}${S === 'before' || !V.recs || M.recs.trim() || opened.has('recs') ? '' : add('recs', T('توصيات', 'Recommendations'))}</div>`;
+    // the meeting details: rows can be renamed, removed or added
+    const pick = (f, ph) => `<span class="mp-pick"><span class="mp-pv" data-d="${f}">${ph}</span><input type="${f === 'date' ? 'date' : 'time'}" class="mp-hid" data-f="${f}" value="${esc(M[f])}" aria-label="${ph}"></span>`;
+    const infoCell = r => r.t === 'date' ? pick('date', T('اختر التاريخ', 'Pick a date'))
+      : r.t === 'time' ? `من ${pick('from', T('وقت البدء', 'start'))} إلى ${pick('to', T('وقت الانتهاء', 'end'))}`
+      : r.t === 'place' ? `${E('place', T('مثل: قاعة الاجتماعات', 'e.g. the meeting room'))} <select class="mp-sel" data-f="mode"><option value="in"${M.mode === 'in' ? ' selected' : ''}>حضوري</option><option value="remote"${M.mode === 'remote' ? ' selected' : ''}>عن بُعد</option><option value="mix"${M.mode === 'mix' ? ' selected' : ''}>حضوري وعن بُعد</option></select>`
+      : E('info:' + r.id + ':v', '…');
+    const infoT = V.info ? `<table class="mo-t mo-info">${M.info.map((r, j) => `<tr class="mp-row"><th>${E('info:' + r.id + ':k', T('اسم الخانة', 'Label'))}</th><td>${infoCell(r)}</td><td class="mp-tc">${j ? ico('upInfo', T('إلى الأعلى', 'Move up'), '↑', ` data-id="${r.id}"`) : ''}${ico('rmInfo', T('حذف الخانة', 'Remove row'), '✕', ` data-id="${r.id}"`)}</td></tr>`).join('')}</table>
+      <div class="mp-adds">${add('addInfo', T('خانة', 'Row'))}${['date', 'time', 'place'].filter(t => !M.info.some(r => r.t === t)).map(t => add('addInfo', { date: T('التاريخ', 'Date'), time: T('الوقت', 'Time'), place: T('المكان', 'Place') }[t], ` data-t="${t}"`)).join('')}</div>` : '';
+    const memOff = !V.att;
     return `<div class="mo-doc mp-doc${M.status === 'draft' && S === 'after' ? ' draft' : ''}" dir="rtl">
-      <table class="mo-hd"><tr><td class="mo-org">${E('org', T('اسم الجهة', 'Organisation'))}<br>${E('unit', T('الكلية أو الإدارة', 'College or department'))}</td><td class="mo-bsm">${M.bsm ? 'بسم الله الرحمن الرحيم' : ''}</td>
-        <td class="mo-logo">${M.logo ? `<img src="${M.logo}" alt="">${ico('rmLogo', T('إزالة الشعار', 'Remove logo'), '✕')}` : `<button type="button" class="mp-add" data-act="logo">+ ${T('الشعار', 'Logo')}</button>`}</td></tr></table>
+      <table class="mo-hd"><tr><td class="mo-org">${E('org', T('اسم الجهة', 'Organisation'))}<br>${E('unit', T('الكلية أو الإدارة', 'College or department'))}</td><td class="mo-bsm">${V.bsm ? 'بسم الله الرحمن الرحيم' : ''}</td>
+        <td class="mo-logo">${!V.logo ? '' : M.logo ? `<img src="${M.logo}" alt="">${ico('rmLogo', T('إزالة الشعار', 'Remove logo'), '✕')}` : `<button type="button" class="mp-add" data-act="logo">+ ${T('الشعار', 'Logo')}</button>`}</td></tr></table>
       <h1>محضر الاجتماع رقم (${E('no', '…')})<br>${E('committee', T('اسم المجلس أو اللجنة', 'Council or committee'))}</h1>
-      <table class="mo-t mo-info"><tr><th>التاريخ</th><td><input type="date" class="mp-in" data-f="date" value="${esc(M.date)}"> <span class="mp-dt" data-d="date"></span></td></tr>
-        <tr><th>الوقت</th><td>من <input type="time" class="mp-in" data-f="from" value="${esc(M.from)}"> إلى <input type="time" class="mp-in" data-f="to" value="${esc(M.to)}"></td></tr>
-        <tr><th>المكان</th><td>${E('place', T('مثل: قاعة الاجتماعات', 'e.g. the meeting room'))} <select class="mp-sel" data-f="mode"><option value="in"${M.mode === 'in' ? ' selected' : ''}>حضوري</option><option value="remote"${M.mode === 'remote' ? ' selected' : ''}>عن بُعد</option><option value="mix"${M.mode === 'mix' ? ' selected' : ''}>حضوري وعن بُعد</option></select></td></tr>
-        ${M.year.trim() || opened.has('year') ? `<tr><th>العام أو الدورة</th><td>${E('year', '…')}</td></tr>` : ''}${M.att.trim() || opened.has('att') ? `<tr><th>المرفقات</th><td>${E('att', '…')}</td></tr>` : ''}</table>
-      <div class="mp-opt mp-show">${M.year.trim() || opened.has('year') ? '' : add('openM', T('العام أو الدورة', 'Year or term'), ' data-f="year"')}${M.att.trim() || opened.has('att') ? '' : add('openM', T('المرفقات', 'Attachments'), ' data-f="att"')}</div>
-      ${during ? '<p data-d="intro"></p>' : ''}
-      <h2>${during ? 'الحضور واكتمال النصاب' : 'الأعضاء'}</h2>
+      ${infoT}
+      ${during && V.intro ? `${M.heads.intro && M.heads.intro.trim() ? `<h2>${E('heads:intro', '')}</h2>` : ''}<p data-d="intro"></p>` : ''}
+      <div class="${memOff ? 'mp-offsec' : ''}">${memOff ? `<p class="mp-offnote">${T('جدول الحضور مخفي من المحضر، ويبقى هنا لتسجيل الحضور والتوقيعات.', 'The attendance table is hidden from the minutes; it stays here for attendance and signatures.')}</p><h2>${esc(head('att'))}</h2>` : HP('att')}
       <table class="mo-t mp-mem"><tr><th>م</th><th>الاسم</th><th>الصفة</th>${during ? '<th>الحضور</th>' : ''}<th class="mp-tc"></th></tr>${memRows}</table>
       <div class="mp-adds">${add('addMem', T('عضو', 'Member'))}<button type="button" class="mp-add" data-act="pasteMem">${T('لصق قائمة أسماء', 'Paste a list of names')}</button>${M.guests.trim() || opened.has('guests') ? '' : add('openM', T('مدعوون من غير الأعضاء', 'Guests'), ' data-f="guests"')}</div>
-      ${M.guests.trim() || opened.has('guests') ? `<p><b>المدعوون من غير الأعضاء:</b> ${E('guests', '…')}</p>` : ''}
-      ${during ? '<p class="mo-q" data-d="q"></p>' : ''}
+      ${M.guests.trim() || opened.has('guests') ? `<p><b>المدعوون من غير الأعضاء:</b> ${E('guests', '…')}</p>` : ''}</div>
+      ${during && V.quorum ? '<p class="mo-q" data-d="q"></p>' : ''}
       ${follow}
-      ${S === 'before' ? `<h2>جدول الأعمال</h2>${agendaEdit}${extra}` : `${M.agenda ? '<h2>جدول الأعمال</h2><table class="mo-t" data-d="agenda"></table>' : ''}<h2>المناقشات والقرارات</h2>${prev}${items}${extra}`}
-      ${during && (M.recs.trim() || opened.has('recs')) ? `<h2>التوصيات</h2><p>${E('recs', T('توصية في كل سطر', 'One per line'), 1)}</p>` : ''}
-      ${S === 'after' ? '<div data-d="sum"></div>' : ''}
-      ${during ? `<h2>اختتام الاجتماع</h2><p>واختُتم الاجتماع<span data-d="end"></span><span class="mp-next">، على أن يُعقد الاجتماع القادم ${E('next', T('(الموعد – اختياري)', '(date – optional)'))}</span>، والله ولي التوفيق.</p>` : ''}
-      ${S === 'after' ? '<h2>توقيعات الحضور</h2><div data-d="sigs"></div>' : ''}
+      ${S === 'before' ? `<h2>${esc(head('agenda'))}</h2>${agendaEdit}${extra}` : `${V.agenda ? HP('agenda') + '<table class="mo-t" data-d="agenda"></table>' : ''}${HP('decs')}${prev}${items}${extra}`}
+      ${during && V.recs && (M.recs.trim() || opened.has('recs')) ? `${HP('recs')}<p>${E('recs', T('توصية في كل سطر', 'One per line'), 1)}</p>` : ''}
+      ${S === 'after' && V.sum ? `${HP('sum')}<div data-d="sum"></div>` : ''}
+      ${during && V.close ? `${HP('close')}<p>واختُتم الاجتماع<span data-d="end"></span><span class="mp-next">، على أن يُعقد الاجتماع القادم ${E('next', T('(الموعد – اختياري)', '(date – optional)'))}</span>، والله ولي التوفيق.</p>` : ''}
+      ${S === 'after' && V.sig ? `${HP('sig')}<div data-d="sigs"></div>` : ''}
     </div>`;
   }
   // the parts written for you: dates, numbers, quorum, the agenda, the summary and the signatures
   function derived() {
     const P = root.querySelector('#mpPaper'); if (!P) return;
     const set = (k, h) => P.querySelectorAll(`[data-d="${k}"]`).forEach(x => { if (x.innerHTML !== h) x.innerHTML = h; });
-    const d = dates(), q = quorum(), b = body(), chair = present().find(m => /رئيس/.test(m.r) && !/نائب/.test(m.r)), when = M.mode === 'remote' ? 'عن بُعد' : M.mode === 'mix' ? 'حضوريًا وعن بُعد' : '';
-    set('date', d.h ? `${esc(d.day)} ${esc(d.h)} هـ، الموافق ${esc(d.g)}` : '');
-    set('intro', `${M.date ? `في يوم ${esc(d.day)} ${esc(d.h)}${d.h ? ' هـ' : ''}` : ''}${M.from ? `، عند الساعة ${t12(M.from)}` : ''}، عُقد الاجتماع ${M.no ? `رقم (${esc(M.no)}) ` : ''}${M.committee.trim() ? esc(li(M.committee)) : ''}${when ? ' ' + when : ''}${M.place.trim() ? ` في ${esc(M.place.trim())}` : ''}${chair ? `، برئاسة ${esc(chair.n)}، ${esc(chair.r)}` : ''}.`);
-    set('q', q.n ? (q.ok ? `وبعد التحقق من اكتمال النصاب النظامي بحضور (${q.p}) من أصل (${q.n}) أعضاء، رحّب ${chair ? 'رئيس الاجتماع' : b.head} بالحاضرين، واستُعرض جدول الأعمال.` : `<span class="mp-bad">لم يكتمل النصاب النظامي: حضر (${q.p}) من أصل (${q.n})، والمطلوب (${q.need}).</span>`) : '');
+    const d = dates(), q = quorum(), chair = present().find(m => /رئيس/.test(m.r) && !/نائب/.test(m.r)), ph = t => `<span class="mp-ph">${t}</span>`;
+    set('date', M.date ? `${esc(d.day)} ${esc(d.h)} هـ، الموافق ${esc(d.g)}` : ph(T('اختر التاريخ', 'Pick a date')));
+    set('from', M.from ? t12(M.from) : ph(T('وقت البدء', 'start'))); set('to', M.to ? t12(M.to) : ph(T('وقت الانتهاء', 'end')));
+    set('intro', introText());
+    set('q', q.n && !q.ok ? `<span class="mp-bad">${quorumText(chair)}</span>` : quorumText(chair));
     const ag = []; if (M.prev.on) ag.push('اعتماد محضر الجلسة السابقة'); if (M.follow.length) ag.push('متابعة تنفيذ قرارات الجلسة السابقة'); M.items.forEach(it => ag.push(esc(it.title.trim()) || '…'));
     set('agenda', `<tr><th>م</th><th>الموضوع</th></tr>${ag.map((t, j) => `<tr><td>${j + 1}</td><td>${t}</td></tr>`).join('')}`);
     M.items.forEach((it, i) => {
@@ -257,7 +377,7 @@
       const bc = P.querySelector(`[data-d="basis:${it.id}"]`); if (bc) { const r = basisState(it); bc.className = 'mp-chk ' + r[0]; bc.innerHTML = r[1]; }
     });
     const rows = M.items.filter(it => it.title.trim() || decText(it).trim()).map(it => { const i = M.items.indexOf(it), tk = it.tasks.filter(t => t.t.trim() || t.who.trim()); return `<tr><td><bdi dir="ltr">${esc(decNo(i))}</bdi></td><td>${nl(decText(it))}${tk.filter(t => t.t.trim()).map(t => `<div class="mo-tk">— ${esc(t.t)}</div>`).join('')}</td><td>${tk.map(t => esc(t.who)).filter(Boolean).join('<br>')}</td><td>${tk.map(t => esc(t.due)).filter(Boolean).join('<br>')}</td></tr>`; });
-    set('sum', rows.length ? `<h2>ملخص القرارات والتكليفات</h2><table class="mo-t mo-sum"><tr><th>رقم القرار</th><th>القرار والتكليف</th><th>المكلّف</th><th>الموعد</th></tr>${rows.join('')}</table>` : '');
+    set('sum', rows.length ? `<table class="mo-t mo-sum"><tr><th>رقم القرار</th><th>القرار والتكليف</th><th>المكلّف</th><th>الموعد</th></tr>${rows.join('')}</table>` : '');
     set('end', M.to ? ' في تمام الساعة ' + t12(M.to) : '');
     const nx = P.querySelector('.mp-next'); if (nx) nx.classList.toggle('mp-ghost', !M.next.trim());
     const sig = present();
@@ -317,6 +437,9 @@
       case 'prevOn': M.prev.on = true; break;
       case 'logo': { const f = document.createElement('input'); f.type = 'file'; f.accept = 'image/*'; f.onchange = async () => { if (!f.files[0]) return; M.logo = await shrink(f.files[0], 360); paint(); later(); }; f.click(); return; }
       case 'rmLogo': M.logo = ''; break;
+      case 'addInfo': { const t = d.t, r = t ? { id: uid(), k: { date: 'التاريخ', time: 'الوقت', place: 'المكان' }[t], t } : { id: uid(), k: '', v: '' }; M.info.push(r); focus = t ? null : `[data-p="info:${r.id}:k"]`; break; }
+      case 'rmInfo': M.info = M.info.filter(r => r.id !== d.id); break;
+      case 'upInfo': { const i = M.info.findIndex(r => r.id === d.id); [M.info[i - 1], M.info[i]] = [M.info[i], M.info[i - 1]]; break; }
       case 'insArt': { const n = articleNo(it.basis), t = articles()[n]; if (!t) return; it.basis = it.basis.replace(/[:：]?\s*«[\s\S]*»\s*$/, '').trim() + ': «' + artBody(t) + '»'; break; }
       default: return;
     }
@@ -367,11 +490,9 @@
       <label class="sn-lbl">${B('الجهة', 'Body')}<select id="sT"><option value="council"${M.type === 'council' ? ' selected' : ''}>مجلس («قرر المجلس»)</option><option value="committee"${M.type === 'committee' ? ' selected' : ''}>لجنة («قررت اللجنة»)</option></select></label>
       <label class="sn-lbl">${B('صيغة رقم القرار: {n} رقم الاجتماع، {i} رقم البند، {y} العام', 'Decision number: {n} meeting, {i} item, {y} year')}<input id="sN" dir="ltr" value="${esc(M.numFmt)}"></label>
       <label class="sn-lbl">${B('التوقيعات', 'Signatures')}<select id="sG"><option value="table"${M.sigL === 'table' ? ' selected' : ''}>${T('جدول', 'Table')}</option><option value="grid"${M.sigL === 'grid' ? ' selected' : ''}>${T('بطاقات', 'Cards')}</option></select></label>
-      <label class="mn-ck"><input type="checkbox" id="sB"${M.bsm ? ' checked' : ''}> ${B('البسملة أعلى المحضر', 'Basmala at the top')}</label>
-      <label class="mn-ck"><input type="checkbox" id="sA"${M.agenda ? ' checked' : ''}> ${B('جدول الأعمال في أول المحضر', 'Agenda table at the start')}</label>
       <label class="sn-lbl">${B('نص اللائحة (اختياري): الصقه مرة واحدة، فإذا كتبت رقم مادة في «الاستناد النظامي» عرضت لك الأداة نصها', 'Regulations (optional): paste them once; when you cite an article number, its text is shown')}<textarea id="sR" rows="4">${esc(M.reg)}</textarea></label>
       <div class="sn-two"><button type="button" class="btn solid" id="sOk">${B('تم', 'Done')}</button></div>`);
-    m.querySelector('#sOk').onclick = () => { M.type = m.querySelector('#sT').value; M.numFmt = m.querySelector('#sN').value.trim() || '{n}/{i}'; M.sigL = m.querySelector('#sG').value; M.bsm = m.querySelector('#sB').checked; M.agenda = m.querySelector('#sA').checked; M.reg = m.querySelector('#sR').value;
+    m.querySelector('#sOk').onclick = () => { M.type = m.querySelector('#sT').value; M.numFmt = m.querySelector('#sN').value.trim() || '{n}/{i}'; M.sigL = m.querySelector('#sG').value; M.reg = m.querySelector('#sR').value;
       if (M.type === 'committee') M.members.forEach(x => x.r = x.r.replace('رئيس المجلس', 'رئيس اللجنة').replace('أمين المجلس', 'مقرر اللجنة')); else M.members.forEach(x => x.r = x.r.replace('رئيس اللجنة', 'رئيس المجلس').replace('مقرر اللجنة', 'أمين المجلس'));
       m.remove(); paint(); later(); };
   }
@@ -457,17 +578,17 @@ ${reg ? `\nنص اللائحة المعتمدة (استند إليها فقط، 
     w.document.write(`<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>${esc(title)}</title><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet"><style>@page{size:A4;margin:16mm}body{margin:0}${DOC_CSS}.pg{break-after:page}.pg:last-child{break-after:auto}.sg{margin-top:28px;text-align:left;line-height:2}</style></head><body>${body}<script>document.fonts.ready.then(()=>setTimeout(()=>print(),300))<\/script></body></html>`);
     w.document.close();
   }
-  const head = () => `<table class="mo-hd"><tr><td class="mo-org">${M.org ? `<b>${esc(M.org)}</b><br>` : ''}${esc(M.unit)}</td><td class="mo-bsm">${M.bsm ? 'بسم الله الرحمن الرحيم' : ''}</td><td class="mo-logo">${M.logo ? `<img src="${M.logo}" alt="">` : ''}</td></tr></table>`;
+  const letterhead = () => `<table class="mo-hd"><tr><td class="mo-org">${M.org ? `<b>${esc(M.org)}</b><br>` : ''}${esc(M.unit)}</td><td class="mo-bsm">${M.show.bsm ? 'بسم الله الرحمن الرحيم' : ''}</td><td class="mo-logo">${M.logo && M.show.logo ? `<img src="${M.logo}" alt="">` : ''}</td></tr></table>`;
   const secretary = () => M.members.find(m => /أمين|مقرر/.test(m.r) && m.n.trim());
   function invite() {
     persist();
     const d = dates(), ag = []; if (M.prev.on) ag.push('اعتماد محضر الجلسة السابقة'); if (M.follow.length) ag.push('متابعة تنفيذ قرارات الجلسة السابقة'); M.items.forEach(it => it.title.trim() && ag.push(it.title.trim()));
     const s = secretary(), when = M.mode === 'remote' ? 'عن بُعد' : '';
-    printPage(T('الدعوة وجدول الأعمال', 'Invitation'), `<div class="mo-doc">${head()}<h1>دعوة لحضور الاجتماع${M.no ? ` رقم (${esc(M.no)})` : ''}<br>${esc(M.committee)}</h1>
+    printPage(T('الدعوة وجدول الأعمال', 'Invitation'), `<div class="mo-doc">${letterhead()}<h1>دعوة لحضور الاجتماع${M.no ? ` رقم (${esc(M.no)})` : ''}<br>${esc(M.committee)}</h1>
       <p>سعادة أعضاء ${esc(M.committee || b0())} المحترمين،</p><p>السلام عليكم ورحمة الله وبركاته، وبعد:</p>
       <p>فيسرّني دعوتكم لحضور الاجتماع${M.no ? ` رقم (${esc(M.no)})` : ''}${M.date ? `، يوم ${esc(d.day)} ${esc(d.h)} هـ الموافق ${esc(d.g)}` : ''}${M.from ? `، في تمام الساعة ${t12(M.from)}` : ''}${when ? '، ' + when : ''}${M.place.trim() ? `، في ${esc(M.place)}` : ''}، لمناقشة جدول الأعمال الآتي:</p>
       <table class="mo-t"><tr><th>م</th><th>الموضوع</th></tr>${ag.map((t, j) => `<tr><td>${j + 1}</td><td>${esc(t)}</td></tr>`).join('')}</table>
-      ${M.att.trim() ? `<p><b>المرفقات:</b> ${esc(M.att)}</p>` : ''}<p>شاكرين لكم حرصكم، ونأمل إبلاغنا عند تعذّر الحضور.</p>
+      ${M.info.filter(r => !r.t && (r.v || '').trim()).map(r => `<p><b>${esc(r.k)}:</b> ${esc(r.v)}</p>`).join('')}<p>شاكرين لكم حرصكم، ونأمل إبلاغنا عند تعذّر الحضور.</p>
       <p class="sg">${s ? esc(s.r) + '<br>' + esc(s.n) : ''}</p></div>`);
   }
   const b0 = () => body().the;
@@ -476,7 +597,7 @@ ${reg ? `\nنص اللائحة المعتمدة (استند إليها فقط، 
     const d = dates(), by = {};
     M.items.forEach((it, i) => it.tasks.forEach(t => { const w = t.who.trim(); if (!w) return; (by[w] = by[w] || []).push({ no: decNo(i), dec: decText(it), t: t.t, due: t.due }); }));
     const s = secretary(), b = body();
-    printPage(T('إبلاغ المكلّفين', 'Notices'), Object.entries(by).map(([w, xs]) => `<div class="mo-doc pg">${head()}<h1>إبلاغ بقرار</h1>
+    printPage(T('إبلاغ المكلّفين', 'Notices'), Object.entries(by).map(([w, xs]) => `<div class="mo-doc pg">${letterhead()}<h1>إبلاغ بقرار</h1>
       <p>سعادة / ${esc(w)} المحترم</p><p>السلام عليكم ورحمة الله وبركاته، وبعد:</p>
       <p>نفيدكم بأن ${esc(M.committee || b.the)} ${b.verb} في ${b.the === 'اللجنة' ? 'اجتماعها' : 'اجتماعه'}${M.no ? ` رقم (${esc(M.no)})` : ''}${M.date ? ` المنعقد يوم ${esc(d.day)} ${esc(d.h)} هـ` : ''} ما يلي:</p>
       <table class="mo-t"><tr><th>رقم القرار</th><th>القرار</th><th>المطلوب منكم</th><th>الموعد</th></tr>${xs.map(x => `<tr><td><bdi dir="ltr">${esc(x.no)}</bdi></td><td>${esc(x.dec)}</td><td>${esc(x.t)}</td><td>${esc(x.due)}</td></tr>`).join('')}</table>
@@ -541,7 +662,7 @@ ${reg ? `\nنص اللائحة المعتمدة (استند إليها فقط، 
     } catch (e) { toast(B('تعذّر تجهيز الملف للتوقيع. نزّله PDF وارفعه في أداة التوقيع.', 'Could not prepare it. Save a PDF and upload it to the signing tool.'), 1); }
     btn.disabled = false; btn.innerHTML = '✍️ ' + B('أرسله للتوقيع', 'Send for signing');
   }
-  const need = src => new Promise((ok, no) => { if (document.querySelector(`script[src="${src}"]`)) return ok(); const s = document.createElement('script'); s.src = src; s.onload = ok; s.onerror = no; document.head.appendChild(s); });
+  const loading = {}, need = src => loading[src] || (loading[src] = new Promise((ok, no) => { const s = document.createElement('script'); s.src = src; s.onload = ok; s.onerror = () => { delete loading[src]; no(); }; document.head.appendChild(s); }));
   function handoff(v) { return new Promise((ok, no) => { const r = indexedDB.open('alsamani', 1); r.onupgradeneeded = () => r.result.createObjectStore('hand'); r.onerror = () => no(r.error); r.onsuccess = () => { const tx = r.result.transaction('hand', 'readwrite'); tx.objectStore('hand').put(v, 'minutes'); tx.oncomplete = ok; tx.onerror = () => no(tx.error); }; }); }
   function shrink(file, max) { return new Promise(ok => { const im = new Image(); im.onload = () => { const s = Math.min(1, max / Math.max(im.width, im.height)), c = document.createElement('canvas'); c.width = im.width * s; c.height = im.height * s; c.getContext('2d').drawImage(im, 0, 0, c.width, c.height); ok(c.toDataURL('image/png')); }; im.src = URL.createObjectURL(file); }); }
 
