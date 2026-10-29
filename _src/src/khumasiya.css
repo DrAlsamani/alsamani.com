@@ -114,3 +114,5 @@
 .kh-stands>div{display:none;justify-content:center;padding-top:4px}.kh-stands.open>div{display:flex}
 .kh-recent{color:#fff;font-weight:600;opacity:0}.kh-recent.go{animation:khRecent 2.6s ease}@keyframes khRecent{10%,75%{opacity:1}100%{opacity:0}}
 .kh-rxset label{display:flex!important;flex-direction:row!important;justify-content:flex-start!important;align-items:center;gap:8px;text-align:start;color:#fff;width:auto!important}.kh-rxset label input{margin:0;width:auto;flex:none}
+/* the other space of the chosen card, already taken: shown, not playable */
+.kh-board.picking .kh-cell.twin,.kh-board .kh-cell.twin{opacity:1;box-shadow:inset 0 0 0 3px #fff;outline:2px dashed var(--gold);outline-offset:-6px}
