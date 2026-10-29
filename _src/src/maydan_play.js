@@ -64,7 +64,7 @@
     go.onclick = async () => {
       const n = inp.value.trim().replace(/\s+/g, ' ').slice(0, 24);
       if (!n) return nameScreen(T('اكتب اسمًا يظهر على الشاشة.', 'Type a name to show on the screen.'));
-      if (TEAMS && TMODE !== 'auto' && myTeam == null) { const e = root.querySelector('.mp-err'); e.hidden = false; e.textContent = T('اختر فريقك.', 'Choose your team.'); return; }
+      if (TEAMS && TMODE === 'pick' && myTeam == null) { const e = root.querySelector('.mp-err'); e.hidden = false; e.textContent = T('اختر فريقك.', 'Choose your team.'); return; }
       go.disabled = true;
       try { await R.child('pl/' + uid).set(Object.assign({ n, at: TS }, TEAMS && myTeam != null ? { t: myTeam } : {})); me = n; store.set('name', n); play(); }
       catch (e) { nameScreen(T('تعذّر الدخول؛ ربما أُقفلت المسابقة.', 'Could not join; the quiz may be closed.')); }
@@ -73,8 +73,8 @@
 
   function teamPick(box) {
     if (!box) return;
-    if (!TEAMS || TMODE === 'auto') { box.innerHTML = TEAMS ? `<p>${B('سيُوزَّع المشاركون على الفرق عند البدء', 'Players will be placed in teams at the start')}</p>` : ''; myTeam = null; return; }
-    box.className = 'mp-teams' + (TEAMS.length > 6 ? ' many' : ''); box.innerHTML = `<p>${B('اختر فريقك', 'Choose your team')}</p>` + TEAMS.map((t, k) => `<button type="button" data-t="${k}" style="--c:var(--qz${k % 6})" aria-pressed="${myTeam === k}">${TEAMS.length > 6 ? k + 1 : esc(t)}</button>`).join('');
+    if (!TEAMS || TMODE !== 'pick') { box.innerHTML = TEAMS ? `<p>${TMODE === 'host' ? B('سيضعك المشرف في فريقك.', 'The host will put you in your team.') : B('سيُوزَّع المشاركون على الفرق عند البدء', 'Players will be placed in teams at the start')}</p>` : ''; myTeam = null; return; }
+    box.className = 'mp-teams' + (TEAMS.length > 6 ? ' many' : ''); box.innerHTML = `<p>${B('اختر فريقك', 'Choose your team')}</p>` + TEAMS.map((t, k) => `<button type="button" data-t="${k}" style="--c:var(--qz${k % 6})" aria-pressed="${myTeam === k}">${esc(t)}</button>`).join('');
     box.querySelectorAll('[data-t]').forEach(b => b.onclick = () => { myTeam = +b.dataset.t; box.querySelectorAll('[data-t]').forEach(x => x.setAttribute('aria-pressed', x === b)); });
   }
   // a row of reactions that float up the big screen

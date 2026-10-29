@@ -1549,7 +1549,7 @@ html.md-on{overflow:hidden}
 .mp-gold{font-weight:800;font-size:1.125rem}
 .mp-plus.neg{color:#ffd1c4}
 .md-set .md-ck{display:flex!important;justify-content:flex-start;text-align:start}.md-set .md-ck>span{flex:1;min-width:0}
-.mp-teams.many{grid-template-columns:repeat(5,1fr)}.mp-teams.many button{padding:10px 0}
+.mp-teams.many{grid-template-columns:repeat(3,1fr)}.mp-teams.many button{padding:9px 4px;font-size:.875rem}
 .mp-right{background:rgba(255,255,255,.16);border-radius:10px;padding:6px 10px;margin:6px 0!important}
 .mp-top5{display:grid;gap:8px;margin:8px 0;text-align:start}.mp-top5 ol{list-style:none;margin:0;padding:0;display:grid;gap:5px;counter-reset:r}
 .mp-top5 li{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.12);border-radius:10px;padding:7px 10px;counter-increment:r}
@@ -1672,6 +1672,27 @@ html.md-on{overflow:hidden}
 .md-tug-sides span{color:#2a7fa8}.md-tug-sides span+span{color:#b0533a}.md-tug-sides small{display:block;font-size:.55em;font-weight:600;opacity:.75}
 .md-tugwin{font-size:clamp(1.6rem,4vw,3rem)}
 .md-lb h3{text-align:center;margin:.6em 0 .3em;font-size:clamp(1rem,2vw,1.4rem)}
+/* teams in the lobby: a column per team; tap a name to move it */
+.md-cbt{font-weight:800}
+.md-teamp .md-tnh{margin:0;font-size:.875rem;color:#5a6664}
+.md-teamp .md-tn{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.md-teamp .md-tn label{display:flex;align-items:center;gap:6px;border:1px solid #dce1dd;border-inline-start:6px solid var(--c);border-radius:10px;padding:4px 8px;background:#f5f6f3}
+.md-teamp .md-tn b{color:#16201f;font-size:.8125rem}.md-teamp .md-tn input{border:0;background:transparent;font:inherit;font-size:.9375rem;color:#16201f;width:100%;min-width:0;padding:4px 0}
+.md-tip{margin:0;font-size:.8125rem;line-height:1.6;color:#33504c;background:#eef5f1;border-radius:10px;padding:8px 10px}
+.md-names.md-has-cols{display:block;max-width:1300px;width:96%}
+.md-cols{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px}
+.md-col{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-top:5px solid var(--c);border-radius:12px;padding:8px;display:flex;flex-wrap:wrap;gap:6px;align-content:flex-start;min-height:70px}
+.md-col h4{width:100%;margin:0 0 2px;font-size:clamp(14px,1.4vw,18px);display:flex;justify-content:space-between;gap:6px}.md-col h4 small{opacity:.7}
+.md-col.md-free{--c:rgba(255,255,255,.35);border-style:dashed}
+.md-col .md-chip{padding:5px 11px;font-size:clamp(13px,1.2vw,16px);color:inherit;font-family:inherit}
+.md-names .md-chip{color:inherit;font-family:inherit}
+.md-chip:hover{text-decoration:none!important;background:rgba(255,255,255,.25)!important}
+.md-move{position:fixed;z-index:9;background:#fff;color:#16201f;border-radius:14px;padding:12px;width:min(320px,92vw);box-shadow:0 18px 40px rgba(0,0,0,.45);display:grid;gap:8px}
+.md-move p{margin:0}.md-mvh{font-size:.8125rem;color:#5a6664}
+.md-mvt{display:flex;flex-wrap:wrap;gap:6px;max-height:40vh;overflow:auto}
+.md-mvt button{border:1px solid #dce1dd;border-inline-start:5px solid var(--c);background:#f5f6f3;border-radius:9px;padding:6px 10px;font:inherit;font-size:.875rem;cursor:pointer;color:#16201f}
+.md-mvt button[aria-pressed=true]{background:#16201f;color:#fff}
+.md-mvb{display:flex;justify-content:space-between;gap:8px}.md-mvb button{border:0;background:none;font:inherit;font-size:.875rem;cursor:pointer;color:#5a6664;padding:4px}.md-mvb .md-rm{color:#b0533a}
 </style>
 <div id="mp" class="sn mp"><noscript><span class="ar">تعمل هذه الصفحة مع تفعيل JavaScript.</span><span class="en">This page needs JavaScript.</span></noscript></div>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script>window.MD_CFG={"apiKey": "AIzaSyA50i75DT1Is1a6Yn6snW1_JVObc8S3F0Y", "authDomain": "maydan-705ae.firebaseapp.com", "databaseURL": "https://maydan-705ae-default-rtdb.europe-west1.firebasedatabase.app", "projectId": "maydan-705ae", "appId": "1:342187013133:web:d5c2396f0db413f3c51144"};window.MD_MARK="<svg class=\"md-mark\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><rect x=\"4\" y=\"4\" width=\"40\" height=\"40\" rx=\"12\" fill=\"#23336F\"/><path d=\"M24 9l4.2 6.8 7.8-1.8-1.8 7.8L41 24l-6.8 4.2 1.8 7.8-7.8-1.8L24 39l-4.2-6.8-7.8 1.8 1.8-7.8L7 24l6.8-4.2-1.8-7.8 7.8 1.8z\" fill=\"#C9822B\"/><circle cx=\"24\" cy=\"24\" r=\"6.5\" fill=\"#23336F\"/><circle cx=\"24\" cy=\"24\" r=\"3\" fill=\"#F3E3C7\"/></svg>";</script><script>/* Maydan challenges: short games played on every phone at once. Every phone gets the same level (same seed),
@@ -2386,7 +2407,7 @@ window.MDGames = (function () {
     go.onclick = async () => {
       const n = inp.value.trim().replace(/\s+/g, ' ').slice(0, 24);
       if (!n) return nameScreen(T('اكتب اسمًا يظهر على الشاشة.', 'Type a name to show on the screen.'));
-      if (TEAMS && TMODE !== 'auto' && myTeam == null) { const e = root.querySelector('.mp-err'); e.hidden = false; e.textContent = T('اختر فريقك.', 'Choose your team.'); return; }
+      if (TEAMS && TMODE === 'pick' && myTeam == null) { const e = root.querySelector('.mp-err'); e.hidden = false; e.textContent = T('اختر فريقك.', 'Choose your team.'); return; }
       go.disabled = true;
       try { await R.child('pl/' + uid).set(Object.assign({ n, at: TS }, TEAMS && myTeam != null ? { t: myTeam } : {})); me = n; store.set('name', n); play(); }
       catch (e) { nameScreen(T('تعذّر الدخول؛ ربما أُقفلت المسابقة.', 'Could not join; the quiz may be closed.')); }
@@ -2395,8 +2416,8 @@ window.MDGames = (function () {
 
   function teamPick(box) {
     if (!box) return;
-    if (!TEAMS || TMODE === 'auto') { box.innerHTML = TEAMS ? `<p>${B('سيُوزَّع المشاركون على الفرق عند البدء', 'Players will be placed in teams at the start')}</p>` : ''; myTeam = null; return; }
-    box.className = 'mp-teams' + (TEAMS.length > 6 ? ' many' : ''); box.innerHTML = `<p>${B('اختر فريقك', 'Choose your team')}</p>` + TEAMS.map((t, k) => `<button type="button" data-t="${k}" style="--c:var(--qz${k % 6})" aria-pressed="${myTeam === k}">${TEAMS.length > 6 ? k + 1 : esc(t)}</button>`).join('');
+    if (!TEAMS || TMODE !== 'pick') { box.innerHTML = TEAMS ? `<p>${TMODE === 'host' ? B('سيضعك المشرف في فريقك.', 'The host will put you in your team.') : B('سيُوزَّع المشاركون على الفرق عند البدء', 'Players will be placed in teams at the start')}</p>` : ''; myTeam = null; return; }
+    box.className = 'mp-teams' + (TEAMS.length > 6 ? ' many' : ''); box.innerHTML = `<p>${B('اختر فريقك', 'Choose your team')}</p>` + TEAMS.map((t, k) => `<button type="button" data-t="${k}" style="--c:var(--qz${k % 6})" aria-pressed="${myTeam === k}">${esc(t)}</button>`).join('');
     box.querySelectorAll('[data-t]').forEach(b => b.onclick = () => { myTeam = +b.dataset.t; box.querySelectorAll('[data-t]').forEach(x => x.setAttribute('aria-pressed', x === b)); });
   }
   // a row of reactions that float up the big screen

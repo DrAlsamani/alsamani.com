@@ -161,16 +161,25 @@ window.MDLive = (function () {
       <div class="md-count"><b id="mdN">0</b> ${B('مشارك', 'players')}</div><div class="md-names" id="mdNames"></div>
       <div class="md-set" id="mdSet" hidden>
         <h3>${B('إعدادات المسابقة', 'Quiz settings')}</h3>
-        <label>${B('الفرق', 'Teams')}<select data-o="teams"><option value="0">${T('بلا فرق', 'No teams')}</option>${[2, 3, 4, 5, 6, 8, 10, 12, 15, 20, 25, 30].map(n => `<option value="${n}"${G.teams && G.teams.length === n ? ' selected' : ''}>${n} ${T('فرق', 'teams')}</option>`).join('')}</select></label>
-        <label data-tmode hidden>${B('توزيع المشاركين', 'How players are placed')}<select data-o="tmode"><option value="pick"${G.opts.tmode !== 'auto' ? ' selected' : ''}>${T('يختار كل مشارك فريقه (مثل رقم الطاولة)', 'Each player picks a team (e.g. the table number)')}</option><option value="auto"${G.opts.tmode === 'auto' ? ' selected' : ''}>${T('توزيع عشوائي متوازن عند البدء', 'Random, balanced, at the start')}</option></select></label>
-        <div class="md-tn" id="mdTn"></div>
         <label>${B('عرض الترتيب', 'Show the ranking')}<select data-o="every">${[[1, T('بعد كل سؤال', 'After every question')], [3, T('كل ٣ أسئلة', 'Every 3 questions')], [5, T('كل ٥ أسئلة', 'Every 5 questions')], [0, T('في النهاية فقط', 'Only at the end')]].map(([v, l]) => `<option value="${v}"${O.every === v ? ' selected' : ''}>${l}</option>`).join('')}</select></label>
         <label class="md-ck"><input type="checkbox" data-o="speed"${O.speed ? ' checked' : ''}> ${B('السرعة تزيد النقاط', 'Speed adds points')}</label>
         <label class="md-ck"><input type="checkbox" data-o="gold"${O.gold ? ' checked' : ''}> ${B('✨ سؤال ذهبي مفاجئ بنقاط مضاعفة', '✨ A surprise golden question with double points')}</label>
         <label class="md-ck"><input type="checkbox" data-o="final"${O.final ? ' checked' : ''}> ${B('🏁 لحظة الحسم: السؤال الأخير بنقاط مضاعفة', '🏁 The final question with double points')}</label>
         <label class="md-ck"><input type="checkbox" data-o="bet"${O.bet ? ' checked' : ''}> ${B('🎯 الثقة: يراهن المشارك على إجابته فيكسب أو يخسر نقاطًا إضافية', '🎯 Confidence: players can bet on their answer to win or lose extra points')}</label>
-        <button type="button" class="btn solid" data-done>${B('تم', 'Done')}</button></div>`,
+        <button type="button" class="btn solid" data-done>${B('تم', 'Done')}</button></div>
+      <div class="md-set md-teamp" id="mdTeamP" hidden>
+        <h3>👥 ${B('الفرق', 'Teams')}</h3>
+        <label>${B('عدد الفرق', 'Number of teams')}<select data-o="teams"><option value="0">${T('بلا فرق (كل مشارك وحده)', 'No teams (everyone on their own)')}</option>${[2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 15, 20, 25, 30].map(n => `<option value="${n}"${G.teams && G.teams.length === n ? ' selected' : ''}>${n} ${n <= 10 ? T('فرق', 'teams') : T('فريقًا', 'teams')}</option>`).join('')}</select></label>
+        <label data-tmode hidden>${B('كيف يُوزَّع المشاركون؟', 'How are players placed?')}<select data-o="tmode">
+          <option value="pick"${!['auto', 'host'].includes(G.opts.tmode) ? ' selected' : ''}>${T('يختار كل مشارك فريقه من جواله', 'Each player picks a team on their phone')}</option>
+          <option value="host"${G.opts.tmode === 'host' ? ' selected' : ''}>${T('المشرف يوزّعهم بنفسه هنا', 'The host places them here')}</option>
+          <option value="auto"${G.opts.tmode === 'auto' ? ' selected' : ''}>${T('توزيع عشوائي متوازن عند البدء', 'Random and balanced at the start')}</option></select></label>
+        <div data-tnw hidden><p class="md-tnh">${B('أسماء الفرق (اكتبها كما تريد)', 'Team names (write your own)')}</p><div class="md-tn" id="mdTn"></div></div>
+        <p class="md-tip" data-tip hidden></p>
+        <button type="button" class="btn solid" data-tdone>${B('تم', 'Done')}</button></div>
+      <div class="md-move" id="mdMove" hidden></div>`,
       `<button type="button" class="btn solid md-start" data-go disabled>${B('ابدأ', 'Start')}</button>
+       <button type="button" class="md-cb md-cbt" data-teams>👥 ${B('الفرق', 'Teams')}</button>
        <button type="button" class="md-cb" data-set>⚙ ${B('الإعدادات', 'Settings')}</button>
        <button type="button" class="md-cb" data-share>🔗 ${B('رابط الدخول', 'Join link')}</button>
        <label class="md-opt"><input type="checkbox" data-lock> ${B('إقفال الدخول', 'Lock joining')}</label>`, true);
@@ -178,33 +187,56 @@ window.MDLive = (function () {
       const link = url, text = T(`ادخل مسابقة «${G.quiz.title || 'ميدان'}»: `, `Join “${G.quiz.title || 'Maydan'}”: `) + link;
       try { if (navigator.share && /iP(hone|ad)|Android/i.test(navigator.userAgent)) await navigator.share({ text }); else { await navigator.clipboard.writeText(text); e.currentTarget.textContent = '✓ ' + T('نُسخ', 'Copied'); } } catch (er) {}
     };
-    const names = q('#mdNames'), go = q('[data-go]'), set = q('#mdSet');
-    const chip = u => {
-      let c = names.querySelector(`[data-u="${u}"]`);
-      if (!c) { c = document.createElement('span'); c.className = 'md-chip'; c.dataset.u = u; c.title = T('اضغط لإخراجه', 'Tap to remove'); c.onclick = () => G.ref.child('pl/' + u).remove(); names.appendChild(c); }
-      c.textContent = G.players[u]; c.style.setProperty('--tc', G.teams && G.team[u] != null ? `var(--qz${(G.team[u]) % 6})` : 'transparent');
+    const names = q('#mdNames'), go = q('[data-go]'), set = q('#mdSet'), tp = q('#mdTeamP'), mv = q('#mdMove');
+    const chipHtml = u => `<button type="button" class="md-chip" data-u="${u}" style="--tc:${G.teams && G.team[u] != null ? `var(--qz${G.team[u] % 6})` : 'transparent'}" dir="auto">${esc(G.players[u] || '')}</button>`;
+    // with teams the names sit in a column per team, so everyone can see where they are
+    const draw = () => {
+      const us = Object.keys(G.players);
+      if (!G.teams) names.innerHTML = us.map(chipHtml).join('');
+      else {
+        const free = us.filter(u => G.team[u] == null || G.team[u] >= G.teams.length);
+        names.innerHTML = `<div class="md-cols">${G.teams.map((t, k) => { const m = us.filter(u => G.team[u] === k); return `<div class="md-col" style="--c:var(--qz${k % 6})"><h4 dir="auto">${esc(t)} <small>${m.length}</small></h4>${m.map(chipHtml).join('')}</div>`; }).join('')}
+          ${free.length ? `<div class="md-col md-free"><h4>${B('بلا فريق بعد', 'No team yet')} <small>${free.length}</small></h4>${free.map(chipHtml).join('')}</div>` : ''}</div>`;
+      }
+      names.classList.toggle('md-has-cols', !!G.teams);
+    };
+    const chip = () => draw();
+    names.onclick = e => {
+      const c = e.target.closest('[data-u]'); if (!c) return; const u = c.dataset.u, r = c.getBoundingClientRect();
+      mv.innerHTML = `<p dir="auto"><b>${esc(G.players[u] || '')}</b></p>${G.teams ? `<p class="md-mvh">${B('انقله إلى:', 'Move to:')}</p><div class="md-mvt">${G.teams.map((t, k) => `<button type="button" data-to="${k}" style="--c:var(--qz${k % 6})"${G.team[u] === k ? ' aria-pressed="true"' : ''} dir="auto">${esc(t)}</button>`).join('')}</div>` : ''}<div class="md-mvb"><button type="button" class="md-rm" data-rm>${B('إخراجه من المسابقة', 'Remove from the quiz')}</button><button type="button" data-x>${B('إغلاق', 'Close')}</button></div>`;
+      mv.hidden = false; mv.style.top = Math.min(innerHeight - mv.offsetHeight - 80, r.bottom + 6) + 'px'; mv.style.left = Math.max(10, Math.min(innerWidth - mv.offsetWidth - 10, r.left + r.width / 2 - mv.offsetWidth / 2)) + 'px';
+      mv.querySelectorAll('[data-to]').forEach(b => b.onclick = () => { G.team[u] = +b.dataset.to; G.ref.child('asg/' + u).set(G.team[u]); mv.hidden = true; draw(); keep(); });
+      mv.querySelector('[data-rm]').onclick = () => { mv.hidden = true; G.ref.child('pl/' + u).remove(); };
+      mv.querySelector('[data-x]').onclick = () => { mv.hidden = true; };
     };
     const count = () => { if (q('#mdN')) { q('#mdN').textContent = Object.keys(G.players).length; go.disabled = !Object.keys(G.players).length; } };
     sub(G.ref.child('pl'), 'child_added', s => {
       const v = s.val() || {}; G.players[s.key] = v.n; if (!(s.key in G.score)) G.score[s.key] = 0; G.streak[s.key] = G.streak[s.key] || 0; if (v.t != null) G.team[s.key] = +v.t;
-      chip(s.key); SND.join(); count();
+      draw(); SND.join(); count();
     });
-    sub(G.ref.child('pl'), 'child_removed', s => { delete G.players[s.key]; delete G.score[s.key]; const c = names.querySelector(`[data-u="${s.key}"]`); if (c) c.remove(); count(); });
+    sub(G.ref.child('pl'), 'child_removed', s => { delete G.players[s.key]; delete G.score[s.key]; draw(); count(); });
     reactions();
     const teamNames = () => {
-      const box = q('#mdTn'), md = set.querySelector('[data-tmode]'); md.hidden = !G.teams; if (!G.teams || G.teams.length > 6) { box.innerHTML = ''; return; }
-      box.innerHTML = G.teams.map((t, k) => `<input type="text" maxlength="20" data-tn="${k}" value="${esc(t)}" style="--c:var(--qz${k % 6})" aria-label="team ${k + 1}">`).join('');
-      box.querySelectorAll('[data-tn]').forEach(i => i.onchange = () => { G.teams[+i.dataset.tn] = i.value.trim() || TEAMS()[+i.dataset.tn]; G.ref.child('teams').set(G.teams); });
+      const box = q('#mdTn'); tp.querySelector('[data-tmode]').hidden = !G.teams; tp.querySelector('[data-tnw]').hidden = !G.teams;
+      const tip = tp.querySelector('[data-tip]'), md = O.tmode || 'pick'; tip.hidden = !G.teams;
+      tip.textContent = md === 'host' ? T('يدخل المشاركون بأسمائهم فقط، ثم تنقر اسم كل واحد في القائمة وتختار فريقه. من لا تختار له فريقًا يُوضع في أصغر فريق عند البدء.', 'Players join with just their names; tap each name in the list and choose a team. Anyone left over goes to the smallest team at the start.')
+        : md === 'auto' ? T('يُوزَّع الجميع عشوائيًا وبالتساوي لحظة البدء.', 'Everyone is placed at random, evenly, at the start.')
+        : T('يرى كل مشارك أسماء الفرق على جواله ويختار فريقه. وتقدر تنقل أي واحد بالنقر على اسمه.', 'Each player sees the team names and picks one. You can still move anyone by tapping their name.');
+      if (!G.teams) { box.innerHTML = ''; return; }
+      box.innerHTML = G.teams.map((t, k) => `<label style="--c:var(--qz${k % 6})"><b>${k + 1}</b><input type="text" maxlength="20" data-tn="${k}" value="${esc(t)}" dir="auto" aria-label="team ${k + 1}"></label>`).join('');
+      box.querySelectorAll('[data-tn]').forEach(i => i.onchange = () => { G.teams[+i.dataset.tn] = i.value.trim() || TEAMS(G.teams.length)[+i.dataset.tn]; G.ref.child('teams').set(G.teams); draw(); keep(); });
     };
-    set.querySelectorAll('[data-o]').forEach(i => i.onchange = () => {
+    [set, tp].forEach(P => P.querySelectorAll('[data-o]').forEach(i => i.onchange = () => {
       const k = i.dataset.o;
-      if (k === 'teams') { const n = +i.value, d = TEAMS(n); G.teams = n ? d.map((x, j) => (G.teams && G.teams.length === n && G.teams[j]) || x) : null; G.ref.update({ teams: G.teams, tmode: G.teams ? O.tmode || 'pick' : null }); teamNames(); Object.keys(G.players).forEach(chip); }
-      else if (k === 'tmode') { O.tmode = i.value; G.ref.child('tmode').set(i.value); }
+      if (k === 'teams') { const n = +i.value, d = TEAMS(n), was = G.teams || []; G.teams = n ? d.map((x, j) => was[j] && was[j] !== TEAMS(was.length)[j] ? was[j] : x) : null; G.ref.update({ teams: G.teams, tmode: G.teams ? O.tmode || 'pick' : null }); teamNames(); draw(); }
+      else if (k === 'tmode') { O.tmode = i.value; G.ref.child('tmode').set(i.value); teamNames(); }
       else if (k === 'every') O.every = +i.value; else O[k] = i.checked;
       keep();
-    });
-    teamNames();
-    q('[data-set]').onclick = () => { set.hidden = !set.hidden; };
+    }));
+    teamNames(); draw();
+    q('[data-set]').onclick = () => { tp.hidden = true; set.hidden = !set.hidden; };
+    q('[data-teams]').onclick = () => { set.hidden = true; tp.hidden = !tp.hidden; };
+    tp.querySelector('[data-tdone]').onclick = () => { tp.hidden = true; };
     set.querySelector('[data-done]').onclick = () => { set.hidden = true; };
     q('[data-lock]').onchange = e => G.ref.child('st/lock').set(e.target.checked);
     go.onclick = () => {
