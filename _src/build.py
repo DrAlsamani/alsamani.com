@@ -327,7 +327,7 @@ def play_band():
   <div class="gb-mark">{_tp.MAYDAN_MARK}</div>
   <div class="gb-txt"><p class="gb-eye">{bi('منصة الألعاب التفاعلية', 'Interactive games')}</p>
     <h2>{bi('ميدان: مسابقات تفاعلية حيّة', 'Maydan: live interactive quizzes')}</h2>
-    <p>{bi('سؤال على الشاشة، وكل مشارك يجيب من جواله: أسئلة متنوعة، وتحديات ألعاب، وفرق تتنافس. للتعلّم والأنشطة والاجتماعات.', 'A question on the screen and everyone answers from their phone: varied questions, game challenges and competing teams. For learning, activities and meetings.')}</p>
+    <p>{bi('سؤال على الشاشة، وكل مشارك يجيب من جواله: عشرة أنواع من الأسئلة، و٢٤ تحديًا، وجولات خاطفة، ووضع «الناجي الأخير»، وفرق تتنافس، ومكتبة مسابقات جاهزة. للتعلّم والأنشطة والاجتماعات.', 'A question on the screen and everyone answers from their phone: ten question kinds, 24 challenges, rapid rounds, a last-survivor mode, competing teams and a library of ready quizzes. For learning, activities and meetings.')}</p>
     <div class="gb-act"><a class="btn solid" href="play/maydan/index.html">{bi('ابنِ مسابقتك', 'Build a quiz')}</a><a class="btn ghost" href="play/maydan/index.html#lib">{bi('جرّب مسابقة جاهزة', 'Try a ready quiz')}</a></div></div>
 </div></section>'''
 

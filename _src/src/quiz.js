@@ -103,6 +103,15 @@
         <li><b>${B('اعرض الرمز', 'Show the code')}</b><small>${B('يدخل المشاركون من جوالاتهم بالرمز أو رمز QR أو رابط ترسله لهم.', 'Players join on their phones by code, QR code or a link you send.')}</small></li>
         <li><b>${B('العبوا', 'Play')}</b><small>${B('أسئلة وتحديات ونقاط وترتيب بعد كل جولة، حتى منصة التتويج.', 'Questions, challenges, points and a ranking after each round, up to the podium.')}</small></li></ol></section>
 
+      <section><h3>🔥 ${B('طرق لعب تشعل الحماس', 'Ways to play that fire people up')}</h3><div class="qi-grid">
+        ${card('⚡', 'الجولة الخاطفة', 'The rapid round', 'عشر عبارات أو أكثر تتوالى على الجوال: صح أم خطأ؟ كل عبارة بمئة نقطة، وفي آخر المسابقة تتضاعف فتقلب الترتيب.', 'Ten or more statements in a row on the phone: true or false? Each is worth 100 points, doubled at the end, and it can turn the ranking around.')}
+        ${card('🏆', 'الناجي الأخير', 'Last survivor', 'من يخطئ يخرج ويتابع متفرجًا، ويفوز من يصمد حتى النهاية. مثالي للمسارح والفعاليات الكبيرة.', 'A wrong answer takes you out to watch; whoever lasts wins. Ideal on stage and at big events.')}
+        ${card('🔗', 'وصّل', 'Match the pairs', 'صِل كل مصطلح بمعناه أو كل دولة بعاصمتها، ولكل توصيل صحيح نصيبه من النقاط.', 'Link each term to its meaning or each country to its capital; every right link earns its share.')}
+        ${card('🪢', 'شدّ الحبل', 'Tug of war', 'فريقان ينقران بأسرع ما يستطيعان، والحبل يتحرك على الشاشة لحظة بلحظة نحو الأقوى.', 'Two sides tap as fast as they can while the rope moves on the screen towards the stronger.')}
+        ${card('✨', 'السؤال الذهبي ولحظة الحسم', 'Golden question and finale', 'سؤال مفاجئ بنقاط مضاعفة، وسؤال أخير مضاعف يُبقي الأمل للجميع حتى النهاية.', 'A surprise double-points question and a doubled final one keep everyone in it to the end.')}
+        ${card('🎯', 'رهان الثقة', 'Confidence bets', 'يراهن المشارك على إجابته فيكسب نقاطًا إضافية أو يخسرها.', 'Players bet on their answer to win or lose extra points.')}
+      </div></section>
+
       <section class="qi-ai"><h3>✨ ${B('أسئلتك جاهزة في دقيقة بمساعدة الذكاء الاصطناعي', 'Your questions ready in a minute with AI')}</h3><ol class="qi-steps">
         <li><b>${B('اكتب الموضوع', 'Type the topic')}</b><small>${B('مثل «٣٠ سؤالًا في الثقافة الإسلامية» أو الصق نص الدرس، واختر العدد والمستوى.', 'Like “30 questions on world capitals”, or paste the lesson, and choose the count and level.')}</small></li>
         <li><b>${B('انسخ التعليمات', 'Copy the instructions')}</b><small>${B('اضغط «نسخ التعليمات» والصقها في ChatGPT أو Claude أو أي مساعد.', 'Tap “Copy the instructions” and paste them into ChatGPT, Claude or any assistant.')}</small></li>
@@ -113,7 +122,7 @@
         ${card('🧩', 'أنواع أسئلة كثيرة', 'Many question kinds', 'اختيار من متعدد، وصح وخطأ، وخمّن الكلمة، والأقرب للرقم، والترتيب، ووصّل، والجولة الخاطفة، والصورة المخفية، والاستطلاع، وسحابة الكلمات.', 'Multiple choice, true/false, guess the word, closest number, ordering, matching, rapid rounds, hidden picture, polls and word clouds.')}
         ${card('🎮', 'تحديات ألعاب بين الأسئلة', 'Game challenges between questions', '٢٤ تحديًا للذكاء والذاكرة والسرعة والمهارة، منها شدّ الحبل بين فريقين. وزّعها بين أسئلتك بضغطة.', '24 challenges of logic, memory, speed and skill, including a team tug of war. Spread them between your questions in one tap.')}
         ${card('👥', 'فرق أو أفراد', 'Teams or individuals', 'من فريقين إلى ثلاثين، بأسماء تكتبها، ويختار المشارك فريقه أو توزّعهم أنت.', 'From two to thirty teams with your own names; players choose, or you place them.')}
-        ${card('🔥', 'حماس حتى آخر سؤال', 'Excitement to the last question', 'سؤال ذهبي مفاجئ، ولحظة حسم بنقاط مضاعفة، ورهان الثقة، ووضع «الناجي الأخير» الذي يُخرج من يخطئ، وتفاعلات المشاركين على الشاشة.', 'A surprise golden question, a double-points finale, confidence bets, a last-survivor mode, and live reactions on the screen.')}
+        ${card('🎓', 'درجات للأنشطة الصفية', 'Grades for class activities', 'حوّل النتائج إلى درجة من ٥ أو ١٠ أو أي رقم، من كل النقاط أو من الأسئلة وحدها، ونزّلها ملفًا بالأسماء.', 'Turn the results into a grade out of 5, 10 or any number, from all points or the questions alone, and download it with the names.')}
         ${card('📽', 'مع شاشة أو بدونها', 'With or without a screen', 'إن تعطّل جهاز العرض استمرت المسابقة، فكل جوال يعرض السؤال والنتيجة والترتيب.', 'If the projector fails the quiz goes on: every phone shows the question, the result and the ranking.')}
         ${card('⏸', 'أوقف وأكمل لاحقًا', 'Pause and resume', 'أوقف المسابقة متى شئت وأكملها من حيث توقفت، ونزّل النتائج ملف CSV.', 'Pause any time and pick up where you left off; download the results as CSV.')}
       </div></section></div>`;
