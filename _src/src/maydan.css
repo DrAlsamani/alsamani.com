@@ -166,3 +166,9 @@ html.md-on{overflow:hidden}
 .mp-plus.neg{color:#ffd1c4}
 .md-set .md-ck{display:flex!important;justify-content:flex-start;text-align:start}.md-set .md-ck>span{flex:1;min-width:0}
 .mp-teams.many{grid-template-columns:repeat(5,1fr)}.mp-teams.many button{padding:10px 0}
+.mp-right{background:rgba(255,255,255,.16);border-radius:10px;padding:6px 10px;margin:6px 0!important}
+.mp-top5{display:grid;gap:8px;margin:8px 0;text-align:start}.mp-top5 ol{list-style:none;margin:0;padding:0;display:grid;gap:5px;counter-reset:r}
+.mp-top5 li{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.12);border-radius:10px;padding:7px 10px;counter-increment:r}
+.mp-top5 li::before{content:counter(r);width:22px;height:22px;border-radius:50%;background:#fff;color:#23336F;display:grid;place-items:center;font-size:.75rem;font-weight:700;flex:none}
+.mp-top5 li span{flex:1}.mp-top5 li.me{background:#C9822B}.mp-tl li{background:var(--c)}
+.mp-res .mp-top5{width:min(320px,78vw);justify-self:center}

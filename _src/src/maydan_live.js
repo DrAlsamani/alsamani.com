@@ -170,7 +170,12 @@ window.MDLive = (function () {
         <button type="button" class="btn solid" data-done>${B('تم', 'Done')}</button></div>`,
       `<button type="button" class="btn solid md-start" data-go disabled>${B('ابدأ', 'Start')}</button>
        <button type="button" class="md-cb" data-set>⚙ ${B('الإعدادات', 'Settings')}</button>
+       <button type="button" class="md-cb" data-share>🔗 ${B('رابط الدخول', 'Join link')}</button>
        <label class="md-opt"><input type="checkbox" data-lock> ${B('إقفال الدخول', 'Lock joining')}</label>`, true);
+    q('[data-share]').onclick = async e => {
+      const link = url, text = T(`ادخل مسابقة «${G.quiz.title || 'ميدان'}»: `, `Join “${G.quiz.title || 'Maydan'}”: `) + link;
+      try { if (navigator.share && /iP(hone|ad)|Android/i.test(navigator.userAgent)) await navigator.share({ text }); else { await navigator.clipboard.writeText(text); e.currentTarget.textContent = '✓ ' + T('نُسخ', 'Copied'); } } catch (er) {}
+    };
     const names = q('#mdNames'), go = q('[data-go]'), set = q('#mdSet');
     const chip = u => {
       let c = names.querySelector(`[data-u="${u}"]`);
@@ -313,6 +318,7 @@ window.MDLive = (function () {
     let climb = null, best = 0;
     order.forEach((u, k) => { const was = (G.prev || {})[u]; if (was && was - (k + 1) > best) { best = was - (k + 1); climb = u; } });
     const tt = teamTable(), tmax = Math.max(1, ...tt.map(t => t.avg));
+    G.ref.child('top').set({ p: top.map(u => ({ n: G.players[u] || '', s: G.score[u] })), t: tt.slice(0, 5).map(t => ({ n: t.name, s: t.avg, k: t.k })), d: decisive || null });
     const q = frame(`<div class="md-lb${G.teams ? ' with-teams' : ''}">${note ? `<p class="md-note">${esc(note)}</p>` : ''}
         <h2>${decisive ? B('🏁 لحظة الحسم: بقي سؤال واحد بنقاط مضاعفة', '🏁 Decisive moment: one question left, worth double') : B('الترتيب', 'Ranking')}</h2>
         ${G.teams ? `<div class="md-teams">${tt.slice(0, 5).map((t, k) => `<div class="md-team" style="--c:var(--qz${(t.k) % 6});--w:${Math.round(100 * t.avg / tmax)}%;--d:${k * 120}ms"><b>${k + 1}</b><span dir="auto">${esc(t.name)}</span><i></i><em>${t.avg}</em></div>`).join('')}<small>${B('نتيجة الفريق متوسط نقاط أعضائه', 'A team’s score is its members’ average')}</small></div>` : ''}
@@ -325,8 +331,9 @@ window.MDLive = (function () {
   /* ---------- the end: the winning team, then the podium from third to first ---------- */
   async function finish() {
     G.ended = true; clearInterval(G.timer); forget();
-    await G.ref.child('st').set({ ph: 'end', i: G.i, lock: true });
     const order = Object.keys(G.score).filter(u => u in G.players).sort((a, b) => G.score[b] - G.score[a]), tt = teamTable();
+    await G.ref.child('top').set({ p: order.slice(0, 5).map(u => ({ n: G.players[u] || '', s: G.score[u] })), t: tt.slice(0, 5).map(t => ({ n: t.name, s: t.avg, k: t.k })) });
+    await G.ref.child('st').set({ ph: 'end', i: G.i, lock: true });
     const p = k => order[k] ? `<div class="md-pod md-p${k + 1}"><span class="md-pn" dir="auto">${esc(G.players[order[k]] || '')}</span><b>${G.score[order[k]]}</b><div class="md-step">${k + 1}</div></div>` : '<div class="md-pod md-empty"></div>';
     const q = frame(`<div class="md-end"><h2>${esc(G.quiz.title || T('ميدان', 'Maydan'))}</h2>
         ${tt.length ? `<p class="md-wteam" style="--c:var(--qz${(tt[0].k) % 6})">${B(`🏆 الفريق الفائز: ${esc(tt[0].name)}`, `🏆 Winning team: ${esc(tt[0].name)}`)} <em>${tt[0].avg}</em></p>` : ''}

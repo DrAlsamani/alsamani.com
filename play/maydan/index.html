@@ -2496,6 +2496,12 @@ html.md-on{overflow:hidden}
 .mp-plus.neg{color:#ffd1c4}
 .md-set .md-ck{display:flex!important;justify-content:flex-start;text-align:start}.md-set .md-ck>span{flex:1;min-width:0}
 .mp-teams.many{grid-template-columns:repeat(5,1fr)}.mp-teams.many button{padding:10px 0}
+.mp-right{background:rgba(255,255,255,.16);border-radius:10px;padding:6px 10px;margin:6px 0!important}
+.mp-top5{display:grid;gap:8px;margin:8px 0;text-align:start}.mp-top5 ol{list-style:none;margin:0;padding:0;display:grid;gap:5px;counter-reset:r}
+.mp-top5 li{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.12);border-radius:10px;padding:7px 10px;counter-increment:r}
+.mp-top5 li::before{content:counter(r);width:22px;height:22px;border-radius:50%;background:#fff;color:#23336F;display:grid;place-items:center;font-size:.75rem;font-weight:700;flex:none}
+.mp-top5 li span{flex:1}.mp-top5 li.me{background:#C9822B}.mp-tl li{background:var(--c)}
+.mp-res .mp-top5{width:min(320px,78vw);justify-self:center}
 </style><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script>window.MD_CFG={"apiKey": "AIzaSyA50i75DT1Is1a6Yn6snW1_JVObc8S3F0Y", "authDomain": "maydan-705ae.firebaseapp.com", "databaseURL": "https://maydan-705ae-default-rtdb.europe-west1.firebasedatabase.app", "projectId": "maydan-705ae", "appId": "1:342187013133:web:d5c2396f0db413f3c51144"};window.MD_MARK="<svg class=\"md-mark\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><rect x=\"4\" y=\"4\" width=\"40\" height=\"40\" rx=\"12\" fill=\"#23336F\"/><path d=\"M24 9l4.2 6.8 7.8-1.8-1.8 7.8L41 24l-6.8 4.2 1.8 7.8-7.8-1.8L24 39l-4.2-6.8-7.8 1.8 1.8-7.8L7 24l6.8-4.2-1.8-7.8 7.8 1.8z\" fill=\"#C9822B\"/><circle cx=\"24\" cy=\"24\" r=\"6.5\" fill=\"#23336F\"/><circle cx=\"24\" cy=\"24\" r=\"3\" fill=\"#F3E3C7\"/></svg>";</script><script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script><script>/* alsamani.com/play/maydan — running a quiz live: the big screen of the host.
    Players join at alsamani.com/m with a six-digit code; the room lives in Firebase and the host alone keeps the answers and the scores.
    A game can be paused and picked up later from the same browser. */
@@ -2668,7 +2674,12 @@ window.MDLive = (function () {
         <button type="button" class="btn solid" data-done>${B('تم', 'Done')}</button></div>`,
       `<button type="button" class="btn solid md-start" data-go disabled>${B('ابدأ', 'Start')}</button>
        <button type="button" class="md-cb" data-set>⚙ ${B('الإعدادات', 'Settings')}</button>
+       <button type="button" class="md-cb" data-share>🔗 ${B('رابط الدخول', 'Join link')}</button>
        <label class="md-opt"><input type="checkbox" data-lock> ${B('إقفال الدخول', 'Lock joining')}</label>`, true);
+    q('[data-share]').onclick = async e => {
+      const link = url, text = T(`ادخل مسابقة «${G.quiz.title || 'ميدان'}»: `, `Join “${G.quiz.title || 'Maydan'}”: `) + link;
+      try { if (navigator.share && /iP(hone|ad)|Android/i.test(navigator.userAgent)) await navigator.share({ text }); else { await navigator.clipboard.writeText(text); e.currentTarget.textContent = '✓ ' + T('نُسخ', 'Copied'); } } catch (er) {}
+    };
     const names = q('#mdNames'), go = q('[data-go]'), set = q('#mdSet');
     const chip = u => {
       let c = names.querySelector(`[data-u="${u}"]`);
@@ -2811,6 +2822,7 @@ window.MDLive = (function () {
     let climb = null, best = 0;
     order.forEach((u, k) => { const was = (G.prev || {})[u]; if (was && was - (k + 1) > best) { best = was - (k + 1); climb = u; } });
     const tt = teamTable(), tmax = Math.max(1, ...tt.map(t => t.avg));
+    G.ref.child('top').set({ p: top.map(u => ({ n: G.players[u] || '', s: G.score[u] })), t: tt.slice(0, 5).map(t => ({ n: t.name, s: t.avg, k: t.k })), d: decisive || null });
     const q = frame(`<div class="md-lb${G.teams ? ' with-teams' : ''}">${note ? `<p class="md-note">${esc(note)}</p>` : ''}
         <h2>${decisive ? B('🏁 لحظة الحسم: بقي سؤال واحد بنقاط مضاعفة', '🏁 Decisive moment: one question left, worth double') : B('الترتيب', 'Ranking')}</h2>
         ${G.teams ? `<div class="md-teams">${tt.slice(0, 5).map((t, k) => `<div class="md-team" style="--c:var(--qz${(t.k) % 6});--w:${Math.round(100 * t.avg / tmax)}%;--d:${k * 120}ms"><b>${k + 1}</b><span dir="auto">${esc(t.name)}</span><i></i><em>${t.avg}</em></div>`).join('')}<small>${B('نتيجة الفريق متوسط نقاط أعضائه', 'A team’s score is its members’ average')}</small></div>` : ''}
@@ -2823,8 +2835,9 @@ window.MDLive = (function () {
   /* ---------- the end: the winning team, then the podium from third to first ---------- */
   async function finish() {
     G.ended = true; clearInterval(G.timer); forget();
-    await G.ref.child('st').set({ ph: 'end', i: G.i, lock: true });
     const order = Object.keys(G.score).filter(u => u in G.players).sort((a, b) => G.score[b] - G.score[a]), tt = teamTable();
+    await G.ref.child('top').set({ p: order.slice(0, 5).map(u => ({ n: G.players[u] || '', s: G.score[u] })), t: tt.slice(0, 5).map(t => ({ n: t.name, s: t.avg, k: t.k })) });
+    await G.ref.child('st').set({ ph: 'end', i: G.i, lock: true });
     const p = k => order[k] ? `<div class="md-pod md-p${k + 1}"><span class="md-pn" dir="auto">${esc(G.players[order[k]] || '')}</span><b>${G.score[order[k]]}</b><div class="md-step">${k + 1}</div></div>` : '<div class="md-pod md-empty"></div>';
     const q = frame(`<div class="md-end"><h2>${esc(G.quiz.title || T('ميدان', 'Maydan'))}</h2>
         ${tt.length ? `<p class="md-wteam" style="--c:var(--qz${(tt[0].k) % 6})">${B(`🏆 الفريق الفائز: ${esc(tt[0].name)}`, `🏆 Winning team: ${esc(tt[0].name)}`)} <em>${tt[0].avg}</em></p>` : ''}
