@@ -53,7 +53,9 @@ window.MDLive = (function () {
   const fail = el => { el.innerHTML = `<div class="md-wait">${B('تعذّر الاتصال بالميدان. تأكد من الإنترنت ثم حاول مرة أخرى.', 'Could not reach the room. Check the connection and try again.')}<button type="button" class="btn ghost" data-x>${B('إغلاق', 'Close')}</button></div>`; el.querySelector('[data-x]').onclick = () => { G = null; leave(); }; };
   function fresh(quiz, el, pin) {
     const n = quiz.qs.length;
-    G = { ar: /[؀-ۿ]/.test(quiz.qs.map(x => x.q + x.opts.join('')).join('')), pin, quiz, el, ref: db.ref('rooms/' + pin), players: {}, score: {}, streak: {}, team: {}, teams: null, i: -1, done: -1,
+    const txt = quiz.qs.map(x => (x.q || '') + (x.opts || []).join('')).join('');
+    // the screen's language: the questions' own, or the page's when there is no text (a games-only quiz)
+    G = { ar: /[؀-ۿ]/.test(txt) || (!/[a-z]/i.test(txt) && document.documentElement.lang !== 'en'), pin, quiz, el, ref: db.ref('rooms/' + pin), players: {}, score: {}, streak: {}, team: {}, teams: null, i: -1, done: -1,
       opts: { every: 1, speed: true, gold: true, final: true, bet: false }, gold: -1, timer: null, subs: [] };
   }
   async function start(quiz) {

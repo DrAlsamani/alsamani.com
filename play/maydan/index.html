@@ -1751,6 +1751,10 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
 .qz-num,.qz-word,.qz-order,.qz-open{border-inline-start:6px solid #2a7fa8}
 .qz-rev{display:flex;align-items:center;gap:6px;font-size:.875rem;color:var(--ink)}
 .qz-tx{display:grid;gap:6px;align-content:start}.qz-pin{font:inherit;padding:8px;border-radius:8px;border:1px solid #ccc;text-align:center}.qz-pw{text-align:center;font-size:1.3rem;letter-spacing:.2em;margin:4px 0}.qz-pans{font-size:.75rem;color:#5a6664;text-align:center;margin:0}
+.qz-starts{display:grid;gap:10px;justify-items:start;width:100%}
+.qz-gstart{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.qz-gstart label{display:flex;gap:6px;align-items:center;font-weight:600}
+.qz-gstart select,.qz-spr select{padding:6px 8px;border:1px solid var(--line,#ccc);border-radius:8px;background:var(--bg,#fff);color:inherit;font:inherit}
+.qz-spr{display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;margin:-74px 0 90px;font-weight:600}
 </style>
 <div id="qz" class="sn qz"><noscript><span class="ar">تعمل هذه الأداة مع تفعيل JavaScript.</span><span class="en">This tool needs JavaScript.</span></noscript></div>
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script><script>/* alsamani.com/tools/quiz — reads questions written in the usual ways: pasted text, Word, Excel/CSV or PDF lines.
@@ -1957,12 +1961,15 @@ if (typeof module !== 'undefined') module.exports = QZParse;
     const P = window.MDLive && MDLive.pending();
     root.innerHTML = `${P ? `<div class="sn-card qz-resume"><p>⏸ ${B('مسابقة متوقفة', 'A paused quiz')}: <b>${esc(P.quiz.title || T('بلا عنوان', 'Untitled'))}</b> · ${B('أُنهي', 'done')} ${P.i + 1} ${T('من', 'of')} ${P.quiz.qs.length} · ${B('الرمز', 'code')} <span dir="ltr">${P.pin}</span></p>
         <div class="sn-two"><button type="button" class="btn solid" id="qzRes">${B('متابعة المسابقة ▶', 'Resume ▶')}</button><button type="button" class="btn ghost" id="qzDrop2">${B('إنهاؤها وحذفها', 'End and remove it')}</button></div></div>` : ''}<div class="sn-card qz-home">
-      <button type="button" class="btn solid" id="qzNew">${B('مسابقة جديدة', 'New quiz')}</button>
+      <div class="qz-starts"><button type="button" class="btn solid" id="qzNew">${B('مسابقة أسئلة جديدة', 'New question quiz')}</button>
+        <div class="qz-gstart"><button type="button" class="btn ghost" id="qzNewG">🎮 ${B('مسابقة ألعاب وتحديات', 'A games-only quiz')}</button><label>${B('عدد التحديات', 'Challenges')} <select id="qzGn">${[5, 8, 10, 12, 15, 20, 24].map(n => `<option${n === 10 ? ' selected' : ''}>${n}</option>`).join('')}</select></label></div>
+        <p class="pt-fine">${B('في مسابقة الألعاب نختار لك تحديات متنوعة، وتقدر تغيّر أي واحد منها بزر 🔀 أو تختار غيره بنفسك.', 'We pick a varied set for you; swap any of them with 🔀 or choose another yourself.')}</p></div>
       ${list.length ? `<h2 class="qz-h">${B('مسابقاتك', 'Your quizzes')}</h2><ul class="qz-list">${list.map(x => `<li><button type="button" data-open="${x.id}"><b>${esc(x.title || T('بلا عنوان', 'Untitled'))}</b><small>${T('الأسئلة: ', 'Questions: ')}${x.qs.length}</small></button></li>`).join('')}</ul>` : ''}
       <label class="qz-imp btn ghost">${B('فتح نسخة محفوظة', 'Open a saved copy')}<input type="file" accept=".json,application/json" hidden id="qzImp"></label>
-      <p class="pt-fine">${B('تُحفظ المسابقات في هذا المتصفح. تشغيلها مع المشاركين قريبًا.', 'Quizzes are kept in this browser. Running them live with players is coming soon.')}</p></div>`;
+      <p class="pt-fine">${B('تُحفظ المسابقات في هذا المتصفح.', 'Quizzes are kept in this browser.')}</p></div>`;
     if (P) { root.querySelector('#qzRes').onclick = () => MDLive.resume(); root.querySelector('#qzDrop2').onclick = async () => { await MDLive.discard(); home(); }; }
     root.querySelector('#qzNew').onclick = () => { Q = { id: uid(), title: '', qs: [] }; editor(); };
+    root.querySelector('#qzNewG').onclick = () => { Q = { id: uid(), title: T('مسابقة الألعاب والتحديات', 'Games and challenges'), qs: pickGames(+root.querySelector('#qzGn').value).map(newGame) }; persist(); editor(); };
     root.querySelectorAll('[data-open]').forEach(b => b.onclick = () => { Q = JSON.parse(JSON.stringify(list.find(x => x.id === b.dataset.open))); Q.qs = Q.qs.map(norm); editor(); });
     root.querySelector('#qzImp').onchange = async e => {
       const f = e.target.files[0]; if (!f) return;
@@ -1997,6 +2004,7 @@ if (typeof module !== 'undefined') module.exports = QZParse;
       </div>
       <div id="qzQs" class="qz-qs"></div>
       <div class="qz-addq"><button type="button" class="btn ghost" id="qzAddQ">${B('+ سؤال', '+ Question')}</button><button type="button" class="btn ghost" id="qzAddTF">${B('+ صح أو خطأ', '+ True or false')}</button><button type="button" class="btn ghost" id="qzAddG">${B('+ تحدٍّ تفاعلي 🎮', '+ Challenge 🎮')}</button></div>
+      <div class="qz-spr"><span>🎲 ${B('وزّع تحديات بين الأسئلة: تحدٍّ بعد كل', 'Spread challenges between the questions: one after every')}</span><select id="qzEvery">${[1, 2, 3, 5, 10].map(n => `<option value="${n}"${n === 3 ? ' selected' : ''}>${n === 1 ? T('سؤال واحد', '1 question') : n === 2 ? T('سؤالين', '2 questions') : n + ' ' + T('أسئلة', 'questions')}</option>`).join('')}</select><button type="button" class="btn ghost" id="qzSpr">${B('وزّع', 'Spread')}</button></div>
       <div class="qz-bar"><div class="qz-chk" id="qzChk"></div><div class="qz-bar-b"><button type="button" class="btn solid md-go" id="qzGo">${B('ابدأ المسابقة ▶', 'Start the quiz ▶')}</button><button type="button" class="btn ghost" id="qzPv">${B('معاينة', 'Preview')}</button><button type="button" class="btn ghost" id="qzExp">${B('حفظ نسخة', 'Save a copy')}</button></div></div>`;
     const q = s => root.querySelector(s);
     q('#qzBack').onclick = () => { persist(); home(); };
@@ -2036,7 +2044,18 @@ if (typeof module !== 'undefined') module.exports = QZParse;
     };
     q('#qzCopy').onclick = async () => { try { await navigator.clipboard.writeText(prompt()); toast(B('نُسخت التعليمات. الصقها في ChatGPT أو Claude.', 'Copied. Paste it into ChatGPT or Claude.')); } catch (er) { toast(B('تعذّر النسخ.', 'Could not copy.'), 1); } };
     q('#qzAddQ').onclick = () => { Q.qs.push(norm({})); draw(); focusLast(); later(); };
-    q('#qzAddG').onclick = () => { const used = Q.qs.filter(z => z.type === 'game').map(z => z.g), all = GAMES().map(z => z.id), g = all.find(id => !used.includes(id)) || all[Math.floor(Math.random() * all.length)] || 'sort'; Q.qs.push(norm({ type: 'game', g, time: 30, opts: ['', ''] })); draw(); const c = root.querySelectorAll('.qz-q'); c[c.length - 1].scrollIntoView({ block: 'center', behavior: 'smooth' }); later(); };
+    q('#qzAddG').onclick = () => { const g = pickGames(1, Q.qs.filter(z => z.type === 'game').map(z => z.g))[0] || 'sort'; Q.qs.push(newGame(g)); draw(); const c = root.querySelectorAll('.qz-q'); c[c.length - 1].scrollIntoView({ block: 'center', behavior: 'smooth' }); later(); };
+    // spreading replaces the challenges already placed, so pressing it again simply re-deals them
+    q('#qzSpr').onclick = () => {
+      const qs = Q.qs.filter(z => z.type !== 'game'), every = +q('#qzEvery').value;
+      if (!qs.length) { toast(B('أضف الأسئلة أولًا، ثم وزّع التحديات بينها.', 'Add the questions first, then spread the challenges.'), 1); return; }
+      const slots = Math.floor((qs.length - 1) / every) || (qs.length >= every ? 1 : 0); if (!slots) { toast(B('الأسئلة أقل من أن يوضع بينها تحدٍّ بهذا التوزيع.', 'Too few questions for that spacing.'), 1); return; }
+      const gs = pickGames(slots), out = []; let k = 0;
+      qs.forEach((z, j) => { out.push(z); if ((j + 1) % every === 0 && j < qs.length - 1 && k < gs.length) out.push(newGame(gs[k++])); });
+      if (!k && gs.length) out.push(newGame(gs[0]));
+      Q.qs = out; draw(); later();
+      toast(B(`وُزّع ${Math.max(k, 1)} تحديًا بين الأسئلة. غيّر أيًّا منها بزر 🔀.`, `${Math.max(k, 1)} challenges spread. Swap any with 🔀.`));
+    };
     q('#qzAddTF').onclick = () => { Q.qs.push(norm({ type: 'tf', opts: [T('صح', 'True'), T('خطأ', 'False')] })); draw(); focusLast(); later(); };
     q('#qzPv').onclick = () => preview(0);
     q('#qzGo').onclick = () => {
@@ -2077,7 +2096,7 @@ if (typeof module !== 'undefined') module.exports = QZParse;
   const TEXTY = ['num', 'word', 'order', 'open'];
   function setType(x, t) {
     const was = x.type;
-    if (t === 'game') { x.g = x.g || 'sort'; x.time = x.time && x.time >= 20 ? x.time : 30; }
+    if (t === 'game') { x.g = x.g || pickGames(1, Q.qs.filter(z => z.type === 'game').map(z => z.g))[0] || 'sort'; x.time = gTime(x.g); }
     if (t === 'tf') { if (was !== 'tf') x.keep = x.opts; x.opts = [T('صح', 'True'), T('خطأ', 'False')]; x.ok = x.ok.filter(j => j < 2).slice(0, 1); }
     if ((t === 'mc' || t === 'poll') && (was === 'tf' || was === 'game' || TEXTY.includes(was))) { x.opts = x.keep && x.keep.length ? x.keep : (x.opts && x.opts.some(o => o.trim()) && was !== 'tf' ? x.opts : ['', '', '', '']); if (was === 'tf') x.ok = []; }
     if (t === 'poll') x.ok = [];
@@ -2085,7 +2104,25 @@ if (typeof module !== 'undefined') module.exports = QZParse;
     if (t === 'open') x.pts = 0; else if (was === 'open' && !x.pts) x.pts = 1;
     x.type = t;
   }
-  const GTIMES = [20, 30, 45, 60, 90];
+  const GTIMES = [15, 20, 30, 40, 45, 60, 90];
+  // each challenge has its own fitting time; a puzzle needs longer than a tap race
+  const GT = { sort: 60, shoot: 30, pairs: 45, stroop: 30, seq: 40, odd: 30, count: 30, math: 30, whack: 30, stack: 30, fly: 30, slide: 60, letters: 45, taps: 15, react: 30, spots: 40, more: 30, maze: 45, pattern: 40, lights: 45, catch: 30, find: 30, aim: 30, tug: 20 };
+  const gTime = g => GT[g] || 30;
+  const mix = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+  // n varied challenges: unused ones first, taking turns between kinds (memory, speed, logic…) so no two alike sit together
+  function pickGames(n, used) {
+    used = used || []; const out = [];
+    while (out.length < n) {
+      const fresh = GAMES().filter(z => !used.includes(z.id) && !out.includes(z.id)), pool = fresh.length ? fresh : GAMES();
+      const by = {}; mix(pool).forEach(z => { (by[z.kind[1]] = by[z.kind[1]] || []).push(z.id); });
+      const kinds = mix(Object.keys(by)); let added = false;
+      for (let r = 0; out.length < n; r++) { let any = false; kinds.forEach(k => { if (by[k][r] && out.length < n && (!out.length || out[out.length - 1] !== by[k][r])) { out.push(by[k][r]); any = true; added = true; } }); if (!any) break; }
+      if (!added) break; if (!fresh.length) used = [];
+      if (out.length < n) used = used.concat(out);
+    }
+    return out;
+  }
+  const newGame = g => norm({ type: 'game', g, time: gTime(g), opts: ['', ''] });
   function card(x, i) {
     if (x.type === 'game') {
       const g = window.MDGames ? MDGames.byId(x.g) : { icon: '🎮', ar: '', en: '', howAr: '', howEn: '' }, t = x.time || 30;
@@ -2094,7 +2131,7 @@ if (typeof module !== 'undefined') module.exports = QZParse;
         ${typeSel('game')}
         <select data-k="gtime" aria-label="time">${GTIMES.map(s => `<option value="${s}"${s === t ? ' selected' : ''}>${s} ${T('ث', 's')}</option>`).join('')}</select>
         <select data-k="pts" aria-label="points"><option value="1"${x.pts === 1 ? ' selected' : ''}>${T('نقاط عادية', 'Standard points')}</option><option value="2"${x.pts === 2 ? ' selected' : ''}>${T('نقاط مضاعفة', 'Double points')}</option><option value="0"${x.pts === 0 ? ' selected' : ''}>${T('بلا نقاط', 'No points')}</option></select>
-        <span class="qz-act"><button type="button" class="qz-ib" data-a="dup" title="${T('تكرار', 'Duplicate')}">⧉</button><button type="button" class="qz-ib" data-a="del" title="${T('حذف', 'Delete')}">✕</button></span></div>
+        <span class="qz-act"><button type="button" class="qz-ib" data-a="swap" title="${T('لعبة أخرى', 'Another game')}">🔀</button><button type="button" class="qz-ib" data-a="dup" title="${T('تكرار', 'Duplicate')}">⧉</button><button type="button" class="qz-ib" data-a="del" title="${T('حذف', 'Delete')}">✕</button></span></div>
       <div class="qz-gpick">${GAMES().map(z => `<button type="button" data-g="${z.id}" aria-pressed="${z.id === x.g}"><b>${z.icon}</b><span>${isAr() ? z.ar : z.en}</span><small>${isAr() ? z.kind[0] : z.kind[1]}</small></button>`).join('')}</div>
       <p class="qz-ghow"><b>${g.icon} ${isAr() ? g.ar : g.en}:</b> ${isAr() ? g.howAr : g.howEn}</p>
       <p class="qz-warn" hidden></p></div>`;
@@ -2124,9 +2161,11 @@ if (typeof module !== 'undefined') module.exports = QZParse;
     const re = () => { const i = Q.qs.indexOf(x), n = document.createElement('div'); n.innerHTML = card(x, i); const c = n.firstElementChild; el.replaceWith(c); bind(c, x); later(); return c; };
     if (x.type === 'game') {
       el.querySelector('[data-k=type]').onchange = e => { setType(x, e.target.value); re(); };
-      el.querySelector('[data-k=gtime]').onchange = e => { x.time = +e.target.value; later(); };
+      el.querySelector('[data-k=gtime]').onchange = e => { x.time = +e.target.value; x.gtSet = true; later(); };
       el.querySelector('[data-k=pts]').onchange = e => { x.pts = +e.target.value; later(); };
-      el.querySelectorAll('[data-g]').forEach(b => b.onclick = () => { x.g = b.dataset.g; re(); });
+      const setG = g => { x.g = g; if (!x.gtSet) x.time = gTime(g); re(); };
+      el.querySelectorAll('[data-g]').forEach(b => b.onclick = () => setG(b.dataset.g));
+      el.querySelector('[data-a=swap]').onclick = () => { let g = pickGames(1, Q.qs.filter(z => z.type === 'game').map(z => z.g))[0]; if (!g || g === x.g) { const o = GAMES().filter(z => z.id !== x.g); g = o[Math.floor(Math.random() * o.length)].id; } setG(g); };
       el.querySelector('[data-a=dup]').onclick = () => { Q.qs.splice(Q.qs.indexOf(x) + 1, 0, norm(JSON.parse(JSON.stringify(Object.assign({}, x, { id: uid() }))))); draw(); later(); };
       el.querySelector('[data-a=del]').onclick = () => { Q.qs.splice(Q.qs.indexOf(x), 1); draw(); later(); };
       return;
@@ -3397,7 +3436,9 @@ window.MDLive = (function () {
   const fail = el => { el.innerHTML = `<div class="md-wait">${B('تعذّر الاتصال بالميدان. تأكد من الإنترنت ثم حاول مرة أخرى.', 'Could not reach the room. Check the connection and try again.')}<button type="button" class="btn ghost" data-x>${B('إغلاق', 'Close')}</button></div>`; el.querySelector('[data-x]').onclick = () => { G = null; leave(); }; };
   function fresh(quiz, el, pin) {
     const n = quiz.qs.length;
-    G = { ar: /[؀-ۿ]/.test(quiz.qs.map(x => x.q + x.opts.join('')).join('')), pin, quiz, el, ref: db.ref('rooms/' + pin), players: {}, score: {}, streak: {}, team: {}, teams: null, i: -1, done: -1,
+    const txt = quiz.qs.map(x => (x.q || '') + (x.opts || []).join('')).join('');
+    // the screen's language: the questions' own, or the page's when there is no text (a games-only quiz)
+    G = { ar: /[؀-ۿ]/.test(txt) || (!/[a-z]/i.test(txt) && document.documentElement.lang !== 'en'), pin, quiz, el, ref: db.ref('rooms/' + pin), players: {}, score: {}, streak: {}, team: {}, teams: null, i: -1, done: -1,
       opts: { every: 1, speed: true, gold: true, final: true, bet: false }, gold: -1, timer: null, subs: [] };
   }
   async function start(quiz) {

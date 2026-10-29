@@ -86,3 +86,7 @@
 .qz-num,.qz-word,.qz-order,.qz-open{border-inline-start:6px solid #2a7fa8}
 .qz-rev{display:flex;align-items:center;gap:6px;font-size:.875rem;color:var(--ink)}
 .qz-tx{display:grid;gap:6px;align-content:start}.qz-pin{font:inherit;padding:8px;border-radius:8px;border:1px solid #ccc;text-align:center}.qz-pw{text-align:center;font-size:1.3rem;letter-spacing:.2em;margin:4px 0}.qz-pans{font-size:.75rem;color:#5a6664;text-align:center;margin:0}
+.qz-starts{display:grid;gap:10px;justify-items:start;width:100%}
+.qz-gstart{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.qz-gstart label{display:flex;gap:6px;align-items:center;font-weight:600}
+.qz-gstart select,.qz-spr select{padding:6px 8px;border:1px solid var(--line,#ccc);border-radius:8px;background:var(--bg,#fff);color:inherit;font:inherit}
+.qz-spr{display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;margin:-74px 0 90px;font-weight:600}
