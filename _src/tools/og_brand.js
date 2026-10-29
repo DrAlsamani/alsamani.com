@@ -20,10 +20,13 @@ body:after{content:"";position:absolute;inset:auto 0 0 0;height:14px;background:
 .e{color:#e0a458;font-size:30px;font-weight:500}h1{font-size:96px;font-weight:700;line-height:1.1;margin:6px 0}.en{direction:ltr;text-align:right;font-family:Alexandria,sans-serif;font-size:34px;color:#c9cde0}
 .q{font-size:30px;color:#d9dcea;line-height:1.6;margin-top:30px;max-width:1000px}.f{position:absolute;bottom:42px;inset-inline:96px;display:flex;justify-content:space-between;font-size:24px;color:#aab0cc}.f span{direction:ltr}</style></head>
 <body><div class="r">${MARK}<div><p class="e">منصة الألعاب التفاعلية</p><h1>${h}</h1><p class="en">${en}</p></div></div><p class="q">${sub}</p><div class="f"><b>${foot}</b><span>alsamani.com</span></div></body></html>`;
+const khMark = `<svg class="md-mark" viewBox="0 0 48 48"><rect x="4" y="4" width="40" height="40" rx="12" fill="#0b3b2c"/><g fill="#e0a458"><circle cx="12" cy="36" r="4"/><circle cx="18" cy="30" r="4"/><circle cx="24" cy="24" r="4"/><circle cx="30" cy="18" r="4"/><circle cx="36" cy="12" r="4"/></g></svg>`;
+const kh = game('خماسية', 'لعبة ورق ولوح للفرق: كوّن خمسًا في صف قبل خصمك. على شاشة وجوالات، أو عن بُعد، أو ضد الجهاز.', 'Khumasiya · five in a row', 'د. عمر عبدالله الصمعاني').replace(MARK, khMark).replace(/background:#1f2a5c/, 'background:#0f4d3a');
 const cards = [
   ['site', site],
   ['play', game('منصة الألعاب التفاعلية'.replace('منصة ', ''), 'منصة تعليمية ترفيهية للتوظيف داخل بيئة التعلم والأنشطة والاجتماعات.', 'Interactive games', 'د. عمر عبدالله الصمعاني')],
   ['play-maydan', game('ميدان', 'مسابقات تفاعلية حيّة: سؤال على الشاشة، والجميع يجيب من جواله. أسئلة وتحديات وفرق ومكتبة جاهزة.', 'Maydan · live quizzes', 'د. عمر عبدالله الصمعاني')],
+  ['play-khumasiya', kh],
   ['m', game('ادخل الميدان', 'اكتب رمز المسابقة الظاهر على الشاشة، ثم اسمك، وابدأ اللعب.', 'Maydan · join the quiz', 'ميدان')]];
 (async () => {
   const b = await chromium.launch({ proxy: { server: process.env.HTTPS_PROXY } }); const c = await b.newContext({ viewport: { width: 1200, height: 630 }, ignoreHTTPSErrors: true }); const p = await c.newPage();
