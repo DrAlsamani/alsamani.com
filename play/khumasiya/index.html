@@ -1473,6 +1473,23 @@ html[dir=ltr] .jr-dch.fd .jr-fold::before{transform:rotate(-45deg)}
 .kh-fly.emo{font-size:2.6rem;line-height:1}.kh-fly.emo small{display:block;font-size:.8rem;color:#fff;background:rgba(0,0,0,.55);border-radius:99px;padding:1px 8px;margin-top:2px;white-space:nowrap}
 .kh-fly.say{background:#fbf6ea;color:#13281f;border-radius:14px;padding:6px 12px;font-size:.95rem;box-shadow:0 6px 18px rgba(0,0,0,.35);white-space:nowrap}.kh-fly.say b{color:#0f4d3a}
 @keyframes khFly{0%{opacity:0;margin-top:20px}12%{opacity:1}80%{opacity:1}100%{opacity:0;margin-top:-220px}}
+/* the simple look: the centre pip stays hidden */
+.kc s{display:none;text-decoration:none}
+/* the real-card look: a white card, its index in the corner, a large pip in the middle */
+.kh-real .kh-cell{background:#fff;box-shadow:inset 0 0 0 1px rgba(0,0,0,.14)}
+.kh-real .kh-cell .kc:not(.star){position:absolute;inset:0;display:block}
+.kh-real .kh-cell .kc:not(.star) b{position:absolute;top:4%;left:8%;font-size:3.5cqi;line-height:1;letter-spacing:-.08em}
+.kh-real .kh-cell .kc:not(.star) i{position:absolute;top:38%;left:9%;font-size:2.6cqi;line-height:1}
+.kh-real .kh-cell .kc:not(.star) s{display:block;position:absolute;right:6%;bottom:2%;font-size:5.6cqi;line-height:1;font-family:"Segoe UI Symbol","Apple Symbols",Arial,sans-serif}
+.kh-real .kh-cell .kc.r s{color:#d3140b}
+.kh-real .kh-hc{background:#fff}
+.kh-real .kh-hc .kc:not(.j){position:absolute;inset:0;display:block}
+.kh-real .kh-hc .kc:not(.j) b{position:absolute;top:5px;left:6px;font-size:1.05rem;line-height:1}
+.kh-real .kh-hc .kc:not(.j) i{position:absolute;top:23px;left:7px;font-size:.85rem;line-height:1}
+.kh-real .kh-hc .kc:not(.j) s{display:block;position:absolute;inset:0;top:30%;font-size:1.9rem;text-align:center;line-height:1}
+.kh-look{font-size:.85rem;align-items:center;color:#cfe0d6}
+.kh-look button{border:1px solid rgba(255,255,255,.35);background:transparent;color:#fff;border-radius:99px;padding:4px 12px;font:inherit;cursor:pointer}.kh-look button[aria-pressed=true]{background:rgba(255,255,255,.18);border-color:#fff}
+.kh-real .kh-hc .kc:not(.j) s{top:46%;font-size:1.7rem}
 </style>
 <div id="kh" class="kh"><noscript><span class="ar">تعمل هذه اللعبة مع تفعيل JavaScript.</span><span class="en">This game needs JavaScript.</span></noscript></div>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script>window.MD_CFG={"apiKey": "AIzaSyA50i75DT1Is1a6Yn6snW1_JVObc8S3F0Y", "authDomain": "maydan-705ae.firebaseapp.com", "databaseURL": "https://maydan-705ae-default-rtdb.europe-west1.firebasedatabase.app", "projectId": "maydan-705ae", "appId": "1:342187013133:web:d5c2396f0db413f3c51144"};window.MD_MARK="<svg class=\"md-mark\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><rect x=\"4\" y=\"4\" width=\"40\" height=\"40\" rx=\"12\" fill=\"#23336F\"/><path d=\"M24 9l4.2 6.8 7.8-1.8-1.8 7.8L41 24l-6.8 4.2 1.8 7.8-7.8-1.8L24 39l-4.2-6.8-7.8 1.8 1.8-7.8L7 24l6.8-4.2-1.8-7.8 7.8 1.8z\" fill=\"#C9822B\"/><circle cx=\"24\" cy=\"24\" r=\"6.5\" fill=\"#23336F\"/><circle cx=\"24\" cy=\"24\" r=\"3\" fill=\"#F3E3C7\"/></svg>";</script><script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script><script>/* Khumasiya: the rules. Two packs of cards; a 10×10 board with every card except the jacks twice and four free corners.
@@ -1705,7 +1722,7 @@ window.KH = (function () {
     if (c === '*') return `<span class="kc star">★</span>`;
     const r = c.slice(0, -1), s = c.slice(-1), red = s === 'H' || s === 'D';
     const jk = r === 'J' ? (KH.twoEyed(c) ? `<em>${B('ضع في أي مكان', 'Wild')}</em>` : `<em>${B('أزل قطعة', 'Remove')}</em>`) : '';
-    return `<span class="kc${red ? ' r' : ''}${r === 'J' ? ' j' : ''} ${cls || ''}"><b>${r === 'T' ? '10' : r}</b><i>${SUIT[s]}</i>${r === 'J' ? `<u>${KH.twoEyed(c) ? '👀' : '👁'}</u>` : ''}${jk}</span>`;
+    return `<span class="kc${red ? ' r' : ''}${r === 'J' ? ' j' : ''} ${cls || ''}"><b>${r === 'T' ? '10' : r}</b><i>${SUIT[s]}</i><s>${r === 'K' ? '♚' : r === 'Q' ? '♛' : SUIT[s]}</s>${r === 'J' ? `<u>${KH.twoEyed(c) ? '👀' : '👁'}</u>` : ''}${jk}</span>`;
   };
 
   let G = null;          // the game on this device
@@ -1998,7 +2015,7 @@ window.KH = (function () {
     const status = P.win >= 0 ? `🏆 ${B(`فاز فريق ${TN(P.win)}!`, `${TN(P.win)} wins!`)}` : P.win === -2 ? B('تعادل!', 'A draw!')
       : mine ? `<b>${B('دورك!', 'Your turn!')}</b> ${sel ? (KH.oneEyed(sel) ? B('👁 ولد أبو عين: اختر قطعة خصم لإزالتها', '👁 One-eyed jack: pick a rival chip to remove') : KH.twoEyed(sel) ? B('👀 ولد أبو عينين: ضع قطعتك في أي خانة فارغة', '👀 Two-eyed jack: put your chip on any empty space') : dead ? B('خانتا هذه الورقة ممتلئتان؛ استبدلها', 'both its spaces are taken; swap it') : B('اختر إحدى الخانتين المضيئتين', 'pick one of the lit spaces')) : B('اختر ورقة من يدك', 'pick a card')}`
       : `${B('دور', 'Turn:')} <b dir="auto" style="color:${COL[team[turn]]}">${esc(names[turn] || '')}</b> (${TN(team[turn])})`;
-    root.innerHTML = `<div class="kh-game${screen ? ' kh-screen' : ''}">
+    root.innerHTML = `<div class="kh-game${screen ? ' kh-screen' : ''}${store.get('look', 'real') === 'real' ? ' kh-real' : ''}">
       <div class="kh-bar">${teamsBar}</div>
       <p class="kh-status">${P.dl && P.win === -1 ? `<span class="kh-clock${mine ? ' me' : ''}" id="khClk"></span> ` : ''}${watch ? `<span class="kh-eye">👀 ${B('مشاهدة', 'Watching')}</span> ` : ''}${status}</p>
       <div class="kh-board${can.length ? ' picking' : ''}">${lay.map((c, i) => { const b = board[i], inq = b >= 0 && sq[b] && sq[b].has(i);
@@ -2007,6 +2024,7 @@ window.KH = (function () {
         <div class="kh-row kh-acts">${dead ? `<button type="button" class="btn ghost" id="khSwap">↻ ${B('استبدل الورقة الميتة', 'Swap the dead card')}</button>` : ''}${stuck ? `<button type="button" class="btn ghost" id="khPass">${B('لا حركة لديك: تخطَّ الدور', 'No move: pass')}</button>` : ''}</div>` : ''}
       ${screen ? `<div class="kh-row"><button type="button" class="btn ghost" id="khFs">⛶ ${B('ملء الشاشة', 'Full screen')}</button></div>` : ''}
       ${G && G.mode !== 'local' && P.win === -1 ? rxBar() : ''}
+      <div class="kh-row kh-look"><span>${B('شكل الورق:', 'Cards:')}</span><button type="button" data-look="real" aria-pressed="${store.get('look', 'real') === 'real'}">🂡 ${B('كالورق الحقيقي', 'Like real cards')}</button><button type="button" data-look="plain" aria-pressed="${store.get('look', 'real') !== 'real'}">${B('مبسّط', 'Simple')}</button></div>
       <div class="kh-help">${rules(false)}</div>
       ${P.win !== -1 ? `<div class="kh-row"><button type="button" class="btn solid" id="khAgain">${B('لعبة جديدة', 'New game')}</button></div>` : ''}</div>`;
     root.querySelectorAll('[data-c]').forEach(b => b.onclick = () => { sel = sel === b.dataset.c ? null : b.dataset.c; buzz(8); view({ P, hand, me, names, screen, watch, act, again }); });
@@ -2018,6 +2036,7 @@ window.KH = (function () {
     if (ck) { let warned = false; const tick = () => { const left = Math.max(0, Math.ceil((P.dl - now()) / 1000)); ck.textContent = '⏱ ' + left; ck.classList.toggle('hot', left <= 10); if (mine && left <= 5 && !warned) { warned = true; buzz([80, 60, 80]); } }; tick(); clk = setInterval(tick, 250); }
     root.querySelectorAll('[data-rx]').forEach(b => b.onclick = () => { sendRx(b.dataset.rx); const ss = root.querySelector('.kh-says'); if (ss) ss.hidden = true; });
     const sy = root.querySelector('[data-say]'); if (sy) sy.onclick = () => { const ss = root.querySelector('.kh-says'); ss.hidden = !ss.hidden; };
+    root.querySelectorAll('[data-look]').forEach(b => b.onclick = () => { store.set('look', b.dataset.look); const g = root.querySelector('.kh-game'); g.classList.toggle('kh-real', b.dataset.look === 'real'); root.querySelectorAll('[data-look]').forEach(x => x.setAttribute('aria-pressed', x === b)); });
     const fs = root.querySelector('#khFs'); if (fs) fs.onclick = () => document.fullscreenElement ? document.exitFullscreen() : root.requestFullscreen && root.requestFullscreen();
   }
 

@@ -19,7 +19,7 @@
     if (c === '*') return `<span class="kc star">★</span>`;
     const r = c.slice(0, -1), s = c.slice(-1), red = s === 'H' || s === 'D';
     const jk = r === 'J' ? (KH.twoEyed(c) ? `<em>${B('ضع في أي مكان', 'Wild')}</em>` : `<em>${B('أزل قطعة', 'Remove')}</em>`) : '';
-    return `<span class="kc${red ? ' r' : ''}${r === 'J' ? ' j' : ''} ${cls || ''}"><b>${r === 'T' ? '10' : r}</b><i>${SUIT[s]}</i>${r === 'J' ? `<u>${KH.twoEyed(c) ? '👀' : '👁'}</u>` : ''}${jk}</span>`;
+    return `<span class="kc${red ? ' r' : ''}${r === 'J' ? ' j' : ''} ${cls || ''}"><b>${r === 'T' ? '10' : r}</b><i>${SUIT[s]}</i><s>${r === 'K' ? '♚' : r === 'Q' ? '♛' : SUIT[s]}</s>${r === 'J' ? `<u>${KH.twoEyed(c) ? '👀' : '👁'}</u>` : ''}${jk}</span>`;
   };
 
   let G = null;          // the game on this device
@@ -312,7 +312,7 @@
     const status = P.win >= 0 ? `🏆 ${B(`فاز فريق ${TN(P.win)}!`, `${TN(P.win)} wins!`)}` : P.win === -2 ? B('تعادل!', 'A draw!')
       : mine ? `<b>${B('دورك!', 'Your turn!')}</b> ${sel ? (KH.oneEyed(sel) ? B('👁 ولد أبو عين: اختر قطعة خصم لإزالتها', '👁 One-eyed jack: pick a rival chip to remove') : KH.twoEyed(sel) ? B('👀 ولد أبو عينين: ضع قطعتك في أي خانة فارغة', '👀 Two-eyed jack: put your chip on any empty space') : dead ? B('خانتا هذه الورقة ممتلئتان؛ استبدلها', 'both its spaces are taken; swap it') : B('اختر إحدى الخانتين المضيئتين', 'pick one of the lit spaces')) : B('اختر ورقة من يدك', 'pick a card')}`
       : `${B('دور', 'Turn:')} <b dir="auto" style="color:${COL[team[turn]]}">${esc(names[turn] || '')}</b> (${TN(team[turn])})`;
-    root.innerHTML = `<div class="kh-game${screen ? ' kh-screen' : ''}">
+    root.innerHTML = `<div class="kh-game${screen ? ' kh-screen' : ''}${store.get('look', 'real') === 'real' ? ' kh-real' : ''}">
       <div class="kh-bar">${teamsBar}</div>
       <p class="kh-status">${P.dl && P.win === -1 ? `<span class="kh-clock${mine ? ' me' : ''}" id="khClk"></span> ` : ''}${watch ? `<span class="kh-eye">👀 ${B('مشاهدة', 'Watching')}</span> ` : ''}${status}</p>
       <div class="kh-board${can.length ? ' picking' : ''}">${lay.map((c, i) => { const b = board[i], inq = b >= 0 && sq[b] && sq[b].has(i);
@@ -321,6 +321,7 @@
         <div class="kh-row kh-acts">${dead ? `<button type="button" class="btn ghost" id="khSwap">↻ ${B('استبدل الورقة الميتة', 'Swap the dead card')}</button>` : ''}${stuck ? `<button type="button" class="btn ghost" id="khPass">${B('لا حركة لديك: تخطَّ الدور', 'No move: pass')}</button>` : ''}</div>` : ''}
       ${screen ? `<div class="kh-row"><button type="button" class="btn ghost" id="khFs">⛶ ${B('ملء الشاشة', 'Full screen')}</button></div>` : ''}
       ${G && G.mode !== 'local' && P.win === -1 ? rxBar() : ''}
+      <div class="kh-row kh-look"><span>${B('شكل الورق:', 'Cards:')}</span><button type="button" data-look="real" aria-pressed="${store.get('look', 'real') === 'real'}">🂡 ${B('كالورق الحقيقي', 'Like real cards')}</button><button type="button" data-look="plain" aria-pressed="${store.get('look', 'real') !== 'real'}">${B('مبسّط', 'Simple')}</button></div>
       <div class="kh-help">${rules(false)}</div>
       ${P.win !== -1 ? `<div class="kh-row"><button type="button" class="btn solid" id="khAgain">${B('لعبة جديدة', 'New game')}</button></div>` : ''}</div>`;
     root.querySelectorAll('[data-c]').forEach(b => b.onclick = () => { sel = sel === b.dataset.c ? null : b.dataset.c; buzz(8); view({ P, hand, me, names, screen, watch, act, again }); });
@@ -332,6 +333,7 @@
     if (ck) { let warned = false; const tick = () => { const left = Math.max(0, Math.ceil((P.dl - now()) / 1000)); ck.textContent = '⏱ ' + left; ck.classList.toggle('hot', left <= 10); if (mine && left <= 5 && !warned) { warned = true; buzz([80, 60, 80]); } }; tick(); clk = setInterval(tick, 250); }
     root.querySelectorAll('[data-rx]').forEach(b => b.onclick = () => { sendRx(b.dataset.rx); const ss = root.querySelector('.kh-says'); if (ss) ss.hidden = true; });
     const sy = root.querySelector('[data-say]'); if (sy) sy.onclick = () => { const ss = root.querySelector('.kh-says'); ss.hidden = !ss.hidden; };
+    root.querySelectorAll('[data-look]').forEach(b => b.onclick = () => { store.set('look', b.dataset.look); const g = root.querySelector('.kh-game'); g.classList.toggle('kh-real', b.dataset.look === 'real'); root.querySelectorAll('[data-look]').forEach(x => x.setAttribute('aria-pressed', x === b)); });
     const fs = root.querySelector('#khFs'); if (fs) fs.onclick = () => document.fullscreenElement ? document.exitFullscreen() : root.requestFullscreen && root.requestFullscreen();
   }
 

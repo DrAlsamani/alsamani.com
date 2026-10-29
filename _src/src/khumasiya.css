@@ -73,3 +73,20 @@
 .kh-fly.emo{font-size:2.6rem;line-height:1}.kh-fly.emo small{display:block;font-size:.8rem;color:#fff;background:rgba(0,0,0,.55);border-radius:99px;padding:1px 8px;margin-top:2px;white-space:nowrap}
 .kh-fly.say{background:#fbf6ea;color:#13281f;border-radius:14px;padding:6px 12px;font-size:.95rem;box-shadow:0 6px 18px rgba(0,0,0,.35);white-space:nowrap}.kh-fly.say b{color:#0f4d3a}
 @keyframes khFly{0%{opacity:0;margin-top:20px}12%{opacity:1}80%{opacity:1}100%{opacity:0;margin-top:-220px}}
+/* the simple look: the centre pip stays hidden */
+.kc s{display:none;text-decoration:none}
+/* the real-card look: a white card, its index in the corner, a large pip in the middle */
+.kh-real .kh-cell{background:#fff;box-shadow:inset 0 0 0 1px rgba(0,0,0,.14)}
+.kh-real .kh-cell .kc:not(.star){position:absolute;inset:0;display:block}
+.kh-real .kh-cell .kc:not(.star) b{position:absolute;top:4%;left:8%;font-size:3.5cqi;line-height:1;letter-spacing:-.08em}
+.kh-real .kh-cell .kc:not(.star) i{position:absolute;top:38%;left:9%;font-size:2.6cqi;line-height:1}
+.kh-real .kh-cell .kc:not(.star) s{display:block;position:absolute;right:6%;bottom:2%;font-size:5.6cqi;line-height:1;font-family:"Segoe UI Symbol","Apple Symbols",Arial,sans-serif}
+.kh-real .kh-cell .kc.r s{color:#d3140b}
+.kh-real .kh-hc{background:#fff}
+.kh-real .kh-hc .kc:not(.j){position:absolute;inset:0;display:block}
+.kh-real .kh-hc .kc:not(.j) b{position:absolute;top:5px;left:6px;font-size:1.05rem;line-height:1}
+.kh-real .kh-hc .kc:not(.j) i{position:absolute;top:23px;left:7px;font-size:.85rem;line-height:1}
+.kh-real .kh-hc .kc:not(.j) s{display:block;position:absolute;inset:0;top:30%;font-size:1.9rem;text-align:center;line-height:1}
+.kh-look{font-size:.85rem;align-items:center;color:#cfe0d6}
+.kh-look button{border:1px solid rgba(255,255,255,.35);background:transparent;color:#fff;border-radius:99px;padding:4px 12px;font:inherit;cursor:pointer}.kh-look button[aria-pressed=true]{background:rgba(255,255,255,.18);border-color:#fff}
+.kh-real .kh-hc .kc:not(.j) s{top:46%;font-size:1.7rem}
