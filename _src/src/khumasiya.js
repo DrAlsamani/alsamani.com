@@ -270,8 +270,8 @@
   }
 
   /* ---------- reactions: emoji and short ready phrases that float over the board for everyone ---------- */
-  const EMO = ['👏', '🔥', '😂', '😮', '💪', '❤️', '😅', '🤝'];
-  const SAY = () => [T('أحسنت!', 'Well done!'), T('يا سلام! 😍', 'Wow! 😍'), T('حظ أوفر 😅', 'Better luck 😅'), T('استعجل شوي ⏱', 'Hurry up ⏱'), T('ركّزوا يا فريق 💪', 'Focus, team 💪'), T('سدّوا عليهم!', 'Block them!'), T('لعبة حلوة 🤝', 'Good game 🤝')];
+  const EMO = ['👏', '🔥', '😂', '😮', '😡', '💪', '❤️', '😅', '🤝'];
+  const SAY = () => [T('أحسنت!', 'Well done!'), T('يا سلام! 😍', 'Wow! 😍'), T('حظ أوفر 😅', 'Better luck 😅'), T('استعجل شوي ⏱', 'Hurry up ⏱'), T('ركّزوا يا فريق 💪', 'Focus, team 💪'), T('سدّوا عليهم!', 'Block them!'), T('لعبة حلوة 🤝', 'Good game 🤝'), T('قهر والله 😤', 'So frustrating 😤'), T('الأخ مفهي 😭', 'Wake up! 😭')];
   let lastRx = 0;
   function listenRx() {
     const fly = s => { const v = s.val() || {}; if (!v.e || !G) return; G.rxSeen = G.rxSeen || {}; const was = G.rxSeen[s.key]; if (was && was.e === v.e && Date.now() - was.at < 1100) return; G.rxSeen[s.key] = { e: v.e, at: Date.now() }; if (Date.now() - (v.t || 0) - off > 15000) return; float(v.e, (G && G.names && G.names[s.key]) || ''); };
