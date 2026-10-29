@@ -200,6 +200,9 @@ CERT = {'slug': 'certificates', 't_ar': 'الشهادات', 't_en': 'Certificate
 QRT = {'slug': 'qr', 't_ar': 'رمز QR', 't_en': 'QR code',
        'q_ar': 'حوّل أي رابط إلى رمز QR جاهز للعروض والمطبوعات، ومنه رابط مجلد يجمع عدة ملفات.',
        'q_en': 'Turn any link into a QR code for slides and print, including a folder link that holds several files.'}
+QUIZ = {'slug': 'quiz', 't_ar': 'المسابقة التفاعلية', 't_en': 'Live quiz',
+        'q_ar': 'اكتب أسئلة مسابقة تفاعلية بسرعة: الصقها أو ارفع ملفها أو اطلبها من الذكاء الاصطناعي.',
+        'q_en': 'Write the questions of a live quiz quickly: paste them, upload a file, or ask an AI.'}
 from tools_seo import SEO
 def about_html(slug):
     d = SEO.get(slug)
@@ -240,3 +243,9 @@ def cert_body():
         f'<div id="ct" class="sn"><noscript>{bi("تعمل هذه الأداة مع تفعيل JavaScript.", "This tool needs JavaScript.")}</noscript></div>',
         ['sign.css', 'pdftool.css'],
         ['https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js', 'https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js', 'https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js', 'certs.js'])
+
+def quiz_body():
+    return _tool_page(QUIZ, '',
+        f'<div id="qz" class="sn qz"><noscript>{bi("تعمل هذه الأداة مع تفعيل JavaScript.", "This tool needs JavaScript.")}</noscript></div>',
+        ['sign.css', 'pdftool.css', 'quiz.css'],
+        ['https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js', 'quiz_parse.js', 'quiz.js'])
