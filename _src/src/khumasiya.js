@@ -1,4 +1,4 @@
-/* Khumasiya (alsamani.com/play/khumasiya): a card-and-board game of five in a row, for teams.
+/* Tasalsul (alsamani.com/play/tasalsul): a card-and-board game of rows of five or four, for teams.
    Play with friends — the board on a big screen and each hand on a phone, or everyone remote on their own phone — or against the computer.
    The device that creates a game keeps the rules and the pack; the others send their moves. */
 (function () {
@@ -14,7 +14,7 @@
   const COL = ['#2a6fdb', '#d64545', '#2f9e5b'];
   const TN = k => [T('الأزرق', 'Blue'), T('الأحمر', 'Red'), T('الأخضر', 'Green')][k];
   const SUIT = { S: '♠', H: '♥', D: '♦', C: '♣' };
-  const JOIN = 'alsamani.com/play/khumasiya';
+  const JOIN = 'alsamani.com/play/tasalsul';
   const card = (c, cls) => {
     if (c === '*') return `<span class="kc star">★</span>`;
     const r = c.slice(0, -1), s = c.slice(-1), red = s === 'H' || s === 'D';
@@ -132,7 +132,7 @@
       <button type="button" class="btn ghost" id="khShare">🔗 ${B('أرسل رابط الدخول', 'Send the join link')}</button></div><div class="kh-qr">${qr}</div></div>
       <div class="kh-teams" id="khTeams"></div><p class="kh-note">${B('انقر اسم أي لاعب لنقله إلى فريق آخر. ومن أراد المتابعة فقط يدخل بالرمز نفسه ويختار «شاهد فقط»، ولو بعد بدء اللعب.', 'Tap a player’s name to move them. Anyone who only wants to follow enters the same code and picks “Just watch”, even after the start.')}</p>
       <div class="kh-row"><button type="button" class="btn solid" id="khStart" disabled>${B('ابدأ اللعب ▶', 'Start ▶')}</button><button type="button" class="btn ghost" id="khEnd">${B('إلغاء', 'Cancel')}</button></div></div>`;
-    root.querySelector('#khShare').onclick = async e => { const text = T('تعال العب خماسية: ', 'Come and play Khumasiya: ') + url; try { if (navigator.share && /iP(hone|ad)|Android/i.test(navigator.userAgent)) await navigator.share({ text }); else { await navigator.clipboard.writeText(text); e.currentTarget.textContent = '✓ ' + T('نُسخ', 'Copied'); } } catch (er) {} };
+    root.querySelector('#khShare').onclick = async e => { const text = T('تعال العب تسلسل: ', 'Come and play Tasalsul: ') + url; try { if (navigator.share && /iP(hone|ad)|Android/i.test(navigator.userAgent)) await navigator.share({ text }); else { await navigator.clipboard.writeText(text); e.currentTarget.textContent = '✓ ' + T('نُسخ', 'Copied'); } } catch (er) {} };
     root.querySelector('#khEnd').onclick = async () => { await wipe(G.pin); store.del('run'); home(); };
     const draw = () => {
       const ids = Object.keys(G.names), box = root.querySelector('#khTeams'); if (!box) return;

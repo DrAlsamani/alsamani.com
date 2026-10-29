@@ -606,11 +606,11 @@ LEGACY = {'f/mothers’-experiences-of-recognizing-and-nurturing-talents-in-asd'
           'f/structured-collaboration-with-generative-artificial-intelligence': 'research/genai-entrepreneurship-education/',
           'f/the-effects-of-ai-based-visual-instruction-on-the-reading-compreh': 'research/ai-visual-instruction-dyslexia/',
           'f/المجتمع-الداعم-للابتكار-وريادة-الأعمال-للأفراد-الموهوبين': 'research/supportive-community-gifted-entrepreneurs/',
-          'contact-تواصل': 'contact/', 'innovation-strategy': 'books/innovation-management/'}
+          'contact-تواصل': 'contact/', 'innovation-strategy': 'books/innovation-management/', 'play/khumasiya': 'play/tasalsul/'}
 def write_legacy():
     for old, new in LEGACY.items():
         p = P('dist', old, 'index.html'); os.makedirs(os.path.dirname(p), exist_ok=True)
-        open(p, 'w').write(f'<!doctype html><html><head><meta charset="utf-8"><meta name="robots" content="noindex"><meta http-equiv="refresh" content="0; url=/{new}"><link rel="canonical" href="{SITE}{new}"><title>alsamani.com</title></head><body><a href="/{new}">alsamani.com/{new}</a></body></html>')
+        open(p, 'w').write(f'<!doctype html><html><head><meta charset="utf-8"><meta name="robots" content="noindex"><meta http-equiv="refresh" content="0; url=/{new}"><script>location.replace("/{new}" + location.search + location.hash)</script><link rel="canonical" href="{SITE}{new}"><title>alsamani.com</title></head><body><a href="/{new}">alsamani.com/{new}</a></body></html>')
 
 def seo(name, title):
     path = '' if name == 'index' else name + '/'
@@ -692,8 +692,8 @@ PAGES.append(('play', 1, 'منصة الألعاب التفاعلية | Interacti
 DESCS['play'] = 'Interactive games and quizzes to play together. منصة الألعاب التفاعلية.'
 PAGES.append(('m', 1, 'ميدان: ادخل المسابقة | Maydan: join | Dr. Omar A. Alsamani', _tp.maydan_join))
 DESCS['m'] = 'Join a Maydan live quiz with its six-digit code. ادخل مسابقة ميدان برمزها.'
-PAGES.append(('play/khumasiya', 2, 'خماسية: على طريقة سيكوينس | Khumasiya: in the style of Sequence | Dr. Omar A. Alsamani', _tp.khumasiya_body))
-DESCS['play/khumasiya'] = 'Khumasiya, a game in the style of Sequence: make five in a row before the others, with friends on a big screen and phones, remotely, or against the computer. خماسية: لعبة على طريقة سيكوينس، خمس في صف قبل خصمك.'
+PAGES.append(('play/tasalsul', 2, 'تسلسل: على طريقة سيكوينس | Tasalsul: in the style of Sequence | Dr. Omar A. Alsamani', _tp.khumasiya_body))
+DESCS['play/tasalsul'] = 'Tasalsul, a game in the style of Sequence: make rows of four or five before the others, with friends on a big screen and phones, remotely, or against the computer. تسلسل: لعبة على طريقة سيكوينس، صفوف من أربع أو خمس قبل خصمك.'
 PAGES.append(('play/maydan', 2, 'ميدان: مسابقات تفاعلية حيّة | Maydan: live quizzes | Dr. Omar A. Alsamani', _tp.maydan_body))
 DESCS['play/maydan'] = 'Maydan: live interactive quizzes. Write the questions by pasting them, uploading Word, Excel or PDF, or asking an AI. ميدان: مسابقات تفاعلية حيّة.'
 PAGES.append(('tools/qr', 2, 'رمز QR | QR code | Dr. Omar A. Alsamani', _tp.qr_body))

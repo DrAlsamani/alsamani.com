@@ -1,4 +1,4 @@
-/* Khumasiya: the rules. Two packs of cards; a 10×10 board with every card except the jacks twice and four free corners.
+/* Tasalsul: the rules. Two packs of cards; a 10×10 board with every card except the jacks twice and four free corners.
    A team wins with sequences of five (or four) of its chips in a row. Pure functions over a plain state object. */
 window.KH = (function () {
   const SUITS = ['S', 'H', 'D', 'C'], RANKS = ['A', '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'Q', 'K'];
