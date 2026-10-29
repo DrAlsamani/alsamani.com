@@ -3752,7 +3752,7 @@ window.MDLive = (function () {
   };
 
   /* ---------- keeping a game so it can be resumed ---------- */
-  const keep = () => { if (!G) return; try { localStorage.setItem(SAVE, JSON.stringify({ pin: G.pin, quiz: G.quiz, i: G.done, score: G.score, streak: G.streak, team: G.team, teams: G.teams, opts: G.opts, gold: G.gold, players: G.players, at: Date.now() })); } catch (e) {} };
+  const keep = () => { if (!G) return; try { localStorage.setItem(SAVE, JSON.stringify({ pin: G.pin, quiz: G.quiz, i: G.done, score: G.score, qp: G.qp, streak: G.streak, team: G.team, teams: G.teams, opts: G.opts, gold: G.gold, players: G.players, at: Date.now() })); } catch (e) {} };
   const forget = () => { try { localStorage.removeItem(SAVE); } catch (e) {} };
   function pending() { try { const s = JSON.parse(localStorage.getItem(SAVE) || 'null'); return s && Date.now() - s.at < 7 * 864e5 ? s : null; } catch (e) { return null; } }
 
@@ -3770,7 +3770,7 @@ window.MDLive = (function () {
     const n = quiz.qs.length;
     const txt = quiz.qs.map(x => (x.q || '') + (x.opts || []).join('')).join('');
     // the screen's language: the questions' own, or the page's when there is no text (a games-only quiz)
-    G = { ar: /[؀-ۿ]/.test(txt) || (!/[a-z]/i.test(txt) && document.documentElement.lang !== 'en'), pin, quiz, el, ref: db.ref('rooms/' + pin), players: {}, score: {}, streak: {}, team: {}, teams: null, i: -1, done: -1,
+    G = { ar: /[؀-ۿ]/.test(txt) || (!/[a-z]/i.test(txt) && document.documentElement.lang !== 'en'), pin, quiz, el, ref: db.ref('rooms/' + pin), players: {}, score: {}, qp: {}, streak: {}, team: {}, teams: null, i: -1, done: -1,
       opts: { every: 1, speed: true, gold: true, final: true, bet: false }, gold: -1, timer: null, subs: [] };
   }
   async function start(quiz) {
@@ -3795,7 +3795,7 @@ window.MDLive = (function () {
       const room = (await db.ref('rooms/' + s.pin).once('value')).val();
       if (!room || room.host !== uid) { forget(); el.innerHTML = `<div class="md-wait">${B('انتهت صلاحية هذه المسابقة ولم تعد موجودة.', 'This quiz is no longer available.')}<button type="button" class="btn ghost" data-x>${B('إغلاق', 'Close')}</button></div>`; el.querySelector('[data-x]').onclick = leave; return; }
       fresh(s.quiz, el, s.pin);
-      Object.assign(G, { score: s.score || {}, streak: s.streak || {}, team: s.team || {}, teams: s.teams || null, opts: s.opts || G.opts, gold: s.gold, players: s.players || {}, i: s.i, done: s.i });
+      Object.assign(G, { score: s.score || {}, qp: s.qp || {}, streak: s.streak || {}, team: s.team || {}, teams: s.teams || null, opts: s.opts || G.opts, gold: s.gold, players: s.players || {}, i: s.i, done: s.i });
       keepPlayers();
       if (G.i < 0) return lobby();
       await G.ref.child('st').set({ ph: 'lb', i: G.i, lock: true });
@@ -4103,7 +4103,7 @@ window.MDLive = (function () {
       // a bet adds or takes away a fixed amount
       const bet = !!(a && a.b && G.opts.bet && m);
       if (bet) d += (correct ? 1 : -1) * 300 * m;
-      G.score[u] = Math.max(0, (G.score[u] || 0) + d);
+      G.score[u] = Math.max(0, (G.score[u] || 0) + d); G.qp[u] = Math.max(0, (G.qp[u] || 0) + d);
       sc[u] = { s: G.score[u], d, c: correct, k: G.streak[u], a: !!a, b: bet };
     });
     // ranks after this question, how far each player is behind the one above, and the team standing
@@ -4160,7 +4160,7 @@ window.MDLive = (function () {
       if (x.type !== 'open' && x.type !== 'poll') G.streak[u] = r.c ? (G.streak[u] || 0) + 1 : 0;
       const bet = !!(ans[u] && ans[u].b && G.opts.bet && m && x.type !== 'open' && x.type !== 'poll');
       if (bet) r.d += (r.c ? 1 : -1) * 300 * m;
-      G.score[u] = Math.max(0, (G.score[u] || 0) + r.d);
+      G.score[u] = Math.max(0, (G.score[u] || 0) + r.d); G.qp[u] = Math.max(0, (G.qp[u] || 0) + r.d);
       sc[u] = Object.assign(r, { s: G.score[u], k: G.streak[u] || 0, b: bet });
     });
     const order = us.slice().sort((a, b) => G.score[b] - G.score[a]), tt = teamTable();
@@ -4247,14 +4247,16 @@ window.MDLive = (function () {
         <div class="md-podium">${p(1)}${p(0)}${p(2)}</div>
         <ol class="md-rest" start="4">${order.slice(3, 10).map(u => `<li><span dir="auto">${esc(G.players[u] || '')}</span><em>${G.score[u]}</em></li>`).join('')}</ol></div>`,
       `<button type="button" class="btn ghost" data-csv>${B('تحميل النتائج', 'Download results')}</button>
-       <label class="md-opt md-grade" title="${T('اختياري: تُحسب الدرجة من نقاط ميدان، والأول يأخذ الدرجة كاملة', 'Optional: the grade follows Maydan points; the top player gets full marks')}">${B('مع درجة من', 'with a grade out of')} <input type="number" min="1" max="100" step="1" inputmode="numeric" data-gr placeholder="—"></label>`);
+       <label class="md-opt md-grade" title="${T('اختياري: تُحسب الدرجة من نقاط ميدان، والأول يأخذ الدرجة كاملة', 'Optional: the grade follows Maydan points; the top player gets full marks')}">${B('مع درجة من', 'with a grade out of')} <input type="number" min="1" max="100" step="1" inputmode="numeric" data-gr placeholder="—"></label>
+       ${G.quiz.qs.some(x => x.type === 'game') ? `<label class="md-opt md-grade"><input type="checkbox" data-gq> ${B('من الأسئلة فقط (دون التحديات)', 'from the questions only (no challenges)')}</label>` : ''}`);
     reactions(); SND.drum();
     [3, 2, 1].forEach((k, n) => setTimeout(() => { const e = q(`.md-p${k}`); if (e) e.classList.add('in'); if (k === 1) SND.win(); }, 900 + n * 1300));
     q('[data-csv]').onclick = () => {
       // an optional grade: in proportion to the points, so speed still counts and the top player gets full marks
-      const out = Math.max(0, Math.min(100, +q('[data-gr]').value || 0)), best = Math.max(1, ...order.map(u => G.score[u] || 0));
-      const head = [T('المركز', 'Rank'), T('الاسم', 'Name'), T('النقاط', 'Points')].concat(G.teams ? [T('الفريق', 'Team')] : []).concat(out ? [T(`الدرجة من ${out}`, `Grade out of ${out}`)] : []);
-      const rows = [head].concat(order.map((u, k) => [k + 1, G.players[u] || '', G.score[u]].concat(G.teams ? [G.teams[G.team[u]] || ''] : []).concat(out ? [Math.round((G.score[u] || 0) / best * out * 100) / 100] : [])));
+      // with "questions only", the points from challenges are left out of the grade (but kept in the ranking)
+      const out = Math.max(0, Math.min(100, +q('[data-gr]').value || 0)), qo = !!(q('[data-gq]') && q('[data-gq]').checked), pts = u => (qo ? G.qp[u] : G.score[u]) || 0, best = Math.max(1, ...order.map(pts));
+      const head = [T('المركز', 'Rank'), T('الاسم', 'Name'), T('النقاط', 'Points')].concat(G.teams ? [T('الفريق', 'Team')] : []).concat(qo ? [T('نقاط الأسئلة', 'Question points')] : []).concat(out ? [qo ? T(`الدرجة من ${out} (الأسئلة فقط)`, `Grade out of ${out} (questions only)`) : T(`الدرجة من ${out}`, `Grade out of ${out}`)] : []);
+      const rows = [head].concat(order.map((u, k) => [k + 1, G.players[u] || '', G.score[u]].concat(G.teams ? [G.teams[G.team[u]] || ''] : []).concat(qo ? [G.qp[u] || 0] : []).concat(out ? [Math.round(pts(u) / best * out * 100) / 100] : [])));
       const csv = '﻿' + rows.map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(',')).join('\n');
       const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' })); a.download = (G.quiz.title || 'maydan') + ' - ' + T('النتائج', 'results') + '.csv'; document.body.appendChild(a); a.click(); setTimeout(() => a.remove(), 1000);
     };
