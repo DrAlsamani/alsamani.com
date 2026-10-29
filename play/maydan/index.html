@@ -3065,6 +3065,8 @@ html.md-on{overflow:hidden}
 .md-mvt button{border:1px solid #dce1dd;border-inline-start:5px solid var(--c);background:#f5f6f3;border-radius:9px;padding:6px 10px;font:inherit;font-size:.875rem;cursor:pointer;color:#16201f}
 .md-mvt button[aria-pressed=true]{background:#16201f;color:#fff}
 .md-mvb{display:flex;justify-content:space-between;gap:8px}.md-mvb button{border:0;background:none;font:inherit;font-size:.875rem;cursor:pointer;color:#5a6664;padding:4px}.md-mvb .md-rm{color:#b0533a}
+.md-grade input{width:58px;margin-inline-start:6px;padding:4px 6px;border-radius:8px;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.1);color:inherit;font:inherit;text-align:center}
+.md-grade{color:#fff!important;opacity:1}.md-grade input{color:#fff!important;-moz-appearance:textfield}.md-grade input::-webkit-inner-spin-button{display:none}
 </style><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script>window.MD_CFG={"apiKey": "AIzaSyA50i75DT1Is1a6Yn6snW1_JVObc8S3F0Y", "authDomain": "maydan-705ae.firebaseapp.com", "databaseURL": "https://maydan-705ae-default-rtdb.europe-west1.firebasedatabase.app", "projectId": "maydan-705ae", "appId": "1:342187013133:web:d5c2396f0db413f3c51144"};window.MD_MARK="<svg class=\"md-mark\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><rect x=\"4\" y=\"4\" width=\"40\" height=\"40\" rx=\"12\" fill=\"#23336F\"/><path d=\"M24 9l4.2 6.8 7.8-1.8-1.8 7.8L41 24l-6.8 4.2 1.8 7.8-7.8-1.8L24 39l-4.2-6.8-7.8 1.8 1.8-7.8L7 24l6.8-4.2-1.8-7.8 7.8 1.8z\" fill=\"#C9822B\"/><circle cx=\"24\" cy=\"24\" r=\"6.5\" fill=\"#23336F\"/><circle cx=\"24\" cy=\"24\" r=\"3\" fill=\"#F3E3C7\"/></svg>";</script><script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script><script>/* Maydan challenges: short games played on every phone at once. Every phone gets the same level (same seed),
    so the race is fair. Each game reports a score; higher is better. */
 window.MDGames = (function () {
@@ -4244,12 +4246,15 @@ window.MDLive = (function () {
         ${tt.length ? `<p class="md-wteam" style="--c:var(--qz${(tt[0].k) % 6})">${B(`🏆 الفريق الفائز: ${esc(tt[0].name)}`, `🏆 Winning team: ${esc(tt[0].name)}`)} <em>${tt[0].avg}</em></p>` : ''}
         <div class="md-podium">${p(1)}${p(0)}${p(2)}</div>
         <ol class="md-rest" start="4">${order.slice(3, 10).map(u => `<li><span dir="auto">${esc(G.players[u] || '')}</span><em>${G.score[u]}</em></li>`).join('')}</ol></div>`,
-      `<button type="button" class="btn ghost" data-csv>${B('تحميل النتائج', 'Download results')}</button>`);
+      `<button type="button" class="btn ghost" data-csv>${B('تحميل النتائج', 'Download results')}</button>
+       <label class="md-opt md-grade" title="${T('اختياري: تُحسب الدرجة من نقاط ميدان، والأول يأخذ الدرجة كاملة', 'Optional: the grade follows Maydan points; the top player gets full marks')}">${B('مع درجة من', 'with a grade out of')} <input type="number" min="1" max="100" step="1" inputmode="numeric" data-gr placeholder="—"></label>`);
     reactions(); SND.drum();
     [3, 2, 1].forEach((k, n) => setTimeout(() => { const e = q(`.md-p${k}`); if (e) e.classList.add('in'); if (k === 1) SND.win(); }, 900 + n * 1300));
     q('[data-csv]').onclick = () => {
-      const head = [T('المركز', 'Rank'), T('الاسم', 'Name'), T('النقاط', 'Points')].concat(G.teams ? [T('الفريق', 'Team')] : []);
-      const rows = [head].concat(order.map((u, k) => [k + 1, G.players[u] || '', G.score[u]].concat(G.teams ? [G.teams[G.team[u]] || ''] : [])));
+      // an optional grade: in proportion to the points, so speed still counts and the top player gets full marks
+      const out = Math.max(0, Math.min(100, +q('[data-gr]').value || 0)), best = Math.max(1, ...order.map(u => G.score[u] || 0));
+      const head = [T('المركز', 'Rank'), T('الاسم', 'Name'), T('النقاط', 'Points')].concat(G.teams ? [T('الفريق', 'Team')] : []).concat(out ? [T(`الدرجة من ${out}`, `Grade out of ${out}`)] : []);
+      const rows = [head].concat(order.map((u, k) => [k + 1, G.players[u] || '', G.score[u]].concat(G.teams ? [G.teams[G.team[u]] || ''] : []).concat(out ? [Math.round((G.score[u] || 0) / best * out * 100) / 100] : [])));
       const csv = '﻿' + rows.map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(',')).join('\n');
       const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' })); a.download = (G.quiz.title || 'maydan') + ' - ' + T('النتائج', 'results') + '.csv'; document.body.appendChild(a); a.click(); setTimeout(() => a.remove(), 1000);
     };

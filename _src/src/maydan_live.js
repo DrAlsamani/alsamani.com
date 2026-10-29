@@ -531,12 +531,15 @@ window.MDLive = (function () {
         ${tt.length ? `<p class="md-wteam" style="--c:var(--qz${(tt[0].k) % 6})">${B(`🏆 الفريق الفائز: ${esc(tt[0].name)}`, `🏆 Winning team: ${esc(tt[0].name)}`)} <em>${tt[0].avg}</em></p>` : ''}
         <div class="md-podium">${p(1)}${p(0)}${p(2)}</div>
         <ol class="md-rest" start="4">${order.slice(3, 10).map(u => `<li><span dir="auto">${esc(G.players[u] || '')}</span><em>${G.score[u]}</em></li>`).join('')}</ol></div>`,
-      `<button type="button" class="btn ghost" data-csv>${B('تحميل النتائج', 'Download results')}</button>`);
+      `<button type="button" class="btn ghost" data-csv>${B('تحميل النتائج', 'Download results')}</button>
+       <label class="md-opt md-grade" title="${T('اختياري: تُحسب الدرجة من نقاط ميدان، والأول يأخذ الدرجة كاملة', 'Optional: the grade follows Maydan points; the top player gets full marks')}">${B('مع درجة من', 'with a grade out of')} <input type="number" min="1" max="100" step="1" inputmode="numeric" data-gr placeholder="—"></label>`);
     reactions(); SND.drum();
     [3, 2, 1].forEach((k, n) => setTimeout(() => { const e = q(`.md-p${k}`); if (e) e.classList.add('in'); if (k === 1) SND.win(); }, 900 + n * 1300));
     q('[data-csv]').onclick = () => {
-      const head = [T('المركز', 'Rank'), T('الاسم', 'Name'), T('النقاط', 'Points')].concat(G.teams ? [T('الفريق', 'Team')] : []);
-      const rows = [head].concat(order.map((u, k) => [k + 1, G.players[u] || '', G.score[u]].concat(G.teams ? [G.teams[G.team[u]] || ''] : [])));
+      // an optional grade: in proportion to the points, so speed still counts and the top player gets full marks
+      const out = Math.max(0, Math.min(100, +q('[data-gr]').value || 0)), best = Math.max(1, ...order.map(u => G.score[u] || 0));
+      const head = [T('المركز', 'Rank'), T('الاسم', 'Name'), T('النقاط', 'Points')].concat(G.teams ? [T('الفريق', 'Team')] : []).concat(out ? [T(`الدرجة من ${out}`, `Grade out of ${out}`)] : []);
+      const rows = [head].concat(order.map((u, k) => [k + 1, G.players[u] || '', G.score[u]].concat(G.teams ? [G.teams[G.team[u]] || ''] : []).concat(out ? [Math.round((G.score[u] || 0) / best * out * 100) / 100] : [])));
       const csv = '﻿' + rows.map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(',')).join('\n');
       const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' })); a.download = (G.quiz.title || 'maydan') + ' - ' + T('النتائج', 'results') + '.csv'; document.body.appendChild(a); a.click(); setTimeout(() => a.remove(), 1000);
     };

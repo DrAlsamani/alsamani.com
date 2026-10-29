@@ -309,3 +309,5 @@ html.md-on{overflow:hidden}
 .md-mvt button{border:1px solid #dce1dd;border-inline-start:5px solid var(--c);background:#f5f6f3;border-radius:9px;padding:6px 10px;font:inherit;font-size:.875rem;cursor:pointer;color:#16201f}
 .md-mvt button[aria-pressed=true]{background:#16201f;color:#fff}
 .md-mvb{display:flex;justify-content:space-between;gap:8px}.md-mvb button{border:0;background:none;font:inherit;font-size:.875rem;cursor:pointer;color:#5a6664;padding:4px}.md-mvb .md-rm{color:#b0533a}
+.md-grade input{width:58px;margin-inline-start:6px;padding:4px 6px;border-radius:8px;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.1);color:inherit;font:inherit;text-align:center}
+.md-grade{color:#fff!important;opacity:1}.md-grade input{color:#fff!important;-moz-appearance:textfield}.md-grade input::-webkit-inner-spin-button{display:none}
