@@ -1499,6 +1499,11 @@ html.md-on{overflow:hidden}
 .mp-streak{font-weight:600}
 .mp-rank{font-size:1.125rem;font-weight:700}
 .mp-gap{opacity:.9}
+/* the question is read alone first, then moves up as the options and the clock come in */
+.md-q .md-qt{transition:transform .7s cubic-bezier(.2,.8,.2,1),font-size .7s}
+.md-q .md-mid,.md-q .md-tile{transition:opacity .5s ease,transform .5s ease;transition-delay:var(--d,0ms)}
+.md-q.md-pre .md-qt{transform:translateY(22vh) scale(1.04)}
+.md-q.md-pre .md-mid,.md-q.md-pre .md-tile{opacity:0;transform:translateY(24px)}
 </style>
 <div id="mp" class="sn mp"><noscript><span class="ar">تعمل هذه الصفحة مع تفعيل JavaScript.</span><span class="en">This page needs JavaScript.</span></noscript></div>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script>window.MD_CFG={"apiKey": "AIzaSyA50i75DT1Is1a6Yn6snW1_JVObc8S3F0Y", "authDomain": "maydan-705ae.firebaseapp.com", "databaseURL": "https://maydan-705ae-default-rtdb.europe-west1.firebasedatabase.app", "projectId": "maydan-705ae", "appId": "1:342187013133:web:d5c2396f0db413f3c51144"};window.MD_MARK="<svg class=\"md-mark\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><rect x=\"4\" y=\"4\" width=\"40\" height=\"40\" rx=\"12\" fill=\"#23336F\"/><path d=\"M24 9l4.2 6.8 7.8-1.8-1.8 7.8L41 24l-6.8 4.2 1.8 7.8-7.8-1.8L24 39l-4.2-6.8-7.8 1.8 1.8-7.8L7 24l6.8-4.2-1.8-7.8 7.8 1.8z\" fill=\"#C9822B\"/><circle cx=\"24\" cy=\"24\" r=\"6.5\" fill=\"#23336F\"/><circle cx=\"24\" cy=\"24\" r=\"3\" fill=\"#F3E3C7\"/></svg>";</script><script>/* alsamani.com/m — a player's phone in Maydan: enter the code, pick a name, answer, see how you did. */

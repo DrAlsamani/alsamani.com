@@ -115,24 +115,27 @@ window.MDLive = (function () {
     G.i++;
     if (G.i >= G.quiz.qs.length) return finish();
     const x = G.quiz.qs[G.i], n = G.quiz.qs.length;
-    // a short get-ready screen, then the question opens for answers on every phone at once
-    frame(`<div class="md-ready"><p>${B('السؤال', 'Question')} ${G.i + 1} ${T('من', 'of')} ${n}</p><h2 dir="auto">${esc(x.q)}</h2>${x.pts === 2 ? `<span class="md-x2">${B('نقاط مضاعفة ×٢', 'Double points ×2')}</span>` : ''}</div>`);
-    await G.ref.update({ q: { q: x.q, opts: x.opts, type: x.type, multi: x.ok.length > 1, pts: x.pts, i: G.i, n, L: G.ar ? 'ar' : 'en', img: x.img || null }, ok: null, st: { ph: 'ready', i: G.i, lock: true } });
-    setTimeout(() => open(x), 2600);
-  }
-  async function open(x) {
-    if (!G) return;
-    await G.ref.child('st').set({ ph: 'q', i: G.i, t0: TS, dur: x.time, lock: true });
-    const t0 = (await G.ref.child('st/t0').once('value')).val();
-    G.t0 = t0; SND.go();
-    const q = frame(`<div class="md-q">
-        <div class="md-qtop"><span class="md-qn">${G.i + 1} / ${G.quiz.qs.length}</span>${x.pts === 2 ? '<span class="md-x2">×2</span>' : ''}</div>
+    // the question is read first, alone and large; then it moves up as the options and the clock appear.
+    // The reading time follows its length, so everyone starts answering on equal terms.
+    const q = frame(`<div class="md-q md-pre">
+        <div class="md-qtop"><span class="md-qn">${B('السؤال', 'Question')} ${G.i + 1} ${T('من', 'of')} ${n}</span>${x.pts === 2 ? `<span class="md-x2">${B('نقاط مضاعفة ×٢', 'Double points ×2')}</span>` : ''}</div>
         <h2 class="md-qt" dir="auto">${esc(x.q)}</h2>
         <div class="md-mid"><div class="md-clock"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" class="md-ring0"/><circle cx="50" cy="50" r="44" class="md-ring" id="mdRing"/></svg><b id="mdT">${x.time}</b></div>
           ${x.img ? `<img class="md-img" src="${x.img}" alt="">` : '<span></span>'}
           <div class="md-ans"><b id="mdA">0</b><small>${B('أجابوا', 'answered')}</small></div></div>
-        <div class="md-tiles">${x.opts.map((o, j) => `<div class="md-tile" style="--c:var(--qz${j})"><i>${LET()[j]}</i><span dir="auto">${esc(o)}</span></div>`).join('')}</div></div>`,
-      `<button type="button" class="btn ghost" data-skip>${B('أنهِ الوقت', 'End time')}</button>`);
+        <div class="md-tiles">${x.opts.map((o, j) => `<div class="md-tile" style="--c:var(--qz${j});--d:${j * 80}ms"><i>${LET()[j]}</i><span dir="auto">${esc(o)}</span></div>`).join('')}</div></div>`,
+      `<button type="button" class="btn ghost" data-skip disabled>${B('أنهِ الوقت', 'End time')}</button>`);
+    await G.ref.update({ q: { q: x.q, opts: x.opts, type: x.type, multi: x.ok.length > 1, pts: x.pts, i: G.i, n, L: G.ar ? 'ar' : 'en', img: x.img || null }, ok: null, st: { ph: 'ready', i: G.i, lock: true } });
+    const words = x.q.trim().split(/\s+/).length, read = Math.min(5, Math.max(2, words / 3)) * 1000;
+    setTimeout(() => open(x, q), read);
+  }
+  async function open(x, q) {
+    if (!G) return;
+    await G.ref.child('st').set({ ph: 'q', i: G.i, t0: TS, dur: x.time, lock: true });
+    const t0 = (await G.ref.child('st/t0').once('value')).val();
+    G.t0 = t0; SND.go();
+    const box = q('.md-q'); if (box) box.classList.remove('md-pre');
+    q('[data-skip]').disabled = false;
     const ring = q('#mdRing'), C = 2 * Math.PI * 44; ring.style.strokeDasharray = C;
     let got = 0, last = -1;
     sub(G.ref.child('an/' + G.i), 'child_added', () => { got++; const a = q('#mdA'); if (a) a.textContent = got; if (got >= Object.keys(G.players).length) reveal(); });
