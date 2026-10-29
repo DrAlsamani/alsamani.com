@@ -1472,12 +1472,16 @@ window.KH = (function () {
   const oneEyed = c => c === 'JS' || c === 'JH';   // removes a rival chip
   const isCorner = i => CORNERS.includes(i);
 
-  // our own board: the 48 cards twice, laid out by the game's seed
-  function layout(seed) {
-    const cards = []; for (let k = 0; k < 2; k++) SUITS.forEach(s => RANKS.forEach(r => cards.push(r + s)));
-    shuffle(cards, rngOf(seed));
-    const out = []; let j = 0;
-    for (let i = 0; i < 100; i++) out.push(isCorner(i) ? '*' : cards[j++]);
+  // our own board, set in order so it reads easily: each suit runs A→K along the rows, snaking back and forth.
+  // The first pack fills the top half and the second the bottom half in the same order (♠ ♥ ♣ ♦),
+  // so the two spaces of any card sit about five rows apart.
+  function layout() {
+    const one = [], two = [];
+    ['S', 'H', 'C', 'D'].forEach(s => RANKS.forEach(r => one.push(r + s)));
+    ['S', 'H', 'C', 'D'].forEach(s => RANKS.forEach(r => two.push(r + s)));
+    const out = new Array(100).fill('*'), seq = one.concat(two);
+    let k = 0;
+    for (let r = 0; r < 10; r++) for (let c0 = 0; c0 < 10; c0++) { const c = r % 2 ? 9 - c0 : c0, i = r * 10 + c; if (!isCorner(i)) out[i] = seq[k++]; }
     return out;
   }
   function deck(seed) {
