@@ -466,7 +466,9 @@ window.MDLive = (function () {
       us.forEach(u => { const a = ans[u]; if (!a) return; const v = [].concat(a.a);
         const hits = x.type === 'match' ? x.pairs.map((_, j) => x._mr[v[j]] === j) : x.truth.map((t, j) => v[j] === (t ? 1 : 0));
         hits.forEach((h, j) => { if (h) per[j]++; }); const k = hits.filter(Boolean).length;
-        const c = x.type === 'match' ? k === n : k / n >= .7; sc[u] = { c, d: m && k ? Math.round(speed(a) * k / n) : 0, a: true, g: k, n }; if (k === n) full.push(u); if (c) right++; });
+        const c = x.type === 'match' ? k === n : k / n >= .7; // a rapid round is worth 100 points a statement (1000 at least); a match, like any question, 1000
+        const worth = x.type === 'rapid' ? Math.max(1, n / 10) : 1;
+        sc[u] = { c, d: m && k ? Math.round(speed(a) * worth * k / n) : 0, a: true, g: k, n }; if (k === n) full.push(u); if (c) right++; });
       full.sort((a, b) => ans[a].t - ans[b].t);
       body = x.type === 'match' ? `<div class="md-pairs">${x.pairs.map((p, j) => `<div><span dir="auto">${esc(p[0])}</span><i>↔</i><span dir="auto">${esc(p[1])}</span><small>${Math.round(100 * per[j] / Math.max(1, Object.keys(ans).length))}%</small></div>`).join('')}</div>`
         : `<ol class="md-rlist${x.items.length > 8 ? ' many' : ''}">${x.items.map((v, j) => `<li class="${x.truth[j] ? 't' : 'f'}"><b>${x.truth[j] ? T('صح', 'True') : T('خطأ', 'False')}</b><span dir="auto">${esc(v)}</span><small>${Math.round(100 * per[j] / Math.max(1, Object.keys(ans).length))}%</small></li>`).join('')}</ol>`;
