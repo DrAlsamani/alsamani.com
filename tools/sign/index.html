@@ -1704,19 +1704,21 @@ async function snDetectPage(page,pi,OPS){
   // the name written on the same row as a box, if the file has its text
   async function nameNear(v, s) {
     try {
-      const tc = await v.page.getTextContent(), cy = s.y + s.h / 2, skip = /^(الاسم|اسم العضو|التوقيع|توقيع|م|الصفة|المسمى|name|signature|no\.?)$/i;
-      const row = tc.items.filter(t => t.str.trim() && Math.abs(t.transform[5] + (t.height || 8) * .35 - cy) < Math.max(s.h * .6, 8) && (t.transform[4] + t.width < s.x - 2 || t.transform[4] > s.x + s.w + 2));
-      const words = row.filter(t => !/^[\d\s.\-–—:|/٠-٩]+$/.test(t.str) && !skip.test(t.str.trim()));
-      if (!words.length) return '';
-      const dist = t => t.transform[4] > s.x ? t.transform[4] - (s.x + s.w) : s.x - (t.transform[4] + t.width);
-      const near = words.reduce((a, t) => dist(t) < dist(a) ? t : a), side = near.transform[4] > s.x;
-      // join the pieces of the same cell: neighbours on the same side with small gaps
-      const pcs = words.filter(t => (t.transform[4] > s.x) === side).sort((a, b) => a.transform[4] - b.transform[4]);
-      let i = pcs.indexOf(near), lo = i, hi = i;
-      while (lo > 0 && pcs[lo].transform[4] - (pcs[lo - 1].transform[4] + pcs[lo - 1].width) < 10) lo--;
-      while (hi < pcs.length - 1 && pcs[hi + 1].transform[4] - (pcs[hi].transform[4] + pcs[hi].width) < 10) hi++;
-      const g = pcs.slice(lo, hi + 1), rtl = g.some(t => /[\u0600-\u06FF]/.test(t.str));
-      const out = (rtl ? g.reverse() : g).map(t => t.str.trim()).join(' ').replace(/\s+/g, ' ').trim().slice(0, 120);
+      const tc = await v.page.getTextContent(), cy = s.y + s.h / 2;
+      const its = tc.items.filter(t => t.str && t.str.trim()).map(t => ({ s: t.str, x: t.transform[4], y: t.transform[5], w: t.width, fs: Math.hypot(t.transform[2], t.transform[3]) || t.height || 10 }));
+      // the row's text joined into cells the same way the automatic detection reads names
+      const skip = /^(الاسم|اسم العضو|التوقيع|توقيع|م|الصفة|المسمى|name|signature|no\.?)$/i, HON = /^(أ|د|م|ا|أ\.د|د\.م)\s?\.|^(dr|mr|mrs|ms|prof|eng)\b/i, ROLE = /^(رئيس|نائب|عضو|مقرر|أمين|سكرتير|ممثل|مشرف|member|chair|vice|secretary)/i;
+      // table borders split the row into its cells, so a name never runs into the number or the role beside it
+      let xs = []; try { const Ls = await snLinesOf(v.page, pdfjsLib.OPS); const cnt = {}; Ls.V.forEach(q => { const k = Math.round(q.x); cnt[k] = (cnt[k] || 0) + 1; });
+        // column borders: long lines, or short ones repeated row after row (a stray stroke inside a cell is neither)
+        xs = [...new Set(Ls.V.filter(q => q.y0 > 2 && q.x > 2 && q.y0 <= cy - 3 && q.y1 >= cy + 3 && (q.y1 - q.y0 > 40 || cnt[Math.round(q.x)] >= 3)).map(q => Math.round(q.x)))].sort((a, b) => a - b); } catch (e) {}
+      const col = t => { const c = t.x + t.w / 2; let k = 0; while (k < xs.length && xs[k] < c) k++; return k; }, groups = {};
+      its.forEach(t => (groups[col(t)] = groups[col(t)] || []).push(t));
+      const cells = [].concat(...Object.values(groups).map(g => snRuns(g))).filter(r => Math.abs(r.y + r.fs * .35 - cy) < Math.max(s.h * .6, r.fs) && (r.r < s.x - 2 || r.x > s.x + s.w + 2) && r.s && !/^[\d\s.\-–—:|/٠-٩]+$/.test(r.s) && !skip.test(r.s));
+      if (!cells.length) return '';
+      const dist = r => r.x > s.x ? r.x - (s.x + s.w) : s.x - r.r;
+      const score = r => (HON.test(r.s) ? 6 : 0) + Math.min(r.s.split(' ').length, 5) - (ROLE.test(r.s) ? 8 : 0) - dist(r) / 200;
+      const out = cells.reduce((a, r) => score(r) > score(a) ? r : a).s.slice(0, 120);
       // files whose fonts hide the real letters give symbols instead of a name
       const L = (out.match(/[\p{L}\p{M}]/gu) || []).length, odd = /[¥¡¦~<>^|{}\[\]\\@#$%&*_=+]/.test(out);
       return !odd && L >= 2 && L / out.replace(/\s/g, '').length > .7 ? out : '';
