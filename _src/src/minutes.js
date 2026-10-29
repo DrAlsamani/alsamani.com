@@ -25,15 +25,17 @@
   const blank = () => normM({ id: uid(), type: 'council', org: '', unit: '', committee: '', logo: '', no: '', year: '', date: today(), from: '', to: '', place: '', mode: 'in', numFmt: '{n}/{i}',
     members: [{ id: uid(), n: '', r: 'رئيس المجلس', st: 'p' }, { id: uid(), n: '', r: 'عضو', st: 'p' }, { id: uid(), n: '', r: 'عضو', st: 'p' }, { id: uid(), n: '', r: 'أمين المجلس', st: 'p' }],
     guests: '', att: '', bsm: true, agenda: true, sigL: 'table', prev: { on: true, note: '' }, follow: [], items: [newItem()], misc: '', recs: '', next: '', status: 'draft', reg: '' });
-  function newItem() { return { id: uid(), title: '', ref: '', disc: '', kind: 'approve', to: '', reason: '', text: '', edited: false, basis: '', vote: 'all', yes: '', no: '', dis: [], tasks: [] }; }
+  function newItem() { return { id: uid(), title: '', ref: '', bg: '', disc: '', kind: 'approve', to: '', reason: '', text: '', edited: false, basis: '', vote: 'all', yes: '', no: '', dis: [], tasks: [] }; }
   // the parts of the minutes, each can be turned off; and the default wording of each heading
-  const SECS = [['bsm', 'البسملة'], ['logo', 'الشعار'], ['info', 'جدول بيانات الاجتماع'], ['intro', 'فقرة الافتتاح'], ['att', 'جدول الحضور'], ['quorum', 'عبارة النصاب'], ['agenda', 'جدول الأعمال'],
+  const SECS = [['lh', 'الكليشة (صورة الترويسة)'], ['bsm', 'البسملة'], ['logo', 'الشعار'], ['info', 'جدول بيانات الاجتماع'], ['intro', 'فقرة الافتتاح'], ['att', 'جدول الحضور'], ['quorum', 'عبارة النصاب'], ['agenda', 'جدول الأعمال'],
     ['disc', 'المناقشة في كل بند'], ['vote', 'التصويت'], ['recs', 'التوصيات'], ['sum', 'ملخص القرارات والتكليفات'], ['close', 'الاختتام'], ['sig', 'التوقيعات'], ['num', 'ترقيم العناوين: أولًا، ثانيًا']];
   const DH = { intro: '', att: 'الحضور واكتمال النصاب', agenda: 'جدول الأعمال', decs: 'المناقشات والقرارات', recs: 'التوصيات', sum: 'ملخص القرارات والتكليفات', close: 'اختتام الاجتماع', sig: 'توقيعات الحضور' };
   const head = k => (M.heads[k] != null && M.heads[k].trim() !== '' ? M.heads[k] : DH[k]);
   function normM(x) {
     x.show = Object.assign({ bsm: x.bsm !== false, logo: true, info: true, intro: true, att: true, quorum: true, agenda: x.agenda !== false, disc: true, vote: true, recs: true, sum: true, close: true, sig: true, num: true }, x.show || {});
     x.heads = Object.assign({}, x.heads || {});
+    if (x.show.lh === undefined) x.show.lh = true;
+    x.sty = Object.assign({ font: 'IBM Plex Sans Arabic', size: 14, tsize: 19, hc: '#1f3b5c', th: '#eef2f6', bd: '#9aa4ad', ac: '#c9822b' }, x.sty || {}); x.lh = x.lh || null;
     if (!x.info) { x.info = [{ id: uid(), k: 'التاريخ', t: 'date' }, { id: uid(), k: 'الوقت', t: 'time' }, { id: uid(), k: 'المكان', t: 'place' }];
       if ((x.year || '').trim()) x.info.push({ id: uid(), k: 'العام أو الدورة', v: x.year }); if ((x.att || '').trim()) x.info.push({ id: uid(), k: 'المرفقات', v: x.att }); x.year = ''; x.att = ''; }
     return x;
@@ -65,7 +67,7 @@
   /* ---------- the minutes as a document (used for the preview, Word, printing and signing) ---------- */
   const li = x => { x = String(x).trim(); return /^ال/.test(x) ? 'ل' + x.slice(1) : 'ل' + x; };
   const HEADS = ['أولًا', 'ثانيًا', 'ثالثًا', 'رابعًا', 'خامسًا', 'سادسًا', 'سابعًا', 'ثامنًا', 'تاسعًا', 'عاشرًا'];
-  function doc() {
+  function doc(o = {}) {
     const b = body(), q = quorum(), S = M.show, chair = present().find(m => /رئيس/.test(m.r) && !/نائب/.test(m.r));
     let k = 0, h = 0; const sec = [], rows = [], H = key => `<h2>${S.num ? (HEADS[h++] || '') + ': ' : ''}${esc(head(key))}</h2>`;
     const agenda = [];
@@ -96,7 +98,7 @@
       ? `<table class="mo-t mo-grid">${sig.reduce((r, m, j) => (j % 2 ? r[r.length - 1].push(m) : r.push([m]), r), []).map(row => `<tr>${row.map(m => `<td class="mo-card"><b>${esc(m.r)}</b><div class="mo-sigbox" data-n="${esc(m.n)}" data-r="${esc(m.r)}"></div>${esc(m.n)}</td>`).join('')}${row.length < 2 ? '<td class="mo-card"></td>' : ''}</tr>`).join('')}</table>`
       : `<table class="mo-t mo-sig"><tr><th>م</th><th>الاسم</th><th>الصفة</th><th>التوقيع</th></tr>${sig.map((m, j) => `<tr><td>${j + 1}</td><td>${esc(m.n)}</td><td>${esc(m.r)}</td><td class="mo-sigbox" data-n="${esc(m.n)}" data-r="${esc(m.r)}"></td></tr>`).join('')}</table>`;
     return `<div class="mo-doc${M.status === 'draft' ? ' draft' : ''}" dir="rtl">
-      <table class="mo-hd"><tr><td class="mo-org">${M.org ? `<b>${esc(M.org)}</b><br>` : ''}${M.unit ? `${esc(M.unit)}` : ''}</td><td class="mo-bsm">${S.bsm ? 'بسم الله الرحمن الرحيم' : ''}</td><td class="mo-logo">${M.logo && S.logo ? `<img src="${M.logo}" alt="" height="64">` : ''}</td></tr></table>
+      ${hasLh() ? `${o.noLh ? '' : `<div class="mo-lh"><img src="${M.lh.top}" alt=""></div>`}${S.bsm ? '<p class="mo-bsm1">بسم الله الرحمن الرحيم</p>' : ''}` : `<table class="mo-hd"><tr><td class="mo-org">${M.org ? `<b>${esc(M.org)}</b><br>` : ''}${M.unit ? `${esc(M.unit)}` : ''}</td><td class="mo-bsm">${S.bsm ? 'بسم الله الرحمن الرحيم' : ''}</td><td class="mo-logo">${M.logo && S.logo ? `<img src="${M.logo}" alt="" height="64">` : ''}</td></tr></table>`}
       <h1>محضر الاجتماع${M.no ? ` رقم (${esc(M.no)})` : ''}${M.committee ? '<br>' + esc(li(M.committee)) : ''}</h1>
       ${S.info && info.length ? `<table class="mo-t mo-info">${info.map(([a, v]) => `<tr><th>${esc(a)}</th><td>${esc(v)}</td></tr>`).join('')}</table>` : ''}
       ${S.intro ? `${head('intro').trim() ? `<h2>${esc(head('intro'))}</h2>` : ''}<p>${introText()}</p>` : ''}
@@ -110,8 +112,10 @@
       ${S.sum && rows.length ? `${H('sum')}<table class="mo-t mo-sum"><tr><th>رقم القرار</th><th>القرار والتكليف</th><th>المكلّف</th><th>الموعد</th></tr>${rows.join('')}</table>` : ''}
       ${S.close ? `${H('close')}<p>${closeText()}</p>` : ''}
       ${S.sig ? `${H('sig')}${sigs}` : ''}
+      ${hasLh() && M.lh.bot && !o.noLh ? `<div class="mo-lh mo-lhb"><img src="${M.lh.bot}" alt=""></div>` : ''}
     </div>`;
   }
+  const hasLh = () => !!(M.lh && M.lh.top && M.show.lh);
   // the sentences written for you, shared by the page and the exports
   function introText() {
     const d = dates(), chair = present().find(m => /رئيس/.test(m.r) && !/نائب/.test(m.r)), when = M.mode === 'remote' ? 'عن بُعد' : M.mode === 'mix' ? 'حضوريًا وعن بُعد' : '';
@@ -122,14 +126,19 @@
     return q.n ? (q.ok ? `وبعد التحقق من اكتمال النصاب النظامي بحضور (${q.p}) من أصل (${q.n}) أعضاء، رحّب ${chair ? 'رئيس الاجتماع' : b.head} بالحاضرين، واستُعرض جدول الأعمال.` : `لم يكتمل النصاب النظامي: حضر (${q.p}) من أصل (${q.n})، والمطلوب (${q.need}).`) : '';
   }
   const closeText = () => `واختُتم الاجتماع${M.to ? ' في تمام الساعة ' + t12(M.to) : ''}${M.next.trim() ? '، على أن يُعقد الاجتماع القادم ' + esc(M.next.trim()) : ''}، والله ولي التوفيق.`;
-  const DOC_CSS = `.mo-doc,.mo-doc *{letter-spacing:0!important;word-spacing:normal!important}.mo-doc{font-family:"IBM Plex Sans Arabic","Traditional Arabic",Arial,sans-serif;color:#111;font-size:14px;line-height:1.85;background:#fff;position:relative}
+  // the look of the minutes, from the formatting the user chose
+  const FONTS = [['IBM Plex Sans Arabic', 'آي بي إم بلكس', '400;600;700'], ['Noto Naskh Arabic', 'نوتو نسخ', '400;600;700'], ['Amiri', 'أميري', '400;700'], ['Cairo', 'القاهرة', '400;600;700'], ['Tajawal', 'تجوال', '400;500;700'], ['Noto Kufi Arabic', 'نوتو كوفي', '400;600;700'],
+    ['Sakkal Majalla', 'Sakkal Majalla (من خطوط Word)'], ['Traditional Arabic', 'Traditional Arabic (من خطوط Word)'], ['Simplified Arabic', 'Simplified Arabic (من خطوط Word)']];
+  const fontUrl = f => { const x = FONTS.find(a => a[0] === f); return x && x[2] ? `https://fonts.googleapis.com/css2?family=${f.replace(/ /g, '+')}:wght@${x[2]}&display=swap` : ''; };
+  const mix = (a, b, t) => { const h = c => [1, 3, 5].map(i => parseInt(c.slice(i, i + 2), 16)), x = h(a), y = h(b); return '#' + x.map((v, i) => Math.round(v * (1 - t) + y[i] * t).toString(16).padStart(2, '0')).join(''); };
+  const docCss = () => { const y = M.sty; return `.mo-doc,.mo-doc *{letter-spacing:0!important;word-spacing:normal!important}.mo-doc{font-family:"${y.font}","Traditional Arabic",Arial,sans-serif;color:#111;font-size:${y.size}px;line-height:1.85;background:#fff;position:relative}
     .mo-doc.draft::before{content:"مسودة";position:absolute;top:30%;left:50%;transform:translate(-50%,-50%) rotate(-24deg);font-size:110px;color:rgba(200,0,0,.07);font-weight:800;pointer-events:none}
-    .mo-hd{width:100%;border-collapse:collapse;border-bottom:2px solid #1f3b5c;margin-bottom:12px}.mo-hd td{width:33%;vertical-align:middle;padding:0 0 10px}.mo-org{font-size:13px;text-align:right;line-height:1.6}.mo-org b{font-size:15px}.mo-bsm{text-align:center;font-size:17px;font-family:"Amiri","Traditional Arabic",serif}.mo-logo{text-align:left}.mo-logo img{max-height:70px;max-width:160px}
-    .mo-doc h1{font-size:19px;text-align:center;margin:8px 0 12px;line-height:1.6}.mo-doc h2{font-size:15px;margin:16px 0 6px;color:#1f3b5c}.mo-doc h3{font-size:14.5px;margin:0 0 4px;color:#1f3b5c}
-    .mo-doc p{margin:4px 0}.mo-item{border-right:3px solid #c9822b;padding:4px 12px 6px;margin:10px 0;break-inside:avoid}.mo-ol{margin:4px 0;padding-right:22px}.mo-tk{font-size:12px;color:#444}
-    .mo-t{width:100%;border-collapse:collapse;margin:4px 0 8px;font-size:13px}.mo-t th,.mo-t td{border:1px solid #9aa4ad;padding:4px 8px;text-align:right;vertical-align:top}.mo-t th{background:#eef2f6}
-    .mo-info th{width:28%}.mo-sig td{height:44px}.mo-sig td:first-child{width:6%}.mo-sig .mo-sigbox{width:30%}.mo-sum td:first-child{width:12%;white-space:nowrap}.mo-dec{background:#f7f3ea;padding:4px 8px;border-radius:4px}.mo-q{font-weight:600}
-    .mo-grid td.mo-card{width:50%;text-align:center;padding:8px;font-weight:600}.mo-card b{font-weight:700;color:#1f3b5c}.mo-card .mo-sigbox{height:54px}`;
+    .mo-hd{width:100%;border-collapse:collapse;border-bottom:2px solid ${y.hc};margin-bottom:12px}.mo-hd td{width:33%;vertical-align:middle;padding:0 0 10px}.mo-org{font-size:13px;text-align:right;line-height:1.6}.mo-org b{font-size:15px}.mo-bsm{text-align:center;font-size:17px;font-family:"Amiri","Traditional Arabic",serif}.mo-logo{text-align:left}.mo-logo img{max-height:70px;max-width:160px}
+    .mo-doc h1{font-size:${y.tsize}px;color:${y.hc === '#1f3b5c' ? '#111' : y.hc};text-align:center;margin:8px 0 12px;line-height:1.6}.mo-doc h2{font-size:${+y.size + 1}px;margin:16px 0 6px;color:${y.hc}}.mo-doc h3{font-size:${+y.size + .5}px;margin:0 0 4px;color:${y.hc}}
+    .mo-doc p{margin:4px 0}.mo-item{border-right:3px solid ${y.ac};padding:4px 12px 6px;margin:10px 0;break-inside:avoid}.mo-ol{margin:4px 0;padding-right:22px}.mo-tk{font-size:12px;color:#444}
+    .mo-t{width:100%;border-collapse:collapse;margin:4px 0 8px;font-size:${y.size - 1}px}.mo-t th,.mo-t td{border:1px solid ${y.bd};padding:4px 8px;text-align:right;vertical-align:top}.mo-t th{background:${y.th}}
+    .mo-info th{width:28%}.mo-sig td{height:44px}.mo-sig td:first-child{width:6%}.mo-sig .mo-sigbox{width:30%}.mo-sum td:first-child{width:12%;white-space:nowrap}.mo-dec{background:${mix(y.ac, '#ffffff', .9)};padding:4px 8px;border-radius:4px}.mo-q{font-weight:600}
+    .mo-grid td.mo-card{width:50%;text-align:center;padding:8px;font-weight:600}.mo-card b{font-weight:700;color:${y.hc}}.mo-card .mo-sigbox{height:54px}.mo-lh img{display:block;width:100%;height:auto}.mo-lh{margin:0 0 10px}.mo-lhb{margin-top:18px}.mo-bsm1{text-align:center;font-size:17px;font-family:"Amiri","Traditional Arabic",serif;margin:0 0 6px}`; };
 
   /* ---------- home: the saved minutes and committees ---------- */
   function home() {
@@ -188,9 +197,64 @@
     let text = '';
     try { text = await readText(file); } catch (e) {}
     if (text.replace(/\s/g, '').length < 80) return toast(B('لم أستطع قراءة نص الملف. إن كان PDF ممسوحًا ضوئيًا فاستخدم نسخة Word.', 'Could not read the text. If it is a scanned PDF, use the Word file.'), 1);
-    M = blank(); const got = mimic(text, M); editor();
+    M = blank(); const got = mimic(text, M);
+    try { const lk = await lookOf(file, M); if (lk) got.push(lk); } catch (e) {}
+    editor();
     toast(B(`بُني المحضر على نمط «${esc(file.name)}»: ${got.join('، ')}. راجع «عناصر المحضر» في الأعلى.`, `Built in the pattern of “${esc(file.name)}”. Check “What the minutes include” at the top.`));
   }
+  // the look of the earlier minutes: its letterhead (top of the first page, and the footer) and its colours
+  async function lookOf(file, X) {
+    const out = [];
+    const setColors = (main, tint) => { if (!main) return; const hc = lum(main) > .5 ? mix(main, '#000000', .45) : main;
+      Object.assign(X.sty, { hc, th: tint || mix(main, '#ffffff', .88), bd: mix(main, '#9a9a9a', .55), ac: hc }); out.push(T('الألوان', 'colours')); };
+    if (/\.pdf$/i.test(file.name)) {
+      await need(PDFJS + 'build/pdf.min.js'); pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS + 'build/pdf.worker.min.js';
+      const doc = await pdfjsLib.getDocument({ data: await file.arrayBuffer(), cMapUrl: PDFJS + 'cmaps/', cMapPacked: true }).promise;
+      // the first page may be a cover, so the second is tried for the letterhead too
+      for (let pn = 1; pn <= Math.min(2, doc.numPages); pn++) { const pg = await doc.getPage(pn);
+      const vp = pg.getViewport({ scale: 1240 / pg.getViewport({ scale: 1 }).width }), c = document.createElement('canvas'); c.width = Math.round(vp.width); c.height = Math.round(vp.height);
+      const x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height); await pg.render({ canvasContext: x, viewport: vp }).promise;
+      const W = c.width, H = c.height, px = x.getImageData(0, 0, W, H).data;
+      // colours: the most common strong colour on the page, and a light tint if the tables use one
+      const hist = {}, tints = {}; let n = 0;
+      for (let i = 0; i < px.length; i += 4 * 7) { const r = px[i], g = px[i + 1], b = px[i + 2], mx = Math.max(r, g, b), mn = Math.min(r, g, b); n++;
+        if (mx - mn > 40 && mx > 40) { const k = (r >> 4) + ',' + (g >> 4) + ',' + (b >> 4); hist[k] = (hist[k] || 0) + 1; }
+        else if (mx < 248 && mn > 200 && mx - mn > 6) { const k = (r >> 3) + ',' + (g >> 3) + ',' + (b >> 3); tints[k] = (tints[k] || 0) + 1; } }
+      const top1 = (h, sh) => { const e = Object.entries(h).sort((a, b) => b[1] - a[1])[0]; if (!e) return null; return { n: e[1], c: '#' + e[0].split(',').map(v => ((+v << sh) + (1 << (sh - 1))).toString(16).padStart(2, '0')).join('') }; };
+      const m1 = top1(hist, 4), t1 = top1(tints, 3); if (pn === 1 && m1 && m1.n > n * .002) setColors(m1.c, t1 && t1.n > n * .01 ? t1.c : null);
+      // rows of ink, to find where the letterhead ends and the footer starts
+      const ink = y => { let k = 0; for (let i = 0; i < W; i += 3) { const o = (y * W + i) * 4; if (px[o] < 232 || px[o + 1] < 232 || px[o + 2] < 232) if (++k > 2) return true; } return false; };
+      const G = Math.round(H * .022); let first = -1; for (let y = 0; y < H * .25; y++) if (ink(y)) { first = y; break; }
+      // the old meeting's number, date and subject in the letterhead are wiped, so they are not reused
+      const tc = await pg.getTextContent(), segs = [];
+      tc.items.filter(t => t.str.trim()).forEach(t => { const m = pdfjsLib.Util.transform(vp.transform, t.transform), fh = Math.hypot(m[2], m[3]) || 10, x0 = m[4], w = (t.width || 0) * vp.scale, yb = m[5];
+        let s0 = segs.find(s => Math.abs(s.yb - yb) < fh * .5 && x0 < s.x1 + fh * 3 && x0 + w > s.x0 - fh * 3); if (!s0) segs.push(s0 = { yb, fh, x0, x1: x0 + w, t: [] }); s0.x0 = Math.min(s0.x0, x0); s0.x1 = Math.max(s0.x1, x0 + w); s0.fh = Math.max(s0.fh, fh); s0.t.push(t.str); });
+      const wipe = (y0, y1) => { const hit = segs.filter(s => s.yb > y0 && s.yb - s.fh < y1 && /[0-9٠-٩]|الرقم|التاريخ|الموضوع|المرفقات|محضر|اجتماع|بدون|\.{4,}|…|_{3,}/.test(normA(s.t.join('').normalize('NFKC')) + s.t.join(''))); segs.filter(s => s.yb > y0 && s.yb - s.fh < y1 && !hit.includes(s) && hit.some(h => s.x0 < h.x1 && s.x1 > h.x0)).forEach(s => hit.push(s));
+        hit.forEach(s => { x.fillStyle = '#fff'; x.fillRect(s.x0 - 6, s.yb - s.fh * 1.1, s.x1 - s.x0 + 12, s.fh * 1.45); }); };
+      const crop = (y0, y1) => { const d = document.createElement('canvas'); d.width = W; d.height = y1 - y0; d.getContext('2d').drawImage(c, 0, y0, W, y1 - y0, 0, 0, W, y1 - y0); return d.toDataURL('image/jpeg', .85); };
+      let topEnd = -1;
+      if (first >= 0) { let gap = 0, end = first; for (let y = first; y < H * .32; y++) { if (ink(y)) { gap = 0; end = y; } else if (++gap >= G) { topEnd = end; break; } } }
+      let botStart = -1, last = -1; for (let y = H - 1; y > H * .8; y--) if (ink(y)) { last = y; break; }
+      if (last > H * .93) { let gap = 0, st = last; for (let y = last; y > H * .78; y--) { if (ink(y)) { gap = 0; st = y; } else if (++gap >= G) { botStart = st; break; } } }
+      if (topEnd > H * .04) { wipe(0, topEnd + 8); X.lh = { top: crop(0, Math.min(H, topEnd + 12)) }; if (botStart > 0) X.lh.bot = crop(Math.max(0, botStart - 10), H); X.show.lh = true; X.show.bsm = false; out.unshift(T('الكليشة', 'letterhead')); break; }
+      }
+    } else if (/\.docx$/i.test(file.name)) {
+      await need('https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js');
+      const z = await JSZip.loadAsync(await file.arrayBuffer()), xml = await (z.file('word/document.xml') || { async: async () => '' }).async('string');
+      const cnt = re => { const h = {}; let m; while ((m = re.exec(xml))) { const v = m[1].toLowerCase(); if (!/^(auto|ffffff|000000)$/.test(v)) h[v] = (h[v] || 0) + 1; } return Object.entries(h).sort((a, b) => b[1] - a[1])[0]; };
+      const fill = cnt(/w:fill="([0-9A-Fa-f]{6})"/g), colr = cnt(/w:color w:val="([0-9A-Fa-f]{6})"/g);
+      if (colr || fill) setColors('#' + (colr || fill)[0], fill && lum('#' + fill[0]) > .75 ? '#' + fill[0] : null);
+      // pictures in the header and footer: a wide one is the letterhead, another the logo
+      const pics = async part => { const rels = Object.keys(z.files).filter(f => new RegExp(`^word/_rels/${part}\\d*\\.xml\\.rels$`).test(f)), out = [];
+        for (const r of rels) { const t = await z.file(r).async('string'); for (const m of t.matchAll(/Target="(media\/[^"]+\.(png|jpe?g))"/gi)) { const b = await z.file('word/' + m[1]).async('base64'), u = `data:image/${/png/i.test(m[2]) ? 'png' : 'jpeg'};base64,${b}`, im = await new Promise(ok => { const i = new Image(); i.onload = () => ok(i); i.onerror = () => ok(null); i.src = u; }); if (im) out.push({ u, r: im.width / im.height, a: im.width * im.height }); } }
+        return out.sort((a, b) => b.a - a.a); };
+      const hp = await pics('header'), fp = await pics('footer'), wide = hp.find(p => p.r >= 2.5);
+      if (wide) { X.lh = { top: wide.u }; const fw = fp.find(p => p.r >= 2.5); if (fw) X.lh.bot = fw.u; X.show.lh = true; X.show.bsm = false; out.unshift(T('الكليشة', 'letterhead')); }
+      else if (hp[0]) { X.logo = hp[0].u; out.push(T('الشعار', 'logo')); }
+    }
+    return out.join('، ');
+  }
+  const lum = c => { const v = [1, 3, 5].map(i => parseInt(c.slice(i, i + 2), 16) / 255); return .2126 * v[0] + .7152 * v[1] + .0722 * v[2]; };
   function mimic(text, X) {
     const lines = text.split(/\n/).map(l => l.replace(/\s+/g, ' ').trim()).filter(Boolean), N = normA, NS = x => N(x).replace(/\s+/g, ''), got = [];
     const short = lines.filter(l => l.length < 70), has = re => lines.some(l => re.test(N(l)));
@@ -237,7 +301,7 @@
     const mem = [], key = n => { const w = N(n).replace(TITLE, '').replace(/\b(بن|بنت|ابن)\b/g, ' ').split(' ').filter(Boolean); return w.length ? w[0] + '|' + w[w.length - 1] : ''; };
     lines.forEach((l, i) => {
       const t0 = l.replace(/^[\d٠-٩]+\s*/, ''); if (!TITLE.test(t0)) return;
-      const people = t0.split(SPLIT), around = (t0.split(SPLIT).length > 1 ? [lines[i - 1] || '', lines[i + 1] || ''] : [lines[i + 1] || '', lines[i - 1] || '']).find(x => x.length < 90 && !TITLE.test(x) && ROLE.test(x)) || '';
+      const people = t0.split(SPLIT); if (people.length > 1 && /توقيع|اعضاء/.test(N(lines.slice(Math.max(0, i - 4), i).join(' ')))) X.sigL = 'grid'; const around = (t0.split(SPLIT).length > 1 ? [lines[i - 1] || '', lines[i + 1] || ''] : [lines[i + 1] || '', lines[i - 1] || '']).find(x => x.length < 90 && !TITLE.test(x) && ROLE.test(x)) || '';
       let roles = people.length > 1 ? around.split(RSPLIT) : [around];
       if (people.length === 2 && roles.length !== 2 && around) { const w = around.split(' '), h = Math.ceil(w.length / 2); roles = [w.slice(0, h).join(' '), w.slice(h).join(' ')]; }
       people.forEach((t, k) => {
@@ -271,17 +335,20 @@
 
   function editor() {
     stage = M.stage || 'before'; opened.clear();
-    if (!document.getElementById('mpDocCss')) { const s = document.createElement('style'); s.id = 'mpDocCss'; s.textContent = DOC_CSS; document.head.appendChild(s); }
+    applySty();
     root.innerHTML = `<div class="mp-top"><button type="button" class="sn-lnk" id="mpBack">${isAr() ? '→' : '←'} ${B('محاضري', 'My minutes')}</button>
         <nav class="mp-steps">${STAGES.map(([k, a, e], i) => `<button type="button" data-st="${k}"><b>${i + 1}</b>${B(a, e)}</button>`).join('')}</nav>
+        <button type="button" class="btn ghost mp-pvb" id="mpPv">👁 ${B('معاينة', 'Preview')}</button>
         <button type="button" class="mp-gear" id="mpSet" title="${T('إعدادات المحضر', 'Settings')}" aria-label="${T('إعدادات المحضر', 'Settings')}">⚙</button></div>
       <p class="mp-hint" id="mpHint"></p>
       <details class="mp-els" id="mpEls"><summary>☰ ${B('عناصر المحضر', 'What the minutes include')}</summary><div class="mp-elsb">${SECS.map(([k, l]) => `<label><input type="checkbox" data-sh="${k}"${M.show[k] ? ' checked' : ''}> ${l}</label>`).join('')}</div><p class="mp-elsn">${B('ألغِ علامة أي عنصر فلا يظهر في المحضر. وتستطيع تعديل أي عنوان أو خانة بالضغط عليها في الصفحة.', 'Untick anything to leave it out. Tap any heading or row on the page to change it.')}</p></details>
+      <details class="mp-els" id="mpSty"><summary>🎨 ${B('التنسيق', 'Formatting')}</summary><div id="mpStyB"></div></details>
       <div id="mpChk"></div>
       <div class="mp-paper" id="mpPaper"></div><div class="mn-bar" id="mpBar"></div>`;
     root.querySelector('#mpBack').onclick = () => { persist(); saveCommittee(); home(); };
     root.querySelectorAll('[data-st]').forEach(b => b.onclick = () => go(b.dataset.st));
     root.querySelector('#mpSet').onclick = settings;
+    root.querySelector('#mpPv').onclick = preview; styPanel();
     root.querySelectorAll('[data-sh]').forEach(c => c.onchange = () => { M.show[c.dataset.sh] = c.checked; paint(); later(); });
     const P = root.querySelector('#mpPaper');
     P.addEventListener('input', e => { const el = e.target.closest('.ed'); if (!el) return; const p = el.dataset.p, v = el.innerText.replace(/\n+$/, '');
@@ -292,6 +359,33 @@
     P.addEventListener('change', e => { const el = e.target; if (el.dataset.f) { M[el.dataset.f] = el.value; } else if (el.dataset.p) { const [o, k] = ref(el.dataset.p); if (o) o[k] = el.value; } else return; derived(); later(); });
     P.addEventListener('click', e => { if (e.target.matches('.mp-hid')) { try { e.target.showPicker(); } catch (er) {} return; } const b = e.target.closest('[data-act]'); if (b) act(b.dataset.act, b.dataset, b); });
     go(stage, true);
+  }
+  function applySty() {
+    let st = document.getElementById('mpDocCss'); if (!st) { st = document.createElement('style'); st.id = 'mpDocCss'; document.head.appendChild(st); }
+    st.textContent = docCss(); const u = fontUrl(M.sty.font);
+    if (u && !document.querySelector(`link[href="${u}"]`)) { const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = u; document.head.appendChild(l); }
+  }
+  const PRESETS = [['أزرق رسمي', '#1f3b5c', '#eef2f6', '#9aa4ad', '#c9822b'], ['أخضر', '#1e5b3a', '#e8f3ec', '#9cb8a6', '#b08d2e'], ['عنابي', '#6d1f2c', '#f6eaec', '#bfa3a8', '#a8862f'], ['أزرق سماوي', '#0b5c8a', '#e7f2f9', '#9dbbd0', '#e08a1e'], ['رمادي', '#333333', '#eeeeee', '#999999', '#777777'], ['أسود', '#000000', '#ffffff', '#000000', '#000000']];
+  function styPanel() {
+    const box = root.querySelector('#mpStyB'), y = M.sty, col = (k, l) => `<label class="mp-col">${l}<input type="color" data-sy="${k}" value="${y[k]}"></label>`;
+    box.innerHTML = `<div class="mp-styg">
+      <label>${B('الخط', 'Font')}<select data-sy="font">${FONTS.map(([f, l]) => `<option value="${f}"${y.font === f ? ' selected' : ''}>${l}</option>`).join('')}</select></label>
+      <label>${B('حجم النص', 'Text size')} <b data-sv="size">${y.size}</b><input type="range" min="11" max="18" step="0.5" data-sy="size" value="${y.size}"></label>
+      <label>${B('حجم العنوان', 'Title size')} <b data-sv="tsize">${y.tsize}</b><input type="range" min="15" max="28" step="1" data-sy="tsize" value="${y.tsize}"></label></div>
+      <div class="mp-styg">${col('hc', T('العناوين', 'Headings'))}${col('th', T('رأس الجداول', 'Table header'))}${col('bd', T('حدود الجداول', 'Borders'))}${col('ac', T('خط البند', 'Item line'))}</div>
+      <div class="mp-pre">${PRESETS.map((p, i) => `<button type="button" data-pre="${i}" title="${p[0]}"><i style="background:${p[1]}"></i><i style="background:${p[2]}"></i><i style="background:${p[4]}"></i>${p[0]}</button>`).join('')}</div>
+      <div class="mp-lhc">${B('الكليشة: صورة الترويسة أعلى كل صفحة (وتذييلها إن وجد)', 'Letterhead: an image at the top of every page (and a footer if any)')}
+        <button type="button" class="mp-add" data-lh="top">${M.lh && M.lh.top ? T('تغيير الترويسة', 'Change header') : T('+ رفع صورة الترويسة', '+ Upload header image')}</button><button type="button" class="mp-add" data-lh="bot">${M.lh && M.lh.bot ? T('تغيير التذييل', 'Change footer') : T('+ تذييل', '+ Footer')}</button>${M.lh && (M.lh.top || M.lh.bot) ? `<button type="button" class="mp-add" data-lh="x">${T('إزالة الكليشة', 'Remove')}</button>` : ''}</div>`;
+    box.querySelectorAll('[data-sy]').forEach(i => i.oninput = () => { y[i.dataset.sy] = i.type === 'range' ? +i.value : i.value; const v = box.querySelector(`[data-sv="${i.dataset.sy}"]`); if (v) v.textContent = i.value; applySty(); later(); });
+    box.querySelectorAll('[data-pre]').forEach(b => b.onclick = () => { const p = PRESETS[+b.dataset.pre]; Object.assign(y, { hc: p[1], th: p[2], bd: p[3], ac: p[4] }); applySty(); styPanel(); later(); });
+    box.querySelectorAll('[data-lh]').forEach(b => b.onclick = () => {
+      if (b.dataset.lh === 'x') { M.lh = null; styPanel(); paint(); later(); return; }
+      const f = document.createElement('input'); f.type = 'file'; f.accept = 'image/*'; f.onchange = async () => { if (!f.files[0]) return; M.lh = M.lh || {}; M.lh[b.dataset.lh] = await shrink(f.files[0], 1400, 'image/jpeg'); M.show.lh = true; styPanel(); paint(); later(); }; f.click(); });
+  }
+  function preview() {
+    persist();
+    const m = sheet(`<div class="mn-pvh"><b>${B('معاينة المحضر كما سيُطبع', 'Preview, as it will print')}</b><button type="button" class="btn ghost" data-mx>${B('إغلاق', 'Close')}</button></div><div class="mn-paper">${doc()}</div>`);
+    m.classList.add('mn-pv');
   }
   function go(st, first) {
     stage = M.stage = st; root.querySelectorAll('[data-st]').forEach(b => b.setAttribute('aria-current', b.dataset.st === st ? 'step' : 'false'));
@@ -330,7 +424,7 @@
     // before the meeting the agenda is where the items are written
     const agendaEdit = `<table class="mo-t"><tr><th>م</th><th>الموضوع</th><th class="mp-tc"></th></tr>
       ${M.prev.on ? `<tr class="mp-row"><td>1</td><td>اعتماد محضر الجلسة السابقة</td><td class="mp-tc">${ico('prevOff', T('حذف', 'Remove'), '✕')}</td></tr>` : ''}
-      ${M.items.map((it, i) => `<tr class="mp-row"><td>${i + 1 + (M.prev.on ? 1 : 0)}</td><td>${E('items:' + it.id + ':title', T('موضوع البند', 'Subject'))}${show(it, 'ref') ? `<div class="mp-sub">المرجع: ${E('items:' + it.id + ':ref', T('رقم المعاملة أو الخطاب وتاريخه', 'Reference no. and date'))}</div>` : ''}</td><td class="mp-tc">${show(it, 'ref') ? '' : `<button type="button" class="mp-ic mp-ict" data-act="open" data-id="${it.id}" data-f="ref">+ ${T('المرجع', 'Reference')}</button>`}${i ? ico('upItem', T('إلى الأعلى', 'Move up'), '↑', ` data-id="${it.id}"`) : ''}${ico('rmItem', T('حذف', 'Remove'), '✕', ` data-id="${it.id}"`)}</td></tr>`).join('')}</table>`;
+      ${M.items.map((it, i) => `<tr class="mp-row"><td>${i + 1 + (M.prev.on ? 1 : 0)}</td><td>${E('items:' + it.id + ':title', T('موضوع البند', 'Subject'))}${show(it, 'ref') ? `<div class="mp-sub">المرجع: ${E('items:' + it.id + ':ref', T('رقم المعاملة أو الخطاب وتاريخه', 'Reference no. and date'))}</div>` : ''}${show(it, 'bg') ? `<div class="mp-sub">${T('ملخص للعرض', 'Summary')}: ${E('items:' + it.id + ':bg', T('خلفية الموضوع وما يُعرض على الأعضاء…', 'Background for the members…'), 1)}</div>` : ''}</td><td class="mp-tc">${show(it, 'ref') ? '' : `<button type="button" class="mp-ic mp-ict" data-act="open" data-id="${it.id}" data-f="ref">+ ${T('المرجع', 'Reference')}</button>`}${show(it, 'bg') ? '' : `<button type="button" class="mp-ic mp-ict" data-act="open" data-id="${it.id}" data-f="bg">+ ${T('ملخص للعرض', 'Summary')}</button>`}${i ? ico('upItem', T('إلى الأعلى', 'Move up'), '↑', ` data-id="${it.id}"`) : ''}${ico('rmItem', T('حذف', 'Remove'), '✕', ` data-id="${it.id}"`)}</td></tr>`).join('')}</table>`;
     const extra = `<div class="mp-adds">${add('addItem', T('بند', 'Item'))}${M.prev.on ? '' : add('prevOn', T('اعتماد المحضر السابق', 'Approve the last minutes'))}${M.follow.length ? '' : add('addFol', T('متابعة قرارات سابقة', 'Follow-up of past decisions'))}${S === 'before' || !V.recs || M.recs.trim() || opened.has('recs') ? '' : add('recs', T('توصيات', 'Recommendations'))}</div>`;
     // the meeting details: rows can be renamed, removed or added
     const pick = (f, ph) => `<span class="mp-pick"><span class="mp-pv" data-d="${f}">${ph}</span><input type="${f === 'date' ? 'date' : 'time'}" class="mp-hid" data-f="${f}" value="${esc(M[f])}" aria-label="${ph}"></span>`;
@@ -342,8 +436,8 @@
       <div class="mp-adds">${add('addInfo', T('خانة', 'Row'))}${['date', 'time', 'place'].filter(t => !M.info.some(r => r.t === t)).map(t => add('addInfo', { date: T('التاريخ', 'Date'), time: T('الوقت', 'Time'), place: T('المكان', 'Place') }[t], ` data-t="${t}"`)).join('')}</div>` : '';
     const memOff = !V.att;
     return `<div class="mo-doc mp-doc${M.status === 'draft' && S === 'after' ? ' draft' : ''}" dir="rtl">
-      <table class="mo-hd"><tr><td class="mo-org">${E('org', T('اسم الجهة', 'Organisation'))}<br>${E('unit', T('الكلية أو الإدارة', 'College or department'))}</td><td class="mo-bsm">${V.bsm ? 'بسم الله الرحمن الرحيم' : ''}</td>
-        <td class="mo-logo">${!V.logo ? '' : M.logo ? `<img src="${M.logo}" alt="">${ico('rmLogo', T('إزالة الشعار', 'Remove logo'), '✕')}` : `<button type="button" class="mp-add" data-act="logo">+ ${T('الشعار', 'Logo')}</button>`}</td></tr></table>
+      ${hasLh() ? `<div class="mo-lh mp-row mp-lhw"><img src="${M.lh.top}" alt="">${ico('rmLh', T('إخفاء الكليشة', 'Hide letterhead'), '✕')}</div>${V.bsm ? '<p class="mo-bsm1">بسم الله الرحمن الرحيم</p>' : ''}` : `<table class="mo-hd"><tr><td class="mo-org">${E('org', T('اسم الجهة', 'Organisation'))}<br>${E('unit', T('الكلية أو الإدارة', 'College or department'))}</td><td class="mo-bsm">${V.bsm ? 'بسم الله الرحمن الرحيم' : ''}</td>
+        <td class="mo-logo">${!V.logo ? '' : M.logo ? `<img src="${M.logo}" alt="">${ico('rmLogo', T('إزالة الشعار', 'Remove logo'), '✕')}` : `<button type="button" class="mp-add" data-act="logo">+ ${T('الشعار', 'Logo')}</button>`}</td></tr></table>`}
       <h1>محضر الاجتماع رقم (${E('no', '…')})<br>${E('committee', T('اسم المجلس أو اللجنة', 'Council or committee'))}</h1>
       ${infoT}
       ${during && V.intro ? `${M.heads.intro && M.heads.intro.trim() ? `<h2>${E('heads:intro', '')}</h2>` : ''}<p data-d="intro"></p>` : ''}
@@ -358,6 +452,7 @@
       ${S === 'after' && V.sum ? `${HP('sum')}<div data-d="sum"></div>` : ''}
       ${during && V.close ? `${HP('close')}<p>واختُتم الاجتماع<span data-d="end"></span><span class="mp-next">، على أن يُعقد الاجتماع القادم ${E('next', T('(الموعد – اختياري)', '(date – optional)'))}</span>، والله ولي التوفيق.</p>` : ''}
       ${S === 'after' && V.sig ? `${HP('sig')}<div data-d="sigs"></div>` : ''}
+      ${hasLh() && M.lh.bot ? `<div class="mo-lh mo-lhb"><img src="${M.lh.bot}" alt=""></div>` : ''}
     </div>`;
   }
   // the parts written for you: dates, numbers, quorum, the agenda, the summary and the signatures
@@ -437,6 +532,7 @@
       case 'prevOn': M.prev.on = true; break;
       case 'logo': { const f = document.createElement('input'); f.type = 'file'; f.accept = 'image/*'; f.onchange = async () => { if (!f.files[0]) return; M.logo = await shrink(f.files[0], 360); paint(); later(); }; f.click(); return; }
       case 'rmLogo': M.logo = ''; break;
+      case 'rmLh': M.show.lh = false; const c0 = root.querySelector('[data-sh="lh"]'); if (c0) c0.checked = false; break;
       case 'addInfo': { const t = d.t, r = t ? { id: uid(), k: { date: 'التاريخ', time: 'الوقت', place: 'المكان' }[t], t } : { id: uid(), k: '', v: '' }; M.info.push(r); focus = t ? null : `[data-p="info:${r.id}:k"]`; break; }
       case 'rmInfo': M.info = M.info.filter(r => r.id !== d.id); break;
       case 'upInfo': { const i = M.info.findIndex(r => r.id === d.id); [M.info[i - 1], M.info[i]] = [M.info[i], M.info[i - 1]]; break; }
@@ -449,12 +545,12 @@
   /* ---------- the bar under the page, for the stage you are in ---------- */
   function bar() {
     const el = root.querySelector('#mpBar'), S = stage, nx = (st, a, e) => `<button type="button" class="btn ghost" data-go="${st}">${B(a, e)} ${isAr() ? '←' : '→'}</button>`;
-    if (S === 'before') el.innerHTML = `<button type="button" class="btn ghost" id="mpInv">🖨 ${B('الدعوة وجدول الأعمال', 'Invitation and agenda')}</button>${nx('during', 'أثناء الاجتماع', 'During the meeting')}`;
+    if (S === 'before') el.innerHTML = `<button type="button" class="btn ghost" id="mpInv">✉️ ${B('الدعوة وجدول الأعمال', 'Invitation and agenda')}</button><button type="button" class="btn ghost" id="mpPack">📦 ${B('رزمة الاجتماع', 'Meeting pack')}</button>${nx('during', 'أثناء الاجتماع', 'During the meeting')}`;
     else if (S === 'during') el.innerHTML = `${!M.from ? `<button type="button" class="btn solid" id="mpStart">▶ ${B('بدأ الاجتماع الآن', 'The meeting starts now')}</button>` : !M.to ? `<button type="button" class="btn solid" id="mpEnd">⏹ ${B('انتهى الاجتماع الآن', 'The meeting ends now')}</button>` : ''}${nx('after', 'بعد الاجتماع', 'After the meeting')}`;
     else el.innerHTML = `<button type="button" class="btn ghost" id="mpAI">✨ ${B('تحسين الصياغة', 'Polish the wording')}</button><button type="button" class="btn ghost" id="mnWord">Word</button><button type="button" class="btn ghost" id="mnPrint">PDF</button><button type="button" class="btn solid" id="mnSign">✍️ ${B('أرسله للتوقيع', 'Send for signing')}</button>${M.items.some(it => it.tasks.some(t => t.who.trim())) ? `<button type="button" class="btn ghost" id="mpNote">📨 ${B('إبلاغ المكلّفين', 'Notify owners')}</button>` : ''}`;
     const q = s => el.querySelector(s), now = () => { const d = new Date(); return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'); };
     el.querySelectorAll('[data-go]').forEach(b => b.onclick = () => go(b.dataset.go));
-    if (q('#mpInv')) q('#mpInv').onclick = invite;
+    if (q('#mpInv')) { q('#mpInv').onclick = () => invite(); q('#mpPack').onclick = pack; }
     if (q('#mpStart')) q('#mpStart').onclick = () => { M.from = now(); if (!M.date) M.date = today(); paint(); later(); };
     if (q('#mpEnd')) q('#mpEnd').onclick = () => { M.to = now(); paint(); later(); };
     if (q('#mpAI')) q('#mpAI').onclick = aiDraft;
@@ -573,31 +669,52 @@ ${reg ? `\nنص اللائحة المعتمدة (استند إليها فقط، 
   }
 
   /* ---------- papers before and after: the invitation, and a notice to each owner of a task ---------- */
+  // a print window; with a letterhead image it repeats at the top (and bottom) of every page
   function printPage(title, body) {
     const w = window.open('', '_blank'); if (!w) return toast(B('اسمح للموقع بفتح نافذة جديدة ثم أعد المحاولة.', 'Allow pop-ups and try again.'), 1);
-    w.document.write(`<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>${esc(title)}</title><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet"><style>@page{size:A4;margin:16mm}body{margin:0}${DOC_CSS}.pg{break-after:page}.pg:last-child{break-after:auto}.sg{margin-top:28px;text-align:left;line-height:2}</style></head><body>${body}<script>document.fonts.ready.then(()=>setTimeout(()=>print(),300))<\/script></body></html>`);
+    const lh = hasLh(), fu = fontUrl(M.sty.font);
+    const inner = lh ? `<table class="pgt"><thead><tr><td><img class="lht" src="${M.lh.top}" alt=""></td></tr></thead>${M.lh.bot ? `<tfoot><tr><td><img class="lht" src="${M.lh.bot}" alt=""></td></tr></tfoot>` : ''}<tbody><tr><td class="pgb">${body}</td></tr></tbody></table>` : body;
+    w.document.write(`<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>${esc(title)}</title>${fu ? `<link href="${fu}" rel="stylesheet">` : ''}<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet"><style>@page{size:A4;margin:${lh ? '0' : '16mm'}}body{margin:0}${docCss()}.pg{break-after:page}.pg:last-child{break-after:auto}.sg{margin-top:28px;text-align:left;line-height:2}
+      .pgt{width:100%;border-collapse:collapse}.pgt td{padding:0}.lht{display:block;width:100%}.pgb{padding:4mm 16mm!important}.mo-doc.draft::before{position:fixed}</style></head><body>${inner}<script>document.fonts.ready.then(()=>setTimeout(()=>print(),400))<\/script></body></html>`);
     w.document.close();
   }
-  const letterhead = () => `<table class="mo-hd"><tr><td class="mo-org">${M.org ? `<b>${esc(M.org)}</b><br>` : ''}${esc(M.unit)}</td><td class="mo-bsm">${M.show.bsm ? 'بسم الله الرحمن الرحيم' : ''}</td><td class="mo-logo">${M.logo && M.show.logo ? `<img src="${M.logo}" alt="">` : ''}</td></tr></table>`;
+  const letterhead = () => hasLh() ? `<div class="mo-lh"><img src="${M.lh.top}" alt=""></div>${M.show.bsm ? '<p class="mo-bsm1">بسم الله الرحمن الرحيم</p>' : ''}` : `<table class="mo-hd"><tr><td class="mo-org">${M.org ? `<b>${esc(M.org)}</b><br>` : ''}${esc(M.unit)}</td><td class="mo-bsm">${M.show.bsm ? 'بسم الله الرحمن الرحيم' : ''}</td><td class="mo-logo">${M.logo && M.show.logo ? `<img src="${M.logo}" alt="">` : ''}</td></tr></table>`;
   const secretary = () => M.members.find(m => /أمين|مقرر/.test(m.r) && m.n.trim());
-  function invite() {
+  function invite(only) {
     persist();
     const d = dates(), ag = []; if (M.prev.on) ag.push('اعتماد محضر الجلسة السابقة'); if (M.follow.length) ag.push('متابعة تنفيذ قرارات الجلسة السابقة'); M.items.forEach(it => it.title.trim() && ag.push(it.title.trim()));
     const s = secretary(), when = M.mode === 'remote' ? 'عن بُعد' : '';
-    printPage(T('الدعوة وجدول الأعمال', 'Invitation'), `<div class="mo-doc">${letterhead()}<h1>دعوة لحضور الاجتماع${M.no ? ` رقم (${esc(M.no)})` : ''}<br>${esc(M.committee)}</h1>
+    const html = `<div class="mo-doc pg">${hasLh() ? (M.show.bsm ? '<p class="mo-bsm1">بسم الله الرحمن الرحيم</p>' : '') : letterhead()}<h1>دعوة لحضور الاجتماع${M.no ? ` رقم (${esc(M.no)})` : ''}<br>${esc(M.committee)}</h1>
       <p>سعادة أعضاء ${esc(M.committee || b0())} المحترمين،</p><p>السلام عليكم ورحمة الله وبركاته، وبعد:</p>
       <p>فيسرّني دعوتكم لحضور الاجتماع${M.no ? ` رقم (${esc(M.no)})` : ''}${M.date ? `، يوم ${esc(d.day)} ${esc(d.h)} هـ الموافق ${esc(d.g)}` : ''}${M.from ? `، في تمام الساعة ${t12(M.from)}` : ''}${when ? '، ' + when : ''}${M.place.trim() ? `، في ${esc(M.place)}` : ''}، لمناقشة جدول الأعمال الآتي:</p>
       <table class="mo-t"><tr><th>م</th><th>الموضوع</th></tr>${ag.map((t, j) => `<tr><td>${j + 1}</td><td>${esc(t)}</td></tr>`).join('')}</table>
       ${M.info.filter(r => !r.t && (r.v || '').trim()).map(r => `<p><b>${esc(r.k)}:</b> ${esc(r.v)}</p>`).join('')}<p>شاكرين لكم حرصكم، ونأمل إبلاغنا عند تعذّر الحضور.</p>
-      <p class="sg">${s ? esc(s.r) + '<br>' + esc(s.n) : ''}</p></div>`);
+      <p class="sg">${s ? esc(s.r) + '<br>' + esc(s.n) : ''}</p></div>`;
+    if (only) return html;
+    printPage(T('الدعوة وجدول الأعمال', 'Invitation'), html);
   }
   const b0 = () => body().the;
+  // the meeting pack: the invitation and agenda, then a page for each item with its summary and the proposed decision
+  function pack() {
+    const lead = M.show.bsm && hasLh() ? '<p class="mo-bsm1">بسم الله الرحمن الرحيم</p>' : hasLh() ? '' : letterhead();
+    const its = M.items.filter(it => it.title.trim());
+    if (!its.length) return toast(B('اكتب بنود جدول الأعمال أولًا.', 'Write the agenda items first.'), 1);
+    const n0 = (M.prev.on ? 1 : 0) + (M.follow.length ? 1 : 0);
+    const memos = its.map(it => { const i = M.items.indexOf(it);
+      return `<div class="mo-doc pg">${lead}<h1>مذكرة البند (${i + 1 + n0})<br><span style="font-size:.8em">${esc(it.title)}</span></h1>
+      <table class="mo-t mo-info"><tr><th>الموضوع</th><td>${esc(it.title)}</td></tr>${it.ref.trim() ? `<tr><th>المرجع</th><td>${esc(it.ref)}</td></tr>` : ''}<tr><th>الاجتماع</th><td>${M.no ? `رقم (${esc(M.no)})` : ''} ${esc(M.committee)}</td></tr></table>
+      <h2>العرض</h2><p>${it.bg.trim() ? nl(it.bg) : '<span style="color:#999">…</span>'}</p>
+      <h2>مشروع القرار المقترح</h2><p class="mo-dec">${nl(decText(it))}</p>
+      <h2>رأي ${esc(body().the)}</h2><table class="mo-t"><tr><td style="height:70px">&nbsp;</td></tr></table></div>`; }).join('');
+    const prev = M.prev.on ? `<div class="mo-doc pg">${lead}<h1>اعتماد محضر الجلسة السابقة</h1><p>يُرفق مع هذه الرزمة محضر الجلسة السابقة للاطلاع عليه، وإبداء الملاحظات قبل اعتماده في هذا الاجتماع.</p>${M.follow.length ? `<h2>متابعة قرارات الجلسة السابقة</h2><table class="mo-t"><tr><th>م</th><th>القرار أو المهمة</th><th>الحالة</th></tr>${M.follow.map((f, j) => `<tr><td>${j + 1}</td><td>${esc(f.t)}</td><td>${FST[f.st] || ''}</td></tr>`).join('')}</table>` : ''}</div>` : '';
+    printPage(T('رزمة الاجتماع', 'Meeting pack'), invite(true) + prev + memos);
+  }
   function notify() {
     persist();
     const d = dates(), by = {};
     M.items.forEach((it, i) => it.tasks.forEach(t => { const w = t.who.trim(); if (!w) return; (by[w] = by[w] || []).push({ no: decNo(i), dec: decText(it), t: t.t, due: t.due }); }));
     const s = secretary(), b = body();
-    printPage(T('إبلاغ المكلّفين', 'Notices'), Object.entries(by).map(([w, xs]) => `<div class="mo-doc pg">${letterhead()}<h1>إبلاغ بقرار</h1>
+    printPage(T('إبلاغ المكلّفين', 'Notices'), Object.entries(by).map(([w, xs]) => `<div class="mo-doc pg">${hasLh() ? (M.show.bsm ? '<p class="mo-bsm1">بسم الله الرحمن الرحيم</p>' : '') : letterhead()}<h1>إبلاغ بقرار</h1>
       <p>سعادة / ${esc(w)} المحترم</p><p>السلام عليكم ورحمة الله وبركاته، وبعد:</p>
       <p>نفيدكم بأن ${esc(M.committee || b.the)} ${b.verb} في ${b.the === 'اللجنة' ? 'اجتماعها' : 'اجتماعه'}${M.no ? ` رقم (${esc(M.no)})` : ''}${M.date ? ` المنعقد يوم ${esc(d.day)} ${esc(d.h)} هـ` : ''} ما يلي:</p>
       <table class="mo-t"><tr><th>رقم القرار</th><th>القرار</th><th>المطلوب منكم</th><th>الموعد</th></tr>${xs.map(x => `<tr><td><bdi dir="ltr">${esc(x.no)}</bdi></td><td>${esc(x.dec)}</td><td>${esc(x.t)}</td><td>${esc(x.due)}</td></tr>`).join('')}</table>
@@ -608,31 +725,32 @@ ${reg ? `\nنص اللائحة المعتمدة (استند إليها فقط، 
   const fname = () => ('محضر ' + (M.committee || '') + (M.no ? ' ' + M.no : '')).replace(/[\\/:*?"<>|]+/g, ' ').trim();
   // Word ignores most class rules, so the tables and boxes get their look inline
   function wordify(h) {
-    const d = new DOMParser().parseFromString(`<div>${h}</div>`, 'text/html').body.firstChild, B1 = '1px solid #9aa4ad';
+    const d = new DOMParser().parseFromString(`<div>${h}</div>`, 'text/html').body.firstChild, y = M.sty, B1 = '1px solid ' + y.bd;
     d.querySelectorAll('table.mo-t').forEach(t => { t.setAttribute('border', '1'); t.setAttribute('cellspacing', '0'); t.setAttribute('cellpadding', '5'); t.setAttribute('width', '100%'); t.style.cssText = 'width:100%;border-collapse:collapse;border:' + B1; });
-    d.querySelectorAll('.mo-t th').forEach(c => c.style.cssText = `border:${B1};background:#eef2f6;text-align:right;padding:4px 8px`);
+    d.querySelectorAll('.mo-t th').forEach(c => c.style.cssText = `border:${B1};background:${y.th};text-align:right;padding:4px 8px`);
     d.querySelectorAll('.mo-t td').forEach(c => c.style.cssText = `border:${B1};text-align:${c.classList.contains('mo-card') ? 'center' : 'right'};vertical-align:top;padding:4px 8px` + (c.classList.contains('mo-sigbox') ? ';height:40px;width:30%' : ''));
     d.querySelectorAll('.mo-card .mo-sigbox').forEach(x => { x.style.height = '48px'; x.innerHTML = '&nbsp;'; });
-    d.querySelectorAll('table.mo-hd').forEach(t => { t.setAttribute('width', '100%'); t.style.cssText = 'width:100%;border-bottom:2px solid #1f3b5c'; });
+    d.querySelectorAll('table.mo-hd').forEach(t => { t.setAttribute('width', '100%'); t.style.cssText = 'width:100%;border-bottom:2px solid ' + y.hc; });
     d.querySelectorAll('.mo-hd td').forEach((c, i) => c.style.cssText = 'width:33%;vertical-align:middle;text-align:' + ['right', 'center', 'left'][i]);
-    d.querySelectorAll('.mo-item').forEach(x => x.style.cssText = 'border-right:3px solid #c9822b;padding:2px 10px;margin:8px 0');
-    d.querySelectorAll('.mo-dec').forEach(x => x.style.cssText = 'background:#f7f3ea;padding:3px 6px');
-    d.querySelectorAll('h1').forEach(x => x.style.cssText = 'font-size:17pt;text-align:center');
-    d.querySelectorAll('h2,h3').forEach(x => x.style.cssText = `font-size:${x.tagName === 'H2' ? 13 : 12}pt;color:#1f3b5c;margin:10pt 0 4pt`);
+    d.querySelectorAll('.mo-item').forEach(x => x.style.cssText = `border-right:3px solid ${y.ac};padding:2px 10px;margin:8px 0`);
+    d.querySelectorAll('.mo-dec').forEach(x => x.style.cssText = `background:${mix(y.ac, '#ffffff', .9)};padding:3px 6px`);
+    d.querySelectorAll('h1').forEach(x => x.style.cssText = `font-size:${Math.round(y.tsize * .85)}pt;text-align:center;color:${y.hc === '#1f3b5c' ? '#111' : y.hc}`);
+    d.querySelectorAll('h2,h3').forEach(x => x.style.cssText = `font-size:${Math.round((+y.size + (x.tagName === 'H2' ? 1 : .5)) * .8)}pt;color:${y.hc};margin:10pt 0 4pt`);
+    d.querySelectorAll('.mo-lh img').forEach(x => { x.setAttribute('width', '600'); x.style.cssText = 'width:100%'; });
     return d.innerHTML;
   }
   function word() {
     persist();
+    // Word opens a web archive (MHTML) with its pictures inside, so the logo and letterhead travel with the file
+    const imgs = []; let body = wordify(doc()).replace(/src="(data:image\/(png|jpe?g|gif);base64,([^"]+))"/g, (m, all, ext, b64) => { const n = 'img' + imgs.length + '.' + (ext === 'jpeg' ? 'jpg' : ext); imgs.push([n, 'image/' + (ext === 'jpg' ? 'jpeg' : ext), b64]); return `src="${n}"`; });
     const html = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="utf-8"><title>${esc(fname())}</title>
-      <!--[if gte mso 9]><xml><w:WordDocument><w:View>Print</w:View></w:WordDocument></xml><![endif]--><style>@page{size:21cm 29.7cm;margin:2cm}body{direction:rtl;font-family:Arial,sans-serif;font-size:12pt}p{margin:3pt 0}</style></head><body dir="rtl" lang="ar-SA">${wordify(doc())}</body></html>`;
-    const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['﻿' + html], { type: 'application/msword' })); a.download = fname() + '.doc'; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 3000);
+      <!--[if gte mso 9]><xml><w:WordDocument><w:View>Print</w:View></w:WordDocument></xml><![endif]--><style>@page{size:21cm 29.7cm;margin:${hasLh() ? '1cm 1.5cm' : '2cm'}}body{direction:rtl;font-family:"${M.sty.font}",Arial,sans-serif;font-size:${Math.round(M.sty.size * .85)}pt}p{margin:3pt 0}</style></head><body dir="rtl" lang="ar-SA">${body}</body></html>`;
+    const b64 = t => btoa(unescape(encodeURIComponent(t))).replace(/.{76}/g, '$&\r\n'), BD = '----=_alsamani_minutes';
+    const mht = ['MIME-Version: 1.0', `Content-Type: multipart/related; boundary="${BD}"; type="text/html"`, '', `--${BD}`, 'Content-Type: text/html; charset="utf-8"', 'Content-Transfer-Encoding: base64', 'Content-Location: minutes.htm', '', b64(html)]
+      .concat(...imgs.map(([n, t, d]) => [`--${BD}`, `Content-Type: ${t}`, 'Content-Transfer-Encoding: base64', `Content-Location: ${n}`, '', d.replace(/.{76}/g, '$&\r\n')]), [`--${BD}--`, '']).join('\r\n');
+    const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(imgs.length ? [mht] : ['\ufeff' + html], { type: 'application/msword' })); a.download = fname() + '.doc'; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 3000);
   }
-  function printIt() {
-    persist();
-    const w = window.open('', '_blank'); if (!w) return toast(B('اسمح للموقع بفتح نافذة جديدة ثم أعد المحاولة.', 'Allow pop-ups and try again.'), 1);
-    w.document.write(`<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>${esc(fname())}</title><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet"><style>@page{size:A4;margin:16mm}body{margin:0}${DOC_CSS}</style></head><body>${doc()}<script>document.fonts.ready.then(()=>setTimeout(()=>print(),300))<\/script></body></html>`);
-    w.document.close();
-  }
+  function printIt() { persist(); printPage(fname(), doc({ noLh: true })); }
   // the minutes as A4 page images in a PDF, with each signature box handed over to the signing tool
   async function toSign() {
     persist();
@@ -640,8 +758,11 @@ ${reg ? `\nنص اللائحة المعتمدة (استند إليها فقط، 
     const btn = root.querySelector('#mnSign'); btn.disabled = true; btn.textContent = T('يُجهَّز…', 'Preparing…');
     try {
       await need('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js'); await need('https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js');
-      const W = 794, H = 1123, PAD = 60; // A4 at 96 dpi
-      const host = document.createElement('div'); host.className = 'mn-render'; host.style.width = W + 'px'; host.innerHTML = `<style>${DOC_CSS}.mo-doc{padding:${PAD}px}</style>${doc()}`;
+      const W = 794, H = 1123; // A4 at 96 dpi
+      const lh = hasLh(), ld = src => new Promise(ok => { const im = new Image(); im.onload = () => ok(im); im.onerror = () => ok(null); im.src = src; });
+      const top = lh ? await ld(M.lh.top) : null, bot = lh && M.lh.bot ? await ld(M.lh.bot) : null, tH = top ? W * top.height / top.width : 0, bH = bot ? W * bot.height / bot.width : 0;
+      const PAD = Math.max(60, Math.ceil(tH + 14), Math.ceil(bH + 14));
+      const host = document.createElement('div'); host.className = 'mn-render'; host.style.width = W + 'px'; host.innerHTML = `<style>${docCss()}.mo-doc{padding:${PAD}px 60px}</style>${doc({ noLh: true })}`;
       document.body.appendChild(host); await document.fonts.ready;
       const d = host.querySelector('.mo-doc');
       // break pages before an item or table that would be cut
@@ -650,7 +771,7 @@ ${reg ? `\nنص اللائحة المعتمدة (استند إليها فقط، 
       const total = Math.ceil(d.offsetHeight / H), cv = await html2canvas(d, { scale: 2, backgroundColor: '#fff', windowWidth: W });
       const pdf = await PDFLib.PDFDocument.create(), slots = [], ptW = 595.28, ptH = 841.89, k = ptW / W;
       for (let p = 0; p < total; p++) {
-        const c = document.createElement('canvas'); c.width = W * 2; c.height = H * 2; const x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height); x.drawImage(cv, 0, p * H * 2, W * 2, H * 2, 0, 0, W * 2, H * 2);
+        const c = document.createElement('canvas'); c.width = W * 2; c.height = H * 2; const x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height); x.drawImage(cv, 0, p * H * 2, W * 2, H * 2, 0, 0, W * 2, H * 2); if (top) x.drawImage(top, 0, 0, W * 2, tH * 2); if (bot) x.drawImage(bot, 0, (H - bH) * 2, W * 2, bH * 2);
         const img = await pdf.embedJpg(await (await fetch(c.toDataURL('image/jpeg', .9))).arrayBuffer()); const pg = pdf.addPage([ptW, ptH]); pg.drawImage(img, { x: 0, y: 0, width: ptW, height: ptH });
       }
       d.querySelectorAll('.mo-sigbox').forEach(td => { const r = td.getBoundingClientRect(), o = d.getBoundingClientRect(), top = r.top - o.top, p = Math.floor(top / H), y = top - p * H;
@@ -664,7 +785,7 @@ ${reg ? `\nنص اللائحة المعتمدة (استند إليها فقط، 
   }
   const loading = {}, need = src => loading[src] || (loading[src] = new Promise((ok, no) => { const s = document.createElement('script'); s.src = src; s.onload = ok; s.onerror = () => { delete loading[src]; no(); }; document.head.appendChild(s); }));
   function handoff(v) { return new Promise((ok, no) => { const r = indexedDB.open('alsamani', 1); r.onupgradeneeded = () => r.result.createObjectStore('hand'); r.onerror = () => no(r.error); r.onsuccess = () => { const tx = r.result.transaction('hand', 'readwrite'); tx.objectStore('hand').put(v, 'minutes'); tx.oncomplete = ok; tx.onerror = () => no(tx.error); }; }); }
-  function shrink(file, max) { return new Promise(ok => { const im = new Image(); im.onload = () => { const s = Math.min(1, max / Math.max(im.width, im.height)), c = document.createElement('canvas'); c.width = im.width * s; c.height = im.height * s; c.getContext('2d').drawImage(im, 0, 0, c.width, c.height); ok(c.toDataURL('image/png')); }; im.src = URL.createObjectURL(file); }); }
+  function shrink(file, max, type) { return new Promise(ok => { const im = new Image(); im.onload = () => { const s = Math.min(1, max / Math.max(im.width, im.height)), c = document.createElement('canvas'); c.width = im.width * s; c.height = im.height * s; c.getContext('2d').drawImage(im, 0, 0, c.width, c.height); ok(type === 'image/jpeg' ? (x => { const d = document.createElement('canvas'); d.width = c.width; d.height = c.height; const g = d.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, d.width, d.height); g.drawImage(c, 0, 0); return d.toDataURL('image/jpeg', .88); })() : c.toDataURL('image/png')); }; im.src = URL.createObjectURL(file); }); }
 
   document.addEventListener('DOMContentLoaded', home);
   if (document.readyState !== 'loading') home();
