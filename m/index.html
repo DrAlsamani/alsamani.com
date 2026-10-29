@@ -1556,9 +1556,203 @@ html.md-on{overflow:hidden}
 .mp-top5 li::before{content:counter(r);width:22px;height:22px;border-radius:50%;background:#fff;color:#23336F;display:grid;place-items:center;font-size:.75rem;font-weight:700;flex:none}
 .mp-top5 li span{flex:1}.mp-top5 li.me{background:#C9822B}.mp-tl li{background:var(--c)}
 .mp-res .mp-top5{width:min(320px,78vw);justify-self:center}
+/* ---------- challenges (games) ---------- */
+.mg{display:flex;flex-direction:column;gap:10px;align-items:center;width:100%;height:100%;user-select:none;-webkit-user-select:none;touch-action:none}
+.mg-info{margin:0;font-weight:700;color:var(--ink)}
+.mg-tools{display:flex;gap:8px}.mg-btn{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:8px 14px;font:inherit;cursor:pointer}
+.mg-sort{flex:1;display:flex;justify-content:center;align-items:flex-end;gap:10px;flex-wrap:wrap;padding:10px 0}
+.mg-tube{width:52px;padding:6px 5px 8px;border:3px solid #9aa6b8;border-top:0;border-radius:0 0 26px 26px;background:rgba(255,255,255,.6);display:flex;flex-direction:column;gap:5px;cursor:pointer;transition:transform .15s}
+.mg-tube i{display:block;width:36px;height:36px;border-radius:50%;margin:0 auto;box-shadow:inset 0 -4px 0 rgba(0,0,0,.15)}.mg-tube i.e{background:transparent;box-shadow:none}
+.mg-tube.sel{transform:translateY(-14px);border-color:#C9822B}.mg-tube.full{border-color:#2f7d5b;background:rgba(47,125,91,.12)}
+.mg-cv{width:100%;flex:1;min-height:360px;border-radius:16px;background:linear-gradient(#23336F,#16214d);touch-action:none}
+.mg-pairs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;width:100%;max-width:380px}
+.mg-card{aspect-ratio:3/4;border:0;border-radius:12px;background:#23336F;cursor:pointer;font-size:2rem;position:relative;transition:transform .25s,background .25s}
+.mg-card span{opacity:0;transition:opacity .2s}.mg-card.up,.mg-card.ok{background:#fff;box-shadow:inset 0 0 0 2px #dce1dd}.mg-card.up span,.mg-card.ok span{opacity:1}
+.mg-card.ok{background:#e4f2ea;transform:scale(.94)}
+.mg-word{font-size:clamp(44px,13vw,72px);font-weight:900;background:#fff;border-radius:18px;padding:18px 26px;min-width:70%;text-align:center;box-shadow:0 4px 18px rgba(0,0,0,.08)}
+.mg-word.shake{animation:mgShake .3s}
+@keyframes mgShake{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.mg-sw{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%;max-width:380px}
+.mg-swb{height:84px;border:0;border-radius:16px;cursor:pointer;box-shadow:0 5px 0 rgba(0,0,0,.18)}.mg-swb:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(0,0,0,.18)}
+.mp-gq{gap:8px}.mp-gbox{flex:1;display:flex;min-height:62svh}
+.mp-how{max-width:320px;margin:6px auto 0;line-height:1.7}
+/* host screen of a challenge */
+.md-gi{font-size:1.2em}.md-how2{text-align:center;font-size:clamp(16px,2vw,28px);line-height:1.6;max-width:900px;justify-self:center;margin:0;opacity:.95}
+.md-gq .md-tiles{display:none}
+.md-lb li .md-plus{color:#2f7d5b;font-weight:700;font-size:.7em}
+/* editor */
+.qz-game{border-inline-start:6px solid #C9822B}
+.qz-gpick{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px;margin:6px 0 10px}
+.qz-gpick button{border:1.5px solid var(--line);background:var(--bg);color:var(--ink);border-radius:12px;padding:10px 6px;font:inherit;cursor:pointer;display:grid;justify-items:center;gap:2px}
+.qz-gpick button b{font-size:1.6rem}.qz-gpick button small{color:var(--muted);font-size:.75rem}
+.qz-gpick button[aria-pressed=true]{border-color:#C9822B;background:rgba(201,130,43,.12)}
+.qz-ghow{margin:0;font-size:.9375rem;color:var(--muted);line-height:1.7}
+.qz-gscreen{justify-content:center;text-align:center}.qz-ghow2{font-size:clamp(12px,2cqw,20px);margin:0}
+.qz-gphone{width:300px;aspect-ratio:auto;height:620px}.qz-gbox{flex:1;display:flex;--ink:#16201f;--surface:#fff;--line:#dce1dd}
+.qz-stage:has(.qz-gphone){grid-template-columns:1fr 300px}
+@media (max-width:760px){.qz-stage:has(.qz-gphone){grid-template-columns:1fr}}
+.mg-sort{flex-wrap:nowrap;gap:2.5%;width:100%}
+.mg-tube{width:13.5%;max-width:56px;padding:5px 4px 8px}
+.mg-tube i{width:100%;height:auto;aspect-ratio:1}
 </style>
 <div id="mp" class="sn mp"><noscript><span class="ar">تعمل هذه الصفحة مع تفعيل JavaScript.</span><span class="en">This page needs JavaScript.</span></noscript></div>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script>window.MD_CFG={"apiKey": "AIzaSyA50i75DT1Is1a6Yn6snW1_JVObc8S3F0Y", "authDomain": "maydan-705ae.firebaseapp.com", "databaseURL": "https://maydan-705ae-default-rtdb.europe-west1.firebasedatabase.app", "projectId": "maydan-705ae", "appId": "1:342187013133:web:d5c2396f0db413f3c51144"};window.MD_MARK="<svg class=\"md-mark\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><rect x=\"4\" y=\"4\" width=\"40\" height=\"40\" rx=\"12\" fill=\"#23336F\"/><path d=\"M24 9l4.2 6.8 7.8-1.8-1.8 7.8L41 24l-6.8 4.2 1.8 7.8-7.8-1.8L24 39l-4.2-6.8-7.8 1.8 1.8-7.8L7 24l6.8-4.2-1.8-7.8 7.8 1.8z\" fill=\"#C9822B\"/><circle cx=\"24\" cy=\"24\" r=\"6.5\" fill=\"#23336F\"/><circle cx=\"24\" cy=\"24\" r=\"3\" fill=\"#F3E3C7\"/></svg>";</script><script>/* alsamani.com/m — a player's phone in Maydan: enter the code, pick a name, answer, see how you did. */
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script>window.MD_CFG={"apiKey": "AIzaSyA50i75DT1Is1a6Yn6snW1_JVObc8S3F0Y", "authDomain": "maydan-705ae.firebaseapp.com", "databaseURL": "https://maydan-705ae-default-rtdb.europe-west1.firebasedatabase.app", "projectId": "maydan-705ae", "appId": "1:342187013133:web:d5c2396f0db413f3c51144"};window.MD_MARK="<svg class=\"md-mark\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><rect x=\"4\" y=\"4\" width=\"40\" height=\"40\" rx=\"12\" fill=\"#23336F\"/><path d=\"M24 9l4.2 6.8 7.8-1.8-1.8 7.8L41 24l-6.8 4.2 1.8 7.8-7.8-1.8L24 39l-4.2-6.8-7.8 1.8 1.8-7.8L7 24l6.8-4.2-1.8-7.8 7.8 1.8z\" fill=\"#C9822B\"/><circle cx=\"24\" cy=\"24\" r=\"6.5\" fill=\"#23336F\"/><circle cx=\"24\" cy=\"24\" r=\"3\" fill=\"#F3E3C7\"/></svg>";</script><script>/* Maydan challenges: short games played on every phone at once. Every phone gets the same level (same seed),
+   so the race is fair. Each game reports a score; higher is better. */
+window.MDGames = (function () {
+  const rngOf = seed => { let a = seed >>> 0 || 1; return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; };
+  const shuffle = (arr, r) => { for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; } return arr; };
+  const COL = ['#2a7fa8', '#b0533a', '#2f7d5b', '#C9822B', '#6b5aa6', '#d4508a'];
+  const h = (tag, cls, html) => { const e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; };
+
+  /* ---------- sort the colours: move balls until each tube holds one colour ---------- */
+  const sort = {
+    id: 'sort', icon: '🧪', ar: 'فرز الألوان', en: 'Colour sort', kind: ['ذكاء', 'Logic'],
+    howAr: 'انقل الكرات بين الأنابيب حتى يصير كل أنبوب بلون واحد. اضغط أنبوبًا ثم الأنبوب الذي تنقل إليه.',
+    howEn: 'Move balls between tubes until each tube holds one colour. Tap a tube, then the tube to move to.',
+    play(el, ctx) {
+      const r = rngOf(ctx.seed), N = 4, CAP = 4;
+      let start; do { const balls = shuffle([].concat(...COL.slice(0, N).map(c => Array(CAP).fill(c))), r); start = Array.from({ length: N }, (_, k) => balls.slice(k * CAP, k * CAP + CAP)).concat([[], []]); } while (start.some(t => t.length === CAP && t.every(b => b === t[0])));
+      let tubes = start.map(t => t.slice()), sel = -1, moves = 0, done = false;
+      const wrap = h('div', 'mg-sort'), bar = h('div', 'mg-tools');
+      const reset = h('button', 'mg-btn', ctx.ar ? '↺ من جديد' : '↺ Restart'); reset.type = 'button'; bar.appendChild(reset);
+      el.append(wrap, bar);
+      const full = t => t.length === CAP && t.every(b => b === t[0]);
+      const solved = () => tubes.every(t => !t.length || full(t));
+      function draw() {
+        wrap.innerHTML = '';
+        tubes.forEach((t, k) => {
+          const tb = h('button', 'mg-tube' + (k === sel ? ' sel' : '') + (full(t) ? ' full' : '')); tb.type = 'button';
+          for (let s = CAP - 1; s >= 0; s--) { const b = h('i'); if (t[s]) b.style.background = t[s]; else b.className = 'e'; tb.appendChild(b); }
+          tb.onclick = () => tap(k); wrap.appendChild(tb);
+        });
+      }
+      function tap(k) {
+        if (done) return;
+        if (sel < 0) { if (tubes[k].length && !full(tubes[k])) { sel = k; ctx.tick(); } draw(); return; }
+        if (sel === k) { sel = -1; draw(); return; }
+        const from = tubes[sel], to = tubes[k], c = from[from.length - 1];
+        if (to.length < CAP && (!to.length || to[to.length - 1] === c)) {
+          while (from.length && from[from.length - 1] === c && to.length < CAP) to.push(from.pop());
+          moves++; ctx.tick();
+        } else ctx.bad();
+        sel = -1; draw();
+        if (solved()) { done = true; ctx.finish(score()); }
+      }
+      reset.onclick = () => { if (done) return; tubes = start.map(t => t.slice()); sel = -1; draw(); };
+      const score = () => done ? 600 + Math.round(400 * ctx.left()) : tubes.filter(full).length * 120;
+      draw();
+      return { score };
+    }
+  };
+
+  /* ---------- the throw: flick the ball into a moving hoop ---------- */
+  const shoot = {
+    id: 'shoot', icon: '🏀', ar: 'الرمية', en: 'The throw', kind: ['مهارة', 'Skill'],
+    howAr: 'اسحب الكرة إلى الأعلى واتركها لترميها في السلة المتحركة. كل إصابة نقطة.',
+    howEn: 'Drag the ball up and let go to throw it into the moving hoop. Every basket counts.',
+    play(el, ctx) {
+      const r = rngOf(ctx.seed), cv = h('canvas', 'mg-cv'), info = h('p', 'mg-info');
+      el.append(info, cv);
+      const x = cv.getContext('2d'), dpr = Math.min(2, window.devicePixelRatio || 1);
+      let W, H; const size = () => { W = cv.clientWidth; H = cv.clientHeight; cv.width = W * dpr; cv.height = H * dpr; x.setTransform(dpr, 0, 0, dpr, 0, 0); };
+      size();
+      const R = Math.max(16, W * .055), phase = r() * 6.28, base = .8 + r() * .5;
+      let hits = 0, shots = 0, ball = null, drag = null, t0 = performance.now(), last = t0, stop = false;
+      const home = () => ({ x: W / 2, y: H - R * 2.2, vx: 0, vy: 0, live: false, up: false });
+      ball = home();
+      const hoop = t => { const spd = base + hits * .12; return { x: W / 2 + Math.sin(t / 1000 * spd + phase) * (W / 2 - 60), y: H * .2, w: Math.max(70, W * .22) }; };
+      cv.addEventListener('pointerdown', e => { if (ball.live) return; const b = cv.getBoundingClientRect(); drag = { x: e.clientX - b.left, y: e.clientY - b.top, t: performance.now() }; cv.setPointerCapture(e.pointerId); });
+      cv.addEventListener('pointerup', e => {
+        if (!drag || ball.live) return; const b = cv.getBoundingClientRect(), ux = e.clientX - b.left, uy = e.clientY - b.top, dt = Math.max(40, performance.now() - drag.t);
+        const dx = ux - drag.x, dy = uy - drag.y; drag = null;
+        if (dy > -20) return;
+        const k = Math.min(2.2, 260 / dt);
+        ball.vx = dx * k * 2.2; ball.vy = Math.max(-H * 2.6, dy * k * 3.2); ball.live = true; ball.up = true; shots++;
+      });
+      function frame(now) {
+        if (stop) return;
+        const dt = Math.min(.04, (now - last) / 1000); last = now;
+        x.clearRect(0, 0, W, H);
+        const hp = hoop(now - t0);
+        // backboard and hoop
+        x.fillStyle = 'rgba(255,255,255,.12)'; x.fillRect(hp.x - hp.w * .6, hp.y - 46, hp.w * 1.2, 40);
+        x.strokeStyle = '#C9822B'; x.lineWidth = 6; x.beginPath(); x.moveTo(hp.x - hp.w / 2, hp.y); x.lineTo(hp.x + hp.w / 2, hp.y); x.stroke();
+        x.strokeStyle = 'rgba(255,255,255,.35)'; x.lineWidth = 2; for (let k = 0; k <= 4; k++) { x.beginPath(); x.moveTo(hp.x - hp.w / 2 + k * hp.w / 4, hp.y); x.lineTo(hp.x - hp.w / 3 + k * hp.w / 6, hp.y + 30); x.stroke(); }
+        if (ball.live) {
+          const py = ball.y; ball.vy += H * 1.6 * dt; ball.x += ball.vx * dt; ball.y += ball.vy * dt;
+          // a basket: coming down through the rim
+          if (ball.vy > 0 && py < hp.y && ball.y >= hp.y && Math.abs(ball.x - hp.x) < hp.w / 2 - R * .4) { hits++; ctx.tick(); flash = 18; }
+          if (ball.y > H + R || ball.x < -R * 2 || ball.x > W + R * 2) ball = home();
+        }
+        x.fillStyle = '#d97a2b'; x.beginPath(); x.arc(ball.x, ball.y, R, 0, 7); x.fill();
+        x.strokeStyle = 'rgba(0,0,0,.35)'; x.lineWidth = 2; x.beginPath(); x.arc(ball.x, ball.y, R, 0, 7); x.moveTo(ball.x - R, ball.y); x.lineTo(ball.x + R, ball.y); x.stroke();
+        if (flash > 0) { flash--; x.fillStyle = 'rgba(243,210,122,' + flash / 30 + ')'; x.fillRect(0, 0, W, H); }
+        info.textContent = (ctx.ar ? 'الإصابات: ' : 'Baskets: ') + hits;
+        requestAnimationFrame(frame);
+      }
+      let flash = 0; requestAnimationFrame(frame);
+      return { score: () => hits * 100, stop: () => { stop = true; } };
+    }
+  };
+
+  /* ---------- pairs: turn cards two at a time and match them ---------- */
+  const pairs = {
+    id: 'pairs', icon: '🃏', ar: 'أزواج البطاقات', en: 'Card pairs', kind: ['ذاكرة', 'Memory'],
+    howAr: 'اقلب بطاقتين في كل مرة، وتذكّر مكانهما، حتى تطابق كل البطاقات.',
+    howEn: 'Turn two cards at a time and remember where they are until every card is matched.',
+    play(el, ctx) {
+      const r = rngOf(ctx.seed), pool = ['🐪', '🌴', '🦅', '⭐', '🌙', '🍉', '🐎', '⚽', '🎈', '🦋', '🍋', '🚀'];
+      const pick = shuffle(pool.slice(), r).slice(0, 8), deck = shuffle(pick.concat(pick), r);
+      const grid = h('div', 'mg-pairs'); el.appendChild(grid);
+      let open = [], got = 0, miss = 0, lock = false, done = false;
+      deck.forEach((e, k) => {
+        const c = h('button', 'mg-card', `<span>${e}</span>`); c.type = 'button';
+        c.onclick = () => {
+          if (lock || done || c.classList.contains('up') || c.classList.contains('ok')) return;
+          c.classList.add('up'); open.push(c); ctx.tick();
+          if (open.length < 2) return;
+          const [a, b] = open; open = [];
+          if (deck[[...grid.children].indexOf(a)] === deck[[...grid.children].indexOf(b)]) {
+            a.classList.add('ok'); b.classList.add('ok'); got++;
+            if (got === 8) { done = true; ctx.finish(score()); }
+          } else { miss++; lock = true; ctx.bad(); setTimeout(() => { a.classList.remove('up'); b.classList.remove('up'); lock = false; }, 650); }
+        };
+        grid.appendChild(c);
+      });
+      const score = () => done ? Math.max(500, 600 + Math.round(400 * ctx.left()) - miss * 10) : got * 60;
+      return { score };
+    }
+  };
+
+  /* ---------- the colour of the word: answer the ink, not the meaning ---------- */
+  const stroop = {
+    id: 'stroop', icon: '🎨', ar: 'لون الكلمة', en: 'Ink colour', kind: ['تركيز', 'Focus'],
+    howAr: 'تظهر كلمة لون مكتوبة بلون آخر. اضغط لون الخط، لا ما تقوله الكلمة. أسرع ما تستطيع.',
+    howEn: 'A colour word appears in another colour. Tap the ink colour, not what the word says. As fast as you can.',
+    play(el, ctx) {
+      const r = rngOf(ctx.seed), C = [['أحمر', 'RED', '#d63c3c'], ['أزرق', 'BLUE', '#2f6fd0'], ['أخضر', 'GREEN', '#2e9a57'], ['أصفر', 'YELLOW', '#e2b21c']];
+      const word = h('div', 'mg-word'), btns = h('div', 'mg-sw'), info = h('p', 'mg-info'); el.append(info, word, btns);
+      let ok = 0, bad = 0, cur;
+      const next = () => { const w = Math.floor(r() * 4); let ink = Math.floor(r() * 4); if (r() < .75) while (ink === w) ink = Math.floor(r() * 4); cur = ink; word.textContent = C[w][ctx.ar ? 0 : 1]; word.style.color = C[ink][2]; };
+      // the buttons are plain swatches, so only the eye for colour decides
+      shuffle(C.map((c, k) => k), rngOf(ctx.seed + 7)).forEach(k => { const b = h('button', 'mg-swb'); b.type = 'button'; b.style.background = C[k][2]; b.setAttribute('aria-label', C[k][ctx.ar ? 0 : 1]); b.onclick = () => { if (k === cur) { ok++; ctx.tick(); } else { bad++; ctx.bad(); word.classList.remove('shake'); void word.offsetWidth; word.classList.add('shake'); } info.textContent = (ctx.ar ? 'صحيح: ' : 'Right: ') + ok; next(); }; btns.appendChild(b); });
+      info.textContent = (ctx.ar ? 'صحيح: ' : 'Right: ') + 0; next();
+      return { score: () => Math.max(0, ok * 50 - bad * 25) };
+    }
+  };
+
+  const LIST = [sort, shoot, pairs, stroop];
+  const byId = id => LIST.find(g => g.id === id) || LIST[0];
+  // run a game in a box: returns {score(), stop()}; ctx.finish is called when a game ends early by being completed
+  function run(id, box, opts) {
+    box.innerHTML = ''; box.className = 'mg mg-' + id;
+    const g = byId(id), ctx = Object.assign({ seed: 1, ar: true, left: () => 0, finish() {}, tick() {}, bad() {} }, opts);
+    const api = g.play(box, ctx);
+    return { score: api.score, stop: api.stop || (() => {}) };
+  }
+  return { LIST, byId, run };
+})();
+</script><script>/* alsamani.com/m — a player's phone in Maydan: enter the code, pick a name, answer, see how you did. */
 (function () {
   const root = document.getElementById('mp');
   if (!root) return;
@@ -1666,14 +1860,32 @@ html.md-on{overflow:hidden}
     clearInterval(tick);
     if (st.ph === 'lobby') return screen(`<div class="mp-wait"><p class="mp-big">${B('أنت في الميدان!', 'You are in!')}</p><p class="mp-me" dir="auto">${esc(me)}</p>${TEAMS && myTeam != null ? `<p class="mp-tm" style="--c:var(--qz${(myTeam) % 6})">${esc(TEAMS[myTeam])}</p>` : ''}<p>${B('انظر إلى الشاشة؛ ستبدأ المسابقة قريبًا.', 'Watch the screen; the quiz will start soon.')}</p></div>` + rxBar());
     if (st.ph === 'pause') return screen(`<div class="mp-wait"><p class="mp-big">⏸</p><p class="mp-big">${B('توقفت المسابقة مؤقتًا', 'The quiz is paused')}</p><p>${B('ابقَ على هذه الصفحة؛ ستُستأنف من حيث توقفت.', 'Stay on this page; it will continue where it stopped.')}</p></div>`);
-    if (st.ph === 'ready') { if (!Q || Q.i !== st.i) { shown = ''; setTimeout(draw, 200); return; } bet = false; return screen(`<div class="mp-wait${Q.gold ? ' gold' : ''}"><p>${B('استعد…', 'Get ready…')}</p><p class="mp-big">${B('السؤال', 'Question')} ${(st.i || 0) + 1}</p>${Q.gold ? `<p class="mp-gold">${B('✨ السؤال الذهبي! نقاط مضاعفة', '✨ The golden question! Double points')}</p>` : Q.last ? `<p class="mp-gold">${B('🏁 السؤال الأخير — نقاط مضاعفة', '🏁 The last question — double points')}</p>` : ''}</div>`); }
+    if (st.ph === 'ready') { if (!Q || Q.i !== st.i) { shown = ''; setTimeout(draw, 200); return; } bet = false; const gm = Q.type === 'game' && window.MDGames ? MDGames.byId(Q.g) : null; return screen(`<div class="mp-wait${Q.gold ? ' gold' : ''}"><p>${B('استعد…', 'Get ready…')}</p><p class="mp-big">${gm ? `${gm.icon} ${Q.L === 'en' ? gm.en : gm.ar}` : B('السؤال', 'Question') + ' ' + ((st.i || 0) + 1)}</p>${gm ? `<p class="mp-how">${Q.L === 'en' ? gm.howEn : gm.howAr}</p>` : ''}${Q.gold ? `<p class="mp-gold">${B('✨ السؤال الذهبي! نقاط مضاعفة', '✨ The golden question! Double points')}</p>` : Q.last ? `<p class="mp-gold">${B('🏁 السؤال الأخير — نقاط مضاعفة', '🏁 The last question — double points')}</p>` : ''}</div>`); }
     if (st.ph === 'q') return question();
     if (st.ph === 'rev' || st.ph === 'lb') return result();
     if (st.ph === 'end') return final();
   }
   function screen(html, cls) { root.innerHTML = `<div class="mp-play ${cls || ''}"><div class="mp-top"><span dir="auto">${esc(me)}${TEAMS && myTeam != null ? ` <i style="--c:var(--qz${(myTeam) % 6})">${esc(TEAMS[myTeam])}</i>` : ''}</span><b>${SC ? SC.s : 0}</b></div>${html}</div>`; if (R) rxBind(); }
+  let game = null;
+  function playGame() {
+    if (sent === st.i) return screen(`<div class="mp-wait"><p class="mp-big">${B('أنهيت التحدي!', 'Challenge done!')}</p><p>${B('بانتظار البقية…', 'Waiting for the others…')}</p></div>`);
+    screen(`<div class="mp-q mp-gq"><div class="mp-bar"><i id="mpBar"></i></div><div class="mp-gbox" id="mpG"></div></div>`, 'q');
+    const send = async score => {
+      if (sent === st.i) return; sent = st.i; buzz(30); if (game) { game.stop(); game = null; }
+      try { await R.child('an/' + st.i + '/' + uid).set({ a: Math.round(score), t: TS }); } catch (e) {}
+      shown = ''; draw();
+    };
+    game = MDGames.run(Q.g, root.querySelector('#mpG'), { seed: Q.seed, ar: Q.L !== 'en', left: () => Math.max(0, 1 - (now() - st.t0) / 1000 / st.dur), finish: send, tick: () => buzz(10), bad: () => buzz(60) });
+    const bar = root.querySelector('#mpBar'), g = game;
+    tick = setInterval(() => {
+      const left = Math.max(0, st.dur - (now() - st.t0) / 1000);
+      if (bar) bar.style.width = (100 * left / st.dur) + '%';
+      if (left <= 0) { clearInterval(tick); send(g.score()); }
+    }, 100);
+  }
   function question() {
     if (!Q || Q.i !== st.i) { setTimeout(draw, 200); shown = ''; return; }
+    if (Q.type === 'game') return playGame();
     if (sent === st.i) return screen(`<div class="mp-wait"><p class="mp-big">${B('وصلت إجابتك', 'Answer sent')}</p><p>${B('انتظر النتيجة…', 'Wait for the result…')}</p></div>`);
     const multi = !!Q.multi, pick = new Set();
     screen(`<div class="mp-q"><div class="mp-bar"><i id="mpBar"></i></div><p class="mp-qt" dir="auto">${esc(Q.q)}</p>${multi ? `<p class="mp-hint">${B('اختر كل الإجابات الصحيحة ثم أرسل', 'Choose every right answer, then send')}</p>` : ''}${Q.bet ? `<button type="button" class="mp-bet" id="mpBet" aria-pressed="${bet}">🎯 ${B('أراهن على إجابتي (+٣٠٠ أو −٣٠٠)', 'I bet on my answer (+300 or −300)')}</button>` : ''}
@@ -1703,6 +1915,12 @@ html.md-on{overflow:hidden}
   function result() {
     if (!SC || !OK) { if (st.ph === 'rev') screen(`<div class="mp-wait"><p>${B('لحظة…', 'One moment…')}</p></div>`); return; }
     if (st.ph === 'lb' && TOP) return screen(`<div class="mp-res end"><p class="mp-big">${B('الترتيب', 'Ranking')}</p>${topList()}<p class="mp-rank">${B(`مركزك: ${SC.r}`, `Your place: ${SC.r}`)}</p></div>` + rxBar(), 'end');
+    if (game) { game.stop(); game = null; }
+    if (Q && Q.type === 'game' && Q.i === st.i) {
+      return screen(`<div class="mp-res ${SC.c ? 'good' : 'bad'}"><p class="mp-sym">${SC.c ? '🎉' : '⏱'}</p><p class="mp-big">${B('نتيجتك في التحدي', 'Your challenge score')}: ${SC.g || 0}</p>
+        ${SC.d > 0 ? `<p class="mp-plus">+${SC.d}</p>` : ''}<p class="mp-rank">${B(`مركزك: ${SC.r}`, `Your place: ${SC.r}`)}</p>
+        ${SC.gap != null && SC.r > 1 ? `<p class="mp-gap">🎯 ${B(`تحتاج ${SC.gap + 1} نقطة لتتجاوز ${esc(SC.above)}`, `You need ${SC.gap + 1} points to pass ${esc(SC.above)}`)}</p>` : SC.r === 1 ? `<p class="mp-gap">${B('أنت في الصدارة!', 'You are in the lead!')}</p>` : ''}</div>` + rxBar(), SC.c ? 'good' : 'bad');
+    }
     const ok = SC.c, right = Q && Q.i === st.i ? [].concat(OK).map(j => `${LET()[j]}) ${esc(Q.opts[j])}`).join(' · ') : '';
     if (st.ph === 'rev') buzz(ok ? [40, 60, 40] : 200);
     screen(`<div class="mp-res ${ok ? 'good' : 'bad'}"><p class="mp-sym">${ok ? '✓' : SC.a ? '✕' : '⏱'}</p>

@@ -1990,7 +1990,7 @@ if (typeof module !== 'undefined') module.exports = QZParse;
           <div class="qz-step2"><b>${B('٢', '2')}</b><p>${B('حين يكتب الأسئلة، انسخ رده كاملًا ثم اضغط:', 'When it has written them, copy its whole reply, then tap:')}</p><button type="button" class="btn solid" id="qzBack2">${B('لصق رد الذكاء الاصطناعي', 'Paste the AI’s reply')}</button></div></div>
       </div>
       <div id="qzQs" class="qz-qs"></div>
-      <div class="qz-addq"><button type="button" class="btn ghost" id="qzAddQ">${B('+ سؤال', '+ Question')}</button><button type="button" class="btn ghost" id="qzAddTF">${B('+ صح أو خطأ', '+ True or false')}</button></div>
+      <div class="qz-addq"><button type="button" class="btn ghost" id="qzAddQ">${B('+ سؤال', '+ Question')}</button><button type="button" class="btn ghost" id="qzAddTF">${B('+ صح أو خطأ', '+ True or false')}</button><button type="button" class="btn ghost" id="qzAddG">${B('+ تحدٍّ تفاعلي 🎮', '+ Challenge 🎮')}</button></div>
       <div class="qz-bar"><div class="qz-chk" id="qzChk"></div><div class="qz-bar-b"><button type="button" class="btn solid md-go" id="qzGo">${B('ابدأ المسابقة ▶', 'Start the quiz ▶')}</button><button type="button" class="btn ghost" id="qzPv">${B('معاينة', 'Preview')}</button><button type="button" class="btn ghost" id="qzExp">${B('حفظ نسخة', 'Save a copy')}</button></div></div>`;
     const q = s => root.querySelector(s);
     q('#qzBack').onclick = () => { persist(); home(); };
@@ -2030,6 +2030,7 @@ if (typeof module !== 'undefined') module.exports = QZParse;
     };
     q('#qzCopy').onclick = async () => { try { await navigator.clipboard.writeText(prompt()); toast(B('نُسخت التعليمات. الصقها في ChatGPT أو Claude.', 'Copied. Paste it into ChatGPT or Claude.')); } catch (er) { toast(B('تعذّر النسخ.', 'Could not copy.'), 1); } };
     q('#qzAddQ').onclick = () => { Q.qs.push(norm({})); draw(); focusLast(); later(); };
+    q('#qzAddG').onclick = () => { const used = Q.qs.filter(z => z.type === 'game').map(z => z.g), all = GAMES().map(z => z.id), g = all.find(id => !used.includes(id)) || all[Math.floor(Math.random() * all.length)] || 'sort'; Q.qs.push(norm({ type: 'game', g, time: 30, opts: ['', ''] })); draw(); const c = root.querySelectorAll('.qz-q'); c[c.length - 1].scrollIntoView({ block: 'center', behavior: 'smooth' }); later(); };
     q('#qzAddTF').onclick = () => { Q.qs.push(norm({ type: 'tf', opts: [T('صح', 'True'), T('خطأ', 'False')] })); draw(); focusLast(); later(); };
     q('#qzPv').onclick = () => preview(0);
     q('#qzGo').onclick = () => {
@@ -2038,7 +2039,7 @@ if (typeof module !== 'undefined') module.exports = QZParse;
       const bad = checks();
       if (bad) { toast(B('بعض الأسئلة تحتاج مراجعة قبل البدء.', 'Some questions need review before starting.'), 1); root.querySelector('#qzChk [data-go]') && root.querySelector('#qzChk [data-go]').click(); return; }
       if (!window.MDLive) { toast(B('تعذّر تشغيل المسابقة الآن.', 'The quiz cannot start right now.'), 1); return; }
-      MDLive.start({ title: Q.title, qs: Q.qs.map(x => ({ type: x.type, q: x.q, opts: x.opts.filter(o => o.trim()), ok: x.ok.map(j => x.opts.slice(0, j).filter(o => o.trim()).length), pts: x.pts, img: x.img, time: x.timeSet ? x.time : suggest(x) })) });
+      MDLive.start({ title: Q.title, qs: Q.qs.map(x => x.type === 'game' ? { type: 'game', g: x.g, q: '', opts: [], ok: [], pts: x.pts, time: x.time || 30, seed: 1 + Math.floor(Math.random() * 1e9) } : ({ type: x.type, q: x.q, opts: x.opts.filter(o => o.trim()), ok: x.ok.map(j => x.opts.slice(0, j).filter(o => o.trim()).length), pts: x.pts, img: x.img, time: x.timeSet ? x.time : suggest(x) })) });
     };
     q('#qzExp').onclick = () => save(new Blob([JSON.stringify({ title: Q.title, qs: Q.qs.map(({ id, timeSet, ...r }) => r) }, null, 1)], { type: 'application/json' }), (Q.title || 'quiz').replace(/[\\/:*?"<>|]+/g, ' ').slice(0, 60) + '.json');
     draw(); checks();
@@ -2064,11 +2065,25 @@ if (typeof module !== 'undefined') module.exports = QZParse;
     box.querySelectorAll('.qz-q').forEach((el, i) => bind(el, Q.qs[i]));
     if (window.Sortable && !box._s) box._s = Sortable.create(box, { handle: '.qz-grip', animation: 150, onEnd: e => { const [m] = Q.qs.splice(e.oldIndex, 1); Q.qs.splice(e.newIndex, 0, m); draw(); later(); } });
   }
+  const GAMES = () => window.MDGames ? MDGames.LIST : [];
+  const GTIMES = [20, 30, 45, 60, 90];
   function card(x, i) {
+    if (x.type === 'game') {
+      const g = window.MDGames ? MDGames.byId(x.g) : { icon: '🎮', ar: '', en: '', howAr: '', howEn: '' }, t = x.time || 30;
+      return `<div class="qz-q qz-game" data-id="${x.id}">
+      <div class="qz-qh"><span class="qz-grip" title="${T('اسحب لتغيير الترتيب', 'Drag to reorder')}">⋮⋮</span><b class="qz-n">${i + 1}</b>
+        <select data-k="type" aria-label="type"><option value="mc">${T('اختيار من متعدد', 'Multiple choice')}</option><option value="tf">${T('صح أو خطأ', 'True or false')}</option><option value="game" selected>${T('تحدٍّ تفاعلي', 'Challenge')}</option></select>
+        <select data-k="gtime" aria-label="time">${GTIMES.map(s => `<option value="${s}"${s === t ? ' selected' : ''}>${s} ${T('ث', 's')}</option>`).join('')}</select>
+        <select data-k="pts" aria-label="points"><option value="1"${x.pts === 1 ? ' selected' : ''}>${T('نقاط عادية', 'Standard points')}</option><option value="2"${x.pts === 2 ? ' selected' : ''}>${T('نقاط مضاعفة', 'Double points')}</option><option value="0"${x.pts === 0 ? ' selected' : ''}>${T('بلا نقاط', 'No points')}</option></select>
+        <span class="qz-act"><button type="button" class="qz-ib" data-a="dup" title="${T('تكرار', 'Duplicate')}">⧉</button><button type="button" class="qz-ib" data-a="del" title="${T('حذف', 'Delete')}">✕</button></span></div>
+      <div class="qz-gpick">${GAMES().map(z => `<button type="button" data-g="${z.id}" aria-pressed="${z.id === x.g}"><b>${z.icon}</b><span>${isAr() ? z.ar : z.en}</span><small>${isAr() ? z.kind[0] : z.kind[1]}</small></button>`).join('')}</div>
+      <p class="qz-ghow"><b>${g.icon} ${isAr() ? g.ar : g.en}:</b> ${isAr() ? g.howAr : g.howEn}</p>
+      <p class="qz-warn" hidden></p></div>`;
+    }
     const t = x.timeSet ? x.time : suggest(x), tf = x.type === 'tf';
     return `<div class="qz-q" data-id="${x.id}">
       <div class="qz-qh"><span class="qz-grip" title="${T('اسحب لتغيير الترتيب', 'Drag to reorder')}">⋮⋮</span><b class="qz-n">${i + 1}</b>
-        <select data-k="type" aria-label="type"><option value="mc"${tf ? '' : ' selected'}>${T('اختيار من متعدد', 'Multiple choice')}</option><option value="tf"${tf ? ' selected' : ''}>${T('صح أو خطأ', 'True or false')}</option></select>
+        <select data-k="type" aria-label="type"><option value="mc"${tf ? '' : ' selected'}>${T('اختيار من متعدد', 'Multiple choice')}</option><option value="game">${T('تحدٍّ تفاعلي', 'Challenge')}</option><option value="tf"${tf ? ' selected' : ''}>${T('صح أو خطأ', 'True or false')}</option></select>
         <select data-k="time" aria-label="time" title="${T('وقت الإجابة', 'Time to answer')}">${TIMES.map(s => `<option value="${s}"${s === t ? ' selected' : ''}>${s} ${T('ث', 's')}${!x.timeSet && s === t ? ' ✦' : ''}</option>`).join('')}</select>
         <select data-k="pts" aria-label="points"><option value="1"${x.pts === 1 ? ' selected' : ''}>${T('نقاط عادية', 'Standard points')}</option><option value="2"${x.pts === 2 ? ' selected' : ''}>${T('نقاط مضاعفة', 'Double points')}</option><option value="0"${x.pts === 0 ? ' selected' : ''}>${T('بلا نقاط', 'No points')}</option></select>
         <span class="qz-act"><label class="qz-ib" title="${T('صورة', 'Image')}">🖼<input type="file" accept="image/*" hidden data-k="img"></label><button type="button" class="qz-ib" data-a="dup" title="${T('تكرار', 'Duplicate')}">⧉</button><button type="button" class="qz-ib" data-a="del" title="${T('حذف', 'Delete')}">✕</button></span></div>
@@ -2081,10 +2096,20 @@ if (typeof module !== 'undefined') module.exports = QZParse;
   }
   function bind(el, x) {
     const re = () => { const i = Q.qs.indexOf(x), n = document.createElement('div'); n.innerHTML = card(x, i); const c = n.firstElementChild; el.replaceWith(c); bind(c, x); later(); return c; };
+    if (x.type === 'game') {
+      el.querySelector('[data-k=type]').onchange = e => { x.type = e.target.value; x.opts = x.type === 'tf' ? [T('صح', 'True'), T('خطأ', 'False')] : (x.keep && x.keep.length ? x.keep : ['', '', '', '']); x.ok = []; delete x.g; re(); };
+      el.querySelector('[data-k=gtime]').onchange = e => { x.time = +e.target.value; later(); };
+      el.querySelector('[data-k=pts]').onchange = e => { x.pts = +e.target.value; later(); };
+      el.querySelectorAll('[data-g]').forEach(b => b.onclick = () => { x.g = b.dataset.g; re(); });
+      el.querySelector('[data-a=dup]').onclick = () => { Q.qs.splice(Q.qs.indexOf(x) + 1, 0, norm(JSON.parse(JSON.stringify(Object.assign({}, x, { id: uid() }))))); draw(); later(); };
+      el.querySelector('[data-a=del]').onclick = () => { Q.qs.splice(Q.qs.indexOf(x), 1); draw(); later(); };
+      return;
+    }
     el.querySelector('[data-k=q]').oninput = e => { x.q = e.target.value; tm(); later(); };
     const tm = () => { if (x.timeSet) return; const s = el.querySelector('[data-k=time]'), t = suggest(x); [...s.options].forEach(o => { o.selected = +o.value === t; o.textContent = o.value + ' ' + T('ث', 's') + (+o.value === t ? ' ✦' : ''); }); };
     el.querySelector('[data-k=type]').onchange = e => {
       x.type = e.target.value;
+      if (x.type === 'game') { x.keep = x.opts; x.g = x.g || 'sort'; x.time = 30; x.q = x.q || ''; re(); return; }
       if (x.type === 'tf') { x.keep = x.opts; x.opts = [T('صح', 'True'), T('خطأ', 'False')]; x.ok = x.ok.filter(j => j < 2).slice(0, 1); }
       else { x.opts = x.keep && x.keep.length ? x.keep : ['', '', '', '']; x.ok = []; }
       re();
@@ -2134,6 +2159,7 @@ if (typeof module !== 'undefined') module.exports = QZParse;
     const W = [];
     const seen = new Map();
     Q.qs.forEach((x, i) => {
+      if (x.type === 'game') { const el = root.querySelectorAll('.qz-q')[i]; if (el) { el.classList.remove('bad'); el.querySelector('.qz-warn').hidden = true; } return; }
       const w = [], filled = x.opts.filter(o => o.trim());
       if (!x.q.trim()) w.push(T('بلا نص', 'no text'));
       if (filled.length < 2) w.push(T('يحتاج خيارين على الأقل', 'needs at least two options'));
@@ -2301,10 +2327,22 @@ False *`;
     document.querySelectorAll('.qz-pv').forEach(x => x.remove());
     const v = document.createElement('div'); v.className = 'qz-pv'; v.setAttribute('role', 'dialog'); document.body.appendChild(v);
     let show = false;
-    const close = () => { v.remove(); document.removeEventListener('keydown', key); };
+    const close = () => { if (game) game.stop(); v.remove(); document.removeEventListener('keydown', key); };
     const key = e => { if (e.key === 'Escape') close(); if (e.key === 'ArrowLeft') go(isAr() ? 1 : -1); if (e.key === 'ArrowRight') go(isAr() ? -1 : 1); };
     const go = d => { const n = i + d; if (n >= 0 && n < Q.qs.length) { i = n; show = false; paint(); } };
+    let game = null;
     function paint() {
+      if (game) { game.stop(); game = null; }
+      if (Q.qs[i].type === 'game' && window.MDGames) {
+        const x = Q.qs[i], g = MDGames.byId(x.g);
+        v.innerHTML = `<div class="qz-pvb"><div class="qz-pvh"><b>${B('معاينة', 'Preview')} · ${i + 1} / ${Q.qs.length}</b><span><button type="button" data-g="-1" aria-label="previous">${isAr() ? '›' : '‹'}</button><button type="button" data-g="1" aria-label="next">${isAr() ? '‹' : '›'}</button><button type="button" data-x aria-label="close">✕</button></span></div>
+          <div class="qz-stage"><div class="qz-screen qz-gscreen"><p class="qz-sq">${g.icon} ${isAr() ? g.ar : g.en}</p><p class="qz-ghow2">${isAr() ? g.howAr : g.howEn}</p><div class="qz-timer">${x.time || 30}</div></div>
+          <div class="qz-phone qz-gphone"><div class="qz-ph-top">${B('جرّبها هنا', 'Try it here')}</div><div class="qz-gbox"></div></div></div></div>`;
+        v.querySelectorAll('[data-g]').forEach(b => b.onclick = () => go(+b.dataset.g));
+        v.querySelector('[data-x]').onclick = close;
+        game = MDGames.run(x.g, v.querySelector('.qz-gbox'), { seed: 7, ar: isAr(), left: () => .5, finish: s => toast(B(`أنهيت التحدي: ${s} نقطة`, `Done: ${s} points`)) });
+        return;
+      }
       const x = Q.qs[i], t = x.timeSet ? x.time : suggest(x), opts = x.opts.map((o, j) => ({ o, j })).filter(z => z.o.trim());
       v.innerHTML = `<div class="qz-pvb">
         <div class="qz-pvh"><b>${B('معاينة', 'Preview')} · ${i + 1} / ${Q.qs.length}</b><span><button type="button" data-g="-1" aria-label="previous">${isAr() ? '›' : '‹'}</button><button type="button" data-g="1" aria-label="next">${isAr() ? '‹' : '›'}</button><button type="button" class="qz-show" aria-pressed="${show}">${B('إظهار الإجابة', 'Show answer')}</button><button type="button" data-x aria-label="close">✕</button></span></div>
@@ -2502,7 +2540,201 @@ html.md-on{overflow:hidden}
 .mp-top5 li::before{content:counter(r);width:22px;height:22px;border-radius:50%;background:#fff;color:#23336F;display:grid;place-items:center;font-size:.75rem;font-weight:700;flex:none}
 .mp-top5 li span{flex:1}.mp-top5 li.me{background:#C9822B}.mp-tl li{background:var(--c)}
 .mp-res .mp-top5{width:min(320px,78vw);justify-self:center}
-</style><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script>window.MD_CFG={"apiKey": "AIzaSyA50i75DT1Is1a6Yn6snW1_JVObc8S3F0Y", "authDomain": "maydan-705ae.firebaseapp.com", "databaseURL": "https://maydan-705ae-default-rtdb.europe-west1.firebasedatabase.app", "projectId": "maydan-705ae", "appId": "1:342187013133:web:d5c2396f0db413f3c51144"};window.MD_MARK="<svg class=\"md-mark\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><rect x=\"4\" y=\"4\" width=\"40\" height=\"40\" rx=\"12\" fill=\"#23336F\"/><path d=\"M24 9l4.2 6.8 7.8-1.8-1.8 7.8L41 24l-6.8 4.2 1.8 7.8-7.8-1.8L24 39l-4.2-6.8-7.8 1.8 1.8-7.8L7 24l6.8-4.2-1.8-7.8 7.8 1.8z\" fill=\"#C9822B\"/><circle cx=\"24\" cy=\"24\" r=\"6.5\" fill=\"#23336F\"/><circle cx=\"24\" cy=\"24\" r=\"3\" fill=\"#F3E3C7\"/></svg>";</script><script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script><script>/* alsamani.com/play/maydan — running a quiz live: the big screen of the host.
+/* ---------- challenges (games) ---------- */
+.mg{display:flex;flex-direction:column;gap:10px;align-items:center;width:100%;height:100%;user-select:none;-webkit-user-select:none;touch-action:none}
+.mg-info{margin:0;font-weight:700;color:var(--ink)}
+.mg-tools{display:flex;gap:8px}.mg-btn{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:8px 14px;font:inherit;cursor:pointer}
+.mg-sort{flex:1;display:flex;justify-content:center;align-items:flex-end;gap:10px;flex-wrap:wrap;padding:10px 0}
+.mg-tube{width:52px;padding:6px 5px 8px;border:3px solid #9aa6b8;border-top:0;border-radius:0 0 26px 26px;background:rgba(255,255,255,.6);display:flex;flex-direction:column;gap:5px;cursor:pointer;transition:transform .15s}
+.mg-tube i{display:block;width:36px;height:36px;border-radius:50%;margin:0 auto;box-shadow:inset 0 -4px 0 rgba(0,0,0,.15)}.mg-tube i.e{background:transparent;box-shadow:none}
+.mg-tube.sel{transform:translateY(-14px);border-color:#C9822B}.mg-tube.full{border-color:#2f7d5b;background:rgba(47,125,91,.12)}
+.mg-cv{width:100%;flex:1;min-height:360px;border-radius:16px;background:linear-gradient(#23336F,#16214d);touch-action:none}
+.mg-pairs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;width:100%;max-width:380px}
+.mg-card{aspect-ratio:3/4;border:0;border-radius:12px;background:#23336F;cursor:pointer;font-size:2rem;position:relative;transition:transform .25s,background .25s}
+.mg-card span{opacity:0;transition:opacity .2s}.mg-card.up,.mg-card.ok{background:#fff;box-shadow:inset 0 0 0 2px #dce1dd}.mg-card.up span,.mg-card.ok span{opacity:1}
+.mg-card.ok{background:#e4f2ea;transform:scale(.94)}
+.mg-word{font-size:clamp(44px,13vw,72px);font-weight:900;background:#fff;border-radius:18px;padding:18px 26px;min-width:70%;text-align:center;box-shadow:0 4px 18px rgba(0,0,0,.08)}
+.mg-word.shake{animation:mgShake .3s}
+@keyframes mgShake{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.mg-sw{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%;max-width:380px}
+.mg-swb{height:84px;border:0;border-radius:16px;cursor:pointer;box-shadow:0 5px 0 rgba(0,0,0,.18)}.mg-swb:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(0,0,0,.18)}
+.mp-gq{gap:8px}.mp-gbox{flex:1;display:flex;min-height:62svh}
+.mp-how{max-width:320px;margin:6px auto 0;line-height:1.7}
+/* host screen of a challenge */
+.md-gi{font-size:1.2em}.md-how2{text-align:center;font-size:clamp(16px,2vw,28px);line-height:1.6;max-width:900px;justify-self:center;margin:0;opacity:.95}
+.md-gq .md-tiles{display:none}
+.md-lb li .md-plus{color:#2f7d5b;font-weight:700;font-size:.7em}
+/* editor */
+.qz-game{border-inline-start:6px solid #C9822B}
+.qz-gpick{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px;margin:6px 0 10px}
+.qz-gpick button{border:1.5px solid var(--line);background:var(--bg);color:var(--ink);border-radius:12px;padding:10px 6px;font:inherit;cursor:pointer;display:grid;justify-items:center;gap:2px}
+.qz-gpick button b{font-size:1.6rem}.qz-gpick button small{color:var(--muted);font-size:.75rem}
+.qz-gpick button[aria-pressed=true]{border-color:#C9822B;background:rgba(201,130,43,.12)}
+.qz-ghow{margin:0;font-size:.9375rem;color:var(--muted);line-height:1.7}
+.qz-gscreen{justify-content:center;text-align:center}.qz-ghow2{font-size:clamp(12px,2cqw,20px);margin:0}
+.qz-gphone{width:300px;aspect-ratio:auto;height:620px}.qz-gbox{flex:1;display:flex;--ink:#16201f;--surface:#fff;--line:#dce1dd}
+.qz-stage:has(.qz-gphone){grid-template-columns:1fr 300px}
+@media (max-width:760px){.qz-stage:has(.qz-gphone){grid-template-columns:1fr}}
+.mg-sort{flex-wrap:nowrap;gap:2.5%;width:100%}
+.mg-tube{width:13.5%;max-width:56px;padding:5px 4px 8px}
+.mg-tube i{width:100%;height:auto;aspect-ratio:1}
+</style><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script>window.MD_CFG={"apiKey": "AIzaSyA50i75DT1Is1a6Yn6snW1_JVObc8S3F0Y", "authDomain": "maydan-705ae.firebaseapp.com", "databaseURL": "https://maydan-705ae-default-rtdb.europe-west1.firebasedatabase.app", "projectId": "maydan-705ae", "appId": "1:342187013133:web:d5c2396f0db413f3c51144"};window.MD_MARK="<svg class=\"md-mark\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><rect x=\"4\" y=\"4\" width=\"40\" height=\"40\" rx=\"12\" fill=\"#23336F\"/><path d=\"M24 9l4.2 6.8 7.8-1.8-1.8 7.8L41 24l-6.8 4.2 1.8 7.8-7.8-1.8L24 39l-4.2-6.8-7.8 1.8 1.8-7.8L7 24l6.8-4.2-1.8-7.8 7.8 1.8z\" fill=\"#C9822B\"/><circle cx=\"24\" cy=\"24\" r=\"6.5\" fill=\"#23336F\"/><circle cx=\"24\" cy=\"24\" r=\"3\" fill=\"#F3E3C7\"/></svg>";</script><script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script><script>/* Maydan challenges: short games played on every phone at once. Every phone gets the same level (same seed),
+   so the race is fair. Each game reports a score; higher is better. */
+window.MDGames = (function () {
+  const rngOf = seed => { let a = seed >>> 0 || 1; return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; };
+  const shuffle = (arr, r) => { for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; } return arr; };
+  const COL = ['#2a7fa8', '#b0533a', '#2f7d5b', '#C9822B', '#6b5aa6', '#d4508a'];
+  const h = (tag, cls, html) => { const e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; };
+
+  /* ---------- sort the colours: move balls until each tube holds one colour ---------- */
+  const sort = {
+    id: 'sort', icon: '🧪', ar: 'فرز الألوان', en: 'Colour sort', kind: ['ذكاء', 'Logic'],
+    howAr: 'انقل الكرات بين الأنابيب حتى يصير كل أنبوب بلون واحد. اضغط أنبوبًا ثم الأنبوب الذي تنقل إليه.',
+    howEn: 'Move balls between tubes until each tube holds one colour. Tap a tube, then the tube to move to.',
+    play(el, ctx) {
+      const r = rngOf(ctx.seed), N = 4, CAP = 4;
+      let start; do { const balls = shuffle([].concat(...COL.slice(0, N).map(c => Array(CAP).fill(c))), r); start = Array.from({ length: N }, (_, k) => balls.slice(k * CAP, k * CAP + CAP)).concat([[], []]); } while (start.some(t => t.length === CAP && t.every(b => b === t[0])));
+      let tubes = start.map(t => t.slice()), sel = -1, moves = 0, done = false;
+      const wrap = h('div', 'mg-sort'), bar = h('div', 'mg-tools');
+      const reset = h('button', 'mg-btn', ctx.ar ? '↺ من جديد' : '↺ Restart'); reset.type = 'button'; bar.appendChild(reset);
+      el.append(wrap, bar);
+      const full = t => t.length === CAP && t.every(b => b === t[0]);
+      const solved = () => tubes.every(t => !t.length || full(t));
+      function draw() {
+        wrap.innerHTML = '';
+        tubes.forEach((t, k) => {
+          const tb = h('button', 'mg-tube' + (k === sel ? ' sel' : '') + (full(t) ? ' full' : '')); tb.type = 'button';
+          for (let s = CAP - 1; s >= 0; s--) { const b = h('i'); if (t[s]) b.style.background = t[s]; else b.className = 'e'; tb.appendChild(b); }
+          tb.onclick = () => tap(k); wrap.appendChild(tb);
+        });
+      }
+      function tap(k) {
+        if (done) return;
+        if (sel < 0) { if (tubes[k].length && !full(tubes[k])) { sel = k; ctx.tick(); } draw(); return; }
+        if (sel === k) { sel = -1; draw(); return; }
+        const from = tubes[sel], to = tubes[k], c = from[from.length - 1];
+        if (to.length < CAP && (!to.length || to[to.length - 1] === c)) {
+          while (from.length && from[from.length - 1] === c && to.length < CAP) to.push(from.pop());
+          moves++; ctx.tick();
+        } else ctx.bad();
+        sel = -1; draw();
+        if (solved()) { done = true; ctx.finish(score()); }
+      }
+      reset.onclick = () => { if (done) return; tubes = start.map(t => t.slice()); sel = -1; draw(); };
+      const score = () => done ? 600 + Math.round(400 * ctx.left()) : tubes.filter(full).length * 120;
+      draw();
+      return { score };
+    }
+  };
+
+  /* ---------- the throw: flick the ball into a moving hoop ---------- */
+  const shoot = {
+    id: 'shoot', icon: '🏀', ar: 'الرمية', en: 'The throw', kind: ['مهارة', 'Skill'],
+    howAr: 'اسحب الكرة إلى الأعلى واتركها لترميها في السلة المتحركة. كل إصابة نقطة.',
+    howEn: 'Drag the ball up and let go to throw it into the moving hoop. Every basket counts.',
+    play(el, ctx) {
+      const r = rngOf(ctx.seed), cv = h('canvas', 'mg-cv'), info = h('p', 'mg-info');
+      el.append(info, cv);
+      const x = cv.getContext('2d'), dpr = Math.min(2, window.devicePixelRatio || 1);
+      let W, H; const size = () => { W = cv.clientWidth; H = cv.clientHeight; cv.width = W * dpr; cv.height = H * dpr; x.setTransform(dpr, 0, 0, dpr, 0, 0); };
+      size();
+      const R = Math.max(16, W * .055), phase = r() * 6.28, base = .8 + r() * .5;
+      let hits = 0, shots = 0, ball = null, drag = null, t0 = performance.now(), last = t0, stop = false;
+      const home = () => ({ x: W / 2, y: H - R * 2.2, vx: 0, vy: 0, live: false, up: false });
+      ball = home();
+      const hoop = t => { const spd = base + hits * .12; return { x: W / 2 + Math.sin(t / 1000 * spd + phase) * (W / 2 - 60), y: H * .2, w: Math.max(70, W * .22) }; };
+      cv.addEventListener('pointerdown', e => { if (ball.live) return; const b = cv.getBoundingClientRect(); drag = { x: e.clientX - b.left, y: e.clientY - b.top, t: performance.now() }; cv.setPointerCapture(e.pointerId); });
+      cv.addEventListener('pointerup', e => {
+        if (!drag || ball.live) return; const b = cv.getBoundingClientRect(), ux = e.clientX - b.left, uy = e.clientY - b.top, dt = Math.max(40, performance.now() - drag.t);
+        const dx = ux - drag.x, dy = uy - drag.y; drag = null;
+        if (dy > -20) return;
+        const k = Math.min(2.2, 260 / dt);
+        ball.vx = dx * k * 2.2; ball.vy = Math.max(-H * 2.6, dy * k * 3.2); ball.live = true; ball.up = true; shots++;
+      });
+      function frame(now) {
+        if (stop) return;
+        const dt = Math.min(.04, (now - last) / 1000); last = now;
+        x.clearRect(0, 0, W, H);
+        const hp = hoop(now - t0);
+        // backboard and hoop
+        x.fillStyle = 'rgba(255,255,255,.12)'; x.fillRect(hp.x - hp.w * .6, hp.y - 46, hp.w * 1.2, 40);
+        x.strokeStyle = '#C9822B'; x.lineWidth = 6; x.beginPath(); x.moveTo(hp.x - hp.w / 2, hp.y); x.lineTo(hp.x + hp.w / 2, hp.y); x.stroke();
+        x.strokeStyle = 'rgba(255,255,255,.35)'; x.lineWidth = 2; for (let k = 0; k <= 4; k++) { x.beginPath(); x.moveTo(hp.x - hp.w / 2 + k * hp.w / 4, hp.y); x.lineTo(hp.x - hp.w / 3 + k * hp.w / 6, hp.y + 30); x.stroke(); }
+        if (ball.live) {
+          const py = ball.y; ball.vy += H * 1.6 * dt; ball.x += ball.vx * dt; ball.y += ball.vy * dt;
+          // a basket: coming down through the rim
+          if (ball.vy > 0 && py < hp.y && ball.y >= hp.y && Math.abs(ball.x - hp.x) < hp.w / 2 - R * .4) { hits++; ctx.tick(); flash = 18; }
+          if (ball.y > H + R || ball.x < -R * 2 || ball.x > W + R * 2) ball = home();
+        }
+        x.fillStyle = '#d97a2b'; x.beginPath(); x.arc(ball.x, ball.y, R, 0, 7); x.fill();
+        x.strokeStyle = 'rgba(0,0,0,.35)'; x.lineWidth = 2; x.beginPath(); x.arc(ball.x, ball.y, R, 0, 7); x.moveTo(ball.x - R, ball.y); x.lineTo(ball.x + R, ball.y); x.stroke();
+        if (flash > 0) { flash--; x.fillStyle = 'rgba(243,210,122,' + flash / 30 + ')'; x.fillRect(0, 0, W, H); }
+        info.textContent = (ctx.ar ? 'الإصابات: ' : 'Baskets: ') + hits;
+        requestAnimationFrame(frame);
+      }
+      let flash = 0; requestAnimationFrame(frame);
+      return { score: () => hits * 100, stop: () => { stop = true; } };
+    }
+  };
+
+  /* ---------- pairs: turn cards two at a time and match them ---------- */
+  const pairs = {
+    id: 'pairs', icon: '🃏', ar: 'أزواج البطاقات', en: 'Card pairs', kind: ['ذاكرة', 'Memory'],
+    howAr: 'اقلب بطاقتين في كل مرة، وتذكّر مكانهما، حتى تطابق كل البطاقات.',
+    howEn: 'Turn two cards at a time and remember where they are until every card is matched.',
+    play(el, ctx) {
+      const r = rngOf(ctx.seed), pool = ['🐪', '🌴', '🦅', '⭐', '🌙', '🍉', '🐎', '⚽', '🎈', '🦋', '🍋', '🚀'];
+      const pick = shuffle(pool.slice(), r).slice(0, 8), deck = shuffle(pick.concat(pick), r);
+      const grid = h('div', 'mg-pairs'); el.appendChild(grid);
+      let open = [], got = 0, miss = 0, lock = false, done = false;
+      deck.forEach((e, k) => {
+        const c = h('button', 'mg-card', `<span>${e}</span>`); c.type = 'button';
+        c.onclick = () => {
+          if (lock || done || c.classList.contains('up') || c.classList.contains('ok')) return;
+          c.classList.add('up'); open.push(c); ctx.tick();
+          if (open.length < 2) return;
+          const [a, b] = open; open = [];
+          if (deck[[...grid.children].indexOf(a)] === deck[[...grid.children].indexOf(b)]) {
+            a.classList.add('ok'); b.classList.add('ok'); got++;
+            if (got === 8) { done = true; ctx.finish(score()); }
+          } else { miss++; lock = true; ctx.bad(); setTimeout(() => { a.classList.remove('up'); b.classList.remove('up'); lock = false; }, 650); }
+        };
+        grid.appendChild(c);
+      });
+      const score = () => done ? Math.max(500, 600 + Math.round(400 * ctx.left()) - miss * 10) : got * 60;
+      return { score };
+    }
+  };
+
+  /* ---------- the colour of the word: answer the ink, not the meaning ---------- */
+  const stroop = {
+    id: 'stroop', icon: '🎨', ar: 'لون الكلمة', en: 'Ink colour', kind: ['تركيز', 'Focus'],
+    howAr: 'تظهر كلمة لون مكتوبة بلون آخر. اضغط لون الخط، لا ما تقوله الكلمة. أسرع ما تستطيع.',
+    howEn: 'A colour word appears in another colour. Tap the ink colour, not what the word says. As fast as you can.',
+    play(el, ctx) {
+      const r = rngOf(ctx.seed), C = [['أحمر', 'RED', '#d63c3c'], ['أزرق', 'BLUE', '#2f6fd0'], ['أخضر', 'GREEN', '#2e9a57'], ['أصفر', 'YELLOW', '#e2b21c']];
+      const word = h('div', 'mg-word'), btns = h('div', 'mg-sw'), info = h('p', 'mg-info'); el.append(info, word, btns);
+      let ok = 0, bad = 0, cur;
+      const next = () => { const w = Math.floor(r() * 4); let ink = Math.floor(r() * 4); if (r() < .75) while (ink === w) ink = Math.floor(r() * 4); cur = ink; word.textContent = C[w][ctx.ar ? 0 : 1]; word.style.color = C[ink][2]; };
+      // the buttons are plain swatches, so only the eye for colour decides
+      shuffle(C.map((c, k) => k), rngOf(ctx.seed + 7)).forEach(k => { const b = h('button', 'mg-swb'); b.type = 'button'; b.style.background = C[k][2]; b.setAttribute('aria-label', C[k][ctx.ar ? 0 : 1]); b.onclick = () => { if (k === cur) { ok++; ctx.tick(); } else { bad++; ctx.bad(); word.classList.remove('shake'); void word.offsetWidth; word.classList.add('shake'); } info.textContent = (ctx.ar ? 'صحيح: ' : 'Right: ') + ok; next(); }; btns.appendChild(b); });
+      info.textContent = (ctx.ar ? 'صحيح: ' : 'Right: ') + 0; next();
+      return { score: () => Math.max(0, ok * 50 - bad * 25) };
+    }
+  };
+
+  const LIST = [sort, shoot, pairs, stroop];
+  const byId = id => LIST.find(g => g.id === id) || LIST[0];
+  // run a game in a box: returns {score(), stop()}; ctx.finish is called when a game ends early by being completed
+  function run(id, box, opts) {
+    box.innerHTML = ''; box.className = 'mg mg-' + id;
+    const g = byId(id), ctx = Object.assign({ seed: 1, ar: true, left: () => 0, finish() {}, tick() {}, bad() {} }, opts);
+    const api = g.play(box, ctx);
+    return { score: api.score, stop: api.stop || (() => {}) };
+  }
+  return { LIST, byId, run };
+})();
+</script><script>/* alsamani.com/play/maydan — running a quiz live: the big screen of the host.
    Players join at alsamani.com/m with a six-digit code; the room lives in Firebase and the host alone keeps the answers and the scores.
    A game can be paused and picked up later from the same browser. */
 window.MDLive = (function () {
@@ -2726,6 +2958,7 @@ window.MDLive = (function () {
     // the question is read first, alone and large; then it moves up as the options and the clock appear.
     // The reading time follows its length, so everyone starts answering on equal terms.
     const tag = gold ? `<span class="md-gold">${B('✨ السؤال الذهبي — نقاط مضاعفة', '✨ The golden question — double points')}</span>` : last ? `<span class="md-x2">${B('🏁 السؤال الأخير — نقاط مضاعفة', '🏁 The last question — double points')}</span>` : m === 2 ? `<span class="md-x2">${B('نقاط مضاعفة ×٢', 'Double points ×2')}</span>` : '';
+    if (x.type === 'game') return nextGame(x, n, m, gold, last, tag);
     const q = frame(`<div class="md-q md-pre${gold ? ' is-gold' : ''}">
         <div class="md-qtop"><span class="md-qn">${B('السؤال', 'Question')} ${G.i + 1} ${T('من', 'of')} ${n}</span>${tag}</div>
         <h2 class="md-qt" dir="auto">${esc(x.q)}</h2>
@@ -2739,6 +2972,22 @@ window.MDLive = (function () {
     await G.ref.update({ q: { q: x.q, opts: x.opts, type: x.type, multi: x.ok.length > 1, m, gold, last, bet: !!(G.opts.bet && m), i: G.i, n, L: G.ar ? 'ar' : 'en', img: x.img || null }, ok: null, st: { ph: 'ready', i: G.i, lock: true } });
     const words = x.q.trim().split(/\s+/).length, read = Math.min(5, Math.max(2, words / 3)) * 1000 + (gold || last ? 1200 : 0);
     setTimeout(() => open(x, q), read);
+  }
+  // a challenge: the name and how to play, then everyone plays on their phone at once
+  async function nextGame(x, n, m, gold, last, tag) {
+    const g = MDGames.byId(x.g), nm = G.ar ? g.ar : g.en, how = G.ar ? g.howAr : g.howEn;
+    const q = frame(`<div class="md-q md-pre md-gq${gold ? ' is-gold' : ''}">
+        <div class="md-qtop"><span class="md-qn">${B('التحدي', 'Challenge')} · ${G.i + 1} ${T('من', 'of')} ${n}</span>${tag}</div>
+        <h2 class="md-qt"><span class="md-gi">${g.icon}</span> ${esc(nm)}</h2>
+        <div class="md-mid"><div class="md-clock"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" class="md-ring0"/><circle cx="50" cy="50" r="44" class="md-ring" id="mdRing"/></svg><b id="mdT">${x.time}</b></div>
+          <p class="md-how2">${esc(how)}</p>
+          <div class="md-ans"><b id="mdA">0</b><small>${B('أنهوا', 'finished')}</small></div></div>
+        <div class="md-tiles"></div></div>`,
+      `<button type="button" class="btn ghost" data-skip disabled>${B('أنهِ الوقت', 'End time')}</button>`);
+    if (gold) SND.gold();
+    await G.ref.child('an/' + G.i).remove();
+    await G.ref.update({ q: { type: 'game', g: x.g, seed: x.seed || 1, q: nm, opts: [], m, gold, last, i: G.i, n, L: G.ar ? 'ar' : 'en' }, ok: null, st: { ph: 'ready', i: G.i, lock: true } });
+    setTimeout(() => open(x, q), 4500 + (gold || last ? 1200 : 0));
   }
   async function open(x, q) {
     if (!G) return;
@@ -2757,7 +3006,7 @@ window.MDLive = (function () {
       if (!el) return;
       el.textContent = s; ring.style.strokeDashoffset = C * (1 - left / x.time);
       if (s !== last && s <= 5 && s > 0) SND.tick(); last = s;
-      if (left <= 0) reveal();
+      if (left <= 0) { if (x.type === 'game') { clearInterval(G.timer); setTimeout(reveal, 1800); } else reveal(); }
     }, 100);
   }
 
@@ -2770,6 +3019,7 @@ window.MDLive = (function () {
     G.subs.forEach(f => f()); G.subs = [];
     keepPlayers(); reactions();
     const ans = (await G.ref.child('an/' + G.i).once('value')).val() || {};
+    if (x.type === 'game') return revealGame(x, m, ans);
     const counts = x.opts.map(() => 0), okSet = new Set(x.ok), sc = {};
     let right = 0;
     const before = Object.keys(G.score).sort((a, b) => G.score[b] - G.score[a]); G.prev = {}; before.forEach((u, k) => { G.prev[u] = k + 1; });
@@ -2807,6 +3057,35 @@ window.MDLive = (function () {
         <div class="md-tiles">${x.opts.map((o, j) => `<div class="md-tile${okSet.has(j) ? ' right' : ' wrong'}" style="--c:var(--qz${j})"><i>${LET()[j]}</i><span dir="auto">${esc(o)}</span>${okSet.has(j) ? '<b>✓</b>' : ''}</div>`).join('')}</div>
         <p class="md-stat">${B(`أجاب إجابة صحيحة ${right} من ${Object.keys(G.players).length}`, `${right} of ${Object.keys(G.players).length} answered correctly`)}</p></div>`,
       `<button type="button" class="btn solid" data-next>${lastQ ? B('النتيجة النهائية', 'Final results') : showBoard ? B('الترتيب', 'Ranking') : B('السؤال التالي', 'Next question')}</button>`, true);
+    q('[data-next]').onclick = () => lastQ ? finish() : showBoard ? board() : next();
+  }
+  async function revealGame(x, m, ans) {
+    const g = MDGames.byId(x.g), sc = {}, raw = {};
+    const before = Object.keys(G.score).sort((a, b) => G.score[b] - G.score[a]); G.prev = {}; before.forEach((u, k) => { G.prev[u] = k + 1; });
+    Object.keys(G.players).forEach(u => { const a = ans[u]; raw[u] = a ? Math.max(0, Number(a.a) || 0) : 0; });
+    const best = Math.max(1, ...Object.values(raw));
+    Object.keys(G.players).forEach(u => {
+      const c = raw[u] > 0, d = m && c ? Math.round(1000 * m * (.25 + .75 * raw[u] / best)) : 0;
+      G.streak[u] = c ? (G.streak[u] || 0) + 1 : 0;
+      G.score[u] = (G.score[u] || 0) + d;
+      sc[u] = { s: G.score[u], d, c, k: G.streak[u], a: !!ans[u], g: raw[u] };
+    });
+    const order = Object.keys(sc).sort((a, b) => G.score[b] - G.score[a]), tt = teamTable();
+    order.forEach((u, k) => {
+      sc[u].r = k + 1; sc[u].of = order.length;
+      if (k) { sc[u].gap = G.score[order[k - 1]] - G.score[u]; sc[u].above = G.players[order[k - 1]] || ''; }
+      if (G.teams && G.team[u] != null) { const r = tt.findIndex(t => t.k === G.team[u]); sc[u].t = G.team[u]; sc[u].tr = r + 1; }
+    });
+    G.done = G.i; keep();
+    await G.ref.update({ ok: 'game', sc });
+    SND.reveal();
+    const n = G.quiz.qs.length, lastQ = G.i === n - 1;
+    const showBoard = !lastQ && ((G.opts.every && (G.i + 1) % G.opts.every === 0) || (G.opts.final && G.i === n - 2 && n > 2));
+    const top = Object.keys(raw).filter(u => u in G.players).sort((a, b) => raw[b] - raw[a]).slice(0, 5);
+    const q = frame(`<div class="md-lb"><h2>${g.icon} ${B('أبطال التحدي', 'Challenge champions')}: ${esc(G.ar ? g.ar : g.en)}</h2>
+        <ol>${top.map((u, k) => `<li style="--d:${k * 90}ms"><b>${k + 1}</b><span dir="auto">${esc(G.players[u] || '')}</span><em>${raw[u]}</em><small class="md-plus">+${sc[u].d}</small></li>`).join('')}</ol>
+        <p class="md-stat">${B(`شارك ${Object.keys(ans).length} من ${Object.keys(G.players).length}`, `${Object.keys(ans).length} of ${Object.keys(G.players).length} took part`)}</p></div>`,
+      `<button type="button" class="btn solid" data-next>${lastQ ? B('النتيجة النهائية', 'Final results') : showBoard ? B('الترتيب', 'Ranking') : B('التالي', 'Next')}</button>`, true);
     q('[data-next]').onclick = () => lastQ ? finish() : showBoard ? board() : next();
   }
   function keepPlayers() {

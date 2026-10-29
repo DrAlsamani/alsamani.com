@@ -260,7 +260,7 @@ def maydan_body():
 <style>{src('sign.css')}{src('pdftool.css')}{src('quiz.css')}</style>
 <div id="qz" class="sn qz"><noscript>{bi("تعمل هذه الأداة مع تفعيل JavaScript.", "This tool needs JavaScript.")}</noscript></div>
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script><script>{src('quiz_parse.js')}</script><script>{src('quiz.js')}</script>
-<style>{src('maydan.css')}</style>{MD_SCRIPTS()}<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script><script>{src('maydan_live.js')}</script>
+<style>{src('maydan.css')}</style>{MD_SCRIPTS()}<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script><script>{src('maydan_games.js')}</script><script>{src('maydan_live.js')}</script>
 </section>'''
 
 FB = 'https://www.gstatic.com/firebasejs/10.12.2/'
@@ -272,5 +272,5 @@ def maydan_join():
     return f'''<section class="first tl-page sn-page-wrap">
 <style>{src('maydan.css')}</style>
 <div id="mp" class="sn mp"><noscript>{bi("تعمل هذه الصفحة مع تفعيل JavaScript.", "This page needs JavaScript.")}</noscript></div>
-{MD_SCRIPTS()}<script>{src('maydan_play.js')}</script>
+{MD_SCRIPTS()}<script>{src('maydan_games.js')}</script><script>{src('maydan_play.js')}</script>
 </section>'''

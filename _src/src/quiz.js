@@ -81,7 +81,7 @@
           <div class="qz-step2"><b>${B('٢', '2')}</b><p>${B('حين يكتب الأسئلة، انسخ رده كاملًا ثم اضغط:', 'When it has written them, copy its whole reply, then tap:')}</p><button type="button" class="btn solid" id="qzBack2">${B('لصق رد الذكاء الاصطناعي', 'Paste the AI’s reply')}</button></div></div>
       </div>
       <div id="qzQs" class="qz-qs"></div>
-      <div class="qz-addq"><button type="button" class="btn ghost" id="qzAddQ">${B('+ سؤال', '+ Question')}</button><button type="button" class="btn ghost" id="qzAddTF">${B('+ صح أو خطأ', '+ True or false')}</button></div>
+      <div class="qz-addq"><button type="button" class="btn ghost" id="qzAddQ">${B('+ سؤال', '+ Question')}</button><button type="button" class="btn ghost" id="qzAddTF">${B('+ صح أو خطأ', '+ True or false')}</button><button type="button" class="btn ghost" id="qzAddG">${B('+ تحدٍّ تفاعلي 🎮', '+ Challenge 🎮')}</button></div>
       <div class="qz-bar"><div class="qz-chk" id="qzChk"></div><div class="qz-bar-b"><button type="button" class="btn solid md-go" id="qzGo">${B('ابدأ المسابقة ▶', 'Start the quiz ▶')}</button><button type="button" class="btn ghost" id="qzPv">${B('معاينة', 'Preview')}</button><button type="button" class="btn ghost" id="qzExp">${B('حفظ نسخة', 'Save a copy')}</button></div></div>`;
     const q = s => root.querySelector(s);
     q('#qzBack').onclick = () => { persist(); home(); };
@@ -121,6 +121,7 @@
     };
     q('#qzCopy').onclick = async () => { try { await navigator.clipboard.writeText(prompt()); toast(B('نُسخت التعليمات. الصقها في ChatGPT أو Claude.', 'Copied. Paste it into ChatGPT or Claude.')); } catch (er) { toast(B('تعذّر النسخ.', 'Could not copy.'), 1); } };
     q('#qzAddQ').onclick = () => { Q.qs.push(norm({})); draw(); focusLast(); later(); };
+    q('#qzAddG').onclick = () => { const used = Q.qs.filter(z => z.type === 'game').map(z => z.g), all = GAMES().map(z => z.id), g = all.find(id => !used.includes(id)) || all[Math.floor(Math.random() * all.length)] || 'sort'; Q.qs.push(norm({ type: 'game', g, time: 30, opts: ['', ''] })); draw(); const c = root.querySelectorAll('.qz-q'); c[c.length - 1].scrollIntoView({ block: 'center', behavior: 'smooth' }); later(); };
     q('#qzAddTF').onclick = () => { Q.qs.push(norm({ type: 'tf', opts: [T('صح', 'True'), T('خطأ', 'False')] })); draw(); focusLast(); later(); };
     q('#qzPv').onclick = () => preview(0);
     q('#qzGo').onclick = () => {
@@ -129,7 +130,7 @@
       const bad = checks();
       if (bad) { toast(B('بعض الأسئلة تحتاج مراجعة قبل البدء.', 'Some questions need review before starting.'), 1); root.querySelector('#qzChk [data-go]') && root.querySelector('#qzChk [data-go]').click(); return; }
       if (!window.MDLive) { toast(B('تعذّر تشغيل المسابقة الآن.', 'The quiz cannot start right now.'), 1); return; }
-      MDLive.start({ title: Q.title, qs: Q.qs.map(x => ({ type: x.type, q: x.q, opts: x.opts.filter(o => o.trim()), ok: x.ok.map(j => x.opts.slice(0, j).filter(o => o.trim()).length), pts: x.pts, img: x.img, time: x.timeSet ? x.time : suggest(x) })) });
+      MDLive.start({ title: Q.title, qs: Q.qs.map(x => x.type === 'game' ? { type: 'game', g: x.g, q: '', opts: [], ok: [], pts: x.pts, time: x.time || 30, seed: 1 + Math.floor(Math.random() * 1e9) } : ({ type: x.type, q: x.q, opts: x.opts.filter(o => o.trim()), ok: x.ok.map(j => x.opts.slice(0, j).filter(o => o.trim()).length), pts: x.pts, img: x.img, time: x.timeSet ? x.time : suggest(x) })) });
     };
     q('#qzExp').onclick = () => save(new Blob([JSON.stringify({ title: Q.title, qs: Q.qs.map(({ id, timeSet, ...r }) => r) }, null, 1)], { type: 'application/json' }), (Q.title || 'quiz').replace(/[\\/:*?"<>|]+/g, ' ').slice(0, 60) + '.json');
     draw(); checks();
@@ -155,11 +156,25 @@
     box.querySelectorAll('.qz-q').forEach((el, i) => bind(el, Q.qs[i]));
     if (window.Sortable && !box._s) box._s = Sortable.create(box, { handle: '.qz-grip', animation: 150, onEnd: e => { const [m] = Q.qs.splice(e.oldIndex, 1); Q.qs.splice(e.newIndex, 0, m); draw(); later(); } });
   }
+  const GAMES = () => window.MDGames ? MDGames.LIST : [];
+  const GTIMES = [20, 30, 45, 60, 90];
   function card(x, i) {
+    if (x.type === 'game') {
+      const g = window.MDGames ? MDGames.byId(x.g) : { icon: '🎮', ar: '', en: '', howAr: '', howEn: '' }, t = x.time || 30;
+      return `<div class="qz-q qz-game" data-id="${x.id}">
+      <div class="qz-qh"><span class="qz-grip" title="${T('اسحب لتغيير الترتيب', 'Drag to reorder')}">⋮⋮</span><b class="qz-n">${i + 1}</b>
+        <select data-k="type" aria-label="type"><option value="mc">${T('اختيار من متعدد', 'Multiple choice')}</option><option value="tf">${T('صح أو خطأ', 'True or false')}</option><option value="game" selected>${T('تحدٍّ تفاعلي', 'Challenge')}</option></select>
+        <select data-k="gtime" aria-label="time">${GTIMES.map(s => `<option value="${s}"${s === t ? ' selected' : ''}>${s} ${T('ث', 's')}</option>`).join('')}</select>
+        <select data-k="pts" aria-label="points"><option value="1"${x.pts === 1 ? ' selected' : ''}>${T('نقاط عادية', 'Standard points')}</option><option value="2"${x.pts === 2 ? ' selected' : ''}>${T('نقاط مضاعفة', 'Double points')}</option><option value="0"${x.pts === 0 ? ' selected' : ''}>${T('بلا نقاط', 'No points')}</option></select>
+        <span class="qz-act"><button type="button" class="qz-ib" data-a="dup" title="${T('تكرار', 'Duplicate')}">⧉</button><button type="button" class="qz-ib" data-a="del" title="${T('حذف', 'Delete')}">✕</button></span></div>
+      <div class="qz-gpick">${GAMES().map(z => `<button type="button" data-g="${z.id}" aria-pressed="${z.id === x.g}"><b>${z.icon}</b><span>${isAr() ? z.ar : z.en}</span><small>${isAr() ? z.kind[0] : z.kind[1]}</small></button>`).join('')}</div>
+      <p class="qz-ghow"><b>${g.icon} ${isAr() ? g.ar : g.en}:</b> ${isAr() ? g.howAr : g.howEn}</p>
+      <p class="qz-warn" hidden></p></div>`;
+    }
     const t = x.timeSet ? x.time : suggest(x), tf = x.type === 'tf';
     return `<div class="qz-q" data-id="${x.id}">
       <div class="qz-qh"><span class="qz-grip" title="${T('اسحب لتغيير الترتيب', 'Drag to reorder')}">⋮⋮</span><b class="qz-n">${i + 1}</b>
-        <select data-k="type" aria-label="type"><option value="mc"${tf ? '' : ' selected'}>${T('اختيار من متعدد', 'Multiple choice')}</option><option value="tf"${tf ? ' selected' : ''}>${T('صح أو خطأ', 'True or false')}</option></select>
+        <select data-k="type" aria-label="type"><option value="mc"${tf ? '' : ' selected'}>${T('اختيار من متعدد', 'Multiple choice')}</option><option value="game">${T('تحدٍّ تفاعلي', 'Challenge')}</option><option value="tf"${tf ? ' selected' : ''}>${T('صح أو خطأ', 'True or false')}</option></select>
         <select data-k="time" aria-label="time" title="${T('وقت الإجابة', 'Time to answer')}">${TIMES.map(s => `<option value="${s}"${s === t ? ' selected' : ''}>${s} ${T('ث', 's')}${!x.timeSet && s === t ? ' ✦' : ''}</option>`).join('')}</select>
         <select data-k="pts" aria-label="points"><option value="1"${x.pts === 1 ? ' selected' : ''}>${T('نقاط عادية', 'Standard points')}</option><option value="2"${x.pts === 2 ? ' selected' : ''}>${T('نقاط مضاعفة', 'Double points')}</option><option value="0"${x.pts === 0 ? ' selected' : ''}>${T('بلا نقاط', 'No points')}</option></select>
         <span class="qz-act"><label class="qz-ib" title="${T('صورة', 'Image')}">🖼<input type="file" accept="image/*" hidden data-k="img"></label><button type="button" class="qz-ib" data-a="dup" title="${T('تكرار', 'Duplicate')}">⧉</button><button type="button" class="qz-ib" data-a="del" title="${T('حذف', 'Delete')}">✕</button></span></div>
@@ -172,10 +187,20 @@
   }
   function bind(el, x) {
     const re = () => { const i = Q.qs.indexOf(x), n = document.createElement('div'); n.innerHTML = card(x, i); const c = n.firstElementChild; el.replaceWith(c); bind(c, x); later(); return c; };
+    if (x.type === 'game') {
+      el.querySelector('[data-k=type]').onchange = e => { x.type = e.target.value; x.opts = x.type === 'tf' ? [T('صح', 'True'), T('خطأ', 'False')] : (x.keep && x.keep.length ? x.keep : ['', '', '', '']); x.ok = []; delete x.g; re(); };
+      el.querySelector('[data-k=gtime]').onchange = e => { x.time = +e.target.value; later(); };
+      el.querySelector('[data-k=pts]').onchange = e => { x.pts = +e.target.value; later(); };
+      el.querySelectorAll('[data-g]').forEach(b => b.onclick = () => { x.g = b.dataset.g; re(); });
+      el.querySelector('[data-a=dup]').onclick = () => { Q.qs.splice(Q.qs.indexOf(x) + 1, 0, norm(JSON.parse(JSON.stringify(Object.assign({}, x, { id: uid() }))))); draw(); later(); };
+      el.querySelector('[data-a=del]').onclick = () => { Q.qs.splice(Q.qs.indexOf(x), 1); draw(); later(); };
+      return;
+    }
     el.querySelector('[data-k=q]').oninput = e => { x.q = e.target.value; tm(); later(); };
     const tm = () => { if (x.timeSet) return; const s = el.querySelector('[data-k=time]'), t = suggest(x); [...s.options].forEach(o => { o.selected = +o.value === t; o.textContent = o.value + ' ' + T('ث', 's') + (+o.value === t ? ' ✦' : ''); }); };
     el.querySelector('[data-k=type]').onchange = e => {
       x.type = e.target.value;
+      if (x.type === 'game') { x.keep = x.opts; x.g = x.g || 'sort'; x.time = 30; x.q = x.q || ''; re(); return; }
       if (x.type === 'tf') { x.keep = x.opts; x.opts = [T('صح', 'True'), T('خطأ', 'False')]; x.ok = x.ok.filter(j => j < 2).slice(0, 1); }
       else { x.opts = x.keep && x.keep.length ? x.keep : ['', '', '', '']; x.ok = []; }
       re();
@@ -225,6 +250,7 @@
     const W = [];
     const seen = new Map();
     Q.qs.forEach((x, i) => {
+      if (x.type === 'game') { const el = root.querySelectorAll('.qz-q')[i]; if (el) { el.classList.remove('bad'); el.querySelector('.qz-warn').hidden = true; } return; }
       const w = [], filled = x.opts.filter(o => o.trim());
       if (!x.q.trim()) w.push(T('بلا نص', 'no text'));
       if (filled.length < 2) w.push(T('يحتاج خيارين على الأقل', 'needs at least two options'));
@@ -392,10 +418,22 @@ False *`;
     document.querySelectorAll('.qz-pv').forEach(x => x.remove());
     const v = document.createElement('div'); v.className = 'qz-pv'; v.setAttribute('role', 'dialog'); document.body.appendChild(v);
     let show = false;
-    const close = () => { v.remove(); document.removeEventListener('keydown', key); };
+    const close = () => { if (game) game.stop(); v.remove(); document.removeEventListener('keydown', key); };
     const key = e => { if (e.key === 'Escape') close(); if (e.key === 'ArrowLeft') go(isAr() ? 1 : -1); if (e.key === 'ArrowRight') go(isAr() ? -1 : 1); };
     const go = d => { const n = i + d; if (n >= 0 && n < Q.qs.length) { i = n; show = false; paint(); } };
+    let game = null;
     function paint() {
+      if (game) { game.stop(); game = null; }
+      if (Q.qs[i].type === 'game' && window.MDGames) {
+        const x = Q.qs[i], g = MDGames.byId(x.g);
+        v.innerHTML = `<div class="qz-pvb"><div class="qz-pvh"><b>${B('معاينة', 'Preview')} · ${i + 1} / ${Q.qs.length}</b><span><button type="button" data-g="-1" aria-label="previous">${isAr() ? '›' : '‹'}</button><button type="button" data-g="1" aria-label="next">${isAr() ? '‹' : '›'}</button><button type="button" data-x aria-label="close">✕</button></span></div>
+          <div class="qz-stage"><div class="qz-screen qz-gscreen"><p class="qz-sq">${g.icon} ${isAr() ? g.ar : g.en}</p><p class="qz-ghow2">${isAr() ? g.howAr : g.howEn}</p><div class="qz-timer">${x.time || 30}</div></div>
+          <div class="qz-phone qz-gphone"><div class="qz-ph-top">${B('جرّبها هنا', 'Try it here')}</div><div class="qz-gbox"></div></div></div></div>`;
+        v.querySelectorAll('[data-g]').forEach(b => b.onclick = () => go(+b.dataset.g));
+        v.querySelector('[data-x]').onclick = close;
+        game = MDGames.run(x.g, v.querySelector('.qz-gbox'), { seed: 7, ar: isAr(), left: () => .5, finish: s => toast(B(`أنهيت التحدي: ${s} نقطة`, `Done: ${s} points`)) });
+        return;
+      }
       const x = Q.qs[i], t = x.timeSet ? x.time : suggest(x), opts = x.opts.map((o, j) => ({ o, j })).filter(z => z.o.trim());
       v.innerHTML = `<div class="qz-pvb">
         <div class="qz-pvh"><b>${B('معاينة', 'Preview')} · ${i + 1} / ${Q.qs.length}</b><span><button type="button" data-g="-1" aria-label="previous">${isAr() ? '›' : '‹'}</button><button type="button" data-g="1" aria-label="next">${isAr() ? '‹' : '›'}</button><button type="button" class="qz-show" aria-pressed="${show}">${B('إظهار الإجابة', 'Show answer')}</button><button type="button" data-x aria-label="close">✕</button></span></div>

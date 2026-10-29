@@ -222,6 +222,7 @@ window.MDLive = (function () {
     // the question is read first, alone and large; then it moves up as the options and the clock appear.
     // The reading time follows its length, so everyone starts answering on equal terms.
     const tag = gold ? `<span class="md-gold">${B('✨ السؤال الذهبي — نقاط مضاعفة', '✨ The golden question — double points')}</span>` : last ? `<span class="md-x2">${B('🏁 السؤال الأخير — نقاط مضاعفة', '🏁 The last question — double points')}</span>` : m === 2 ? `<span class="md-x2">${B('نقاط مضاعفة ×٢', 'Double points ×2')}</span>` : '';
+    if (x.type === 'game') return nextGame(x, n, m, gold, last, tag);
     const q = frame(`<div class="md-q md-pre${gold ? ' is-gold' : ''}">
         <div class="md-qtop"><span class="md-qn">${B('السؤال', 'Question')} ${G.i + 1} ${T('من', 'of')} ${n}</span>${tag}</div>
         <h2 class="md-qt" dir="auto">${esc(x.q)}</h2>
@@ -235,6 +236,22 @@ window.MDLive = (function () {
     await G.ref.update({ q: { q: x.q, opts: x.opts, type: x.type, multi: x.ok.length > 1, m, gold, last, bet: !!(G.opts.bet && m), i: G.i, n, L: G.ar ? 'ar' : 'en', img: x.img || null }, ok: null, st: { ph: 'ready', i: G.i, lock: true } });
     const words = x.q.trim().split(/\s+/).length, read = Math.min(5, Math.max(2, words / 3)) * 1000 + (gold || last ? 1200 : 0);
     setTimeout(() => open(x, q), read);
+  }
+  // a challenge: the name and how to play, then everyone plays on their phone at once
+  async function nextGame(x, n, m, gold, last, tag) {
+    const g = MDGames.byId(x.g), nm = G.ar ? g.ar : g.en, how = G.ar ? g.howAr : g.howEn;
+    const q = frame(`<div class="md-q md-pre md-gq${gold ? ' is-gold' : ''}">
+        <div class="md-qtop"><span class="md-qn">${B('التحدي', 'Challenge')} · ${G.i + 1} ${T('من', 'of')} ${n}</span>${tag}</div>
+        <h2 class="md-qt"><span class="md-gi">${g.icon}</span> ${esc(nm)}</h2>
+        <div class="md-mid"><div class="md-clock"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" class="md-ring0"/><circle cx="50" cy="50" r="44" class="md-ring" id="mdRing"/></svg><b id="mdT">${x.time}</b></div>
+          <p class="md-how2">${esc(how)}</p>
+          <div class="md-ans"><b id="mdA">0</b><small>${B('أنهوا', 'finished')}</small></div></div>
+        <div class="md-tiles"></div></div>`,
+      `<button type="button" class="btn ghost" data-skip disabled>${B('أنهِ الوقت', 'End time')}</button>`);
+    if (gold) SND.gold();
+    await G.ref.child('an/' + G.i).remove();
+    await G.ref.update({ q: { type: 'game', g: x.g, seed: x.seed || 1, q: nm, opts: [], m, gold, last, i: G.i, n, L: G.ar ? 'ar' : 'en' }, ok: null, st: { ph: 'ready', i: G.i, lock: true } });
+    setTimeout(() => open(x, q), 4500 + (gold || last ? 1200 : 0));
   }
   async function open(x, q) {
     if (!G) return;
@@ -253,7 +270,7 @@ window.MDLive = (function () {
       if (!el) return;
       el.textContent = s; ring.style.strokeDashoffset = C * (1 - left / x.time);
       if (s !== last && s <= 5 && s > 0) SND.tick(); last = s;
-      if (left <= 0) reveal();
+      if (left <= 0) { if (x.type === 'game') { clearInterval(G.timer); setTimeout(reveal, 1800); } else reveal(); }
     }, 100);
   }
 
@@ -266,6 +283,7 @@ window.MDLive = (function () {
     G.subs.forEach(f => f()); G.subs = [];
     keepPlayers(); reactions();
     const ans = (await G.ref.child('an/' + G.i).once('value')).val() || {};
+    if (x.type === 'game') return revealGame(x, m, ans);
     const counts = x.opts.map(() => 0), okSet = new Set(x.ok), sc = {};
     let right = 0;
     const before = Object.keys(G.score).sort((a, b) => G.score[b] - G.score[a]); G.prev = {}; before.forEach((u, k) => { G.prev[u] = k + 1; });
@@ -303,6 +321,35 @@ window.MDLive = (function () {
         <div class="md-tiles">${x.opts.map((o, j) => `<div class="md-tile${okSet.has(j) ? ' right' : ' wrong'}" style="--c:var(--qz${j})"><i>${LET()[j]}</i><span dir="auto">${esc(o)}</span>${okSet.has(j) ? '<b>✓</b>' : ''}</div>`).join('')}</div>
         <p class="md-stat">${B(`أجاب إجابة صحيحة ${right} من ${Object.keys(G.players).length}`, `${right} of ${Object.keys(G.players).length} answered correctly`)}</p></div>`,
       `<button type="button" class="btn solid" data-next>${lastQ ? B('النتيجة النهائية', 'Final results') : showBoard ? B('الترتيب', 'Ranking') : B('السؤال التالي', 'Next question')}</button>`, true);
+    q('[data-next]').onclick = () => lastQ ? finish() : showBoard ? board() : next();
+  }
+  async function revealGame(x, m, ans) {
+    const g = MDGames.byId(x.g), sc = {}, raw = {};
+    const before = Object.keys(G.score).sort((a, b) => G.score[b] - G.score[a]); G.prev = {}; before.forEach((u, k) => { G.prev[u] = k + 1; });
+    Object.keys(G.players).forEach(u => { const a = ans[u]; raw[u] = a ? Math.max(0, Number(a.a) || 0) : 0; });
+    const best = Math.max(1, ...Object.values(raw));
+    Object.keys(G.players).forEach(u => {
+      const c = raw[u] > 0, d = m && c ? Math.round(1000 * m * (.25 + .75 * raw[u] / best)) : 0;
+      G.streak[u] = c ? (G.streak[u] || 0) + 1 : 0;
+      G.score[u] = (G.score[u] || 0) + d;
+      sc[u] = { s: G.score[u], d, c, k: G.streak[u], a: !!ans[u], g: raw[u] };
+    });
+    const order = Object.keys(sc).sort((a, b) => G.score[b] - G.score[a]), tt = teamTable();
+    order.forEach((u, k) => {
+      sc[u].r = k + 1; sc[u].of = order.length;
+      if (k) { sc[u].gap = G.score[order[k - 1]] - G.score[u]; sc[u].above = G.players[order[k - 1]] || ''; }
+      if (G.teams && G.team[u] != null) { const r = tt.findIndex(t => t.k === G.team[u]); sc[u].t = G.team[u]; sc[u].tr = r + 1; }
+    });
+    G.done = G.i; keep();
+    await G.ref.update({ ok: 'game', sc });
+    SND.reveal();
+    const n = G.quiz.qs.length, lastQ = G.i === n - 1;
+    const showBoard = !lastQ && ((G.opts.every && (G.i + 1) % G.opts.every === 0) || (G.opts.final && G.i === n - 2 && n > 2));
+    const top = Object.keys(raw).filter(u => u in G.players).sort((a, b) => raw[b] - raw[a]).slice(0, 5);
+    const q = frame(`<div class="md-lb"><h2>${g.icon} ${B('أبطال التحدي', 'Challenge champions')}: ${esc(G.ar ? g.ar : g.en)}</h2>
+        <ol>${top.map((u, k) => `<li style="--d:${k * 90}ms"><b>${k + 1}</b><span dir="auto">${esc(G.players[u] || '')}</span><em>${raw[u]}</em><small class="md-plus">+${sc[u].d}</small></li>`).join('')}</ol>
+        <p class="md-stat">${B(`شارك ${Object.keys(ans).length} من ${Object.keys(G.players).length}`, `${Object.keys(ans).length} of ${Object.keys(G.players).length} took part`)}</p></div>`,
+      `<button type="button" class="btn solid" data-next>${lastQ ? B('النتيجة النهائية', 'Final results') : showBoard ? B('الترتيب', 'Ranking') : B('التالي', 'Next')}</button>`, true);
     q('[data-next]').onclick = () => lastQ ? finish() : showBoard ? board() : next();
   }
   function keepPlayers() {
