@@ -1,6 +1,15 @@
 # Search-friendly titles, a short "how it works", and common questions for each meeting and file tool.
 # Shown under the tool and given to search engines as WebApplication + FAQPage data.
 SEO = {
+ 'minutes': {
+  'title': ('بناء محضر اجتماع مجلس أو لجنة', 'Build council or committee meeting minutes'),
+  'how': [('اكتب بيانات الاجتماع وأسماء الأعضاء، فيُحسب النصاب ويظهر التاريخ الهجري تلقائيًا.', 'Enter the meeting details and members; quorum and the Hijri date are worked out for you.'),
+          ('أضف البنود واختر نوع كل قرار: موافقة أو عدم موافقة أو إحالة أو تأجيل أو إحاطة، فتُكتب صيغته ورقمه.', 'Add the items and pick each decision: approve, reject, refer, defer or note; its wording and number are written for you.'),
+          ('سجّل التصويت والتحفظات والتكليفات بمسؤوليها ومواعيدها، أو صغ البنود من ملاحظاتك بالذكاء الاصطناعي.', 'Record the vote, reservations and tasks with owners and dates, or draft the items from your notes with AI.'),
+          ('نزّله Word أو اطبعه PDF، أو أرسله مباشرة لأداة توقيع المحاضر بخانات جاهزة لكل حاضر.', 'Download Word, print to PDF, or send it straight to the signing tool with a box ready for each attendee.')],
+  'faq': [('أين تُحفظ المحاضر؟', 'Where are the minutes kept?', 'في متصفحك على جهازك فقط، ولا تُرفع إلى أي خادم.', 'In your browser on your device only; they are never uploaded.'),
+          ('هل أعيد كتابة الأعضاء في كل اجتماع؟', 'Do I retype the members every meeting?', 'لا. احفظ اللجنة مرة، وابدأ منها كل محضر جديد برقم الجلسة التالي ومتابعة مهام المحضر السابق.', 'No. Save the committee once and start each new minutes from it, with the next number and the last tasks to follow up.'),
+          ('كيف تتحقق الأداة من المواد النظامية؟', 'How are cited articles checked?', 'إذا لصقت نص اللائحة، تتأكد الأداة أن النص المقتبس بين «» موجود فيها حرفيًا، وتنبهك إن لم تجده.', 'If you paste the regulations, the tool checks that the text quoted in «» appears in them word for word, and warns you if not.')]},
  'sign': {
   'title': ('توقيع المحاضر إلكترونيًا مجانًا', 'Sign meeting minutes online for free'),
   'how': [('ارفع المحضر بصيغة PDF، فتُكتشف خانات التوقيع تلقائيًا.', 'Upload the minutes as a PDF; signature boxes are detected automatically.'),

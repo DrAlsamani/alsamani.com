@@ -170,6 +170,20 @@
       drop.classList.remove('busy'); drop.hidden = true;
       editor(doc, buf, slots, file.name.replace(/\.pdf$/i, ''));
     }
+    // minutes handed over from the minutes builder: the PDF and a box for each attendee, already placed
+    if (location.hash === '#minutes') (async () => {
+      let v; try { v = await new Promise((ok, no) => { const r = indexedDB.open('alsamani', 1); r.onupgradeneeded = () => r.result.createObjectStore('hand'); r.onerror = () => no(r.error);
+        r.onsuccess = () => { const tx = r.result.transaction('hand', 'readwrite'), st = tx.objectStore('hand'), g = st.get('minutes'); g.onsuccess = () => { ok(g.result); st.delete('minutes'); }; g.onerror = () => no(g.error); }; }); } catch (e) {}
+      history.replaceState(null, '', location.pathname);
+      if (!v || !v.pdf) return;
+      drop.classList.add('busy');
+      try {
+        const buf = v.pdf.buffer ? v.pdf.buffer.slice(v.pdf.byteOffset, v.pdf.byteOffset + v.pdf.byteLength) : v.pdf;
+        const doc = await pdfjsLib.getDocument({ data: buf.slice(0), cMapUrl: PDFJS + 'cmaps/', cMapPacked: true, standardFontDataUrl: PDFJS + 'standard_fonts/', disableFontFace: true }).promise;
+        drop.classList.remove('busy'); drop.hidden = true;
+        editor(doc, buf, (v.slots || []).map(x => ({ p: x.p, n: x.n, r: x.r || '', x: x.x, y: x.y, w: x.w, h: x.h })), v.title || '');
+      } catch (e) { drop.classList.remove('busy'); toast(B('تعذّر فتح المحضر المرسل.', 'The minutes could not be opened.'), 1); }
+    })();
   }
 
   // the coordinator's boxes are remembered on this device and can be reused for the next minutes of the same format
