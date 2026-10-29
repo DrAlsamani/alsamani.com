@@ -36,6 +36,12 @@
   const stop = () => { if (G && G.off) G.off.forEach(f => f()); if (G && G.botT) clearTimeout(G.botT); G = null; };
   const on = (ref, ev, fn) => { ref.on(ev, fn); G.off.push(() => ref.off(ev, fn)); };
 
+  const rules = open => `<details class="kh-rules"${open ? ' open' : ''}><summary>📖 ${B('كيف تُلعب؟', 'How to play')}</summary>
+        <ol><li>${B('لكل فريق لون. في دورك اختر ورقة من يدك، ثم ضع قطعتك على إحدى خانتيها في اللوح (لكل ورقة خانتان).', 'Each team has a colour. On your turn pick a card, then put your chip on one of its two spaces.')}</li>
+        <li>${B('<b>السلسلة</b>: خمس قطع متتالية من لونك أفقيًا أو عموديًا أو قطريًا. الزوايا ★ مجانية للجميع.', '<b>A sequence</b>: five of your chips in a row, across, down or diagonal. The ★ corners count for everyone.')}</li>
+        <li>${B('<b>👀 ولد أبو عينين</b> (♦ و♣): ضع قطعتك في أي خانة فارغة. <b>👁 ولد أبو عين</b> (♠ و♥): أزل قطعة خصم، إلا إن كانت في سلسلة مكتملة.', '<b>👀 Two-eyed jacks</b> (♦ ♣): put your chip on any empty space. <b>👁 One-eyed jacks</b> (♠ ♥): remove a rival chip unless it is in a finished sequence.')}</li>
+        <li>${B('<b>الفوز</b>: فريقان يحتاجان سلسلتين، وثلاثة فرق سلسلة واحدة. ويمكن اختيار صف من أربع للعب أسرع.', '<b>Winning</b>: with two teams make two sequences; with three, one. You can choose rows of four for a quicker game.')}</li>
+        <li>${B('<b>الورقة الميتة</b>: إن امتلأت خانتاها فاستبدلها بورقة جديدة مرة في الدور.', '<b>A dead card</b>: if both its spaces are taken, swap it for a new one, once a turn.')}</li></ol></details>`;
   /* ---------- home ---------- */
   function home() {
     stop();
@@ -51,12 +57,7 @@
         <button type="button" class="kh-mode" data-go="join"><b>🔢 ${B('ادخل برمز', 'Join with a code')}</b><small>${B('عندك رمز لعبة؟ ادخل واختر فريقك.', 'Got a game code? Join and pick your team.')}</small></button>
         <button type="button" class="kh-mode" data-go="bot"><b>🤖 ${B('العب ضد الجهاز', 'Play the computer')}</b><small>${B('جرّب اللعبة وحدك وتعلّم قواعدها.', 'Try it on your own and learn the rules.')}</small></button>
       </div>
-      <details class="kh-rules"><summary>📖 ${B('كيف تُلعب؟', 'How to play')}</summary>
-        <ol><li>${B('لكل فريق لون. في دورك اختر ورقة من يدك، ثم ضع قطعتك على إحدى خانتيها في اللوح (لكل ورقة خانتان).', 'Each team has a colour. On your turn pick a card, then put your chip on one of its two spaces.')}</li>
-        <li>${B('<b>السلسلة</b>: خمس قطع متتالية من لونك أفقيًا أو عموديًا أو قطريًا. الزوايا ★ مجانية للجميع.', '<b>A sequence</b>: five of your chips in a row, across, down or diagonal. The ★ corners count for everyone.')}</li>
-        <li>${B('<b>👀 ولد أبو عينين</b> (♦ و♣): ضع قطعتك في أي خانة فارغة. <b>👁 ولد أبو عين</b> (♠ و♥): أزل قطعة خصم، إلا إن كانت في سلسلة مكتملة.', '<b>👀 Two-eyed jacks</b> (♦ ♣): put your chip on any empty space. <b>👁 One-eyed jacks</b> (♠ ♥): remove a rival chip unless it is in a finished sequence.')}</li>
-        <li>${B('<b>الفوز</b>: فريقان يحتاجان سلسلتين، وثلاثة فرق سلسلة واحدة. ويمكن اختيار صف من أربع للعب أسرع.', '<b>Winning</b>: with two teams make two sequences; with three, one. You can choose rows of four for a quicker game.')}</li>
-        <li>${B('<b>الورقة الميتة</b>: إن امتلأت خانتاها فاستبدلها بورقة جديدة مرة في الدور.', '<b>A dead card</b>: if both its spaces are taken, swap it for a new one, once a turn.')}</li></ol></details>`;
+      ${rules()}`;
     if (fresh) { root.querySelector('#khRes').onclick = () => resumeHost(P); root.querySelector('#khDrop').onclick = async () => { store.del('run'); try { await fb(); await wipe(P.pin); } catch (e) {} home(); }; }
     root.querySelectorAll('[data-go]').forEach(b => b.onclick = () => ({ host: setup, join: joinCode, bot: () => setup(true) })[b.dataset.go]());
   }
@@ -219,7 +220,7 @@
       if (!G) return;
       if (G.stt === 'lobby' || !G.P) {
         const k = G.tm[uid];
-        root.innerHTML = `<div class="kh-card kh-narrow kh-wait"><p class="kh-big">${B('أنت في اللعبة!', 'You are in!')}</p>${k != null ? `<p class="kh-tm" style="--c:${COL[k]}">${B('فريقك', 'Your team')}: <b>${TN(k)}</b></p>` : ''}<p>${B('انتظر حتى يبدأ منشئ اللعبة.', 'Wait for the game to start.')}</p></div>`;
+        root.innerHTML = `<div class="kh-card kh-narrow kh-wait"><p class="kh-big">${B('أنت في اللعبة!', 'You are in!')}</p>${k != null ? `<p class="kh-tm" style="--c:${COL[k]}">${B('فريقك', 'Your team')}: <b>${TN(k)}</b></p>` : ''}<p>${B('انتظر حتى يبدأ منشئ اللعبة. وفي الأثناء تعرّف على القواعد:', 'Wait for the game to start. Meanwhile, here are the rules:')}</p></div>${rules(true)}`;
         return;
       }
       view({ P: G.P, hand: G.hand, me: uid, names: G.names, act: (k, c, i) => { G.ref.child('mv/' + uid).set({ k, c: c || '', x: i == null ? -1 : i, t: TS() }).catch(() => toast(B('تعذّر الإرسال.', 'Could not send.'), 1)); return ''; }, again: () => { history.replaceState(null, '', location.pathname); home(); } });
@@ -263,7 +264,7 @@
     if (L && P.n !== lastSeen) { lastSeen = P.n; if (L.made) { toast(`🎉 ${B(`فريق ${TN(L.t)} أكمل سلسلة!`, `${TN(L.t)} made a sequence!`)}`); buzz([60, 40, 60]); } else if (L.rm) toast(`👁 ${B(`${esc(names[L.id] || '')} أزال قطعة من فريق ${TN(L.t)}`, `${esc(names[L.id] || '')} removed a ${TN(L.t)} chip`)}`); if (mine) buzz(40); }
     const teamsBar = [...Array(P.teams).keys()].map(k => `<div class="kh-ts${P.order && names && turn != null && team[turn] === k ? ' on' : ''}" style="--c:${COL[k]}"><b>${TN(k)}</b><span>${'●'.repeat(P.seqs[k] || 0)}${'○'.repeat(Math.max(0, P.need - (P.seqs[k] || 0)))}</span><small dir="auto">${Object.keys(team).filter(u => team[u] === k).map(u => esc(names[u] || '')).join('، ')}</small></div>`).join('');
     const status = P.win >= 0 ? `🏆 ${B(`فاز فريق ${TN(P.win)}!`, `${TN(P.win)} wins!`)}` : P.win === -2 ? B('تعادل!', 'A draw!')
-      : mine ? `<b>${B('دورك!', 'Your turn!')}</b> ${sel ? (KH.oneEyed(sel) ? B('اختر قطعة خصم لإزالتها', 'pick a rival chip to remove') : dead ? B('هذه ورقة ميتة', 'this card is dead') : B('اختر الخانة', 'pick the space')) : B('اختر ورقة من يدك', 'pick a card')}`
+      : mine ? `<b>${B('دورك!', 'Your turn!')}</b> ${sel ? (KH.oneEyed(sel) ? B('👁 ولد أبو عين: اختر قطعة خصم لإزالتها', '👁 One-eyed jack: pick a rival chip to remove') : KH.twoEyed(sel) ? B('👀 ولد أبو عينين: ضع قطعتك في أي خانة فارغة', '👀 Two-eyed jack: put your chip on any empty space') : dead ? B('خانتا هذه الورقة ممتلئتان؛ استبدلها', 'both its spaces are taken; swap it') : B('اختر إحدى الخانتين المضيئتين', 'pick one of the lit spaces')) : B('اختر ورقة من يدك', 'pick a card')}`
       : `${B('دور', 'Turn:')} <b dir="auto" style="color:${COL[team[turn]]}">${esc(names[turn] || '')}</b> (${TN(team[turn])})`;
     root.innerHTML = `<div class="kh-game${screen ? ' kh-screen' : ''}">
       <div class="kh-bar">${teamsBar}</div>
@@ -273,6 +274,7 @@
       ${me != null && !screen ? `<div class="kh-hand${mine ? ' mine' : ''}">${hand.map(c => `<button type="button" class="kh-hc${sel === c ? ' on' : ''}${mine && !KH.twoEyed(c) && !KH.oneEyed(c) && !legalOf(c).length ? ' dead' : ''}" data-c="${c}" style="--c:${myT != null ? COL[myT] : '#888'}">${card(c)}</button>`).join('')}</div>
         <div class="kh-row kh-acts">${dead ? `<button type="button" class="btn ghost" id="khSwap">↻ ${B('استبدل الورقة الميتة', 'Swap the dead card')}</button>` : ''}${stuck ? `<button type="button" class="btn ghost" id="khPass">${B('لا حركة لديك: تخطَّ الدور', 'No move: pass')}</button>` : ''}</div>` : ''}
       ${screen ? `<div class="kh-row"><button type="button" class="btn ghost" id="khFs">⛶ ${B('ملء الشاشة', 'Full screen')}</button></div>` : ''}
+      <div class="kh-help">${rules(false)}</div>
       ${P.win !== -1 ? `<div class="kh-row"><button type="button" class="btn solid" id="khAgain">${B('لعبة جديدة', 'New game')}</button></div>` : ''}</div>`;
     root.querySelectorAll('[data-c]').forEach(b => b.onclick = () => { sel = sel === b.dataset.c ? null : b.dataset.c; buzz(8); view({ P, hand, me, names, screen, watch, act, again }); });
     root.querySelectorAll('.kh-cell.can').forEach(c => c.onclick = () => { const s = sel; sel = null; buzz(20); act('p', s, +c.dataset.i); });
