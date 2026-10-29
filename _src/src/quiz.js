@@ -130,7 +130,7 @@
       const bad = checks();
       if (bad) { toast(B('بعض الأسئلة تحتاج مراجعة قبل البدء.', 'Some questions need review before starting.'), 1); root.querySelector('#qzChk [data-go]') && root.querySelector('#qzChk [data-go]').click(); return; }
       if (!window.MDLive) { toast(B('تعذّر تشغيل المسابقة الآن.', 'The quiz cannot start right now.'), 1); return; }
-      MDLive.start({ title: Q.title, qs: Q.qs.map(x => x.type === 'game' ? { type: 'game', g: x.g, q: '', opts: [], ok: [], pts: x.pts, time: x.time || 30, seed: 1 + Math.floor(Math.random() * 1e9) } : ({ type: x.type, q: x.q, opts: x.opts.filter(o => o.trim()), ok: x.ok.map(j => x.opts.slice(0, j).filter(o => o.trim()).length), pts: x.pts, img: x.img, time: x.timeSet ? x.time : suggest(x) })) });
+      MDLive.start({ title: Q.title, qs: Q.qs.map(x => x.type === 'game' ? { type: 'game', g: x.g, q: '', opts: [], ok: [], pts: x.pts, time: x.time || 30, seed: 1 + Math.floor(Math.random() * 1e9) } : ({ type: x.type, q: x.q, opts: TEXTY.includes(x.type) ? [] : x.opts.filter(o => o.trim()), ok: x.type === 'poll' || TEXTY.includes(x.type) ? [] : x.ok.map(j => x.opts.slice(0, j).filter(o => o.trim()).length), pts: x.type === 'open' || x.type === 'poll' ? 0 : x.pts, img: x.img, reveal: !!(x.reveal && x.img && x.type === 'mc'), ans: x.ans, unit: x.unit || '', items: x.type === 'order' ? x.items.filter(v => v.trim()) : null, time: x.timeSet ? x.time : suggest(x) })) });
     };
     q('#qzExp').onclick = () => save(new Blob([JSON.stringify({ title: Q.title, qs: Q.qs.map(({ id, timeSet, ...r }) => r) }, null, 1)], { type: 'application/json' }), (Q.title || 'quiz').replace(/[\\/:*?"<>|]+/g, ' ').slice(0, 60) + '.json');
     draw(); checks();
@@ -157,13 +157,26 @@
     if (window.Sortable && !box._s) box._s = Sortable.create(box, { handle: '.qz-grip', animation: 150, onEnd: e => { const [m] = Q.qs.splice(e.oldIndex, 1); Q.qs.splice(e.newIndex, 0, m); draw(); later(); } });
   }
   const GAMES = () => window.MDGames ? MDGames.LIST : [];
+  const KINDS = () => [['mc', T('اختيار من متعدد', 'Multiple choice')], ['tf', T('صح أو خطأ', 'True or false')], ['poll', T('تصويت (بلا إجابة صحيحة)', 'Poll (no right answer)')], ['num', T('الأقرب للرقم', 'Closest number')], ['word', T('خمّن الكلمة', 'Guess the word')], ['order', T('رتّب بالترتيب الصحيح', 'Put in order')], ['open', T('كتابة حرة (سحابة كلمات)', 'Free text (word cloud)')], ['game', T('تحدٍّ تفاعلي 🎮', 'Challenge 🎮')]];
+  const typeSel = t => `<select data-k="type" aria-label="type">${KINDS().map(([v, l]) => `<option value="${v}"${v === t ? ' selected' : ''}>${l}</option>`).join('')}</select>`;
+  const TEXTY = ['num', 'word', 'order', 'open'];
+  function setType(x, t) {
+    const was = x.type;
+    if (t === 'game') { x.g = x.g || 'sort'; x.time = x.time && x.time >= 20 ? x.time : 30; }
+    if (t === 'tf') { if (was !== 'tf') x.keep = x.opts; x.opts = [T('صح', 'True'), T('خطأ', 'False')]; x.ok = x.ok.filter(j => j < 2).slice(0, 1); }
+    if ((t === 'mc' || t === 'poll') && (was === 'tf' || was === 'game' || TEXTY.includes(was))) { x.opts = x.keep && x.keep.length ? x.keep : (x.opts && x.opts.some(o => o.trim()) && was !== 'tf' ? x.opts : ['', '', '', '']); if (was === 'tf') x.ok = []; }
+    if (t === 'poll') x.ok = [];
+    if (t === 'order' && !(x.items && x.items.length)) x.items = ['', '', ''];
+    if (t === 'open') x.pts = 0; else if (was === 'open' && !x.pts) x.pts = 1;
+    x.type = t;
+  }
   const GTIMES = [20, 30, 45, 60, 90];
   function card(x, i) {
     if (x.type === 'game') {
       const g = window.MDGames ? MDGames.byId(x.g) : { icon: '🎮', ar: '', en: '', howAr: '', howEn: '' }, t = x.time || 30;
       return `<div class="qz-q qz-game" data-id="${x.id}">
       <div class="qz-qh"><span class="qz-grip" title="${T('اسحب لتغيير الترتيب', 'Drag to reorder')}">⋮⋮</span><b class="qz-n">${i + 1}</b>
-        <select data-k="type" aria-label="type"><option value="mc">${T('اختيار من متعدد', 'Multiple choice')}</option><option value="tf">${T('صح أو خطأ', 'True or false')}</option><option value="game" selected>${T('تحدٍّ تفاعلي', 'Challenge')}</option></select>
+        ${typeSel('game')}
         <select data-k="gtime" aria-label="time">${GTIMES.map(s => `<option value="${s}"${s === t ? ' selected' : ''}>${s} ${T('ث', 's')}</option>`).join('')}</select>
         <select data-k="pts" aria-label="points"><option value="1"${x.pts === 1 ? ' selected' : ''}>${T('نقاط عادية', 'Standard points')}</option><option value="2"${x.pts === 2 ? ' selected' : ''}>${T('نقاط مضاعفة', 'Double points')}</option><option value="0"${x.pts === 0 ? ' selected' : ''}>${T('بلا نقاط', 'No points')}</option></select>
         <span class="qz-act"><button type="button" class="qz-ib" data-a="dup" title="${T('تكرار', 'Duplicate')}">⧉</button><button type="button" class="qz-ib" data-a="del" title="${T('حذف', 'Delete')}">✕</button></span></div>
@@ -171,15 +184,22 @@
       <p class="qz-ghow"><b>${g.icon} ${isAr() ? g.ar : g.en}:</b> ${isAr() ? g.howAr : g.howEn}</p>
       <p class="qz-warn" hidden></p></div>`;
     }
-    const t = x.timeSet ? x.time : suggest(x), tf = x.type === 'tf';
-    return `<div class="qz-q" data-id="${x.id}">
-      <div class="qz-qh"><span class="qz-grip" title="${T('اسحب لتغيير الترتيب', 'Drag to reorder')}">⋮⋮</span><b class="qz-n">${i + 1}</b>
-        <select data-k="type" aria-label="type"><option value="mc"${tf ? '' : ' selected'}>${T('اختيار من متعدد', 'Multiple choice')}</option><option value="game">${T('تحدٍّ تفاعلي', 'Challenge')}</option><option value="tf"${tf ? ' selected' : ''}>${T('صح أو خطأ', 'True or false')}</option></select>
+    const t = x.timeSet ? x.time : suggest(x), tf = x.type === 'tf', poll = x.type === 'poll';
+    const head = `<div class="qz-qh"><span class="qz-grip" title="${T('اسحب لتغيير الترتيب', 'Drag to reorder')}">⋮⋮</span><b class="qz-n">${i + 1}</b>
+        ${typeSel(x.type)}
         <select data-k="time" aria-label="time" title="${T('وقت الإجابة', 'Time to answer')}">${TIMES.map(s => `<option value="${s}"${s === t ? ' selected' : ''}>${s} ${T('ث', 's')}${!x.timeSet && s === t ? ' ✦' : ''}</option>`).join('')}</select>
         <select data-k="pts" aria-label="points"><option value="1"${x.pts === 1 ? ' selected' : ''}>${T('نقاط عادية', 'Standard points')}</option><option value="2"${x.pts === 2 ? ' selected' : ''}>${T('نقاط مضاعفة', 'Double points')}</option><option value="0"${x.pts === 0 ? ' selected' : ''}>${T('بلا نقاط', 'No points')}</option></select>
         <span class="qz-act"><label class="qz-ib" title="${T('صورة', 'Image')}">🖼<input type="file" accept="image/*" hidden data-k="img"></label><button type="button" class="qz-ib" data-a="dup" title="${T('تكرار', 'Duplicate')}">⧉</button><button type="button" class="qz-ib" data-a="del" title="${T('حذف', 'Delete')}">✕</button></span></div>
-      <textarea data-k="q" rows="2" dir="auto" maxlength="300" placeholder="${T('اكتب السؤال', 'Type the question')}">${esc(x.q)}</textarea>
-      ${x.img ? `<div class="qz-img"><img src="${x.img}" alt=""><button type="button" data-a="noimg">${B('إزالة الصورة', 'Remove image')}</button></div>` : ''}
+      <textarea data-k="q" rows="2" dir="auto" maxlength="300" placeholder="${x.type === 'word' ? T('تلميح عن الكلمة (مثال: عاصمة عربية)', 'A hint about the word (e.g. an Arab capital)') : x.type === 'num' ? T('السؤال (مثال: كم طول برج المملكة بالمتر؟)', 'The question (e.g. how tall is the Kingdom Tower in metres?)') : x.type === 'open' ? T('السؤال (مثال: صف رحلتنا بكلمة)', 'The question (e.g. describe our trip in one word)') : T('اكتب السؤال', 'Type the question')}">${esc(x.q)}</textarea>
+      ${x.img ? `<div class="qz-img"><img src="${x.img}" alt=""><button type="button" data-a="noimg">${B('إزالة الصورة', 'Remove image')}</button>${x.type === 'mc' ? `<label class="qz-rev"><input type="checkbox" data-k="reveal"${x.reveal ? ' checked' : ''}> ${B('🧩 أخفِ الصورة واكشفها تدريجيًا (الأسرع في التعرف يكسب أكثر)', '🧩 Hide the picture and reveal it bit by bit (the quickest to recognise it earns most)')}</label>` : ''}</div>` : ''}`;
+    if (TEXTY.includes(x.type)) {
+      const body = x.type === 'num' ? `<div class="qz-row2"><label>${B('الجواب (رقم)', 'The answer (a number)')}<input type="number" data-k="ans" step="any" value="${esc(x.ans == null ? '' : x.ans)}"></label><label>${B('الوحدة (اختياري)', 'Unit (optional)')}<input type="text" data-k="unit" maxlength="20" value="${esc(x.unit || '')}" placeholder="${T('متر، سنة…', 'metres, years…')}"></label></div><p class="qz-ghow">${B('يكتب كل مشارك رقمًا، والأقرب إلى الجواب يكسب أكثر.', 'Everyone types a number; the closest earns most.')}</p>`
+        : x.type === 'word' ? `<div class="qz-row2"><label>${B('الكلمة', 'The word')}<input type="text" data-k="ans" maxlength="24" dir="auto" value="${esc(x.ans || '')}"></label></div><p class="qz-ghow">${B('تنكشف حروف الكلمة واحدًا بعد الآخر على الشاشة والجوالات، ومن يكتبها أسرع يكسب أكثر.', 'The letters show one by one on the screen and the phones; the quickest to type it earns most.')}</p>`
+        : x.type === 'order' ? `<p class="qz-ghow">${B('اكتب العناصر بترتيبها الصحيح من الأول إلى الأخير؛ تظهر للمشاركين مخلوطة.', 'Write the items in their right order, first to last; players see them shuffled.')}</p><ol class="qz-items">${(x.items || []).map((v, j) => `<li><b>${j + 1}</b><input type="text" data-it="${j}" maxlength="60" dir="auto" value="${esc(v)}">${x.items.length > 2 ? `<button type="button" class="qz-x" data-irm="${j}" aria-label="remove">×</button>` : ''}</li>`).join('')}</ol>${(x.items || []).length < 6 ? `<button type="button" class="sn-lnk qz-more" data-a="item">${B('+ عنصر', '+ Item')}</button>` : ''}`
+        : `<p class="qz-ghow">${B('يكتب كل مشارك كلمة أو جملة قصيرة، وتظهر الإجابات على الشاشة سحابة كلمات، والأكثر تكرارًا أكبر. بلا نقاط.', 'Everyone writes a word or a short phrase; the answers appear as a word cloud, the most common biggest. No points.')}</p>`;
+      return `<div class="qz-q qz-${x.type}" data-id="${x.id}">${head}${body}<p class="qz-warn" hidden></p></div>`;
+    }
+    return `<div class="qz-q${poll ? ' qz-poll' : ''}" data-id="${x.id}">${head}
       <ol class="qz-opts">${x.opts.map((o, j) => `<li class="qz-o${x.ok.includes(j) ? ' ok' : ''}" style="--c:var(--qz${j})"><button type="button" class="qz-tick" data-ok="${j}" aria-pressed="${x.ok.includes(j)}" title="${T('الإجابة الصحيحة', 'Right answer')}"><i>${LET()[j]}</i></button>
         <input type="text" data-o="${j}" value="${esc(o)}" dir="auto" maxlength="120" placeholder="${T('خيار', 'Option')} ${j + 1}"${tf ? ' readonly' : ''}>${!tf && x.opts.length > 2 ? `<button type="button" class="qz-x" data-rm="${j}" aria-label="remove">×</button>` : ''}</li>`).join('')}</ol>
       ${!tf && x.opts.length < 6 ? `<button type="button" class="sn-lnk qz-more" data-a="opt">${B('+ خيار', '+ Option')}</button>` : ''}
@@ -188,7 +208,7 @@
   function bind(el, x) {
     const re = () => { const i = Q.qs.indexOf(x), n = document.createElement('div'); n.innerHTML = card(x, i); const c = n.firstElementChild; el.replaceWith(c); bind(c, x); later(); return c; };
     if (x.type === 'game') {
-      el.querySelector('[data-k=type]').onchange = e => { x.type = e.target.value; x.opts = x.type === 'tf' ? [T('صح', 'True'), T('خطأ', 'False')] : (x.keep && x.keep.length ? x.keep : ['', '', '', '']); x.ok = []; delete x.g; re(); };
+      el.querySelector('[data-k=type]').onchange = e => { setType(x, e.target.value); re(); };
       el.querySelector('[data-k=gtime]').onchange = e => { x.time = +e.target.value; later(); };
       el.querySelector('[data-k=pts]').onchange = e => { x.pts = +e.target.value; later(); };
       el.querySelectorAll('[data-g]').forEach(b => b.onclick = () => { x.g = b.dataset.g; re(); });
@@ -198,17 +218,18 @@
     }
     el.querySelector('[data-k=q]').oninput = e => { x.q = e.target.value; tm(); later(); };
     const tm = () => { if (x.timeSet) return; const s = el.querySelector('[data-k=time]'), t = suggest(x); [...s.options].forEach(o => { o.selected = +o.value === t; o.textContent = o.value + ' ' + T('ث', 's') + (+o.value === t ? ' ✦' : ''); }); };
-    el.querySelector('[data-k=type]').onchange = e => {
-      x.type = e.target.value;
-      if (x.type === 'game') { x.keep = x.opts; x.g = x.g || 'sort'; x.time = 30; x.q = x.q || ''; re(); return; }
-      if (x.type === 'tf') { x.keep = x.opts; x.opts = [T('صح', 'True'), T('خطأ', 'False')]; x.ok = x.ok.filter(j => j < 2).slice(0, 1); }
-      else { x.opts = x.keep && x.keep.length ? x.keep : ['', '', '', '']; x.ok = []; }
-      re();
-    };
+    el.querySelector('[data-k=type]').onchange = e => { setType(x, e.target.value); re(); };
+    const f = k => el.querySelector(`[data-k=${k}]`);
+    if (f('ans')) f('ans').oninput = e => { x.ans = x.type === 'num' ? (e.target.value === '' ? null : +e.target.value) : e.target.value; later(); };
+    if (f('unit')) f('unit').oninput = e => { x.unit = e.target.value; later(); };
+    if (f('reveal')) f('reveal').onchange = e => { x.reveal = e.target.checked; later(); };
+    el.querySelectorAll('[data-it]').forEach(i => { i.oninput = () => { x.items[+i.dataset.it] = i.value; later(); }; i.onkeydown = e => { if (e.key === 'Enter' && !e.isComposing) { e.preventDefault(); const j = +i.dataset.it; if (j < x.items.length - 1) el.querySelector(`[data-it="${j + 1}"]`).focus(); else if (x.items.length < 6) { x.items.push(''); re().querySelector(`[data-it="${j + 1}"]`).focus(); } } }; });
+    el.querySelectorAll('[data-irm]').forEach(b => b.onclick = () => { x.items.splice(+b.dataset.irm, 1); re(); });
     el.querySelector('[data-k=time]').onchange = e => { x.time = +e.target.value; x.timeSet = true; later(); };
     el.querySelector('[data-k=pts]').onchange = e => { x.pts = +e.target.value; later(); };
     el.querySelector('[data-k=img]').onchange = async e => { const f = e.target.files[0]; if (f) { x.img = await shrink(f); re(); } };
     el.querySelectorAll('[data-ok]').forEach(b => b.onclick = () => {
+      if (x.type === 'poll') return;
       const j = +b.dataset.ok;
       // true/false has one answer; multiple choice may have several
       if (x.type === 'tf') x.ok = [j]; else x.ok = x.ok.includes(j) ? x.ok.filter(k => k !== j) : x.ok.concat(j).sort();
@@ -229,6 +250,7 @@
     el.querySelector('[data-k=q]').onkeydown = e => { if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) { e.preventDefault(); const f = el.querySelector('[data-o="0"]'); if (f) f.focus(); } };
     el.querySelectorAll('[data-rm]').forEach(b => b.onclick = () => { const j = +b.dataset.rm; x.opts.splice(j, 1); x.ok = x.ok.filter(k => k !== j).map(k => k > j ? k - 1 : k); re(); });
     const a = s => el.querySelector(`[data-a=${s}]`);
+    if (a('item')) a('item').onclick = () => { x.items.push(''); re().querySelector(`[data-it="${x.items.length - 1}"]`).focus(); };
     if (a('opt')) a('opt').onclick = () => { x.opts.push(''); const c = re(); c.querySelector(`[data-o="${x.opts.length - 1}"]`).focus(); };
     if (a('noimg')) a('noimg').onclick = () => { x.img = null; re(); };
     a('dup').onclick = () => { const c = norm(JSON.parse(JSON.stringify(Object.assign({}, x, { id: uid() })))); c.timeSet = x.timeSet; Q.qs.splice(Q.qs.indexOf(x) + 1, 0, c); draw(); later(); };
@@ -251,10 +273,13 @@
     const seen = new Map();
     Q.qs.forEach((x, i) => {
       if (x.type === 'game') { const el = root.querySelectorAll('.qz-q')[i]; if (el) { el.classList.remove('bad'); el.querySelector('.qz-warn').hidden = true; } return; }
-      const w = [], filled = x.opts.filter(o => o.trim());
+      const w = [], filled = x.opts.filter(o => o.trim()), choice = !TEXTY.includes(x.type);
       if (!x.q.trim()) w.push(T('بلا نص', 'no text'));
-      if (filled.length < 2) w.push(T('يحتاج خيارين على الأقل', 'needs at least two options'));
-      if (!x.ok.length) w.push(T('لم تُحدَّد الإجابة الصحيحة', 'no right answer chosen'));
+      if (x.type === 'num' && (x.ans == null || isNaN(x.ans))) w.push(T('اكتب الجواب رقمًا', 'type the answer as a number'));
+      if (x.type === 'word' && !(x.ans || '').trim()) w.push(T('اكتب الكلمة', 'type the word'));
+      if (x.type === 'order' && (x.items || []).filter(v => v.trim()).length < 2) w.push(T('يحتاج عنصرين على الأقل', 'needs at least two items'));
+      if (choice && filled.length < 2) w.push(T('يحتاج خيارين على الأقل', 'needs at least two options'));
+      if (choice && x.type !== 'poll' && !x.ok.length) w.push(T('لم تُحدَّد الإجابة الصحيحة', 'no right answer chosen'));
       else if (x.ok.some(j => !(x.opts[j] || '').trim())) w.push(T('الإجابة الصحيحة خيار فارغ', 'the right answer is an empty option'));
       const lo = filled.map(o => o.trim().toLowerCase()); if (new Set(lo).size < lo.length) w.push(T('خيارات مكررة', 'repeated options'));
       if (x.q.length > 160) w.push(T('السؤال طويل على الشاشة', 'long for the screen'));
@@ -432,6 +457,15 @@ False *`;
         v.querySelectorAll('[data-g]').forEach(b => b.onclick = () => go(+b.dataset.g));
         v.querySelector('[data-x]').onclick = close;
         game = MDGames.run(x.g, v.querySelector('.qz-gbox'), { seed: 7, ar: isAr(), left: () => .5, finish: s => toast(B(`أنهيت التحدي: ${s} نقطة`, `Done: ${s} points`)) });
+        return;
+      }
+      if (TEXTY.includes(Q.qs[i].type)) {
+        const x = Q.qs[i], ph = x.type === 'num' ? `<input class="qz-pin" placeholder="${T('اكتب رقمًا', 'Type a number')}" disabled><p class="qz-pans">${B('الجواب', 'Answer')}: ${esc(x.ans)} ${esc(x.unit || '')}</p>` : x.type === 'word' ? `<p class="qz-pw">${[...(x.ans || '')].map(c => c === ' ' ? ' ' : '_').join(' ')}</p><input class="qz-pin" placeholder="${T('اكتب الكلمة', 'Type the word')}" disabled>` : x.type === 'order' ? (x.items || []).slice().sort(() => Math.random() - .5).map(v => `<div class="qz-pb" style="--c:var(--qz1)"><span dir="auto">${esc(v)}</span></div>`).join('') : `<input class="qz-pin" placeholder="${T('اكتب إجابتك', 'Type your answer')}" disabled>`;
+        v.innerHTML = `<div class="qz-pvb"><div class="qz-pvh"><b>${B('معاينة', 'Preview')} · ${i + 1} / ${Q.qs.length}</b><span><button type="button" data-g="-1" aria-label="previous">${isAr() ? '›' : '‹'}</button><button type="button" data-g="1" aria-label="next">${isAr() ? '‹' : '›'}</button><button type="button" data-x aria-label="close">✕</button></span></div>
+          <div class="qz-stage"><div class="qz-screen"><p class="qz-sq" dir="auto">${esc(x.q) || '…'}</p>${x.img ? `<img src="${x.img}" alt="">` : ''}<div class="qz-timer">${x.timeSet ? x.time : suggest(x)}</div></div>
+          <div class="qz-phone"><div class="qz-ph-top">${KINDS().find(k => k[0] === x.type)[1]}</div><div class="qz-tx">${ph}</div></div></div></div>`;
+        v.querySelectorAll('[data-g]').forEach(b => b.onclick = () => go(+b.dataset.g));
+        v.querySelector('[data-x]').onclick = close;
         return;
       }
       const x = Q.qs[i], t = x.timeSet ? x.time : suggest(x), opts = x.opts.map((o, j) => ({ o, j })).filter(z => z.o.trim());

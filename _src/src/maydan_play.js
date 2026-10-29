@@ -95,13 +95,14 @@
     R.child('pl/' + uid + '/t').once('value', t => { if (t.val() != null) myTeam = +t.val(); });
     R.child('asg/' + uid).on('value', t => { if (t.val() != null) { myTeam = +t.val(); shown = ''; draw(); } });
     R.child('ok').on('value', s => { OK = s.val(); draw(); });
+    R.child('wr').on('value', s => { const e = root.querySelector('#mpW'); if (e && s.val()) e.textContent = s.val(); });
     R.child('top').on('value', s => { TOP = s.val(); if (st.ph === 'lb' || st.ph === 'end') { shown = ''; draw(); } });
     R.child('sc/' + uid).on('value', s => { SC = s.val(); draw(); });
     R.child('pl/' + uid).on('value', s => { if (!s.exists() && me) kicked(); });
   }
   let shown = '';
   function draw() {
-    const key = st.ph + ':' + st.i + ':' + (st.ph === 'rev' || st.ph === 'lb' || st.ph === 'end' ? (SC ? SC.s : '') + (OK ? 'k' : '') + (TOP ? JSON.stringify(TOP).length : '') : '');
+    const key = st.ph + ':' + st.i + ':' + (st.ph === 'rev' || st.ph === 'lb' || st.ph === 'end' ? JSON.stringify(SC) + (OK ? 'k' : '') + (TOP ? JSON.stringify(TOP).length : '') : '');
     if (key === shown) return; shown = key;
     clearInterval(tick);
     if (st.ph === 'lobby') return screen(`<div class="mp-wait"><p class="mp-big">${B('أنت في الميدان!', 'You are in!')}</p><p class="mp-me" dir="auto">${esc(me)}</p>${TEAMS && myTeam != null ? `<p class="mp-tm" style="--c:var(--qz${(myTeam) % 6})">${esc(TEAMS[myTeam])}</p>` : ''}<p>${B('انظر إلى الشاشة؛ ستبدأ المسابقة قريبًا.', 'Watch the screen; the quiz will start soon.')}</p></div>` + rxBar());
@@ -129,12 +130,41 @@
       if (left <= 0) { clearInterval(tick); send(g.score()); }
     }, 100);
   }
+  // the kinds answered by typing or arranging
+  function textQ() {
+    const T2 = Q.type, pic = Q.img ? `<img class="mp-img" src="${Q.img}" alt="">` : '';
+    const inner = T2 === 'num' ? `<input class="mp-in" id="mpIn" type="number" inputmode="decimal" step="any" placeholder="${isAr() ? 'اكتب رقمًا' : 'Type a number'}">${Q.unit ? `<p class="mp-hint">${esc(Q.unit)}</p>` : ''}`
+      : T2 === 'word' ? `<p class="mp-mask" id="mpW" dir="auto">${esc(Q.wl || '')}</p><input class="mp-in" id="mpIn" maxlength="24" dir="auto" autocomplete="off" placeholder="${isAr() ? 'اكتب الكلمة' : 'Type the word'}">`
+      : T2 === 'open' ? `<input class="mp-in" id="mpIn" maxlength="40" dir="auto" autocomplete="off" placeholder="${isAr() ? 'اكتب إجابتك' : 'Write your answer'}">`
+      : `<p class="mp-hint">${B('اضغطها بالترتيب من الأول إلى الأخير', 'Tap them in order, first to last')}</p><ol class="mp-picked" id="mpPk"></ol><div class="mp-ord" id="mpOrd">${(Q.items || []).map((v, j) => `<button type="button" data-o="${j}" style="--c:var(--qz${j % 6})"><span dir="auto">${esc(v)}</span></button>`).join('')}</div><button type="button" class="mg-btn" id="mpUndo">${B('⌫ تراجع', '⌫ Undo')}</button>`;
+    screen(`<div class="mp-q mp-tq"><div class="mp-bar"><i id="mpBar"></i></div><p class="mp-qt" dir="auto">${esc(Q.q)}</p>${pic}${inner}
+      ${Q.bet ? `<button type="button" class="mp-bet" id="mpBet" aria-pressed="${bet}">🎯 ${B('أراهن على إجابتي (+٣٠٠ أو −٣٠٠)', 'I bet on my answer (+300 or −300)')}</button>` : ''}
+      <button type="button" class="btn solid mp-send" id="mpSend">${B('إرسال', 'Send')}</button></div>`, 'q');
+    const inp = root.querySelector('#mpIn'), go = root.querySelector('#mpSend'), picked = [];
+    const send = async a => { sent = st.i; buzz(30); try { await R.child('an/' + st.i + '/' + uid).set(Object.assign({ a, t: TS }, bet ? { b: true } : {})); } catch (e) {} shown = ''; draw(); };
+    if (inp) { setTimeout(() => inp.focus(), 100); inp.onkeydown = e => { if (e.key === 'Enter') go.click(); }; }
+    go.onclick = () => {
+      if (T2 === 'order') { if (picked.length !== (Q.items || []).length) return; return send(picked.slice()); }
+      const v = inp.value.trim(); if (!v) return;
+      send(T2 === 'num' ? +v : v);
+    };
+    if (T2 === 'order') {
+      const pk = root.querySelector('#mpPk'), paint = () => { pk.innerHTML = picked.map(j => `<li dir="auto">${esc(Q.items[j])}</li>`).join(''); root.querySelectorAll('[data-o]').forEach(b => b.disabled = picked.includes(+b.dataset.o)); go.disabled = picked.length !== Q.items.length; };
+      root.querySelectorAll('[data-o]').forEach(b => b.onclick = () => { picked.push(+b.dataset.o); buzz(10); paint(); });
+      root.querySelector('#mpUndo').onclick = () => { picked.pop(); paint(); }; paint();
+    }
+    const bb = root.querySelector('#mpBet'); if (bb) bb.onclick = () => { bet = !bet; bb.setAttribute('aria-pressed', bet); buzz(20); };
+    const bar = root.querySelector('#mpBar');
+    tick = setInterval(() => { const left = Math.max(0, st.dur - (now() - st.t0) / 1000); if (bar) bar.style.width = (100 * left / st.dur) + '%'; if (left <= 0) { clearInterval(tick); go.disabled = true; } }, 100);
+  }
   function question() {
     if (!Q || Q.i !== st.i) { setTimeout(draw, 200); shown = ''; return; }
     if (Q.type === 'game') return playGame();
+    if (['num', 'word', 'order', 'open'].includes(Q.type) && sent !== st.i) return textQ();
     if (sent === st.i) return screen(`<div class="mp-wait"><p class="mp-big">${B('وصلت إجابتك', 'Answer sent')}</p><p>${B('انتظر النتيجة…', 'Wait for the result…')}</p></div>`);
     const multi = !!Q.multi, pick = new Set();
-    screen(`<div class="mp-q"><div class="mp-bar"><i id="mpBar"></i></div><p class="mp-qt" dir="auto">${esc(Q.q)}</p>${multi ? `<p class="mp-hint">${B('اختر كل الإجابات الصحيحة ثم أرسل', 'Choose every right answer, then send')}</p>` : ''}${Q.bet ? `<button type="button" class="mp-bet" id="mpBet" aria-pressed="${bet}">🎯 ${B('أراهن على إجابتي (+٣٠٠ أو −٣٠٠)', 'I bet on my answer (+300 or −300)')}</button>` : ''}
+    const veil = Q.img && Q.rv ? `<div class="md-pic mp-pic"><img src="${Q.img}" alt=""><div class="md-veil go">${Array.from({ length: 24 }, (_, k) => `<i style="--d:${(Math.random() * Q.rv * .85).toFixed(2)}s"></i>`).join('')}</div></div>` : '';
+    screen(`<div class="mp-q"><div class="mp-bar"><i id="mpBar"></i></div><p class="mp-qt" dir="auto">${esc(Q.q)}</p>${veil}${multi ? `<p class="mp-hint">${B('اختر كل الإجابات الصحيحة ثم أرسل', 'Choose every right answer, then send')}</p>` : ''}${Q.bet ? `<button type="button" class="mp-bet" id="mpBet" aria-pressed="${bet}">🎯 ${B('أراهن على إجابتي (+٣٠٠ أو −٣٠٠)', 'I bet on my answer (+300 or −300)')}</button>` : ''}
       <div class="mp-btns n${Q.opts.length}">${Q.opts.map((o, j) => `<button type="button" data-j="${j}" style="--c:var(--qz${j})"><i>${LET()[j]}</i><span dir="auto">${esc(o)}</span></button>`).join('')}</div>
       ${multi ? `<button type="button" class="btn solid mp-send" id="mpSend" disabled>${B('إرسال', 'Send')}</button>` : ''}</div>`, 'q');
     const send = async a => {
@@ -159,9 +189,21 @@
   // the standings as the big screen shows them: top teams and top five
   const topList = () => !TOP ? '' : `<div class="mp-top5">${TOP.d ? `<p class="mp-gold">${B('🏁 بقي سؤال واحد بنقاط مضاعفة', '🏁 One question left, worth double')}</p>` : ''}${TOP.t && TOP.t.length ? `<ol class="mp-tl">${TOP.t.map(t => `<li style="--c:var(--qz${t.k % 6})"><span dir="auto">${esc(t.n)}</span><b>${t.s}</b></li>`).join('')}</ol>` : ''}<ol>${(TOP.p || []).map(p => `<li${p.n === me ? ' class="me"' : ''}><span dir="auto">${esc(p.n)}</span><b>${p.s}</b></li>`).join('')}</ol></div>`;
   function result() {
-    if (!SC || !OK) { if (st.ph === 'rev') screen(`<div class="mp-wait"><p>${B('لحظة…', 'One moment…')}</p></div>`); return; }
+    // wait for this question's own result, not the last one
+    if (!SC || !OK || (SC.q != null && SC.q !== st.i)) { if (st.ph === 'rev') screen(`<div class="mp-wait"><p>${B('لحظة…', 'One moment…')}</p></div>`); shown = ''; return; }
     if (st.ph === 'lb' && TOP) return screen(`<div class="mp-res end"><p class="mp-big">${B('الترتيب', 'Ranking')}</p>${topList()}<p class="mp-rank">${B(`مركزك: ${SC.r}`, `Your place: ${SC.r}`)}</p></div>` + rxBar(), 'end');
     if (game) { game.stop(); game = null; }
+    if (Q && Q.i === st.i && (Q.type === 'poll' || Q.type === 'open')) return screen(`<div class="mp-res end"><p class="mp-sym">🗳️</p><p class="mp-big">${SC.a ? B('شكرًا، وصلت مشاركتك', 'Thanks, your answer is in') : B('انتهى الوقت', 'Time’s up')}</p><p>${B('انظر النتائج على الشاشة', 'See the results on the screen')}</p><p class="mp-rank">${B(`مركزك: ${SC.r}`, `Your place: ${SC.r}`)}</p></div>` + rxBar(), 'end');
+    if (Q && Q.i === st.i && ['num', 'word', 'order'].includes(Q.type)) {
+      const ok2 = SC.c, ans = Q.type === 'order' ? `<ol class="mp-ordr">${[].concat(OK).map(v => `<li dir="auto">${esc(v)}</li>`).join('')}</ol>` : `<b dir="auto">${esc(OK)}${Q.unit ? ' ' + esc(Q.unit) : ''}</b>`;
+      if (st.ph === 'rev') buzz(ok2 ? [40, 60, 40] : 200);
+      return screen(`<div class="mp-res ${ok2 ? 'good' : 'bad'}"><p class="mp-sym">${ok2 ? '✓' : SC.a ? '✕' : '⏱'}</p>
+        <p class="mp-big">${Q.type === 'num' ? (ok2 ? B('من الأقرب!', 'One of the closest!') : B('ليس الأقرب', 'Not the closest')) : ok2 ? B('إجابة صحيحة', 'Correct') : SC.a ? B('إجابة خاطئة', 'Not this time') : B('انتهى الوقت', 'Time’s up')}</p>
+        <p class="mp-right">${B('الجواب:', 'Answer:')} ${ans}${Q.type === 'num' && SC.g != null ? `<br>${B('إجابتك:', 'Yours:')} ${esc(SC.g)}` : ''}</p>
+        ${SC.d > 0 ? `<p class="mp-plus">+${SC.d}</p>` : SC.d < 0 ? `<p class="mp-plus neg">${SC.d}</p>` : ''}${SC.b ? `<p class="mp-streak">🎯 ${ok2 ? B('ربحت الرهان', 'You won the bet') : B('خسرت الرهان', 'You lost the bet')}</p>` : ''}
+        <p class="mp-rank">${B(`مركزك: ${SC.r}`, `Your place: ${SC.r}`)}</p>
+        ${SC.gap != null && SC.r > 1 ? `<p class="mp-gap">🎯 ${B(`تحتاج ${SC.gap + 1} نقطة لتتجاوز ${esc(SC.above)}`, `You need ${SC.gap + 1} points to pass ${esc(SC.above)}`)}</p>` : SC.r === 1 ? `<p class="mp-gap">${B('أنت في الصدارة!', 'You are in the lead!')}</p>` : ''}</div>` + rxBar(), ok2 ? 'good' : 'bad');
+    }
     if (Q && Q.type === 'game' && Q.i === st.i) {
       return screen(`<div class="mp-res ${SC.c ? 'good' : 'bad'}"><p class="mp-sym">${SC.c ? '🎉' : '⏱'}</p><p class="mp-big">${B('نتيجتك في التحدي', 'Your challenge score')}: ${SC.g || 0}</p>
         ${SC.d > 0 ? `<p class="mp-plus">+${SC.d}</p>` : ''}<p class="mp-rank">${B(`مركزك: ${SC.r}`, `Your place: ${SC.r}`)}</p>
