@@ -4,10 +4,8 @@ const MARK = `<svg class="md-mark" viewBox="0 0 48 48" aria-hidden="true"><rect 
 const font = '<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;700&family=Alexandria:wght@500;700&display=block" rel="stylesheet">';
 const site = `<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8">${font}<style>*{margin:0;box-sizing:border-box}
 body{width:1200px;height:630px;font-family:"IBM Plex Sans Arabic",sans-serif;background:#fbfbfd;color:#1d1d1f;display:flex;align-items:center;gap:72px;padding:0 96px;position:relative;overflow:hidden}
-body:before{content:"";position:absolute;inset:0 0 auto 0;height:12px;background:linear-gradient(90deg,#0066CC,#2997FF 60%,#B64400)}
-.oa{flex:none;width:330px;height:330px;border-radius:50%;border:3px solid #1d1d1f;display:grid;place-items:center;position:relative;background:#fff}
-.oa:after{content:"";position:absolute;inset:16px;border-radius:50%;border:1.5px solid #0066CC}
-.oa b{font-family:Alexandria,sans-serif;font-weight:700;font-size:150px;letter-spacing:-6px;direction:ltr;line-height:1}.oa b i{font-style:normal;color:#0066CC}
+.oa{flex:none;width:300px;height:300px;border-radius:60px;background:#2C3E8F;display:grid;place-items:center}
+.oa b{font-family:Alexandria,sans-serif;font-weight:700;font-size:140px;letter-spacing:-4px;direction:ltr;line-height:1;color:#fff}.oa b i{font-style:normal}
 .t{display:flex;flex-direction:column;gap:18px}.en{direction:ltr;text-align:right;font-family:Alexandria,sans-serif;font-size:54px;font-weight:700;letter-spacing:-1px}
 .ar{font-size:40px;font-weight:700;color:#424245}.s{font-size:27px;color:#6e6e73;line-height:1.6;margin-top:10px}.u{direction:ltr;text-align:right;font-size:26px;color:#B64400;font-weight:500;margin-top:18px}</style></head>
 <body><div class="oa"><b>O<i>A</i></b></div><div class="t"><p class="en">Dr. Omar A. Alsamani</p><p class="ar">د. عمر عبدالله الصمعاني</p>
