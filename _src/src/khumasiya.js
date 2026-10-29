@@ -302,7 +302,18 @@
   const rxBar = react => `<div class="kh-rx">${react ? `<button type="button" class="kh-tab" data-say>😊 ${B('تفاعل', 'React')}</button>` : ''}${G && G.mode !== 'local' ? `<button type="button" class="kh-tab" data-rxset>${muted && react ? '🔕' : '⚙'} ${B('الإعدادات', 'Settings')}</button>` : ''}${react ? `<div class="kh-says" hidden><div class="kh-emo">${EMO.map(e => `<button type="button" data-rx="${e}">${e}</button>`).join('')}</div><div class="kh-phr">${SAY().map(t => `<button type="button" data-rx="${esc(t)}">${esc(t)}</button>`).join('')}</div></div>` : ''}${rxSet(G && G.mode !== 'local')}</div>`;
 
   /* ---------- the table: the board, the teams, whose turn, and this player's hand ---------- */
-  let sel = null, lastSeen = -1;
+  let sel = null, lastSeen = -1, winShown = -1;
+  function celebrate(P, names, again) {
+    document.querySelectorAll('.kh-win').forEach(x => x.remove());
+    const t = P.win, team = P.team || {}, who = t >= 0 ? Object.keys(team).filter(u => team[u] === t).map(u => esc(names[u] || '')).join('، ') : '';
+    const d = document.createElement('div'); d.className = 'kh-win'; d.style.setProperty('--c', t >= 0 ? COL[t] : '#888');
+    d.innerHTML = `<div class="kh-conf">${Array.from({ length: 60 }, (_, k) => `<i style="--x:${Math.random() * 100}%;--d:${(Math.random() * 1.6).toFixed(2)}s;--r:${Math.floor(Math.random() * 360)}deg;--k:${['#e0a458', '#fff', COL[0], COL[1], COL[2]][k % 5]}"></i>`).join('')}</div>
+      <div class="kh-winbox"><p class="kh-trophy">${t >= 0 ? '🏆' : '🤝'}</p><h2>${t >= 0 ? B(`فاز الفريق ${TN(t)}!`, `${TN(t)} wins!`) : B('تعادل!', 'A draw!')}</h2>${who ? `<p dir="auto">${who}</p>` : ''}
+      <div class="kh-row"><button type="button" class="btn solid" data-w="again">${B('لعبة جديدة', 'New game')}</button><button type="button" class="btn ghost" data-w="board">${B('عرض اللوح', 'See the board')}</button></div></div>`;
+    document.body.appendChild(d); buzz([100, 60, 100, 60, 200]);
+    d.querySelector('[data-w="board"]').onclick = () => d.remove();
+    d.querySelector('[data-w="again"]').onclick = () => { d.remove(); again(); };
+  }
   function view({ P, hand, me, names, screen, watch, act, again }) {
     const lay = P.lay.split(','), board = P.board.split('').map(c => c === '.' ? -1 : +c);
     const sq = (P.sq || []).map(s => new Set(String(s || '').split(',').filter(Boolean).map(Number)));
@@ -318,6 +329,7 @@
     const L = P.last;
     clearInterval(clk);
     // news of the last move
+    const fresh = !!L && P.n !== lastSeen;
     if (L && P.n !== lastSeen) { lastSeen = P.n; if (L.auto) toast(`⏱ ${B(`انتهى وقت ${esc(names[L.id] || '')}، فلُعبت ورقة عنه`, `${esc(names[L.id] || '')} ran out of time; a card was played for them`)}`); else if (L.made) { toast(`🎉 ${B(`فريق ${TN(L.t)} أكمل سلسلة!`, `${TN(L.t)} made a sequence!`)}`); buzz([60, 40, 60]); } else if (L.rm) toast(`👁 ${B(`${esc(names[L.id] || '')} أزال قطعة من فريق ${TN(L.t)}`, `${esc(names[L.id] || '')} removed a ${TN(L.t)} chip`)}`); if (mine) buzz(40); }
     const teamsBar = [...Array(P.teams).keys()].map(k => `<div class="kh-ts${P.order && names && turn != null && team[turn] === k ? ' on' : ''}" style="--c:${COL[k]}"><b>${TN(k)}</b><span>${'●'.repeat(P.seqs[k] || 0)}${'○'.repeat(Math.max(0, P.need - (P.seqs[k] || 0)))}</span><small dir="auto">${Object.keys(team).filter(u => team[u] === k).map(u => esc(names[u] || '')).join('، ')}</small></div>`).join('');
     const status = P.win >= 0 ? `🏆 ${B(`فاز فريق ${TN(P.win)}!`, `${TN(P.win)} wins!`)}` : P.win === -2 ? B('تعادل!', 'A draw!')
@@ -328,7 +340,7 @@
       ${G && G.mode !== 'local' ? stands() : ''}
       <p class="kh-status">${P.dl && P.win === -1 ? `<span class="kh-clock${mine ? ' me' : ''}" id="khClk"></span> ` : ''}${watch ? `<span class="kh-eye">👀 ${B('مشاهدة', 'Watching')}</span> ` : ''}${status}</p>
       <div class="kh-board${can.length ? ' picking' : ''}">${lay.map((c, i) => { const b = board[i], inq = b >= 0 && sq[b] && sq[b].has(i);
-        return `<div class="kh-cell${can.includes(i) ? ' can' : sel && lay[i] === sel ? ' twin' : ''}${L && L.i === i ? ' last' : ''}" data-i="${i}">${card(c)}${b >= 0 ? `<i class="kh-chip${inq ? ' seq' : ''}" style="--c:${COL[b]}"></i>` : ''}</div>`; }).join('')}</div>
+        return `<div class="kh-cell${can.includes(i) ? ' can' : sel && lay[i] === sel ? ' twin' : ''}${L && L.i === i ? ' last' + (fresh ? ' drop' : '') : ''}${P.win >= 0 && inq && b === P.win ? ' won' : ''}" data-i="${i}">${card(c)}${b >= 0 ? `<i class="kh-chip${inq ? ' seq' : ''}" style="--c:${COL[b]}"></i>` : ''}${L && L.i === i && L.rm && fresh ? `<i class="kh-chip ghost" style="--c:${COL[L.t]}"></i>` : ''}</div>`; }).join('')}</div>
       ${me != null && !screen ? `<div class="kh-hand${mine ? ' mine' : ''}">${hand.map(c => `<button type="button" class="kh-hc${sel === c ? ' on' : ''}${mine && !KH.twoEyed(c) && !KH.oneEyed(c) && !legalOf(c).length ? ' dead' : ''}" data-c="${c}" style="--c:${myT != null ? COL[myT] : '#888'}">${card(c)}</button>`).join('')}</div>
         <div class="kh-row kh-acts">${dead ? `<button type="button" class="btn ghost" id="khSwap">↻ ${B('استبدل الورقة الميتة', 'Swap the dead card')}</button>` : ''}${stuck ? `<button type="button" class="btn ghost" id="khPass">${B('لا حركة لديك: تخطَّ الدور', 'No move: pass')}</button>` : ''}</div>` : ''}
       ${screen ? `<div class="kh-row"><button type="button" class="btn ghost" id="khFs">⛶ ${B('ملء الشاشة', 'Full screen')}</button></div>` : ''}
@@ -340,6 +352,7 @@
     const sw = root.querySelector('#khSwap'); if (sw) sw.onclick = () => { const s = sel; sel = null; act('s', s); };
     const ps = root.querySelector('#khPass'); if (ps) ps.onclick = () => act('n');
     const ag = root.querySelector('#khAgain'); if (ag) ag.onclick = again;
+    if (P.win !== -1 && winShown !== P.n) { winShown = P.n; celebrate(P, names, again); }
     const ck = root.querySelector('#khClk');
     if (ck) { let warned = false; const tick = () => { const left = Math.max(0, Math.ceil((P.dl - now()) / 1000)); ck.textContent = '⏱ ' + left; ck.classList.toggle('hot', left <= 10); if (mine && left <= 5 && !warned) { warned = true; buzz([80, 60, 80]); } }; tick(); clk = setInterval(tick, 250); }
     root.querySelectorAll('[data-rx]').forEach(b => b.onclick = () => { sendRx(b.dataset.rx); const ss = root.querySelector('.kh-says'); if (ss) ss.hidden = true; });

@@ -1518,6 +1518,26 @@ html[dir=ltr] .jr-dch.fd .jr-fold::before{transform:rotate(-45deg)}
 .kh-board.picking .kh-cell.twin,.kh-board .kh-cell.twin{opacity:1;box-shadow:inset 0 0 0 3px #fff;outline:2px dashed var(--gold);outline-offset:-6px}
 
 .kh-cell:has(.kh-chip) .kc{text-shadow:0 0 1.5px #fff,0 0 1.5px #fff}
+/* the last move: the chip drops in large and settles; the space keeps a soft ring until the next move */
+.kh-cell.last{box-shadow:inset 0 0 0 3px #fff,0 0 0 2px var(--gold);z-index:2}
+.kh-cell.last::after{animation:khLast 1.6s infinite}
+.kh-cell.drop .kh-chip:not(.ghost){animation:khDrop .9s cubic-bezier(.2,.9,.3,1.3)}
+@keyframes khDrop{0%{transform:scale(3.2);opacity:0}35%{opacity:1}100%{transform:scale(1)}}
+.kh-cell.drop::before{content:"";position:absolute;inset:-30%;border-radius:50%;border:4px solid var(--gold);animation:khRing 1.1s ease-out forwards;z-index:3;pointer-events:none}
+@keyframes khRing{0%{transform:scale(.3);opacity:1}100%{transform:scale(1.6);opacity:0}}
+.kh-cell{overflow:visible}.kh-cell>.kc,.kh-cell>.kh-chip{overflow:hidden}
+.kh-chip.ghost{animation:khGone 1.6s ease forwards}.kh-chip.ghost::after{content:"✕";position:absolute;inset:0;display:grid;place-items:center;color:#fff;font-weight:900;font-size:5cqi}
+@keyframes khGone{0%{opacity:1;transform:scale(1)}60%{opacity:1;transform:scale(1.15)}100%{opacity:0;transform:scale(.4)}}
+.kh-cell.won{animation:khWon 1.2s ease-in-out infinite}@keyframes khWon{50%{box-shadow:inset 0 0 0 3px var(--gold),0 0 14px var(--gold)}}
+/* the winner in the middle of the screen */
+.kh-win{position:fixed;inset:0;z-index:90;background:rgba(5,25,18,.72);display:grid;place-items:center;padding:16px;animation:khIn .3s ease}
+@keyframes khIn{from{opacity:0}}
+.kh-winbox{position:relative;z-index:1;background:var(--cream,#fbf6ea);color:#13281f;border-radius:24px;padding:26px 30px;text-align:center;border-top:10px solid var(--c);box-shadow:0 30px 80px rgba(0,0,0,.5);animation:khPop .6s cubic-bezier(.2,.9,.3,1.4);max-width:420px}
+.kh-winbox h2{margin:4px 0;font-size:clamp(1.8rem,7vw,2.6rem);color:var(--c)}.kh-winbox p{margin:0 0 14px}.kh-trophy{font-size:4.2rem;margin:0!important;animation:khBounce 1.2s ease infinite}
+@keyframes khPop{0%{transform:scale(.4);opacity:0}100%{transform:none;opacity:1}}@keyframes khBounce{50%{transform:translateY(-8px) rotate(-6deg)}}
+.kh-winbox .btn.ghost{color:#13281f;border-color:#13281f}
+.kh-conf{position:absolute;inset:0;overflow:hidden;pointer-events:none}.kh-conf i{position:absolute;top:-20px;left:var(--x);width:9px;height:14px;background:var(--k);border-radius:2px;transform:rotate(var(--r));animation:khConf 3.2s linear var(--d) infinite}
+@keyframes khConf{to{top:110%;transform:rotate(calc(var(--r) + 540deg))}}
 </style>
 <div id="kh" class="kh"><noscript><span class="ar">تعمل هذه اللعبة مع تفعيل JavaScript.</span><span class="en">This game needs JavaScript.</span></noscript></div>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script>window.MD_CFG={"apiKey": "AIzaSyA50i75DT1Is1a6Yn6snW1_JVObc8S3F0Y", "authDomain": "maydan-705ae.firebaseapp.com", "databaseURL": "https://maydan-705ae-default-rtdb.europe-west1.firebasedatabase.app", "projectId": "maydan-705ae", "appId": "1:342187013133:web:d5c2396f0db413f3c51144"};window.MD_MARK="<svg class=\"md-mark\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><rect x=\"4\" y=\"4\" width=\"40\" height=\"40\" rx=\"12\" fill=\"#23336F\"/><path d=\"M24 9l4.2 6.8 7.8-1.8-1.8 7.8L41 24l-6.8 4.2 1.8 7.8-7.8-1.8L24 39l-4.2-6.8-7.8 1.8 1.8-7.8L7 24l6.8-4.2-1.8-7.8 7.8 1.8z\" fill=\"#C9822B\"/><circle cx=\"24\" cy=\"24\" r=\"6.5\" fill=\"#23336F\"/><circle cx=\"24\" cy=\"24\" r=\"3\" fill=\"#F3E3C7\"/></svg>";</script><script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script><script>/* Khumasiya: the rules. Two packs of cards; a 10×10 board with every card except the jacks twice and four free corners.
@@ -2033,7 +2053,18 @@ window.KH = (function () {
   const rxBar = react => `<div class="kh-rx">${react ? `<button type="button" class="kh-tab" data-say>😊 ${B('تفاعل', 'React')}</button>` : ''}${G && G.mode !== 'local' ? `<button type="button" class="kh-tab" data-rxset>${muted && react ? '🔕' : '⚙'} ${B('الإعدادات', 'Settings')}</button>` : ''}${react ? `<div class="kh-says" hidden><div class="kh-emo">${EMO.map(e => `<button type="button" data-rx="${e}">${e}</button>`).join('')}</div><div class="kh-phr">${SAY().map(t => `<button type="button" data-rx="${esc(t)}">${esc(t)}</button>`).join('')}</div></div>` : ''}${rxSet(G && G.mode !== 'local')}</div>`;
 
   /* ---------- the table: the board, the teams, whose turn, and this player's hand ---------- */
-  let sel = null, lastSeen = -1;
+  let sel = null, lastSeen = -1, winShown = -1;
+  function celebrate(P, names, again) {
+    document.querySelectorAll('.kh-win').forEach(x => x.remove());
+    const t = P.win, team = P.team || {}, who = t >= 0 ? Object.keys(team).filter(u => team[u] === t).map(u => esc(names[u] || '')).join('، ') : '';
+    const d = document.createElement('div'); d.className = 'kh-win'; d.style.setProperty('--c', t >= 0 ? COL[t] : '#888');
+    d.innerHTML = `<div class="kh-conf">${Array.from({ length: 60 }, (_, k) => `<i style="--x:${Math.random() * 100}%;--d:${(Math.random() * 1.6).toFixed(2)}s;--r:${Math.floor(Math.random() * 360)}deg;--k:${['#e0a458', '#fff', COL[0], COL[1], COL[2]][k % 5]}"></i>`).join('')}</div>
+      <div class="kh-winbox"><p class="kh-trophy">${t >= 0 ? '🏆' : '🤝'}</p><h2>${t >= 0 ? B(`فاز الفريق ${TN(t)}!`, `${TN(t)} wins!`) : B('تعادل!', 'A draw!')}</h2>${who ? `<p dir="auto">${who}</p>` : ''}
+      <div class="kh-row"><button type="button" class="btn solid" data-w="again">${B('لعبة جديدة', 'New game')}</button><button type="button" class="btn ghost" data-w="board">${B('عرض اللوح', 'See the board')}</button></div></div>`;
+    document.body.appendChild(d); buzz([100, 60, 100, 60, 200]);
+    d.querySelector('[data-w="board"]').onclick = () => d.remove();
+    d.querySelector('[data-w="again"]').onclick = () => { d.remove(); again(); };
+  }
   function view({ P, hand, me, names, screen, watch, act, again }) {
     const lay = P.lay.split(','), board = P.board.split('').map(c => c === '.' ? -1 : +c);
     const sq = (P.sq || []).map(s => new Set(String(s || '').split(',').filter(Boolean).map(Number)));
@@ -2049,6 +2080,7 @@ window.KH = (function () {
     const L = P.last;
     clearInterval(clk);
     // news of the last move
+    const fresh = !!L && P.n !== lastSeen;
     if (L && P.n !== lastSeen) { lastSeen = P.n; if (L.auto) toast(`⏱ ${B(`انتهى وقت ${esc(names[L.id] || '')}، فلُعبت ورقة عنه`, `${esc(names[L.id] || '')} ran out of time; a card was played for them`)}`); else if (L.made) { toast(`🎉 ${B(`فريق ${TN(L.t)} أكمل سلسلة!`, `${TN(L.t)} made a sequence!`)}`); buzz([60, 40, 60]); } else if (L.rm) toast(`👁 ${B(`${esc(names[L.id] || '')} أزال قطعة من فريق ${TN(L.t)}`, `${esc(names[L.id] || '')} removed a ${TN(L.t)} chip`)}`); if (mine) buzz(40); }
     const teamsBar = [...Array(P.teams).keys()].map(k => `<div class="kh-ts${P.order && names && turn != null && team[turn] === k ? ' on' : ''}" style="--c:${COL[k]}"><b>${TN(k)}</b><span>${'●'.repeat(P.seqs[k] || 0)}${'○'.repeat(Math.max(0, P.need - (P.seqs[k] || 0)))}</span><small dir="auto">${Object.keys(team).filter(u => team[u] === k).map(u => esc(names[u] || '')).join('، ')}</small></div>`).join('');
     const status = P.win >= 0 ? `🏆 ${B(`فاز فريق ${TN(P.win)}!`, `${TN(P.win)} wins!`)}` : P.win === -2 ? B('تعادل!', 'A draw!')
@@ -2059,7 +2091,7 @@ window.KH = (function () {
       ${G && G.mode !== 'local' ? stands() : ''}
       <p class="kh-status">${P.dl && P.win === -1 ? `<span class="kh-clock${mine ? ' me' : ''}" id="khClk"></span> ` : ''}${watch ? `<span class="kh-eye">👀 ${B('مشاهدة', 'Watching')}</span> ` : ''}${status}</p>
       <div class="kh-board${can.length ? ' picking' : ''}">${lay.map((c, i) => { const b = board[i], inq = b >= 0 && sq[b] && sq[b].has(i);
-        return `<div class="kh-cell${can.includes(i) ? ' can' : sel && lay[i] === sel ? ' twin' : ''}${L && L.i === i ? ' last' : ''}" data-i="${i}">${card(c)}${b >= 0 ? `<i class="kh-chip${inq ? ' seq' : ''}" style="--c:${COL[b]}"></i>` : ''}</div>`; }).join('')}</div>
+        return `<div class="kh-cell${can.includes(i) ? ' can' : sel && lay[i] === sel ? ' twin' : ''}${L && L.i === i ? ' last' + (fresh ? ' drop' : '') : ''}${P.win >= 0 && inq && b === P.win ? ' won' : ''}" data-i="${i}">${card(c)}${b >= 0 ? `<i class="kh-chip${inq ? ' seq' : ''}" style="--c:${COL[b]}"></i>` : ''}${L && L.i === i && L.rm && fresh ? `<i class="kh-chip ghost" style="--c:${COL[L.t]}"></i>` : ''}</div>`; }).join('')}</div>
       ${me != null && !screen ? `<div class="kh-hand${mine ? ' mine' : ''}">${hand.map(c => `<button type="button" class="kh-hc${sel === c ? ' on' : ''}${mine && !KH.twoEyed(c) && !KH.oneEyed(c) && !legalOf(c).length ? ' dead' : ''}" data-c="${c}" style="--c:${myT != null ? COL[myT] : '#888'}">${card(c)}</button>`).join('')}</div>
         <div class="kh-row kh-acts">${dead ? `<button type="button" class="btn ghost" id="khSwap">↻ ${B('استبدل الورقة الميتة', 'Swap the dead card')}</button>` : ''}${stuck ? `<button type="button" class="btn ghost" id="khPass">${B('لا حركة لديك: تخطَّ الدور', 'No move: pass')}</button>` : ''}</div>` : ''}
       ${screen ? `<div class="kh-row"><button type="button" class="btn ghost" id="khFs">⛶ ${B('ملء الشاشة', 'Full screen')}</button></div>` : ''}
@@ -2071,6 +2103,7 @@ window.KH = (function () {
     const sw = root.querySelector('#khSwap'); if (sw) sw.onclick = () => { const s = sel; sel = null; act('s', s); };
     const ps = root.querySelector('#khPass'); if (ps) ps.onclick = () => act('n');
     const ag = root.querySelector('#khAgain'); if (ag) ag.onclick = again;
+    if (P.win !== -1 && winShown !== P.n) { winShown = P.n; celebrate(P, names, again); }
     const ck = root.querySelector('#khClk');
     if (ck) { let warned = false; const tick = () => { const left = Math.max(0, Math.ceil((P.dl - now()) / 1000)); ck.textContent = '⏱ ' + left; ck.classList.toggle('hot', left <= 10); if (mine && left <= 5 && !warned) { warned = true; buzz([80, 60, 80]); } }; tick(); clk = setInterval(tick, 250); }
     root.querySelectorAll('[data-rx]').forEach(b => b.onclick = () => { sendRx(b.dataset.rx); const ss = root.querySelector('.kh-says'); if (ss) ss.hidden = true; });
