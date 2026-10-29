@@ -1513,6 +1513,7 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
 .sn-nmi::placeholder{color:var(--accent);opacity:.45;font-weight:400}
 .sn-box.act input.sn-nmi:focus{background:rgba(255,255,255,.7)!important;border-radius:4px}
 .sn-ghost{position:absolute;box-sizing:border-box;border:2px dashed var(--accent);border-radius:6px;background:rgba(44,62,143,.06);color:var(--accent);display:grid;place-items:center;font-size:.75rem;white-space:nowrap;pointer-events:none;opacity:.75;z-index:1}
+.sn-why{background:var(--accent-soft);border-radius:12px;padding:12px 14px;font-size:.9375rem;line-height:1.8;margin:10px 0 14px}.sn-why b{color:var(--accent)}
 </style>
 <div id="sn" class="sn" data-api="https://script.google.com/macros/s/AKfycbx8-M5oOYDU-TaWyLaySlqZHvBffRiDI6QH85_hBh5y_9uYrvUdxwD3hKNzGoJ4K7UOXQ/exec"><noscript><span class="ar">تعمل هذه الأداة مع تفعيل JavaScript.</span><span class="en">This tool needs JavaScript.</span></noscript></div>
 <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
@@ -1792,8 +1793,9 @@ async function snDetectPage(page,pi,OPS){
         <label class="sn-lbl">${B('عنوان المحضر', 'Title')}<input type="text" id="snTitle" maxlength="200" value="${esc(title)}"></label>
         ${T.length ? `<label class="sn-lbl">${B('خانات محفوظة من محاضر سابقة', 'Boxes saved from earlier minutes')}<select id="snTpl"><option value="">${isAr() ? 'تحديد تلقائي من هذا الملف' : 'Detect from this file'}</option>${T.map((t, k) => `<option value="${k}"${used === t ? ' selected' : ''}>${esc(t.title)} · ${t.slots.length} ${isAr() ? 'خانة' : 'boxes'}</option>`).join('')}</select></label>` : ''}
         <p class="sn-found">${used ? B(`استُخدمت خانات «${esc(used.title)}» وأسماؤها. راجعها إن تغيّر شكل المحضر.`, `Boxes and names from “${esc(used.title)}” were applied. Review them if the layout changed.`) : found ? B(`حددت الأداة ${found} خانة توقيع أمام الأسماء، وستظهر للأعضاء جاهزة. ويستطيع أي عضو أيضًا التوقيع في الموضع الذي يختاره.`, `The tool marked ${found} signature boxes next to the names; members will see them ready. Any member can also sign wherever they choose.`) : B('لم تُحدَّد خانات توقيع تلقائيًا، ولا بأس: يضع كل عضو توقيعه في الموضع الذي يختاره من المحضر.', 'No signature boxes were detected, which is fine: each member places their signature wherever they choose.')}</p>
+        <p class="sn-why">${B('<b>لماذا خانات التوقيع؟</b> تحدد لكل عضو مربعًا باسمه في موضع توقيعه، فيصير التوقيع أسهل وأدق: يفتح العضو الرابط ويختار اسمه، فينتقل إلى مربعه مباشرة، ثم يرسم توقيعه أو يختار توقيعه المحفوظ، فيوضع في مكانه بالحجم المناسب ويُحفظ تلقائيًا. وتتابع أنت من وقّع ومن لم يوقّع بعد.', '<b>Why signature boxes?</b> Each member gets a box with their name where they sign, so signing is easier and neater: the member opens the link and picks their name, goes straight to their box, draws or picks a saved signature, and it is placed at the right size and saved automatically. You can follow who has signed and who has not.')}</p>
         <div class="sn-two"><button type="button" class="btn solid" id="snCreate">${B('إنشاء الرابط الآن', 'Create the link now')}</button>
-        <button type="button" class="btn ghost" id="snRevBtn" aria-expanded="false">${found ? B('مراجعة الخانات أولًا', 'Review the boxes first') : B('تحديد الخانات بنفسي', 'Mark the boxes myself')}</button></div>
+        <button type="button" class="btn ghost" id="snRevBtn" aria-expanded="false">${found ? B('مراجعة خانات التوقيع', 'Review the signature boxes') : B('إضافة خانات التوقيع', 'Add signature boxes')}</button></div>
       </div>
       <div id="snRev" hidden>
       <div class="sn-card">

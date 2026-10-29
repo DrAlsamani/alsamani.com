@@ -161,8 +161,8 @@ def journey_body():
 </section>'''
 
 SIGN = {'slug': 'sign', 't_ar': 'توقيع المحاضر', 't_en': 'Signing the minutes',
-        'q_ar': 'ارفع المحضر، وأرسل رابطًا واحدًا يوقّع منه الأعضاء.',
-        'q_en': 'Upload the minutes and share one link for members to sign.'}
+        'q_ar': 'ارفع المحضر وأرسله للأعضاء للتوقيع بيسر وسهولة.',
+        'q_en': 'Upload the minutes and send them to members to sign, simply and easily.'}
 def sign_ready():
     return (os.environ.get('SIGN_API') or json.load(open(os.path.join(ROOT, 'data', 'sign.json')))['api']).startswith('http')
 def poll_ready():
