@@ -117,12 +117,21 @@
   function playGame() {
     if (sent === st.i) return screen(`<div class="mp-wait"><p class="mp-big">${B('أنهيت التحدي!', 'Challenge done!')}</p><p>${B('بانتظار البقية…', 'Waiting for the others…')}</p></div>`);
     screen(`<div class="mp-q mp-gq"><div class="mp-bar"><i id="mpBar"></i></div><div class="mp-gbox" id="mpG"></div></div>`, 'q');
-    const send = async score => {
+    let send = async score => {
       if (sent === st.i) return; sent = st.i; buzz(30); if (game) { game.stop(); game = null; }
       try { await R.child('an/' + st.i + '/' + uid).set({ a: Math.round(score), t: TS }); } catch (e) {}
       shown = ''; draw();
     };
-    game = MDGames.run(Q.g, root.querySelector('#mpG'), { seed: Q.seed, ar: Q.L !== 'en', left: () => Math.max(0, 1 - (now() - st.t0) / 1000 / st.dur), finish: send, tick: () => buzz(10), bad: () => buzz(60) });
+    // tug of war: pulls go up live (a few times a second) so the rope moves on every screen
+    let tug = {};
+    if (Q.g === 'tug') {
+      const k = Q.ts && Q.ts[uid] != null ? Q.ts[uid] : 0; let pos = 0, pend = 0, lastW = 0, tm = null;
+      const ref = R.child('tgp'), on = v => { pos = +v.val() || 0; }; ref.on('value', on);
+      const push = () => { tm = null; lastW = Date.now(); R.child('tg/' + uid).set({ c: pend }).catch(() => {}); };
+      tug = { side: { k, name: Q.tn ? Q.tn[k] : '' }, rope: () => pos, onTap: n => { pend = n; if (!tm) tm = setTimeout(push, Math.max(0, 350 - (Date.now() - lastW))); } };
+      const was = send; send = async sc => { ref.off('value', on); if (tm) { clearTimeout(tm); push(); } return was(sc); };
+    }
+    game = MDGames.run(Q.g, root.querySelector('#mpG'), Object.assign({ seed: Q.seed, ar: Q.L !== 'en', left: () => Math.max(0, 1 - (now() - st.t0) / 1000 / st.dur), finish: s2 => send(s2), tick: () => buzz(10), bad: () => buzz(60) }, tug));
     const bar = root.querySelector('#mpBar'), g = game;
     tick = setInterval(() => {
       const left = Math.max(0, st.dur - (now() - st.t0) / 1000);
@@ -205,7 +214,7 @@
         ${SC.gap != null && SC.r > 1 ? `<p class="mp-gap">🎯 ${B(`تحتاج ${SC.gap + 1} نقطة لتتجاوز ${esc(SC.above)}`, `You need ${SC.gap + 1} points to pass ${esc(SC.above)}`)}</p>` : SC.r === 1 ? `<p class="mp-gap">${B('أنت في الصدارة!', 'You are in the lead!')}</p>` : ''}</div>` + rxBar(), ok2 ? 'good' : 'bad');
     }
     if (Q && Q.type === 'game' && Q.i === st.i) {
-      return screen(`<div class="mp-res ${SC.c ? 'good' : 'bad'}"><p class="mp-sym">${SC.c ? '🎉' : '⏱'}</p><p class="mp-big">${B('نتيجتك في التحدي', 'Your challenge score')}: ${SC.g || 0}</p>
+      return screen(`<div class="mp-res ${SC.c ? 'good' : 'bad'}"><p class="mp-sym">${SC.tw != null ? (SC.tw ? '🏆' : '🪢') : SC.c ? '🎉' : '⏱'}</p>${SC.tw != null ? `<p class="mp-big">${SC.tw ? B('فاز فريقك!', 'Your side won!') : B('خسر فريقك هذه المرة', 'Your side lost this time')}</p><p>${B('شدّاتك', 'Your pulls')}: ${SC.g || 0}</p>` : `<p class="mp-big">${B('نتيجتك في التحدي', 'Your challenge score')}: ${SC.g || 0}</p>`}
         ${SC.d > 0 ? `<p class="mp-plus">+${SC.d}</p>` : ''}<p class="mp-rank">${B(`مركزك: ${SC.r}`, `Your place: ${SC.r}`)}</p>
         ${SC.gap != null && SC.r > 1 ? `<p class="mp-gap">🎯 ${B(`تحتاج ${SC.gap + 1} نقطة لتتجاوز ${esc(SC.above)}`, `You need ${SC.gap + 1} points to pass ${esc(SC.above)}`)}</p>` : SC.r === 1 ? `<p class="mp-gap">${B('أنت في الصدارة!', 'You are in the lead!')}</p>` : ''}</div>` + rxBar(), SC.c ? 'good' : 'bad');
     }

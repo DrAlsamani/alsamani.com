@@ -610,7 +610,30 @@ window.MDGames = (function () {
     }
   };
 
-  const LIST = [sort, shoot, pairs, stroop, seq, odd, count, math, whack, stack, fly, slide, letters, taps, react, spots, more, maze, pattern, lights, catcher, find, aim];
+  /* ---------- tug of war: two sides tap together; the rope moves with each side's average taps ---------- */
+  const tug = {
+    id: 'tug', icon: '🪢', ar: 'شدّ الحبل', en: 'Tug of war', kind: ['جماعي', 'Team'], team: true,
+    howAr: 'ينقسم الجميع إلى فريقين. انقر بأسرع ما تستطيع لتشدّ الحبل نحو فريقك؛ الفريق الأقوى يفوز.',
+    howEn: 'Everyone splits into two sides. Tap as fast as you can to pull the rope your way; the stronger side wins.',
+    play(el, ctx) {
+      const side = ctx.side || { k: 0, name: ctx.ar ? 'فريقك' : 'Your side' };
+      const lab = h('p', 'mg-tside s' + side.k, (ctx.ar ? 'أنت في ' : 'You are on ') + '<b></b>'); lab.querySelector('b').textContent = side.name;
+      const rope = h('div', 'mg-rope', '<i class="a"></i><i class="b"></i><span class="knot">🎀</span>');
+      const info = h('p', 'mg-info'), b = h('button', 'mg-big mg-pull s' + side.k, '💪'); b.type = 'button';
+      el.append(lab, rope, info, b);
+      let n = 0, lastT = 0, stop = false, sim = 0;
+      const show = () => { info.textContent = (ctx.ar ? 'شدّاتك: ' : 'Your pulls: ') + n; };
+      b.addEventListener('pointerdown', e => { e.preventDefault(); const t = performance.now(); if (t - lastT < 55) return; lastT = t; n++; b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop'); show(); if (ctx.onTap) ctx.onTap(n); });
+      // pos runs from -1 (side 0 wins) to 1 (side 1 wins); without a live feed the try-out pulls against a steady rival
+      const knot = rope.querySelector('.knot');
+      (function frame() { if (stop) return; let p; if (ctx.rope) p = ctx.rope(); else { sim += 1 / 60 * 5; p = Math.max(-1, Math.min(1, (sim - n) / 25)) * (side.k ? -1 : 1); }
+        knot.style.left = (50 + 42 * (p || 0)) + '%'; requestAnimationFrame(frame); })();
+      show();
+      return { score: () => n, stop: () => { stop = true; } };
+    }
+  };
+
+  const LIST = [sort, shoot, pairs, stroop, seq, odd, count, math, whack, stack, fly, slide, letters, taps, react, spots, more, maze, pattern, lights, catcher, find, aim, tug];
   const byId = id => LIST.find(g => g.id === id) || LIST[0];
   // run a game in a box: returns {score(), stop()}; ctx.finish is called when a game ends early by being completed
   function run(id, box, opts) {

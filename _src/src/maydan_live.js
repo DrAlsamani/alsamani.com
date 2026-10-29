@@ -265,12 +265,38 @@ window.MDLive = (function () {
         <div class="md-mid"><div class="md-clock"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" class="md-ring0"/><circle cx="50" cy="50" r="44" class="md-ring" id="mdRing"/></svg><b id="mdT">${x.time}</b></div>
           <p class="md-how2">${esc(how)}</p>
           <div class="md-ans"><b id="mdA">0</b><small>${B('أنهوا', 'finished')}</small></div></div>
-        <div class="md-tiles"></div></div>`,
+        ${x.g === 'tug' ? tugView(x) : '<div class="md-tiles"></div>'}</div>`,
       `<button type="button" class="btn ghost" data-skip disabled>${B('أنهِ الوقت', 'End time')}</button>`);
     if (gold) SND.gold();
     await G.ref.child('an/' + G.i).remove();
-    await G.ref.update({ q: { type: 'game', g: x.g, seed: x.seed || 1, q: nm, opts: [], m, gold, last, i: G.i, n, L: G.ar ? 'ar' : 'en' }, ok: null, st: { ph: 'ready', i: G.i, lock: true } });
+    if (x.g === 'tug') await G.ref.update({ tg: null, tgp: 0 });
+    await G.ref.update({ q: Object.assign({ type: 'game', g: x.g, seed: x.seed || 1, q: nm, opts: [], m, gold, last, i: G.i, n, L: G.ar ? 'ar' : 'en' }, x.g === 'tug' ? { ts: x._tug.sides, tn: x._tug.names } : {}), ok: null, st: { ph: 'ready', i: G.i, lock: true } });
     setTimeout(() => open(x, q), 4500 + (gold || last ? 1200 : 0));
+  }
+  /* ---------- tug of war: two balanced sides; teams stay whole when there are teams ---------- */
+  function tugSides() {
+    const sides = {}, us = Object.keys(G.players), live = teamTable();
+    if (G.teams && live.length >= 2) {
+      const load = [0, 0], got = [[], []];
+      live.slice().sort((a, b) => b.n - a.n).forEach(t => { const k = load[0] <= load[1] ? 0 : 1; load[k] += t.n; got[k].push(t.name); us.filter(u => G.team[u] === t.k).forEach(u => { sides[u] = k; }); });
+      us.forEach(u => { if (sides[u] == null) sides[u] = load[0] <= load[1] ? 0 : 1; });
+      const nm = (l, d) => l.length <= 3 ? l.join(' + ') : d;
+      return { sides, names: [nm(got[0], T('الفريق الأزرق', 'Blue side')), nm(got[1], T('الفريق الأحمر', 'Red side'))] };
+    }
+    us.sort(() => Math.random() - .5).forEach((u, k) => { sides[u] = k % 2; });
+    return { sides, names: [T('الفريق الأزرق', 'Blue side'), T('الفريق الأحمر', 'Red side')] };
+  }
+  function tugView(x) {
+    x._tug = tugSides(); const c = [0, 1].map(k => Object.values(x._tug.sides).filter(v => v === k).length);
+    return `<div class="md-tug"><div class="md-tug-sides"><span>${esc(x._tug.names[0])}<small>${c[0]} ${T('لاعب', 'players')}</small></span><span>${esc(x._tug.names[1])}<small>${c[1]} ${T('لاعب', 'players')}</small></span></div>
+      <div class="mg-rope"><i class="a"></i><i class="b"></i><span class="knot" id="mdKnot">🎀</span></div></div>`;
+  }
+  // average pulls per player on each side; -1 means the first side has it all, 1 the second
+  function tugPos(x, taps) {
+    const sum = [0, 0], cnt = [0, 0];
+    Object.keys(x._tug.sides).forEach(u => { const k = x._tug.sides[u]; cnt[k]++; sum[k] += taps[u] || 0; });
+    const a = sum.map((v, k) => cnt[k] ? v / cnt[k] : 0);
+    return { avg: a, p: Math.max(-1, Math.min(1, (a[1] - a[0]) / (a[0] + a[1] + 6))) };
   }
   async function open(x, q) {
     if (!G) return;
@@ -283,6 +309,14 @@ window.MDLive = (function () {
     let got = 0, last = -1;
     sub(G.ref.child('an/' + G.i), 'child_added', () => { got++; const a = q('#mdA'); if (a) a.textContent = got; if (got >= Object.keys(G.players).length) reveal(); });
     q('[data-skip]').onclick = () => reveal();
+    if (x.g === 'tug') {
+      let taps = {}, sentAt = 0;
+      sub(G.ref.child('tg'), 'value', v => {
+        taps = {}; Object.entries(v.val() || {}).forEach(([u, o]) => { taps[u] = +o.c || 0; });
+        const { p } = tugPos(x, taps), k = q('#mdKnot'); if (k) k.style.left = (50 + 42 * p) + '%';
+        if (Date.now() - sentAt > 300) { sentAt = Date.now(); G.ref.child('tgp').set(Math.round(p * 100) / 100); }
+      });
+    }
     clearInterval(G.timer);
     G.timer = setInterval(() => {
       const left = Math.max(0, x.time - (now() - t0) / 1000), s = Math.ceil(left), el = q('#mdT');
@@ -398,11 +432,17 @@ window.MDLive = (function () {
     const before = Object.keys(G.score).sort((a, b) => G.score[b] - G.score[a]); G.prev = {}; before.forEach((u, k) => { G.prev[u] = k + 1; });
     Object.keys(G.players).forEach(u => { const a = ans[u]; raw[u] = a ? Math.max(0, Number(a.a) || 0) : 0; });
     const best = Math.max(1, ...Object.values(raw));
+    // tug of war: the winning side scores most; the other side still earns a little for its effort
+    const tug = x.g === 'tug' && x._tug ? tugPos(x, raw) : null, win = tug ? (tug.avg[0] >= tug.avg[1] ? 0 : 1) : 0;
+    const bestOf = k => Math.max(1, ...Object.keys(raw).filter(u => x._tug.sides[u] === k).map(u => raw[u]));
     Object.keys(G.players).forEach(u => {
-      const c = raw[u] > 0, d = m && c ? Math.round(1000 * m * (.25 + .75 * raw[u] / best)) : 0;
+      const sd = tug ? (x._tug.sides[u] != null ? x._tug.sides[u] : 0) : 0;
+      const c = tug ? raw[u] > 0 && sd === win : raw[u] > 0;
+      const d = !m || !raw[u] ? 0 : tug ? Math.round(1000 * m * (sd === win ? .5 + .5 * raw[u] / bestOf(sd) : .25 * raw[u] / bestOf(sd))) : Math.round(1000 * m * (.25 + .75 * raw[u] / best));
       G.streak[u] = c ? (G.streak[u] || 0) + 1 : 0;
       G.score[u] = (G.score[u] || 0) + d;
       sc[u] = { s: G.score[u], d, c, k: G.streak[u], a: !!ans[u], g: raw[u] };
+      if (tug) sc[u].tw = sd === win;
     });
     const order = Object.keys(sc).sort((a, b) => G.score[b] - G.score[a]), tt = teamTable();
     order.forEach((u, k) => {
@@ -417,7 +457,7 @@ window.MDLive = (function () {
     const n = G.quiz.qs.length, lastQ = G.i === n - 1;
     const showBoard = !lastQ && ((G.opts.every && (G.i + 1) % G.opts.every === 0) || (G.opts.final && G.i === n - 2 && n > 2));
     const top = Object.keys(raw).filter(u => u in G.players).sort((a, b) => raw[b] - raw[a]).slice(0, 5);
-    const q = frame(`<div class="md-lb"><h2>${g.icon} ${B('أبطال التحدي', 'Challenge champions')}: ${esc(G.ar ? g.ar : g.en)}</h2>
+    const q = frame(`<div class="md-lb">${tug ? `<h2 class="md-tugwin">🏆 ${B('فاز', 'Winner:')} ${esc(x._tug.names[win])}</h2><div class="md-tug"><div class="md-tug-sides"><span>${esc(x._tug.names[0])}<small>${T('معدل الشدّات', 'Avg pulls')}: ${Math.round(tug.avg[0])}</small></span><span>${esc(x._tug.names[1])}<small>${T('معدل الشدّات', 'Avg pulls')}: ${Math.round(tug.avg[1])}</small></span></div><div class="mg-rope"><i class="a"></i><i class="b"></i><span class="knot" style="left:${win ? 92 : 8}%">🎀</span></div></div><h3>${B('أقوى الشادّين', 'Strongest pullers')}</h3>` : `<h2>${g.icon} ${B('أبطال التحدي', 'Challenge champions')}: ${esc(G.ar ? g.ar : g.en)}</h2>`}
         <ol>${top.map((u, k) => `<li style="--d:${k * 90}ms"><b>${k + 1}</b><span dir="auto">${esc(G.players[u] || '')}</span><em>${raw[u]}</em><small class="md-plus">+${sc[u].d}</small></li>`).join('')}</ol>
         <p class="md-stat">${B(`شارك ${Object.keys(ans).length} من ${Object.keys(G.players).length}`, `${Object.keys(ans).length} of ${Object.keys(G.players).length} took part`)}</p></div>`,
       `<button type="button" class="btn solid" data-next>${lastQ ? B('النتيجة النهائية', 'Final results') : showBoard ? B('الترتيب', 'Ranking') : B('التالي', 'Next')}</button>`, true);

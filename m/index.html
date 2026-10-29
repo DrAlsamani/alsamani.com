@@ -1658,6 +1658,20 @@ html.md-on{overflow:hidden}
 .mp-ord{display:grid;gap:8px}.mp-ord button{border:0;border-radius:12px;background:var(--c);color:#fff;font:inherit;font-weight:600;padding:12px;cursor:pointer}.mp-ord button:disabled{opacity:.25}
 .mp-picked{margin:0;padding:0 1.4em;min-height:1em;display:grid;gap:4px;font-weight:600}
 .mp-ordr{margin:4px 0;padding:0 1.2em;text-align:start}
+/* tug of war: side 0 pulls left (blue), side 1 pulls right (red) */
+.mg-tside{margin:0;font-weight:700}.mg-tside b{padding:.1em .6em;border-radius:99px;color:#fff;background:#2a7fa8}.mg-tside.s1 b{background:#b0533a}
+.mg-rope{position:relative;width:100%;height:34px;direction:ltr;flex:none}
+.mg-rope .a,.mg-rope .b{position:absolute;top:0;bottom:0;width:8%;border-radius:8px}.mg-rope .a{left:0;background:#2a7fa8}.mg-rope .b{right:0;background:#b0533a}
+.mg-rope::before{content:"";position:absolute;left:8%;right:8%;top:50%;height:6px;margin-top:-3px;background:repeating-linear-gradient(90deg,#a7783f 0 8px,#c99a5b 8px 16px);border-radius:3px}
+.mg-rope::after{content:"";position:absolute;left:50%;top:2px;bottom:2px;border-left:2px dashed rgba(0,0,0,.35)}
+.mg-rope .knot{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:1.5rem;transition:left .25s;z-index:1}
+.mg-pull.s0{background:radial-gradient(#5fb3d9,#2a7fa8)}.mg-pull.s1{background:radial-gradient(#d98a6b,#b0533a)}
+/* host view of the tug */
+.md-tug{width:min(900px,92vw);margin:2vh auto 0}.md-tug .mg-rope{height:64px}.md-tug .mg-rope .knot{font-size:3rem}
+.md-tug-sides{display:flex;justify-content:space-between;direction:ltr;font-weight:800;font-size:clamp(1.1rem,2.6vw,2rem);margin-bottom:.5em}
+.md-tug-sides span{color:#2a7fa8}.md-tug-sides span+span{color:#b0533a}.md-tug-sides small{display:block;font-size:.55em;font-weight:600;opacity:.75}
+.md-tugwin{font-size:clamp(1.6rem,4vw,3rem)}
+.md-lb h3{text-align:center;margin:.6em 0 .3em;font-size:clamp(1rem,2vw,1.4rem)}
 </style>
 <div id="mp" class="sn mp"><noscript><span class="ar">تعمل هذه الصفحة مع تفعيل JavaScript.</span><span class="en">This page needs JavaScript.</span></noscript></div>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script>window.MD_CFG={"apiKey": "AIzaSyA50i75DT1Is1a6Yn6snW1_JVObc8S3F0Y", "authDomain": "maydan-705ae.firebaseapp.com", "databaseURL": "https://maydan-705ae-default-rtdb.europe-west1.firebasedatabase.app", "projectId": "maydan-705ae", "appId": "1:342187013133:web:d5c2396f0db413f3c51144"};window.MD_MARK="<svg class=\"md-mark\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><rect x=\"4\" y=\"4\" width=\"40\" height=\"40\" rx=\"12\" fill=\"#23336F\"/><path d=\"M24 9l4.2 6.8 7.8-1.8-1.8 7.8L41 24l-6.8 4.2 1.8 7.8-7.8-1.8L24 39l-4.2-6.8-7.8 1.8 1.8-7.8L7 24l6.8-4.2-1.8-7.8 7.8 1.8z\" fill=\"#C9822B\"/><circle cx=\"24\" cy=\"24\" r=\"6.5\" fill=\"#23336F\"/><circle cx=\"24\" cy=\"24\" r=\"3\" fill=\"#F3E3C7\"/></svg>";</script><script>/* Maydan challenges: short games played on every phone at once. Every phone gets the same level (same seed),
@@ -2272,7 +2286,30 @@ window.MDGames = (function () {
     }
   };
 
-  const LIST = [sort, shoot, pairs, stroop, seq, odd, count, math, whack, stack, fly, slide, letters, taps, react, spots, more, maze, pattern, lights, catcher, find, aim];
+  /* ---------- tug of war: two sides tap together; the rope moves with each side's average taps ---------- */
+  const tug = {
+    id: 'tug', icon: '🪢', ar: 'شدّ الحبل', en: 'Tug of war', kind: ['جماعي', 'Team'], team: true,
+    howAr: 'ينقسم الجميع إلى فريقين. انقر بأسرع ما تستطيع لتشدّ الحبل نحو فريقك؛ الفريق الأقوى يفوز.',
+    howEn: 'Everyone splits into two sides. Tap as fast as you can to pull the rope your way; the stronger side wins.',
+    play(el, ctx) {
+      const side = ctx.side || { k: 0, name: ctx.ar ? 'فريقك' : 'Your side' };
+      const lab = h('p', 'mg-tside s' + side.k, (ctx.ar ? 'أنت في ' : 'You are on ') + '<b></b>'); lab.querySelector('b').textContent = side.name;
+      const rope = h('div', 'mg-rope', '<i class="a"></i><i class="b"></i><span class="knot">🎀</span>');
+      const info = h('p', 'mg-info'), b = h('button', 'mg-big mg-pull s' + side.k, '💪'); b.type = 'button';
+      el.append(lab, rope, info, b);
+      let n = 0, lastT = 0, stop = false, sim = 0;
+      const show = () => { info.textContent = (ctx.ar ? 'شدّاتك: ' : 'Your pulls: ') + n; };
+      b.addEventListener('pointerdown', e => { e.preventDefault(); const t = performance.now(); if (t - lastT < 55) return; lastT = t; n++; b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop'); show(); if (ctx.onTap) ctx.onTap(n); });
+      // pos runs from -1 (side 0 wins) to 1 (side 1 wins); without a live feed the try-out pulls against a steady rival
+      const knot = rope.querySelector('.knot');
+      (function frame() { if (stop) return; let p; if (ctx.rope) p = ctx.rope(); else { sim += 1 / 60 * 5; p = Math.max(-1, Math.min(1, (sim - n) / 25)) * (side.k ? -1 : 1); }
+        knot.style.left = (50 + 42 * (p || 0)) + '%'; requestAnimationFrame(frame); })();
+      show();
+      return { score: () => n, stop: () => { stop = true; } };
+    }
+  };
+
+  const LIST = [sort, shoot, pairs, stroop, seq, odd, count, math, whack, stack, fly, slide, letters, taps, react, spots, more, maze, pattern, lights, catcher, find, aim, tug];
   const byId = id => LIST.find(g => g.id === id) || LIST[0];
   // run a game in a box: returns {score(), stop()}; ctx.finish is called when a game ends early by being completed
   function run(id, box, opts) {
@@ -2402,12 +2439,21 @@ window.MDGames = (function () {
   function playGame() {
     if (sent === st.i) return screen(`<div class="mp-wait"><p class="mp-big">${B('أنهيت التحدي!', 'Challenge done!')}</p><p>${B('بانتظار البقية…', 'Waiting for the others…')}</p></div>`);
     screen(`<div class="mp-q mp-gq"><div class="mp-bar"><i id="mpBar"></i></div><div class="mp-gbox" id="mpG"></div></div>`, 'q');
-    const send = async score => {
+    let send = async score => {
       if (sent === st.i) return; sent = st.i; buzz(30); if (game) { game.stop(); game = null; }
       try { await R.child('an/' + st.i + '/' + uid).set({ a: Math.round(score), t: TS }); } catch (e) {}
       shown = ''; draw();
     };
-    game = MDGames.run(Q.g, root.querySelector('#mpG'), { seed: Q.seed, ar: Q.L !== 'en', left: () => Math.max(0, 1 - (now() - st.t0) / 1000 / st.dur), finish: send, tick: () => buzz(10), bad: () => buzz(60) });
+    // tug of war: pulls go up live (a few times a second) so the rope moves on every screen
+    let tug = {};
+    if (Q.g === 'tug') {
+      const k = Q.ts && Q.ts[uid] != null ? Q.ts[uid] : 0; let pos = 0, pend = 0, lastW = 0, tm = null;
+      const ref = R.child('tgp'), on = v => { pos = +v.val() || 0; }; ref.on('value', on);
+      const push = () => { tm = null; lastW = Date.now(); R.child('tg/' + uid).set({ c: pend }).catch(() => {}); };
+      tug = { side: { k, name: Q.tn ? Q.tn[k] : '' }, rope: () => pos, onTap: n => { pend = n; if (!tm) tm = setTimeout(push, Math.max(0, 350 - (Date.now() - lastW))); } };
+      const was = send; send = async sc => { ref.off('value', on); if (tm) { clearTimeout(tm); push(); } return was(sc); };
+    }
+    game = MDGames.run(Q.g, root.querySelector('#mpG'), Object.assign({ seed: Q.seed, ar: Q.L !== 'en', left: () => Math.max(0, 1 - (now() - st.t0) / 1000 / st.dur), finish: s2 => send(s2), tick: () => buzz(10), bad: () => buzz(60) }, tug));
     const bar = root.querySelector('#mpBar'), g = game;
     tick = setInterval(() => {
       const left = Math.max(0, st.dur - (now() - st.t0) / 1000);
@@ -2490,7 +2536,7 @@ window.MDGames = (function () {
         ${SC.gap != null && SC.r > 1 ? `<p class="mp-gap">🎯 ${B(`تحتاج ${SC.gap + 1} نقطة لتتجاوز ${esc(SC.above)}`, `You need ${SC.gap + 1} points to pass ${esc(SC.above)}`)}</p>` : SC.r === 1 ? `<p class="mp-gap">${B('أنت في الصدارة!', 'You are in the lead!')}</p>` : ''}</div>` + rxBar(), ok2 ? 'good' : 'bad');
     }
     if (Q && Q.type === 'game' && Q.i === st.i) {
-      return screen(`<div class="mp-res ${SC.c ? 'good' : 'bad'}"><p class="mp-sym">${SC.c ? '🎉' : '⏱'}</p><p class="mp-big">${B('نتيجتك في التحدي', 'Your challenge score')}: ${SC.g || 0}</p>
+      return screen(`<div class="mp-res ${SC.c ? 'good' : 'bad'}"><p class="mp-sym">${SC.tw != null ? (SC.tw ? '🏆' : '🪢') : SC.c ? '🎉' : '⏱'}</p>${SC.tw != null ? `<p class="mp-big">${SC.tw ? B('فاز فريقك!', 'Your side won!') : B('خسر فريقك هذه المرة', 'Your side lost this time')}</p><p>${B('شدّاتك', 'Your pulls')}: ${SC.g || 0}</p>` : `<p class="mp-big">${B('نتيجتك في التحدي', 'Your challenge score')}: ${SC.g || 0}</p>`}
         ${SC.d > 0 ? `<p class="mp-plus">+${SC.d}</p>` : ''}<p class="mp-rank">${B(`مركزك: ${SC.r}`, `Your place: ${SC.r}`)}</p>
         ${SC.gap != null && SC.r > 1 ? `<p class="mp-gap">🎯 ${B(`تحتاج ${SC.gap + 1} نقطة لتتجاوز ${esc(SC.above)}`, `You need ${SC.gap + 1} points to pass ${esc(SC.above)}`)}</p>` : SC.r === 1 ? `<p class="mp-gap">${B('أنت في الصدارة!', 'You are in the lead!')}</p>` : ''}</div>` + rxBar(), SC.c ? 'good' : 'bad');
     }
