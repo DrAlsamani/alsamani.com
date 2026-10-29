@@ -1475,16 +1475,21 @@ window.KH = (function () {
   const oneEyed = c => c === 'JS' || c === 'JH';   // removes a rival chip
   const isCorner = i => CORNERS.includes(i);
 
-  // our own board, set in order so it reads easily: each suit runs A→K along the rows, snaking back and forth.
-  // The first pack fills the top half and the second the bottom half in the same order (♠ ♥ ♣ ♦),
-  // so the two spaces of any card sit about five rows apart.
+  // our own board, laid like a spiral: from the outer edge inwards, clockwise, each suit running A→K.
+  // The first pack takes the outer rings (♠ ♣ ♥ ♦), the second continues towards the middle (♦ ♥ ♣ ♠),
+  // so the two spaces of a card sit apart, one near the edge and one nearer the centre.
   function layout() {
-    const one = [], two = [];
-    ['S', 'H', 'C', 'D'].forEach(s => RANKS.forEach(r => one.push(r + s)));
-    ['S', 'H', 'C', 'D'].forEach(s => RANKS.forEach(r => two.push(r + s)));
-    const out = new Array(100).fill('*'), seq = one.concat(two);
-    let k = 0;
-    for (let r = 0; r < 10; r++) for (let c0 = 0; c0 < 10; c0++) { const c = r % 2 ? 9 - c0 : c0, i = r * 10 + c; if (!isCorner(i)) out[i] = seq[k++]; }
+    const sp = []; let t = 0, b = 9, l = 0, r = 9;
+    while (t <= b && l <= r) {
+      for (let c = l; c <= r; c++) sp.push(t * 10 + c); t++;
+      for (let x = t; x <= b; x++) sp.push(x * 10 + r); r--;
+      if (t <= b) { for (let c = r; c >= l; c--) sp.push(b * 10 + c); b--; }
+      if (l <= r) { for (let x = b; x >= t; x--) sp.push(x * 10 + l); l++; }
+    }
+    const seq = [];
+    ['S', 'C', 'H', 'D', 'D', 'H', 'C', 'S'].forEach(s => RANKS.forEach(r => seq.push(r + s)));
+    const out = new Array(100).fill('*');
+    sp.filter(i => !isCorner(i)).forEach((i, k) => { out[i] = seq[k]; });
     return out;
   }
   function deck(seed) {
