@@ -30,16 +30,16 @@
 .kh-ts{background:rgba(0,0,0,.18);border-radius:12px;padding:6px 10px;border-inline-start:5px solid var(--c);display:grid;gap:1px}.kh-ts.on{background:rgba(255,255,255,.14);box-shadow:0 0 0 2px var(--c)}
 .kh-ts b{color:#fff;font-size:.9rem}.kh-ts span{color:var(--gold);letter-spacing:2px}.kh-ts small{color:#cfe0d6;font-size:.75rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .kh-status{margin:0;text-align:center;font-size:1.05rem}.kh-status b{color:#fff}
-.kh-board{display:grid;grid-template-columns:repeat(10,1fr);gap:3px;background:var(--felt2);padding:5px;border-radius:12px;direction:ltr;width:100%;max-width:min(100%,78vh);margin:0 auto;aspect-ratio:1}
+.kh-board{container-type:inline-size;display:grid;grid-template-columns:repeat(10,1fr);gap:3px;background:var(--felt2);padding:5px;border-radius:12px;direction:ltr;width:100%;max-width:min(100%,78vh);margin:0 auto;aspect-ratio:1}
 .kh-cell{position:relative;background:var(--cream);border-radius:4px;display:grid;place-items:center;overflow:hidden;aspect-ratio:1;min-width:0}
-.kh-board.picking .kh-cell:not(.can){opacity:.45}
+.kh-board.picking .kh-cell:not(.can){opacity:.6}
 .kh-cell.can{cursor:pointer;box-shadow:inset 0 0 0 3px var(--gold);animation:khCan 1.2s infinite}
 @keyframes khCan{50%{box-shadow:inset 0 0 0 3px #fff}}
 .kh-cell.last::after{content:"";position:absolute;inset:0;border:3px solid #fff;border-radius:4px;animation:khLast 1.4s 2}
 @keyframes khLast{50%{border-color:var(--gold)}}
 .kc{display:grid;place-items:center;line-height:1;color:#1d2420;font-family:Georgia,"Times New Roman",serif}
-.kh-cell .kc b{font-size:clamp(.5rem,1.9vmin,1rem);font-weight:700}.kh-cell .kc i{font-style:normal;font-size:clamp(.55rem,2.1vmin,1.1rem)}
-.kc.r{color:#c0392b}.kc.star{color:#c9822b;font-size:clamp(.8rem,3vmin,1.6rem)}
+.kh-cell .kc{gap:0}.kh-cell .kc b{font-size:4.1cqi;font-weight:800;letter-spacing:-.04em;line-height:.95}.kh-cell .kc i{font-style:normal;font-size:4.4cqi;line-height:.9}
+.kc.r{color:#c0392b}.kh-cell .kc.star{color:#c9822b;font-size:6.5cqi}
 .kh-chip{position:absolute;inset:12%;border-radius:50%;background:var(--c);box-shadow:inset 0 -3px 0 rgba(0,0,0,.25),0 2px 4px rgba(0,0,0,.35);border:2px solid rgba(255,255,255,.75)}
 .kh-chip.seq{border-color:var(--gold);box-shadow:0 0 0 2px var(--gold),inset 0 -3px 0 rgba(0,0,0,.25)}
 .kh-hand{display:flex;gap:6px;justify-content:center;flex-wrap:nowrap}
