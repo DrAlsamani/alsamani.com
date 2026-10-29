@@ -1676,7 +1676,7 @@ html:has(.mp-paper){scroll-padding-bottom:110px;scroll-padding-top:80px}
   const today = () => new Date().toISOString().slice(0, 10);
   const blank = () => normM({ id: uid(), type: 'council', org: '', unit: '', committee: '', logo: '', no: '', year: '', date: today(), from: '', to: '', place: '', mode: 'in', numFmt: '{n}/{i}',
     members: [{ id: uid(), n: '', r: 'رئيس المجلس', st: 'p' }, { id: uid(), n: '', r: 'عضو', st: 'p' }, { id: uid(), n: '', r: 'عضو', st: 'p' }, { id: uid(), n: '', r: 'أمين المجلس', st: 'p' }],
-    guests: '', att: '', bsm: true, agenda: true, sigL: 'table', prev: { on: true, note: '' }, follow: [], items: [newItem()], misc: '', recs: '', next: '', status: 'draft', reg: '' });
+    guests: '', att: '', bsm: true, agenda: true, sigL: 'table', prev: { on: true, note: '' }, follow: [], items: [newItem()], misc: '', recs: '', next: '', status: 'draft', reg: '', rules: '', aiNotes: [] });
   function newItem() { return { id: uid(), title: '', ref: '', bg: '', disc: '', kind: 'approve', to: '', reason: '', text: '', edited: false, basis: '', vote: 'all', yes: '', no: '', dis: [], tasks: [] }; }
   // the parts of the minutes, each can be turned off; and the default wording of each heading
   const SECS = [['lh', 'الكليشة (صورة الترويسة)'], ['bsm', 'البسملة'], ['logo', 'الشعار'], ['info', 'جدول بيانات الاجتماع'], ['intro', 'فقرة الافتتاح'], ['att', 'جدول الحضور'], ['quorum', 'عبارة النصاب'], ['agenda', 'جدول الأعمال'],
@@ -1811,6 +1811,7 @@ html:has(.mp-paper){scroll-padding-bottom:110px;scroll-padding-top:80px}
   function fromCommittee(c) {
     M = blank();
     Object.assign(M, { type: c.type, org: c.org, unit: c.unit, committee: c.committee, logo: c.logo, year: c.year || '', place: c.place || '', mode: c.mode || 'in', numFmt: c.numFmt || M.numFmt, sigL: c.sigL || 'table' });
+    M.rules = c.rules || ''; M.reg = c.reg || '';
     if (c.show) M.show = Object.assign({}, c.show); if (c.heads) M.heads = Object.assign({}, c.heads); if (c.info) M.info = c.info.map(r => ({ id: uid(), k: r.k, t: r.t, v: '' }));
     M.members = c.members.map(m => ({ id: uid(), n: m.n, r: m.r, st: 'p' }));
     // the last minutes of this committee: next number, and its tasks to follow up
@@ -1822,7 +1823,7 @@ html:has(.mp-paper){scroll-padding-bottom:110px;scroll-padding-top:80px}
   function saveCommittee() {
     if (!M || !M.committee.trim() || !named().length) return;
     const coms = store.get('coms', []), key = (M.org + '|' + M.committee).trim();
-    const c = { id: (coms.find(x => (x.org + '|' + x.committee).trim() === key) || {}).id || uid(), type: M.type, org: M.org, unit: M.unit, committee: M.committee, logo: M.logo, year: M.year, place: M.place, mode: M.mode, numFmt: M.numFmt, sigL: M.sigL, show: M.show, heads: M.heads, info: M.info.map(r => ({ k: r.k, t: r.t })), members: named().map(m => ({ n: m.n, r: m.r })) };
+    const c = { id: (coms.find(x => (x.org + '|' + x.committee).trim() === key) || {}).id || uid(), type: M.type, org: M.org, unit: M.unit, committee: M.committee, logo: M.logo, year: M.year, place: M.place, mode: M.mode, numFmt: M.numFmt, sigL: M.sigL, rules: M.rules || '', reg: M.reg, show: M.show, heads: M.heads, info: M.info.map(r => ({ k: r.k, t: r.t })), members: named().map(m => ({ n: m.n, r: m.r })) };
     store.set('coms', [c].concat(coms.filter(x => x.id !== c.id)).slice(0, 12));
   }
 
@@ -2199,7 +2200,7 @@ html:has(.mp-paper){scroll-padding-bottom:110px;scroll-padding-top:80px}
     const el = root.querySelector('#mpBar'), S = stage, nx = (st, a, e) => `<button type="button" class="btn ghost" data-go="${st}">${B(a, e)} ${isAr() ? '←' : '→'}</button>`;
     if (S === 'before') el.innerHTML = `<button type="button" class="btn ghost" id="mpInv">✉️ ${B('الدعوة وجدول الأعمال', 'Invitation and agenda')}</button><button type="button" class="btn ghost" id="mpPack">📦 ${B('رزمة الاجتماع', 'Meeting pack')}</button>${nx('during', 'أثناء الاجتماع', 'During the meeting')}`;
     else if (S === 'during') el.innerHTML = `${!M.from ? `<button type="button" class="btn solid" id="mpStart">▶ ${B('بدأ الاجتماع الآن', 'The meeting starts now')}</button>` : !M.to ? `<button type="button" class="btn solid" id="mpEnd">⏹ ${B('انتهى الاجتماع الآن', 'The meeting ends now')}</button>` : ''}${nx('after', 'بعد الاجتماع', 'After the meeting')}`;
-    else el.innerHTML = `<button type="button" class="btn ghost" id="mpAI">✨ ${B('تحسين الصياغة', 'Polish the wording')}</button><button type="button" class="btn ghost" id="mnWord">Word</button><button type="button" class="btn ghost" id="mnPrint">PDF</button><button type="button" class="btn solid" id="mnSign">✍️ ${B('أرسله للتوقيع', 'Send for signing')}</button>${M.items.some(it => it.tasks.some(t => t.who.trim())) ? `<button type="button" class="btn ghost" id="mpNote">📨 ${B('إبلاغ المكلّفين', 'Notify owners')}</button>` : ''}`;
+    else el.innerHTML = `<button type="button" class="btn ghost" id="mpAI">✨ ${B('مراجعة وتحسين', 'Review and polish')}</button><button type="button" class="btn ghost" id="mnWord">Word</button><button type="button" class="btn ghost" id="mnPrint">PDF</button><button type="button" class="btn solid" id="mnSign">✍️ ${B('أرسله للتوقيع', 'Send for signing')}</button>${M.items.some(it => it.tasks.some(t => t.who.trim())) ? `<button type="button" class="btn ghost" id="mpNote">📨 ${B('إبلاغ المكلّفين', 'Notify owners')}</button>` : ''}`;
     const q = s => el.querySelector(s), now = () => { const d = new Date(); return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'); };
     el.querySelectorAll('[data-go]').forEach(b => b.onclick = () => go(b.dataset.go));
     if (q('#mpInv')) { q('#mpInv').onclick = () => invite(); q('#mpPack').onclick = pack; }
@@ -2224,12 +2225,27 @@ html:has(.mp-paper){scroll-padding-bottom:110px;scroll-padding-top:80px}
       if (/…/.test(decText(it))) w.push(T(`البند ${n}: في نص القرار «…» تحتاج إكمالًا.`, `Item ${n}: the decision has a “…” to fill.`));
       if (it.vote === 'maj' && !(it.yes || it.no)) w.push(T(`البند ${n}: اكتب عدد الأصوات.`, `Item ${n}: give the vote count.`));
       it.tasks.forEach(t => { if (t.t.trim() && (!t.who.trim() || !t.due.trim())) w.push(T(`البند ${n}: تكليف بلا مسؤول أو موعد.`, `Item ${n}: a task without owner or date.`)); });
-      if (basisState(it)[0] === 'bad') w.push(T(`البند ${n}: المادة المستند إليها غير موجودة في اللائحة.`, `Item ${n}: the cited article is not in the regulations.`)); });
+      if (basisState(it)[0] === 'bad') w.push(T(`البند ${n}: المادة المستند إليها غير موجودة في اللائحة.`, `Item ${n}: the cited article is not in the regulations.`));
+      selfCheck(it, n).forEach(x => w.push(x)); });
+    (M.aiNotes || []).forEach(x => w.push('🔎 ' + x));
     const open = box.dataset.open === '1';
     box.innerHTML = `<div class="mp-checks">${w.length ? `<button type="button" class="mp-ck-b" id="mpCk">⚠ ${w.length} ${B('ملاحظات قبل الاعتماد', 'notes before approval')} <i>${open ? '▴' : '▾'}</i></button>${open ? `<ul>${w.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : ''}` : `<span class="mp-ok">✓ ${B('المحضر مكتمل', 'Nothing missing')}</span>`}
       <label class="mp-status">${B('الحالة', 'Status')} <select id="mpStatus"><option value="draft"${M.status === 'draft' ? ' selected' : ''}>${T('مسودة', 'Draft')}</option><option value="final"${M.status === 'final' ? ' selected' : ''}>${T('معتمد', 'Approved')}</option></select></label></div>`;
     if (box.querySelector('#mpCk')) box.querySelector('#mpCk').onclick = () => { box.dataset.open = open ? '' : '1'; paintChecks(); };
     box.querySelector('#mpStatus').onchange = e => { M.status = e.target.value; root.querySelector('.mp-doc').classList.toggle('draft', M.status === 'draft'); later(); };
+  }
+
+  // can a stranger tell exactly what was discussed and decided? things named in general but never listed, a request without its owner, money without a figure
+  const GEN = [['الابحاث', 'الأبحاث'], ['البحوث', 'البحوث'], ['الطلبات', 'الطلبات'], ['المرشحين', 'المرشحين'], ['المرشحات', 'المرشحات'], ['المتقدمين', 'المتقدمين'], ['الاسماء', 'الأسماء'], ['المقترحات', 'المقترحات'], ['العروض', 'العروض'], ['المقررات', 'المقررات'], ['الملفات', 'الملفات'], ['المعاملات', 'المعاملات'], ['الحالات', 'الحالات']];
+  function selfCheck(it, n) {
+    const raw = [it.title, it.disc, decText(it)].join('\n'), x = normA(raw), out = [];
+    const listed = /\n\s*([-•*]|[\d٠-٩]+\s*[.)\-])/.test(raw) || /[:：]\s*\S+[^\n]*[،,]\s*\S+[^\n]*[،,]/.test(raw) || /«[^»]{3,}»/.test(raw.replace(it.basis || '', ''));
+    if (!listed) { const g = GEN.find(([k]) => new RegExp('(^|\\s)(و|ب|ل|في|على)?' + k + '(\\s|$)').test(x)); if (g) out.push(T(`البند ${n}: يذكر «${g[1]}» دون تفصيلها؛ اذكرها بأسمائها أو عناوينها، أو أرفق قائمتها وأشر إليها.`, `Item ${n}: mentions “${g[1]}” without listing them.`)); }
+    const rq = x.match(/طلب (الطالب|الطالبه|العضو|الموظف|الموظفه|المتقدم|المتقدمه|الزميل|الزميله|المستفيد)(\s+(\S+))?/);
+    if (rq && (!rq[3] || /^(ب|ل)?(ال)?(تاجيل|تمديد|اعتذار|معادله|نقل|تحويل|اعاده|الغاء|حذف|اضافه|حصول|انسحاب|قبول|منح|صرف|تعديل)|^(في|على|حول|بشان|المقدم|المرفق|الوارد)$/.test(rq[3]))) out.push(T(`البند ${n}: «طلب ${rq[1].replace(/ه$/, 'ة')}» دون اسمه أو رقمه.`, `Item ${n}: a request without the requester’s name or number.`));
+    if (/(مبلغ|ميزانيه|تكلفه|مكافاه|مكافات|اعتماد مالي|صرف|قيمه العقد)/.test(x) && !/[0-9٠-٩]/.test(raw)) out.push(T(`البند ${n}: يتعلق بمال دون ذكر المبلغ.`, `Item ${n}: money is mentioned without an amount.`));
+    if (/(^|\s)(المرفق|المرفقه|المرفقات|مرفق)(\s|$)/.test(x) && !M.info.some(r => /مرفق/.test(r.k) && (r.v || '').trim()) && !(it.ref || '').trim()) out.push(T(`البند ${n}: يشير إلى مرفق لم يُحدَّد؛ اذكره في خانة «المرفقات» أو في مرجع البند.`, `Item ${n}: refers to an attachment that is not named.`));
+    return out;
   }
 
   /* ---------- settings: the things set once ---------- */
@@ -2239,8 +2255,9 @@ html:has(.mp-paper){scroll-padding-bottom:110px;scroll-padding-top:80px}
       <label class="sn-lbl">${B('صيغة رقم القرار: {n} رقم الاجتماع، {i} رقم البند، {y} العام', 'Decision number: {n} meeting, {i} item, {y} year')}<input id="sN" dir="ltr" value="${esc(M.numFmt)}"></label>
       <label class="sn-lbl">${B('التوقيعات', 'Signatures')}<select id="sG"><option value="table"${M.sigL === 'table' ? ' selected' : ''}>${T('جدول', 'Table')}</option><option value="grid"${M.sigL === 'grid' ? ' selected' : ''}>${T('بطاقات', 'Cards')}</option></select></label>
       <label class="sn-lbl">${B('نص اللائحة (اختياري): الصقه مرة واحدة، فإذا كتبت رقم مادة في «الاستناد النظامي» عرضت لك الأداة نصها', 'Regulations (optional): paste them once; when you cite an article number, its text is shown')}<textarea id="sR" rows="4">${esc(M.reg)}</textarea></label>
+      <label class="sn-lbl">${B('تعليمات جهتك للمراجعة (اختياري): ما يجب أن يتضمنه محضركم، وتُحفظ مع اللجنة', 'Your organisation’s review rules (optional): what your minutes must include; kept with the committee')}<textarea id="sU" rows="3" placeholder="${T('مثال: في بنود الترقية تُذكر عناوين الأبحاث ووعاء النشر وسنة النشر.', 'e.g. promotion items list each paper’s title, journal and year.')}">${esc(M.rules || '')}</textarea></label>
       <div class="sn-two"><button type="button" class="btn solid" id="sOk">${B('تم', 'Done')}</button></div>`);
-    m.querySelector('#sOk').onclick = () => { M.type = m.querySelector('#sT').value; M.numFmt = m.querySelector('#sN').value.trim() || '{n}/{i}'; M.sigL = m.querySelector('#sG').value; M.reg = m.querySelector('#sR').value;
+    m.querySelector('#sOk').onclick = () => { M.rules = m.querySelector('#sU').value; M.type = m.querySelector('#sT').value; M.numFmt = m.querySelector('#sN').value.trim() || '{n}/{i}'; M.sigL = m.querySelector('#sG').value; M.reg = m.querySelector('#sR').value;
       if (M.type === 'committee') M.members.forEach(x => x.r = x.r.replace('رئيس المجلس', 'رئيس اللجنة').replace('أمين المجلس', 'مقرر اللجنة')); else M.members.forEach(x => x.r = x.r.replace('رئيس اللجنة', 'رئيس المجلس').replace('مقرر اللجنة', 'أمين المجلس'));
       m.remove(); paint(); later(); };
   }
@@ -2250,8 +2267,9 @@ html:has(.mp-paper){scroll-padding-bottom:110px;scroll-padding-top:80px}
   const PRIV = () => `<p class="mn-priv">🔒 ${B('ما تلصقه في ChatGPT أو Claude يُرسل إلى خدمتهما. لا تلصق ما لا يجوز إطلاع غير الأعضاء عليه.', 'What you paste into ChatGPT or Claude goes to their service. Do not paste what must stay within the members.')}</p>`;
   function aiDraft() {
     persist();
-    const m = sheet(`<h3>✨ ${B('تحسين الصياغة', 'Polish the wording')}</h3>
-      <p>${B('تُجهَّز تعليمات فيها بنود المحضر وما كتبته فيها، تلصقها في المساعد، ثم تلصق ردّه هنا فتُحدَّث المناقشة ونص القرار في كل بند، وتراجعها قبل الاعتماد.', 'Instructions are prepared from your items and notes; paste them into the assistant, then paste its reply here to update each item’s discussion and decision. Check them before approving.')}</p>
+    const m = sheet(`<h3>✨ ${B('مراجعة وتحسين', 'Review and polish')}</h3>
+      <p>${B('تُجهَّز تعليمات فيها بيانات الجهة وبنود المحضر وما كتبته فيها، تلصقها في المساعد، ثم تلصق ردّه هنا: فتُحدَّث صياغة البنود، وتظهر ملاحظات الجودة في «ملاحظات قبل الاعتماد».', 'Instructions are prepared with your organisation’s details and the items; paste them into the assistant, then paste its reply here: the wording is updated and its quality notes appear in “notes before approval”.')}</p>
+      <p class="sn-fine">${M.reg.trim() ? B('✓ نص اللائحة مضمَّن.', '✓ Regulations included.') : B('لم تلصق نص اللائحة في ⚙؛ سيُطلب من المساعد البحث بنفسه مع ذكر المصدر.', 'No regulations pasted in ⚙; the assistant is asked to search, citing its sources.')} ${(M.rules || '').trim() ? B('✓ تعليمات جهتك مضمَّنة.', '✓ Your rules included.') : ''}</p>
       ${PRIV()}
       <div class="sn-two"><button type="button" class="btn solid" id="aiCopy">${B('١. انسخ التعليمات', '1. Copy the instructions')}</button><a class="btn ghost" target="_blank" rel="noopener" href="https://chatgpt.com/">ChatGPT</a><a class="btn ghost" target="_blank" rel="noopener" href="https://claude.ai/new">Claude</a></div>
       <label class="sn-lbl">${B('٢. الصق الرد هنا', '2. Paste the reply here')}<textarea id="aiR" rows="6"></textarea></label>
@@ -2259,6 +2277,8 @@ html:has(.mp-paper){scroll-padding-bottom:110px;scroll-padding-top:80px}
     m.querySelector('#aiCopy').onclick = async e => { try { await navigator.clipboard.writeText(draftPrompt()); e.currentTarget.textContent = '✓ ' + T('نُسخت؛ الصقها في المساعد', 'Copied; paste it into the assistant'); } catch (er) { toast(B('تعذّر النسخ.', 'Could not copy.'), 1); } };
     m.querySelector('#aiAdd').onclick = () => {
       const got = parseDraft(m.querySelector('#aiR').value);
+      M.aiNotes = got.notes || [];
+      if (!got.length && M.aiNotes.length) { m.remove(); stage === 'after' && root.querySelector('#mpChk') && (root.querySelector('#mpChk').dataset.open = '1'); paint(); later(); return toast(B(`وصلت ${M.aiNotes.length} ملاحظات؛ تجدها في «ملاحظات قبل الاعتماد».`, `${M.aiNotes.length} notes added.`)); }
       if (!got.length) return toast(B('لم أتعرّف على بنود في الرد. تأكد أنك نسخته كاملًا.', 'No items found in the reply.'), 1);
       M.items = M.items.filter(x => x.title.trim() || x.disc.trim() || x.tasks.length);
       got.forEach((g, k) => { const it = M.items[k]; if (!it) return M.items.push(g);
@@ -2266,19 +2286,25 @@ html:has(.mp-paper){scroll-padding-bottom:110px;scroll-padding-top:80px}
         if (g.disc) it.disc = g.disc; if (g.text) { it.text = g.text; it.edited = true; } if (g.kind !== 'free') it.kind = g.kind;
         if (g.basis) it.basis = g.basis; if (g.vote !== undefined && g.vote !== 'all') it.vote = g.vote;
         if (g.dis.length && !it.dis.length) it.dis = g.dis; if (g.tasks.length && !it.tasks.length) it.tasks = g.tasks; });
-      m.remove(); paint(); later(); toast(B('حُدّثت البنود. راجع كل قرار قبل الاعتماد.', 'Items updated. Check each decision before approving.'));
+      const ck = root.querySelector('#mpChk'); if (ck && M.aiNotes.length) ck.dataset.open = '1';
+      m.remove(); paint(); later(); toast(M.aiNotes.length ? B(`حُدّثت البنود، ووصلت ${M.aiNotes.length} ملاحظات جودة في «ملاحظات قبل الاعتماد».`, `Items updated, with ${M.aiNotes.length} quality notes.`) : B('حُدّثت البنود. راجع كل قرار قبل الاعتماد.', 'Items updated. Check each decision before approving.'));
     };
   }
   function draftPrompt() {
     const b = body(), reg = M.reg.trim();
-    const its = M.items.map((it, i) => `البند ${i + 1}: ${it.title || '…'}${it.ref ? `\nالمرجع: ${it.ref}` : ''}\nملاحظات الأمين: ${it.disc || '—'}\nنوع القرار: ${(KINDS.find(k => k[0] === it.kind) || [])[1] || ''}\nالقرار الحالي: ${decText(it)}${it.dis.length ? `\nتحفظات: ${it.dis.map(x => x.n + ' — ' + x.note).join('؛ ')}` : ''}${it.tasks.length ? `\nتكليفات: ${it.tasks.map(t => [t.t, t.who, t.due].join(' | ')).join('؛ ')}` : ''}`).join('\n\n');
-    return `أنت أمين ${b.the === 'المجلس' ? 'مجلس' : 'لجنة'} محترف. أعد صياغة بنود المحضر التالية بلغة عربية إدارية سليمة وموجزة: المناقشة في جملة أو جملتين، ونص القرار واضحًا قابلًا للتنفيذ.
+    const its = M.items.map((it, i) => `البند ${i + 1 + (M.prev.on ? 1 : 0)}: ${it.title || '…'}${it.ref ? `\nالمرجع: ${it.ref}` : ''}\nملاحظات الأمين: ${it.disc || '—'}\nنوع القرار: ${(KINDS.find(k => k[0] === it.kind) || [])[1] || ''}\nالقرار الحالي: ${decText(it)}${it.dis.length ? `\nتحفظات: ${it.dis.map(x => x.n + ' — ' + x.note).join('؛ ')}` : ''}${it.tasks.length ? `\nتكليفات: ${it.tasks.map(t => [t.t, t.who, t.due].join(' | ')).join('؛ ')}` : ''}`).join('\n\n');
+    const d = dates(), rules = (M.rules || '').trim();
+    return `أنت أمين ${b.the === 'المجلس' ? 'مجلس' : 'لجنة'} محترف ومراجع جودة. لديك مهمتان: (١) راجع محضر الاجتماع التالي مراجعة جودة، (٢) أعد صياغة بنوده بلغة عربية إدارية سليمة وموجزة: المناقشة في جملة أو جملتين، ونص القرار واضحًا قابلًا للتنفيذ.
 
-الجهة: ${M.committee || '—'}
+بيانات الجهة:
+- الجهة: ${[M.org, M.unit].filter(x => x.trim()).join('، ') || '—'}
+- ${b.the === 'المجلس' ? 'المجلس' : 'اللجنة'}: ${M.committee || '—'}
+- الاجتماع: ${M.no ? 'رقم ' + M.no : '—'}${M.date ? '، بتاريخ ' + d.h + ' هـ (' + d.g + ')' : ''}
 الأعضاء: ${named().map(m => m.n + ' (' + m.r + ')').join('، ') || '—'}
-
+${M.prev.on ? '(البند 1 في المحضر هو اعتماد محضر الجلسة السابقة، ولا يحتاج إلى صياغة.)\n' : ''}
 ${its}
-${reg ? `\nنص اللائحة المعتمدة (استند إليها فقط، واقتبس نص المادة حرفيًا بين «»، ولا تذكر مادة غير موجودة فيها):\n${reg.slice(0, 12000)}\n` : '\nلا تذكر أي مادة نظامية أو رقم مادة، لأن نص اللائحة غير متاح.\n'}
+${rules ? `\nتعليمات الجهة لمحاضرها (التزم بها في المراجعة):\n${rules.slice(0, 3000)}\n` : ''}${reg ? `\nنص اللائحة المعتمدة (استند إليها، واقتبس نص المادة حرفيًا بين «»، ولا تذكر مادة غير موجودة فيها):\n${reg.slice(0, 12000)}\n` : `\nنص لائحة الجهة غير متاح. إن كان البحث في الإنترنت متاحًا لك، فابحث عن الأنظمة واللوائح العامة المنظِّمة لموضوع كل بند لدى هذه الجهة أو في بلدها، واستفد منها في ملاحظات الجودة فقط، بشرط أن تذكر لكل ملاحظة مستندة إلى نظام: اسم النظام ورابطه ونص المادة. ما لم تتحقق منه فاكتب أمامه (للتحقق). لا تضع أي رقم مادة داخل نص المحضر نفسه.\n`}
+معيار المراجعة: أن يكفي المحضر نفسه بنفسه، فيعرف قارئ غريب بالضبط ما نوقش وما قُرّر ومن المسؤول ومتى. نبّه إلى: ما ذُكر جملةً دون تفصيل (أبحاث أو طلبات أو مرشحين دون أسمائهم أو عناوينهم)، والطلب دون اسم صاحبه أو رقمه، والمبلغ دون رقم، والقرار غير القابل للتنفيذ أو غير المحدد، والتكليف دون مسؤول أو موعد، والتعارض بين البنود، ونقص ما تشترطه الأنظمة لهذا النوع من الموضوعات.
 الشروط:
 - حافظ على ترتيب البنود وعددها، ولا تضف معلومة غير موجودة، واكتب «…» مكان ما ينقص.
 - نص القرار يبدأ بـ«${b.verb} ${b.the}:» أو «${b.noted} ${b.the} علمًا».
@@ -2295,10 +2321,16 @@ ${reg ? `\nنص اللائحة المعتمدة (استند إليها فقط، 
 تحفظ: اسم العضو — السبب
 مهمة: المهمة | المسؤول | الموعد
 
-البند: …`;
+البند: …
+
+ملاحظات الجودة:
+- البند (رقمه): الملاحظة، وما يلزم إضافته أو تعديله (والمصدر إن وُجد)
+- …`;
   }
   function parseDraft(text) {
-    const lines = String(text || '').replace(/```[a-z]*/g, '').split(/\r?\n/).map(s => s.replace(/\*\*/g, '').trim());
+    let all = String(text || '').replace(/```[a-z]*/g, '').split(/\r?\n/).map(s => s.replace(/\*\*/g, '').replace(/^#+\s*/, '').trim());
+    const qi = all.findIndex(l => /^ملاحظات الجودة/.test(l)), notes = qi < 0 ? [] : all.slice(qi + 1).filter(l => /^([-•*]|[\d٠-٩]+[.)\-])\s*\S/.test(l)).map(l => l.replace(/^([-•*]|[\d٠-٩]+[.)\-])\s*/, '').trim()).filter(l => l && l !== '…');
+    const lines = qi < 0 ? all : all.slice(0, qi);
     const out = []; let cur = null;
     const KIND = { 'الموافقة': 'approve', 'عدم الموافقة': 'reject', 'الإحالة': 'refer', 'التأجيل': 'defer', 'الإحاطة': 'note' };
     for (const l of lines) {
@@ -2317,7 +2349,7 @@ ${reg ? `\nنص اللائحة المعتمدة (استند إليها فقط، 
       else if (/مهمة/.test(k)) { const [t, who, due] = v.split('|').map(s => (s || '').trim()); if (t && t !== '…') cur.tasks.push({ t, who: who || '', due: due || '' }); cur._last = null; }
     }
     out.forEach(x => { delete x._last; if (x.ref && /^\(?إن وُجد\)?$/.test(x.ref)) x.ref = ''; });
-    return out.filter(x => x.title || x.text);
+    const res = out.filter(x => x.title || x.text); res.notes = notes; return res;
   }
 
   /* ---------- papers before and after: the invitation, and a notice to each owner of a task ---------- */
