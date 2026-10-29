@@ -3,7 +3,7 @@
 section.first{border-top:0;padding-top:44px}
 nav.links a[aria-current="page"]{color:var(--ink);font-weight:600}
 nav.links.mobile{display:none;gap:18px;overflow-x:auto;padding-bottom:10px;white-space:nowrap}
-@media (max-width:820px){nav.links.mobile{display:flex}}
+@media (max-width:960px){nav.links.mobile{display:flex}}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 .orig{font-family:var(--f-body)!important;font-weight:600;line-height:1.5;text-align:start}
 html[dir="rtl"] .orig{text-align:right}

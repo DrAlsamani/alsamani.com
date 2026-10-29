@@ -38,14 +38,14 @@ TYPES = {'publication': ('نشر', 'Publication'), 'training': ('تدريب', 'T
 PTYPES = {'article': ('مقال محكّم', 'Journal article'), 'chapter': ('فصل في كتاب', 'Book chapter'),
           'thesis': ('رسالة علمية', 'Thesis'), 'book': ('كتاب', 'Book')}
 NAV = [('index', 'المستجدات', 'Updates'), ('books', 'المكتبة المفتوحة', 'Open Library'), ('publications', 'المنشورات', 'Publications'),
-       ('tools', 'الأدوات', 'Tools'), ('photography', 'التصوير', 'Photography'), ('about', 'نبذة', 'About'), ('contact', 'تواصل', 'Contact')]
+       ('tools', 'الأدوات', 'Tools'), ('play', 'منصة الألعاب', 'Games'), ('photography', 'التصوير', 'Photography'), ('about', 'نبذة', 'About'), ('contact', 'تواصل', 'Contact')]
 
 def href(page, depth):
     up = '../' * depth
     return up + ('index.html' if page == 'index' else page + '/index.html')
 
 def page(name, depth, title_ar, body, full, seo_html=''):
-    nav = '\n'.join(f'<a href="{href(p, depth)}"{" aria-current=\"page\"" if p == name else ""}>{bi(a, b)}</a>' for p, a, b in NAV)
+    nav = '\n'.join(f'<a href="{href(p, depth)}"{" aria-current=\"page\"" if p == name or (p != 'index' and name.startswith(p + '/')) else ""}>{bi(a, b)}</a>' for p, a, b in NAV)
     head_meta = ''
     if full:
         head_meta = seo_html + f'''<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%232C3E8F'/%3E%3Ctext x='16' y='22' font-size='16' text-anchor='middle' fill='%23fff' font-family='sans-serif'%3EOA%3C/text%3E%3C/svg%3E">
