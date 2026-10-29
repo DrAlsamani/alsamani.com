@@ -231,7 +231,7 @@
     // a watcher only reads the table: no name, and they can come in at any time
     root.querySelector('#khWatch').onclick = async () => {
       const p = pin.value.replace(/\D/g, ''); if (p.length !== 6) return err(B('الرمز ستة أرقام.', 'The code has six digits.'));
-      try { await fb(); if (!(await db.ref('kh/' + p + '/st').once('value')).exists()) return err(B('لا توجد لعبة بهذا الرمز.', 'No game with this code.')); watch(p); } catch (e) { err(B('تعذّر الاتصال.', 'Could not connect.')); }
+      try { await fb(); if (!(await db.ref('kh/' + p + '/st').once('value')).exists()) return err(B('لا توجد لعبة بهذا الرمز.', 'No game with this code.')); const n = root.querySelector('#khN').value.trim().slice(0, 24); if (n) store.set('name', n); watch(p, n || T('مشجّع', 'A fan')); } catch (e) { err(B('تعذّر الاتصال.', 'Could not connect.')); }
     };
     if (pre) setTimeout(() => root.querySelector('#khN').value.trim() ? null : root.querySelector('#khN').focus(), 100);
   }
@@ -255,9 +255,11 @@
     on(db.ref('khh/' + pin + '/' + uid), 'value', s => { G.hand = s.val() || []; draw(); });
   }
 
-  function watch(pin) {
+  function watch(pin, name) {
     stop();
     G = { mode: 'watch', pin, ref: db.ref('kh/' + pin), off: [], P: null, names: {} };
+    // take a seat in the stands; it is freed when the page closes
+    const seat = G.ref.child('au/' + uid); seat.set({ n: name, at: TS() }).catch(() => {}); seat.onDisconnect().remove(); G.off.push(() => { seat.remove().catch(() => {}); });
     const leave = () => { history.replaceState(null, '', location.pathname); home(); };
     on(G.ref.child('st'), 'value', s => { if (!s.exists()) { stop(); root.innerHTML = `<div class="kh-card kh-narrow"><p class="kh-big">${B('انتهت اللعبة', 'The game has ended')}</p><button type="button" class="btn ghost" id="khHome">${B('الرئيسية', 'Home')}</button></div>`; root.querySelector('#khHome').onclick = leave; } });
     on(G.ref.child('names'), 'value', s => { G.names = s.val() || {}; });
@@ -265,7 +267,7 @@
     on(G.ref.child('g'), 'value', s => {
       G.P = s.val();
       if (!G.P) { root.innerHTML = `<div class="kh-card kh-narrow kh-wait"><p class="kh-big">👀 ${B('أنت تشاهد', 'You are watching')}</p><p>${B('لم تبدأ اللعبة بعد؛ ستظهر هنا حين تبدأ.', 'The game has not started yet; it will show here when it does.')}</p></div>`; return; }
-      view({ P: G.P, hand: null, me: null, names: G.names, screen: true, watch: true, act: () => '', again: leave });
+      G.redraw = () => view({ P: G.P, hand: null, me: null, names: G.names, screen: true, watch: true, act: () => '', again: leave }); G.redraw();
     });
   }
 
@@ -273,10 +275,16 @@
   const EMO = ['👏', '🔥', '😂', '😮', '😡', '💪', '❤️', '😅', '🤝'];
   const SAY = () => [T('أحسنت!', 'Well done!'), T('يا سلام! 😍', 'Wow! 😍'), T('حظ أوفر 😅', 'Better luck 😅'), T('استعجل شوي ⏱', 'Hurry up ⏱'), T('ركّزوا يا فريق 💪', 'Focus, team 💪'), T('سدّوا عليهم!', 'Block them!'), T('لعبة حلوة 🤝', 'Good game 🤝'), T('قهر والله 😤', 'So frustrating 😤'), T('الأخ مفهي 😭', 'Wake up! 😭')];
   let lastRx = 0;
+  // each person can silence everyone, or block one person, on their own device only
+  const blocked = new Set(store.get('blk', [])); let muted = store.get('mute', false);
   function listenRx() {
-    const fly = s => { const v = s.val() || {}; if (!v.e || !G) return; G.rxSeen = G.rxSeen || {}; const was = G.rxSeen[s.key]; if (was && was.e === v.e && Date.now() - was.at < 1100) return; G.rxSeen[s.key] = { e: v.e, at: Date.now() }; if (Date.now() - (v.t || 0) - off > 15000) return; float(v.e, (G && G.names && G.names[s.key]) || ''); };
+    on(G.ref.child('au'), 'value', s => { G.aud = s.val() || {}; const st = root.querySelector('.kh-stands'); if (st) st.outerHTML = stands(); });
+    const fly = s => { const v = s.val() || {}; if (!v.e || !G || muted || blocked.has(s.key)) return; G.rxSeen = G.rxSeen || {}; const was = G.rxSeen[s.key]; if (was && was.e === v.e && Date.now() - was.at < 1100) return; G.rxSeen[s.key] = { e: v.e, at: Date.now() }; if (Date.now() - (v.t || 0) - off > 15000) return; const fan = G.aud && G.aud[s.key]; float(v.e, (G.names && G.names[s.key]) || (fan && fan.n) || ''); if (fan) cheer(s.key, v.e); };
     on(G.ref.child('rx'), 'child_added', fly); on(G.ref.child('rx'), 'child_changed', fly);
   }
+  // the stands: everyone watching, by name; a fan's chip jumps when they react
+  const stands = () => { const a = Object.entries((G && G.aud) || {}); return `<div class="kh-stands"${a.length ? '' : ' hidden'}><b>👀 ${B('المدرجات', 'The stands')} <small>${a.length}</small></b><div>${a.slice(0, 40).map(([u, v]) => `<span class="kh-fan${blocked.has(u) ? ' blk' : ''}" data-fan="${u}" dir="auto">${esc((v.n || '').slice(0, 14))}</span>`).join('')}${a.length > 40 ? `<span class="kh-fan">+${a.length - 40}</span>` : ''}</div></div>`; };
+  function cheer(u, e) { const f = root.querySelector(`[data-fan="${u}"]`); if (!f) return; f.dataset.e = [...e].length <= 2 ? e : '💬'; f.classList.remove('go'); void f.offsetWidth; f.classList.add('go'); }
   function float(e, who) {
     const b = root.querySelector('.kh-board') || root, r = b.getBoundingClientRect(), d = document.createElement('div'), big = [...e].length <= 2;
     d.className = 'kh-fly' + (big ? ' emo' : ' say');
@@ -288,7 +296,9 @@
     if (Date.now() - lastRx < 1200 || !G || !G.ref || !uid) return; lastRx = Date.now(); buzz(10);
     G.ref.child('rx/' + uid).set({ e, t: TS() }).catch(() => {});
   }
-  const rxBar = () => `<div class="kh-rx">${EMO.map(e => `<button type="button" data-rx="${e}">${e}</button>`).join('')}<button type="button" class="kh-say" data-say>💬</button><div class="kh-says" hidden>${SAY().map(t => `<button type="button" data-rx="${esc(t)}">${esc(t)}</button>`).join('')}</div></div>`;
+  const people = () => { const all = Object.assign({}, ...Object.entries((G && G.aud) || {}).map(([u, v]) => ({ [u]: v.n })), (G && G.names) || {}); delete all[uid]; return Object.entries(all); };
+  const rxSet = () => `<div class="kh-rxset" hidden><label><input type="checkbox" data-mute${muted ? ' checked' : ''}> 🔕 ${B('أوقف كل التفاعلات عندي', 'Turn off all reactions for me')}</label>${people().length ? `<p>${B('حظر شخص (لن تصلك تفاعلاته):', 'Block someone (you will not see their reactions):')}</p><div>${people().map(([u, n]) => `<button type="button" data-blk="${u}" aria-pressed="${blocked.has(u)}" dir="auto">${blocked.has(u) ? '🚫 ' : ''}${esc(n || '')}</button>`).join('')}</div>` : ''}<p class="kh-note">${B('يخصّ جهازك وحدك، ولا يعلم به أحد.', 'This is for your device only; nobody is told.')}</p></div>`;
+  const rxBar = () => `<div class="kh-rx">${EMO.map(e => `<button type="button" data-rx="${e}">${e}</button>`).join('')}<button type="button" class="kh-say" data-say>💬</button><button type="button" class="kh-say" data-rxset title="${T('إعدادات التفاعلات', 'Reaction settings')}">${muted ? '🔕' : '⚙'}</button>${rxSet()}<div class="kh-says" hidden>${SAY().map(t => `<button type="button" data-rx="${esc(t)}">${esc(t)}</button>`).join('')}</div></div>`;
 
   /* ---------- the table: the board, the teams, whose turn, and this player's hand ---------- */
   let sel = null, lastSeen = -1;
@@ -314,6 +324,7 @@
       : `${B('دور', 'Turn:')} <b dir="auto" style="color:${COL[team[turn]]}">${esc(names[turn] || '')}</b> (${TN(team[turn])})`;
     root.innerHTML = `<div class="kh-game${screen ? ' kh-screen' : ''}${store.get('look', 'real') === 'real' ? ' kh-real' : ''}">
       <div class="kh-bar">${teamsBar}</div>
+      ${G && G.mode !== 'local' ? stands() : ''}
       <p class="kh-status">${P.dl && P.win === -1 ? `<span class="kh-clock${mine ? ' me' : ''}" id="khClk"></span> ` : ''}${watch ? `<span class="kh-eye">👀 ${B('مشاهدة', 'Watching')}</span> ` : ''}${status}</p>
       <div class="kh-board${can.length ? ' picking' : ''}">${lay.map((c, i) => { const b = board[i], inq = b >= 0 && sq[b] && sq[b].has(i);
         return `<div class="kh-cell${can.includes(i) ? ' can' : ''}${L && L.i === i ? ' last' : ''}" data-i="${i}">${card(c)}${b >= 0 ? `<i class="kh-chip${inq ? ' seq' : ''}" style="--c:${COL[b]}"></i>` : ''}</div>`; }).join('')}</div>
@@ -332,6 +343,9 @@
     const ck = root.querySelector('#khClk');
     if (ck) { let warned = false; const tick = () => { const left = Math.max(0, Math.ceil((P.dl - now()) / 1000)); ck.textContent = '⏱ ' + left; ck.classList.toggle('hot', left <= 10); if (mine && left <= 5 && !warned) { warned = true; buzz([80, 60, 80]); } }; tick(); clk = setInterval(tick, 250); }
     root.querySelectorAll('[data-rx]').forEach(b => b.onclick = () => { sendRx(b.dataset.rx); const ss = root.querySelector('.kh-says'); if (ss) ss.hidden = true; });
+    const rs = root.querySelector('[data-rxset]'); if (rs) rs.onclick = () => { const p = root.querySelector('.kh-rxset'); p.hidden = !p.hidden; };
+    const mu = root.querySelector('[data-mute]'); if (mu) mu.onchange = () => { muted = mu.checked; store.set('mute', muted); rs.textContent = muted ? '🔕' : '⚙'; };
+    root.querySelectorAll('[data-blk]').forEach(b => b.onclick = () => { const u = b.dataset.blk; if (blocked.has(u)) blocked.delete(u); else blocked.add(u); store.set('blk', [...blocked]); b.setAttribute('aria-pressed', blocked.has(u)); b.textContent = (blocked.has(u) ? '🚫 ' : '') + b.textContent.replace(/^🚫 /, ''); const f = root.querySelector(`[data-fan="${u}"]`); if (f) f.classList.toggle('blk', blocked.has(u)); });
     const sy = root.querySelector('[data-say]'); if (sy) sy.onclick = () => { const ss = root.querySelector('.kh-says'); ss.hidden = !ss.hidden; };
     root.querySelectorAll('[data-look]').forEach(b => b.onclick = () => { store.set('look', b.dataset.look); const g = root.querySelector('.kh-game'); g.classList.toggle('kh-real', b.dataset.look === 'real'); root.querySelectorAll('[data-look]').forEach(x => x.setAttribute('aria-pressed', x === b)); });
     const fs = root.querySelector('#khFs'); if (fs) fs.onclick = () => document.fullscreenElement ? document.exitFullscreen() : root.requestFullscreen && root.requestFullscreen();
