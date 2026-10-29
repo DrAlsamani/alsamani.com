@@ -33,9 +33,9 @@ window.KH = (function () {
   const handSize = n => n <= 2 ? 7 : n <= 4 ? 6 : n <= 6 ? 5 : n <= 9 ? 4 : 3;
 
   // players: [{id, team}]; teams 2 or 3; L 5 or 4
-  function create({ players, teams, L, seed }) {
+  function create({ players, teams, L, seed, need }) {
     seed = seed || 1 + Math.floor(Math.random() * 1e9);
-    const st = { seed, teams, L, need: teams === 2 ? 2 : 1, lay: layout(seed), board: new Array(100).fill(-1), inseq: Array.from({ length: teams }, () => []), seqs: new Array(teams).fill(0),
+    const st = { seed, teams, L, need: need || (teams === 2 ? 2 : 1), lay: layout(seed), board: new Array(100).fill(-1), inseq: Array.from({ length: teams }, () => []), seqs: new Array(teams).fill(0),
       deck: deck(seed), used: [], passes: 0, hands: {}, team: {}, order: [], turn: 0, last: null, win: -1, swapped: false, moves: 0 };
     // turns go round the teams: one player of each team in turn
     const by = Array.from({ length: teams }, (_, k) => players.filter(p => p.team === k).map(p => p.id));

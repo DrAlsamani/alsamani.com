@@ -1575,9 +1575,9 @@ window.KH = (function () {
   const handSize = n => n <= 2 ? 7 : n <= 4 ? 6 : n <= 6 ? 5 : n <= 9 ? 4 : 3;
 
   // players: [{id, team}]; teams 2 or 3; L 5 or 4
-  function create({ players, teams, L, seed }) {
+  function create({ players, teams, L, seed, need }) {
     seed = seed || 1 + Math.floor(Math.random() * 1e9);
-    const st = { seed, teams, L, need: teams === 2 ? 2 : 1, lay: layout(seed), board: new Array(100).fill(-1), inseq: Array.from({ length: teams }, () => []), seqs: new Array(teams).fill(0),
+    const st = { seed, teams, L, need: need || (teams === 2 ? 2 : 1), lay: layout(seed), board: new Array(100).fill(-1), inseq: Array.from({ length: teams }, () => []), seqs: new Array(teams).fill(0),
       deck: deck(seed), used: [], passes: 0, hands: {}, team: {}, order: [], turn: 0, last: null, win: -1, swapped: false, moves: 0 };
     // turns go round the teams: one player of each team in turn
     const by = Array.from({ length: teams }, (_, k) => players.filter(p => p.team === k).map(p => p.id));
@@ -1794,7 +1794,7 @@ window.KH = (function () {
         <ol><li>${B('لكل فريق لون. في دورك اختر ورقة من يدك، ثم ضع قطعتك على إحدى خانتيها في اللوح (لكل ورقة خانتان).', 'Each team has a colour. On your turn pick a card, then put your chip on one of its two spaces.')}</li>
         <li>${B('<b>السلسلة</b>: خمس قطع متتالية من لونك أفقيًا أو عموديًا أو قطريًا. الزوايا ★ مجانية للجميع.', '<b>A sequence</b>: five of your chips in a row, across, down or diagonal. The ★ corners count for everyone.')}</li>
         <li>${B('<b>👀 ولد أبو عينين</b> (♦ و♣): ضع قطعتك في أي خانة فارغة. <b>👁 ولد أبو عين</b> (♠ و♥): أزل قطعة خصم، إلا إن كانت في سلسلة مكتملة.', '<b>👀 Two-eyed jacks</b> (♦ ♣): put your chip on any empty space. <b>👁 One-eyed jacks</b> (♠ ♥): remove a rival chip unless it is in a finished sequence.')}</li>
-        <li>${B('<b>الفوز</b>: فريقان يحتاجان سلسلتين، وثلاثة فرق سلسلة واحدة. ويمكن اختيار صف من أربع للعب أسرع.', '<b>Winning</b>: with two teams make two sequences; with three, one. You can choose rows of four for a quicker game.')}</li>
+        <li>${B('<b>الفوز</b>: يفوز أول فريق يكمل عدد السلاسل المختار عند بدء اللعبة (واحدة أو اثنتان أو ثلاث). ويمكن اختيار صف من أربع للعب أسرع.', '<b>Winning</b>: the first team to make the number of sequences chosen at the start (one, two or three). Rows of four make a quicker game.')}</li>
         <li>${B('<b>الورقة الميتة</b>: إن امتلأت خانتاها فاستبدلها بورقة جديدة مرة في الدور.', '<b>A dead card</b>: if both its spaces are taken, swap it for a new one, once a turn.')}</li></ol></details>`;
   /* ---------- home ---------- */
   function home() {
@@ -1823,10 +1823,11 @@ window.KH = (function () {
 
   /* ---------- a new game: teams, row length, and who this device is ---------- */
   function setup(bot) {
-    const o = Object.assign({ teams: 2, L: 5, role: 'play', tt: 45, lv: 2 }, store.get('cfg', {}));
+    const o = Object.assign({ teams: 2, L: 5, role: 'play', tt: 45, lv: 2 }, store.get('cfg', {})); if (!o.need) o.need = o.teams === 2 ? 2 : 1;
     root.innerHTML = `<div class="kh-card"><h2>${bot ? '🤖 ' + B('العب ضد الجهاز', 'Play the computer') : '👥 ' + B('لعبة جديدة', 'A new game')}</h2>
       <div class="kh-opt"><span>${B('عدد الفرق', 'Teams')}</span><div class="kh-seg" data-k="teams"><button type="button" data-v="2">${B('فريقان', 'Two')}</button><button type="button" data-v="3">${B('ثلاثة فرق', 'Three')}</button></div></div>
-      <div class="kh-opt"><span>${B('طول الصف', 'Row length')}</span><div class="kh-seg" data-k="L"><button type="button" data-v="5">${B('خمس (الأصلية)', 'Five (classic)')}</button><button type="button" data-v="4">${B('أربع (أسرع وللصغار)', 'Four (quicker, for children)')}</button></div></div>
+      <div class="kh-opt"><span>${B('طول الصف', 'Row length')}</span><div class="kh-seg" data-k="L"><button type="button" data-v="5">${B('خمس (الأصلية)', 'Five (classic)')}</button><button type="button" data-v="4">${B('أربع (أسرع)', 'Four (quicker)')}</button></div></div>
+      <div class="kh-opt"><span>${B('سلاسل الفوز', 'Sequences to win')}</span><div class="kh-seg" data-k="need"><button type="button" data-v="1">${B('واحدة', 'One')}</button><button type="button" data-v="2">${B('اثنتان', 'Two')}</button><button type="button" data-v="3">${B('ثلاث', 'Three')}</button></div></div>
       ${bot ? `<div class="kh-opt"><span>${B('مستوى الجهاز', 'Computer level')}</span><div class="kh-seg" data-k="lv"><button type="button" data-v="1">${B('سهل', 'Easy')}</button><button type="button" data-v="2">${B('متوسط', 'Medium')}</button><button type="button" data-v="3">${B('صعب', 'Hard')}</button></div></div>` : ''}
       ${bot ? '' : `<div class="kh-opt"><span>${B('وقت الدور', 'Time per turn')}</span><div class="kh-seg" data-k="tt"><button type="button" data-v="30">${B('٣٠ ثانية', '30 s')}</button><button type="button" data-v="45">${B('٤٥ ثانية', '45 s')}</button><button type="button" data-v="60">${B('دقيقة', '1 min')}</button><button type="button" data-v="0">${B('بلا وقت', 'No limit')}</button></div></div>`}
       ${bot ? '' : `<div class="kh-opt"><span>${B('هذا الجهاز', 'This device')}</span><div class="kh-seg" data-k="role"><button type="button" data-v="play">${B('ألعب منه', 'I play on it')}</button><button type="button" data-v="screen">${B('شاشة عرض فقط', 'A display screen only')}</button></div></div>`}
@@ -1836,9 +1837,10 @@ window.KH = (function () {
     const paint = () => {
       root.querySelectorAll('.kh-seg').forEach(g => g.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(o[g.dataset.k]) === b.dataset.v)));
       const nm = root.querySelector('.kh-name'); if (nm) nm.hidden = !bot && o.role === 'screen';
-      root.querySelector('#khNote').innerHTML = o.teams === 2 ? B(`يفوز أول فريق يكمل <b>سلسلتين</b> من ${o.L}.`, `The first team to make <b>two</b> sequences of ${o.L} wins.`) : B(`يفوز أول فريق يكمل <b>سلسلة واحدة</b> من ${o.L}.`, `The first team to make <b>one</b> sequence of ${o.L} wins.`);
+      const nw = ['', 'سلسلة واحدة', 'سلسلتين', 'ثلاث سلاسل'][o.need], ne = ['', 'one sequence', 'two sequences', 'three sequences'][o.need];
+      root.querySelector('#khNote').innerHTML = B(`يفوز أول فريق يكمل <b>${nw}</b>، كل سلسلة ${o.L === 4 ? 'أربع' : 'خمس'} قطع متتالية.${o.teams === 3 && o.need > 1 ? ' (مع ثلاثة فرق تطول اللعبة.)' : ''}`, `The first team to make <b>${ne}</b> of ${o.L} wins.`);
     };
-    root.querySelectorAll('.kh-seg button').forEach(b => b.onclick = () => { const k = b.parentNode.dataset.k; o[k] = k === 'role' ? b.dataset.v : +b.dataset.v; paint(); });
+    root.querySelectorAll('.kh-seg button').forEach(b => b.onclick = () => { const k = b.parentNode.dataset.k; o[k] = k === 'role' ? b.dataset.v : +b.dataset.v; if (k === 'teams' && !o.needSet) o.need = o.teams === 2 ? 2 : 1; if (k === 'need') o.needSet = 1; paint(); });
     paint();
     root.querySelector('#khBack').onclick = home;
     root.querySelector('#khGo').onclick = () => {
@@ -1854,7 +1856,7 @@ window.KH = (function () {
   function local(o, name) {
     stop();
     const players = [{ id: 'me', team: 0 }, { id: 'b1', team: 1 }].concat(o.teams === 3 ? [{ id: 'b2', team: 2 }] : []);
-    const st = KH.create({ players, teams: o.teams, L: o.L });
+    const st = KH.create({ players, teams: o.teams, L: o.L, need: o.need });
     G = { mode: 'local', st, me: 'me', off: [], names: { me: name, b1: T('الجهاز', 'Computer') + (o.teams === 3 ? ' ١' : ''), b2: T('الجهاز ٢', 'Computer 2') } };
     const act = (k, c, i) => { const e = k === 'p' ? KH.play(st, 'me', c, i) : k === 's' ? KH.swap(st, 'me', c) : KH.pass(st, 'me'); if (e) return; after(); };
     const after = () => { show(); if (st.win === -1 && KH.cur(st) !== 'me') G.botT = setTimeout(botTurn, 750); };
@@ -1868,7 +1870,7 @@ window.KH = (function () {
     stop(); root.innerHTML = `<div class="kh-card"><p>${B('لحظة…', 'One moment…')}</p></div>`;
     try { await fb(); } catch (e) { root.innerHTML = `<div class="kh-card"><p>${B('تعذّر الاتصال. تأكد من الإنترنت.', 'Could not connect. Check the internet.')}</p><button type="button" class="btn ghost" id="khBack">${B('رجوع', 'Back')}</button></div>`; root.querySelector('#khBack').onclick = home; return; }
     let pin = null;
-    for (let t = 0; t < 6 && !pin; t++) { const p = String(100000 + Math.floor(Math.random() * 900000)); try { await db.ref('kh/' + p).set({ host: uid, at: TS(), st: 'lobby', cfg: { teams: o.teams, L: o.L } }); pin = p; } catch (e) {} }
+    for (let t = 0; t < 6 && !pin; t++) { const p = String(100000 + Math.floor(Math.random() * 900000)); try { await db.ref('kh/' + p).set({ host: uid, at: TS(), st: 'lobby', cfg: { teams: o.teams, L: o.L, need: o.need } }); pin = p; } catch (e) {} }
     if (!pin) { toast(B('تعذّر إنشاء اللعبة.', 'Could not create the game.'), 1); return home(); }
     G = { mode: 'host', pin, o: Object.assign({ tt: 45 }, o), ref: db.ref('kh/' + pin), names: {}, tm: {}, off: [], me: o.role === 'play' ? uid : null };
     if (G.me) await G.ref.child('pl/' + uid).set({ n: name, at: TS() });
@@ -1900,7 +1902,7 @@ window.KH = (function () {
   async function start() {
     G.off.forEach(f => f()); G.off = [];
     const players = Object.keys(G.names).map(id => ({ id, team: G.tm[id] })).sort(() => Math.random() - .5);
-    G.st = KH.create({ players, teams: G.o.teams, L: G.o.L });
+    G.st = KH.create({ players, teams: G.o.teams, L: G.o.L, need: G.o.need });
     await G.ref.child('st').set('play');
     await publish(true);
     run();
@@ -1916,10 +1918,11 @@ window.KH = (function () {
   }
   function timeUp() {
     if (!G || !G.st || G.st.win !== -1 || G.dlN !== G.st.turn) return;
-    const st = G.st, id = KH.cur(st);
-    let m = KH.botMove(st, id);
-    if (m && m.swap) { KH.swap(st, id, m.swap); m = KH.botMove(st, id); }
-    if (!m || m.swap) KH.pass(st, id); else { KH.play(st, id, m.card, m.i); if (st.last) st.last.auto = true; }
+    // when time runs out the move is chosen at random, so letting the clock run never helps a player
+    const st = G.st, id = KH.cur(st), rnd = () => { const ms = []; for (const c of new Set(st.hands[id])) for (const i of KH.legal(st, c)) ms.push({ card: c, i }); return ms[Math.floor(Math.random() * ms.length)]; };
+    let m = rnd();
+    if (!m) { const d = st.hands[id].find(c => KH.dead(st, c)); if (d && !st.swapped) { KH.swap(st, id, d); m = rnd(); } }
+    if (!m) KH.pass(st, id); else { KH.play(st, id, m.card, m.i); if (st.last) st.last.auto = true; }
     G.lastBy = id; publish(false); show();
   }
   async function publish(all) {
