@@ -23,17 +23,20 @@
   };
 
   let G = null;          // the game on this device
-  let db = null, uid = null;
+  let db = null, uid = null, off = 0;
+  const now = () => Date.now() + off;
   async function fb() {
     if (db) return;
     if (!window.firebase || !window.MD_CFG) throw new Error('nofb');
     if (!firebase.apps.length) firebase.initializeApp(MD_CFG);
     const u = firebase.auth().currentUser || (await firebase.auth().signInAnonymously()).user;
     uid = u.uid; db = firebase.database();
+    db.ref('.info/serverTimeOffset').on('value', s => { off = s.val() || 0; });
   }
   const TS = () => firebase.database.ServerValue.TIMESTAMP;
   const wipe = async pin => { try { await db.ref('khh/' + pin).remove(); } catch (e) {} try { await db.ref('kh/' + pin).remove(); } catch (e) {} };
-  const stop = () => { if (G && G.off) G.off.forEach(f => f()); if (G && G.botT) clearTimeout(G.botT); G = null; };
+  const stop = () => { if (G && G.off) G.off.forEach(f => f()); if (G && G.botT) clearTimeout(G.botT); if (G && G.tt) clearTimeout(G.tt); clearInterval(clk); G = null; };
+  let clk = null;
   const on = (ref, ev, fn) => { ref.on(ev, fn); G.off.push(() => ref.off(ev, fn)); };
 
   const rules = open => `<details class="kh-rules"${open ? ' open' : ''}><summary>📖 ${B('كيف تُلعب؟', 'How to play')}</summary>
@@ -69,10 +72,11 @@
 
   /* ---------- a new game: teams, row length, and who this device is ---------- */
   function setup(bot) {
-    const o = store.get('cfg', { teams: 2, L: 5, role: 'play' });
+    const o = Object.assign({ teams: 2, L: 5, role: 'play', tt: 45 }, store.get('cfg', {}));
     root.innerHTML = `<div class="kh-card"><h2>${bot ? '🤖 ' + B('العب ضد الجهاز', 'Play the computer') : '👥 ' + B('لعبة جديدة', 'A new game')}</h2>
       <div class="kh-opt"><span>${B('عدد الفرق', 'Teams')}</span><div class="kh-seg" data-k="teams"><button type="button" data-v="2">${B('فريقان', 'Two')}</button><button type="button" data-v="3">${B('ثلاثة فرق', 'Three')}</button></div></div>
       <div class="kh-opt"><span>${B('طول الصف', 'Row length')}</span><div class="kh-seg" data-k="L"><button type="button" data-v="5">${B('خمس (الأصلية)', 'Five (classic)')}</button><button type="button" data-v="4">${B('أربع (أسرع وللصغار)', 'Four (quicker, for children)')}</button></div></div>
+      ${bot ? '' : `<div class="kh-opt"><span>${B('وقت الدور', 'Time per turn')}</span><div class="kh-seg" data-k="tt"><button type="button" data-v="30">${B('٣٠ ثانية', '30 s')}</button><button type="button" data-v="45">${B('٤٥ ثانية', '45 s')}</button><button type="button" data-v="60">${B('دقيقة', '1 min')}</button><button type="button" data-v="0">${B('بلا وقت', 'No limit')}</button></div></div>`}
       ${bot ? '' : `<div class="kh-opt"><span>${B('هذا الجهاز', 'This device')}</span><div class="kh-seg" data-k="role"><button type="button" data-v="play">${B('ألعب منه', 'I play on it')}</button><button type="button" data-v="screen">${B('شاشة عرض فقط', 'A display screen only')}</button></div></div>`}
       <label class="kh-opt kh-name" ${!bot && o.role === 'screen' ? 'hidden' : ''}><span>${B('اسمك', 'Your name')}</span><input id="khN" maxlength="24" dir="auto" value="${esc(store.get('name', ''))}"></label>
       <p class="kh-note" id="khNote"></p>
@@ -114,7 +118,7 @@
     let pin = null;
     for (let t = 0; t < 6 && !pin; t++) { const p = String(100000 + Math.floor(Math.random() * 900000)); try { await db.ref('kh/' + p).set({ host: uid, at: TS(), st: 'lobby', cfg: { teams: o.teams, L: o.L } }); pin = p; } catch (e) {} }
     if (!pin) { toast(B('تعذّر إنشاء اللعبة.', 'Could not create the game.'), 1); return home(); }
-    G = { mode: 'host', pin, o, ref: db.ref('kh/' + pin), names: {}, tm: {}, off: [], me: o.role === 'play' ? uid : null };
+    G = { mode: 'host', pin, o: Object.assign({ tt: 45 }, o), ref: db.ref('kh/' + pin), names: {}, tm: {}, off: [], me: o.role === 'play' ? uid : null };
     if (G.me) await G.ref.child('pl/' + uid).set({ n: name, at: TS() });
     lobby();
   }
@@ -150,10 +154,26 @@
     run();
   }
   // what everyone sees, then each hand to its owner only
+  // the turn clock: when it runs out, the computer plays a sensible move for that player
+  const pubOf = () => Object.assign(KH.pub(G.st), { dl: G.dl || 0 });
+  function clock() {
+    const st = G.st; clearTimeout(G.tt);
+    if (!G.o.tt || st.win !== -1) { G.dl = 0; return; }
+    if (G.dlN !== st.turn || !G.dl) { G.dlN = st.turn; G.dl = now() + G.o.tt * 1000; }
+    G.tt = setTimeout(timeUp, Math.max(0, G.dl - now()) + 400);
+  }
+  function timeUp() {
+    if (!G || !G.st || G.st.win !== -1 || G.dlN !== G.st.turn) return;
+    const st = G.st, id = KH.cur(st);
+    let m = KH.botMove(st, id);
+    if (m && m.swap) { KH.swap(st, id, m.swap); m = KH.botMove(st, id); }
+    if (!m || m.swap) KH.pass(st, id); else { KH.play(st, id, m.card, m.i); if (st.last) st.last.auto = true; }
+    G.lastBy = id; publish(false); show();
+  }
   async function publish(all) {
-    const st = G.st;
+    const st = G.st; clock();
     store.set('run', { pin: G.pin, st, names: G.names, tm: G.tm, o: G.o, me: G.me, at: Date.now() });
-    await G.ref.update({ g: KH.pub(st), names: G.names, st: st.win !== -1 ? 'end' : 'play' });
+    await G.ref.update({ g: pubOf(), names: G.names, st: st.win !== -1 ? 'end' : 'play' });
     const ids = all ? Object.keys(st.hands) : [G.lastBy].filter(Boolean);
     await Promise.all(ids.map(id => db.ref('khh/' + G.pin + '/' + id).set(st.hands[id])));
   }
@@ -169,15 +189,15 @@
   }
   function show() {
     const st = G.st;
-    view({ P: KH.pub(st), hand: G.me ? st.hands[G.me] : null, me: G.me, names: G.names, screen: !G.me, act: (k, c, i) => apply(G.me, k, c, i), again: async () => { store.del('run'); await wipe(G.pin); home(); } });
+    view({ P: pubOf(), hand: G.me ? st.hands[G.me] : null, me: G.me, names: G.names, screen: !G.me, act: (k, c, i) => apply(G.me, k, c, i), again: async () => { store.del('run'); await wipe(G.pin); home(); } });
   }
   async function resumeHost(P) {
     stop();
     try { await fb(); } catch (e) { toast(B('تعذّر الاتصال.', 'Could not connect.'), 1); return; }
     const snap = await db.ref('kh/' + P.pin + '/host').once('value');
     if (snap.val() !== uid) { store.del('run'); toast(B('انتهت هذه اللعبة.', 'This game has ended.'), 1); return home(); }
-    G = { mode: 'host', pin: P.pin, o: P.o, ref: db.ref('kh/' + P.pin), names: P.names, tm: P.tm, off: [], me: P.me, st: P.st };
-    run();
+    G = { mode: 'host', pin: P.pin, o: Object.assign({ tt: 0 }, P.o), ref: db.ref('kh/' + P.pin), names: P.names, tm: P.tm, off: [], me: P.me, st: P.st };
+    run(); publish(false);
   }
 
   /* ---------- a player who joins with a code ---------- */
@@ -260,15 +280,16 @@
     const dead = mine && sel && !KH.twoEyed(sel) && !KH.oneEyed(sel) && can.length === 0;
     const stuck = mine && hand.length && hand.every(c => !legalOf(c).length) && (P.sw || !hand.some(c => !KH.twoEyed(c) && !KH.oneEyed(c)));
     const L = P.last;
+    clearInterval(clk);
     // news of the last move
-    if (L && P.n !== lastSeen) { lastSeen = P.n; if (L.made) { toast(`🎉 ${B(`فريق ${TN(L.t)} أكمل سلسلة!`, `${TN(L.t)} made a sequence!`)}`); buzz([60, 40, 60]); } else if (L.rm) toast(`👁 ${B(`${esc(names[L.id] || '')} أزال قطعة من فريق ${TN(L.t)}`, `${esc(names[L.id] || '')} removed a ${TN(L.t)} chip`)}`); if (mine) buzz(40); }
+    if (L && P.n !== lastSeen) { lastSeen = P.n; if (L.auto) toast(`⏱ ${B(`انتهى وقت ${esc(names[L.id] || '')}، فلُعبت ورقة عنه`, `${esc(names[L.id] || '')} ran out of time; a card was played for them`)}`); else if (L.made) { toast(`🎉 ${B(`فريق ${TN(L.t)} أكمل سلسلة!`, `${TN(L.t)} made a sequence!`)}`); buzz([60, 40, 60]); } else if (L.rm) toast(`👁 ${B(`${esc(names[L.id] || '')} أزال قطعة من فريق ${TN(L.t)}`, `${esc(names[L.id] || '')} removed a ${TN(L.t)} chip`)}`); if (mine) buzz(40); }
     const teamsBar = [...Array(P.teams).keys()].map(k => `<div class="kh-ts${P.order && names && turn != null && team[turn] === k ? ' on' : ''}" style="--c:${COL[k]}"><b>${TN(k)}</b><span>${'●'.repeat(P.seqs[k] || 0)}${'○'.repeat(Math.max(0, P.need - (P.seqs[k] || 0)))}</span><small dir="auto">${Object.keys(team).filter(u => team[u] === k).map(u => esc(names[u] || '')).join('، ')}</small></div>`).join('');
     const status = P.win >= 0 ? `🏆 ${B(`فاز فريق ${TN(P.win)}!`, `${TN(P.win)} wins!`)}` : P.win === -2 ? B('تعادل!', 'A draw!')
       : mine ? `<b>${B('دورك!', 'Your turn!')}</b> ${sel ? (KH.oneEyed(sel) ? B('👁 ولد أبو عين: اختر قطعة خصم لإزالتها', '👁 One-eyed jack: pick a rival chip to remove') : KH.twoEyed(sel) ? B('👀 ولد أبو عينين: ضع قطعتك في أي خانة فارغة', '👀 Two-eyed jack: put your chip on any empty space') : dead ? B('خانتا هذه الورقة ممتلئتان؛ استبدلها', 'both its spaces are taken; swap it') : B('اختر إحدى الخانتين المضيئتين', 'pick one of the lit spaces')) : B('اختر ورقة من يدك', 'pick a card')}`
       : `${B('دور', 'Turn:')} <b dir="auto" style="color:${COL[team[turn]]}">${esc(names[turn] || '')}</b> (${TN(team[turn])})`;
     root.innerHTML = `<div class="kh-game${screen ? ' kh-screen' : ''}">
       <div class="kh-bar">${teamsBar}</div>
-      <p class="kh-status">${watch ? `<span class="kh-eye">👀 ${B('مشاهدة', 'Watching')}</span> ` : ''}${status}</p>
+      <p class="kh-status">${P.dl && P.win === -1 ? `<span class="kh-clock${mine ? ' me' : ''}" id="khClk"></span> ` : ''}${watch ? `<span class="kh-eye">👀 ${B('مشاهدة', 'Watching')}</span> ` : ''}${status}</p>
       <div class="kh-board${can.length ? ' picking' : ''}">${lay.map((c, i) => { const b = board[i], inq = b >= 0 && sq[b] && sq[b].has(i);
         return `<div class="kh-cell${can.includes(i) ? ' can' : ''}${L && L.i === i ? ' last' : ''}" data-i="${i}">${card(c)}${b >= 0 ? `<i class="kh-chip${inq ? ' seq' : ''}" style="--c:${COL[b]}"></i>` : ''}</div>`; }).join('')}</div>
       ${me != null && !screen ? `<div class="kh-hand${mine ? ' mine' : ''}">${hand.map(c => `<button type="button" class="kh-hc${sel === c ? ' on' : ''}${mine && !KH.twoEyed(c) && !KH.oneEyed(c) && !legalOf(c).length ? ' dead' : ''}" data-c="${c}" style="--c:${myT != null ? COL[myT] : '#888'}">${card(c)}</button>`).join('')}</div>
@@ -281,6 +302,8 @@
     const sw = root.querySelector('#khSwap'); if (sw) sw.onclick = () => { const s = sel; sel = null; act('s', s); };
     const ps = root.querySelector('#khPass'); if (ps) ps.onclick = () => act('n');
     const ag = root.querySelector('#khAgain'); if (ag) ag.onclick = again;
+    const ck = root.querySelector('#khClk');
+    if (ck) { let warned = false; const tick = () => { const left = Math.max(0, Math.ceil((P.dl - now()) / 1000)); ck.textContent = '⏱ ' + left; ck.classList.toggle('hot', left <= 10); if (mine && left <= 5 && !warned) { warned = true; buzz([80, 60, 80]); } }; tick(); clk = setInterval(tick, 250); }
     const fs = root.querySelector('#khFs'); if (fs) fs.onclick = () => document.fullscreenElement ? document.exitFullscreen() : root.requestFullscreen && root.requestFullscreen();
   }
 
