@@ -35,6 +35,15 @@
   const TEAMN = k => k ? T('هم', 'Them') : T('لنا', 'Us');
   const IMG = '../../img/cards/';
   // real playing cards (the classic designs by Adrian Kennard, public domain)
+  // a seated player: a simple bust in thobe and shmagh (red or white), drawn here
+  const LOOKS = [['#c62828', '#c98e62', 1], ['#fff', '#b97a50', 0], ['#c62828', '#a86d45', 1], ['#fff', '#d9a27a', 1]];
+  const person = k => { const [sh, sk, beard] = LOOKS[k % 4], id = 'shm' + k;
+    return `<svg viewBox="0 0 64 64" aria-hidden="true"><defs><pattern id="${id}" width="5" height="5" patternUnits="userSpaceOnUse"><rect width="5" height="5" fill="#fff"/>${sh === '#fff' ? '' : `<path d="M0 0h2.5v2.5H0zM2.5 2.5H5V5H2.5z" fill="${sh}"/>`}</pattern></defs>
+      <rect width="64" height="64" fill="#6d4a2c"/><path d="M4 64c2-13 12-19 28-19s26 6 28 19z" fill="#f2f0ea"/><path d="M28 45l4 9 4-9z" fill="#ddd"/>
+      <path d="M17 31c0-13 6-20 15-20s15 7 15 20l5 18c-6-5-12-7-20-7s-14 2-20 7z" fill="url(#${id})" stroke="#0002"/>
+      <ellipse cx="32" cy="31" rx="8.6" ry="10.4" fill="${sk}"/>${beard ? `<path d="M23.6 32c1 8 4.4 10.6 8.4 10.6s7.4-2.6 8.4-10.6c-2 3-4 4.4-8.4 4.4s-6.4-1.4-8.4-4.4z" fill="#2b1d14"/>` : ''}
+      <path d="M28 29.5h2.6M33.4 29.5H36" stroke="#2b1d14" stroke-width="1.6" stroke-linecap="round"/>
+      <path d="M17.5 21.5c4-4 9-5.5 14.5-5.5s10.5 1.5 14.5 5.5" stroke="#151515" stroke-width="2.6" fill="none"/><path d="M18.5 24.5c4-3.6 8.6-4.8 13.5-4.8s9.5 1.2 13.5 4.8" stroke="#151515" stroke-width="2.4" fill="none"/></svg>`; };
   const card = (c, cls) => `<span class="bl-c${c ? '' : ' back'} ${cls || ''}"${c ? ` data-c="${c}"` : ''}><img src="${IMG}${c || 'back'}.svg" alt="${c ? (c[0] === 'T' ? '10' : c[0]) + SUIT[c[1]] : ''}" draggable="false"></span>`;
   const contractTxt = C => !C ? '' : C.type === 'sun' ? (C.ashkal ? T('أشكال (صن)', 'Ashkal (Sun)') : T('صن', 'Sun')) : `${T('حكم', 'Hokm')} ${SUIT[C.trump]}`;
   const BID = { pass: T('بس', 'Pass'), hokm: T('حكم', 'Hokm'), sun: T('صن', 'Sun'), ashkal: T('أشكل', 'Ashkal'), kawesh: T('كوّش', 'Kawesh') };
@@ -337,7 +346,7 @@
     const dl = P.dl && P.phase !== 'done' ? Math.max(0, (P.dl - now()) / 1000) : 0, tt = P.tt || 0;
     const seatBox = k => { const s = at(k), x = seats[s] || {}, cnt = (P.counts || [])[s] || 0, on = P.turn === s && ['bid', 'double', 'play'].includes(P.phase) && !holding;
       const ring = on && dl && tt ? ` style="--p:${Math.round(100 * dl / tt)}%"` : '';
-      return `<div class="bl-seat p${k}${on ? ' turn' : ''}${team(s) === myT ? ' us' : ' them'}"><div class="bl-av"${ring}><span>${esc((x.n || '?').trim().charAt(0))}</span>${on && dl ? `<em>${Math.ceil(dl)}</em>` : ''}</div>
+      return `<div class="bl-seat p${k}${on ? ' turn' : ''}${team(s) === myT ? ' us' : ' them'}"><div class="bl-av"${ring}>${person(s)}${on && dl ? `<em>${Math.ceil(dl)}</em>` : ''}</div>
         <b dir="auto">${esc(x.n || '')}${x.bot ? ' 🤖' : ''}</b>${callTag(P, s)}${P.dealer === s ? `<small class="bl-dealer">${B('الموزّع', 'Dealer')}</small>` : ''}
         ${k && cnt ? `<span class="bl-backs">${Array.from({ length: Math.min(cnt, 8) }, (_, i) => `<i style="--r:${(i - (Math.min(cnt, 8) - 1) / 2) * 7}deg"></i>`).join('')}</span>` : ''}${fresh(s) ? `<span class="bl-say">${esc(fresh(s))}</span>` : ''}</div>`; };
     // the trick on the table; a finished one stays, with its winner marked
