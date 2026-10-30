@@ -75,3 +75,5 @@
   .bl-hand .bl-c{margin-inline-start:-10px}.bl-seat{font-size:.8125rem}.bl-seat.p1,.bl-seat.p3{top:44%}
   .bl-jk{grid-template-columns:1fr 1fr}.bl-pin{font-size:2rem}
 }
+
+.bl-who{border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:12px;display:grid;gap:8px}.bl-who h4{margin:0;font-size:1rem}

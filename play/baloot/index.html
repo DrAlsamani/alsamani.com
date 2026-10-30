@@ -1615,6 +1615,8 @@ html[dir=ltr] .jr-dch.fd .jr-fold::before{transform:rotate(-45deg)}
   .bl-hand .bl-c{margin-inline-start:-10px}.bl-seat{font-size:.8125rem}.bl-seat.p1,.bl-seat.p3{top:44%}
   .bl-jk{grid-template-columns:1fr 1fr}.bl-pin{font-size:2rem}
 }
+
+.bl-who{border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:12px;display:grid;gap:8px}.bl-who h4{margin:0;font-size:1rem}
 </style>
 <div id="bl" class="bl"><noscript><span class="ar">تعمل هذه اللعبة مع تفعيل JavaScript.</span><span class="en">This game needs JavaScript.</span></noscript></div>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script>window.MD_CFG={"apiKey": "AIzaSyA50i75DT1Is1a6Yn6snW1_JVObc8S3F0Y", "authDomain": "maydan-705ae.firebaseapp.com", "databaseURL": "https://maydan-705ae-default-rtdb.europe-west1.firebasedatabase.app", "projectId": "maydan-705ae", "appId": "1:342187013133:web:d5c2396f0db413f3c51144"};window.MD_MARK="<svg class=\"md-mark\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><rect x=\"4\" y=\"4\" width=\"40\" height=\"40\" rx=\"12\" fill=\"#23336F\"/><path d=\"M24 9l4.2 6.8 7.8-1.8-1.8 7.8L41 24l-6.8 4.2 1.8 7.8-7.8-1.8L24 39l-4.2-6.8-7.8 1.8 1.8-7.8L7 24l6.8-4.2-1.8-7.8 7.8 1.8z\" fill=\"#C9822B\"/><circle cx=\"24\" cy=\"24\" r=\"6.5\" fill=\"#23336F\"/><circle cx=\"24\" cy=\"24\" r=\"3\" fill=\"#F3E3C7\"/></svg>";</script><script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script><script>/* Baloot: the rules (Saudi), as pure functions over a plain state object.
@@ -2131,12 +2133,14 @@ html[dir=ltr] .jr-dch.fd .jr-fold::before{transform:rotate(-45deg)}
 
   /* ---------- a new game: the computer's style, house rules, turn time ---------- */
   function setup(bot) {
-    const o = Object.assign({ style: 'pro', level: 'strong', tt: 0, qaid: true, ashkal2: false, kawesh: true, role: 'play', seat: 'jack' }, store.get('cfg', {}));
+    const o = Object.assign({ style: 'pro', level: 'strong', pStyle: 'classic', pLevel: 'strong', oStyle: 'pro', oLevel: 'medium', tt: 0, qaid: true, ashkal2: false, kawesh: true, role: 'play', seat: 'jack' }, store.get('cfg', {}));
+    if (!['pro', 'classic'].includes(o.style)) o.style = 'pro';
     const seg = (k, opts) => `<div class="bl-seg" data-k="${k}">${opts.map(([v, a, e]) => `<button type="button" data-v="${v}">${B(a, e)}</button>`).join('')}</div>`;
     root.innerHTML = `<div class="bl-card"><h2>${bot ? '🤖 ' + B('العب ضد الجهاز', 'Play the computer') : '👥 ' + B('طاولة جديدة', 'A new table')}</h2>
-      <div class="bl-opt"><span>${B('أسلوب الجهاز', 'Computer style')}</span>${seg('style', [['pro', 'حريف', 'Sharp'], ['classic', 'أصول', 'By the book'], ['tricky', 'يلعب من تحت', 'Tricky'], ['cautious', 'يفوّت', 'Cautious']])}</div>
-      <div class="bl-opt"><span>${B('قوته', 'Strength')}</span>${seg('level', [['easy', 'مبتدئ', 'Beginner'], ['medium', 'متوسط', 'Medium'], ['strong', 'قوي', 'Strong']])}</div>
-      <div class="bl-opt"><span>${B('القيد', 'Qaid')}</span>${seg('qaid', [['1', 'مفتوح: المخالفة ممكنة ويُنادى عليها', 'Open: breaches can happen and be called'], ['0', 'ممنوع: لا تُقبل إلا الورقة الصحيحة', 'Off: only legal cards']])}</div>
+      ${bot ? `<div class="bl-who"><h4>🤝 ${B('شريكك', 'Your partner')}</h4>${seg('pStyle', STY)}${seg('pLevel', LVL)}</div>
+      <div class="bl-who"><h4>⚔️ ${B('الخصمان', 'The opponents')}</h4>${seg('oStyle', STY)}${seg('oLevel', LVL)}</div>`
+      : `<div class="bl-who"><h4>🤖 ${B('الجهاز حين يكمّل مقعدًا فارغًا', 'The computer, when it fills an empty seat')}</h4>${seg('style', STY)}${seg('level', LVL)}</div>`}
+      <div class="bl-opt"><span>${B('القيد', 'Qaid')}</span>${seg('qaid', [['1', 'مفتوح', 'Open'], ['0', 'ممنوع', 'Off']])}</div>
       ${bot ? '' : `<div class="bl-opt"><span>${B('وقت الدور', 'Time per turn')}</span>${seg('tt', [['0', 'بلا وقت', 'No limit'], ['30', '٣٠ ثانية', '30 s'], ['60', 'دقيقة', '1 min']])}</div>
       <div class="bl-opt"><span>${B('الجلوس', 'Seating')}</span>${seg('seat', [['jack', 'طق الولد', 'Draw the jacks'], ['rand', 'عشوائي', 'Random'], ['hand', 'أختار بنفسي', 'I choose']])}</div>
       <div class="bl-opt"><span>${B('هذا الجهاز', 'This device')}</span>${seg('role', [['play', 'ألعب منه', 'I play on it'], ['screen', 'شاشة الطاولة فقط', 'The table screen only']])}</div>`}
@@ -2156,6 +2160,8 @@ html[dir=ltr] .jr-dch.fd .jr-fold::before{transform:rotate(-45deg)}
       if (bot) local(o, name); else host(o, name);
     };
   }
+  const STY = [['pro', 'حريف', 'Sharp'], ['classic', 'أصول', 'By the book']];
+  const LVL = [['easy', 'مبتدئ', 'Beginner'], ['medium', 'متوسط', 'Medium'], ['strong', 'قوي', 'Strong']];
   const houseRules = o => ({ strict: !o.qaid, ashkal2: !!o.ashkal2, kawesh: !!o.kawesh });
   const botName = s => [T('الجهاز ١', 'Computer 1'), T('الجهاز ٢', 'Computer 2'), T('الجهاز ٣', 'Computer 3'), T('الجهاز ٤', 'Computer 4')][s];
 
@@ -2163,7 +2169,7 @@ html[dir=ltr] .jr-dch.fd .jr-fold::before{transform:rotate(-45deg)}
   function local(o, name) {
     stop();
     const m = BL.newMatch(houseRules(o));
-    G = { mode: 'local', o, m, seats: [{ n: name, me: true }, { n: T('خصم', 'Rival') + ' ١', bot: 1 }, { n: T('شريكك', 'Partner'), bot: 1 }, { n: T('خصم', 'Rival') + ' ٢', bot: 1 }], mine: 0, off: [] };
+    const opp = { bot: 1, sty: o.oStyle, lvl: o.oLevel }; G = { mode: 'local', o, m, seats: [{ n: name, me: true }, Object.assign({ n: T('خصم', 'Rival') + ' ١' }, opp), { n: T('شريكك', 'Partner'), bot: 1, sty: o.pStyle, lvl: o.pLevel }, Object.assign({ n: T('خصم', 'Rival') + ' ٢' }, opp)], mine: 0, off: [] };
     drive();
   }
   function resumeLocal(run) { stop(); G = { mode: 'local', o: run.o, m: run.m, seats: run.seats, mine: 0, off: [] }; drive(); }
@@ -2184,7 +2190,7 @@ html[dir=ltr] .jr-dch.fd .jr-fold::before{transform:rotate(-45deg)}
   }
   function botMove(s) {
     if (!G || G.m.H.turn !== s) return;
-    const a = BLBOT.act(G.m, s, { style: G.o.style, level: G.o.level }) || BL.botAct(G.m, s);
+    const x = G.seats[s] || {}, a = BLBOT.act(G.m, s, { style: x.sty || G.o.style, level: x.lvl || G.o.level }) || BL.botAct(G.m, s);
     perform(s, a);
   }
   // when time runs out the computer moves for the player, without thinking (no gain from waiting)
