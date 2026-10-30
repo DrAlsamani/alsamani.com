@@ -1790,6 +1790,18 @@ body:has(#bl .bl-table) section.first{transform:none!important;animation:none!im
 .bl-table.dealing .bl-held i{animation:blPop .3s both}.bl-table.dealing .bl-held i:nth-child(2){animation-delay:.3s}.bl-table.dealing .bl-held i:nth-child(3){animation-delay:.6s}.bl-table.dealing .bl-held i:nth-child(4){animation-delay:.9s}.bl-table.dealing .bl-held i:nth-child(5){animation-delay:1.2s}
 .bl-exp.flip .bl-c{animation:blFlip .5s 2.1s both}.bl-exp.flip small{animation:blPop .3s 2.5s both}
 @keyframes blFlip{from{transform:rotateY(90deg) scale(.6);opacity:0}}
+
+/* won tricks: one face-down card each, side by side; ours under my partner, theirs under the left player */
+.bl-pile{display:none}
+.bl-stack{position:absolute;z-index:1;display:flex}
+.bl-stack i{width:22px;height:31px;margin-inline-start:-9px;border-radius:3px;background:#fff url(../../img/cards/back.svg) center/cover;box-shadow:0 1px 3px rgba(0,0,0,.55);animation:blPop .3s}
+.bl-stack i:first-child{margin-inline-start:0}
+.bl-stack.us{left:50%;top:6%;transform:translateX(-50%);direction:ltr}
+.bl-stack.them{left:5%;top:50%;flex-direction:column}.bl-stack.them i{margin:-20px 0 0;width:31px;height:22px}.bl-stack.them i:first-child{margin:0}
+.bl-trick.sweep .bl-tp{animation:blSweep .45s ease-in forwards}
+.bl-trick.sweep.us{--tx:0px;--ty:-34vh}.bl-trick.sweep.them{--tx:-38vw;--ty:0px}
+@keyframes blSweep{to{left:calc(50% + var(--tx));top:calc(50% + var(--ty));scale:.3;opacity:0}}
+.bl-plus.q0,.bl-plus.q1,.bl-plus.q2,.bl-plus.q3{left:50%;right:auto;top:auto;bottom:22%;margin-left:-24px}
 </style>
 <div id="bl" class="bl"><noscript><span class="ar">تعمل هذه اللعبة مع تفعيل JavaScript.</span><span class="en">This game needs JavaScript.</span></noscript></div>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script>window.MD_CFG={"apiKey": "AIzaSyA50i75DT1Is1a6Yn6snW1_JVObc8S3F0Y", "authDomain": "maydan-705ae.firebaseapp.com", "databaseURL": "https://maydan-705ae-default-rtdb.europe-west1.firebasedatabase.app", "projectId": "maydan-705ae", "appId": "1:342187013133:web:d5c2396f0db413f3c51144"};window.MD_MARK="<svg class=\"md-mark\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><rect x=\"4\" y=\"4\" width=\"40\" height=\"40\" rx=\"12\" fill=\"#23336F\"/><path d=\"M24 9l4.2 6.8 7.8-1.8-1.8 7.8L41 24l-6.8 4.2 1.8 7.8-7.8-1.8L24 39l-4.2-6.8-7.8 1.8 1.8-7.8L7 24l6.8-4.2-1.8-7.8 7.8 1.8z\" fill=\"#C9822B\"/><circle cx=\"24\" cy=\"24\" r=\"6.5\" fill=\"#23336F\"/><circle cx=\"24\" cy=\"24\" r=\"3\" fill=\"#F3E3C7\"/></svg>";</script><script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script><script>/* Baloot: the rules (Saudi), as pure functions over a plain state object.
@@ -2425,9 +2437,7 @@ body:has(#bl .bl-table) section.first{transform:none!important;animation:none!im
     if (!G) return; const m = G.m, H = m.H;
     if (G.mode === 'local') store.set('run', { local: true, o: G.o, m, seats: G.seats, at: Date.now() });
     if (G.dn !== m.n) { G.dn = m.n; G.hold = now() + 2900; G.nt = 0; }   // a new deal: give the cards time to arrive
-    if (H.tricks.length !== G.nt) { G.tap = -1; if (H.tricks.length > (G.nt || 0)) { const w = H.tricks[H.tricks.length - 1].win, x = G.seats[w] || {};
-        if (!x.bot && H.tricks.length - (G.nt || 0) === 1 && (G.mode === 'local' ? w === 0 : !!x.u)) { G.hold = now() + 10000; G.tap = w; G.tapT = setTimeout(() => { if (G && G.tap === w) { G.tap = -1; drive(); } }, 10050); }
-        else G.hold = now() + 1300; } G.nt = H.tricks.length; }
+    if (H.tricks.length !== G.nt) { G.tap = -1; if (H.tricks.length > (G.nt || 0)) G.hold = now() + 1900; G.nt = H.tricks.length; }
     if (G.mode === 'host') publish();
     show();
     clearTimeout(G.botT); clearTimeout(G.tt);
@@ -2702,7 +2712,8 @@ body:has(#bl .bl-table) section.first{transform:none!important;animation:none!im
     if (P.n !== view.hn && P.phase === 'bid') { view.hn = P.n; SND.deal(); }
     view.said = view.said || {}; Object.keys(says).forEach(s => { const v = says[s]; if (v && Date.now() - v.at < 3000 && view.said[s] !== v.at) { view.said[s] = v.at; SND.speak(v.t); } });
     const trick = tk.map((x, i) => `<div class="bl-tp p${(x.s - base + 4) % 4}${i === tk.length - 1 && isNew ? (view.slam === x.c ? ' new slam' : showLast ? '' : ' new') : ''}${showLast && x.s === P.last.win ? ' win' : ''}">${card(x.c)}</div>`).join('');
-    const center = P.phase === 'bid' ? `<div class="bl-exp${dealAnim ? ' flip' : ''}">${P.exp ? card(P.exp, 'big') : ''}<small>${P.round === 2 ? B('الدور الثاني', 'Second round') : B('الدور الأول', 'First round')}</small></div>` : `<div class="bl-trick">${trick}</div>`;
+    const sweep = showLast && P.hold - now() < 480 ? (team(P.last.win) === myT ? ' sweep us' : ' sweep them') : '';
+    const center = P.phase === 'bid' ? `<div class="bl-exp${dealAnim ? ' flip' : ''}">${P.exp ? card(P.exp, 'big') : ''}<small>${P.round === 2 ? B('الدور الثاني', 'Second round') : B('الدور الأول', 'First round')}</small></div>` : `<div class="bl-trick${sweep}">${trick}</div>`;
     const dbl = P.dbl && P.dbl.level > 1 ? ` · ${['', '', T('دبل', 'Double'), T('ثري', 'Triple'), T('فور', 'Four')][P.dbl.level]}${P.dbl.gahwa ? ' ☕' : ''}${P.dbl.locked ? ' 🔒' : ''}` : '';
     const top = `<div class="bl-top"><div class="bl-sc us"><small>${esc(tn(myT))}</small><b>${P.scores[myT]}</b></div>
       <div class="bl-con">${C ? `<b>${contractTxt(C)}${dbl}</b><small>${esc((seats[C.seat] || {}).n || '')}${P.won ? ` · ${B('الأكلات', 'Tricks')} ${P.won[myT]}–${P.won[1 - myT]}` : ''}</small>` : `<b>${B('الشراء', 'Bidding')}</b><small>${B('إلى ١٥٢', 'to 152')}</small>`}</div>
@@ -2726,7 +2737,7 @@ body:has(#bl .bl-table) section.first{transform:none!important;animation:none!im
       <button type="button" data-proj class="${pr.length ? 'has' : ''}"${pr.length && turnMine ? '' : ' disabled'}>🃏 ${B('المشاريع', 'Projects')}${pr.length ? `<i>${decl ? '✓' : ''}</i>` : ''}</button>
       ${G && G.ref ? `<button type="button" data-say>😊 ${B('تفاعل', 'React')}</button>` : ''}<button type="button" data-snd>${SND.on ? '🔊' : '🔇'}</button><button type="button" data-info>📖</button></div>` : '';
     const first = !root.querySelector('.bl-table');
-    root.innerHTML = `<div class="bl-table${me < 0 ? ' screen' : ''}${dealAnim ? ' dealing' : ''}"><button type="button" class="bl-exit" data-exit aria-label="${T('خروج', 'Leave')}">✕</button>${top}<div class="bl-felt"><div class="bl-room"><i class="bl-sofa"></i><i class="bl-dallah">${DALLAH}</i></div>${G && G.ref ? `<div class="bl-fans">${fansHtml()}</div>` : ''}<div class="bl-plane"><div class="bl-rug"></div>${showLast && P.last ? `<span class="bl-plus q${(P.last.win - base + 4) % 4}">+${P.lastPts || 0}</span>` : ''}${[0, 1, 2, 3].map(k => { const n = (P.wins || [])[at(k)] || 0; return n ? `<span class="bl-pile q${k}"><i></i><i></i><b>${n}</b></span>` : ''; }).join('')}<i class="bl-cup a">${CUP}</i><i class="bl-cup b">${CUP}</i>${center}</div>${[1, 2, 3].map(seatBox).join('')}${me < 0 ? seatBox(0) : ''}${shown}</div>
+    root.innerHTML = `<div class="bl-table${me < 0 ? ' screen' : ''}${dealAnim ? ' dealing' : ''}"><button type="button" class="bl-exit" data-exit aria-label="${T('خروج', 'Leave')}">✕</button>${top}<div class="bl-felt"><div class="bl-room"><i class="bl-sofa"></i><i class="bl-dallah">${DALLAH}</i></div>${G && G.ref ? `<div class="bl-fans">${fansHtml()}</div>` : ''}<div class="bl-plane"><div class="bl-rug"></div>${showLast && P.last ? `<span class="bl-plus q${(P.last.win - base + 4) % 4}">+${P.lastPts || 0}</span>` : ''}${[myT, 1 - myT].map((t, j) => { const n = (P.won || [])[t] || 0; return n ? `<span class="bl-stack ${j ? 'them' : 'us'}">${'<i></i>'.repeat(n)}</span>` : ''; }).join('')}<i class="bl-cup a">${CUP}</i><i class="bl-cup b">${CUP}</i>${center}</div>${[1, 2, 3].map(seatBox).join('')}${me < 0 ? seatBox(0) : ''}${shown}</div>
       ${meBox}${ctl}${handHtml}${bar}
       ${G && G.ref ? `<div class="bl-rxp" hidden>${EMO.map(e => `<button type="button" data-e="${e}">${e}</button>`).join('')}${SAY().map(e => `<button type="button" class="ph" data-e="${esc(e)}">${esc(e)}</button>`).join('')}</div>` : ''}
       <div class="bl-info" hidden>${rules(true)}</div></div>`;
@@ -2763,7 +2774,7 @@ body:has(#bl .bl-table) section.first{transform:none!important;animation:none!im
     else if (P.phase !== 'done') document.querySelectorAll('.bl-over').forEach(x => x.remove());
     if (P.over >= 0 && !holding) matchOver(P, myT, me);
     clearTimeout(view.t);
-    if (dl || holding || Object.values(says).some(v => Date.now() - v.at < 3600)) view.t = setTimeout(() => view(P, hand, me, send), dealing ? Math.max(120, P.hold - now() + 30) : holding ? Math.min(500, Math.max(120, P.hold - now() + 30)) : 500);
+    if (dl || holding || Object.values(says).some(v => Date.now() - v.at < 3600)) view.t = setTimeout(() => view(P, hand, me, send), dealing ? Math.max(120, P.hold - now() + 30) : holding ? (P.hold - now() > 480 ? P.hold - now() - 470 : Math.max(60, P.hold - now() + 30)) : 500);
   }
   // a joined phone does not hold the rules state: it works out its own options from what it can see
   function bidOptsRemote(P, me, hand) {

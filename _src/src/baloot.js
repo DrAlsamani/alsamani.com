@@ -150,9 +150,7 @@
     if (!G) return; const m = G.m, H = m.H;
     if (G.mode === 'local') store.set('run', { local: true, o: G.o, m, seats: G.seats, at: Date.now() });
     if (G.dn !== m.n) { G.dn = m.n; G.hold = now() + 2900; G.nt = 0; }   // a new deal: give the cards time to arrive
-    if (H.tricks.length !== G.nt) { G.tap = -1; if (H.tricks.length > (G.nt || 0)) { const w = H.tricks[H.tricks.length - 1].win, x = G.seats[w] || {};
-        if (!x.bot && H.tricks.length - (G.nt || 0) === 1 && (G.mode === 'local' ? w === 0 : !!x.u)) { G.hold = now() + 10000; G.tap = w; G.tapT = setTimeout(() => { if (G && G.tap === w) { G.tap = -1; drive(); } }, 10050); }
-        else G.hold = now() + 1300; } G.nt = H.tricks.length; }
+    if (H.tricks.length !== G.nt) { G.tap = -1; if (H.tricks.length > (G.nt || 0)) G.hold = now() + 1900; G.nt = H.tricks.length; }
     if (G.mode === 'host') publish();
     show();
     clearTimeout(G.botT); clearTimeout(G.tt);
@@ -427,7 +425,8 @@
     if (P.n !== view.hn && P.phase === 'bid') { view.hn = P.n; SND.deal(); }
     view.said = view.said || {}; Object.keys(says).forEach(s => { const v = says[s]; if (v && Date.now() - v.at < 3000 && view.said[s] !== v.at) { view.said[s] = v.at; SND.speak(v.t); } });
     const trick = tk.map((x, i) => `<div class="bl-tp p${(x.s - base + 4) % 4}${i === tk.length - 1 && isNew ? (view.slam === x.c ? ' new slam' : showLast ? '' : ' new') : ''}${showLast && x.s === P.last.win ? ' win' : ''}">${card(x.c)}</div>`).join('');
-    const center = P.phase === 'bid' ? `<div class="bl-exp${dealAnim ? ' flip' : ''}">${P.exp ? card(P.exp, 'big') : ''}<small>${P.round === 2 ? B('الدور الثاني', 'Second round') : B('الدور الأول', 'First round')}</small></div>` : `<div class="bl-trick">${trick}</div>`;
+    const sweep = showLast && P.hold - now() < 480 ? (team(P.last.win) === myT ? ' sweep us' : ' sweep them') : '';
+    const center = P.phase === 'bid' ? `<div class="bl-exp${dealAnim ? ' flip' : ''}">${P.exp ? card(P.exp, 'big') : ''}<small>${P.round === 2 ? B('الدور الثاني', 'Second round') : B('الدور الأول', 'First round')}</small></div>` : `<div class="bl-trick${sweep}">${trick}</div>`;
     const dbl = P.dbl && P.dbl.level > 1 ? ` · ${['', '', T('دبل', 'Double'), T('ثري', 'Triple'), T('فور', 'Four')][P.dbl.level]}${P.dbl.gahwa ? ' ☕' : ''}${P.dbl.locked ? ' 🔒' : ''}` : '';
     const top = `<div class="bl-top"><div class="bl-sc us"><small>${esc(tn(myT))}</small><b>${P.scores[myT]}</b></div>
       <div class="bl-con">${C ? `<b>${contractTxt(C)}${dbl}</b><small>${esc((seats[C.seat] || {}).n || '')}${P.won ? ` · ${B('الأكلات', 'Tricks')} ${P.won[myT]}–${P.won[1 - myT]}` : ''}</small>` : `<b>${B('الشراء', 'Bidding')}</b><small>${B('إلى ١٥٢', 'to 152')}</small>`}</div>
@@ -451,7 +450,7 @@
       <button type="button" data-proj class="${pr.length ? 'has' : ''}"${pr.length && turnMine ? '' : ' disabled'}>🃏 ${B('المشاريع', 'Projects')}${pr.length ? `<i>${decl ? '✓' : ''}</i>` : ''}</button>
       ${G && G.ref ? `<button type="button" data-say>😊 ${B('تفاعل', 'React')}</button>` : ''}<button type="button" data-snd>${SND.on ? '🔊' : '🔇'}</button><button type="button" data-info>📖</button></div>` : '';
     const first = !root.querySelector('.bl-table');
-    root.innerHTML = `<div class="bl-table${me < 0 ? ' screen' : ''}${dealAnim ? ' dealing' : ''}"><button type="button" class="bl-exit" data-exit aria-label="${T('خروج', 'Leave')}">✕</button>${top}<div class="bl-felt"><div class="bl-room"><i class="bl-sofa"></i><i class="bl-dallah">${DALLAH}</i></div>${G && G.ref ? `<div class="bl-fans">${fansHtml()}</div>` : ''}<div class="bl-plane"><div class="bl-rug"></div>${showLast && P.last ? `<span class="bl-plus q${(P.last.win - base + 4) % 4}">+${P.lastPts || 0}</span>` : ''}${[0, 1, 2, 3].map(k => { const n = (P.wins || [])[at(k)] || 0; return n ? `<span class="bl-pile q${k}"><i></i><i></i><b>${n}</b></span>` : ''; }).join('')}<i class="bl-cup a">${CUP}</i><i class="bl-cup b">${CUP}</i>${center}</div>${[1, 2, 3].map(seatBox).join('')}${me < 0 ? seatBox(0) : ''}${shown}</div>
+    root.innerHTML = `<div class="bl-table${me < 0 ? ' screen' : ''}${dealAnim ? ' dealing' : ''}"><button type="button" class="bl-exit" data-exit aria-label="${T('خروج', 'Leave')}">✕</button>${top}<div class="bl-felt"><div class="bl-room"><i class="bl-sofa"></i><i class="bl-dallah">${DALLAH}</i></div>${G && G.ref ? `<div class="bl-fans">${fansHtml()}</div>` : ''}<div class="bl-plane"><div class="bl-rug"></div>${showLast && P.last ? `<span class="bl-plus q${(P.last.win - base + 4) % 4}">+${P.lastPts || 0}</span>` : ''}${[myT, 1 - myT].map((t, j) => { const n = (P.won || [])[t] || 0; return n ? `<span class="bl-stack ${j ? 'them' : 'us'}">${'<i></i>'.repeat(n)}</span>` : ''; }).join('')}<i class="bl-cup a">${CUP}</i><i class="bl-cup b">${CUP}</i>${center}</div>${[1, 2, 3].map(seatBox).join('')}${me < 0 ? seatBox(0) : ''}${shown}</div>
       ${meBox}${ctl}${handHtml}${bar}
       ${G && G.ref ? `<div class="bl-rxp" hidden>${EMO.map(e => `<button type="button" data-e="${e}">${e}</button>`).join('')}${SAY().map(e => `<button type="button" class="ph" data-e="${esc(e)}">${esc(e)}</button>`).join('')}</div>` : ''}
       <div class="bl-info" hidden>${rules(true)}</div></div>`;
@@ -488,7 +487,7 @@
     else if (P.phase !== 'done') document.querySelectorAll('.bl-over').forEach(x => x.remove());
     if (P.over >= 0 && !holding) matchOver(P, myT, me);
     clearTimeout(view.t);
-    if (dl || holding || Object.values(says).some(v => Date.now() - v.at < 3600)) view.t = setTimeout(() => view(P, hand, me, send), dealing ? Math.max(120, P.hold - now() + 30) : holding ? Math.min(500, Math.max(120, P.hold - now() + 30)) : 500);
+    if (dl || holding || Object.values(says).some(v => Date.now() - v.at < 3600)) view.t = setTimeout(() => view(P, hand, me, send), dealing ? Math.max(120, P.hold - now() + 30) : holding ? (P.hold - now() > 480 ? P.hold - now() - 470 : Math.max(60, P.hold - now() + 30)) : 500);
   }
   // a joined phone does not hold the rules state: it works out its own options from what it can see
   function bidOptsRemote(P, me, hand) {

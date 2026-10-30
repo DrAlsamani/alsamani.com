@@ -250,3 +250,15 @@ body:has(#bl .bl-table) section.first{transform:none!important;animation:none!im
 .bl-table.dealing .bl-held i{animation:blPop .3s both}.bl-table.dealing .bl-held i:nth-child(2){animation-delay:.3s}.bl-table.dealing .bl-held i:nth-child(3){animation-delay:.6s}.bl-table.dealing .bl-held i:nth-child(4){animation-delay:.9s}.bl-table.dealing .bl-held i:nth-child(5){animation-delay:1.2s}
 .bl-exp.flip .bl-c{animation:blFlip .5s 2.1s both}.bl-exp.flip small{animation:blPop .3s 2.5s both}
 @keyframes blFlip{from{transform:rotateY(90deg) scale(.6);opacity:0}}
+
+/* won tricks: one face-down card each, side by side; ours under my partner, theirs under the left player */
+.bl-pile{display:none}
+.bl-stack{position:absolute;z-index:1;display:flex}
+.bl-stack i{width:22px;height:31px;margin-inline-start:-9px;border-radius:3px;background:#fff url(../../img/cards/back.svg) center/cover;box-shadow:0 1px 3px rgba(0,0,0,.55);animation:blPop .3s}
+.bl-stack i:first-child{margin-inline-start:0}
+.bl-stack.us{left:50%;top:6%;transform:translateX(-50%);direction:ltr}
+.bl-stack.them{left:5%;top:50%;flex-direction:column}.bl-stack.them i{margin:-20px 0 0;width:31px;height:22px}.bl-stack.them i:first-child{margin:0}
+.bl-trick.sweep .bl-tp{animation:blSweep .45s ease-in forwards}
+.bl-trick.sweep.us{--tx:0px;--ty:-34vh}.bl-trick.sweep.them{--tx:-38vw;--ty:0px}
+@keyframes blSweep{to{left:calc(50% + var(--tx));top:calc(50% + var(--ty));scale:.3;opacity:0}}
+.bl-plus.q0,.bl-plus.q1,.bl-plus.q2,.bl-plus.q3{left:50%;right:auto;top:auto;bottom:22%;margin-left:-24px}
