@@ -11,7 +11,7 @@
     tricky: { name: 'يلعب من تحت', bid: .5, classic: 0, tricky: 1.2 },
     cautious: { name: 'يفوّت', bid: -1.6, classic: .4, tricky: 0, doubler: true }
   };
-  const LEVELS = { easy: { n: 0 }, medium: { n: 18 }, strong: { n: 60 } };
+  const LEVELS = { easy: { n: 0 }, medium: { n: 36 }, strong: { n: 60 } };
   const clone = m => { const c = JSON.parse(JSON.stringify(Object.assign({}, m, { log: [] }))); c.rules.strict = true; return c; };
   const shuffle = (a, r) => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
 
@@ -57,6 +57,7 @@
   /* ---------- playing a card ---------- */
   function chooseCard(m, me, o) {
     const H = m.H, L = BL.legal(m, me), lv = LEVELS[o.level || 'strong'], sty = STYLES[o.style || 'pro'];
+    if (o.level === 'medium' && Math.random() < .35) { const a = BL.botAct(m, me); return { card: a.card, declare: a.declare, ekka: a.ekka }; }
     if (L.length === 1 || !lv.n) { const a = BL.botAct(m, me); return { card: L.length === 1 ? L[0] : a.card, declare: a && a.declare, ekka: a && a.ekka }; }
     const r = rnd((m.seed || 1) * 31 + H.tricks.length * 97 + H.trick.length * 7 + me), score = {};
     L.forEach(c => score[c] = 0);
@@ -87,7 +88,7 @@
   /* ---------- bidding: imagine each contract and keep the best ---------- */
   function chooseBid(m, me, o) {
     const H = m.H, opts = BL.bidOptions(m, me), lv = LEVELS[o.level || 'strong'], sty = STYLES[o.style || 'pro'];
-    if (!lv.n) return BL.botAct(m, me).bid;
+    if (!lv.n || o.level === 'medium') return BL.botAct(m, me).bid;   // the middle level buys with the plain player's caution
     const r = rnd((m.seed || 1) * 13 + m.n * 101 + me), cands = opts.filter(x => x !== 'pass' && x !== 'kawesh');
     if (opts.includes('kawesh')) return 'kawesh';
     if (!cands.length) return 'pass';
