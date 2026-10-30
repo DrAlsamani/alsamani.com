@@ -241,3 +241,12 @@ body:has(#bl .bl-table) section.first{transform:none!important;animation:none!im
 .bl-spot{position:absolute;z-index:2;pointer-events:none;width:46%;height:24%;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(closest-side,rgba(255,206,110,.85),rgba(255,206,110,.3) 55%,transparent);mix-blend-mode:screen;transition:left .6s cubic-bezier(.4,.1,.2,1),top .6s cubic-bezier(.4,.1,.2,1);animation:blGlow 1.4s ease-in-out infinite}
 .bl-spot.q0{left:50%;top:84%}.bl-spot.q1{left:86%;top:44%}.bl-spot.q2{left:50%;top:20%}.bl-spot.q3{left:14%;top:44%}
 @keyframes blGlow{50%{opacity:.6}}
+
+/* my hand never clips a raised card */
+.bl-hand{overflow:visible}
+/* the deal: cards fly from the dealer one by one, then one card is laid face up on the table */
+.bl-hand.deal .bl-c{animation:blDeal .45s var(--d) cubic-bezier(.2,.7,.3,1) both}
+@keyframes blDeal{from{transform:translate(var(--fx),var(--fy)) rotate(160deg) scale(.45);opacity:0}}
+.bl-table.dealing .bl-held i{animation:blPop .3s both}.bl-table.dealing .bl-held i:nth-child(2){animation-delay:.3s}.bl-table.dealing .bl-held i:nth-child(3){animation-delay:.6s}.bl-table.dealing .bl-held i:nth-child(4){animation-delay:.9s}.bl-table.dealing .bl-held i:nth-child(5){animation-delay:1.2s}
+.bl-exp.flip .bl-c{animation:blFlip .5s 2.1s both}.bl-exp.flip small{animation:blPop .3s 2.5s both}
+@keyframes blFlip{from{transform:rotateY(90deg) scale(.6);opacity:0}}

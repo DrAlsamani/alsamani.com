@@ -149,6 +149,7 @@
   function drive() {
     if (!G) return; const m = G.m, H = m.H;
     if (G.mode === 'local') store.set('run', { local: true, o: G.o, m, seats: G.seats, at: Date.now() });
+    if (G.dn !== m.n) { G.dn = m.n; G.hold = now() + 2900; G.nt = 0; }   // a new deal: give the cards time to arrive
     if (H.tricks.length !== G.nt) { G.tap = -1; if (H.tricks.length > (G.nt || 0)) { const w = H.tricks[H.tricks.length - 1].win, x = G.seats[w] || {};
         if (!x.bot && H.tricks.length - (G.nt || 0) === 1 && (G.mode === 'local' ? w === 0 : !!x.u)) { G.hold = now() + 10000; G.tap = w; G.tapT = setTimeout(() => { if (G && G.tap === w) { G.tap = -1; drive(); } }, 10050); }
         else G.hold = now() + 1300; } G.nt = H.tricks.length; }
@@ -171,8 +172,8 @@
   function timeUp(s) { if (!G || G.m.H.turn !== s) return; const a = BL.botAct(G.m, s, 'weak'); if (G.m.H.phase === 'bid') a.bid = 'pass'; if (G.m.H.phase === 'double') a.dbl = 'pass'; perform(s, a, true); }
   function perform(s, a, auto) {
     const m = G.m, H = m.H; let ok = false;
-    if (H.phase === 'bid') { ok = BL.bid(m, s, a.bid); if (ok) say(s, a.bid === 'pass' ? (m.H.round === 2 || H.round === 2 ? T('ولا', 'Pass') : T('بس', 'Pass')) : a.bid.startsWith('hokm:') ? T('حكم ثاني', 'Hokm, second') : bidTxt(a.bid)); }
-    else if (H.phase === 'double') { ok = BL.doubleAct(m, s, a.dbl); if (ok && a.dbl !== 'pass') say(s, DBLO()[a.dbl]); }
+    if (H.phase === 'bid') { ok = BL.bid(m, s, a.bid); if (ok) say(s, a.bid === 'pass' ? (m.H.round === 2 || H.round === 2 ? T('ولا', 'Pass') : T('بس', 'Pass')) : a.bid.startsWith('hokm:') ? T('حكم ثاني', 'Hokm, second') : bidTxt(a.bid), 1); }
+    else if (H.phase === 'double') { ok = BL.doubleAct(m, s, a.dbl); if (ok && a.dbl !== 'pass') say(s, DBLO()[a.dbl], 1); }
     else if (H.phase === 'play') { const hadB = H.baloot; ok = BL.play(m, s, a.card, { declare: a.declare, ekka: a.ekka }); if (ok) G.sl = a.slam ? a.card : ''; if (ok && a.ekka) say(s, T('إكّة', 'Ekka')); if (ok && !hadB && m.H.baloot) say(s, T('بلوت!', 'Baloot!')); }
     if (ok) { G.lastAuto = auto ? s : -1; drive(); }
     return ok;
@@ -190,7 +191,8 @@
     return false;
   }
   // a short word over a seat ("Hokm", "Double", "Qaid!")
-  function say(s, t) { G.says = G.says || {}; G.says[s] = { t, at: Date.now() }; }
+  // q: spoken only (bids and doubles already stay written by the name, so no bubble)
+  function say(s, t, q) { G.says = G.says || {}; G.says[s] = { t, at: Date.now(), q: q ? 1 : 0 }; }
 
   /* ---------- online: create, seat, publish ---------- */
   async function host(o, name) {
@@ -405,9 +407,9 @@
   function view(P, hand, me, send) {
     const seats = P.seats || [], base = me >= 0 ? me : 0, at = k => (base + k) % 4;     // 0 bottom, 1 right, 2 top, 3 left (play goes anticlockwise)
     const myT = me >= 0 ? team(me) : 0, C = P.contract;
-    const says = P.says || {}, fresh = s => says[s] && Date.now() - says[s].at < 3500 ? says[s].t : '';
-    const holding = P.hold && now() < P.hold;                      // a finished trick stays on the table for a moment
-    const turnMine = me >= 0 && P.turn === me && ['bid', 'double', 'play'].includes(P.phase) && !(holding && P.phase === 'play' && false);
+    const says = P.says || {}, fresh = s => says[s] && !says[s].q && Date.now() - says[s].at < 3500 ? says[s].t : '';
+    const holding = P.hold && now() < P.hold, dealing = holding && P.phase === 'bid', dealAnim = dealing && view.dealt !== P.n; if (dealing) view.dealt = P.n;                      // a finished trick stays on the table for a moment
+    const turnMine = me >= 0 && P.turn === me && ['bid', 'double', 'play'].includes(P.phase) && !dealing;
     hand = hand ? sortHand(hand, P) : null;
     const tn = k => me >= 0 ? (k === myT ? T('لنا', 'Us') : T('لهم', 'Them')) : seats.filter((x, s) => team(s) === k).map(x => x.n).join('، ');
     const dl = P.dl && P.phase !== 'done' ? Math.max(0, (P.dl - now()) / 1000) : 0, tt = P.tt || 0;
@@ -425,7 +427,7 @@
     if (P.n !== view.hn && P.phase === 'bid') { view.hn = P.n; SND.deal(); }
     view.said = view.said || {}; Object.keys(says).forEach(s => { const v = says[s]; if (v && Date.now() - v.at < 3000 && view.said[s] !== v.at) { view.said[s] = v.at; SND.speak(v.t); } });
     const trick = tk.map((x, i) => `<div class="bl-tp p${(x.s - base + 4) % 4}${i === tk.length - 1 && isNew ? (view.slam === x.c ? ' new slam' : showLast ? '' : ' new') : ''}${showLast && x.s === P.last.win ? ' win' : ''}">${card(x.c)}</div>`).join('');
-    const center = P.phase === 'bid' ? `<div class="bl-exp">${P.exp ? card(P.exp, 'big') : ''}<small>${P.round === 2 ? B('الدور الثاني', 'Second round') : B('الدور الأول', 'First round')}</small></div>` : `<div class="bl-trick">${trick}</div>`;
+    const center = P.phase === 'bid' ? `<div class="bl-exp${dealAnim ? ' flip' : ''}">${P.exp ? card(P.exp, 'big') : ''}<small>${P.round === 2 ? B('الدور الثاني', 'Second round') : B('الدور الأول', 'First round')}</small></div>` : `<div class="bl-trick">${trick}</div>`;
     const dbl = P.dbl && P.dbl.level > 1 ? ` · ${['', '', T('دبل', 'Double'), T('ثري', 'Triple'), T('فور', 'Four')][P.dbl.level]}${P.dbl.gahwa ? ' ☕' : ''}${P.dbl.locked ? ' 🔒' : ''}` : '';
     const top = `<div class="bl-top"><div class="bl-sc us"><small>${esc(tn(myT))}</small><b>${P.scores[myT]}</b></div>
       <div class="bl-con">${C ? `<b>${contractTxt(C)}${dbl}</b><small>${esc((seats[C.seat] || {}).n || '')}${P.won ? ` · ${B('الأكلات', 'Tricks')} ${P.won[myT]}–${P.won[1 - myT]}` : ''}</small>` : `<b>${B('الشراء', 'Bidding')}</b><small>${B('إلى ١٥٢', 'to 152')}</small>`}</div>
@@ -438,7 +440,8 @@
     const pr = me >= 0 && P.phase === 'play' && P.nt === 0 && hand ? BL.projectsIn(hand, { contract: C }) : [];
     const help = P.phase === 'play' && turnMine && (P.rules || {}).strict && G.mode !== 'player' ? BL.legal(G.m, me) : null;
     const n = hand ? hand.length : 0;
-    const handHtml = hand ? `<div class="bl-hand${turnMine && P.phase === 'play' && !holding ? ' go' : ''}" dir="ltr" style="--n:${n}">${hand.map((c, i) => `<div class="bl-hc" style="--r:${((i - (n - 1) / 2) * 1.6).toFixed(1)}deg;--y:${(((i - (n - 1) / 2) ** 2) * 1.3).toFixed(1)}px">${card(c, (sel === c ? 'sel' : '') + (help && !help.includes(c) ? ' no' : '') + (G && G.hint && G.hint.c === c && Date.now() - G.hint.at < 15000 ? ' hint' : ''))}</div>`).join('')}</div>` : '';
+    const dk = (P.dealer - base + 4) % 4, from = [['0px', '40vh'], ['45vw', '-25vh'], ['0px', '-55vh'], ['-45vw', '-25vh']][dk];
+    const handHtml = hand ? `<div class="bl-hand${turnMine && P.phase === 'play' && !holding ? ' go' : ''}${dealAnim ? ' deal' : ''}" style="--fx:${from[0]};--fy:${from[1]}" dir="ltr" style="--n:${n}">${hand.map((c, i) => `<div class="bl-hc" style="--d:${(i * .14 + (i >= 5 ? .5 : 0)).toFixed(2)}s;--r:${((i - (n - 1) / 2) * 1.6).toFixed(1)}deg;--y:${(((i - (n - 1) / 2) ** 2) * 1.3).toFixed(1)}px">${card(c, (sel === c ? 'sel' : '') + (help && !help.includes(c) ? ' no' : '') + (G && G.hint && G.hint.c === c && Date.now() - G.hint.at < 15000 ? ' hint' : ''))}</div>`).join('')}</div>` : '';
     const shown = false ? `<div class="bl-shown">${esc(tn(P.shown.team))}: ${P.shown.list.map(p => `${KIND()[p.kind]} ${p.cards.map(c => card(c, 'mini')).join('')}`).join(' · ')}</div>` : '';
     const iWon = turnMine && P.phase === 'play' && !(P.trick || []).length && P.last && P.last.win === me;
     const tapMe = holding && P.tap === me && me >= 0;
@@ -448,7 +451,7 @@
       <button type="button" data-proj class="${pr.length ? 'has' : ''}"${pr.length && turnMine ? '' : ' disabled'}>🃏 ${B('المشاريع', 'Projects')}${pr.length ? `<i>${decl ? '✓' : ''}</i>` : ''}</button>
       ${G && G.ref ? `<button type="button" data-say>😊 ${B('تفاعل', 'React')}</button>` : ''}<button type="button" data-snd>${SND.on ? '🔊' : '🔇'}</button><button type="button" data-info>📖</button></div>` : '';
     const first = !root.querySelector('.bl-table');
-    root.innerHTML = `<div class="bl-table${me < 0 ? ' screen' : ''}"><button type="button" class="bl-exit" data-exit aria-label="${T('خروج', 'Leave')}">✕</button>${top}<div class="bl-felt"><div class="bl-room"><i class="bl-sofa"></i><i class="bl-dallah">${DALLAH}</i></div>${G && G.ref ? `<div class="bl-fans">${fansHtml()}</div>` : ''}<div class="bl-plane"><div class="bl-rug"></div>${showLast && P.last ? `<span class="bl-plus q${(P.last.win - base + 4) % 4}">+${P.lastPts || 0}</span>` : ''}${[0, 1, 2, 3].map(k => { const n = (P.wins || [])[at(k)] || 0; return n ? `<span class="bl-pile q${k}"><i></i><i></i><b>${n}</b></span>` : ''; }).join('')}<i class="bl-cup a">${CUP}</i><i class="bl-cup b">${CUP}</i>${center}</div>${[1, 2, 3].map(seatBox).join('')}${me < 0 ? seatBox(0) : ''}${shown}</div>
+    root.innerHTML = `<div class="bl-table${me < 0 ? ' screen' : ''}${dealAnim ? ' dealing' : ''}"><button type="button" class="bl-exit" data-exit aria-label="${T('خروج', 'Leave')}">✕</button>${top}<div class="bl-felt"><div class="bl-room"><i class="bl-sofa"></i><i class="bl-dallah">${DALLAH}</i></div>${G && G.ref ? `<div class="bl-fans">${fansHtml()}</div>` : ''}<div class="bl-plane"><div class="bl-rug"></div>${showLast && P.last ? `<span class="bl-plus q${(P.last.win - base + 4) % 4}">+${P.lastPts || 0}</span>` : ''}${[0, 1, 2, 3].map(k => { const n = (P.wins || [])[at(k)] || 0; return n ? `<span class="bl-pile q${k}"><i></i><i></i><b>${n}</b></span>` : ''; }).join('')}<i class="bl-cup a">${CUP}</i><i class="bl-cup b">${CUP}</i>${center}</div>${[1, 2, 3].map(seatBox).join('')}${me < 0 ? seatBox(0) : ''}${shown}</div>
       ${meBox}${ctl}${handHtml}${bar}
       ${G && G.ref ? `<div class="bl-rxp" hidden>${EMO.map(e => `<button type="button" data-e="${e}">${e}</button>`).join('')}${SAY().map(e => `<button type="button" class="ph" data-e="${esc(e)}">${esc(e)}</button>`).join('')}</div>` : ''}
       <div class="bl-info" hidden>${rules(true)}</div></div>`;
@@ -485,7 +488,7 @@
     else if (P.phase !== 'done') document.querySelectorAll('.bl-over').forEach(x => x.remove());
     if (P.over >= 0 && !holding) matchOver(P, myT, me);
     clearTimeout(view.t);
-    if (dl || holding || Object.values(says).some(v => Date.now() - v.at < 3600)) view.t = setTimeout(() => view(P, hand, me, send), holding ? Math.min(500, Math.max(120, P.hold - now() + 30)) : 500);
+    if (dl || holding || Object.values(says).some(v => Date.now() - v.at < 3600)) view.t = setTimeout(() => view(P, hand, me, send), dealing ? Math.max(120, P.hold - now() + 30) : holding ? Math.min(500, Math.max(120, P.hold - now() + 30)) : 500);
   }
   // a joined phone does not hold the rules state: it works out its own options from what it can see
   function bidOptsRemote(P, me, hand) {
