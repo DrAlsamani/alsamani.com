@@ -61,7 +61,7 @@
     if (H.spoke.length < 4) { H.turn = nx(H.turn); return true; }
     // everyone spoke once in this round
     if (!H.bid) {
-      if (H.round === 1) { H.round = 2; H.spoke = []; H.turn = nx(m.dealer); return true; }
+      if (H.round === 1) { H.round = 2; H.spoke = []; H.calls = ['', '', '', '']; H.turn = nx(m.dealer); return true; }   // the second round starts with clean labels
       m.dealer = nx(m.dealer); deal(m); return true;        // nobody bought: a new deal
     }
     // players earlier in turn than the bidder may still take Sun (earliest first)

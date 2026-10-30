@@ -1776,6 +1776,11 @@ body:has(#bl .bl-table) section.first{transform:none!important;animation:none!im
   .bl-pile.q0{bottom:30%}
   .bl-exit{top:6px}
 }
+
+/* the turn: a warm light slides across the table to whoever plays next */
+.bl-spot{position:absolute;z-index:2;pointer-events:none;width:46%;height:24%;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(closest-side,rgba(255,206,110,.85),rgba(255,206,110,.3) 55%,transparent);mix-blend-mode:screen;transition:left .6s cubic-bezier(.4,.1,.2,1),top .6s cubic-bezier(.4,.1,.2,1);animation:blGlow 1.4s ease-in-out infinite}
+.bl-spot.q0{left:50%;top:84%}.bl-spot.q1{left:86%;top:44%}.bl-spot.q2{left:50%;top:20%}.bl-spot.q3{left:14%;top:44%}
+@keyframes blGlow{50%{opacity:.6}}
 </style>
 <div id="bl" class="bl"><noscript><span class="ar">تعمل هذه اللعبة مع تفعيل JavaScript.</span><span class="en">This game needs JavaScript.</span></noscript></div>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script>window.MD_CFG={"apiKey": "AIzaSyA50i75DT1Is1a6Yn6snW1_JVObc8S3F0Y", "authDomain": "maydan-705ae.firebaseapp.com", "databaseURL": "https://maydan-705ae-default-rtdb.europe-west1.firebasedatabase.app", "projectId": "maydan-705ae", "appId": "1:342187013133:web:d5c2396f0db413f3c51144"};window.MD_MARK="<svg class=\"md-mark\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><rect x=\"4\" y=\"4\" width=\"40\" height=\"40\" rx=\"12\" fill=\"#23336F\"/><path d=\"M24 9l4.2 6.8 7.8-1.8-1.8 7.8L41 24l-6.8 4.2 1.8 7.8-7.8-1.8L24 39l-4.2-6.8-7.8 1.8 1.8-7.8L7 24l6.8-4.2-1.8-7.8 7.8 1.8z\" fill=\"#C9822B\"/><circle cx=\"24\" cy=\"24\" r=\"6.5\" fill=\"#23336F\"/><circle cx=\"24\" cy=\"24\" r=\"3\" fill=\"#F3E3C7\"/></svg>";</script><script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script><script>/* Baloot: the rules (Saudi), as pure functions over a plain state object.
@@ -1841,7 +1846,7 @@ body:has(#bl .bl-table) section.first{transform:none!important;animation:none!im
     if (H.spoke.length < 4) { H.turn = nx(H.turn); return true; }
     // everyone spoke once in this round
     if (!H.bid) {
-      if (H.round === 1) { H.round = 2; H.spoke = []; H.turn = nx(m.dealer); return true; }
+      if (H.round === 1) { H.round = 2; H.spoke = []; H.calls = ['', '', '', '']; H.turn = nx(m.dealer); return true; }   // the second round starts with clean labels
       m.dealer = nx(m.dealer); deal(m); return true;        // nobody bought: a new deal
     }
     // players earlier in turn than the bidder may still take Sun (earliest first)
@@ -2283,6 +2288,7 @@ body:has(#bl .bl-table) section.first{transform:none!important;animation:none!im
       get on() { return on; }, set on(v) { on = v; store.set('snd', v); if (!v) try { speechSynthesis.cancel(); } catch (e) {} },
       card() { const a = on && ctx(); if (a) noise(a, .07, 2600, .9, .55); },
       slam() { const a = on && ctx(); if (!a) return; noise(a, .14, 1400, .6, 1.1); noise(a, .2, 500, .7, .9, 'lowpass'); thump(a, .9); },
+      tick() { const a = on && ctx(); if (a) noise(a, .03, 4200, 2, .18); },
       deal() { const a = on && ctx(); if (!a) return; for (let i = 0; i < 4; i++) setTimeout(() => noise(a, .05, 3200, 1, .3), i * 70); },
       speak(t) { if (!on || !isAr() || !window.speechSynthesis) return; t = String(t).replace(/[♠♥♦♣]/g, m => ' ' + SUITN[{ '♠': 'S', '♥': 'H', '♦': 'D', '♣': 'C' }[m]]).replace(/[^؀-ۿ\s!؟?]/g, '').trim(); if (!t) return; try { const u = new SpeechSynthesisUtterance(t); u.lang = 'ar-SA'; if (voice) u.voice = voice; u.rate = 1.05; u.pitch = 1; speechSynthesis.speak(u); } catch (e) {} }
     };
@@ -2318,9 +2324,9 @@ body:has(#bl .bl-table) section.first{transform:none!important;animation:none!im
   const DALLAH = `<svg viewBox="0 0 60 90" aria-hidden="true"><defs><linearGradient id="blBr" x1="0" x2="1"><stop offset="0" stop-color="#8a6a2a"/><stop offset=".45" stop-color="#f1d58a"/><stop offset="1" stop-color="#9c7a34"/></linearGradient></defs><path d="M30 2l3 8h-6z" fill="url(#blBr)"/><path d="M24 10h12l2 12c6 4 9 14 9 26 0 14-6 24-17 24S13 62 13 48c0-12 3-22 9-26z" fill="url(#blBr)"/><path d="M14 40C6 34 2 22 4 12l4 2c0 9 3 18 8 22z" fill="url(#blBr)"/><path d="M46 30c8 0 12 8 10 16s-8 12-10 12" stroke="url(#blBr)" stroke-width="4" fill="none"/><path d="M14 74h32l4 10H10z" fill="url(#blBr)"/></svg>`;
   const card = (c, cls) => `<span class="bl-c${c ? '' : ' back'} ${cls || ''}"${c ? ` data-c="${c}"` : ''}><img src="${IMG}${c || 'back'}.svg" alt="${c ? (c[0] === 'T' ? '10' : c[0]) + SUIT[c[1]] : ''}" draggable="false"></span>`;
   const contractTxt = C => !C ? '' : C.type === 'sun' ? (C.ashkal ? T('أشكال (صن)', 'Ashkal (Sun)') : T('صن', 'Sun')) : `${T('حكم', 'Hokm')} ${SUIT[C.trump]}`;
-  const BID = { pass: T('بس', 'Pass'), hokm: T('حكم', 'Hokm'), sun: T('صن', 'Sun'), ashkal: T('أشكل', 'Ashkal'), kawesh: T('كوّش', 'Kawesh') };
-  const bidTxt = o => o.startsWith('hokm:') ? `${T('حكم', 'Hokm')} ${SUIT[o.slice(5)]}` : BID[o] || o;
-  const DBL = { pass: T('بس', 'Pass'), double: T('دبل', 'Double'), 'double:open': T('دبل مفتوح', 'Double, open'), 'double:locked': T('دبل مقفول', 'Double, locked'), triple: T('ثري', 'Triple'), 'four:open': T('فور مفتوح', 'Four, open'), 'four:locked': T('فور مقفول', 'Four, locked'), gahwa: T('قهوة ☕', 'Gahwa ☕') };
+  const BIDO = () => ({ pass: T('بس', 'Pass'), hokm: T('حكم', 'Hokm'), sun: T('صن', 'Sun'), ashkal: T('أشكل', 'Ashkal'), kawesh: T('كوّش', 'Kawesh') });
+  const bidTxt = o => o.startsWith('hokm:') ? `${T('حكم', 'Hokm')} ${SUIT[o.slice(5)]}` : BIDO()[o] || o;
+  const DBLO = () => ({ pass: T('بس', 'Pass'), double: T('دبل', 'Double'), 'double:open': T('دبل مفتوح', 'Double, open'), 'double:locked': T('دبل مقفول', 'Double, locked'), triple: T('ثري', 'Triple'), 'four:open': T('فور مفتوح', 'Four, open'), 'four:locked': T('فور مقفول', 'Four, locked'), gahwa: T('قهوة ☕', 'Gahwa ☕') });
   // short codes for the network (the rules allow three characters)
   const ENC = { pass: 'P', hokm: 'H', sun: 'S', ashkal: 'A', kawesh: 'K', 'hokm:S': 'HS', 'hokm:H': 'HH', 'hokm:D': 'HD', 'hokm:C': 'HC', double: 'D', 'double:open': 'DO', 'double:locked': 'DL', triple: 'T', 'four:open': 'FO', 'four:locked': 'FL', gahwa: 'G' };
   const DEC = Object.fromEntries(Object.entries(ENC).map(([a, b]) => [b, a]));
@@ -2430,7 +2436,7 @@ body:has(#bl .bl-table) section.first{transform:none!important;animation:none!im
   function perform(s, a, auto) {
     const m = G.m, H = m.H; let ok = false;
     if (H.phase === 'bid') { ok = BL.bid(m, s, a.bid); if (ok) say(s, a.bid === 'pass' ? (m.H.round === 2 || H.round === 2 ? T('ولا', 'Pass') : T('بس', 'Pass')) : a.bid.startsWith('hokm:') ? T('حكم ثاني', 'Hokm, second') : bidTxt(a.bid)); }
-    else if (H.phase === 'double') { ok = BL.doubleAct(m, s, a.dbl); if (ok && a.dbl !== 'pass') say(s, DBL[a.dbl]); }
+    else if (H.phase === 'double') { ok = BL.doubleAct(m, s, a.dbl); if (ok && a.dbl !== 'pass') say(s, DBLO()[a.dbl]); }
     else if (H.phase === 'play') { const hadB = H.baloot; ok = BL.play(m, s, a.card, { declare: a.declare, ekka: a.ekka }); if (ok) G.sl = a.slam ? a.card : ''; if (ok && a.ekka) say(s, T('إكّة', 'Ekka')); if (ok && !hadB && m.H.baloot) say(s, T('بلوت!', 'Baloot!')); }
     if (ok) { G.lastAuto = auto ? s : -1; drive(); }
     return ok;
@@ -2651,7 +2657,7 @@ body:has(#bl .bl-table) section.first{transform:none!important;animation:none!im
   // what each player said in the bidding stays by their name; in play the buyer keeps «شاري …»
   function callTag(P, s) {
     const c = (P.calls || {})[s] || '', C = P.contract;
-    if (P.phase === 'bid' || P.phase === 'double') { if (!c) return P.phase === 'bid' && P.first === s && P.round === 1 ? `<span class="bl-call first">${T('أول', 'First')}</span>` : ''; if (c.startsWith('x:')) return `<span class="bl-call dbl">${esc(DBL[c.slice(2)] || '')}</span>`;
+    if (P.phase === 'bid' || P.phase === 'double') { if (!c) return P.phase === 'bid' && P.first === s && P.round === 1 ? `<span class="bl-call first">${T('أول', 'First')}</span>` : ''; if (c.startsWith('x:')) return `<span class="bl-call dbl">${esc(DBLO()[c.slice(2)] || '')}</span>`;
       if (c === 'pass' || c === 'pass2') return `<span class="bl-call pass">${c === 'pass2' ? T('ولا', 'Pass') : T('بس', 'Pass')}</span>`;
       return `<span class="bl-call buy">${esc(c.startsWith('hokm:') ? T('حكم ثاني', 'Hokm, second') : bidTxt(c))}</span>`; }
     if (C && C.seat === s && (P.phase === 'play' || P.phase === 'done')) return `<span class="bl-call buy">${T('شاري', 'Bought')} ${esc(contractTxt(C))}</span>`;
@@ -2692,7 +2698,7 @@ body:has(#bl .bl-table) section.first{transform:none!important;animation:none!im
     let ctl = '';
     if (turnMine && P.phase === 'bid') { const opts = G.mode !== 'player' ? BL.bidOptions(G.m, me) : bidOptsRemote(P, me, hand); const lab = o => o === 'pass' ? (P.round === 2 ? T('ولا', 'Pass') : T('بس', 'Pass')) : o === 'sun' && P.ask ? T('قبلك', 'Before you') : bidTxt(o); const hs = opts.filter(o => o.startsWith('hokm:')), rest = opts.filter(o => !o.startsWith('hokm:'));
       ctl = `<div class="bl-ctl">${rest.map(o => `<button type="button" class="bl-b${o === 'pass' ? ' pass' : ''}" data-bid="${o}">${lab(o)}</button>`).join('')}${hs.length ? `<button type="button" class="bl-b" data-two>${T('حكم ثاني', 'Hokm, second')}</button>` : ''}</div>${hs.length ? `<div class="bl-ctl bl-suits" hidden>${hs.map(o => `<button type="button" class="bl-b suit s${o.slice(5)}" data-bid="${o}">${SUIT[o.slice(5)]} ${SUITN[o.slice(5)]}</button>`).join('')}</div>` : ''}`; }
-    else if (turnMine && P.phase === 'double') { const opts = G.mode !== 'player' ? BL.doubleOptions(G.m, me) : dblOptsRemote(P); ctl = `<div class="bl-ctl">${opts.map(o => `<button type="button" class="bl-b${o === 'pass' ? ' pass' : ''}" data-dbl="${o}">${DBL[o]}</button>`).join('')}</div>`; }
+    else if (turnMine && P.phase === 'double') { const opts = G.mode !== 'player' ? BL.doubleOptions(G.m, me) : dblOptsRemote(P); ctl = `<div class="bl-ctl">${opts.map(o => `<button type="button" class="bl-b${o === 'pass' ? ' pass' : ''}" data-dbl="${o}">${DBLO()[o]}</button>`).join('')}</div>`; }
     const pr = me >= 0 && P.phase === 'play' && P.nt === 0 && hand ? BL.projectsIn(hand, { contract: C }) : [];
     const help = P.phase === 'play' && turnMine && (P.rules || {}).strict && G.mode !== 'player' ? BL.legal(G.m, me) : null;
     const n = hand ? hand.length : 0;
@@ -2706,7 +2712,7 @@ body:has(#bl .bl-table) section.first{transform:none!important;animation:none!im
       <button type="button" data-proj class="${pr.length ? 'has' : ''}"${pr.length && turnMine ? '' : ' disabled'}>🃏 ${B('المشاريع', 'Projects')}${pr.length ? `<i>${decl ? '✓' : ''}</i>` : ''}</button>
       ${G && G.ref ? `<button type="button" data-say>😊 ${B('تفاعل', 'React')}</button>` : ''}<button type="button" data-snd>${SND.on ? '🔊' : '🔇'}</button><button type="button" data-info>📖</button></div>` : '';
     const first = !root.querySelector('.bl-table');
-    root.innerHTML = `<div class="bl-table${me < 0 ? ' screen' : ''}"><button type="button" class="bl-exit" data-exit aria-label="${T('خروج', 'Leave')}">✕</button>${top}<div class="bl-felt"><div class="bl-room"><i class="bl-sofa"></i><i class="bl-dallah">${DALLAH}</i></div>${G && G.ref ? `<div class="bl-fans">${fansHtml()}</div>` : ''}<div class="bl-plane"><div class="bl-rug"></div>${showLast && P.last ? `<span class="bl-plus q${(P.last.win - base + 4) % 4}">+${P.lastPts || 0}</span>` : ''}${[0, 1, 2, 3].map(k => { const n = (P.wins || [])[at(k)] || 0; return n ? `<span class="bl-pile q${k}"><i></i><i></i><b>${n}</b></span>` : ''; }).join('')}<i class="bl-cup a">${CUP}</i><i class="bl-cup b">${CUP}</i>${P.phase === 'bid' ? '' : center}</div>${[1, 2, 3].map(seatBox).join('')}${me < 0 ? seatBox(0) : ''}${P.phase === 'bid' ? center : ''}${shown}</div>
+    root.innerHTML = `<div class="bl-table${me < 0 ? ' screen' : ''}"><button type="button" class="bl-exit" data-exit aria-label="${T('خروج', 'Leave')}">✕</button>${top}<div class="bl-felt"><div class="bl-room"><i class="bl-sofa"></i><i class="bl-dallah">${DALLAH}</i></div>${G && G.ref ? `<div class="bl-fans">${fansHtml()}</div>` : ''}<div class="bl-plane"><div class="bl-rug"></div>${showLast && P.last ? `<span class="bl-plus q${(P.last.win - base + 4) % 4}">+${P.lastPts || 0}</span>` : ''}${[0, 1, 2, 3].map(k => { const n = (P.wins || [])[at(k)] || 0; return n ? `<span class="bl-pile q${k}"><i></i><i></i><b>${n}</b></span>` : ''; }).join('')}<i class="bl-cup a">${CUP}</i><i class="bl-cup b">${CUP}</i>${center}</div>${[1, 2, 3].map(seatBox).join('')}${me < 0 ? seatBox(0) : ''}${shown}</div>
       ${meBox}${ctl}${handHtml}${bar}
       ${G && G.ref ? `<div class="bl-rxp" hidden>${EMO.map(e => `<button type="button" data-e="${e}">${e}</button>`).join('')}${SAY().map(e => `<button type="button" class="ph" data-e="${esc(e)}">${esc(e)}</button>`).join('')}</div>` : ''}
       <div class="bl-info" hidden>${rules(true)}</div></div>`;
@@ -2733,6 +2739,10 @@ body:has(#bl .bl-table) section.first{transform:none!important;animation:none!im
     const ex = root.querySelector('[data-exit]'); if (ex) ex.onclick = () => { if (confirm(T('تخرج من الطاولة؟ (تقدر ترجع لها من الصفحة الرئيسية)', 'Leave the table? (You can come back from the start page)'))) { stop(); home(); } };
     const sn = root.querySelector('[data-snd]'); if (sn) sn.onclick = () => { SND.on = !SND.on; sn.textContent = SND.on ? '🔊' : '🔇'; if (SND.on) SND.card(); };
     const inf = root.querySelector('[data-info]'); if (inf) inf.onclick = () => { const p = root.querySelector('.bl-info'); p.hidden = !p.hidden; };
+    const tk2 = ['bid', 'double', 'play'].includes(P.phase) && !holding ? (P.turn - base + 4) % 4 : -1, felt = root.querySelector('.bl-felt');
+    if (felt && tk2 >= 0) { const sp = document.createElement('i'); sp.className = 'bl-spot q' + (view.spot >= 0 ? view.spot : tk2); felt.appendChild(sp);
+      if (view.spot !== tk2) { if (view.spot >= 0) SND.tick(); requestAnimationFrame(() => requestAnimationFrame(() => { sp.className = 'bl-spot q' + tk2; })); } }
+    view.spot = tk2;
     if (G && G.mode === 'watch') { root.querySelector('.bl-table').insertAdjacentHTML('beforeend', advPanel(P)); bindAdv(P); }
     if (first) root.querySelector('.bl-table').scrollIntoView({ block: 'start', behavior: 'smooth' });
     if (P.phase === 'done' && P.result && !holding) handOver(P, seats, myT, me);
