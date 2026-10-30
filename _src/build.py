@@ -731,6 +731,8 @@ for target, full in (('dist', True), ('preview', False)):
             shutil.copy(P('img', f), P(target, 'img', f))
     if os.path.isdir(P('img', 'og')):
         shutil.copytree(P('img', 'og'), P(target, 'img', 'og'), dirs_exist_ok=True)
+    if os.path.isdir(P('img', 'cards')):
+        shutil.copytree(P('img', 'cards'), P(target, 'img', 'cards'), dirs_exist_ok=True)
     if os.path.isdir(P('img', 'research')):
         shutil.copytree(P('img', 'research'), P(target, 'img', 'research'), dirs_exist_ok=True)
 import sys as _sys; _sys.path.insert(0, P('tools')); import scholar_meta

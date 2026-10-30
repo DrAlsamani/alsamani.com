@@ -11,12 +11,31 @@
   const store = { get(k, d) { try { const v = localStorage.getItem('bl.' + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } }, set(k, v) { try { localStorage.setItem('bl.' + k, JSON.stringify(v)); } catch (e) {} }, del(k) { try { localStorage.removeItem('bl.' + k); } catch (e) {} } };
   const toast = (html, bad) => { let t = document.getElementById('blToast'); if (!t) { t = document.createElement('div'); t.id = 'blToast'; t.className = 'sn-toast'; t.setAttribute('role', 'status'); document.body.appendChild(t); } t.innerHTML = html; t.classList.toggle('bad', !!bad); t.classList.add('on'); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('on'), 3200); };
   const buzz = p => { try { navigator.vibrate && navigator.vibrate(p); } catch (e) {} };
+  // sound: card snaps made on the fly (no files) and the calls spoken by the device's Arabic voice
+  const SND = (() => {
+    let ac = null, on = store.get('snd', true);
+    const ctx = () => { if (!ac) { try { ac = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { return null; } } if (ac.state === 'suspended') ac.resume().catch(() => {}); return ac; };
+    const noise = (a, dur, f, q, vol, type) => { const b = a.createBuffer(1, Math.ceil(a.sampleRate * dur), a.sampleRate), d = b.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / d.length, 3); const src = a.createBufferSource(); src.buffer = b; const fl = a.createBiquadFilter(); fl.type = type || 'bandpass'; fl.frequency.value = f; fl.Q.value = q; const g = a.createGain(); g.gain.value = vol; src.connect(fl).connect(g).connect(a.destination); src.start(); };
+    const thump = (a, vol) => { const o = a.createOscillator(), g = a.createGain(), t = a.currentTime; o.frequency.setValueAtTime(140, t); o.frequency.exponentialRampToValueAtTime(45, t + .18); g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(.001, t + .25); o.connect(g).connect(a.destination); o.start(t); o.stop(t + .26); };
+    let voice = null; const pickV = () => { try { const v = speechSynthesis.getVoices(); voice = v.find(x => /^ar[-_]SA/i.test(x.lang)) || v.find(x => /^ar/i.test(x.lang)) || null; } catch (e) {} };
+    try { pickV(); speechSynthesis.onvoiceschanged = pickV; } catch (e) {}
+    document.addEventListener('pointerdown', () => { if (on) ctx(); }, { once: true });
+    return {
+      get on() { return on; }, set on(v) { on = v; store.set('snd', v); if (!v) try { speechSynthesis.cancel(); } catch (e) {} },
+      card() { const a = on && ctx(); if (a) noise(a, .07, 2600, .9, .55); },
+      slam() { const a = on && ctx(); if (!a) return; noise(a, .14, 1400, .6, 1.1); noise(a, .2, 500, .7, .9, 'lowpass'); thump(a, .9); },
+      deal() { const a = on && ctx(); if (!a) return; for (let i = 0; i < 4; i++) setTimeout(() => noise(a, .05, 3200, 1, .3), i * 70); },
+      speak(t) { if (!on || !isAr() || !window.speechSynthesis) return; t = String(t).replace(/[♠♥♦♣]/g, m => ' ' + SUITN[{ '♠': 'S', '♥': 'H', '♦': 'D', '♣': 'C' }[m]]).replace(/[^؀-ۿ\s!؟?]/g, '').trim(); if (!t) return; try { const u = new SpeechSynthesisUtterance(t); u.lang = 'ar-SA'; if (voice) u.voice = voice; u.rate = 1.05; u.pitch = 1; speechSynthesis.speak(u); } catch (e) {} }
+    };
+  })();
   const JOIN = 'alsamani.com/play/baloot';
   const SUIT = { S: '♠', H: '♥', D: '♦', C: '♣' }, SUITN = { S: 'سبيت', H: 'هاص', D: 'ديمن', C: 'شيريا' };
   const RN = { A: 'إكة', K: 'شايب', Q: 'بنت', J: 'ولد', T: 'عشرة', 9: 'تسعة', 8: 'ثمانية', 7: 'سبعة' };
   const team = s => s % 2;
   const TEAMN = k => k ? T('هم', 'Them') : T('لنا', 'Us');
-  const card = (c, cls) => { if (!c) return '<span class="bl-c back"></span>'; const r = c[0], s = c[1], red = s === 'H' || s === 'D'; return `<span class="bl-c${red ? ' r' : ''} ${cls || ''}" data-c="${c}"><b>${r === 'T' ? '10' : r === 'A' ? 'A' : r}</b><i>${SUIT[s]}</i><em>${SUIT[s]}</em></span>`; };
+  const IMG = '../../img/cards/';
+  // real playing cards (the classic designs by Adrian Kennard, public domain)
+  const card = (c, cls) => `<span class="bl-c${c ? '' : ' back'} ${cls || ''}"${c ? ` data-c="${c}"` : ''}><img src="${IMG}${c || 'back'}.svg" alt="${c ? (c[0] === 'T' ? '10' : c[0]) + SUIT[c[1]] : ''}" draggable="false"></span>`;
   const contractTxt = C => !C ? '' : C.type === 'sun' ? (C.ashkal ? T('أشكال (صن)', 'Ashkal (Sun)') : T('صن', 'Sun')) : `${T('حكم', 'Hokm')} ${SUIT[C.trump]}`;
   const BID = { pass: T('بس', 'Pass'), hokm: T('حكم', 'Hokm'), sun: T('صن', 'Sun'), ashkal: T('أشكل', 'Ashkal'), kawesh: T('كوّش', 'Kawesh') };
   const bidTxt = o => o.startsWith('hokm:') ? `${T('حكم', 'Hokm')} ${SUIT[o.slice(5)]}` : BID[o] || o;
@@ -69,7 +88,7 @@
       <div class="bl-who"><h4>⚔️ ${B('الخصمان', 'The opponents')}</h4>${seg('oStyle', STY)}${seg('oLevel', LVL)}</div>`
       : `<div class="bl-who"><h4>🤖 ${B('الجهاز حين يكمّل مقعدًا فارغًا', 'The computer, when it fills an empty seat')}</h4>${seg('style', STY)}${seg('level', LVL)}</div>`}
       <div class="bl-opt"><span>${B('القيد', 'Qaid')}</span>${seg('qaid', [['1', 'مفتوح', 'Open'], ['0', 'ممنوع', 'Off']])}</div>
-      ${bot ? '' : `<div class="bl-opt"><span>${B('وقت الدور', 'Time per turn')}</span>${seg('tt', [['0', 'بلا وقت', 'No limit'], ['30', '٣٠ ثانية', '30 s'], ['60', 'دقيقة', '1 min']])}</div>
+      ${bot ? '' : `<div class="bl-opt"><span>${B('وقت الدور', 'Time per turn')}</span>${seg('tt', [['0', 'بلا وقت', 'No limit'], ['10', '١٠ ثوانٍ', '10 s'], ['15', '١٥ ثانية', '15 s'], ['30', '٣٠ ثانية', '30 s'], ['60', 'دقيقة', '1 min']])}</div>
       <div class="bl-opt"><span>${B('الجلوس', 'Seating')}</span>${seg('seat', [['jack', 'طق الولد', 'Draw the jacks'], ['rand', 'عشوائي', 'Random'], ['hand', 'أختار بنفسي', 'I choose']])}</div>
       <div class="bl-opt"><span>${B('هذا الجهاز', 'This device')}</span>${seg('role', [['play', 'ألعب منه', 'I play on it'], ['screen', 'شاشة الطاولة فقط', 'The table screen only']])}</div>`}
       <details class="bl-more"><summary>${B('قوانين الجلسة', 'House rules')}</summary>
@@ -107,14 +126,15 @@
   function drive() {
     if (!G) return; const m = G.m, H = m.H;
     if (G.mode === 'local') store.set('run', { local: true, o: G.o, m, seats: G.seats, at: Date.now() });
+    if (H.tricks.length !== G.nt) { if (H.tricks.length > (G.nt || 0)) G.hold = now() + 1700; G.nt = H.tricks.length; }
     if (G.mode === 'host') publish();
     show();
     clearTimeout(G.botT); clearTimeout(G.tt);
     if (m.over >= 0) return;
-    if (H.phase === 'done') { G.nxT = setTimeout(() => { if (G && G.m.H.phase === 'done' && G.autoNext !== false) { BL.nextHand(G.m); drive(); } }, G.mode === 'local' ? 9000 : 12000); return; }
+    if (H.phase === 'done') { G.nxT = setTimeout(() => { if (G && G.m.H.phase === 'done' && G.autoNext !== false) { BL.nextHand(G.m); drive(); } }, (G.mode === 'local' ? 12000 : 14000) + Math.max(0, (G.hold || 0) - now())); return; }
     const s = H.turn, seat = G.seats[s];
-    if (seat && seat.bot) { G.botT = setTimeout(() => botMove(s), H.phase === 'play' ? 650 + Math.random() * 450 : 900); return; }
-    if (G.o.tt) { G.dl = now() + G.o.tt * 1000; G.tt = setTimeout(() => timeUp(s), G.o.tt * 1000 + 300); } else G.dl = 0;
+    if (seat && seat.bot) { G.botT = setTimeout(() => botMove(s), Math.max(0, (G.hold || 0) - now()) + (H.phase === 'play' ? 1100 + Math.random() * 700 : 1300 + Math.random() * 500)); return; }
+    if (G.o.tt) { const w = Math.max(0, (G.hold || 0) - now()); G.dl = now() + w + G.o.tt * 1000; G.tt = setTimeout(() => timeUp(s), w + G.o.tt * 1000 + 300); } else G.dl = 0;
   }
   function botMove(s) {
     if (!G || G.m.H.turn !== s) return;
@@ -127,7 +147,7 @@
     const m = G.m, H = m.H; let ok = false;
     if (H.phase === 'bid') { ok = BL.bid(m, s, a.bid); if (ok) say(s, a.bid === 'pass' ? (m.H.round === 2 || H.round === 2 ? T('ولا', 'Pass') : T('بس', 'Pass')) : bidTxt(a.bid)); }
     else if (H.phase === 'double') { ok = BL.doubleAct(m, s, a.dbl); if (ok && a.dbl !== 'pass') say(s, DBL[a.dbl]); }
-    else if (H.phase === 'play') { const hadB = H.baloot; ok = BL.play(m, s, a.card, { declare: a.declare, ekka: a.ekka }); if (ok && a.ekka) say(s, T('إكّة', 'Ekka')); if (ok && !hadB && m.H.baloot) say(s, T('بلوت!', 'Baloot!')); }
+    else if (H.phase === 'play') { const hadB = H.baloot; ok = BL.play(m, s, a.card, { declare: a.declare, ekka: a.ekka }); if (ok) G.sl = a.slam ? a.card : ''; if (ok && a.ekka) say(s, T('إكّة', 'Ekka')); if (ok && !hadB && m.H.baloot) say(s, T('بلوت!', 'Baloot!')); }
     if (ok) { G.lastAuto = auto ? s : -1; drive(); }
     return ok;
   }
@@ -138,7 +158,7 @@
     if (m.H.turn !== s) return false;
     if (k === 'b') return perform(s, { bid: v });
     if (k === 'd') return perform(s, { dbl: v });
-    if (k === 'p') return perform(s, { card: v, declare: !!(x & 1), ekka: !!(x & 2) });
+    if (k === 'p') return perform(s, { card: v, declare: !!(x & 1), ekka: !!(x & 2), slam: !!(x & 4) });
     return false;
   }
   // a short word over a seat ("Hokm", "Double", "Qaid!")
@@ -203,7 +223,7 @@
     on(G.ref.child('mv'), 'child_added', s => { const v = s.val() || {}, seat = G.seats.findIndex(x => x.u === s.key); if (seat >= 0) act(seat, v.k, DEC[v.c] || v.c, v.x); s.ref.remove(); });
     listenRx();
   }
-  const pubOf = () => { const P = BL.view(G.m, null); return Object.assign(P, { seats: G.seats.map(x => ({ n: x.n, bot: !!x.bot, u: x.u || '' })), dl: G.dl || 0, says: G.says || {}, auto: G.lastAuto, rules: G.m.rules, n: G.m.n, decl: undefined }); };
+  const pubOf = () => { const P = BL.view(G.m, null); return Object.assign(P, { seats: G.seats.map(x => ({ n: x.n, bot: !!x.bot, u: x.u || '' })), dl: G.dl || 0, hold: G.hold || 0, tt: G.o.tt || 0, says: G.says || {}, sl: G.sl || '', auto: G.lastAuto, rules: G.m.rules, n: G.m.n, decl: undefined }); };
   async function publish() {
     store.set('run', { pin: G.pin, o: G.o, m: G.m, seats: G.seats, names: G.names, me: G.me, at: Date.now() });
     const P = pubOf();
@@ -267,17 +287,27 @@
   const EMO = ['👏', '🔥', '😂', '😮', '😡', '💪', '😅', '🤝', '☕'];
   const SAY = () => [T('السلام عليكم', 'Hello'), T('كفو! 👏', 'Bravo! 👏'), T('ابشر بالعوض', 'Better luck next'), T('طرا 😏', 'Fluke 😏'), T('سموحة 🙏', 'Sorry 🙏'), T('بسرعة ⏱', 'Hurry ⏱'), T('حرام عليك 😤', 'Have mercy 😤'), T('صحيح خوي 😂', 'Ha, of course 😂'), T('قهر والله 😤', 'So annoying 😤'), T('الأخ مفهي 😭', 'Asleep at the table 😭'), T('شريكي ذيب 🐺', 'My partner is a wolf 🐺'), T('كبوت! 🔥', 'Kaboot! 🔥')];
   let lastRx = 0;
-  function listenRx() { if (!G.ref) return; const fly = s => { const v = s.val() || {}; if (!v.e || Date.now() - (v.t || 0) - off > 15000) return; const who = (G.P && G.P.seats || G.seats || []).find(x => x.u === s.key) || {}; float(v.e, who.n || ((G.aud || {})[s.key] || {}).n || ''); }; on(G.ref.child('rx'), 'child_added', fly); on(G.ref.child('rx'), 'child_changed', fly); on(G.ref.child('au'), 'value', s => { G.aud = s.val() || {}; const a = root.querySelector('.bl-aud'); if (a) a.innerHTML = audTxt(); }); }
+  function listenRx() { if (!G.ref) return; const fly = s => { const v = s.val() || {}; if (!v.e || Date.now() - (v.t || 0) - off > 15000) return; const who = (G.P && G.P.seats || G.seats || []).find(x => x.u === s.key) || {}; float(v.e, who.n || ((G.aud || {})[s.key] || {}).n || ''); }; on(G.ref.child('rx'), 'child_added', fly); on(G.ref.child('rx'), 'child_changed', fly); on(G.ref.child('au'), 'value', s => { G.aud = s.val() || {}; const a = root.querySelector('.bl-aud'); if (a) a.innerHTML = audTxt(); const f = root.querySelector('.bl-fans'); if (f) f.innerHTML = fansHtml(); }); }
   const audTxt = () => { const a = Object.values((G && G.aud) || {}); return a.length ? `👀 ${B('المتابعون', 'Watching')} <b>${a.length}</b>` : ''; };
+  // the audience sit on chairs around the table, behind and beside the players
+  const fansHtml = () => { const a = Object.values((G && G.aud) || {}), N = 8, slots = ['t1', 't2', 'r1', 'l1', 'r2', 'l2', 't3', 't4'];
+    return a.slice(0, N).map((x, i) => `<span class="bl-fan ${slots[i]}" title="${esc(x.n || '')}"><i>${esc((x.n || '؟').trim().charAt(0))}</i><u></u></span>`).join('') + (a.length > N ? `<span class="bl-fan more">+${a.length - N}</span>` : ''); };
   function float(e, who) { const d = document.createElement('div'), big = [...e].length <= 2; d.className = 'bl-fly' + (big ? ' emo' : ' say'); d.innerHTML = big ? `${esc(e)}${who ? `<small dir="auto">${esc(who)}</small>` : ''}` : `<b dir="auto">${esc(who)}</b> <span dir="auto">${esc(e)}</span>`; d.style.left = (15 + Math.random() * 70) + 'vw'; document.body.appendChild(d); setTimeout(() => d.remove(), 3200); }
   function sendRx(e) { if (Date.now() - lastRx < 1200 || !G || !G.ref || !uid) return; lastRx = Date.now(); G.ref.child('rx/' + uid).set({ e, t: TS() }).catch(() => {}); }
 
   /* ---------- the table ---------- */
   let sel = null, decl = true;
+  // drag a card up to play it; flick it up fast to slam it on the table (once in a while, so it stays fun)
+  const gest = { at: 0 };
+  document.addEventListener('pointerdown', e => { const el = e.target.closest && e.target.closest('#bl .bl-hand .bl-c'); gest.c = el ? el.dataset.c : null; gest.y = e.clientY; gest.t = performance.now(); });
+  document.addEventListener('pointerup', e => { if (!gest.c) return; const c = gest.c, dy = e.clientY - gest.y, dt = Math.max(1, performance.now() - gest.t); gest.c = null;
+    if (dy > -45 || !view.play) return; gest.at = now();
+    const slam = -dy / dt > .9 && now() - (gest.slam || 0) > 25000; if (slam) gest.slam = now();
+    view.play(c, slam); });
   function show() {
     if (!G || !G.m) return;
     const mine = G.mode === 'local' ? 0 : G.mine;
-    const P = Object.assign(BL.view(G.m, null), { seats: G.seats.map(x => ({ n: x.n, bot: !!x.bot })), dl: G.dl || 0, says: G.says || {}, rules: G.m.rules, n: G.m.n });
+    const P = Object.assign(BL.view(G.m, null), { seats: G.seats.map(x => ({ n: x.n, bot: !!x.bot })), dl: G.dl || 0, hold: G.hold || 0, tt: G.o.tt || 0, says: G.says || {}, sl: G.sl || '', rules: G.m.rules, n: G.m.n });
     view(P, mine >= 0 ? G.m.H.hands[mine] : null, mine, (k, v, x) => act(mine, k, v, x));
   }
   // order the hand by suit (alternating colours) and rank
@@ -286,59 +316,77 @@
     const rank = c => (tr && c[1] === tr ? ['J', '9', 'A', 'T', 'K', 'Q', '8', '7'] : ['A', 'T', 'K', 'Q', 'J', '9', '8', '7']).indexOf(c[0]);
     return h.slice().sort((a, b) => (a[1] === tr ? -1 : b[1] === tr ? 1 : 0) || so.indexOf(a[1]) - so.indexOf(b[1]) || rank(a) - rank(b));
   }
+  const KIND = () => ({ sira: T('سرا', 'Sira'), 50: T('خمسين', 'Fifty'), 100: T('مية', 'Hundred'), 400: T('أربعمية', 'Four hundred') });
   function view(P, hand, me, send) {
-    const seats = P.seats || [], base = me >= 0 ? me : 0, at = k => (base + k) % 4;     // 0 bottom, 1 right, 2 top, 3 left
-    const myT = me >= 0 ? team(me) : 0, C = P.contract, H = { contract: C, tricks: [], trick: P.trick || [] };
-    const says = P.says || {}, fresh = s => says[s] && Date.now() - says[s].at < 4000 ? says[s].t : '';
-    const turnMine = me >= 0 && P.turn === me && ['bid', 'double', 'play'].includes(P.phase);
+    const seats = P.seats || [], base = me >= 0 ? me : 0, at = k => (base + k) % 4;     // 0 bottom, 1 right, 2 top, 3 left (play goes anticlockwise)
+    const myT = me >= 0 ? team(me) : 0, C = P.contract;
+    const says = P.says || {}, fresh = s => says[s] && Date.now() - says[s].at < 3500 ? says[s].t : '';
+    const holding = P.hold && now() < P.hold;                      // a finished trick stays on the table for a moment
+    const turnMine = me >= 0 && P.turn === me && ['bid', 'double', 'play'].includes(P.phase) && !(holding && P.phase === 'play' && false);
     hand = hand ? sortHand(hand, P) : null;
     const tn = k => me >= 0 ? (k === myT ? T('لنا', 'Us') : T('لهم', 'Them')) : seats.filter((x, s) => team(s) === k).map(x => x.n).join('، ');
-    const seatBox = k => { const s = at(k), x = seats[s] || {}, cnt = (P.counts || [])[s] || 0;
-      return `<div class="bl-seat p${k}${P.turn === s && P.phase !== 'done' ? ' turn' : ''}${team(s) === myT ? ' us' : ' them'}"><b dir="auto">${esc(x.n || '')}${x.bot ? ' 🤖' : ''}${P.dealer === s ? ' <i title="الموزّع">🂠</i>' : ''}</b>
-        ${k ? `<span class="bl-backs">${'<i></i>'.repeat(Math.min(cnt, 8))}</span>` : ''}${fresh(s) ? `<span class="bl-say">${esc(fresh(s))}</span>` : ''}</div>`; };
-    const tk = P.trick || [], key = P.n + ':' + P.nt + ':' + tk.length, isNew = view.k !== key; view.k = key;
-    const trick = tk.map((x, i) => `<div class="bl-tp p${(x.s - base + 4) % 4}${i === tk.length - 1 && isNew ? ' new' : ''}">${card(x.c)}</div>`).join('');
-    const center = P.phase === 'bid' || P.phase === 'double' && false ? `<div class="bl-exp">${P.exp ? card(P.exp, 'big') : ''}<small>${P.round === 2 ? B('الدور الثاني', 'Second round') : B('الدور الأول', 'First round')}</small></div>` : `<div class="bl-trick">${trick}</div>`;
-    const dl = P.dl && P.phase !== 'done' ? Math.max(0, Math.ceil((P.dl - now()) / 1000)) : 0;
+    const dl = P.dl && P.phase !== 'done' ? Math.max(0, (P.dl - now()) / 1000) : 0, tt = P.tt || 0;
+    const seatBox = k => { const s = at(k), x = seats[s] || {}, cnt = (P.counts || [])[s] || 0, on = P.turn === s && ['bid', 'double', 'play'].includes(P.phase) && !holding;
+      const ring = on && dl && tt ? ` style="--p:${Math.round(100 * dl / tt)}%"` : '';
+      return `<div class="bl-seat p${k}${on ? ' turn' : ''}${team(s) === myT ? ' us' : ' them'}"><div class="bl-av"${ring}><span>${esc((x.n || '?').trim().charAt(0))}</span>${on && dl ? `<em>${Math.ceil(dl)}</em>` : ''}</div>
+        <b dir="auto">${esc(x.n || '')}${x.bot ? ' 🤖' : ''}</b>${P.dealer === s ? `<small class="bl-dealer">${B('الموزّع', 'Dealer')}</small>` : ''}
+        ${k && cnt ? `<span class="bl-backs">${Array.from({ length: Math.min(cnt, 8) }, (_, i) => `<i style="--r:${(i - (Math.min(cnt, 8) - 1) / 2) * 7}deg"></i>`).join('')}</span>` : ''}${fresh(s) ? `<span class="bl-say">${esc(fresh(s))}</span>` : ''}</div>`; };
+    // the trick on the table; a finished one stays, with its winner marked
+    const showLast = holding && !(P.trick || []).length && P.last, tk = showLast ? P.last.cards : (P.trick || []);
+    const key = P.n + ':' + P.nt + ':' + tk.length + (showLast ? 'h' : ''), isNew = view.k !== key; view.k = key;
+    const played = P.phase === 'play' || P.phase === 'done' ? (P.nt || 0) * 4 + (P.trick || []).length : 0, pc = P.n + ':' + played;
+    if (view.pc !== pc) { const prev = (view.pc || '').split(':'); view.pc = pc; if (+prev[0] === P.n && +prev[1] === played - 1) { const lc = (P.trick || []).length ? P.trick[P.trick.length - 1].c : P.last && P.last.cards[3].c; if (P.sl && P.sl === lc) { SND.slam(); buzz([30, 30, 60]); view.slam = lc; } else SND.card(); } }
+    if (P.n !== view.hn && P.phase === 'bid') { view.hn = P.n; SND.deal(); }
+    view.said = view.said || {}; Object.keys(says).forEach(s => { const v = says[s]; if (v && Date.now() - v.at < 3000 && view.said[s] !== v.at) { view.said[s] = v.at; SND.speak(v.t); } });
+    const trick = tk.map((x, i) => `<div class="bl-tp p${(x.s - base + 4) % 4}${i === tk.length - 1 && isNew ? (view.slam === x.c ? ' new slam' : showLast ? '' : ' new') : ''}${showLast && x.s === P.last.win ? ' win' : ''}">${card(x.c)}</div>`).join('');
+    const center = P.phase === 'bid' ? `<div class="bl-exp">${P.exp ? card(P.exp, 'big') : ''}<small>${P.round === 2 ? B('الدور الثاني', 'Second round') : B('الدور الأول', 'First round')}</small></div>` : `<div class="bl-trick">${trick}</div>`;
     const dbl = P.dbl && P.dbl.level > 1 ? ` · ${['', '', T('دبل', 'Double'), T('ثري', 'Triple'), T('فور', 'Four')][P.dbl.level]}${P.dbl.gahwa ? ' ☕' : ''}${P.dbl.locked ? ' 🔒' : ''}` : '';
-    const top = `<div class="bl-top"><div class="bl-score"><span class="${myT === 0 ? 'us' : ''}">${esc(tn(0))} <b>${P.scores[0]}</b></span><span class="${myT === 1 ? 'us' : ''}">${esc(tn(1))} <b>${P.scores[1]}</b></span></div>
-      <div class="bl-con">${C ? `<b>${contractTxt(C)}${dbl}</b><small>${B('المشتري', 'Buyer')}: ${esc((seats[C.seat] || {}).n || '')}</small>` : `<small>${B('الشراء', 'Bidding')}</small>`}${P.won ? `<small>${B('الأكلات', 'Tricks')} ${P.won[myT]}–${P.won[1 - myT]}</small>` : ''}</div>
-      ${dl ? `<div class="bl-dl">⏱ ${dl}</div>` : ''}<div class="bl-aud">${audTxt()}</div></div>`;
+    const top = `<div class="bl-top"><div class="bl-sc us"><small>${esc(tn(myT))}</small><b>${P.scores[myT]}</b></div>
+      <div class="bl-con">${C ? `<b>${contractTxt(C)}${dbl}</b><small>${esc((seats[C.seat] || {}).n || '')}${P.won ? ` · ${B('الأكلات', 'Tricks')} ${P.won[myT]}–${P.won[1 - myT]}` : ''}</small>` : `<b>${B('الشراء', 'Bidding')}</b><small>${B('إلى ١٥٢', 'to 152')}</small>`}</div>
+      <div class="bl-sc them"><small>${esc(tn(1 - myT))}</small><b>${P.scores[1 - myT]}</b></div></div>`;
     // the controls for whoever's turn it is on this device
     let ctl = '';
-    if (turnMine && P.phase === 'bid') { const opts = me >= 0 && G.mode !== 'player' ? BL.bidOptions(G.m, me) : bidOptsRemote(P, me, hand); const lab = o => o === 'pass' ? (P.round === 2 ? T('ولا', 'Pass') : T('بس', 'Pass')) : o === 'sun' && P.ask ? T('قبلك (صن)', 'Before you (Sun)') : bidTxt(o); ctl = `<div class="bl-ctl">${opts.map(o => `<button type="button" class="btn ${o === 'pass' ? 'ghost' : 'solid'}" data-bid="${o}">${lab(o)}</button>`).join('')}</div>`; }
-    else if (turnMine && P.phase === 'double') { const opts = G.mode !== 'player' ? BL.doubleOptions(G.m, me) : dblOptsRemote(P); ctl = `<div class="bl-ctl">${opts.map(o => `<button type="button" class="btn ${o === 'pass' ? 'ghost' : 'solid'}" data-dbl="${o}">${DBL[o]}</button>`).join('')}</div>`; }
-    else if (me >= 0 && P.phase === 'play') {
-      const first = P.nt === 0, pr = first && hand ? BL.projectsIn(hand, { contract: C }) : [];
-      ctl = `<div class="bl-ctl small">${turnMine ? `<span class="bl-yt">${B('دورك', 'Your turn')}</span>` : ''}${turnMine && pr.length ? `<label class="bl-decl"><input type="checkbox" id="blDecl"${decl ? ' checked' : ''}> ${B('أعلن', 'Declare')} ${pr.map(p => ({ sira: T('سرا', 'Sira'), 50: T('خمسين', 'Fifty'), 100: T('مية', 'Hundred'), 400: T('أربعمية', 'Four hundred') })[p.kind]).join(' + ')}</label>` : ''}
-        ${!(P.rules || {}).strict ? `<button type="button" class="btn ghost bl-qaid" data-qaid>⚖️ ${B('قيدها', 'Qaid')}</button>` : ''}</div>`;
-    }
+    if (turnMine && P.phase === 'bid') { const opts = G.mode !== 'player' ? BL.bidOptions(G.m, me) : bidOptsRemote(P, me, hand); const lab = o => o === 'pass' ? (P.round === 2 ? T('ولا', 'Pass') : T('بس', 'Pass')) : o === 'sun' && P.ask ? T('قبلك', 'Before you') : bidTxt(o); ctl = `<div class="bl-ctl">${opts.map(o => `<button type="button" class="bl-b${o === 'pass' ? ' pass' : ''}" data-bid="${o}">${lab(o)}</button>`).join('')}</div>`; }
+    else if (turnMine && P.phase === 'double') { const opts = G.mode !== 'player' ? BL.doubleOptions(G.m, me) : dblOptsRemote(P); ctl = `<div class="bl-ctl">${opts.map(o => `<button type="button" class="bl-b${o === 'pass' ? ' pass' : ''}" data-dbl="${o}">${DBL[o]}</button>`).join('')}</div>`; }
+    const pr = me >= 0 && P.phase === 'play' && P.nt === 0 && hand ? BL.projectsIn(hand, { contract: C }) : [];
     const help = P.phase === 'play' && turnMine && (P.rules || {}).strict && G.mode !== 'player' ? BL.legal(G.m, me) : null;
-    const handHtml = hand ? `<div class="bl-hand${turnMine && P.phase === 'play' ? ' go' : ''}">${hand.map(c => card(c, (sel === c ? 'sel' : '') + (help && !help.includes(c) ? ' no' : ''))).join('')}</div>` : '';
-    const last = P.last && P.phase === 'play' && !(P.trick || []).length ? `<div class="bl-last"><small>${B('آخر أكلة', 'Last trick')}</small>${P.last.cards.map(x => card(x.c, 'mini')).join('')}</div>` : '';
-    const shown = P.shown && P.shown.list && P.shown.list.length && P.nt <= 2 && P.phase === 'play' ? `<div class="bl-shown">${B('مشاريع', 'Projects')} ${esc(tn(P.shown.team))}: ${P.shown.list.map(p => `${({ sira: T('سرا', 'Sira'), 50: T('خمسين', 'Fifty'), 100: T('مية', 'Hundred'), 400: T('أربعمية', 'Four hundred') })[p.kind]} ${p.cards.map(c => card(c, 'mini')).join('')}`).join(' · ')}</div>` : '';
+    const n = hand ? hand.length : 0;
+    const handHtml = hand ? `<div class="bl-hand${turnMine && P.phase === 'play' ? ' go' : ''}" dir="ltr" style="--n:${n}">${hand.map((c, i) => `<div class="bl-hc" style="--r:${((i - (n - 1) / 2) * (n > 6 ? 4 : 5)).toFixed(1)}deg">${card(c, (sel === c ? 'sel' : '') + (help && !help.includes(c) ? ' no' : ''))}</div>`).join('')}</div>` : '';
+    const shown = P.shown && P.shown.list && P.shown.list.length && P.nt >= 1 && P.nt <= 2 && P.phase === 'play' ? `<div class="bl-shown">${esc(tn(P.shown.team))}: ${P.shown.list.map(p => `${KIND()[p.kind]} ${p.cards.map(c => card(c, 'mini')).join('')}`).join(' · ')}</div>` : '';
+    const meBox = me >= 0 ? `<div class="bl-mine${turnMine && !holding ? ' turn' : ''}">${turnMine && P.phase === 'play' ? `<b>${B('دورك', 'Your turn')}</b>` : ''}${turnMine && dl ? `<em>${Math.ceil(dl)}</em>` : ''}${fresh(me) ? `<span class="bl-say">${esc(fresh(me))}</span>` : ''}</div>` : '';
+    const bar = me >= 0 ? `<div class="bl-bar">${!(P.rules || {}).strict ? `<button type="button" data-qaid${P.phase !== 'play' ? ' disabled' : ''}>⚖️ ${B('قيدها', 'Qaid')}</button>` : ''}
+      <button type="button" data-proj class="${pr.length ? 'has' : ''}"${pr.length && turnMine ? '' : ' disabled'}>🃏 ${B('المشاريع', 'Projects')}${pr.length ? `<i>${decl ? '✓' : ''}</i>` : ''}</button>
+      ${G && G.ref ? `<button type="button" data-say>😊 ${B('تفاعل', 'React')}</button>` : ''}<button type="button" data-snd>${SND.on ? '🔊' : '🔇'}</button><button type="button" data-info>📖</button></div>` : '';
     const first = !root.querySelector('.bl-table');
-    root.innerHTML = `<div class="bl-table${me < 0 ? ' screen' : ''}">${top}<div class="bl-felt">${[1, 2, 3].map(seatBox).join('')}${center}${last}${shown}${me < 0 ? seatBox(0) : `<div class="bl-seat p0 me${P.turn === me ? ' turn' : ''}">${fresh(me) ? `<span class="bl-say">${esc(fresh(me))}</span>` : ''}</div>`}</div>
-      ${ctl}${handHtml}${G && G.ref ? `<div class="bl-rx"><button type="button" class="bl-tab" data-say>😊 ${B('تفاعل', 'React')}</button><div class="bl-rxp" hidden>${EMO.map(e => `<button type="button" data-e="${e}">${e}</button>`).join('')}${SAY().map(e => `<button type="button" class="ph" data-e="${esc(e)}">${esc(e)}</button>`).join('')}</div></div>` : ''}
-      ${P.phase === 'bid' && !P.contract ? '' : ''}<details class="bl-help">${rules(false).replace(/^<details[^>]*>|<\/details>$/g, '')}</details></div>`;
+    root.innerHTML = `<div class="bl-table${me < 0 ? ' screen' : ''}">${top}<div class="bl-felt">${G && G.ref ? `<div class="bl-fans">${fansHtml()}</div>` : ''}<div class="bl-plane"><div class="bl-rug"></div>${P.phase === 'bid' ? '' : center}</div>${[1, 2, 3].map(seatBox).join('')}${me < 0 ? seatBox(0) : ''}${P.phase === 'bid' ? center : ''}${shown}</div>
+      ${meBox}${ctl}${handHtml}${bar}
+      ${G && G.ref ? `<div class="bl-rxp" hidden>${EMO.map(e => `<button type="button" data-e="${e}">${e}</button>`).join('')}${SAY().map(e => `<button type="button" class="ph" data-e="${esc(e)}">${esc(e)}</button>`).join('')}</div>` : ''}
+      <div class="bl-info" hidden>${rules(true)}</div></div>`;
     // tap a card once to raise it, again to play it
-    root.querySelectorAll('.bl-hand .bl-c').forEach(el => el.onclick = () => {
-      const c = el.dataset.c; if (!(turnMine && P.phase === 'play')) { sel = sel === c ? null : c; return view(P, hand, me, send); }
-      if (sel !== c) { sel = c; return view(P, hand, me, send); }
+    const playC = (c, slam) => {
       const leadTop = !(P.trick || []).length && C.type === 'hokm' && c[1] !== C.trump && c[0] !== 'A';
-      const x = (document.getElementById('blDecl') && document.getElementById('blDecl').checked ? 1 : 0) | (leadTop ? 2 : 0);
+      const x = (pr.length && decl ? 1 : 0) | (leadTop ? 2 : 0) | (slam ? 4 : 0);
       sel = null; if (!send('p', c, x)) toast(B('لا يجوز لعب هذه الورقة الآن.', 'That card cannot be played now.'), 1); else buzz(15);
+    };
+    view.play = turnMine && P.phase === 'play' ? playC : null;
+    root.querySelectorAll('.bl-hand .bl-c').forEach(el => el.onclick = () => {
+      if (now() - (gest.at || 0) < 400) return; const c = el.dataset.c; if (!(turnMine && P.phase === 'play')) { sel = sel === c ? null : c; return view(P, hand, me, send); }
+      if (sel !== c) { sel = c; return view(P, hand, me, send); }
+      playC(c, false);
     });
     root.querySelectorAll('[data-bid]').forEach(b => b.onclick = () => send('b', b.dataset.bid));
     root.querySelectorAll('[data-dbl]').forEach(b => b.onclick = () => send('d', b.dataset.dbl));
     const q = root.querySelector('[data-qaid]'); if (q) q.onclick = () => { if (confirm(T('تنادي «قيد» على الخصم؟ إن لم تكن هناك مخالفة يُقيَّد عليك.', 'Call Qaid on the other side? If there was no breach, it counts against you.'))) send('q'); };
-    const dc = document.getElementById('blDecl'); if (dc) dc.onchange = () => { decl = dc.checked; };
+    const pj = root.querySelector('[data-proj]'); if (pj) pj.onclick = () => { decl = !decl; toast(decl ? B(`ستُعلن: ${pr.map(p => KIND()[p.kind]).join(' + ')}`, 'Will declare') : B('لن تُعلن مشاريعك', 'Projects not declared')); view(P, hand, me, send); };
     const sy = root.querySelector('[data-say]'); if (sy) { sy.onclick = () => { const p = root.querySelector('.bl-rxp'); p.hidden = !p.hidden; }; root.querySelectorAll('[data-e]').forEach(b => b.onclick = () => { sendRx(b.dataset.e); root.querySelector('.bl-rxp').hidden = true; }); }
+    const sn = root.querySelector('[data-snd]'); if (sn) sn.onclick = () => { SND.on = !SND.on; sn.textContent = SND.on ? '🔊' : '🔇'; if (SND.on) SND.card(); };
+    const inf = root.querySelector('[data-info]'); if (inf) inf.onclick = () => { const p = root.querySelector('.bl-info'); p.hidden = !p.hidden; };
     if (first) root.querySelector('.bl-table').scrollIntoView({ block: 'start', behavior: 'smooth' });
-    if (P.phase === 'done' && P.result) handOver(P, seats, myT, me);
-    else document.querySelectorAll('.bl-over').forEach(x => x.remove());
-    if (P.over >= 0) matchOver(P, myT, me);
-    clearTimeout(view.t); if (dl) view.t = setTimeout(() => view(P, hand, me, send), 1000);
+    if (P.phase === 'done' && P.result && !holding) handOver(P, seats, myT, me);
+    else if (P.phase !== 'done') document.querySelectorAll('.bl-over').forEach(x => x.remove());
+    if (P.over >= 0 && !holding) matchOver(P, myT, me);
+    clearTimeout(view.t);
+    if (dl || holding || Object.values(says).some(v => Date.now() - v.at < 3600)) view.t = setTimeout(() => view(P, hand, me, send), holding ? Math.max(120, P.hold - now() + 30) : 500);
   }
   // a joined phone does not hold the rules state: it works out its own options from what it can see
   function bidOptsRemote(P, me, hand) {
