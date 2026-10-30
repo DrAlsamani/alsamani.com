@@ -2185,7 +2185,7 @@ body:has(#bl .bl-table) section.first{transform:none!important;animation:none!im
     while (H.phase === 'play' && g++ < 40) { const s = H.turn, a = BL.botAct(c, s); if (!a || !BL.play(c, s, a.card, a)) break; }
     const r = H.result; if (!r) return 0;
     if (r.gahwa) return r.win === team(me) ? 200 : -200;
-    return r.add[team(me)] - r.add[1 - team(me)];
+    return r.add[team(me)] - r.add[1 - team(me)] + (r.raw ? (r.raw[team(me)] - r.raw[1 - team(me)]) / 12 : 0);
   }
   const rnd = seed => { let a = seed >>> 0 || 1; return () => { a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; };
 
@@ -2208,6 +2208,8 @@ body:has(#bl .bl-table) section.first{transform:none!important;animation:none!im
       if (!T.length && sty.classic) { if (rk(c) === 'A' && st(c) !== (H.contract.trump || '')) b += sty.classic; if (H.contract.type === 'hokm' && st(c) === H.contract.trump && H.contract.team === team(me)) b += sty.classic * .6; }
       if (T.length && win && team(win.s) !== team(me) && sty.classic && BL.winnerOf(H, T.concat({ s: me, c })).s === me && c === lowestWinner(H, T, L, me)) b += sty.classic * .5;
       if (sty.tricky && L.length > 2) { const could = BL.winnerOf(H, T.concat({ s: me, c: top })).s === me; if (could && c !== top && BL.value(H, c) < BL.value(H, top)) b += sty.tricky; if (!T.length && rk(c) !== 'A' && BL.value(H, c) <= 3) b += sty.tricky * .4; }
+      // giving points away: a card that does not win, on a trick the other side takes
+      if (T.length) { const after = BL.winnerOf(H, T.concat({ s: me, c })); if (team(after.s) !== team(me)) { b -= BL.value(H, c) * .12; if (ekkaOk(H, c, H.hands[me]) || rk(c) === 'A') b -= 4; } }
       return b;
     };
     let best = null, bv = -1e9;
