@@ -333,7 +333,7 @@
     return { scores: m.scores, dealer: m.dealer, over: m.over, phase: H.phase, round: H.round, ask: !!H.ask, turn: H.turn, exp: open ? H.exp : null, bid: H.bid, contract: H.contract, dbl: H.dbl,
       trick: H.trick, last: H.tricks[H.tricks.length - 1] || null, nt: H.tricks.length, counts: H.hands.map(h => h.length), hand: s == null ? null : H.hands[s].slice(),
       won: [0, 1].map(t => H.tricks.filter(x => team(x.win) === t).length), baloot: H.baloot, result: H.result,
-      shown: H.tricks.length >= 1 ? bestProjects(H) : null, decl: H.tricks.length === 0 ? H.decl.map(d => d.length ? d[0].kind : null) : null, declK: H.tricks.length <= 1 ? H.decl.map(d => d.map(p => p.kind).join(',')) : null, wins: [0, 1, 2, 3].map(x => H.tricks.filter(t => t.win === x).length), first: H.order[0], calls: (H.calls || ['', '', '', '']).slice() };
+      shown: H.tricks.length >= 1 ? bestProjects(H) : null, decl: H.tricks.length === 0 ? H.decl.map(d => d.length ? d[0].kind : null) : null, declK: H.tricks.length <= 1 ? H.decl.map(d => d.map(p => p.kind).join(',')) : null, wins: [0, 1, 2, 3].map(x => H.tricks.filter(t => t.win === x).length), lastPts: H.tricks.length ? H.tricks[H.tricks.length - 1].cards.reduce((t, x) => t + value(H, x.c), 0) + (H.tricks.length === 8 ? 10 : 0) : 0, first: H.order[0], calls: (H.calls || ['', '', '', '']).slice() };
   }
 
   const API = { _end: endHand, sawa, sawaOk, SUITS, RANKS, team, newMatch, deal, bidOptions, bid, doubleOptions, doubleAct, legal, play, projectsIn, projectOptions, hasBaloot, qaid, nextHand, botAct, view, winnerOf, value, bestProjects, pos };

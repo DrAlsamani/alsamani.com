@@ -212,3 +212,27 @@ body:has(#bl .bl-table) header.top,body:has(#bl .bl-table) .tl-crumb,body:has(#b
 .bl-top{padding-inline-start:36px}
 #bl .bl-table .bl-advp{position:absolute;left:8px;right:8px;bottom:8px;z-index:8;margin:0}
 body:has(#bl .bl-table) section.first{transform:none!important;animation:none!important}
+
+.bl-plus{position:absolute;z-index:3;color:#7CFC8A;font-weight:900;font-size:1.5rem;text-shadow:0 2px 4px #000;animation:blPop .3s}
+.bl-plus.q0{left:50%;bottom:24%;margin-left:-20px}.bl-plus.q2{left:50%;top:8%;margin-left:-20px}.bl-plus.q1{right:14%;top:38%}.bl-plus.q3{left:14%;top:38%}
+/* a phone held sideways: the table fills the screen and everything sits on it, as in the majlis apps */
+@media (orientation:landscape) and (max-height:560px){
+  #bl .bl-table{display:block;padding:0}
+  #bl .bl-table .bl-felt{position:absolute;inset:0;border-radius:0;margin:0}
+  .bl-top{position:absolute;top:6px;left:8px;z-index:12;display:flex;gap:6px;padding:0;align-items:center;background:rgba(30,20,14,.78);border-radius:12px;padding:4px 8px}
+  #bl .bl-table .bl-sc{border-width:1px;padding:0 8px;border-radius:9px}.bl-sc b{font-size:1rem!important}.bl-sc small{font-size:.625rem}.bl-con b{font-size:.8125rem}.bl-con small{font-size:.6875rem}
+  .bl-plane{left:8%;right:8%;top:16%}
+  .bl-sofa{top:4%;height:22%}
+  .bl-seat.p2{top:1%;width:clamp(70px,26vh,130px)}
+  .bl-seat.p1,.bl-seat.p3{top:16%;width:clamp(80px,34vh,170px)}
+  .bl-seat.p1{right:2%}.bl-seat.p3{left:2%}
+  .bl-trick{--cw:clamp(44px,15vh,90px);inset:0 0 22% 0}
+  .bl-hand{position:absolute;left:50%;bottom:calc(var(--cw)*-.42);transform:translateX(-50%);margin:0;padding:0;background:none;overflow:visible;--cw:min(27vh,calc((100vw - 330px) / 3.94));min-height:0;width:max-content;z-index:6}
+  .bl-mine{position:absolute;left:8px;bottom:8px;z-index:8;flex-direction:column;align-items:flex-start;margin:0}
+  .bl-ctl{position:absolute;left:50%;bottom:calc(min(27vh,(100vw - 330px) / 3.94) * 1.05);transform:translateX(-50%);z-index:12;flex-wrap:nowrap}
+  .bl-ctl.bl-suits{bottom:calc(min(27vh,(100vw - 330px) / 3.94) * 1.05 + 52px)}
+  .bl-bar{position:absolute;right:6px;bottom:6px;z-index:8;flex-direction:column;padding:0;gap:4px}
+  #bl .bl-table .bl-bar button{padding:5px 8px;font-size:.75rem}
+  .bl-pile.q0{bottom:30%}
+  .bl-exit{top:6px}
+}
