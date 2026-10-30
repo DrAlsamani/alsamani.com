@@ -21,7 +21,7 @@
     const h = [[], [], [], []]; let k = 0;
     for (const n of [3, 2]) for (let i = 1; i <= 4; i++) { const s = (m.dealer + i) % 4; for (let x = 0; x < n; x++) h[s].push(d[k++]); }
     m.H = { hands: h, exp: d[k++], rest: d.slice(k), phase: 'bid', round: 1, turn: nx(m.dealer), spoke: [], bid: null, ask: null, contract: null,
-      dbl: null, trick: [], tricks: [], lead: nx(m.dealer), decl: [[], [], [], []], order: [1, 2, 3, 4].map(i => (m.dealer + i) % 4), baloot: null, viol: [], result: null, ekka: false };
+      dbl: null, trick: [], tricks: [], lead: nx(m.dealer), decl: [[], [], [], []], order: [1, 2, 3, 4].map(i => (m.dealer + i) % 4), baloot: null, viol: [], result: null, ekka: false, calls: ['', '', '', ''] };
     m.n++;
   }
   const pos = (m, s) => (s - m.dealer + 3) % 4;          // 0 = the dealer's right … 3 = the dealer
@@ -47,6 +47,7 @@
   function bid(m, s, opt) {
     const H = m.H; if (!bidOptions(m, s).includes(opt)) return false;
     m.log.push({ t: 'bid', s, opt });
+    if (H.calls) H.calls[s] = opt === 'pass' && H.round === 2 && !H.ask ? 'pass2' : opt === 'pass' && H.ask ? H.calls[s] : opt;
     if (opt === 'kawesh') { m.dealer = nx(m.dealer); deal(m); return true; }
     if (H.ask) {                                            // asked in turn whether they want Sun instead
       if (opt === 'sun') { H.bid = { type: 'sun', seat: s }; return finishBid(m); }
@@ -98,6 +99,7 @@
   function doubleAct(m, s, opt) {
     const H = m.H; if (!doubleOptions(m, s).includes(opt)) return false;
     m.log.push({ t: 'dbl', s, opt });
+    if (H.calls && opt !== 'pass') H.calls[s] = 'x:' + opt;
     if (opt === 'pass') { H.dask.shift(); if (H.dask.length) { H.turn = H.dask[0]; return true; } startPlay(m); return true; }
     const [what, lock] = opt.split(':'), D = H.dbl;
     if (lock) D.locked = lock === 'locked';
@@ -305,7 +307,7 @@
     return { scores: m.scores, dealer: m.dealer, over: m.over, phase: H.phase, round: H.round, ask: !!H.ask, turn: H.turn, exp: open ? H.exp : null, bid: H.bid, contract: H.contract, dbl: H.dbl,
       trick: H.trick, last: H.tricks[H.tricks.length - 1] || null, nt: H.tricks.length, counts: H.hands.map(h => h.length), hand: s == null ? null : H.hands[s].slice(),
       won: [0, 1].map(t => H.tricks.filter(x => team(x.win) === t).length), baloot: H.baloot, result: H.result,
-      shown: H.tricks.length >= 1 ? bestProjects(H) : null, decl: H.tricks.length === 0 ? H.decl.map(d => d.length ? d[0].kind : null) : null };
+      shown: H.tricks.length >= 1 ? bestProjects(H) : null, decl: H.tricks.length === 0 ? H.decl.map(d => d.length ? d[0].kind : null) : null, calls: (H.calls || ['', '', '', '']).slice() };
   }
 
   const API = { _end: endHand, SUITS, RANKS, team, newMatch, deal, bidOptions, bid, doubleOptions, doubleAct, legal, play, projectsIn, projectOptions, hasBaloot, qaid, nextHand, botAct, view, winnerOf, value, bestProjects, pos };

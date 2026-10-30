@@ -739,7 +739,10 @@ import sys as _sys; _sys.path.insert(0, P('tools')); import scholar_meta
 print('scholar meta on', scholar_meta.run(P('dist')), 'book pages')
 print('library covers', scholar_meta.library_covers(P('dist')))
 from datetime import date
-urls = [SITE] + [SITE + n + '/' for n, *_ in PAGES if n not in ('index', 'm')]
+HIDDEN = {'play/baloot'}   # in development: reachable by link, not listed or indexed
+for _n in HIDDEN:
+    _f = P('dist', _n, 'index.html'); _t = open(_f).read(); open(_f, 'w').write(_t.replace('<head>', '<head><meta name="robots" content="noindex">', 1))
+urls = [SITE] + [SITE + n + '/' for n, *_ in PAGES if n not in ('index', 'm') and n not in HIDDEN]
 import glob as _gs
 for _h in sorted(_gs.glob(P('dist', 'books', '**', '*.html'), recursive=True) + _gs.glob(P('dist', 'courses', '**', '*.html'), recursive=True)):
     _r = os.path.relpath(_h, P('dist')).replace(os.sep, '/')

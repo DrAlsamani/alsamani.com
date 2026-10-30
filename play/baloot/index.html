@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en" dir="ltr">
-<head>
+<head><meta name="robots" content="noindex">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>بلوت: الطاولة على الشاشة والأوراق في الجوالات | Baloot | Dr. Omar A. Alsamani</title>
@@ -1589,13 +1589,14 @@ html[dir=ltr] .jr-dch.fd .jr-fold::before{transform:rotate(-45deg)}
 .bl-av[style*="--p"]::before{content:"";position:absolute;inset:-6px;border-radius:50%;background:conic-gradient(var(--gold) var(--p),transparent 0);-webkit-mask:radial-gradient(circle,transparent 27px,#000 28px);mask:radial-gradient(circle,transparent 27px,#000 28px)}
 .bl-av em{position:absolute;bottom:-6px;inset-inline-end:-8px;background:var(--gold);color:#3a2604;font-style:normal;font-size:.75rem;font-weight:700;border-radius:999px;padding:0 6px}
 @keyframes blPulse{50%{box-shadow:0 0 0 3px var(--gold),0 0 0 11px rgba(224,164,88,.1)}}
+.bl-call{border-radius:8px;padding:1px 9px;font-size:.8125rem;font-weight:800;text-shadow:none;white-space:nowrap;animation:blPop .25s}.bl-call.pass{background:#e9e9e9;color:#555}.bl-call.buy{background:var(--gold);color:#3a2604;box-shadow:0 0 0 2px #fff6}.bl-call.dbl{background:#c0392b;color:#fff}
 .bl-dealer{background:#e6d3a3;color:#4a2a14;border-radius:6px;padding:0 6px;font-size:.6875rem;font-weight:700;text-shadow:none}
 .bl-seat.p2{top:2px;left:50%;transform:translateX(-50%) scale(.88);transform-origin:50% 0}.bl-seat.p0{bottom:6px;left:50%;transform:translateX(-50%)}
 .bl-seat.p1{right:4px;top:44%;transform:translateY(-50%)}.bl-seat.p3{left:4px;top:44%;transform:translateY(-50%)}
 .bl-backs{display:flex;justify-content:center;height:30px}.bl-backs i{width:20px;height:28px;border-radius:3px;margin-inline-start:-13px;background:#fff url(../../img/cards/back.svg) center/cover;box-shadow:0 1px 2px rgba(0,0,0,.4);transform:rotate(var(--r));transform-origin:50% 120%}
 .bl-backs i:first-child{margin-inline-start:0}
 .bl-say{position:absolute;top:-8px;white-space:nowrap;background:#fff;color:#1d1d1f;border-radius:12px;padding:3px 12px;font-weight:700;font-size:.875rem;box-shadow:0 4px 12px rgba(0,0,0,.35);animation:blPop .25s;text-shadow:none;z-index:4}
-.bl-seat.p1 .bl-say{right:58px;top:6px}.bl-seat.p3 .bl-say{left:58px;top:6px}.bl-seat.p2 .bl-say{top:52px}
+.bl-seat.p1 .bl-say{right:58px;top:6px}.bl-seat.p3 .bl-say{left:58px;top:6px}.bl-seat.p2 .bl-say{top:8px;left:calc(100% + 6px)}
 @keyframes blPop{from{transform:scale(.6);opacity:0}}
 .bl-trick{position:absolute;inset:0;--cw:clamp(62px,17vw,100px)}
 .bl-tp{position:absolute;transform:translate(-50%,-50%)}.bl-tp .bl-c{box-shadow:0 3px 10px rgba(0,0,0,.45)}
@@ -1681,7 +1682,7 @@ html[dir=ltr] .jr-dch.fd .jr-fold::before{transform:rotate(-45deg)}
     const h = [[], [], [], []]; let k = 0;
     for (const n of [3, 2]) for (let i = 1; i <= 4; i++) { const s = (m.dealer + i) % 4; for (let x = 0; x < n; x++) h[s].push(d[k++]); }
     m.H = { hands: h, exp: d[k++], rest: d.slice(k), phase: 'bid', round: 1, turn: nx(m.dealer), spoke: [], bid: null, ask: null, contract: null,
-      dbl: null, trick: [], tricks: [], lead: nx(m.dealer), decl: [[], [], [], []], order: [1, 2, 3, 4].map(i => (m.dealer + i) % 4), baloot: null, viol: [], result: null, ekka: false };
+      dbl: null, trick: [], tricks: [], lead: nx(m.dealer), decl: [[], [], [], []], order: [1, 2, 3, 4].map(i => (m.dealer + i) % 4), baloot: null, viol: [], result: null, ekka: false, calls: ['', '', '', ''] };
     m.n++;
   }
   const pos = (m, s) => (s - m.dealer + 3) % 4;          // 0 = the dealer's right … 3 = the dealer
@@ -1707,6 +1708,7 @@ html[dir=ltr] .jr-dch.fd .jr-fold::before{transform:rotate(-45deg)}
   function bid(m, s, opt) {
     const H = m.H; if (!bidOptions(m, s).includes(opt)) return false;
     m.log.push({ t: 'bid', s, opt });
+    if (H.calls) H.calls[s] = opt === 'pass' && H.round === 2 && !H.ask ? 'pass2' : opt === 'pass' && H.ask ? H.calls[s] : opt;
     if (opt === 'kawesh') { m.dealer = nx(m.dealer); deal(m); return true; }
     if (H.ask) {                                            // asked in turn whether they want Sun instead
       if (opt === 'sun') { H.bid = { type: 'sun', seat: s }; return finishBid(m); }
@@ -1758,6 +1760,7 @@ html[dir=ltr] .jr-dch.fd .jr-fold::before{transform:rotate(-45deg)}
   function doubleAct(m, s, opt) {
     const H = m.H; if (!doubleOptions(m, s).includes(opt)) return false;
     m.log.push({ t: 'dbl', s, opt });
+    if (H.calls && opt !== 'pass') H.calls[s] = 'x:' + opt;
     if (opt === 'pass') { H.dask.shift(); if (H.dask.length) { H.turn = H.dask[0]; return true; } startPlay(m); return true; }
     const [what, lock] = opt.split(':'), D = H.dbl;
     if (lock) D.locked = lock === 'locked';
@@ -1965,7 +1968,7 @@ html[dir=ltr] .jr-dch.fd .jr-fold::before{transform:rotate(-45deg)}
     return { scores: m.scores, dealer: m.dealer, over: m.over, phase: H.phase, round: H.round, ask: !!H.ask, turn: H.turn, exp: open ? H.exp : null, bid: H.bid, contract: H.contract, dbl: H.dbl,
       trick: H.trick, last: H.tricks[H.tricks.length - 1] || null, nt: H.tricks.length, counts: H.hands.map(h => h.length), hand: s == null ? null : H.hands[s].slice(),
       won: [0, 1].map(t => H.tricks.filter(x => team(x.win) === t).length), baloot: H.baloot, result: H.result,
-      shown: H.tricks.length >= 1 ? bestProjects(H) : null, decl: H.tricks.length === 0 ? H.decl.map(d => d.length ? d[0].kind : null) : null };
+      shown: H.tricks.length >= 1 ? bestProjects(H) : null, decl: H.tricks.length === 0 ? H.decl.map(d => d.length ? d[0].kind : null) : null, calls: (H.calls || ['', '', '', '']).slice() };
   }
 
   const API = { _end: endHand, SUITS, RANKS, team, newMatch, deal, bidOptions, bid, doubleOptions, doubleAct, legal, play, projectsIn, projectOptions, hasBaloot, qaid, nextHand, botAct, view, winnerOf, value, bestProjects, pos };
@@ -2428,6 +2431,15 @@ html[dir=ltr] .jr-dch.fd .jr-fold::before{transform:rotate(-45deg)}
     return h.slice().sort((a, b) => (a[1] === tr ? -1 : b[1] === tr ? 1 : 0) || so.indexOf(a[1]) - so.indexOf(b[1]) || rank(a) - rank(b));
   }
   const KIND = () => ({ sira: T('سرا', 'Sira'), 50: T('خمسين', 'Fifty'), 100: T('مية', 'Hundred'), 400: T('أربعمية', 'Four hundred') });
+  // what each player said in the bidding stays by their name; in play the buyer keeps «شاري …»
+  function callTag(P, s) {
+    const c = (P.calls || {})[s] || '', C = P.contract;
+    if (P.phase === 'bid' || P.phase === 'double') { if (!c) return ''; if (c.startsWith('x:')) return `<span class="bl-call dbl">${esc(DBL[c.slice(2)] || '')}</span>`;
+      if (c === 'pass' || c === 'pass2') return `<span class="bl-call pass">${c === 'pass2' ? T('ولا', 'Pass') : T('بس', 'Pass')}</span>`;
+      return `<span class="bl-call buy">${esc(bidTxt(c))}</span>`; }
+    if (C && C.seat === s && (P.phase === 'play' || P.phase === 'done')) return `<span class="bl-call buy">${T('شاري', 'Bought')} ${esc(contractTxt(C))}</span>`;
+    return '';
+  }
   function view(P, hand, me, send) {
     const seats = P.seats || [], base = me >= 0 ? me : 0, at = k => (base + k) % 4;     // 0 bottom, 1 right, 2 top, 3 left (play goes anticlockwise)
     const myT = me >= 0 ? team(me) : 0, C = P.contract;
@@ -2440,7 +2452,7 @@ html[dir=ltr] .jr-dch.fd .jr-fold::before{transform:rotate(-45deg)}
     const seatBox = k => { const s = at(k), x = seats[s] || {}, cnt = (P.counts || [])[s] || 0, on = P.turn === s && ['bid', 'double', 'play'].includes(P.phase) && !holding;
       const ring = on && dl && tt ? ` style="--p:${Math.round(100 * dl / tt)}%"` : '';
       return `<div class="bl-seat p${k}${on ? ' turn' : ''}${team(s) === myT ? ' us' : ' them'}"><div class="bl-av"${ring}><span>${esc((x.n || '?').trim().charAt(0))}</span>${on && dl ? `<em>${Math.ceil(dl)}</em>` : ''}</div>
-        <b dir="auto">${esc(x.n || '')}${x.bot ? ' 🤖' : ''}</b>${P.dealer === s ? `<small class="bl-dealer">${B('الموزّع', 'Dealer')}</small>` : ''}
+        <b dir="auto">${esc(x.n || '')}${x.bot ? ' 🤖' : ''}</b>${callTag(P, s)}${P.dealer === s ? `<small class="bl-dealer">${B('الموزّع', 'Dealer')}</small>` : ''}
         ${k && cnt ? `<span class="bl-backs">${Array.from({ length: Math.min(cnt, 8) }, (_, i) => `<i style="--r:${(i - (Math.min(cnt, 8) - 1) / 2) * 7}deg"></i>`).join('')}</span>` : ''}${fresh(s) ? `<span class="bl-say">${esc(fresh(s))}</span>` : ''}</div>`; };
     // the trick on the table; a finished one stays, with its winner marked
     const showLast = holding && !(P.trick || []).length && P.last, tk = showLast ? P.last.cards : (P.trick || []);
@@ -2464,7 +2476,7 @@ html[dir=ltr] .jr-dch.fd .jr-fold::before{transform:rotate(-45deg)}
     const n = hand ? hand.length : 0;
     const handHtml = hand ? `<div class="bl-hand${turnMine && P.phase === 'play' ? ' go' : ''}" dir="ltr" style="--n:${n}">${hand.map((c, i) => `<div class="bl-hc" style="--r:${((i - (n - 1) / 2) * (n > 6 ? 4 : 5)).toFixed(1)}deg">${card(c, (sel === c ? 'sel' : '') + (help && !help.includes(c) ? ' no' : ''))}</div>`).join('')}</div>` : '';
     const shown = P.shown && P.shown.list && P.shown.list.length && P.nt >= 1 && P.nt <= 2 && P.phase === 'play' ? `<div class="bl-shown">${esc(tn(P.shown.team))}: ${P.shown.list.map(p => `${KIND()[p.kind]} ${p.cards.map(c => card(c, 'mini')).join('')}`).join(' · ')}</div>` : '';
-    const meBox = me >= 0 ? `<div class="bl-mine${turnMine && !holding ? ' turn' : ''}">${turnMine && P.phase === 'play' ? `<b>${B('دورك', 'Your turn')}</b>` : ''}${turnMine && dl ? `<em>${Math.ceil(dl)}</em>` : ''}${fresh(me) ? `<span class="bl-say">${esc(fresh(me))}</span>` : ''}</div>` : '';
+    const meBox = me >= 0 ? `<div class="bl-mine${turnMine && !holding ? ' turn' : ''}">${callTag(P, me)}${turnMine && P.phase === 'play' ? `<b>${B('دورك', 'Your turn')}</b>` : ''}${turnMine && dl ? `<em>${Math.ceil(dl)}</em>` : ''}${fresh(me) ? `<span class="bl-say">${esc(fresh(me))}</span>` : ''}</div>` : '';
     const bar = me >= 0 ? `<div class="bl-bar">${!(P.rules || {}).strict ? `<button type="button" data-qaid${P.phase !== 'play' ? ' disabled' : ''}>⚖️ ${B('قيدها', 'Qaid')}</button>` : ''}
       <button type="button" data-proj class="${pr.length ? 'has' : ''}"${pr.length && turnMine ? '' : ' disabled'}>🃏 ${B('المشاريع', 'Projects')}${pr.length ? `<i>${decl ? '✓' : ''}</i>` : ''}</button>
       ${G && G.ref ? `<button type="button" data-say>😊 ${B('تفاعل', 'React')}</button>` : ''}<button type="button" data-snd>${SND.on ? '🔊' : '🔇'}</button><button type="button" data-info>📖</button></div>` : '';

@@ -317,6 +317,15 @@
     return h.slice().sort((a, b) => (a[1] === tr ? -1 : b[1] === tr ? 1 : 0) || so.indexOf(a[1]) - so.indexOf(b[1]) || rank(a) - rank(b));
   }
   const KIND = () => ({ sira: T('سرا', 'Sira'), 50: T('خمسين', 'Fifty'), 100: T('مية', 'Hundred'), 400: T('أربعمية', 'Four hundred') });
+  // what each player said in the bidding stays by their name; in play the buyer keeps «شاري …»
+  function callTag(P, s) {
+    const c = (P.calls || {})[s] || '', C = P.contract;
+    if (P.phase === 'bid' || P.phase === 'double') { if (!c) return ''; if (c.startsWith('x:')) return `<span class="bl-call dbl">${esc(DBL[c.slice(2)] || '')}</span>`;
+      if (c === 'pass' || c === 'pass2') return `<span class="bl-call pass">${c === 'pass2' ? T('ولا', 'Pass') : T('بس', 'Pass')}</span>`;
+      return `<span class="bl-call buy">${esc(bidTxt(c))}</span>`; }
+    if (C && C.seat === s && (P.phase === 'play' || P.phase === 'done')) return `<span class="bl-call buy">${T('شاري', 'Bought')} ${esc(contractTxt(C))}</span>`;
+    return '';
+  }
   function view(P, hand, me, send) {
     const seats = P.seats || [], base = me >= 0 ? me : 0, at = k => (base + k) % 4;     // 0 bottom, 1 right, 2 top, 3 left (play goes anticlockwise)
     const myT = me >= 0 ? team(me) : 0, C = P.contract;
@@ -329,7 +338,7 @@
     const seatBox = k => { const s = at(k), x = seats[s] || {}, cnt = (P.counts || [])[s] || 0, on = P.turn === s && ['bid', 'double', 'play'].includes(P.phase) && !holding;
       const ring = on && dl && tt ? ` style="--p:${Math.round(100 * dl / tt)}%"` : '';
       return `<div class="bl-seat p${k}${on ? ' turn' : ''}${team(s) === myT ? ' us' : ' them'}"><div class="bl-av"${ring}><span>${esc((x.n || '?').trim().charAt(0))}</span>${on && dl ? `<em>${Math.ceil(dl)}</em>` : ''}</div>
-        <b dir="auto">${esc(x.n || '')}${x.bot ? ' 🤖' : ''}</b>${P.dealer === s ? `<small class="bl-dealer">${B('الموزّع', 'Dealer')}</small>` : ''}
+        <b dir="auto">${esc(x.n || '')}${x.bot ? ' 🤖' : ''}</b>${callTag(P, s)}${P.dealer === s ? `<small class="bl-dealer">${B('الموزّع', 'Dealer')}</small>` : ''}
         ${k && cnt ? `<span class="bl-backs">${Array.from({ length: Math.min(cnt, 8) }, (_, i) => `<i style="--r:${(i - (Math.min(cnt, 8) - 1) / 2) * 7}deg"></i>`).join('')}</span>` : ''}${fresh(s) ? `<span class="bl-say">${esc(fresh(s))}</span>` : ''}</div>`; };
     // the trick on the table; a finished one stays, with its winner marked
     const showLast = holding && !(P.trick || []).length && P.last, tk = showLast ? P.last.cards : (P.trick || []);
@@ -353,7 +362,7 @@
     const n = hand ? hand.length : 0;
     const handHtml = hand ? `<div class="bl-hand${turnMine && P.phase === 'play' ? ' go' : ''}" dir="ltr" style="--n:${n}">${hand.map((c, i) => `<div class="bl-hc" style="--r:${((i - (n - 1) / 2) * (n > 6 ? 4 : 5)).toFixed(1)}deg">${card(c, (sel === c ? 'sel' : '') + (help && !help.includes(c) ? ' no' : ''))}</div>`).join('')}</div>` : '';
     const shown = P.shown && P.shown.list && P.shown.list.length && P.nt >= 1 && P.nt <= 2 && P.phase === 'play' ? `<div class="bl-shown">${esc(tn(P.shown.team))}: ${P.shown.list.map(p => `${KIND()[p.kind]} ${p.cards.map(c => card(c, 'mini')).join('')}`).join(' · ')}</div>` : '';
-    const meBox = me >= 0 ? `<div class="bl-mine${turnMine && !holding ? ' turn' : ''}">${turnMine && P.phase === 'play' ? `<b>${B('دورك', 'Your turn')}</b>` : ''}${turnMine && dl ? `<em>${Math.ceil(dl)}</em>` : ''}${fresh(me) ? `<span class="bl-say">${esc(fresh(me))}</span>` : ''}</div>` : '';
+    const meBox = me >= 0 ? `<div class="bl-mine${turnMine && !holding ? ' turn' : ''}">${callTag(P, me)}${turnMine && P.phase === 'play' ? `<b>${B('دورك', 'Your turn')}</b>` : ''}${turnMine && dl ? `<em>${Math.ceil(dl)}</em>` : ''}${fresh(me) ? `<span class="bl-say">${esc(fresh(me))}</span>` : ''}</div>` : '';
     const bar = me >= 0 ? `<div class="bl-bar">${!(P.rules || {}).strict ? `<button type="button" data-qaid${P.phase !== 'play' ? ' disabled' : ''}>⚖️ ${B('قيدها', 'Qaid')}</button>` : ''}
       <button type="button" data-proj class="${pr.length ? 'has' : ''}"${pr.length && turnMine ? '' : ' disabled'}>🃏 ${B('المشاريع', 'Projects')}${pr.length ? `<i>${decl ? '✓' : ''}</i>` : ''}</button>
       ${G && G.ref ? `<button type="button" data-say>😊 ${B('تفاعل', 'React')}</button>` : ''}<button type="button" data-snd>${SND.on ? '🔊' : '🔇'}</button><button type="button" data-info>📖</button></div>` : '';
