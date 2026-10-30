@@ -38,6 +38,15 @@
   // a seated player: a simple bust in thobe and shmagh (red or white), drawn here
   const LOOKS = [['#c62828', '#c98e62', 1], ['#fff', '#b97a50', 0], ['#c62828', '#a86d45', 1], ['#fff', '#d9a27a', 1]];
   // a seated player from the chest up, in thobe and shmagh; the hands hold the cards in front
+  const profile = k => { const [sh, sk, beard] = LOOKS[k % 4], id = 'shp' + k + Math.random().toString(36).slice(2, 6);
+    return `<svg class="bl-man side" viewBox="0 0 120 112" aria-hidden="true"><defs><pattern id="${id}" width="5" height="5" patternUnits="userSpaceOnUse"><rect width="5" height="5" fill="#fbfaf7"/>${sh === '#fff' ? '<path d="M0 0h5v.6H0z" fill="#e7e3da"/>' : `<path d="M0 0h2.5v2.5H0zM2.5 2.5H5V5H2.5z" fill="${sh}"/>`}</pattern>
+      <linearGradient id="${id}t" x1="0" x2="1"><stop offset="0" stop-color="#d9d5cb"/><stop offset=".6" stop-color="#fbfaf6"/><stop offset="1" stop-color="#e2ded5"/></linearGradient></defs>
+      <path d="M14 112c2-30 18-46 46-46 24 0 40 14 44 46z" fill="url(#${id}t)"/><path d="M84 78c8 8 14 18 16 34" stroke="#d2cdc2" stroke-width="2" fill="none"/>
+      <path d="M44 30c-4 22-12 46-26 66l30-12c6-16 10-34 12-52z" fill="url(#${id})" stroke="#0002"/>
+      <path d="M58 26c12-3 21 4 23 14l4 8-4 2c1 7-3 14-11 16-9 2-15-4-16-12z" fill="${sk}"/>${beard ? `<path d="M60 56c3 7 8 10 14 9 5-1 7-5 7-9-4 2-9 3-13 1-3-1-6-2-8-1z" fill="#241811"/>` : ''}
+      <circle cx="74" cy="40" r="1.6" fill="#241811"/>
+      <path d="M40 36c0-14 10-22 22-22 10 0 18 6 20 16-8-4-18-4-26 1-2 16-6 34-12 52l-14 8c8-18 10-36 10-55z" fill="url(#${id})" stroke="#0002"/>
+      <path d="M42 26c8-8 22-10 34-3" stroke="#141414" stroke-width="3.6" fill="none"/><path d="M41.5 31c8-7 22-8.6 34-2.4" stroke="#141414" stroke-width="3.2" fill="none"/></svg>`; };
   const person = k => { const [sh, sk, beard] = LOOKS[k % 4], id = 'shm' + k + Math.random().toString(36).slice(2, 6);
     return `<svg class="bl-man" viewBox="0 0 120 112" aria-hidden="true"><defs><pattern id="${id}" width="5" height="5" patternUnits="userSpaceOnUse"><rect width="5" height="5" fill="#fbfaf7"/>${sh === '#fff' ? '<path d="M0 0h5v.6H0z" fill="#e7e3da"/>' : `<path d="M0 0h2.5v2.5H0zM2.5 2.5H5V5H2.5z" fill="${sh}"/>`}</pattern>
       <linearGradient id="${id}t" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#fbfaf6"/><stop offset="1" stop-color="#d9d5cb"/></linearGradient></defs>
@@ -46,20 +55,8 @@
       <ellipse cx="60" cy="50" rx="12.5" ry="15.5" fill="${sk}"/>${beard ? `<path d="M47.6 51c1 12 6.4 16 12.4 16s11.4-4 12.4-16c-3 4.4-6.4 6.4-12.4 6.4S50.6 55.4 47.6 51z" fill="#241811"/><path d="M54 57.5c3 1.4 9 1.4 12 0" stroke="#241811" stroke-width="2.4" fill="none"/>` : ''}
       <path d="M53.5 47.5h4M62.5 47.5h4" stroke="#241811" stroke-width="2" stroke-linecap="round"/>
       <path d="M37 32c6-6 14-8 23-8s17 2 23 8" stroke="#141414" stroke-width="3.6" fill="none"/><path d="M38.5 36.5c6-5 13.5-6.6 21.5-6.6s15.5 1.6 21.5 6.6" stroke="#141414" stroke-width="3.2" fill="none"/></svg>`; };
-  // my two hands: the left holds the fan, its thumb across the cards; the right steadies it from the side
   const CUP = `<svg viewBox="0 0 40 34" aria-hidden="true"><ellipse cx="20" cy="30" rx="15" ry="3.5" fill="#0004"/><path d="M5 6h30l-4 20c-1 4-5 6-11 6s-10-2-11-6z" fill="#fbfaf6" stroke="#d8d2c4"/><ellipse cx="20" cy="6" rx="15" ry="3.6" fill="#c9a36a" stroke="#e6dccb"/><path d="M20 12v10M17 15l3-3 3 3M16 18l4-3 4 3" stroke="#3f7d4b" stroke-width="1.4" fill="none"/></svg>`;
   const DALLAH = `<svg viewBox="0 0 60 90" aria-hidden="true"><defs><linearGradient id="blBr" x1="0" x2="1"><stop offset="0" stop-color="#8a6a2a"/><stop offset=".45" stop-color="#f1d58a"/><stop offset="1" stop-color="#9c7a34"/></linearGradient></defs><path d="M30 2l3 8h-6z" fill="url(#blBr)"/><path d="M24 10h12l2 12c6 4 9 14 9 26 0 14-6 24-17 24S13 62 13 48c0-12 3-22 9-26z" fill="url(#blBr)"/><path d="M14 40C6 34 2 22 4 12l4 2c0 9 3 18 8 22z" fill="url(#blBr)"/><path d="M46 30c8 0 12 8 10 16s-8 12-10 12" stroke="url(#blBr)" stroke-width="4" fill="none"/><path d="M14 74h32l4 10H10z" fill="url(#blBr)"/></svg>`;
-  const HANDS = `<svg class="bl-gl" viewBox="0 0 160 200" aria-hidden="true"><defs><linearGradient id="blSk" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e8b48c"/><stop offset="1" stop-color="#b8784c"/></linearGradient><linearGradient id="blSl" x1="0" x2="1"><stop offset="0" stop-color="#e4e0d6"/><stop offset=".5" stop-color="#fdfcf9"/><stop offset="1" stop-color="#d9d4c8"/></linearGradient><linearGradient id="blSk2" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#c88a5e"/><stop offset=".6" stop-color="#e9b892"/><stop offset="1" stop-color="#d49a6e"/></linearGradient></defs>
-      <path d="M46 170c-8-28 4-56 32-62 24-6 48 2 54 22 6 22-6 44-30 50-22 6-50 4-56-10z" fill="url(#blSk)"/>
-      <path d="M68 128c12-4 30-4 42 0M64 144c14-4 34-4 50 0M64 158c14-3 32-3 46 0" stroke="#7a4a2a" stroke-opacity=".25" stroke-width="2" fill="none" stroke-linecap="round"/>
-      <path d="M82 116c8-22 24-44 46-62 9-7 22-3 21 8-1 8-9 15-16 23-14 15-24 30-29 44z" fill="url(#blSk2)" stroke="#a8693f" stroke-opacity=".5"/>
-      <ellipse cx="139" cy="60" rx="7" ry="9.5" transform="rotate(48 139 60)" fill="#f3d2b8" stroke="#c99472" stroke-width="1"/>
-      <path d="M-6 200l22-62c20-12 52-12 72 6l-12 56z" fill="url(#blSl)"/><path d="M16 138c20-12 52-12 72 6" stroke="#cfc8b9" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M30 160l-8 40M52 154l-4 46" stroke="#e2ddd2" stroke-width="2"/></svg>
-    <svg class="bl-gr" viewBox="0 0 160 200" aria-hidden="true"><path d="M46 170c-8-28 4-56 32-62 24-6 48 2 54 22 6 22-6 44-30 50-22 6-50 4-56-10z" fill="url(#blSk)"/>
-      <path d="M66 132c12-4 28-4 40 0M64 148c14-4 32-4 46 0" stroke="#7a4a2a" stroke-opacity=".25" stroke-width="2" fill="none" stroke-linecap="round"/>
-      <path d="M86 118c4-20 14-40 30-56 8-7 19-3 18 7-1 7-7 13-12 20-10 13-16 26-19 38z" fill="url(#blSk2)" stroke="#a8693f" stroke-opacity=".5"/>
-      <ellipse cx="126" cy="68" rx="6" ry="8.5" transform="rotate(40 126 68)" fill="#f3d2b8" stroke="#c99472" stroke-width="1"/>
-      <path d="M-6 200l22-62c20-12 52-12 72 6l-12 56z" fill="url(#blSl)"/><path d="M16 138c20-12 52-12 72 6" stroke="#cfc8b9" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M30 160l-8 40M52 154l-4 46" stroke="#e2ddd2" stroke-width="2"/></svg>`;
   const card = (c, cls) => `<span class="bl-c${c ? '' : ' back'} ${cls || ''}"${c ? ` data-c="${c}"` : ''}><img src="${IMG}${c || 'back'}.svg" alt="${c ? (c[0] === 'T' ? '10' : c[0]) + SUIT[c[1]] : ''}" draggable="false"></span>`;
   const contractTxt = C => !C ? '' : C.type === 'sun' ? (C.ashkal ? T('أشكال (صن)', 'Ashkal (Sun)') : T('صن', 'Sun')) : `${T('حكم', 'Hokm')} ${SUIT[C.trump]}`;
   const BID = { pass: T('بس', 'Pass'), hokm: T('حكم', 'Hokm'), sun: T('صن', 'Sun'), ashkal: T('أشكل', 'Ashkal'), kawesh: T('كوّش', 'Kawesh') };
@@ -362,8 +359,8 @@
     const dl = P.dl && P.phase !== 'done' ? Math.max(0, (P.dl - now()) / 1000) : 0, tt = P.tt || 0;
     const seatBox = k => { const s = at(k), x = seats[s] || {}, cnt = (P.counts || [])[s] || 0, on = P.turn === s && ['bid', 'double', 'play'].includes(P.phase) && !holding, nb = Math.min(cnt, 8);
       const bar = on && dl && tt ? ` style="--p:${Math.round(100 * dl / tt)}%"` : '';
-      return `<div class="bl-seat p${k}${on ? ' turn' : ''}${team(s) === myT ? ' us' : ' them'}"><div class="bl-body">${person(s)}${on ? `<span class="bl-clock"${dl && tt ? ` style="--p:${Math.round(100 * dl / tt)}%"` : ''}>${dl ? Math.ceil(dl) : '⏳'}</span>` : ''}
-        ${nb ? `<span class="bl-held">${Array.from({ length: nb }, (_, i) => `<i style="--r:${((i - (nb - 1) / 2) * 9).toFixed(1)}deg"></i>`).join('')}</span><span class="bl-fist l"></span><span class="bl-fist r"></span>` : ''}</div>
+      return `<div class="bl-seat p${k}${on ? ' turn' : ''}${team(s) === myT ? ' us' : ' them'}"><div class="bl-body">${k % 2 ? profile(s) : person(s)}${on ? `<span class="bl-clock"${dl && tt ? ` style="--p:${Math.round(100 * dl / tt)}%"` : ''}>${dl ? Math.ceil(dl) : '⏳'}</span>` : ''}
+        ${nb ? `<span class="bl-held">${Array.from({ length: nb }, (_, i) => `<i style="--r:${((i - (nb - 1) / 2) * 9).toFixed(1)}deg"></i>`).join('')}<span class="bl-fist l"></span><span class="bl-fist r"></span></span>` : ''}</div>
         <div class="bl-plate"${bar}><b dir="auto">${esc(x.n || '')}${x.bot ? ' 🤖' : ''}</b>${on && dl ? `<em>${Math.ceil(dl)}</em>` : ''}</div>
         <div class="bl-tags">${callTag(P, s)}${P.dealer === s ? `<small class="bl-dealer">${B('الموزّع', 'Dealer')}</small>` : ''}</div>${fresh(s) ? `<span class="bl-say">${esc(fresh(s))}</span>` : ''}</div>`; };
     // the trick on the table; a finished one stays, with its winner marked
@@ -387,7 +384,7 @@
     const pr = me >= 0 && P.phase === 'play' && P.nt === 0 && hand ? BL.projectsIn(hand, { contract: C }) : [];
     const help = P.phase === 'play' && turnMine && (P.rules || {}).strict && G.mode !== 'player' ? BL.legal(G.m, me) : null;
     const n = hand ? hand.length : 0;
-    const handHtml = hand ? `<div class="bl-hand${turnMine && P.phase === 'play' && !holding ? ' go' : ''}" dir="ltr" style="--n:${n}">${hand.map((c, i) => `<div class="bl-hc" style="--r:${((i - (n - 1) / 2) * (n > 6 ? 4 : 5)).toFixed(1)}deg">${card(c, (sel === c ? 'sel' : '') + (help && !help.includes(c) ? ' no' : ''))}</div>`).join('')}${n ? HANDS : ''}</div>` : '';
+    const handHtml = hand ? `<div class="bl-hand${turnMine && P.phase === 'play' && !holding ? ' go' : ''}" dir="ltr" style="--n:${n}">${hand.map((c, i) => `<div class="bl-hc" style="--r:${((i - (n - 1) / 2) * (n > 6 ? 4 : 5)).toFixed(1)}deg">${card(c, (sel === c ? 'sel' : '') + (help && !help.includes(c) ? ' no' : ''))}</div>`).join('')}</div>` : '';
     const shown = P.shown && P.shown.list && P.shown.list.length && P.nt >= 1 && P.nt <= 2 && P.phase === 'play' ? `<div class="bl-shown">${esc(tn(P.shown.team))}: ${P.shown.list.map(p => `${KIND()[p.kind]} ${p.cards.map(c => card(c, 'mini')).join('')}`).join(' · ')}</div>` : '';
     const iWon = turnMine && P.phase === 'play' && !(P.trick || []).length && P.last && P.last.win === me;
     const meBox = me >= 0 ? `<div class="bl-mine${turnMine && !holding ? ' turn' : ''}">${callTag(P, me)}${turnMine && !holding ? `<span class="bl-clock me"${dl && tt ? ` style="--p:${Math.round(100 * dl / tt)}%"` : ''}>${dl ? Math.ceil(dl) : '⏳'}</span><b>${P.phase === 'play' ? (iWon ? B('أكلتها — ابدأ أنت', 'You won it — lead') : B('دورك', 'Your turn')) : B('دورك', 'Your turn')}</b>` : ''}${fresh(me) ? `<span class="bl-say">${esc(fresh(me))}</span>` : ''}</div>` : '';

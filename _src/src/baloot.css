@@ -60,8 +60,8 @@
 .bl-seat.p1 .bl-say{right:58px;top:6px}.bl-seat.p3 .bl-say{left:58px;top:6px}.bl-seat.p2 .bl-say{top:8px;left:calc(100% + 6px)}
 @keyframes blPop{from{transform:scale(.6);opacity:0}}
 .bl-trick{position:absolute;inset:0;--cw:clamp(62px,17vw,100px)}
-.bl-tp{position:absolute;left:50%;top:50%;transform:translate(calc(-50% + var(--dx,0px)),calc(-50% + var(--dy,0px)))}.bl-tp .bl-c{box-shadow:0 3px 10px rgba(0,0,0,.45)}
-.bl-tp.p0{--dy:calc(var(--cw)*.5);rotate:-3deg}.bl-tp.p2{--dy:calc(var(--cw)*-.5);rotate:4deg}.bl-tp.p1{--dx:calc(var(--cw)*.55);rotate:12deg}.bl-tp.p3{--dx:calc(var(--cw)*-.55);rotate:-10deg}
+.bl-tp{position:absolute;left:calc(50% + var(--dx,0px));top:calc(50% + var(--dy,0px));margin:calc(var(--cw)*-.7) 0 0 calc(var(--cw)*-.5);line-height:0}.bl-tp .bl-c{box-shadow:0 3px 10px rgba(0,0,0,.45)}
+.bl-tp.p0{--dy:calc(var(--cw)*.5);rotate:-3deg}.bl-tp.p2{--dy:calc(var(--cw)*-.5);rotate:183deg}.bl-tp.p1{--dx:calc(var(--cw)*.52);rotate:-87deg}.bl-tp.p3{--dx:calc(var(--cw)*-.52);rotate:93deg}
 .bl-tp.new{animation:blIn .32s ease-out}.bl-tp.win .bl-c{box-shadow:0 0 0 3px var(--gold),0 6px 16px rgba(0,0,0,.5)}
 @keyframes blIn{from{opacity:.3;scale:.7}}
 .bl-tp.slam{animation:blSlam .45s cubic-bezier(.3,1.4,.5,1)}.bl-tp.slam .bl-c{box-shadow:0 0 0 2px #fff8,0 10px 24px rgba(0,0,0,.6)}
@@ -134,7 +134,7 @@
 .bl-held i{width:15cqw;height:21cqw;margin-left:-11cqw;border-radius:1.4cqw;background:#fff url(../../img/cards/back.svg) center/cover;box-shadow:0 1px 3px rgba(0,0,0,.4);transform:rotate(var(--r));transform-origin:50% 120%}
 .bl-held i:first-child{margin-left:0}
 .bl-fist{position:absolute;bottom:0;width:15cqw;height:12cqw;border-radius:45% 45% 40% 40%;background:linear-gradient(160deg,#e3ab80,#b07246);box-shadow:0 2px 3px rgba(0,0,0,.3)}
-.bl-fist.l{left:calc(50% - 15cqw)}.bl-fist.r{left:50%}
+.bl-fist{bottom:-3cqw}.bl-fist.l{left:calc(50% - 15cqw)}.bl-fist.r{left:50%}
 .bl-plate{position:relative;overflow:hidden;background:rgba(30,22,16,.82);color:#fff;border-radius:999px;padding:2px 12px;font-size:.8125rem;display:flex;gap:6px;align-items:center;box-shadow:0 2px 6px rgba(0,0,0,.35);max-width:130px}
 .bl-plate b{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .bl-plate em{font-style:normal;font-weight:800;color:#3a2604;background:var(--gold);border-radius:999px;padding:0 6px;font-size:.75rem}
@@ -147,6 +147,7 @@
 .bl-seat.p1,.bl-seat.p3{z-index:3;top:31%;width:clamp(100px,28%,180px);transform:none}
 .bl-seat.p1{right:-6%;left:auto;align-items:flex-start}.bl-seat.p3{left:-6%;right:auto;align-items:flex-end}
 .bl-seat.p1 .bl-man{transform:scaleX(-1)}
+.bl-seat.p3 .bl-held{left:auto;right:-6cqw;bottom:22cqw;transform:rotate(-8deg) scale(.82)}.bl-seat.p1 .bl-held{left:-6cqw;bottom:22cqw;transform:rotate(8deg) scale(.82)}
 .bl-seat.p0{z-index:3;bottom:0;left:50%;width:clamp(104px,22%,170px);transform:translateX(-50%)}
 .bl-seat.p1 .bl-say{right:auto;left:0;top:-30px}.bl-seat.p3 .bl-say{left:auto;right:0;top:-30px}.bl-seat.p2 .bl-say{top:auto;bottom:6px;left:calc(100% - 6px)}
 .bl-gl,.bl-gr{position:absolute;pointer-events:none;z-index:20;filter:drop-shadow(0 3px 5px rgba(0,0,0,.3))}
@@ -163,5 +164,9 @@
 .bl-mine.turn b{font-size:1.0625rem}
 .bl-hand.go .bl-c{box-shadow:0 0 0 2px var(--gold),0 2px 8px rgba(0,0,0,.3)}
 /* my hand sits on the near edge of the table */
-.bl-hand{order:1;margin-top:calc(var(--cw)*-.8);background:linear-gradient(180deg,transparent 0 calc(var(--cw)*.8),#4d2b14 calc(var(--cw)*.8) calc(var(--cw)*.8 + 10px),#2f241c calc(var(--cw)*.8 + 10px));border-radius:0 0 22px 22px;overflow:hidden;padding-bottom:6px}
+.bl-hand{order:1;margin-top:calc(var(--cw)*-.5);background:linear-gradient(180deg,transparent 0 calc(var(--cw)*.5),#4d2b14 calc(var(--cw)*.5) calc(var(--cw)*.5 + 10px),#2f241c calc(var(--cw)*.5 + 10px));border-radius:0 0 22px 22px;overflow:hidden;padding-bottom:6px}
 .bl-mine,.bl-ctl,.bl-bar{order:2}
+
+.bl-shown{bottom:auto;top:24%;z-index:4;font-size:.75rem;padding:3px 8px}.bl-shown .bl-c.mini{--cw:22px}
+.bl-mine{margin-top:6px}
+.bl-trick{inset:0 0 12% 0}
