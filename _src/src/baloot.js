@@ -77,7 +77,7 @@
   }
   const TS = () => firebase.database.ServerValue.TIMESTAMP;
   const wipe = async pin => { try { await db.ref('khh/' + pin).remove(); } catch (e) {} try { await db.ref('kh/' + pin).remove(); } catch (e) {} };
-  const stop = () => { if (G && G.off) G.off.forEach(f => f()); if (G) { clearTimeout(G.botT); clearTimeout(G.tt); clearTimeout(G.nxT); } G = null; document.querySelectorAll('.bl-over').forEach(x => x.remove()); };
+  const stop = () => { if (G && G.off) G.off.forEach(f => f()); if (G) { clearTimeout(G.botT); clearTimeout(G.tt); clearTimeout(G.nxT); clearTimeout(G.tapT); } clearTimeout(view.t); G = null; document.querySelectorAll('.bl-over').forEach(x => x.remove()); };
   const on = (ref, ev, fn) => { ref.on(ev, fn); G.off.push(() => ref.off(ev, fn)); };
 
   /* ---------- home ---------- */
@@ -148,7 +148,9 @@
   function drive() {
     if (!G) return; const m = G.m, H = m.H;
     if (G.mode === 'local') store.set('run', { local: true, o: G.o, m, seats: G.seats, at: Date.now() });
-    if (H.tricks.length !== G.nt) { if (H.tricks.length > (G.nt || 0)) G.hold = now() + 1700; G.nt = H.tricks.length; }
+    if (H.tricks.length !== G.nt) { G.tap = -1; if (H.tricks.length > (G.nt || 0)) { const w = H.tricks[H.tricks.length - 1].win, x = G.seats[w] || {};
+        if (!x.bot && H.tricks.length - (G.nt || 0) === 1 && (G.mode === 'local' ? w === 0 : !!x.u)) { G.hold = now() + 10000; G.tap = w; G.tapT = setTimeout(() => { if (G && G.tap === w) { G.tap = -1; drive(); } }, 10050); }
+        else G.hold = now() + 1300; } G.nt = H.tricks.length; }
     if (G.mode === 'host') publish();
     show();
     clearTimeout(G.botT); clearTimeout(G.tt);
@@ -160,6 +162,7 @@
   }
   function botMove(s) {
     if (!G || G.m.H.turn !== s) return;
+    if (G.m.H.phase === 'play' && !G.m.H.trick.length && G.m.H.hands[s].length >= 2 && BL.sawaOk(G.m, s)) { act(s, 'w'); return; }
     const x = G.seats[s] || {}, a = BLBOT.act(G.m, s, { style: x.sty || G.o.style, level: x.lvl || G.o.level }) || BL.botAct(G.m, s);
     perform(s, a);
   }
@@ -167,7 +170,7 @@
   function timeUp(s) { if (!G || G.m.H.turn !== s) return; const a = BL.botAct(G.m, s, 'weak'); if (G.m.H.phase === 'bid') a.bid = 'pass'; if (G.m.H.phase === 'double') a.dbl = 'pass'; perform(s, a, true); }
   function perform(s, a, auto) {
     const m = G.m, H = m.H; let ok = false;
-    if (H.phase === 'bid') { ok = BL.bid(m, s, a.bid); if (ok) say(s, a.bid === 'pass' ? (m.H.round === 2 || H.round === 2 ? T('ولا', 'Pass') : T('بس', 'Pass')) : a.bid.startsWith('hokm:') ? T('ثاني', 'Second') : bidTxt(a.bid)); }
+    if (H.phase === 'bid') { ok = BL.bid(m, s, a.bid); if (ok) say(s, a.bid === 'pass' ? (m.H.round === 2 || H.round === 2 ? T('ولا', 'Pass') : T('بس', 'Pass')) : a.bid.startsWith('hokm:') ? T('حكم ثاني', 'Hokm, second') : bidTxt(a.bid)); }
     else if (H.phase === 'double') { ok = BL.doubleAct(m, s, a.dbl); if (ok && a.dbl !== 'pass') say(s, DBL[a.dbl]); }
     else if (H.phase === 'play') { const hadB = H.baloot; ok = BL.play(m, s, a.card, { declare: a.declare, ekka: a.ekka }); if (ok) G.sl = a.slam ? a.card : ''; if (ok && a.ekka) say(s, T('إكّة', 'Ekka')); if (ok && !hadB && m.H.baloot) say(s, T('بلوت!', 'Baloot!')); }
     if (ok) { G.lastAuto = auto ? s : -1; drive(); }
@@ -176,6 +179,8 @@
   function act(s, k, v, x) {        // a person's move, from this device or the network
     if (!G || !G.m) return false;
     const m = G.m;
+    if (k === 'k') { if (G.tap === s) { G.tap = -1; clearTimeout(G.tapT); G.hold = now(); drive(); } return true; }
+    if (k === 'w') { const ok = BL.sawa(m, s); if (ok) { say(s, T('سوا', 'All mine')); drive(); } return ok; }
     if (k === 'q') { const ok = BL.qaid(m, s); if (ok) { say(s, T('قيد!', 'Qaid!')); drive(); } return ok; }
     if (m.H.turn !== s) return false;
     if (k === 'b') return perform(s, { bid: v });
@@ -245,12 +250,13 @@
     on(G.ref.child('mv'), 'child_added', s => { const v = s.val() || {}, seat = G.seats.findIndex(x => x.u === s.key); if (seat >= 0) act(seat, v.k, DEC[v.c] || v.c, v.x); s.ref.remove(); });
     listenRx();
   }
-  const pubOf = () => { const P = BL.view(G.m, null); return Object.assign(P, { seats: G.seats.map(x => ({ n: x.n, bot: !!x.bot, u: x.u || '' })), dl: G.dl || 0, hold: G.hold || 0, tt: G.o.tt || 0, says: G.says || {}, sl: G.sl || '', auto: G.lastAuto, rules: G.m.rules, n: G.m.n, decl: undefined }); };
+  const pubOf = () => { const P = BL.view(G.m, null); return Object.assign(P, { seats: G.seats.map(x => ({ n: x.n, bot: !!x.bot, u: x.u || '' })), dl: G.dl || 0, hold: G.hold || 0, tt: G.o.tt || 0, says: G.says || {}, sl: G.sl || '', tap: G.tap >= 0 ? G.tap : -1, adv: G.adv || {}, auto: G.lastAuto, rules: G.m.rules, n: G.m.n, decl: undefined }); };
   async function publish() {
     store.set('run', { pin: G.pin, o: G.o, m: G.m, seats: G.seats, names: G.names, me: G.me, at: Date.now() });
     const P = pubOf();
     try { await G.ref.update({ g: JSON.parse(JSON.stringify(P)), st: G.m.over >= 0 ? 'end' : 'play' }); } catch (e) {}
     G.seats.forEach((x, s) => { if (x.u) db.ref('khh/' + G.pin + '/' + x.u).set(G.m.H.hands[s]).catch(() => {}); });
+    Object.keys(G.adv || {}).forEach(k => db.ref('khh/' + G.pin + '/' + G.adv[k].u).set(G.m.H.hands[+k.slice(1)]).catch(() => {}));   // each advisor sees the hand of the one they advise
   }
   async function resumeHost(run) {
     stop(); try { await fb(); } catch (e) { toast(B('تعذّر الاتصال.', 'Could not connect.'), 1); return; }
@@ -294,6 +300,7 @@
       if (!G) return;
       if (!G.P) { root.innerHTML = `<div class="bl-card bl-narrow bl-wait"><p class="bl-big">${B('أنت في الطاولة!', 'You are in!')}</p><p>${B('انتظر حتى يبدأ منشئ الطاولة.', 'Wait for the host to start.')}</p></div>`; return; }
       const seat = (G.P.seats || []).findIndex(x => x.u === uid); G.mine = seat;
+      G.send = G.send || ((k, v, x) => { G.ref.child('mv/' + uid).set({ k, c: ENC[v] || v || '', x: x || 0, t: TS() }).catch(() => toast(B('تعذّر الإرسال.', 'Could not send.'), 1)); return true; });
       view(G.P, G.hand, seat, (k, v, x) => { G.ref.child('mv/' + uid).set({ k, c: ENC[v] || v || '', x: x || 0, t: TS() }).catch(() => toast(B('تعذّر الإرسال.', 'Could not send.'), 1)); return true; });
     };
   }
@@ -307,14 +314,57 @@
 
   /* ---------- reactions: emoji and short phrases for everyone (online) ---------- */
   const EMO = ['👏', '🔥', '😂', '😮', '😡', '💪', '😅', '🤝', '☕'];
-  const SAY = () => [T('السلام عليكم', 'Hello'), T('كفو! 👏', 'Bravo! 👏'), T('ابشر بالعوض', 'Better luck next'), T('طرا 😏', 'Fluke 😏'), T('سموحة 🙏', 'Sorry 🙏'), T('بسرعة ⏱', 'Hurry ⏱'), T('حرام عليك 😤', 'Have mercy 😤'), T('صحيح خوي 😂', 'Ha, of course 😂'), T('قهر والله 😤', 'So annoying 😤'), T('الأخ مفهي 😭', 'Asleep at the table 😭'), T('شريكي ذيب 🐺', 'My partner is a wolf 🐺'), T('كبوت! 🔥', 'Kaboot! 🔥')];
+  const SAY = () => [T('السلام عليكم', 'Hello'), T('وعليكم السلام', 'Hello to you'), T('فالك طيب', 'Good luck'), T('فدا', 'No worries'), T('تسلم', 'Thanks'), T('كفو! 👏', 'Bravo! 👏'), T('ابشر بالعوض', 'Better luck next'), T('طرا 😏', 'Fluke 😏'), T('سموحة 🙏', 'Sorry 🙏'), T('بسرعة ⏱', 'Hurry ⏱'), T('حرام عليك 😤', 'Have mercy 😤'), T('صحيح خوي 😂', 'Ha, of course 😂'), T('قهر والله 😤', 'So annoying 😤'), T('الأخ مفهي 😭', 'Asleep at the table 😭'), T('شريكي ذيب 🐺', 'My partner is a wolf 🐺'), T('كبوت! 🔥', 'Kaboot! 🔥')];
   let lastRx = 0;
-  function listenRx() { if (!G.ref) return; const fly = s => { const v = s.val() || {}; if (!v.e || Date.now() - (v.t || 0) - off > 15000) return; const who = (G.P && G.P.seats || G.seats || []).find(x => x.u === s.key) || {}; float(v.e, who.n || ((G.aud || {})[s.key] || {}).n || ''); }; on(G.ref.child('rx'), 'child_added', fly); on(G.ref.child('rx'), 'child_changed', fly); on(G.ref.child('au'), 'value', s => { G.aud = s.val() || {}; const a = root.querySelector('.bl-aud'); if (a) a.innerHTML = audTxt(); const f = root.querySelector('.bl-fans'); if (f) f.innerHTML = fansHtml(); }); }
+  function listenRx() { if (!G.ref) return; const fly = s => { const v = s.val() || {}; if (!v.e || Date.now() - (v.t || 0) - off > 15000) return; if (v.e[0] === '@') return advMsg(s.key, v.e); const who = (G.P && G.P.seats || G.seats || []).find(x => x.u === s.key) || {}; float(v.e, who.n || ((G.aud || {})[s.key] || {}).n || ''); }; on(G.ref.child('rx'), 'child_added', fly); on(G.ref.child('rx'), 'child_changed', fly); on(G.ref.child('au'), 'value', s => { G.aud = s.val() || {}; const a = root.querySelector('.bl-aud'); if (a) a.innerHTML = audTxt(); const f = root.querySelector('.bl-fans'); if (f) f.innerHTML = fansHtml(); }); }
   const audTxt = () => { const a = Object.values((G && G.aud) || {}); return a.length ? `👀 ${B('المتابعون', 'Watching')} <b>${a.length}</b>` : ''; };
   // the audience sit on chairs around the table, behind and beside the players
   const fansHtml = () => { const a = Object.values((G && G.aud) || {}), N = 8, slots = ['t1', 't2', 'r1', 'l1', 'r2', 'l2', 't3', 't4'];
     return a.slice(0, N).map((x, i) => `<span class="bl-fan ${slots[i]}" title="${esc(x.n || '')}"><i>${esc((x.n || '؟').trim().charAt(0))}</i><u></u></span>`).join('') + (a.length > N ? `<span class="bl-fan more">+${a.length - N}</span>` : ''); };
   function float(e, who) { const d = document.createElement('div'), big = [...e].length <= 2; d.className = 'bl-fly' + (big ? ' emo' : ' say'); d.innerHTML = big ? `${esc(e)}${who ? `<small dir="auto">${esc(who)}</small>` : ''}` : `<b dir="auto">${esc(who)}</b> <span dir="auto">${esc(e)}</span>`; d.style.left = (15 + Math.random() * 70) + 'vw'; document.body.appendChild(d); setTimeout(() => d.remove(), 3200); }
+  /* ---------- the advisor (مستشار): someone watching advises one player, in the open ----------
+     Requests and cues travel as reactions that start with '@'. The player accepts; the host then
+     copies that player's hand to the advisor. Everyone sees each cue; for «العب هذي» only the
+     player sees which card. */
+  const CUES = () => [T('انتبه', 'Careful'), T('شكله فوت', 'Looks like a void'), T('فوت', 'Skip it'), T('شد', 'Go strong'), T('اشترِ', 'Buy'), T('خلك حذر', 'Play safe'), T('لازم تتهور', 'Take a risk'), T('دبّل', 'Double')];
+  const rxRaw = e => G && G.ref && uid && G.ref.child('rx/' + uid).set({ e, t: TS() }).catch(() => {});
+  const advOf = u => { const A = (G.P || {}).adv || G.adv || {}; const k = Object.keys(A).find(x => A[x] && A[x].u === u); return k == null ? null : { s: +k.slice(1), ...A[k] }; };   // keys are 's0'…'s3'
+  function advMsg(from, e) {
+    const [k, a] = [e.slice(1, 2), e.slice(3)], seats = (G.P && G.P.seats) || G.seats || [], aud = G.aud || {};
+    if (k === 'a') {                                  // a request to advise seat a
+      const seat = +a, mine = G.mode === 'player' ? G.mine : G.mode === 'host' && G.me ? G.seats.findIndex(x => x.u === G.me) : -1; if (mine !== seat || document.querySelector('.bl-ask')) return;
+      const d = document.createElement('div'); d.className = 'bl-ask';
+      d.innerHTML = `<p>🧠 <b>${esc((aud[from] || {}).n || T('متابع', 'A fan'))}</b> ${B('يبي يكون مستشارك (يرى أوراقك ويوجّهك علنًا).', 'wants to advise you (sees your cards, cues in the open).')}</p><div class="bl-row"><button type="button" class="btn solid" data-y>${B('قبول', 'Accept')}</button><button type="button" class="btn ghost" data-n>${B('لا', 'No')}</button></div>`;
+      document.body.appendChild(d); d.querySelector('[data-y]').onclick = () => { rxRaw('@o:' + from.slice(0, 8)); d.remove(); }; d.querySelector('[data-n]').onclick = () => { rxRaw('@x:' + from.slice(0, 8)); d.remove(); };   // the answer names the advisor by the start of their id (messages are short)
+      return;
+    }
+    if (k === 'o' || k === 'x') {                      // the player's answer
+      const advU = Object.keys(aud).concat(Object.keys(G.req || {})).find(u => u.slice(0, 8) === a) || ''; if (uid && uid.slice(0, 8) === a) toast(k === 'o' ? B('قَبِل! صرت مستشاره.', 'Accepted! You are the advisor.') : B('اعتذر عن الاستشارة.', 'The player declined.'), k !== 'o');
+      if (k === 'o' && G.mode === 'host') { const seat = G.seats.findIndex(x => x.u === from); if (seat >= 0 && advU) { G.adv = G.adv || {}; Object.keys(G.adv).forEach(x => { if (G.adv[x].u === advU) delete G.adv[x]; }); G.adv['s' + seat] = { u: advU, n: ((G.aud || {})[advU] || {}).n || T('مستشار', 'Advisor') }; publish(); show(); } }
+      return;
+    }
+    const ad = advOf(from); if (!ad) return;          // a cue, from someone who really advises
+    const pn = (seats[ad.s] || {}).n || '';
+    if (k === 'c') float(`🧠 ${CUES()[+a] || ''}`, `${ad.n} ← ${pn}`);
+    if (k === 'p') { float(`🧠 ${T('العب هذي', 'Play this one')}`, `${ad.n} ← ${pn}`); if (G.mode === 'player' && G.mine === ad.s) { G.hint = { c: a, at: Date.now() }; buzz([20, 40, 20]); if (G.P) view(G.P, G.hand, G.mine, G.send); } }
+  }
+  // the advisor's panel, under the table, for someone watching
+  function advPanel(P) {
+    const me = advOf(uid), seats = P.seats || [];
+    if (!me) { const can = seats.map((x, s) => ({ x, s })).filter(o => o.x.u && !o.x.bot);
+      return can.length ? `<div class="bl-advp"><b>🧠 ${B('كن مستشارًا لـ', 'Advise')}</b>${can.map(o => `<button type="button" class="bl-b" data-adv="${o.s}">${esc(o.x.n)}</button>`).join('')}</div>` : ''; }
+    const used = (G.advUsed && G.advUsed.n === P.n) ? G.advUsed.k : 0, left = Math.max(0, 3 - used), h = sortHand(G.advHand || [], P);
+    return `<div class="bl-advp on"><b>🧠 ${B('مستشار', 'Advising')} ${esc((seats[me.s] || {}).n || '')}</b><small>${B(`باقي لك ${left} في هذه اليد`, `${left} left this hand`)}</small>
+      <div class="bl-advh">${h.map(c => `<button type="button" data-hint="${c}"${left ? '' : ' disabled'}>${card(c, 'mini')}</button>`).join('')}</div>
+      <div class="bl-advc">${CUES().map((t, i) => `<button type="button" data-cue="${i}"${left ? '' : ' disabled'}>${t}</button>`).join('')}</div></div>`;
+  }
+  function bindAdv(P) {
+    root.querySelectorAll('[data-adv]').forEach(b => b.onclick = () => { rxRaw('@a:' + b.dataset.adv); toast(B('أُرسل الطلب، انتظر موافقته.', 'Request sent; wait for the player.')); });
+    const spend = () => { G.advUsed = G.advUsed && G.advUsed.n === P.n ? G.advUsed : { n: P.n, k: 0 }; G.advUsed.k++; };
+    root.querySelectorAll('[data-cue]').forEach(b => b.onclick = () => { spend(); rxRaw('@c:' + b.dataset.cue); view(P, null, -1, null); });
+    root.querySelectorAll('[data-hint]').forEach(b => b.onclick = () => { spend(); rxRaw('@p:' + b.dataset.hint); view(P, null, -1, null); });
+    if (advOf(uid) && !G.advOn) { G.advOn = 1; on(db.ref('khh/' + G.pin + '/' + uid), 'value', s => { G.advHand = s.val() || []; if (G.P) view(G.P, null, -1, null); }); }
+  }
   function sendRx(e) { if (Date.now() - lastRx < 1200 || !G || !G.ref || !uid) return; lastRx = Date.now(); G.ref.child('rx/' + uid).set({ e, t: TS() }).catch(() => {}); }
 
   /* ---------- the table ---------- */
@@ -329,7 +379,7 @@
   function show() {
     if (!G || !G.m) return;
     const mine = G.mode === 'local' ? 0 : G.mine;
-    const P = Object.assign(BL.view(G.m, null), { seats: G.seats.map(x => ({ n: x.n, bot: !!x.bot })), dl: G.dl || 0, hold: G.hold || 0, tt: G.o.tt || 0, says: G.says || {}, sl: G.sl || '', rules: G.m.rules, n: G.m.n });
+    const P = Object.assign(BL.view(G.m, null), { seats: G.seats.map(x => ({ n: x.n, bot: !!x.bot })), dl: G.dl || 0, hold: G.hold || 0, tt: G.o.tt || 0, says: G.says || {}, sl: G.sl || '', tap: G.tap >= 0 ? G.tap : -1, adv: G.adv || {}, rules: G.m.rules, n: G.m.n });
     view(P, mine >= 0 ? G.m.H.hands[mine] : null, mine, (k, v, x) => act(mine, k, v, x));
   }
   // order the hand by suit (alternating colours) and rank
@@ -342,12 +392,15 @@
   // what each player said in the bidding stays by their name; in play the buyer keeps «شاري …»
   function callTag(P, s) {
     const c = (P.calls || {})[s] || '', C = P.contract;
-    if (P.phase === 'bid' || P.phase === 'double') { if (!c) return ''; if (c.startsWith('x:')) return `<span class="bl-call dbl">${esc(DBL[c.slice(2)] || '')}</span>`;
+    if (P.phase === 'bid' || P.phase === 'double') { if (!c) return P.phase === 'bid' && P.first === s && P.round === 1 ? `<span class="bl-call first">${T('أول', 'First')}</span>` : ''; if (c.startsWith('x:')) return `<span class="bl-call dbl">${esc(DBL[c.slice(2)] || '')}</span>`;
       if (c === 'pass' || c === 'pass2') return `<span class="bl-call pass">${c === 'pass2' ? T('ولا', 'Pass') : T('بس', 'Pass')}</span>`;
-      return `<span class="bl-call buy">${esc(c.startsWith('hokm:') ? T('ثاني', 'Second') : bidTxt(c))}</span>`; }
+      return `<span class="bl-call buy">${esc(c.startsWith('hokm:') ? T('حكم ثاني', 'Hokm, second') : bidTxt(c))}</span>`; }
     if (C && C.seat === s && (P.phase === 'play' || P.phase === 'done')) return `<span class="bl-call buy">${T('شاري', 'Bought')} ${esc(contractTxt(C))}</span>`;
     return '';
   }
+  const projTag = (P, s) => { const k = P.phase === 'play' && P.declK && P.declK[s]; return k ? `<span class="bl-call proj">${k.split(',').map(x => KIND()[x]).join(' + ')}</span>` : ''; };
+  // in the second trick the winning side's projects are shown by each player who has them
+  const projFan = (P, s) => { if (!(P.phase === 'play' && P.nt === 1 && P.shown && P.shown.list)) return ''; const l = P.shown.list.filter(p => p.s === s); return l.length ? `<div class="bl-pfan">${l.map(p => p.cards.map(c => card(c, 'mini')).join('')).join('<i></i>')}</div>` : ''; };
   function view(P, hand, me, send) {
     const seats = P.seats || [], base = me >= 0 ? me : 0, at = k => (base + k) % 4;     // 0 bottom, 1 right, 2 top, 3 left (play goes anticlockwise)
     const myT = me >= 0 ? team(me) : 0, C = P.contract;
@@ -362,7 +415,7 @@
       return `<div class="bl-seat p${k}${on ? ' turn' : ''}${team(s) === myT ? ' us' : ' them'}"><div class="bl-body">${k % 2 ? profile(s) : person(s)}${on ? `<span class="bl-clock"${dl && tt ? ` style="--p:${Math.round(100 * dl / tt)}%"` : ''}>${dl ? Math.ceil(dl) : '⏳'}</span>` : ''}
         ${nb ? `<span class="bl-held">${Array.from({ length: nb }, (_, i) => `<i style="--r:${((i - (nb - 1) / 2) * 9).toFixed(1)}deg"></i>`).join('')}<span class="bl-fist l"></span><span class="bl-fist r"></span></span>` : ''}</div>
         <div class="bl-plate"${bar}><b dir="auto">${esc(x.n || '')}${x.bot ? ' 🤖' : ''}</b>${on && dl ? `<em>${Math.ceil(dl)}</em>` : ''}</div>
-        <div class="bl-tags">${callTag(P, s)}${P.dealer === s ? `<small class="bl-dealer">${B('الموزّع', 'Dealer')}</small>` : ''}</div>${fresh(s) ? `<span class="bl-say">${esc(fresh(s))}</span>` : ''}</div>`; };
+        <div class="bl-tags">${callTag(P, s)}${projTag(P, s)}${P.adv && P.adv['s' + s] ? `<span class="bl-call adv">🧠 ${esc(P.adv['s' + s].n)}</span>` : ''}${P.dealer === s ? `<small class="bl-dealer">${B('الموزّع', 'Dealer')}</small>` : ''}</div>${projFan(P, s)}${fresh(s) ? `<span class="bl-say">${esc(fresh(s))}</span>` : ''}</div>`; };
     // the trick on the table; a finished one stays, with its winner marked
     const showLast = holding && !(P.trick || []).length && P.last, tk = showLast ? P.last.cards : (P.trick || []);
     const key = P.n + ':' + P.nt + ':' + tk.length + (showLast ? 'h' : ''), isNew = view.k !== key; view.k = key;
@@ -379,20 +432,22 @@
     // the controls for whoever's turn it is on this device
     let ctl = '';
     if (turnMine && P.phase === 'bid') { const opts = G.mode !== 'player' ? BL.bidOptions(G.m, me) : bidOptsRemote(P, me, hand); const lab = o => o === 'pass' ? (P.round === 2 ? T('ولا', 'Pass') : T('بس', 'Pass')) : o === 'sun' && P.ask ? T('قبلك', 'Before you') : bidTxt(o); const hs = opts.filter(o => o.startsWith('hokm:')), rest = opts.filter(o => !o.startsWith('hokm:'));
-      ctl = `<div class="bl-ctl">${rest.map(o => `<button type="button" class="bl-b${o === 'pass' ? ' pass' : ''}" data-bid="${o}">${lab(o)}</button>`).join('')}${hs.length ? `<button type="button" class="bl-b" data-two>${T('ثاني', 'Second')}</button>` : ''}</div>${hs.length ? `<div class="bl-ctl bl-suits" hidden>${hs.map(o => `<button type="button" class="bl-b suit s${o.slice(5)}" data-bid="${o}">${SUIT[o.slice(5)]} ${SUITN[o.slice(5)]}</button>`).join('')}</div>` : ''}`; }
+      ctl = `<div class="bl-ctl">${rest.map(o => `<button type="button" class="bl-b${o === 'pass' ? ' pass' : ''}" data-bid="${o}">${lab(o)}</button>`).join('')}${hs.length ? `<button type="button" class="bl-b" data-two>${T('حكم ثاني', 'Hokm, second')}</button>` : ''}</div>${hs.length ? `<div class="bl-ctl bl-suits" hidden>${hs.map(o => `<button type="button" class="bl-b suit s${o.slice(5)}" data-bid="${o}">${SUIT[o.slice(5)]} ${SUITN[o.slice(5)]}</button>`).join('')}</div>` : ''}`; }
     else if (turnMine && P.phase === 'double') { const opts = G.mode !== 'player' ? BL.doubleOptions(G.m, me) : dblOptsRemote(P); ctl = `<div class="bl-ctl">${opts.map(o => `<button type="button" class="bl-b${o === 'pass' ? ' pass' : ''}" data-dbl="${o}">${DBL[o]}</button>`).join('')}</div>`; }
     const pr = me >= 0 && P.phase === 'play' && P.nt === 0 && hand ? BL.projectsIn(hand, { contract: C }) : [];
     const help = P.phase === 'play' && turnMine && (P.rules || {}).strict && G.mode !== 'player' ? BL.legal(G.m, me) : null;
     const n = hand ? hand.length : 0;
-    const handHtml = hand ? `<div class="bl-hand${turnMine && P.phase === 'play' && !holding ? ' go' : ''}" dir="ltr" style="--n:${n}">${hand.map((c, i) => `<div class="bl-hc" style="--r:${((i - (n - 1) / 2) * (n > 6 ? 4 : 5)).toFixed(1)}deg">${card(c, (sel === c ? 'sel' : '') + (help && !help.includes(c) ? ' no' : ''))}</div>`).join('')}</div>` : '';
-    const shown = P.shown && P.shown.list && P.shown.list.length && P.nt >= 1 && P.nt <= 2 && P.phase === 'play' ? `<div class="bl-shown">${esc(tn(P.shown.team))}: ${P.shown.list.map(p => `${KIND()[p.kind]} ${p.cards.map(c => card(c, 'mini')).join('')}`).join(' · ')}</div>` : '';
+    const handHtml = hand ? `<div class="bl-hand${turnMine && P.phase === 'play' && !holding ? ' go' : ''}" dir="ltr" style="--n:${n}">${hand.map((c, i) => `<div class="bl-hc" style="--r:${((i - (n - 1) / 2) * 1.6).toFixed(1)}deg;--y:${(((i - (n - 1) / 2) ** 2) * 1.3).toFixed(1)}px">${card(c, (sel === c ? 'sel' : '') + (help && !help.includes(c) ? ' no' : '') + (G && G.hint && G.hint.c === c && Date.now() - G.hint.at < 15000 ? ' hint' : ''))}</div>`).join('')}</div>` : '';
+    const shown = false ? `<div class="bl-shown">${esc(tn(P.shown.team))}: ${P.shown.list.map(p => `${KIND()[p.kind]} ${p.cards.map(c => card(c, 'mini')).join('')}`).join(' · ')}</div>` : '';
     const iWon = turnMine && P.phase === 'play' && !(P.trick || []).length && P.last && P.last.win === me;
-    const meBox = me >= 0 ? `<div class="bl-mine${turnMine && !holding ? ' turn' : ''}">${callTag(P, me)}${turnMine && !holding ? `<span class="bl-clock me"${dl && tt ? ` style="--p:${Math.round(100 * dl / tt)}%"` : ''}>${dl ? Math.ceil(dl) : '⏳'}</span><b>${P.phase === 'play' ? (iWon ? B('أكلتها — ابدأ أنت', 'You won it — lead') : B('دورك', 'Your turn')) : B('دورك', 'Your turn')}</b>` : ''}${fresh(me) ? `<span class="bl-say">${esc(fresh(me))}</span>` : ''}</div>` : '';
+    const tapMe = holding && P.tap === me && me >= 0;
+    const meBox = me >= 0 ? `<div class="bl-mine${turnMine && !holding ? ' turn' : ''}">${tapMe ? `<button type="button" class="bl-tap" data-take><em>${Math.ceil((P.hold - now()) / 1000)}</em> ${B('اضغط في أي مكان للأكلة', 'Tap anywhere to take the trick')}</button>` : ''}${callTag(P, me)}${projTag(P, me)}${projFan(P, me)}${turnMine && !holding ? `<span class="bl-clock me"${dl && tt ? ` style="--p:${Math.round(100 * dl / tt)}%"` : ''}>${dl ? Math.ceil(dl) : '⏳'}</span><b>${P.phase === 'play' ? (iWon ? B('أكلتها — ابدأ أنت', 'You won it — lead') : B('دورك', 'Your turn')) : B('دورك', 'Your turn')}</b>` : ''}${fresh(me) ? `<span class="bl-say">${esc(fresh(me))}</span>` : ''}</div>` : '';
     const bar = me >= 0 ? `<div class="bl-bar">${!(P.rules || {}).strict ? `<button type="button" data-qaid${P.phase !== 'play' ? ' disabled' : ''}>⚖️ ${B('قيدها', 'Qaid')}</button>` : ''}
+      <button type="button" data-sawa${turnMine && !holding && P.phase === 'play' && !(P.trick || []).length && (hand || []).length > 1 ? '' : ' disabled'}>🙌 ${B('سوا', 'Claim')}</button>
       <button type="button" data-proj class="${pr.length ? 'has' : ''}"${pr.length && turnMine ? '' : ' disabled'}>🃏 ${B('المشاريع', 'Projects')}${pr.length ? `<i>${decl ? '✓' : ''}</i>` : ''}</button>
       ${G && G.ref ? `<button type="button" data-say>😊 ${B('تفاعل', 'React')}</button>` : ''}<button type="button" data-snd>${SND.on ? '🔊' : '🔇'}</button><button type="button" data-info>📖</button></div>` : '';
     const first = !root.querySelector('.bl-table');
-    root.innerHTML = `<div class="bl-table${me < 0 ? ' screen' : ''}">${top}<div class="bl-felt"><div class="bl-room"><i class="bl-sofa"></i><i class="bl-dallah">${DALLAH}</i></div>${G && G.ref ? `<div class="bl-fans">${fansHtml()}</div>` : ''}<div class="bl-plane"><div class="bl-rug"></div><i class="bl-cup a">${CUP}</i><i class="bl-cup b">${CUP}</i>${P.phase === 'bid' ? '' : center}</div>${[1, 2, 3].map(seatBox).join('')}${me < 0 ? seatBox(0) : ''}${P.phase === 'bid' ? center : ''}${shown}</div>
+    root.innerHTML = `<div class="bl-table${me < 0 ? ' screen' : ''}"><button type="button" class="bl-exit" data-exit aria-label="${T('خروج', 'Leave')}">✕</button>${top}<div class="bl-felt"><div class="bl-room"><i class="bl-sofa"></i><i class="bl-dallah">${DALLAH}</i></div>${G && G.ref ? `<div class="bl-fans">${fansHtml()}</div>` : ''}<div class="bl-plane"><div class="bl-rug"></div>${[0, 1, 2, 3].map(k => { const n = (P.wins || [])[at(k)] || 0; return n ? `<span class="bl-pile q${k}"><i></i><i></i><b>${n}</b></span>` : ''; }).join('')}<i class="bl-cup a">${CUP}</i><i class="bl-cup b">${CUP}</i>${P.phase === 'bid' ? '' : center}</div>${[1, 2, 3].map(seatBox).join('')}${me < 0 ? seatBox(0) : ''}${P.phase === 'bid' ? center : ''}${shown}</div>
       ${meBox}${ctl}${handHtml}${bar}
       ${G && G.ref ? `<div class="bl-rxp" hidden>${EMO.map(e => `<button type="button" data-e="${e}">${e}</button>`).join('')}${SAY().map(e => `<button type="button" class="ph" data-e="${esc(e)}">${esc(e)}</button>`).join('')}</div>` : ''}
       <div class="bl-info" hidden>${rules(true)}</div></div>`;
@@ -414,14 +469,18 @@
     const q = root.querySelector('[data-qaid]'); if (q) q.onclick = () => { if (confirm(T('تنادي «قيد» على الخصم؟ إن لم تكن هناك مخالفة يُقيَّد عليك.', 'Call Qaid on the other side? If there was no breach, it counts against you.'))) send('q'); };
     const pj = root.querySelector('[data-proj]'); if (pj) pj.onclick = () => { decl = !decl; toast(decl ? B(`ستُعلن: ${pr.map(p => KIND()[p.kind]).join(' + ')}`, 'Will declare') : B('لن تُعلن مشاريعك', 'Projects not declared')); view(P, hand, me, send); };
     const sy = root.querySelector('[data-say]'); if (sy) { sy.onclick = () => { const p = root.querySelector('.bl-rxp'); p.hidden = !p.hidden; }; root.querySelectorAll('[data-e]').forEach(b => b.onclick = () => { sendRx(b.dataset.e); root.querySelector('.bl-rxp').hidden = true; }); }
+    const sw = root.querySelector('[data-sawa]'); if (sw) sw.onclick = () => { if (confirm(T('«سوا»: تأخذ كل الأكلات الباقية؟ إن أمكن للخصم أن يأكل منها شيئًا تُحسب عليك.', 'Claim all the remaining tricks? If the other side could take any, it counts against you.'))) send('w'); };
+    if (tapMe) { const take = () => send('k'); root.querySelector('.bl-felt').onclick = take; root.querySelector('[data-take]').onclick = take; }
+    const ex = root.querySelector('[data-exit]'); if (ex) ex.onclick = () => { if (confirm(T('تخرج من الطاولة؟ (تقدر ترجع لها من الصفحة الرئيسية)', 'Leave the table? (You can come back from the start page)'))) { stop(); home(); } };
     const sn = root.querySelector('[data-snd]'); if (sn) sn.onclick = () => { SND.on = !SND.on; sn.textContent = SND.on ? '🔊' : '🔇'; if (SND.on) SND.card(); };
     const inf = root.querySelector('[data-info]'); if (inf) inf.onclick = () => { const p = root.querySelector('.bl-info'); p.hidden = !p.hidden; };
+    if (G && G.mode === 'watch') { root.querySelector('.bl-table').insertAdjacentHTML('beforeend', advPanel(P)); bindAdv(P); }
     if (first) root.querySelector('.bl-table').scrollIntoView({ block: 'start', behavior: 'smooth' });
     if (P.phase === 'done' && P.result && !holding) handOver(P, seats, myT, me);
     else if (P.phase !== 'done') document.querySelectorAll('.bl-over').forEach(x => x.remove());
     if (P.over >= 0 && !holding) matchOver(P, myT, me);
     clearTimeout(view.t);
-    if (dl || holding || Object.values(says).some(v => Date.now() - v.at < 3600)) view.t = setTimeout(() => view(P, hand, me, send), holding ? Math.max(120, P.hold - now() + 30) : 500);
+    if (dl || holding || Object.values(says).some(v => Date.now() - v.at < 3600)) view.t = setTimeout(() => view(P, hand, me, send), holding ? Math.min(500, Math.max(120, P.hold - now() + 30)) : 500);
   }
   // a joined phone does not hold the rules state: it works out its own options from what it can see
   function bidOptsRemote(P, me, hand) {
@@ -438,16 +497,19 @@
     document.querySelectorAll('.bl-over').forEach(x => x.remove());
     const r = P.result, tn = k => me >= 0 ? (k === myT ? T('لنا', 'Us') : T('لهم', 'Them')) : seats.filter((x, s) => team(s) === k).map(x => x.n).join('، ');
     const d = document.createElement('div'); d.className = 'bl-over'; d.dataset.n = P.n;
-    const rows = r.qaid ? `<p class="bl-big">⚖️ ${r.ok ? B('قيد صحيح', 'A right call') : B('قيد خاطئ', 'A wrong call')}</p><p>${r.ok ? B(`خالف ${esc((seats[r.breach.s] || {}).n)} بورقة ${card(r.breach.c, 'mini')} في الأكلة ${r.breach.trick + 1}.`, 'A breach was found.') : B('لم تكن هناك مخالفة من الخصم، فقُيّد على من نادى.', 'There was no breach, so it counts against the caller.')}</p>`
+    const rows = r.qaid && r.sawa ? `<p class="bl-big">🙌 ${B('سوا خاطئ', 'A wrong claim')}</p><p>${B(`ادّعى ${esc((seats[r.by] || {}).n)} أن الأكلات الباقية كلها لهم، وكان للخصم ما يأكل به، فحُسبت عليهم.`, 'The other side could still take a trick, so it counts against the claimers.')}</p>`
+      : r.qaid ? `<p class="bl-big">⚖️ ${r.ok ? B('قيد صحيح', 'A right call') : B('قيد خاطئ', 'A wrong call')}</p><p>${r.ok ? B(`خالف ${esc((seats[r.breach.s] || {}).n)} بورقة ${card(r.breach.c, 'mini')} في الأكلة ${r.breach.trick + 1}.`, 'A breach was found.') : B('لم تكن هناك مخالفة من الخصم، فقُيّد على من نادى.', 'There was no breach, so it counts against the caller.')}</p>`
       : `<table class="bl-res"><tr><th></th><th>${esc(tn(0))}</th><th>${esc(tn(1))}</th></tr>
-        <tr><td>${B('الأبناط', 'Card points')}</td><td>${r.raw[0]}</td><td>${r.raw[1]}</td></tr>
-        <tr><td>${B('الأكلات', 'Tricks')}</td><td>${r.tricks[0]}</td><td>${r.tricks[1]}</td></tr>
+        <tr><td>${B('الأكلات', 'Tricks')}</td><td>${r.raw[0] - (r.ground === 0 ? 10 : 0)}</td><td>${r.raw[1] - (r.ground === 1 ? 10 : 0)}</td></tr>
+        <tr><td>${B('الأرض', 'Last trick')}</td><td>${r.ground === 0 ? 10 : ''}</td><td>${r.ground === 1 ? 10 : ''}</td></tr>
         ${r.proj[0] + r.proj[1] ? `<tr><td>${B('المشاريع', 'Projects')}</td><td>${r.proj[0] || ''}</td><td>${r.proj[1] || ''}</td></tr>` : ''}
         ${r.bal[0] + r.bal[1] ? `<tr><td>${B('بلوت', 'Baloot')}</td><td>${r.bal[0] || ''}</td><td>${r.bal[1] || ''}</td></tr>` : ''}
+        <tr><td>${B('الأبناط', 'Card points')}</td><td>${r.raw[0]}</td><td>${r.raw[1]}</td></tr>
         <tr class="sum"><td>${B('النتيجة', 'Score')}</td><td>+${r.add[0]}</td><td>+${r.add[1]}</td></tr></table>
-        <p>${r.kaboot >= 0 && r.kaboot !== undefined ? B(`كبوت لـ${esc(tn(r.kaboot))}! 🔥`, 'Kaboot! 🔥') : r.decWins ? B('نتيجة الشراء: ربحانة ✓', 'The buyers made it.') : B('نتيجة الشراء: خسرانة ✗', 'The buyers failed.')}${r.mult > 1 ? ` (${['', '', T('دبل', 'Double'), T('ثري', 'Triple'), T('فور', 'Four')][r.mult]})` : ''}</p>`;
-    d.innerHTML = `<div class="bl-obox"><h3>${B('النشرة', 'The count')} · ${contractTxt(P.contract)}</h3>${rows}<p class="bl-tot">${esc(tn(0))} <b>${P.scores[0]}</b> · ${esc(tn(1))} <b>${P.scores[1]}</b></p>
-      ${P.over < 0 && G && G.m ? `<button type="button" class="btn solid" data-next>${B('اليد التالية ▶', 'Next hand ▶')}</button>` : P.over < 0 ? `<p class="bl-note">${B('اليد التالية بعد لحظات…', 'The next hand starts shortly…')}</p>` : ''}</div>`;
+        <p>${r.sawa !== undefined ? B('سوا ✓', 'Claimed ✓') : ''}${r.mult > 1 ? ` (${['', '', T('دبل', 'Double'), T('ثري', 'Triple'), T('فور', 'Four')][r.mult]})` : ''}</p>`;
+    const buyer = P.contract ? team(P.contract.seat) : -1;
+    d.innerHTML = `<div class="bl-obox">${!r.qaid && r.kaboot >= 0 && r.kaboot !== undefined ? `<p class="bl-kab">${B('كبوت', 'Kaboot')}</p>` : ''}<div class="bl-head"><span>${B('اللعبة', 'Game')}: <b>${contractTxt(P.contract)}</b></span><span>${B('المشتري أو المدبّل', 'Bought by')}: <b>${me >= 0 ? (buyer === myT ? T('فريقنا', 'Us') : T('فريقهم', 'Them')) : esc(tn(buyer))}</b></span>${!r.qaid ? `<span>${B('نتيجة الشراء', 'Result')}: <b class="${r.decWins || r.kaboot === buyer ? 'ok' : 'no'}">${r.decWins || r.kaboot === buyer ? T('ربحانة', 'Made') : T('خسرانة', 'Lost')}</b></span>` : ''}</div><h3>${B('النشرة', 'The count')}</h3>${rows}<p class="bl-tot">${esc(tn(0))} <b>${P.scores[0]}</b> · ${esc(tn(1))} <b>${P.scores[1]}</b></p>
+      ${P.over < 0 && G && G.m ? `<button type="button" class="btn solid" data-next>${B('عودة', 'Back')}</button>` : P.over < 0 ? `<p class="bl-note">${B('اليد التالية بعد لحظات…', 'The next hand starts shortly…')}</p>` : ''}</div>`;
     document.body.appendChild(d);
     const nb = d.querySelector('[data-next]'); if (nb) nb.onclick = () => { d.remove(); if (G && G.m && G.m.H.phase === 'done') { BL.nextHand(G.m); drive(); } };
   }
@@ -456,8 +518,8 @@
     const w = P.over, mineWin = me >= 0 && w === myT, seats = P.seats || [];
     const d = document.createElement('div'); d.className = 'bl-win';
     d.innerHTML = `<div class="bl-conf">${Array.from({ length: 50 }, () => `<i style="--x:${Math.random() * 100}%;--d:${(Math.random() * 1.6).toFixed(2)}s;--r:${Math.floor(Math.random() * 360)}deg"></i>`).join('')}</div>
-      <div class="bl-winbox"><p class="bl-trophy">${me < 0 || mineWin ? '🏆' : '😤'}</p><h2>${me < 0 ? B(`فاز ${esc(seats.filter((x, s) => team(s) === w).map(x => x.n).join('، '))}`, 'Winners!') : mineWin ? B('فزتم بالصكّة!', 'You won!') : B('فازوا عليكم هالمرة', 'They won this time')}</h2>
-      <p>${P.scores[0]} – ${P.scores[1]}</p><div class="bl-row"><button type="button" class="btn solid" data-again>${B('صكّة جديدة', 'New match')}</button><button type="button" class="btn ghost" data-close>${B('إغلاق', 'Close')}</button></div></div>`;
+      <div class="bl-winbox"><p class="bl-trophy">${me < 0 || mineWin ? '🏆' : '😤'}</p><h2>${me < 0 ? B(`فاز ${esc(seats.filter((x, s) => team(s) === w).map(x => x.n).join('، '))}`, 'Winners!') : mineWin ? B('ربحت القهوة!', 'You won!') : B('خسرت القهوة', 'They won this time')}</h2>
+      <p>${P.scores[0]} – ${P.scores[1]}</p><div class="bl-row"><button type="button" class="btn solid" data-again>${B('قهوة جديدة', 'New match')}</button><button type="button" class="btn ghost" data-close>${B('إغلاق', 'Close')}</button></div></div>`;
     document.body.appendChild(d); buzz([100, 60, 160]);
     d.querySelector('[data-close]').onclick = () => d.remove();
     d.querySelector('[data-again]').onclick = () => { d.remove(); if (G && G.mode === 'local') local(G.o, G.seats[0].n); else if (G && G.mode === 'host') { G.m = BL.newMatch(houseRules(G.o)); drive(); } else home(); };

@@ -216,6 +216,32 @@
     applyResult(m); H.phase = 'done'; return true;
   }
 
+  // «سوا»: the player on lead claims every trick left. Right when no card of the other side can beat
+  // any of the claimer's cards (keeping all their cards, so the claim holds however they play); the
+  // remaining tricks then go to the claimer's side. A wrong claim counts like a wrong Qaid.
+  function sawaOk(m, s) {
+    const H = m.H, mine = H.hands[s];
+    const opp = [0, 1, 2, 3].filter(o => team(o) !== team(s)).map(o => H.hands[o]);
+    const trumpSuit = H.contract.type === 'hokm' ? H.contract.trump : null;
+    return mine.every(c => opp.every(h => {
+      const same = h.filter(x => st(x) === st(c));
+      if (same.length) return same.every(x => order(H, x) < order(H, c));
+      return !(trumpSuit && st(c) !== trumpSuit && h.some(x => st(x) === trumpSuit));
+    }));
+  }
+  function sawa(m, s) {
+    const H = m.H; if (H.phase !== 'play' || H.turn !== s || H.trick.length) return false;
+    if (!sawaOk(m, s)) { const add = [0, 0], win = 1 - team(s), base = H.contract.type === 'sun' ? 26 : 16, mult = H.dbl.level;
+      const pr = bestProjects(H); add[win] = base * mult + (pr.team === win ? pr.points : 0) * (mult > 1 ? 2 : 1) + (H.baloot && H.baloot.team === win ? 2 : 0);
+      H.result = { qaid: true, sawa: true, by: s, ok: false, add, win }; applyResult(m); H.phase = 'done'; return true; }
+    H.sawa = team(s);
+    while (H.hands[s].length) {
+      const cards = [0, 1, 2, 3].map(i => (s + 4 - i) % 4).map(x => ({ s: x, c: H.hands[x].shift() })).filter(x => x.c);
+      H.tricks.push({ cards, win: s });
+    }
+    endHand(m); return true;
+  }
+
   /* ---------- counting ---------- */
   function bestProjects(H) {
     let best = null;
@@ -231,7 +257,7 @@
     const pr = bestProjects(H), proj = [0, 0]; if (pr.team >= 0) proj[pr.team] = pr.points;
     const bal = [0, 0]; if (H.baloot) bal[H.baloot.team] = 2;
     const dec = C.team, opp = 1 - dec, mult = D.level, add = [0, 0];
-    const res = { raw, tricks, proj, bal, mult, gahwa: D.gahwa };
+    const res = { raw, tricks, proj, bal, mult, gahwa: D.gahwa, ground: H.tricks.length === 8 ? team(H.tricks[7].win) : -1, sawa: H.sawa >= 0 ? H.sawa : undefined };
     // al-kaboot: all eight tricks
     const kab = tricks[0] === 8 ? 0 : tricks[1] === 8 ? 1 : -1;
     if (kab >= 0) {
@@ -307,9 +333,9 @@
     return { scores: m.scores, dealer: m.dealer, over: m.over, phase: H.phase, round: H.round, ask: !!H.ask, turn: H.turn, exp: open ? H.exp : null, bid: H.bid, contract: H.contract, dbl: H.dbl,
       trick: H.trick, last: H.tricks[H.tricks.length - 1] || null, nt: H.tricks.length, counts: H.hands.map(h => h.length), hand: s == null ? null : H.hands[s].slice(),
       won: [0, 1].map(t => H.tricks.filter(x => team(x.win) === t).length), baloot: H.baloot, result: H.result,
-      shown: H.tricks.length >= 1 ? bestProjects(H) : null, decl: H.tricks.length === 0 ? H.decl.map(d => d.length ? d[0].kind : null) : null, calls: (H.calls || ['', '', '', '']).slice() };
+      shown: H.tricks.length >= 1 ? bestProjects(H) : null, decl: H.tricks.length === 0 ? H.decl.map(d => d.length ? d[0].kind : null) : null, declK: H.tricks.length <= 1 ? H.decl.map(d => d.map(p => p.kind).join(',')) : null, wins: [0, 1, 2, 3].map(x => H.tricks.filter(t => t.win === x).length), first: H.order[0], calls: (H.calls || ['', '', '', '']).slice() };
   }
 
-  const API = { _end: endHand, SUITS, RANKS, team, newMatch, deal, bidOptions, bid, doubleOptions, doubleAct, legal, play, projectsIn, projectOptions, hasBaloot, qaid, nextHand, botAct, view, winnerOf, value, bestProjects, pos };
+  const API = { _end: endHand, sawa, sawaOk, SUITS, RANKS, team, newMatch, deal, bidOptions, bid, doubleOptions, doubleAct, legal, play, projectsIn, projectOptions, hasBaloot, qaid, nextHand, botAct, view, winnerOf, value, bestProjects, pos };
   if (typeof module !== 'undefined') module.exports = API; else root.BL = API;
 })(typeof window !== 'undefined' ? window : this);

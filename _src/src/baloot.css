@@ -170,3 +170,45 @@
 .bl-shown{bottom:auto;top:24%;z-index:4;font-size:.75rem;padding:3px 8px}.bl-shown .bl-c.mini{--cw:22px}
 .bl-mine{margin-top:6px}
 .bl-trick{inset:0 0 12% 0}
+
+.bl-call.first{background:#1d1d1f;color:#fff}.bl-call.proj{background:#2c6e49;color:#fff}
+.bl-pfan{display:flex;gap:1px;background:rgba(0,0,0,.55);padding:3px;border-radius:8px;margin-top:2px}.bl-pfan .bl-c.mini{--cw:20px}.bl-pfan i{width:5px}
+.bl-seat.p1 .bl-pfan,.bl-seat.p3 .bl-pfan{margin-top:-4px}
+.bl-mine .bl-pfan .bl-c.mini{--cw:26px}
+.bl-pile{position:absolute;z-index:1;width:30px;height:40px}.bl-pile i{position:absolute;inset:0;border-radius:3px;background:#fff url(../../img/cards/back.svg) center/cover;box-shadow:0 1px 3px rgba(0,0,0,.5)}
+.bl-pile i+i{transform:translate(3px,-3px) rotate(6deg)}.bl-pile b{position:absolute;right:-8px;top:-8px;z-index:2;background:var(--gold);color:#3a2604;border-radius:999px;font-size:.6875rem;padding:0 5px}
+.bl-pile.q0{left:50%;bottom:16%;margin-left:70px}.bl-pile.q2{left:50%;top:6%;margin-left:-100px}.bl-pile.q1{right:7%;top:46%}.bl-pile.q3{left:7%;top:46%}
+.bl-tap{font:inherit;display:flex;align-items:center;gap:8px;background:#1d1d1f;color:var(--gold);border:0;border-radius:12px;padding:6px 14px;font-weight:700;cursor:pointer;animation:blPop .25s}
+.bl-tap em{font-style:normal;background:var(--gold);color:#3a2604;border-radius:50%;width:24px;height:24px;display:grid;place-items:center}
+.bl-head{display:grid;gap:4px;background:var(--bg);border-radius:10px;padding:8px 10px;margin-bottom:8px;font-size:.875rem;text-align:start}.bl-head .ok{color:#2c8a4b}.bl-head .no{color:#c0392b}
+.bl-kab{font-size:2.25rem;font-weight:900;color:#c0392b;margin:0 0 6px;text-shadow:0 2px 0 #0002}
+.bl-seat.p2 .bl-pfan{position:absolute;right:calc(100% - 6px);top:22%;z-index:3}
+
+.bl-call.adv{background:#3b2a6b;color:#fff}
+.bl-hand .bl-c.hint{box-shadow:0 0 0 4px #7c4dff,0 0 20px #7c4dffaa;transform:translateY(-14px)}
+.bl-advp{display:flex;flex-wrap:wrap;gap:6px;align-items:center;justify-content:center;padding:8px;margin-top:6px;background:var(--surface);border:1px solid var(--line);border-radius:14px}
+.bl-advp.on{display:grid;justify-items:center}.bl-advp small{color:var(--muted)}
+.bl-advh{display:flex;gap:3px;flex-wrap:wrap;justify-content:center}.bl-advh button{border:0;background:none;padding:0;cursor:pointer}.bl-advh .bl-c.mini{--cw:40px}.bl-advh button:disabled{opacity:.5}
+.bl-advc{display:flex;flex-wrap:wrap;gap:5px;justify-content:center}.bl-advc button{font:inherit;font-size:.8125rem;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:10px;padding:5px 9px;cursor:pointer}.bl-advc button:disabled{opacity:.45}
+.bl-ask{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:95;background:var(--surface);color:var(--ink);border-radius:16px;padding:14px 16px;box-shadow:0 12px 30px rgba(0,0,0,.3);width:min(380px,92vw);text-align:center}
+
+/* as in the majlis apps: my eight cards in one row across the width, the same size however many are left */
+.bl-hand{--cw:min(124px,calc((min(100vw,980px) - 28px) / 3.94));margin-top:calc(var(--cw)*-.35);background:linear-gradient(180deg,transparent 0 calc(var(--cw)*.35),#4d2b14 calc(var(--cw)*.35) calc(var(--cw)*.35 + 10px),#2f241c calc(var(--cw)*.35 + 10px));padding:14px 0 10px;min-height:calc(var(--cw)*1.4 + 24px)}
+.bl-hc{margin-inline-start:calc(var(--cw)*-.58);transform:translateY(var(--y,0)) rotate(var(--r));transform-origin:50% 100%}
+/* the players on the sides sit fully in view, at a size you can read */
+.bl-seat.p1,.bl-seat.p3{top:27%;width:clamp(112px,31%,200px)}
+.bl-seat.p1{right:0}.bl-seat.p3{left:0}
+@media (max-width:640px){.bl-seat.p1{right:0}.bl-seat.p3{left:0}}
+
+/* full screen while at the table: the site's header and footer step aside */
+body:has(#bl .bl-table){overflow:hidden}
+body:has(#bl .bl-table) header.top,body:has(#bl .bl-table) .tl-crumb,body:has(#bl .bl-table) .kh-head,body:has(#bl .bl-table) .site-foot{display:none}
+#bl .bl-table{position:fixed;inset:0;z-index:60;max-width:none;margin:0;height:100dvh;min-height:0;background:linear-gradient(180deg,#2a1d14,#1a120c);padding:max(6px,env(safe-area-inset-top)) max(6px,calc((100vw - 1000px) / 2)) max(4px,env(safe-area-inset-bottom));box-sizing:border-box}
+#bl .bl-table .bl-sc{background:#3a2a1e;color:#fff;border-width:2px}#bl .bl-table .bl-sc small{color:#d9c7a3}
+#bl .bl-table .bl-con{color:#fff}#bl .bl-table .bl-con small{color:#d9c7a3}
+#bl .bl-table .bl-mine{color:#fff}
+#bl .bl-table .bl-bar button{background:#3a2a1e;color:#fff;border-color:#5a4433}#bl .bl-table .bl-bar [data-qaid]{color:#ff8a80;border-color:#c0392b}
+.bl-exit{position:absolute;top:max(8px,env(safe-area-inset-top));inset-inline-start:8px;z-index:9;background:rgba(0,0,0,.35);color:#fff;border:0;border-radius:50%;width:30px;height:30px;font-size:15px;cursor:pointer}
+.bl-top{padding-inline-start:36px}
+#bl .bl-table .bl-advp{position:absolute;left:8px;right:8px;bottom:8px;z-index:8;margin:0}
+body:has(#bl .bl-table) section.first{transform:none!important;animation:none!important}
