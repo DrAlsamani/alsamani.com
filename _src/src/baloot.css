@@ -117,3 +117,51 @@
   .bl-sc b{font-size:1.25rem}.bl-b{min-width:70px;padding:9px 10px;font-size:.9375rem}.bl-bar button{padding:7px 9px;font-size:.8125rem}
   .bl-jk{grid-template-columns:1fr 1fr}.bl-pin{font-size:2rem}
 }
+/* ---- the majlis seen from my chair: a wall and a sofa behind, a leather-topped table, the players holding their cards ---- */
+.bl-felt{background:linear-gradient(180deg,#e9dcc3 0,#d8c4a0 38%,#bfa27a 60%,#7a5a3c 100%)}
+.bl-room{position:absolute;inset:0;pointer-events:none}
+.bl-sofa{position:absolute;left:10%;right:10%;top:12%;height:26%;border-radius:18px 18px 6px 6px;background:linear-gradient(180deg,#5d5a56,#46433f);box-shadow:0 6px 14px rgba(0,0,0,.25)}
+.bl-sofa::before{content:"";position:absolute;left:6%;right:6%;top:16%;height:46%;border-radius:10px;background:repeating-linear-gradient(90deg,#8f2d24 0 18%,transparent 18% 20%,#2a3b4f 20% 38%,transparent 38% 40%),repeating-linear-gradient(0deg,#e6d3a3 0 3px,transparent 3px 9px);opacity:.9}
+.bl-dallah{position:absolute;right:4%;top:9%;width:8%;max-width:56px}.bl-dallah svg{width:100%;display:block;filter:drop-shadow(0 3px 4px rgba(0,0,0,.3))}
+.bl-plane{z-index:1;top:19%;background:linear-gradient(180deg,#7b4b28,#5e3519 70%,#4d2b14);box-shadow:inset 0 2px 0 #b98352,0 30px 40px rgba(0,0,0,.5)}
+.bl-rug{inset:14px 14px 0;border-radius:10px 10px 0 0;background:radial-gradient(90% 70% at 50% 40%,#46413c,#2f2b28 75%);box-shadow:inset 0 0 0 2px #b08a52,inset 0 0 0 4px #2a2622,inset 0 0 26px rgba(0,0,0,.5)}
+.bl-rug::before,.bl-rug::after{display:none}
+.bl-cup{position:absolute;width:9%;max-width:54px}.bl-cup svg{width:100%;display:block}.bl-cup.a{left:6%;bottom:12%}.bl-cup.b{right:6%;top:10%}
+.bl-trick,.bl-exp{z-index:2}
+.bl-seat{direction:ltr;display:flex;flex-direction:column;align-items:center;gap:2px;text-shadow:none}
+.bl-body{position:relative;width:100%;container-type:inline-size}.bl-man{display:block;width:100%;height:auto}
+.bl-held{position:absolute;left:50%;bottom:3cqw;transform:translateX(-50%);display:flex;justify-content:center}
+.bl-held i{width:15cqw;height:21cqw;margin-left:-11cqw;border-radius:1.4cqw;background:#fff url(../../img/cards/back.svg) center/cover;box-shadow:0 1px 3px rgba(0,0,0,.4);transform:rotate(var(--r));transform-origin:50% 120%}
+.bl-held i:first-child{margin-left:0}
+.bl-fist{position:absolute;bottom:0;width:15cqw;height:12cqw;border-radius:45% 45% 40% 40%;background:linear-gradient(160deg,#e3ab80,#b07246);box-shadow:0 2px 3px rgba(0,0,0,.3)}
+.bl-fist.l{left:calc(50% - 15cqw)}.bl-fist.r{left:50%}
+.bl-plate{position:relative;overflow:hidden;background:rgba(30,22,16,.82);color:#fff;border-radius:999px;padding:2px 12px;font-size:.8125rem;display:flex;gap:6px;align-items:center;box-shadow:0 2px 6px rgba(0,0,0,.35);max-width:130px}
+.bl-plate b{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bl-plate em{font-style:normal;font-weight:800;color:#3a2604;background:var(--gold);border-radius:999px;padding:0 6px;font-size:.75rem}
+.bl-plate[style*="--p"]::after{content:"";position:absolute;left:0;bottom:0;height:3px;width:var(--p);background:var(--gold);transition:width .5s linear}
+.bl-seat.us .bl-plate{box-shadow:0 0 0 2px var(--us),0 2px 6px rgba(0,0,0,.35)}.bl-seat.them .bl-plate{box-shadow:0 0 0 2px var(--them),0 2px 6px rgba(0,0,0,.35)}
+.bl-seat.turn .bl-plate{box-shadow:0 0 0 3px var(--gold),0 0 14px rgba(224,164,88,.7)}
+.bl-tags{display:flex;gap:4px;justify-content:center;min-height:0}
+.bl-seat.p2{z-index:0;top:3%;left:50%;width:clamp(120px,34%,210px);transform:translateX(-50%)}
+.bl-seat.p2 .bl-plate,.bl-seat.p2 .bl-tags{position:absolute;left:calc(100% - 6px);top:22%;white-space:nowrap}.bl-seat.p2 .bl-tags{top:calc(22% + 26px)}
+.bl-seat.p1,.bl-seat.p3{z-index:3;top:31%;width:clamp(100px,28%,180px);transform:none}
+.bl-seat.p1{right:-6%;left:auto;align-items:flex-start}.bl-seat.p3{left:-6%;right:auto;align-items:flex-end}
+.bl-seat.p1 .bl-man{transform:scaleX(-1)}
+.bl-seat.p0{z-index:3;bottom:0;left:50%;width:clamp(104px,22%,170px);transform:translateX(-50%)}
+.bl-seat.p1 .bl-say{right:auto;left:0;top:-30px}.bl-seat.p3 .bl-say{left:auto;right:0;top:-30px}.bl-seat.p2 .bl-say{top:auto;bottom:6px;left:calc(100% - 6px)}
+.bl-gl,.bl-gr{position:absolute;pointer-events:none;z-index:20;filter:drop-shadow(0 3px 5px rgba(0,0,0,.3))}
+.bl-gl{width:calc(var(--cw)*1.5);left:calc(50% - var(--cw)*2.15);bottom:-26px}
+.bl-gr{width:calc(var(--cw)*1.3);left:calc(50% + var(--cw)*.95);bottom:-30px;transform:scaleX(-1) rotate(8deg)}
+.bl-suits .suit{min-width:64px}.bl-suits .sH,.bl-suits .sD{color:#c0272d}
+@media (max-width:640px){.bl-plate{font-size:.75rem;padding:1px 9px;max-width:96px}.bl-seat.p1{right:-7%}.bl-seat.p3{left:-7%}}
+
+.bl-clock{position:absolute;left:50%;top:6%;transform:translateX(-50%);z-index:5;width:clamp(34px,30cqw,50px);aspect-ratio:1;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:1rem;color:#3a2604;
+  background:radial-gradient(circle,#fff6df 0 58%,transparent 59%),conic-gradient(var(--gold) var(--p,100%),#0000004d 0);box-shadow:0 0 0 3px #fff8,0 0 18px rgba(224,164,88,.9);animation:blTick 1s infinite}
+.bl-clock.me{position:static;transform:none;width:38px;font-size:.9375rem}
+@keyframes blTick{50%{box-shadow:0 0 0 3px #fff8,0 0 30px rgba(224,164,88,1)}}
+.bl-seat.turn .bl-man{filter:drop-shadow(0 0 10px rgba(255,200,90,.95))}
+.bl-mine.turn b{font-size:1.0625rem}
+.bl-hand.go .bl-c{box-shadow:0 0 0 2px var(--gold),0 2px 8px rgba(0,0,0,.3)}
+/* my hand sits on the near edge of the table */
+.bl-hand{order:1;margin-top:calc(var(--cw)*-.8);background:linear-gradient(180deg,transparent 0 calc(var(--cw)*.8),#4d2b14 calc(var(--cw)*.8) calc(var(--cw)*.8 + 10px),#2f241c calc(var(--cw)*.8 + 10px));border-radius:0 0 22px 22px;overflow:hidden;padding-bottom:6px}
+.bl-mine,.bl-ctl,.bl-bar{order:2}
