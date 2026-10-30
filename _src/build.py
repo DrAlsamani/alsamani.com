@@ -692,6 +692,8 @@ PAGES.append(('play', 1, 'منصة الألعاب التفاعلية | Interacti
 DESCS['play'] = 'Interactive games and quizzes to play together. منصة الألعاب التفاعلية.'
 PAGES.append(('m', 1, 'ميدان: ادخل المسابقة | Maydan: join | Dr. Omar A. Alsamani', _tp.maydan_join))
 DESCS['m'] = 'Join a Maydan live quiz with its six-digit code. ادخل مسابقة ميدان برمزها.'
+PAGES.append(('play/baloot', 2, 'بلوت: الطاولة على الشاشة والأوراق في الجوالات | Baloot | Dr. Omar A. Alsamani', _tp.baloot_body))
+DESCS['play/baloot'] = 'Baloot with the table on a screen and the hands on phones, the jack draw and Qaid as at the majlis, and a smart computer player in several styles. بلوت: الطاولة على الشاشة والأوراق في الجوالات، وطق الولد والقيد، وجهاز ذكي.'
 PAGES.append(('play/tasalsul', 2, 'تسلسل: على طريقة سيكوينس | Tasalsul: in the style of Sequence | Dr. Omar A. Alsamani', _tp.khumasiya_body))
 DESCS['play/tasalsul'] = 'Tasalsul, a game in the style of Sequence: make rows of four or five before the others, with friends on a big screen and phones, remotely, or against the computer. تسلسل: لعبة على طريقة سيكوينس، صفوف من أربع أو خمس قبل خصمك.'
 PAGES.append(('play/maydan', 2, 'ميدان: مسابقات تفاعلية حيّة | Maydan: live quizzes | Dr. Omar A. Alsamani', _tp.maydan_body))

@@ -124,6 +124,7 @@
     }
     return best;
   }
+  const isTopTrump = (H, c, hand) => { const gone = new Set(seen(H).concat(hand)); return TRUMP_ORDER.slice(TRUMP_ORDER.indexOf(rk(c)) + 1).every(r => gone.has(r + st(c))); };
   const seen = H => H.tricks.flatMap(t => t.cards.map(x => x.c)).concat(H.trick.map(x => x.c));
   // the highest card still out in a suit (for "ekka")
   function isTop(H, c, hand) {
@@ -282,8 +283,16 @@
     const declare = H.tricks.length === 0 && projectsIn(H.hands[s], H).length > 0;
     if (level === 'weak') return { card: L[Math.floor(Math.random() * L.length)], declare };
     const T = H.trick, lowest = arr => arr.slice().sort((a, b) => value(H, a) - value(H, b) || order(H, a) - order(H, b))[0];
-    if (!T.length) {                                         // lead a top card if we hold one, else a low card
-      const top = L.find(c => !isTrump(H, c) && isTop(H, c, H.hands[s])); return { card: top || lowest(L), declare, ekka: !!top };
+    if (!T.length) {
+      // the buyers in hokm draw trumps first while they hold the jack or nine and trumps are still out
+      if (H.contract.type === 'hokm' && team(s) === H.contract.team) {
+        const tr = H.contract.trump, mine = L.filter(c => st(c) === tr), out = 8 - seen(H).filter(c => st(c) === tr).length - H.hands[s].filter(c => st(c) === tr).length;
+        const boss = mine.find(c => isTopTrump(H, c, H.hands[s])); if (boss && out > 0) return { card: boss, declare };
+      }
+      // lead a top card if we hold one, else a low card from our longest suit
+      const top = L.find(c => !isTrump(H, c) && isTop(H, c, H.hands[s])); if (top) return { card: top, declare, ekka: true };
+      const len = x => H.hands[s].filter(c => st(c) === st(x)).length, low = L.filter(c => !isTrump(H, c) && value(H, c) <= 4);
+      return { card: (low.length ? low.sort((a, b) => len(b) - len(a) || value(H, a) - value(H, b))[0] : lowest(L)), declare };
     }
     const w = winnerOf(H, T);
     if (team(w.s) === team(s)) return { card: T.length === 3 ? L.slice().sort((a, b) => value(H, b) - value(H, a)).find(c => !isTrump(H, c)) || lowest(L) : lowest(L), declare };
@@ -293,7 +302,7 @@
   // what a seat may see: its own hand, the table, counts, and nothing of the others' hands
   function view(m, s) {
     const H = m.H, open = H.phase === 'bid';
-    return { scores: m.scores, dealer: m.dealer, over: m.over, phase: H.phase, round: H.round, turn: H.turn, exp: open ? H.exp : null, bid: H.bid, contract: H.contract, dbl: H.dbl,
+    return { scores: m.scores, dealer: m.dealer, over: m.over, phase: H.phase, round: H.round, ask: !!H.ask, turn: H.turn, exp: open ? H.exp : null, bid: H.bid, contract: H.contract, dbl: H.dbl,
       trick: H.trick, last: H.tricks[H.tricks.length - 1] || null, nt: H.tricks.length, counts: H.hands.map(h => h.length), hand: s == null ? null : H.hands[s].slice(),
       won: [0, 1].map(t => H.tricks.filter(x => team(x.win) === t).length), baloot: H.baloot, result: H.result,
       shown: H.tricks.length >= 1 ? bestProjects(H) : null, decl: H.tricks.length === 0 ? H.decl.map(d => d.length ? d[0].kind : null) : null };
