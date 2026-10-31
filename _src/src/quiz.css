@@ -155,3 +155,4 @@
 .qz-aih{background:var(--bg);border-radius:12px;padding:8px 12px;font-size:.875rem;margin:0 0 10px}
 .qi-more{margin:22px 0 8px;border:1px solid var(--line);border-radius:16px;padding:10px 14px;background:var(--surface)}.qi-more summary{cursor:pointer;font-weight:700}
 .qz-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
+.qz-libmore{display:block;margin:12px auto 0}

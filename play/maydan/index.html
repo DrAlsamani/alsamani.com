@@ -1834,6 +1834,7 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
 .qz-aih{background:var(--bg);border-radius:12px;padding:8px 12px;font-size:.875rem;margin:0 0 10px}
 .qi-more{margin:22px 0 8px;border:1px solid var(--line);border-radius:16px;padding:10px 14px;background:var(--surface)}.qi-more summary{cursor:pointer;font-weight:700}
 .qz-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
+.qz-libmore{display:block;margin:12px auto 0}
 </style>
 <div id="qz" class="sn qz"><noscript><span class="ar">تعمل هذه الأداة مع تفعيل JavaScript.</span><span class="en">This tool needs JavaScript.</span></noscript></div>
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script><script>/* Maydan library: ready quizzes to start at once or open and edit. Written in the editor's own format. */
@@ -2010,20 +2011,6 @@ window.MDLib = (function () {
       match('صِل كل حيوان بمسكنه', [['الأسد', 'العرين'], ['النحل', 'الخلية'], ['الطائر', 'العش'], ['الحصان', 'الإسطبل']]),
       g('tug', 20),
       rapid('الجولة الخاطفة: منوعات', [['الزرافة أطول الحيوانات', true], ['البطريق يطير', false], ['للنحلة خمسة أجنحة', false], ['للأخطبوط ثمانية أذرع', true], ['السنة الكبيسة 365 يومًا', false], ['القلب يضخ الدم', true], ['الدلفين من الأسماك', false], ['الطماطم ثمرة نباتيًا', true], ['الأرض مسطّحة', false], ['للعنكبوت ثماني أرجل', true]])] },
-    { id: 'lib-prof', icon: '🎓', title: 'مواقف في التدريس الجامعي', desc: 'مواقف حقيقية من القاعة والتقويم والإشراف: ما التصرف الأنسب؟ للنقاش في ورش أعضاء هيئة التدريس.', who: 'لأعضاء هيئة التدريس', qs: [
-      mc('طالب يكرر الأسئلة الخارجة عن موضوع المحاضرة فيشتّت الزملاء. ما الأنسب؟', ['تجاهله تمامًا حتى يتوقف', 'تشكره وتدوّن سؤاله لنقاشه بعد المحاضرة أو في الساعات المكتبية', 'تطلب منه مغادرة القاعة', 'تجيب عن كل أسئلته فورًا مهما طالت'], 1),
-      mc('لاحظت بعد الاختبار النصفي أن ٧٠٪ من الطلاب أخفقوا في سؤال واحد. أول خطوة؟', ['تحذف السؤال دون مراجعة', 'تراجع صياغة السؤال وارتباطه بما دُرّس فعلًا قبل الحكم', 'تعدّه دليلًا على تقصير الطلاب', 'تعيد الاختبار كله'], 1),
-      mc('طالبة أرسلت بحثًا فيه فقرات منقولة حرفيًا دون توثيق. ما الأنسب أولًا؟', ['ترسب مباشرة دون نقاش', 'تلتقي بها وتتحقق وتشرح معنى الأمانة العلمية وفق لائحة الجامعة', 'تتجاهل الأمر هذه المرة', 'تفضحها أمام الشعبة'], 1),
-      mc('أي هذه أقرب إلى «التقويم البنائي»؟', ['اختبار نهائي واحد', 'تغذية راجعة متكررة أثناء التعلّم يُبنى عليها التحسين', 'درجة الحضور', 'ترتيب الطلاب على المنحنى'], 1),
-      mc('محاضرة من ٩٠ دقيقة يقل فيها انتباه الطلاب بعد ٢٠ دقيقة. أفضل حل؟', ['تسريع الشرح لإنهاء المادة', 'تقسيمها إلى مقاطع قصيرة بينها نشاط أو سؤال أو نقاش ثنائي', 'زيادة عدد الشرائح', 'منع الجوالات فقط'], 1),
-      tf('مخرجات التعلّم الجيدة تُكتب بأفعال قابلة للقياس مثل «يحلّل» و«يقارن» بدل «يعرف» و«يفهم».', true),
-      mc('طالب ذو إعاقة بصرية في مقررك. أول خطوة؟', ['تعامله كغيره دون أي تعديل', 'تتواصل معه ومع مركز ذوي الإعاقة لتحديد التسهيلات المناسبة', 'تعفيه من التقويمات', 'تطلب منه تسجيل مقرر آخر'], 1),
-      order('رتّب خطوات التصميم العكسي للمقرر', ['تحديد مخرجات التعلّم', 'تحديد أدلة التقويم', 'تخطيط أنشطة التعلّم والتدريس']),
-      mc('طالب دراسات عليا متأخر كثيرًا في رسالته. الأنسب؟', ['الانتظار حتى يبادر هو', 'جدول زمني مكتوب بمهام صغيرة ولقاءات متابعة دورية', 'نقل الإشراف فورًا', 'إنذاره بالفصل'], 1),
-      match('صِل الاستراتيجية بوصفها', [['التعلّم المعكوس', 'المحتوى قبل المحاضرة والتطبيق داخلها'], ['التعلّم القائم على المشروعات', 'منتج حقيقي يحل مشكلة'], ['التعلّم بالأقران', 'يشرح الطلاب لبعضهم'], ['دراسة الحالة', 'تحليل موقف واقعي واتخاذ قرار']]),
-      poll('أي ممارسة تراها الأكثر أثرًا في تعلّم طلابك؟', ['التغذية الراجعة السريعة', 'الأنشطة التطبيقية', 'وضوح التوقعات من البداية', 'العلاقة الإيجابية مع الطلاب']),
-      open('اكتب بكلمتين أكبر تحدٍّ في قاعتك'),
-      rapid('جولة خاطفة: التدريس الجامعي', [['سلم التقدير (Rubric) يزيد عدالة التصحيح', true], ['كثرة الشرائح دليل جودة المحاضرة', false], ['الأسئلة المفتوحة تكشف التفكير أكثر من الحفظ', true], ['التغذية الراجعة المتأخرة كالفورية في أثرها', false], ['التنويع في طرق التقويم يقلل ظلم بعض الطلاب', true], ['مخرجات التعلّم تُكتب بعد الاختبار النهائي', false], ['الساعات المكتبية جزء من دعم التعلّم', true], ['الطالب الصامت غير مهتم دائمًا', false], ['ربط المحتوى بالواقع يرفع الدافعية', true], ['الاختبار الواحد يكفي للحكم على التعلّم', false]])] },
     { id: 'lib-gifted', icon: '🌟', title: 'الموهوبون في الصف', desc: 'مواقف المعلم مع الطلاب الموهوبين ومزدوجي الاستثنائية: كيف نكتشفهم وندعمهم؟', who: 'للمعلمين والمرشدين', qs: [
       mc('طالب ينهي مهامه بسرعة ثم يشاغب. التفسير الأقرب الذي يستحق التحقق أولًا؟', ['سوء أدب فقط', 'قد تكون المهام أسهل من قدراته فيحتاج تحديًا أعمق', 'ضعف في التحصيل', 'مشكلة أسرية حتمًا'], 1),
       mc('«مزدوج الاستثنائية» يعني طالبًا:', ['موهوبًا في مادتين', 'يجمع موهبة مع صعوبة أو إعاقة', 'ينتقل صفين في عام', 'متفوقًا في التحصيل والرياضة'], 1),
@@ -2361,11 +2348,12 @@ if (typeof module !== 'undefined') module.exports = QZParse;
         <div class="qz-gstart"><button type="button" class="btn ghost" id="qzNewG">🎮 ${B('مسابقة ألعاب وتحديات', 'A games-only quiz')}</button><label>${B('عدد التحديات', 'Challenges')} <select id="qzGn">${[5, 8, 10, 12, 15, 20, 24].map(n => `<option${n === 10 ? ' selected' : ''}>${n}</option>`).join('')}</select></label></div>
         <p class="pt-fine">${B('في مسابقة الألعاب نختار لك تحديات متنوعة، وتقدر تغيّر أي واحد منها بزر 🔀 أو تختار غيره بنفسك.', 'We pick a varied set for you; swap any of them with 🔀 or choose another yourself.')}</p></div>
       ${RLIB().length ? `<h2 class="qz-h" id="lib">📚 ${B('مكتبة ميدان: مسابقات جاهزة', 'The Maydan library: ready quizzes')}</h2><p class="pt-fine">${B('ابدأ أيًّا منها مباشرة، أو افتحها وعدّل عليها لتصير مسابقتك.', 'Start any of them now, or open one and make it your own.')}</p>
-      <div class="qz-lib">${RLIB().map(z => `<div class="qz-lc"><span class="qz-li">${z.icon}</span><b>${esc(z.title)}</b><small>${esc(z.desc)}</small><em>${esc(z.who)} · ${z.qs.length} ${z.qs.every(x => x.type === 'game') ? B('تحديات', 'challenges') : B('فقرة', 'items')}</em><span class="qz-lb"><button type="button" class="btn solid" data-lgo="${z.id}">${B('ابدأ الآن ▶', 'Start now ▶')}</button><button type="button" class="btn ghost" data-led="${z.id}">${B('افتحها وعدّلها', 'Open and edit')}</button></span></div>`).join('')}</div>` : ''}
+      <div class="qz-lib">${RLIB().map((z, k) => `<div class="qz-lc"${k >= 5 ? ' data-more hidden' : ''}><span class="qz-li">${z.icon}</span><b>${esc(z.title)}</b><small>${esc(z.desc)}</small><em>${esc(z.who)} · ${z.qs.length} ${z.qs.every(x => x.type === 'game') ? B('تحديات', 'challenges') : B('فقرة', 'items')}</em><span class="qz-lb"><button type="button" class="btn solid" data-lgo="${z.id}">${B('ابدأ الآن ▶', 'Start now ▶')}</button><button type="button" class="btn ghost" data-led="${z.id}">${B('افتحها وعدّلها', 'Open and edit')}</button></span></div>`).join('')}</div>${RLIB().length > 5 ? `<button type="button" class="btn ghost qz-libmore" id="qzLibMore">${B(`عرض كل المسابقات (${RLIB().length})`, `Show all quizzes (${RLIB().length})`)}</button>` : ''}` : ''}
       ${list.length ? `<h2 class="qz-h">${B('مسابقاتك', 'Your quizzes')}</h2><ul class="qz-list">${list.map(x => `<li><button type="button" data-open="${x.id}"><b>${esc(x.title || T('بلا عنوان', 'Untitled'))}</b><small>${T('الأسئلة: ', 'Questions: ')}${x.qs.length}</small></button></li>`).join('')}</ul>` : ''}
       <label class="qz-imp btn ghost">${B('فتح نسخة محفوظة', 'Open a saved copy')}<input type="file" accept=".json,application/json" hidden id="qzImp"></label>
       <p class="pt-fine">${B('تُحفظ المسابقات في هذا المتصفح.', 'Quizzes are kept in this browser.')}</p></div>${introMore()}`;
     if (P) { root.querySelector('#qzRes').onclick = () => MDLive.resume(); root.querySelector('#qzDrop2').onclick = async () => { await MDLive.discard(); home(); }; }
+    const lm = root.querySelector('#qzLibMore'); if (lm) lm.onclick = () => { root.querySelectorAll('[data-more]').forEach(e => { e.hidden = false; }); lm.remove(); };
     root.querySelector('#qzNew').onclick = () => { Q = { id: uid(), title: '', qs: [] }; editor(); };
     root.querySelectorAll('[data-newq]').forEach(b => b.onclick = () => root.querySelector('#qzNew').click());
     const fromLib = id => { const z = RLIB().find(v => v.id === id); return { id: uid(), title: z.title, qs: z.qs.map(x => norm(JSON.parse(JSON.stringify(x)))) }; };
