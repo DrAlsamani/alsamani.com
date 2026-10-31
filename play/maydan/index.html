@@ -4385,6 +4385,8 @@ window.MDLive = (function () {
 
   /* ---------- a question ---------- */
   const multOf = i => (G.quiz.qs[i].pts || 0) * (i === G.gold ? 2 : 1) * (G.opts.final && i === G.quiz.qs.length - 1 && G.quiz.qs.length > 1 ? 2 : 1);
+  // the place of an item among the real questions (the stage is not counted)
+  const qNo = i => G.quiz.qs.slice(0, i + 1).filter(z => z.type !== 'stage').length, qTot = () => G.quiz.qs.filter(z => z.type !== 'stage').length;
   async function next() {
     if (G.stageNext && !G.ended && G.done + 1 < G.quiz.qs.length) stageNow();
     G.i = G.done + 1;
@@ -4397,7 +4399,7 @@ window.MDLive = (function () {
     const tag = gold ? `<span class="md-gold">${B('✨ السؤال الذهبي — نقاط مضاعفة', '✨ The golden question — double points')}</span>` : last ? `<span class="md-x2">${B('🏁 السؤال الأخير — نقاط مضاعفة', '🏁 The last question — double points')}</span>` : m === 2 ? `<span class="md-x2">${B('نقاط مضاعفة ×٢', 'Double points ×2')}</span>` : '';
     if (x.type === 'game') return nextGame(x, n, m, gold, last, tag);
     const q = frame(`<div class="md-q md-pre${gold ? ' is-gold' : ''}">
-        <div class="md-qtop"><span class="md-qn">${B('السؤال', 'Question')} ${G.i + 1} ${T('من', 'of')} ${n}</span>${tag}</div>
+        <div class="md-qtop"><span class="md-qn">${x.type === 'stage' ? '🎤 ' + B('المنصة', 'The stage') : `${B('السؤال', 'Question')} ${qNo(G.i)} ${T('من', 'of')} ${qTot()}`}</span>${tag}</div>
         <h2 class="md-qt" dir="auto">${esc(x.q)}</h2>
         <div class="md-mid"><div class="md-clock"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" class="md-ring0"/><circle cx="50" cy="50" r="44" class="md-ring" id="mdRing"/></svg><b id="mdT">${x.time}</b></div>
           ${x.img ? (x.reveal ? `<div class="md-pic"><img src="${x.img}" alt=""><div class="md-veil">${veil(x.time)}</div></div>` : `<img class="md-img" src="${x.img}" alt="">`) : '<span></span>'}
@@ -4406,7 +4408,7 @@ window.MDLive = (function () {
       `<button type="button" class="btn ghost" data-skip disabled>${B('أنهِ الوقت', 'End time')}</button>`);
     if (gold) SND.gold();
     await G.ref.child('an/' + G.i).remove();
-    await G.ref.update({ q: Object.assign({ q: x.q, opts: x.opts, type: x.type, multi: x.ok.length > 1, m, gold, last, bet: !!(G.opts.bet && m && !['poll', 'open', 'stage'].includes(x.type)), pw: !!(G.opts.pw && m && !['poll', 'open', 'stage'].includes(x.type)), i: G.i, n, L: G.ar ? 'ar' : 'en', img: x.img || null, rv: x.reveal ? x.time : null }, extra(x)), ok: null, wr: null, st: { ph: 'ready', i: G.i, lock: !!G.lockJoin } });
+    await G.ref.update({ q: Object.assign({ q: x.q, opts: x.opts, type: x.type, multi: x.ok.length > 1, m, gold, last, bet: !!(G.opts.bet && m && !['poll', 'open', 'stage'].includes(x.type)), pw: !!(G.opts.pw && m && !['poll', 'open', 'stage'].includes(x.type)), i: G.i, n, qn: qNo(G.i), qt: qTot(), L: G.ar ? 'ar' : 'en', img: x.img || null, rv: x.reveal ? x.time : null }, extra(x)), ok: null, wr: null, st: { ph: 'ready', i: G.i, lock: !!G.lockJoin } });
     const words = x.q.trim().split(/\s+/).length, read = Math.min(5, Math.max(2, words / 3)) * 1000 + (gold || last ? 1200 : 0);
     setTimeout(() => open(x, q), read);
   }
@@ -4438,7 +4440,7 @@ window.MDLive = (function () {
   async function nextGame(x, n, m, gold, last, tag) {
     const g = MDGames.byId(x.g), nm = G.ar ? g.ar : g.en, how = G.ar ? g.howAr : g.howEn;
     const q = frame(`<div class="md-q md-pre md-gq${gold ? ' is-gold' : ''}">
-        <div class="md-qtop"><span class="md-qn">${B('التحدي', 'Challenge')} · ${G.i + 1} ${T('من', 'of')} ${n}</span>${tag}</div>
+        <div class="md-qtop"><span class="md-qn">${B('التحدي', 'Challenge')} · ${qNo(G.i)} ${T('من', 'of')} ${qTot()}</span>${tag}</div>
         <h2 class="md-qt"><span class="md-gi">${g.icon}</span> ${esc(nm)}</h2>
         <div class="md-mid"><div class="md-clock"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" class="md-ring0"/><circle cx="50" cy="50" r="44" class="md-ring" id="mdRing"/></svg><b id="mdT">${x.time}</b></div>
           <p class="md-how2">${esc(how)}</p>
@@ -4448,7 +4450,7 @@ window.MDLive = (function () {
     if (gold) SND.gold();
     await G.ref.child('an/' + G.i).remove();
     if (x.g === 'tug' || x.g === 'race') await G.ref.update({ tg: null, tgp: 0 });
-    await G.ref.update({ q: Object.assign({ type: 'game', g: x.g, seed: x.seed || 1, q: nm, opts: [], m, gold, last, i: G.i, n, L: G.ar ? 'ar' : 'en' }, x.g === 'tug' || x.g === 'race' ? { ts: x._tug.sides, tn: x._tug.names } : {}), ok: null, st: { ph: 'ready', i: G.i, lock: !!G.lockJoin } });
+    await G.ref.update({ q: Object.assign({ type: 'game', g: x.g, seed: x.seed || 1, q: nm, opts: [], m, gold, last, i: G.i, n, qn: qNo(G.i), qt: qTot(), L: G.ar ? 'ar' : 'en' }, x.g === 'tug' || x.g === 'race' ? { ts: x._tug.sides, tn: x._tug.names } : {}), ok: null, st: { ph: 'ready', i: G.i, lock: !!G.lockJoin } });
     setTimeout(() => open(x, q), 4500 + (gold || last ? 1200 : 0));
   }
   /* ---------- tug of war: two balanced sides; teams stay whole when there are teams ---------- */

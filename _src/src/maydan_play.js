@@ -130,7 +130,7 @@
   function screen(html, cls) {
     if (SC && SC.left != null && SC.q === st.i && st.ph === 'rev') html = (SC.out ? `<p class="mp-surv out">🏳 ${B('خرجت من المنافسة، وتكمل متفرجًا', 'You are out; keep watching')}</p>` : `<p class="mp-surv">🏆 ${B(`ما زلت في المنافسة · الناجون: ${SC.left}`, `Still in · ${SC.left} left`)}</p>`) + html;
     if (FAN) html = fanHtml(html);
-    const qn = Q && Q.n && st.i >= 0 && ['q', 'ready', 'rev'].includes(st.ph) ? `<span class="mp-qn">${B(`السؤال ${st.i + 1} من ${Q.n}`, `Question ${st.i + 1} of ${Q.n}`)}</span>` : '';
+    const qn = Q && Q.n && st.i >= 0 && ['q', 'ready', 'rev'].includes(st.ph) ? `<span class="mp-qn">${Q.type === 'stage' ? '🎤 ' + B('المنصة', 'The stage') : B(`السؤال ${Q.qn || st.i + 1} من ${Q.qt || Q.n}`, `Question ${Q.qn || st.i + 1} of ${Q.qt || Q.n}`)}</span>` : '';
     const fx = SC && SC.q === st.i && st.ph === 'rev' ? pwNote() : '';
     root.innerHTML = `<div class="mp-play ${cls || ''}"><div class="mp-top"><span dir="auto">${FAN ? '👀 ' : ''}${esc(me)}${TEAMS && myTeam != null ? ` <i style="--c:var(--qz${(myTeam) % 6})">${esc(TEAMS[myTeam])}</i>` : ''}</span>${qn}<b>${FAN ? '' : SC ? SC.s : 0}</b></div>${fx}${html}${!FAN && ['rev', 'lb', 'ready'].includes(st.ph) ? toolsBar() : ''}${!FAN && st.ph === 'q' && cls === 'q' ? skipBtn() : ''}</div>`; if (R) { rxBind(); toolsBind(); } }
   /* ---------- challenge tools: chosen between questions, sent with the next answer ---------- */
