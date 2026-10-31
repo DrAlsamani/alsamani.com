@@ -150,7 +150,7 @@
       <div id="qzQs" class="qz-qs"></div>
       <div class="qz-addq"><button type="button" class="btn ghost" id="qzAddQ">${B('+ سؤال', '+ Question')}</button><button type="button" class="btn ghost" id="qzAddTF">${B('+ صح أو خطأ', '+ True or false')}</button><button type="button" class="btn ghost" id="qzAddG">${B('+ تحدٍّ تفاعلي 🎮', '+ Challenge 🎮')}</button></div>
       <div class="qz-spr"><span>🎲 ${B('وزّع تحديات بين الأسئلة: تحدٍّ بعد كل', 'Spread challenges between the questions: one after every')}</span><select id="qzEvery">${[1, 2, 3, 5, 10].map(n => `<option value="${n}"${n === 3 ? ' selected' : ''}>${n === 1 ? T('سؤال واحد', '1 question') : n === 2 ? T('سؤالين', '2 questions') : n + ' ' + T('أسئلة', 'questions')}</option>`).join('')}</select><button type="button" class="btn ghost" id="qzSpr">${B('وزّع', 'Spread')}</button></div>
-      <div class="qz-bar"><div class="qz-chk" id="qzChk"></div><div class="qz-bar-b"><button type="button" class="btn solid md-go" id="qzGo">${B('ابدأ المسابقة ▶', 'Start the quiz ▶')}</button><button type="button" class="btn ghost" id="qzPv">${B('معاينة', 'Preview')}</button><button type="button" class="btn ghost" id="qzExp">${B('حفظ نسخة', 'Save a copy')}</button></div></div>`;
+      <div class="qz-bar"><div class="qz-chk" id="qzChk"></div><div class="qz-bar-b"><button type="button" class="btn solid md-go" id="qzGo">${B('ابدأ المسابقة ▶', 'Start the quiz ▶')}</button><button type="button" class="btn ghost" id="qzPv">${B('معاينة', 'Preview')}</button><button type="button" class="btn ghost" id="qzExp">${B('حفظ نسخة', 'Save a copy')}</button><button type="button" class="btn ghost" id="qzPub">📤 ${B('انشرها في المكتبة', 'Offer it to the library')}</button></div></div>`;
     const q = s => root.querySelector(s);
     q('#qzBack').onclick = () => { persist(); home(); };
     q('#qzTitle').oninput = e => { Q.title = e.target.value; later(); };
@@ -203,6 +203,7 @@
     };
     q('#qzAddTF').onclick = () => { Q.qs.push(norm({ type: 'tf', opts: [T('صح', 'True'), T('خطأ', 'False')] })); draw(); focusLast(); later(); };
     q('#qzPv').onclick = () => preview(0);
+    q('#qzPub').onclick = offer;
     q('#qzGo').onclick = () => {
       persist();
       if (!Q.qs.length) { toast(B('أضف الأسئلة أولًا.', 'Add questions first.'), 1); return; }
@@ -513,6 +514,30 @@
 
   /* ---------- the AI instructions ---------- */
   const usable = x => x.q && (x.type === 'match' ? (x.pairs || []).length >= 2 : x.type === 'rapid' ? (x.items || []).length >= 3 : x.type === 'num' ? x.ans !== '' && x.ans != null : x.type === 'word' ? !!x.ans : x.type === 'order' ? (x.items || []).length >= 2 : x.type === 'open' ? true : x.opts.filter(o => o.trim()).length >= 2);
+  /* ---------- offering a quiz to the public library: it goes to the site's author, who reviews it first ---------- */
+  function offer() {
+    if ((Q.qs || []).length < 5) return toast(B('أضف ٥ أسئلة على الأقل قبل النشر.', 'Add at least 5 questions first.'), 1);
+    const d = document.createElement('div'); d.className = 'qz-modal';
+    d.innerHTML = `<div class="qz-mbox"><h3>📤 ${B('انشر مسابقتك في مكتبة ميدان', 'Offer your quiz to the Maydan library')}</h3>
+      <p class="pt-fine">${B('تصل المسابقة إلى صاحب الموقع فيراجعها، وإن قُبلت تظهر في المكتبة باسمك ليستفيد منها الجميع.', 'It goes to the site’s author for review; if accepted it appears in the library under your name.')}</p>
+      <label class="sn-lbl">${B('الاسم الذي يظهر مع المسابقة', 'The name shown with the quiz')}<input id="qpN" maxlength="40" dir="auto"></label>
+      <p class="qz-warn">⚠️ ${B('تأكد أن الاسم مناسب للنشر العام (اسمك أو اسم جهتك)، فهو يظهر للجميع.', 'Make sure the name suits public view (yours or your organisation’s); everyone will see it.')}</p>
+      <label class="sn-lbl">${B('لمن تناسب؟ (مثال: طلاب المتوسط، العائلة)', 'Who is it for? (e.g. middle school, families)')}<input id="qpW" maxlength="60" dir="auto"></label>
+      <label class="sn-lbl">${B('وصف قصير', 'A short description')}<input id="qpD" maxlength="140" dir="auto"></label>
+      <label class="sn-lbl">${B('بريدك (اختياري، لا يُنشر)', 'Your email (optional, never published)')}<input id="qpE" type="email" dir="ltr"></label>
+      <label class="qz-ok"><input type="checkbox" id="qpC"> ${B('راجعتُ الأسئلة وتأكدت من صحة إجاباتها', 'I reviewed the questions and checked the answers')}</label>
+      <div class="sn-two"><button type="button" class="btn solid" id="qpGo">${B('أرسل للمراجعة', 'Send for review')}</button><button type="button" class="btn ghost" id="qpX">${B('إلغاء', 'Cancel')}</button></div></div>`;
+    document.body.appendChild(d);
+    const g = s2 => d.querySelector(s2); g('#qpX').onclick = () => d.remove();
+    g('#qpGo').onclick = async () => {
+      const n = g('#qpN').value.trim(); if (!n) return toast(B('اكتب الاسم.', 'Write the name.'), 1); if (!g('#qpC').checked) return toast(B('راجع الأسئلة أولًا وأكّد ذلك.', 'Review the questions first and tick the box.'), 1);
+      const body = { _subject: '[مكتبة ميدان] ' + (Q.title || 'مسابقة') + ' — ' + n, _template: 'table', _captcha: 'false', name: n, who: g('#qpW').value.trim() || '—', desc: g('#qpD').value.trim() || '—', email: g('#qpE').value.trim() || '—', title: Q.title || '—', count: String(Q.qs.length), page: location.href, quiz: JSON.stringify({ title: Q.title, by: n, who: g('#qpW').value.trim(), desc: g('#qpD').value.trim(), qs: Q.qs }) };
+      const b = g('#qpGo'); b.disabled = true; b.textContent = T('جارٍ الإرسال…', 'Sending…');
+      try { const r = await fetch('https://formsubmit.co/ajax/o.alsamani@uoh.edu.sa', { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(body) }); const j = await r.json(); if (!(r.ok && String(j.success) === 'true')) throw 0;
+        d.remove(); toast(B('شكرًا! وصلت مسابقتك وستُراجع قبل نشرها.', 'Thank you! Your quiz arrived and will be reviewed.')); }
+      catch (e) { b.disabled = false; b.textContent = T('أرسل للمراجعة', 'Send for review'); toast(B('تعذّر الإرسال الآن. حاول لاحقًا، أو احفظ نسخة وأرسلها.', 'Could not send now. Try later, or save a copy and send it.'), 1); }
+    };
+  }
   function aiPrompt(topic, n, lv, ty, lg, x) {
     const ar = lg === 'ar', all = ty === 'all'; x = x || {};
     const AUD = { kids: ['تناسب الأطفال بلغة بسيطة جدًا', 'suitable for young children, in very simple words'], prim: ['تناسب طلاب المرحلة الابتدائية', 'suitable for primary school pupils'], mid: ['تناسب طلاب المرحلة المتوسطة', 'suitable for middle school students'], sec: ['تناسب طلاب المرحلة الثانوية', 'suitable for secondary school students'], uni: ['تناسب طلاب الجامعة', 'suitable for university students'], pro: ['تناسب الموظفين والمختصين', 'suitable for staff and specialists'], fam: ['تناسب العائلة بكل أعمارها', 'suitable for a family of all ages'] }[x.aud];

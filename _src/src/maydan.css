@@ -354,3 +354,4 @@ html.md-on{overflow:hidden}
 .mp-fo{list-style:none;padding:0;display:grid;gap:6px;text-align:start}.mp-fo li{background:var(--c);color:#fff;border-radius:10px;padding:6px 10px}
 .mp-tb button[aria-pressed="true"],.mp-nb button[aria-pressed="true"]{background:#e0a458!important;border-color:#e0a458!important;color:#2a1a04!important;opacity:1!important}
 .mp-top b:empty{display:none}
+.md-team .md-tmem{grid-column:1/-1;font-size:.55em;opacity:.85;position:relative;z-index:1}

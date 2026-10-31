@@ -1822,6 +1822,9 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
 .qz-pairs i{font-style:normal;color:#C9822B;font-weight:700}
 .qz-tv{border:0;border-radius:99px;padding:7px 14px;font:inherit;font-size:.8125rem;font-weight:700;color:#fff;cursor:pointer;min-width:58px}.qz-tv.t{background:#2f7d5b}.qz-tv.f{background:#b0533a}
 .qz-pmatch{display:flex;gap:6px;align-items:center;justify-content:space-between;font-size:.8125rem;background:rgba(0,0,0,.05);border-radius:8px;padding:6px 8px;margin-bottom:6px}.qz-pmatch i{font-style:normal;color:#C9822B}
+.qz-modal{position:fixed;inset:0;z-index:120;background:rgba(0,0,0,.45);display:grid;place-items:center;padding:16px}
+.qz-mbox{background:var(--surface,#fff);color:var(--ink,#111);border-radius:18px;padding:18px 20px;width:min(460px,100%);max-height:90vh;overflow:auto;display:grid;gap:10px}
+.qz-mbox h3{margin:0}.qz-warn{margin:0;font-size:.8125rem;background:#fff4e0;color:#7a4a00;border-radius:10px;padding:6px 10px}.qz-ok{display:flex;gap:8px;align-items:flex-start;font-size:.9375rem}.qz-ok input{width:auto}
 </style>
 <div id="qz" class="sn qz"><noscript><span class="ar">تعمل هذه الأداة مع تفعيل JavaScript.</span><span class="en">This tool needs JavaScript.</span></noscript></div>
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script><script>/* Maydan library: ready quizzes to start at once or open and edit. Written in the editor's own format. */
@@ -2334,7 +2337,7 @@ if (typeof module !== 'undefined') module.exports = QZParse;
       <div id="qzQs" class="qz-qs"></div>
       <div class="qz-addq"><button type="button" class="btn ghost" id="qzAddQ">${B('+ سؤال', '+ Question')}</button><button type="button" class="btn ghost" id="qzAddTF">${B('+ صح أو خطأ', '+ True or false')}</button><button type="button" class="btn ghost" id="qzAddG">${B('+ تحدٍّ تفاعلي 🎮', '+ Challenge 🎮')}</button></div>
       <div class="qz-spr"><span>🎲 ${B('وزّع تحديات بين الأسئلة: تحدٍّ بعد كل', 'Spread challenges between the questions: one after every')}</span><select id="qzEvery">${[1, 2, 3, 5, 10].map(n => `<option value="${n}"${n === 3 ? ' selected' : ''}>${n === 1 ? T('سؤال واحد', '1 question') : n === 2 ? T('سؤالين', '2 questions') : n + ' ' + T('أسئلة', 'questions')}</option>`).join('')}</select><button type="button" class="btn ghost" id="qzSpr">${B('وزّع', 'Spread')}</button></div>
-      <div class="qz-bar"><div class="qz-chk" id="qzChk"></div><div class="qz-bar-b"><button type="button" class="btn solid md-go" id="qzGo">${B('ابدأ المسابقة ▶', 'Start the quiz ▶')}</button><button type="button" class="btn ghost" id="qzPv">${B('معاينة', 'Preview')}</button><button type="button" class="btn ghost" id="qzExp">${B('حفظ نسخة', 'Save a copy')}</button></div></div>`;
+      <div class="qz-bar"><div class="qz-chk" id="qzChk"></div><div class="qz-bar-b"><button type="button" class="btn solid md-go" id="qzGo">${B('ابدأ المسابقة ▶', 'Start the quiz ▶')}</button><button type="button" class="btn ghost" id="qzPv">${B('معاينة', 'Preview')}</button><button type="button" class="btn ghost" id="qzExp">${B('حفظ نسخة', 'Save a copy')}</button><button type="button" class="btn ghost" id="qzPub">📤 ${B('انشرها في المكتبة', 'Offer it to the library')}</button></div></div>`;
     const q = s => root.querySelector(s);
     q('#qzBack').onclick = () => { persist(); home(); };
     q('#qzTitle').oninput = e => { Q.title = e.target.value; later(); };
@@ -2387,6 +2390,7 @@ if (typeof module !== 'undefined') module.exports = QZParse;
     };
     q('#qzAddTF').onclick = () => { Q.qs.push(norm({ type: 'tf', opts: [T('صح', 'True'), T('خطأ', 'False')] })); draw(); focusLast(); later(); };
     q('#qzPv').onclick = () => preview(0);
+    q('#qzPub').onclick = offer;
     q('#qzGo').onclick = () => {
       persist();
       if (!Q.qs.length) { toast(B('أضف الأسئلة أولًا.', 'Add questions first.'), 1); return; }
@@ -2697,6 +2701,30 @@ if (typeof module !== 'undefined') module.exports = QZParse;
 
   /* ---------- the AI instructions ---------- */
   const usable = x => x.q && (x.type === 'match' ? (x.pairs || []).length >= 2 : x.type === 'rapid' ? (x.items || []).length >= 3 : x.type === 'num' ? x.ans !== '' && x.ans != null : x.type === 'word' ? !!x.ans : x.type === 'order' ? (x.items || []).length >= 2 : x.type === 'open' ? true : x.opts.filter(o => o.trim()).length >= 2);
+  /* ---------- offering a quiz to the public library: it goes to the site's author, who reviews it first ---------- */
+  function offer() {
+    if ((Q.qs || []).length < 5) return toast(B('أضف ٥ أسئلة على الأقل قبل النشر.', 'Add at least 5 questions first.'), 1);
+    const d = document.createElement('div'); d.className = 'qz-modal';
+    d.innerHTML = `<div class="qz-mbox"><h3>📤 ${B('انشر مسابقتك في مكتبة ميدان', 'Offer your quiz to the Maydan library')}</h3>
+      <p class="pt-fine">${B('تصل المسابقة إلى صاحب الموقع فيراجعها، وإن قُبلت تظهر في المكتبة باسمك ليستفيد منها الجميع.', 'It goes to the site’s author for review; if accepted it appears in the library under your name.')}</p>
+      <label class="sn-lbl">${B('الاسم الذي يظهر مع المسابقة', 'The name shown with the quiz')}<input id="qpN" maxlength="40" dir="auto"></label>
+      <p class="qz-warn">⚠️ ${B('تأكد أن الاسم مناسب للنشر العام (اسمك أو اسم جهتك)، فهو يظهر للجميع.', 'Make sure the name suits public view (yours or your organisation’s); everyone will see it.')}</p>
+      <label class="sn-lbl">${B('لمن تناسب؟ (مثال: طلاب المتوسط، العائلة)', 'Who is it for? (e.g. middle school, families)')}<input id="qpW" maxlength="60" dir="auto"></label>
+      <label class="sn-lbl">${B('وصف قصير', 'A short description')}<input id="qpD" maxlength="140" dir="auto"></label>
+      <label class="sn-lbl">${B('بريدك (اختياري، لا يُنشر)', 'Your email (optional, never published)')}<input id="qpE" type="email" dir="ltr"></label>
+      <label class="qz-ok"><input type="checkbox" id="qpC"> ${B('راجعتُ الأسئلة وتأكدت من صحة إجاباتها', 'I reviewed the questions and checked the answers')}</label>
+      <div class="sn-two"><button type="button" class="btn solid" id="qpGo">${B('أرسل للمراجعة', 'Send for review')}</button><button type="button" class="btn ghost" id="qpX">${B('إلغاء', 'Cancel')}</button></div></div>`;
+    document.body.appendChild(d);
+    const g = s2 => d.querySelector(s2); g('#qpX').onclick = () => d.remove();
+    g('#qpGo').onclick = async () => {
+      const n = g('#qpN').value.trim(); if (!n) return toast(B('اكتب الاسم.', 'Write the name.'), 1); if (!g('#qpC').checked) return toast(B('راجع الأسئلة أولًا وأكّد ذلك.', 'Review the questions first and tick the box.'), 1);
+      const body = { _subject: '[مكتبة ميدان] ' + (Q.title || 'مسابقة') + ' — ' + n, _template: 'table', _captcha: 'false', name: n, who: g('#qpW').value.trim() || '—', desc: g('#qpD').value.trim() || '—', email: g('#qpE').value.trim() || '—', title: Q.title || '—', count: String(Q.qs.length), page: location.href, quiz: JSON.stringify({ title: Q.title, by: n, who: g('#qpW').value.trim(), desc: g('#qpD').value.trim(), qs: Q.qs }) };
+      const b = g('#qpGo'); b.disabled = true; b.textContent = T('جارٍ الإرسال…', 'Sending…');
+      try { const r = await fetch('https://formsubmit.co/ajax/o.alsamani@uoh.edu.sa', { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(body) }); const j = await r.json(); if (!(r.ok && String(j.success) === 'true')) throw 0;
+        d.remove(); toast(B('شكرًا! وصلت مسابقتك وستُراجع قبل نشرها.', 'Thank you! Your quiz arrived and will be reviewed.')); }
+      catch (e) { b.disabled = false; b.textContent = T('أرسل للمراجعة', 'Send for review'); toast(B('تعذّر الإرسال الآن. حاول لاحقًا، أو احفظ نسخة وأرسلها.', 'Could not send now. Try later, or save a copy and send it.'), 1); }
+    };
+  }
   function aiPrompt(topic, n, lv, ty, lg, x) {
     const ar = lg === 'ar', all = ty === 'all'; x = x || {};
     const AUD = { kids: ['تناسب الأطفال بلغة بسيطة جدًا', 'suitable for young children, in very simple words'], prim: ['تناسب طلاب المرحلة الابتدائية', 'suitable for primary school pupils'], mid: ['تناسب طلاب المرحلة المتوسطة', 'suitable for middle school students'], sec: ['تناسب طلاب المرحلة الثانوية', 'suitable for secondary school students'], uni: ['تناسب طلاب الجامعة', 'suitable for university students'], pro: ['تناسب الموظفين والمختصين', 'suitable for staff and specialists'], fam: ['تناسب العائلة بكل أعمارها', 'suitable for a family of all ages'] }[x.aud];
@@ -3229,6 +3257,7 @@ html.md-on{overflow:hidden}
 .mp-fo{list-style:none;padding:0;display:grid;gap:6px;text-align:start}.mp-fo li{background:var(--c);color:#fff;border-radius:10px;padding:6px 10px}
 .mp-tb button[aria-pressed="true"],.mp-nb button[aria-pressed="true"]{background:#e0a458!important;border-color:#e0a458!important;color:#2a1a04!important;opacity:1!important}
 .mp-top b:empty{display:none}
+.md-team .md-tmem{grid-column:1/-1;font-size:.55em;opacity:.85;position:relative;z-index:1}
 </style><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script>window.MD_CFG={"apiKey": "AIzaSyA50i75DT1Is1a6Yn6snW1_JVObc8S3F0Y", "authDomain": "maydan-705ae.firebaseapp.com", "databaseURL": "https://maydan-705ae-default-rtdb.europe-west1.firebasedatabase.app", "projectId": "maydan-705ae", "appId": "1:342187013133:web:d5c2396f0db413f3c51144"};window.MD_MARK="<svg class=\"md-mark\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><rect x=\"4\" y=\"4\" width=\"40\" height=\"40\" rx=\"12\" fill=\"#23336F\"/><path d=\"M24 9l4.2 6.8 7.8-1.8-1.8 7.8L41 24l-6.8 4.2 1.8 7.8-7.8-1.8L24 39l-4.2-6.8-7.8 1.8 1.8-7.8L7 24l6.8-4.2-1.8-7.8 7.8 1.8z\" fill=\"#C9822B\"/><circle cx=\"24\" cy=\"24\" r=\"6.5\" fill=\"#23336F\"/><circle cx=\"24\" cy=\"24\" r=\"3\" fill=\"#F3E3C7\"/></svg>";</script><script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script><script>/* Maydan challenges: short games played on every phone at once. Every phone gets the same level (same seed),
    so the race is fair. Each game reports a score; higher is better. */
 window.MDGames = (function () {
@@ -4479,7 +4508,7 @@ window.MDLive = (function () {
     G.ref.child('top').set({ p: top.map(u => ({ n: G.players[u] || '', s: G.score[u], d: (G.lastD || {})[u] || 0, w: (G.prev || {})[u] || 0 })), t: tt.slice(0, 5).map(t => ({ n: t.name, s: t.avg, k: t.k })), d: decisive || null });
     const q = frame(`<div class="md-lb${G.teams ? ' with-teams' : ''}">${note ? `<p class="md-note">${esc(note)}</p>` : ''}
         <h2>${decisive ? B('🏁 لحظة الحسم: بقي سؤال واحد بنقاط مضاعفة', '🏁 Decisive moment: one question left, worth double') : B('الترتيب', 'Ranking')}</h2>
-        ${G.teams ? `<div class="md-teams">${tt.slice(0, 5).map((t, k) => `<div class="md-team" style="--c:var(--qz${(t.k) % 6});--w:${Math.round(100 * t.avg / tmax)}%;--d:${k * 120}ms"><b>${k + 1}</b><span dir="auto">${esc(t.name)}</span><i></i><em>${t.avg}</em></div>`).join('')}<small>${B('نتيجة الفريق متوسط نقاط أعضائه', 'A team’s score is its members’ average')}</small></div>` : ''}
+        ${G.teams ? `<div class="md-teams">${tt.slice(0, 5).map((t, k) => `<div class="md-team" style="--c:var(--qz${(t.k) % 6});--w:${Math.round(100 * t.avg / tmax)}%;--d:${k * 120}ms"><b>${k + 1}</b><span dir="auto">${esc(t.name)}</span><i></i><em>${t.avg}</em><small class="md-tmem">${Object.keys(G.players).filter(u => G.team[u] === t.k).sort(byRank).slice(0, 4).map((u, j) => `${j + 1}. ${esc(G.players[u] || '')} ${G.score[u] || 0}`).join(' · ')}</small></div>`).join('')}<small>${B('نتيجة الفريق متوسط نقاط أعضائه', 'A team’s score is its members’ average')}</small></div>` : ''}
         <ol>${top.map((u, k) => `<li style="--d:${k * 90}ms">${G.teams && G.team[u] != null ? `<s style="--c:var(--qz${(G.team[u]) % 6})"></s>` : ''}<b>${k + 1}</b><span dir="auto">${esc(G.players[u] || '')}</span>${decisive && k ? `<small>−${G.score[top[k - 1]] - G.score[u]}</small>` : ''}<em>${G.score[u]}</em>${G.streak[u] >= 3 ? `<i title="${T('إجابات صحيحة متتالية', 'right answers in a row')}">🔥${G.streak[u]}</i>` : ''}</li>`).join('')}</ol>
         ${climb && best >= (order.length >= 6 ? 2 : 1) ? `<p class="md-climb">${B(`⬆ الصاعد: ${esc(G.players[climb])} تقدّم ${best} ${best === 1 ? 'مركزًا' : 'مراكز'}`, `⬆ Riser: ${esc(G.players[climb])} climbed ${best} place${best > 1 ? 's' : ''}`)}</p>` : ''}</div>`,
       `<button type="button" class="btn solid" data-next>${B('السؤال التالي', 'Next question')}</button>`, true);
