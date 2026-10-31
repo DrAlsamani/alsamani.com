@@ -37,7 +37,7 @@ window.MDLive = (function () {
   };
 
   /* ---------- keeping a game so it can be resumed ---------- */
-  const keep = () => { if (!G) return; try { localStorage.setItem(SAVE, JSON.stringify({ pin: G.pin, quiz: G.quiz, i: G.done, score: G.score, qp: G.qp, out: G.out, streak: G.streak, team: G.team, teams: G.teams, opts: G.opts, gold: G.gold, players: G.players, used: G.used || {}, lockJoin: !!G.lockJoin, shuffled: !!G.shuffled, at: Date.now() })); } catch (e) {} };
+  const keep = () => { if (!G) return; try { localStorage.setItem(SAVE, JSON.stringify({ pin: G.pin, quiz: G.quiz, i: G.done, score: G.score, qp: G.qp, out: G.out, streak: G.streak, team: G.team, teams: G.teams, opts: G.opts, gold: G.gold, players: G.players, phones: !!G.phones, used: G.used || {}, lockJoin: !!G.lockJoin, shuffled: !!G.shuffled, at: Date.now() })); } catch (e) {} };
   const forget = () => { try { localStorage.removeItem(SAVE); } catch (e) {} };
   function pending() { try { const s = JSON.parse(localStorage.getItem(SAVE) || 'null'); return s && Date.now() - s.at < 7 * 864e5 ? s : null; } catch (e) { return null; } }
 
@@ -81,6 +81,7 @@ window.MDLive = (function () {
       if (!room || room.host !== uid) { forget(); el.innerHTML = `<div class="md-wait">${B('انتهت صلاحية هذه المسابقة ولم تعد موجودة.', 'This quiz is no longer available.')}<button type="button" class="btn ghost" data-x>${B('إغلاق', 'Close')}</button></div>`; el.querySelector('[data-x]').onclick = leave; return; }
       fresh(s.quiz, el, s.pin);
       Object.assign(G, { score: s.score || {}, qp: s.qp || {}, out: s.out || {}, streak: s.streak || {}, team: s.team || {}, teams: s.teams || null, opts: s.opts || G.opts, gold: s.gold, players: s.players || {}, i: s.i, done: s.i, used: s.used || {}, lockJoin: !!s.lockJoin, shuffled: !!s.shuffled });
+      if (s.phones) { phonesMode(true); if (G.i >= 0) G.el.classList.add('started'); }
       keepPlayers();
       if (G.i < 0) return lobby();
       await G.ref.child('st').set({ ph: 'lb', i: G.i, lock: !!G.lockJoin });
@@ -122,7 +123,7 @@ window.MDLive = (function () {
   }
   function frame(inner, bar, canPause) {
     if (G.note) { inner = inner.replace(/<\/div>\s*$/, `<p class="md-surv">${G.note}</p></div>`); G.note = null; }
-    G.el.innerHTML = `<div class="md-scr">${inner}</div><div class="md-fx" aria-hidden="true"></div><div class="md-ctl">${bar || ''}<span class="md-sp"></span>${canPause ? `<button type="button" class="md-cb" data-pause>${B('إيقاف مؤقت', 'Pause')}</button>` : ''}<button type="button" class="md-cb" data-mute title="${T('الصوت', 'Sound')}">${mute ? '🔇' : '🔊'}</button><button type="button" class="md-cb" data-fs title="${T('ملء الشاشة', 'Full screen')}">⛶</button><button type="button" class="md-cb" data-end>${B('إنهاء', 'End')}</button></div>`;
+    (G.box || G.el).innerHTML = `<div class="md-scr">${inner}</div><div class="md-fx" aria-hidden="true"></div><div class="md-ctl">${bar || ''}<span class="md-sp"></span>${canPause ? `<button type="button" class="md-cb" data-pause>${B('إيقاف مؤقت', 'Pause')}</button>` : ''}<button type="button" class="md-cb" data-mute title="${T('الصوت', 'Sound')}">${mute ? '🔇' : '🔊'}</button><button type="button" class="md-cb" data-fs title="${T('ملء الشاشة', 'Full screen')}">⛶</button><button type="button" class="md-cb" data-end>${B('إنهاء', 'End')}</button></div>`;
     clearTimeout(G.autoT);
     const q = s => G.el.querySelector(s);
     if (G.opts.auto && !G.ended) { const nb = G.el.querySelector('[data-next]'); if (nb) G.autoT = setTimeout(() => { if (nb.isConnected) nb.click(); }, G.el.querySelector('.md-lb') ? 6500 : 4500); }
@@ -150,6 +151,20 @@ window.MDLive = (function () {
       fx.appendChild(e); setTimeout(() => e.remove(), 2600);
     };
     sub(G.ref.child('rx'), 'child_added', fly); sub(G.ref.child('rx'), 'child_changed', fly);
+  }
+
+  /* ---------- phones only: no big screen; the host's own phone runs the quiz and plays it in a panel below ----------
+     The panel is the player page itself (same browser, so the same player), kept alive while the screen above changes. */
+  function phonesMode(on) {
+    G.phones = on; if (on) G.opts.auto = true;   // nobody stands at a screen, so it moves on by itself
+    G.el.classList.toggle('phones', on);
+    if (on && !G.fr) {
+      const box = document.createElement('div'); box.className = 'md-box'; while (G.el.firstChild) box.appendChild(G.el.firstChild);
+      const fr = document.createElement('iframe'); fr.className = 'md-me'; fr.title = T('جوالي', 'My phone'); fr.src = '../../m/index.html?embed=1&p=' + G.pin;
+      G.el.append(box, fr); G.box = box; G.fr = fr;
+    }
+    if (G.fr) G.fr.hidden = !on;
+    keep();
   }
 
   /* ---------- challenge tools: once each per game, sent with the answer ----------
@@ -226,6 +241,7 @@ window.MDLive = (function () {
         <label class="md-ck"><input type="checkbox" data-o="auto"${O.auto ? ' checked' : ''}> ${B('▶ تقدّم تلقائي (المشرف يلعب من جواله أيضًا: ادخل بالرمز نفسه)', '▶ Move on automatically (so the host can play on a phone too, with the same code)')}</label>
         <label class="md-ck"><input type="checkbox" data-o="bet"${O.bet ? ' checked' : ''}> ${B('🎯 الثقة: يراهن المشارك على إجابته فيكسب أو يخسر نقاطًا إضافية', '🎯 Confidence: players can bet on their answer to win or lose extra points')}</label>
         <button type="button" class="btn solid" data-done>${B('تم', 'Done')}</button></div>
+      <div class="md-mode"><span>${B('كيف تعرضون المسابقة؟', 'How will you follow the quiz?')}</span><button type="button" data-mode="screen" aria-pressed="${!G.phones}">📺 ${B('شاشة عرض', 'A big screen')}</button><button type="button" data-mode="phones" aria-pressed="${!!G.phones}">📱 ${B('جوالات فقط (وأنا ألعب معهم)', 'Phones only (and I play too)')}</button></div>
       <div class="md-set md-teamp" id="mdTeamP" hidden>
         <h3>👥 ${B('الفرق', 'Teams')}</h3>
         <label>${B('عدد الفرق', 'Number of teams')}<select data-o="teams"><option value="0">${T('بلا فرق (كل مشارك وحده)', 'No teams (everyone on their own)')}</option>${[2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 15, 20, 25, 30].map(n => `<option value="${n}"${G.teams && G.teams.length === n ? ' selected' : ''}>${n} ${n <= 10 ? T('فرق', 'teams') : T('فريقًا', 'teams')}</option>`).join('')}</select></label>
@@ -295,11 +311,13 @@ window.MDLive = (function () {
     }));
     teamNames(); draw();
     q('[data-set]').onclick = () => { tp.hidden = true; set.hidden = !set.hidden; };
+    G.el.querySelectorAll('[data-mode]').forEach(b => b.onclick = () => { phonesMode(b.dataset.mode === 'phones'); lobby(); });
     q('[data-teams]').onclick = () => { set.hidden = true; tp.hidden = !tp.hidden; };
     tp.querySelector('[data-tdone]').onclick = () => { tp.hidden = true; };
     set.querySelector('[data-done]').onclick = () => { set.hidden = true; };
     q('[data-lock]').onchange = e => { G.lockJoin = e.target.checked; G.ref.child('st/lock').set(e.target.checked); };
     go.onclick = () => {
+      if (G.phones) G.el.classList.add('started');
       G.lockJoin = !!q('[data-lock]').checked; placeAll(G.opts.tmode === 'auto');
       if (O.shuf && !G.shuffled) { G.shuffled = true; G.quiz = shuffleQuiz(G.quiz); }
       // the golden question falls somewhere in the middle, never first or last

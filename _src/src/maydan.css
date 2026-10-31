@@ -369,3 +369,18 @@ html.md-on{overflow:hidden}
 .md-flag{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:clamp(24px,4vh,44px)}
 .md-lane small{position:absolute;left:12px;bottom:4px;font-size:clamp(11px,1.3vw,17px);opacity:.9;color:#ffe2b0}
 .md-race.done .md-lane small{left:auto;right:60px;top:8px;bottom:auto}
+/* how the quiz is followed: a big screen or phones only */
+.md-mode{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center;margin:1.5vh auto 0}
+.md-mode span{width:100%;text-align:center;font-size:.9375rem;opacity:.85}
+.md-mode button{font:inherit;font-weight:700;border:2px solid rgba(255,255,255,.35);background:rgba(255,255,255,.08);color:#fff;border-radius:12px;padding:9px 14px;cursor:pointer}
+.md-mode button[aria-pressed="true"]{background:#e0a458;border-color:#e0a458;color:#2a1a04}
+.md-live.phones{flex-direction:column}
+.md-live.phones .md-box{flex:0 0 auto;max-height:46vh;display:flex;flex-direction:column;min-height:0;overflow:auto}
+.md-live.phones.started .md-box{max-height:none}.md-live.phones.started .md-scr{display:none}
+.md-live.phones .md-me{flex:1;min-height:0;width:100%;border:0;background:#fff}
+html.mp-embed header.top,html.mp-embed .site-foot,html.mp-embed .tl-crumb,html.mp-embed .md-head,html.mp-embed .sf-nav{display:none!important}
+html.mp-embed body{padding-top:0!important}
+.mp-tools{background:#f1f3fa;border-color:#d8ddef;color:#16201f}
+.mp-tb button,.mp-nb button{background:#23336F!important;border-color:#23336F!important;color:#fff!important}
+.mp-tb button[aria-pressed="true"],.mp-nb button[aria-pressed="true"]{background:#e0a458!important;border-color:#c98a3a!important;color:#2a1a04!important}
+.mp-armed{color:#1e7a4c}.mp-skip{color:#23336F;border-color:#23336F}
