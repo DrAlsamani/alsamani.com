@@ -1782,6 +1782,14 @@ html.mp-embed body{padding-top:0!important}
 .mp-tb button,.mp-nb button{background:#23336F!important;border-color:#23336F!important;color:#fff!important}
 .mp-tb button[aria-pressed="true"],.mp-nb button[aria-pressed="true"]{background:#e0a458!important;border-color:#c98a3a!important;color:#2a1a04!important}
 .mp-armed{color:#1e7a4c}.mp-skip{color:#23336F;border-color:#23336F}
+/* the stage: statements in speech bubbles, newest first */
+.md-stage,.md-wall{display:flex;flex-wrap:wrap;gap:1.4vh 1.4vw;justify-content:center;align-content:flex-start;margin:2vh auto 0;width:min(1100px,96vw)}
+.md-bub{position:relative;max-width:min(520px,44vw);background:#fff;color:#16201f;border-radius:20px;padding:1.2vh 1.6vw 1.4vh;box-shadow:0 0 0 4px var(--c),0 8px 20px rgba(0,0,0,.3);animation:mdBub .45s cubic-bezier(.3,1.4,.5,1) both;cursor:pointer}
+.md-bub::after{content:"";position:absolute;bottom:-12px;inset-inline-start:26px;border:12px solid transparent;border-top-color:#fff;border-bottom:0}
+.md-bub b{display:block;color:var(--c);font-size:clamp(13px,1.5vw,20px)}.md-bub p{margin:.3em 0 0;font-size:clamp(17px,2.2vw,32px);font-weight:700;line-height:1.35}
+.md-stage .md-bub:first-child{transform:scale(1.08)}
+@keyframes mdBub{from{opacity:0;transform:translateY(20px) scale(.7)}}
+.mp-ta{min-height:96px;resize:vertical;font:inherit}
 </style>
 <div id="mp" class="sn mp"><noscript><span class="ar">تعمل هذه الصفحة مع تفعيل JavaScript.</span><span class="en">This page needs JavaScript.</span></noscript></div>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script>window.MD_CFG={"apiKey": "AIzaSyA50i75DT1Is1a6Yn6snW1_JVObc8S3F0Y", "authDomain": "maydan-705ae.firebaseapp.com", "databaseURL": "https://maydan-705ae-default-rtdb.europe-west1.firebasedatabase.app", "projectId": "maydan-705ae", "appId": "1:342187013133:web:d5c2396f0db413f3c51144"};window.MD_MARK="<svg class=\"md-mark\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><rect x=\"4\" y=\"4\" width=\"40\" height=\"40\" rx=\"12\" fill=\"#23336F\"/><path d=\"M24 9l4.2 6.8 7.8-1.8-1.8 7.8L41 24l-6.8 4.2 1.8 7.8-7.8-1.8L24 39l-4.2-6.8-7.8 1.8 1.8-7.8L7 24l6.8-4.2-1.8-7.8 7.8 1.8z\" fill=\"#C9822B\"/><circle cx=\"24\" cy=\"24\" r=\"6.5\" fill=\"#23336F\"/><circle cx=\"24\" cy=\"24\" r=\"3\" fill=\"#F3E3C7\"/></svg>";</script><script>/* Maydan challenges: short games played on every phone at once. Every phone gets the same level (same seed),
@@ -2656,6 +2664,7 @@ window.MDGames = (function () {
     const T2 = Q.type, pic = Q.img ? `<img class="mp-img" src="${Q.img}" alt="">` : '';
     const inner = T2 === 'num' ? `<input class="mp-in" id="mpIn" type="text" inputmode="decimal" autocomplete="off" dir="ltr" placeholder="${isAr() ? 'اكتب رقمًا' : 'Type a number'}">${Q.unit ? `<p class="mp-hint">${esc(Q.unit)}</p>` : ''}`
       : T2 === 'word' ? `<p class="mp-mask" id="mpW" dir="auto">${esc(Q.wl || '')}</p><input class="mp-in" id="mpIn" maxlength="24" dir="auto" autocomplete="off" placeholder="${isAr() ? 'اكتب الكلمة' : 'Type the word'}">`
+      : T2 === 'stage' ? `<textarea class="mp-in mp-ta" id="mpIn" maxlength="140" rows="3" dir="auto" placeholder="${isAr() ? 'اكتب تصريحك (١٤٠ حرفًا)' : 'Your statement (140 characters)'}"></textarea>`
       : T2 === 'open' ? `<input class="mp-in" id="mpIn" maxlength="40" dir="auto" autocomplete="off" placeholder="${isAr() ? 'اكتب إجابتك' : 'Write your answer'}">`
       : T2 === 'match' ? `<div class="mp-mrows" id="mpMr">${(Q.items || []).map((v, j) => `<button type="button" class="mp-mrow" data-l="${j}" style="--c:var(--qz${j % 6})"><span dir="auto">${esc(v)}</span><i>↔</i><b dir="auto">…</b></button>`).join('')}</div><p class="mp-hint" id="mpMh"></p><div class="mp-ord" id="mpOrd">${(Q.opts2 || []).map((v, j) => `<button type="button" data-o="${j}" style="--c:#6b7393"><span dir="auto">${esc(v)}</span></button>`).join('')}</div><button type="button" class="mg-btn" id="mpUndo">${B('⌫ تراجع', '⌫ Undo')}</button>`
       : T2 === 'rapid' ? `<p class="mp-rk" id="mpRk"></p><p class="mp-rs" id="mpRs" dir="auto"></p><div class="mp-rtf"><button type="button" class="t" data-tf="1">${B('صح', 'True')}</button><button type="button" class="f" data-tf="0">${B('خطأ', 'False')}</button></div>`
@@ -2704,7 +2713,7 @@ window.MDGames = (function () {
   function question() {
     if (!Q || Q.i !== st.i) { setTimeout(draw, 200); shown = ''; return; }
     if (Q.type === 'game') return playGame();
-    if (['num', 'word', 'order', 'open', 'match', 'rapid'].includes(Q.type) && sent !== st.i) return textQ();
+    if (['num', 'word', 'order', 'open', 'match', 'rapid', 'stage'].includes(Q.type) && sent !== st.i) return textQ();
     if (sent === st.i) return screen(`<div class="mp-wait"><p class="mp-big">${B('وصلت إجابتك', 'Answer sent')}</p><p>${B('انتظر النتيجة…', 'Wait for the result…')}</p></div>`);
     const multi = !!Q.multi, pick = new Set();
     const veil = Q.img && Q.rv ? `<div class="md-pic mp-pic"><img src="${Q.img}" alt=""><div class="md-veil go">${Array.from({ length: 24 }, (_, k) => `<i style="--d:${(Math.random() * Q.rv * .85).toFixed(2)}s"></i>`).join('')}</div></div>` : Q.img ? `<img class="mp-img" src="${Q.img}" alt="">` : '';
@@ -2738,7 +2747,7 @@ window.MDGames = (function () {
     if (!SC || !OK || (SC.q != null && SC.q !== st.i)) { if (st.ph === 'rev') screen(`<div class="mp-wait"><p>${B('لحظة…', 'One moment…')}</p></div>`); shown = ''; return; }
     if (st.ph === 'lb' && TOP) return screen(`<div class="mp-res end"><p class="mp-big">${B('الترتيب', 'Ranking')}</p>${topList()}<p class="mp-rank">${B(`مركزك: ${SC.r}`, `Your place: ${SC.r}`)}</p></div>` + rxBar(), 'end');
     if (game) { game.stop(); game = null; }
-    if (Q && Q.i === st.i && (Q.type === 'poll' || Q.type === 'open')) return screen(`<div class="mp-res end"><p class="mp-sym">🗳️</p><p class="mp-big">${SC.a ? B('شكرًا، وصلت مشاركتك', 'Thanks, your answer is in') : B('انتهى الوقت', 'Time’s up')}</p><p>${B('انظر النتائج على الشاشة', 'See the results on the screen')}</p><p class="mp-rank">${B(`مركزك: ${SC.r}`, `Your place: ${SC.r}`)}</p></div>` + rxBar(), 'end');
+    if (Q && Q.i === st.i && (Q.type === 'poll' || Q.type === 'open' || Q.type === 'stage')) return screen(`<div class="mp-res end"><p class="mp-sym">🗳️</p><p class="mp-big">${SC.a ? B('شكرًا، وصلت مشاركتك', 'Thanks, your answer is in') : B('انتهى الوقت', 'Time’s up')}</p><p>${B('انظر النتائج على الشاشة', 'See the results on the screen')}</p><p class="mp-rank">${B(`مركزك: ${SC.r}`, `Your place: ${SC.r}`)}</p></div>` + rxBar(), 'end');
     if (Q && Q.i === st.i && (Q.type === 'match' || Q.type === 'rapid')) {
       const ok2 = SC.c; if (st.ph === 'rev') buzz(ok2 ? [40, 60, 40] : 200);
       const key = Q.type === 'match' ? `<ol class="mp-ordr">${[].concat(OK).map(v => `<li dir="auto">${esc(v)}</li>`).join('')}</ol>` : '';

@@ -205,6 +205,7 @@
     const T2 = Q.type, pic = Q.img ? `<img class="mp-img" src="${Q.img}" alt="">` : '';
     const inner = T2 === 'num' ? `<input class="mp-in" id="mpIn" type="text" inputmode="decimal" autocomplete="off" dir="ltr" placeholder="${isAr() ? 'اكتب رقمًا' : 'Type a number'}">${Q.unit ? `<p class="mp-hint">${esc(Q.unit)}</p>` : ''}`
       : T2 === 'word' ? `<p class="mp-mask" id="mpW" dir="auto">${esc(Q.wl || '')}</p><input class="mp-in" id="mpIn" maxlength="24" dir="auto" autocomplete="off" placeholder="${isAr() ? 'اكتب الكلمة' : 'Type the word'}">`
+      : T2 === 'stage' ? `<textarea class="mp-in mp-ta" id="mpIn" maxlength="140" rows="3" dir="auto" placeholder="${isAr() ? 'اكتب تصريحك (١٤٠ حرفًا)' : 'Your statement (140 characters)'}"></textarea>`
       : T2 === 'open' ? `<input class="mp-in" id="mpIn" maxlength="40" dir="auto" autocomplete="off" placeholder="${isAr() ? 'اكتب إجابتك' : 'Write your answer'}">`
       : T2 === 'match' ? `<div class="mp-mrows" id="mpMr">${(Q.items || []).map((v, j) => `<button type="button" class="mp-mrow" data-l="${j}" style="--c:var(--qz${j % 6})"><span dir="auto">${esc(v)}</span><i>↔</i><b dir="auto">…</b></button>`).join('')}</div><p class="mp-hint" id="mpMh"></p><div class="mp-ord" id="mpOrd">${(Q.opts2 || []).map((v, j) => `<button type="button" data-o="${j}" style="--c:#6b7393"><span dir="auto">${esc(v)}</span></button>`).join('')}</div><button type="button" class="mg-btn" id="mpUndo">${B('⌫ تراجع', '⌫ Undo')}</button>`
       : T2 === 'rapid' ? `<p class="mp-rk" id="mpRk"></p><p class="mp-rs" id="mpRs" dir="auto"></p><div class="mp-rtf"><button type="button" class="t" data-tf="1">${B('صح', 'True')}</button><button type="button" class="f" data-tf="0">${B('خطأ', 'False')}</button></div>`
@@ -253,7 +254,7 @@
   function question() {
     if (!Q || Q.i !== st.i) { setTimeout(draw, 200); shown = ''; return; }
     if (Q.type === 'game') return playGame();
-    if (['num', 'word', 'order', 'open', 'match', 'rapid'].includes(Q.type) && sent !== st.i) return textQ();
+    if (['num', 'word', 'order', 'open', 'match', 'rapid', 'stage'].includes(Q.type) && sent !== st.i) return textQ();
     if (sent === st.i) return screen(`<div class="mp-wait"><p class="mp-big">${B('وصلت إجابتك', 'Answer sent')}</p><p>${B('انتظر النتيجة…', 'Wait for the result…')}</p></div>`);
     const multi = !!Q.multi, pick = new Set();
     const veil = Q.img && Q.rv ? `<div class="md-pic mp-pic"><img src="${Q.img}" alt=""><div class="md-veil go">${Array.from({ length: 24 }, (_, k) => `<i style="--d:${(Math.random() * Q.rv * .85).toFixed(2)}s"></i>`).join('')}</div></div>` : Q.img ? `<img class="mp-img" src="${Q.img}" alt="">` : '';
@@ -287,7 +288,7 @@
     if (!SC || !OK || (SC.q != null && SC.q !== st.i)) { if (st.ph === 'rev') screen(`<div class="mp-wait"><p>${B('لحظة…', 'One moment…')}</p></div>`); shown = ''; return; }
     if (st.ph === 'lb' && TOP) return screen(`<div class="mp-res end"><p class="mp-big">${B('الترتيب', 'Ranking')}</p>${topList()}<p class="mp-rank">${B(`مركزك: ${SC.r}`, `Your place: ${SC.r}`)}</p></div>` + rxBar(), 'end');
     if (game) { game.stop(); game = null; }
-    if (Q && Q.i === st.i && (Q.type === 'poll' || Q.type === 'open')) return screen(`<div class="mp-res end"><p class="mp-sym">🗳️</p><p class="mp-big">${SC.a ? B('شكرًا، وصلت مشاركتك', 'Thanks, your answer is in') : B('انتهى الوقت', 'Time’s up')}</p><p>${B('انظر النتائج على الشاشة', 'See the results on the screen')}</p><p class="mp-rank">${B(`مركزك: ${SC.r}`, `Your place: ${SC.r}`)}</p></div>` + rxBar(), 'end');
+    if (Q && Q.i === st.i && (Q.type === 'poll' || Q.type === 'open' || Q.type === 'stage')) return screen(`<div class="mp-res end"><p class="mp-sym">🗳️</p><p class="mp-big">${SC.a ? B('شكرًا، وصلت مشاركتك', 'Thanks, your answer is in') : B('انتهى الوقت', 'Time’s up')}</p><p>${B('انظر النتائج على الشاشة', 'See the results on the screen')}</p><p class="mp-rank">${B(`مركزك: ${SC.r}`, `Your place: ${SC.r}`)}</p></div>` + rxBar(), 'end');
     if (Q && Q.i === st.i && (Q.type === 'match' || Q.type === 'rapid')) {
       const ok2 = SC.c; if (st.ph === 'rev') buzz(ok2 ? [40, 60, 40] : 200);
       const key = Q.type === 'match' ? `<ol class="mp-ordr">${[].concat(OK).map(v => `<li dir="auto">${esc(v)}</li>`).join('')}</ol>` : '';

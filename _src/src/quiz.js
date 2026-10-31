@@ -28,7 +28,7 @@
     const a = document.createElement('a'); a.href = URL.createObjectURL(f); a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 4000);
   };
   // each kind gets the time it needs: typing or arranging takes longer than a tap
-  const suggest = x => x && x.type === 'rapid' ? (TIMES.find(t => t >= Math.min(90, Math.max(20, 4 * (x.items || []).length))) || 90) : ({ tf: 15, mc: 20, poll: 20, num: 25, word: 30, order: 30, open: 30, match: 40 }[x && x.type] || 20);
+  const suggest = x => x && x.type === 'rapid' ? (TIMES.find(t => t >= Math.min(90, Math.max(20, 4 * (x.items || []).length))) || 90) : ({ tf: 15, mc: 20, poll: 20, num: 25, word: 30, order: 30, open: 30, stage: 60, match: 40 }[x && x.type] || 20);
   const norm = q => Object.assign({ id: uid(), type: 'mc', q: '', opts: ['', ''], ok: [], pts: 1, img: null, timeSet: false }, q, { opts: (q.opts && q.opts.length ? q.opts : ['', '']).slice(0, 6) }, q.time ? { time: q.time, timeSet: true } : {});
 
   let list = store.get('list', []), Q = null;
@@ -119,7 +119,7 @@
 
   /* ---------- editor ---------- */
   // the editor's quiz in the form the live screen plays
-  const live = Q => ({ title: Q.title, qs: Q.qs.map(x => x.type === 'game' ? { type: 'game', g: x.g, q: '', opts: [], ok: [], pts: x.pts, time: x.time || 30, seed: 1 + Math.floor(Math.random() * 1e9) } : ({ type: x.type, q: x.q, opts: TEXTY.includes(x.type) ? [] : x.opts.filter(o => o.trim()), ok: x.type === 'poll' || TEXTY.includes(x.type) ? [] : x.ok.map(j => x.opts.slice(0, j).filter(o => o.trim()).length), pts: x.type === 'open' || x.type === 'poll' ? 0 : x.pts, img: x.img, reveal: !!(x.reveal && x.img && x.type === 'mc'), ans: x.ans, unit: x.unit || '', items: x.type === 'order' ? x.items.filter(v => v.trim()) : x.type === 'rapid' ? x.items.filter(v => v.trim()) : null, truth: x.type === 'rapid' ? x.items.map((v, j) => v.trim() ? !!x.truth[j] : null).filter(v => v != null) : null, pairs: x.type === 'match' ? x.pairs.filter(p => p[0].trim() && p[1].trim()).map(p => [p[0].trim(), p[1].trim()]) : null, time: x.timeSet ? x.time : suggest(x) })) });
+  const live = Q => ({ title: Q.title, qs: Q.qs.map(x => x.type === 'game' ? { type: 'game', g: x.g, q: '', opts: [], ok: [], pts: x.pts, time: x.time || 30, seed: 1 + Math.floor(Math.random() * 1e9) } : ({ type: x.type, q: x.q, opts: TEXTY.includes(x.type) ? [] : x.opts.filter(o => o.trim()), ok: x.type === 'poll' || TEXTY.includes(x.type) ? [] : x.ok.map(j => x.opts.slice(0, j).filter(o => o.trim()).length), pts: x.type === 'open' || x.type === 'poll' || x.type === 'stage' ? 0 : x.pts, img: x.img, reveal: !!(x.reveal && x.img && x.type === 'mc'), ans: x.ans, unit: x.unit || '', items: x.type === 'order' ? x.items.filter(v => v.trim()) : x.type === 'rapid' ? x.items.filter(v => v.trim()) : null, truth: x.type === 'rapid' ? x.items.map((v, j) => v.trim() ? !!x.truth[j] : null).filter(v => v != null) : null, pairs: x.type === 'match' ? x.pairs.filter(p => p[0].trim() && p[1].trim()).map(p => [p[0].trim(), p[1].trim()]) : null, time: x.timeSet ? x.time : suggest(x) })) });
   function editor() {
     setTimeout(() => { const h = document.querySelector('.md-page') || root; window.scrollTo({ top: Math.max(0, h.getBoundingClientRect().top + scrollY - 70), behavior: 'instant' }); }, 0);
     root.innerHTML = `<div class="qz-top"><button type="button" class="sn-lnk" id="qzBack">${B('‹ مسابقاتي', '‹ My quizzes')}</button></div>
@@ -148,7 +148,7 @@
           <div class="qz-step2"><b>${B('٢', '2')}</b><p>${B('حين يكتب الأسئلة، انسخ رده كاملًا ثم اضغط:', 'When it has written them, copy its whole reply, then tap:')}</p><button type="button" class="btn solid" id="qzBack2">${B('لصق رد الذكاء الاصطناعي', 'Paste the AI’s reply')}</button></div></div>
       </div>
       <div id="qzQs" class="qz-qs"></div>
-      <div class="qz-addq"><button type="button" class="btn ghost" id="qzAddQ">${B('+ سؤال', '+ Question')}</button><button type="button" class="btn ghost" id="qzAddTF">${B('+ صح أو خطأ', '+ True or false')}</button><button type="button" class="btn ghost" id="qzAddG">${B('+ تحدٍّ تفاعلي 🎮', '+ Challenge 🎮')}</button></div>
+      <div class="qz-addq"><button type="button" class="btn ghost" id="qzAddQ">${B('+ سؤال', '+ Question')}</button><button type="button" class="btn ghost" id="qzAddSt">${B('+ منصة التصريحات 🎤', '+ The stage 🎤')}</button><button type="button" class="btn ghost" id="qzAddTF">${B('+ صح أو خطأ', '+ True or false')}</button><button type="button" class="btn ghost" id="qzAddG">${B('+ تحدٍّ تفاعلي 🎮', '+ Challenge 🎮')}</button></div>
       <div class="qz-spr"><span>🎲 ${B('وزّع تحديات بين الأسئلة: تحدٍّ بعد كل', 'Spread challenges between the questions: one after every')}</span><select id="qzEvery">${[1, 2, 3, 5, 10].map(n => `<option value="${n}"${n === 3 ? ' selected' : ''}>${n === 1 ? T('سؤال واحد', '1 question') : n === 2 ? T('سؤالين', '2 questions') : n + ' ' + T('أسئلة', 'questions')}</option>`).join('')}</select><button type="button" class="btn ghost" id="qzSpr">${B('وزّع', 'Spread')}</button></div>
       <div class="qz-bar"><div class="qz-chk" id="qzChk"></div><div class="qz-bar-b"><button type="button" class="btn solid md-go" id="qzGo">${B('ابدأ المسابقة ▶', 'Start the quiz ▶')}</button><button type="button" class="btn ghost" id="qzPv">${B('معاينة', 'Preview')}</button><button type="button" class="btn ghost" id="qzExp">${B('حفظ نسخة', 'Save a copy')}</button><button type="button" class="btn ghost" id="qzPub">📤 ${B('انشرها في المكتبة', 'Offer it to the library')}</button></div></div>`;
     const q = s => root.querySelector(s);
@@ -201,6 +201,7 @@
       Q.qs = out; draw(); later();
       toast(B(`وُزّع ${Math.max(k, 1)} تحديًا بين الأسئلة. غيّر أيًّا منها بزر 🔀.`, `${Math.max(k, 1)} challenges spread. Swap any with 🔀.`));
     };
+    q('#qzAddSt').onclick = () => { const x = norm({ type: 'open' }); setType(x, 'stage'); x.q = T('قل كلمتك للمجموعة 🎤', 'Say a word to the group 🎤'); x.time = 60; x.timeSet = true; Q.qs.push(x); draw(); focusLast(); later(); };
     q('#qzAddTF').onclick = () => { Q.qs.push(norm({ type: 'tf', opts: [T('صح', 'True'), T('خطأ', 'False')] })); draw(); focusLast(); later(); };
     q('#qzPv').onclick = () => preview(0);
     q('#qzPub').onclick = offer;
@@ -238,9 +239,9 @@
   }
   const RLIB = () => window.MDLib || [];
   const GAMES = () => window.MDGames ? MDGames.LIST : [];
-  const KINDS = () => [['mc', T('اختيار من متعدد', 'Multiple choice')], ['tf', T('صح أو خطأ', 'True or false')], ['poll', T('تصويت (بلا إجابة صحيحة)', 'Poll (no right answer)')], ['num', T('الأقرب للرقم', 'Closest number')], ['word', T('خمّن الكلمة', 'Guess the word')], ['order', T('رتّب بالترتيب الصحيح', 'Put in order')], ['match', T('وصّل (مطابقة)', 'Match the pairs')], ['rapid', T('الجولة الخاطفة (صح أو خطأ متتالية)', 'Rapid round (true/false in a row)')], ['open', T('كتابة حرة (سحابة كلمات)', 'Free text (word cloud)')], ['game', T('تحدٍّ تفاعلي 🎮', 'Challenge 🎮')]];
+  const KINDS = () => [['mc', T('اختيار من متعدد', 'Multiple choice')], ['stage', T('🎤 منصة التصريحات (يكتب المشاركون ويظهر على الشاشة)', '🎤 The stage (players write, it shows on screen)')], ['tf', T('صح أو خطأ', 'True or false')], ['poll', T('تصويت (بلا إجابة صحيحة)', 'Poll (no right answer)')], ['num', T('الأقرب للرقم', 'Closest number')], ['word', T('خمّن الكلمة', 'Guess the word')], ['order', T('رتّب بالترتيب الصحيح', 'Put in order')], ['match', T('وصّل (مطابقة)', 'Match the pairs')], ['rapid', T('الجولة الخاطفة (صح أو خطأ متتالية)', 'Rapid round (true/false in a row)')], ['open', T('كتابة حرة (سحابة كلمات)', 'Free text (word cloud)')], ['game', T('تحدٍّ تفاعلي 🎮', 'Challenge 🎮')]];
   const typeSel = t => `<select data-k="type" aria-label="type">${KINDS().map(([v, l]) => `<option value="${v}"${v === t ? ' selected' : ''}>${l}</option>`).join('')}</select>`;
-  const TEXTY = ['num', 'word', 'order', 'open', 'match', 'rapid'];
+  const TEXTY = ['num', 'word', 'order', 'open', 'match', 'rapid', 'stage'];
   function setType(x, t) {
     const was = x.type;
     if (t === 'game') { x.g = x.g || pickGames(1, Q.qs.filter(z => z.type === 'game').map(z => z.g))[0] || 'sort'; x.time = gTime(x.g); }
@@ -250,7 +251,7 @@
     if (t === 'order' && !(x.items && x.items.length)) x.items = ['', '', ''];
     if (t === 'match' && !(x.pairs && x.pairs.length)) x.pairs = [['', ''], ['', ''], ['', '']];
     if (t === 'rapid') { if (!(x.items && x.items.length) || was === 'order') x.items = ['', '', '', '', '']; x.truth = (x.truth || []).slice(0, x.items.length); while (x.truth.length < x.items.length) x.truth.push(true); }
-    if (t === 'open') x.pts = 0; else if (was === 'open' && !x.pts) x.pts = 1;
+    if (t === 'open' || t === 'stage') { x.pts = 0; if (t === 'stage' && !x.time) x.time = 60; } else if ((was === 'open' || was === 'stage') && !x.pts) x.pts = 1;
     x.type = t;
   }
   const GTIMES = [15, 20, 30, 40, 45, 60, 90];
@@ -513,7 +514,7 @@
   }
 
   /* ---------- the AI instructions ---------- */
-  const usable = x => x.q && (x.type === 'match' ? (x.pairs || []).length >= 2 : x.type === 'rapid' ? (x.items || []).length >= 3 : x.type === 'num' ? x.ans !== '' && x.ans != null : x.type === 'word' ? !!x.ans : x.type === 'order' ? (x.items || []).length >= 2 : x.type === 'open' ? true : x.opts.filter(o => o.trim()).length >= 2);
+  const usable = x => x.q && (x.type === 'match' ? (x.pairs || []).length >= 2 : x.type === 'rapid' ? (x.items || []).length >= 3 : x.type === 'num' ? x.ans !== '' && x.ans != null : x.type === 'word' ? !!x.ans : x.type === 'order' ? (x.items || []).length >= 2 : x.type === 'open' || x.type === 'stage' ? true : x.opts.filter(o => o.trim()).length >= 2);
   /* ---------- offering a quiz to the public library: it goes to the site's author, who reviews it first ---------- */
   function offer() {
     if ((Q.qs || []).length < 5) return toast(B('أضف ٥ أسئلة على الأقل قبل النشر.', 'Add at least 5 questions first.'), 1);

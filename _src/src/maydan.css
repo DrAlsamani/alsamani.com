@@ -384,3 +384,11 @@ html.mp-embed body{padding-top:0!important}
 .mp-tb button,.mp-nb button{background:#23336F!important;border-color:#23336F!important;color:#fff!important}
 .mp-tb button[aria-pressed="true"],.mp-nb button[aria-pressed="true"]{background:#e0a458!important;border-color:#c98a3a!important;color:#2a1a04!important}
 .mp-armed{color:#1e7a4c}.mp-skip{color:#23336F;border-color:#23336F}
+/* the stage: statements in speech bubbles, newest first */
+.md-stage,.md-wall{display:flex;flex-wrap:wrap;gap:1.4vh 1.4vw;justify-content:center;align-content:flex-start;margin:2vh auto 0;width:min(1100px,96vw)}
+.md-bub{position:relative;max-width:min(520px,44vw);background:#fff;color:#16201f;border-radius:20px;padding:1.2vh 1.6vw 1.4vh;box-shadow:0 0 0 4px var(--c),0 8px 20px rgba(0,0,0,.3);animation:mdBub .45s cubic-bezier(.3,1.4,.5,1) both;cursor:pointer}
+.md-bub::after{content:"";position:absolute;bottom:-12px;inset-inline-start:26px;border:12px solid transparent;border-top-color:#fff;border-bottom:0}
+.md-bub b{display:block;color:var(--c);font-size:clamp(13px,1.5vw,20px)}.md-bub p{margin:.3em 0 0;font-size:clamp(17px,2.2vw,32px);font-weight:700;line-height:1.35}
+.md-stage .md-bub:first-child{transform:scale(1.08)}
+@keyframes mdBub{from{opacity:0;transform:translateY(20px) scale(.7)}}
+.mp-ta{min-height:96px;resize:vertical;font:inherit}
