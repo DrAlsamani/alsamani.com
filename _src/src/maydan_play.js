@@ -141,10 +141,11 @@
   function toolsBar() {
     if (!TOOLS || (Q && Q.n && nextI() >= Q.n)) return '';
     const u = usedAll(), on = k => PEND && PEND.i === nextI() && PEND.p.includes(k), nb = SC ? [SC.up, SC.dn].filter(Boolean) : [];
-    if (u.has('x2') && u.has('st') && u.has('sk')) return '';
+
     return `<div class="mp-tools"><p>${B('🧰 أدواتك للسؤال القادم (كل أداة مرة واحدة)', '🧰 Your tools for the next question (once each)')}</p><div class="mp-tb">
-      ${u.has('x2') ? '' : `<button type="button" data-tool="x2" aria-pressed="${on('x2')}">✖️2 ${B('ضاعف نقاطه', 'Double it')}</button>`}
-      ${u.has('st') || !nb.length ? '' : `<button type="button" data-tool="st" aria-pressed="${on('st')}">🎯 ${B('اخطف من جارك', 'Steal from a neighbour')}</button>`}</div>
+      ${u.has('x2') ? `<button type="button" disabled>⚡×٢ ${B('استُخدمت', 'Used')}</button>` : `<button type="button" data-tool="x2" aria-pressed="${on('x2')}">⚡×٢ ${B('ضاعف نقاطه', 'Double it')}</button>`}
+      ${u.has('st') ? `<button type="button" disabled>🎯 ${B('استُخدمت', 'Used')}</button>` : !nb.length ? `<button type="button" disabled>🎯 ${B('اخطف (يحتاج منافسًا)', 'Steal (needs a rival)')}</button>` : `<button type="button" data-tool="st" aria-pressed="${on('st')}">🎯 ${B('اخطف من جارك', 'Steal from a neighbour')}</button>`}
+      <button type="button" disabled>🏳 ${u.has('sk') ? B('استُخدمت', 'Used') : B('الانسحاب: يظهر أثناء السؤال', 'Skip: shown during the question')}</button></div>
       ${PEND && PEND.i === nextI() && PEND.p.includes('st') ? `<div class="mp-nb"><p>${B('ممن تخطف؟ ما تكسبه في السؤال القادم يُخصم منه', 'From whom? What you earn next is taken from them')}</p>${nb.map(x => `<button type="button" data-tg="${x.u}" aria-pressed="${PEND.g === x.u}"><span dir="auto">${x === SC.up ? '⬆' : '⬇'} ${esc(x.n)}</span><b>${x.s}</b></button>`).join('')}</div>` : ''}
       ${PEND && PEND.i === nextI() && PEND.p.length ? `<p class="mp-armed">✅ ${B('مفعّلة للسؤال القادم', 'Set for the next question')}</p>` : ''}</div>`;
   }
@@ -156,7 +157,7 @@
   const skipBtn = () => TOOLS && Q && Q.pw && !usedAll().has('sk') && sent !== st.i ? `<button type="button" class="mp-skip" data-skip>🏳 ${B('انسحب من السؤال بمتوسط نقاطك', 'Skip it for your average')}</button>` : '';
   function pwNote() {
     const p = [].concat(SC.pw || []), out = [];
-    if (p.includes('x2')) out.push(`✖️2 ${B('ضاعفت نقاط السؤال', 'You doubled this one')}`);
+    if (p.includes('x2')) out.push(`⚡×٢ ${B('ضاعفت نقاط السؤال', 'You doubled this one')}`);
     if (p.includes('st')) out.push(`🎯 ${B(`خطفت ${Math.max(0, SC.d || 0)} من ${esc(SC.tg || '')}`, `You took ${Math.max(0, SC.d || 0)} from ${esc(SC.tg || '')}`)}`);
     if (p.includes('sk')) out.push(`🏳 ${B(`انسحبت وأخذت متوسطك: ${SC.d}`, `Skipped for your average: ${SC.d}`)}`);
     if (SC.hit) out.push(`💥 ${B(`خطف منك: ${esc(SC.hit)}`, `${esc(SC.hit)} took points from you`)}`);
