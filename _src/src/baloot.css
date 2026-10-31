@@ -262,3 +262,9 @@ body:has(#bl .bl-table) section.first{transform:none!important;animation:none!im
 .bl-trick.sweep.us{--tx:0px;--ty:-34vh}.bl-trick.sweep.them{--tx:-38vw;--ty:0px}
 @keyframes blSweep{to{left:calc(50% + var(--tx));top:calc(50% + var(--ty));scale:.3;opacity:0}}
 .bl-plus.q0,.bl-plus.q1,.bl-plus.q2,.bl-plus.q3{left:50%;right:auto;top:auto;bottom:22%;margin-left:-24px}
+
+.bl-dealfx{position:absolute;inset:0;z-index:7;pointer-events:none}
+.bl-dealfx i{position:absolute;width:26px;height:36px;margin:-18px 0 0 -13px;border-radius:3px;background:#fff url(../../img/cards/back.svg) center/cover;box-shadow:0 2px 4px rgba(0,0,0,.5);opacity:0;animation:blFly2 .38s var(--d) ease-out both}
+@keyframes blFly2{0%{left:var(--sx);top:var(--sy);opacity:1;rotate:0deg}90%{opacity:1}100%{left:var(--ex);top:var(--ey);opacity:0;rotate:200deg}}
+.bl-hand.deal .bl-c{animation:blDeal .3s calc(var(--d) + .3s) cubic-bezier(.2,.7,.3,1) both}
+.bl-table.dealing .bl-held{animation:blPop .3s 1.7s both}.bl-table.dealing .bl-held i{animation:none}
