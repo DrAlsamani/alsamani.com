@@ -85,8 +85,12 @@
   // a row of reactions that float up the big screen
   const RX = ['👏', '🔥', '😂', '😮', '💪', '❤️'];
   const PH = () => [T('كفو!', 'Bravo!'), T('قوية!', 'Nice one!'), T('يا حظك', 'Lucky!'), T('ركّز!', 'Focus!'), T('الله الله', 'Wow'), T('هههه', 'Haha')];
-  const rxBar = () => `<div class="mp-rx">${RX.map(e => `<button type="button" data-rx="${e}">${e}</button>`).join('')}${PH().map(e => `<button type="button" class="ph" data-rx="${e}">${e}</button>`).join('')}</div>`;
+  let micOn = false;
+  const micBox = () => { if (FAN || !['rev', 'lb'].includes(st.ph)) return ''; const M = (TOP && TOP.mic) || { n: 0, need: 2 }; if (!M.n && !M.on) micOn = micOn && false; if (M.cool) return '';
+    return `<div class="mp-mic"><button type="button" data-mic aria-pressed="${micOn || M.on}"${micOn || M.on ? ' disabled' : ''}>🎤 ${M.on ? B('فُتحت المنصة بعد هذه الجولة!', 'The stage opens after this round!') : micOn ? B('طلبت المنصة ✓', 'You asked for the stage ✓') : B('اطلب المنصة', 'Ask for the stage')}</button>${M.on ? '' : `<small>${B(`تُفتح إذا طلبها ${M.need} (٢٥٪ من المشاركين) · طلبها حتى الآن ${M.n}`, `Opens when ${M.need} ask (25% of players) · ${M.n} so far`)}</small>`}</div>`; };
+  const rxBar = () => micBox() + `<div class="mp-rx">${RX.map(e => `<button type="button" data-rx="${e}">${e}</button>`).join('')}${PH().map(e => `<button type="button" class="ph" data-rx="${e}">${e}</button>`).join('')}</div>`;
   function rxBind() {
+    const mb = root.querySelector('[data-mic]'); if (mb) mb.onclick = () => { micOn = true; R.child('rx/' + uid).set({ e: '🎤', t: TS }).catch(() => {}); buzz(30); shown = ''; draw(); };
     root.querySelectorAll('[data-rx]').forEach(b => b.onclick = () => {
       if (Date.now() - lastRx < 900) return; lastRx = Date.now();
       R.child('rx/' + uid).set({ e: b.dataset.rx, t: TS }).catch(() => {}); b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop'); buzz(15);
@@ -103,7 +107,7 @@
     R.child('asg/' + uid).on('value', t => { if (t.val() != null) { myTeam = +t.val(); shown = ''; draw(); } });
     R.child('ok').on('value', s => { OK = s.val(); draw(); });
     R.child('wr').on('value', s => { const e = root.querySelector('#mpW'); if (e && s.val()) e.textContent = s.val(); });
-    R.child('top').on('value', s => { TOP = s.val(); if (st.ph === 'lb' || st.ph === 'end') { shown = ''; draw(); } });
+    R.child('top').on('value', s => { TOP = s.val(); if (TOP && TOP.mic && !TOP.mic.n && !TOP.mic.on) micOn = false; if (['lb', 'end', 'rev'].includes(st.ph)) { shown = ''; draw(); } });
     R.child('sc/' + uid).on('value', s => { SC = s.val(); draw(); });
     R.child('pl/' + uid).on('value', s => { if (!s.exists() && me) kicked(); });
   }

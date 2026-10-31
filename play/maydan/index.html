@@ -3358,6 +3358,10 @@ html.mp-embed body{padding-top:0!important}
 .md-stage .md-bub:first-child{transform:scale(1.08)}
 @keyframes mdBub{from{opacity:0;transform:translateY(20px) scale(.7)}}
 .mp-ta{min-height:96px;resize:vertical;font:inherit}
+.md-micb small{margin-inline-start:6px;opacity:.85}.md-micb.on{background:#e0a458!important;color:#2a1a04!important;border-color:#e0a458!important}
+.md-micfx{position:absolute;left:50%;top:40%;transform:translate(-50%,-50%);font-size:clamp(26px,4vw,56px)!important;font-weight:900;color:#fff;background:#c9822b;border-radius:20px;padding:.4em .9em;white-space:nowrap;animation:mdBub .5s both!important;box-shadow:0 10px 30px rgba(0,0,0,.4)}
+.mp-mic{text-align:center;margin:12px 0 4px}.mp-mic button{font:inherit;font-weight:800;font-size:1rem;border:2px solid #23336F;background:#23336F;color:#fff;border-radius:14px;padding:10px 18px;cursor:pointer}
+.mp-mic button[aria-pressed="true"]{background:#e0a458;border-color:#c98a3a;color:#2a1a04;opacity:1}.mp-mic small{display:block;margin-top:5px;font-size:.75rem;opacity:.8}
 </style><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script>window.MD_CFG={"apiKey": "AIzaSyA50i75DT1Is1a6Yn6snW1_JVObc8S3F0Y", "authDomain": "maydan-705ae.firebaseapp.com", "databaseURL": "https://maydan-705ae-default-rtdb.europe-west1.firebasedatabase.app", "projectId": "maydan-705ae", "appId": "1:342187013133:web:d5c2396f0db413f3c51144"};window.MD_MARK="<svg class=\"md-mark\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><rect x=\"4\" y=\"4\" width=\"40\" height=\"40\" rx=\"12\" fill=\"#23336F\"/><path d=\"M24 9l4.2 6.8 7.8-1.8-1.8 7.8L41 24l-6.8 4.2 1.8 7.8-7.8-1.8L24 39l-4.2-6.8-7.8 1.8 1.8-7.8L7 24l6.8-4.2-1.8-7.8 7.8 1.8z\" fill=\"#C9822B\"/><circle cx=\"24\" cy=\"24\" r=\"6.5\" fill=\"#23336F\"/><circle cx=\"24\" cy=\"24\" r=\"3\" fill=\"#F3E3C7\"/></svg>";</script><script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script><script>/* Maydan challenges: short games played on every phone at once. Every phone gets the same level (same seed),
    so the race is fair. Each game reports a score; higher is better. */
 window.MDGames = (function () {
@@ -4148,7 +4152,7 @@ window.MDLive = (function () {
   }
   function frame(inner, bar, canPause) {
     if (G.note) { inner = inner.replace(/<\/div>\s*$/, `<p class="md-surv">${G.note}</p></div>`); G.note = null; }
-    (G.box || G.el).innerHTML = `<div class="md-scr">${inner}</div><div class="md-fx" aria-hidden="true"></div><div class="md-ctl">${bar || ''}<span class="md-sp"></span>${canPause ? `<button type="button" class="md-cb" data-pause>${B('إيقاف مؤقت', 'Pause')}</button>` : ''}<button type="button" class="md-cb" data-mute title="${T('الصوت', 'Sound')}">${mute ? '🔇' : '🔊'}</button><button type="button" class="md-cb" data-fs title="${T('ملء الشاشة', 'Full screen')}">⛶</button><button type="button" class="md-cb" data-end>${B('إنهاء', 'End')}</button></div>`;
+    (G.box || G.el).innerHTML = `<div class="md-scr">${inner}</div><div class="md-fx" aria-hidden="true"></div><div class="md-ctl">${bar || ''}<span class="md-sp"></span>${canPause && G.i >= 0 && !G.ended ? `<button type="button" class="md-cb md-micb${G.stageNext ? ' on' : ''}" data-mic>🎤 ${G.stageNext ? B('المنصة بعد هذه الجولة ✓', 'Stage next ✓') : B('افتح المنصة', 'Open the stage')}<small>${micTxt()}</small></button>` : ''}${canPause ? `<button type="button" class="md-cb" data-pause>${B('إيقاف مؤقت', 'Pause')}</button>` : ''}<button type="button" class="md-cb" data-mute title="${T('الصوت', 'Sound')}">${mute ? '🔇' : '🔊'}</button><button type="button" class="md-cb" data-fs title="${T('ملء الشاشة', 'Full screen')}">⛶</button><button type="button" class="md-cb" data-end>${B('إنهاء', 'End')}</button></div>`;
     clearTimeout(G.autoT);
     const q = s => G.el.querySelector(s);
     if (G.opts.auto && !G.ended) { const nb = G.el.querySelector('[data-next]'); if (nb) G.autoT = setTimeout(() => { if (nb.isConnected) nb.click(); }, G.el.querySelector('.md-lb') ? 6500 : 4500); }
@@ -4156,6 +4160,7 @@ window.MDLive = (function () {
     q('[data-fs]').onclick = () => document.fullscreenElement ? document.exitFullscreen() : G.el.requestFullscreen && G.el.requestFullscreen();
     q('[data-end]').onclick = () => { if (G.i < 0 || G.ended || confirmEnd()) close(); };
     if (q('[data-pause]')) q('[data-pause]').onclick = pause;
+    if (q('[data-mic]')) q('[data-mic]').onclick = () => { G.stageNext = !G.stageNext; micSync(); };
     return q;
   }
   function confirmEnd() {
@@ -4171,6 +4176,7 @@ window.MDLive = (function () {
     const fly = s => {
       const v = s.val() || {}; if (!v.e || seen[s.key] === v.t) return; seen[s.key] = v.t;
       if (now() - (v.t || 0) > 8000) return;
+      if (v.e === '🎤') return micVote(s.key);
       const fx = G && G.el.querySelector('.md-fx'); if (!fx) return;
       const e = document.createElement('span'); e.textContent = v.e; e.style.setProperty('--x', (8 + Math.random() * 84) + '%'); e.style.setProperty('--r', (Math.random() * 40 - 20) + 'deg');
       fx.appendChild(e); setTimeout(() => e.remove(), 2600);
@@ -4190,6 +4196,29 @@ window.MDLive = (function () {
     }
     if (G.fr) G.fr.hidden = !on;
     keep();
+  }
+
+  /* ---------- the stage on demand: the host opens it, or it opens when a quarter of the players ask ---------- */
+  const micNeed = () => Math.max(2, Math.ceil(Object.keys(G.players).length * .25));
+  const micCool = () => G.micAt != null && G.done - G.micAt < 2;   // a pause of two questions after each stage
+  const micTxt = () => G.stageNext ? '' : micCool() ? ` · ${T('استراحة', 'cooling down')}` : G.mic && G.mic.size ? ` · ${G.mic.size}/${micNeed()}` : '';
+  function micVote(u) {
+    if (!(u in G.players) || G.stageNext || micCool() || G.i < 0) return;
+    G.mic = G.mic || new Set(); G.mic.add(u);
+    if (G.mic.size >= micNeed()) { G.stageNext = true; SND.gold(); const fx = G.el.querySelector('.md-fx'); if (fx) { const e = document.createElement('span'); e.className = 'md-micfx'; e.textContent = T('🎤 فُتحت المنصة بعد هذه الجولة!', '🎤 The stage opens after this round!'); fx.appendChild(e); setTimeout(() => e.remove(), 3500); } }
+    micSync();
+  }
+  function micSync() {
+    G.micInfo = { n: G.mic ? G.mic.size : 0, need: micNeed(), on: !!G.stageNext, cool: micCool() };
+    G.ref.child('top/mic').set(G.micInfo).catch(() => {});
+    const b = G.el.querySelector('[data-mic]'); if (b) { b.classList.toggle('on', !!G.stageNext); b.innerHTML = `🎤 ${G.stageNext ? B('المنصة بعد هذه الجولة ✓', 'Stage next ✓') : B('افتح المنصة', 'Open the stage')}<small>${micTxt()}</small>`; }
+  }
+  // put a stage in before the next question
+  function stageNow() {
+    const at = G.done + 1;
+    G.quiz.qs.splice(at, 0, { type: 'stage', q: T('🎤 المنصة لكم: قل كلمتك', '🎤 The stage is yours: say your word'), opts: [], ok: [], pts: 0, time: 45 });
+    if (G.gold >= at) G.gold++;
+    G.stageNext = false; G.mic = new Set(); G.micAt = at; micSync(); keep();
   }
 
   // a statement on the stage: the name and the words in a speech bubble; the host can click one away
@@ -4357,6 +4386,7 @@ window.MDLive = (function () {
   /* ---------- a question ---------- */
   const multOf = i => (G.quiz.qs[i].pts || 0) * (i === G.gold ? 2 : 1) * (G.opts.final && i === G.quiz.qs.length - 1 && G.quiz.qs.length > 1 ? 2 : 1);
   async function next() {
+    if (G.stageNext && !G.ended && G.done + 1 < G.quiz.qs.length) stageNow();
     G.i = G.done + 1;
     // last survivor: alone it ends with one player left; with teams, when only one team still has someone in
     if (G.opts.surv && !G.teams && G.i > 0 && alive().length <= 1) return finish();
@@ -4685,7 +4715,7 @@ window.MDLive = (function () {
     let climb = null, best = 0;
     order.forEach((u, k) => { const was = (G.prev || {})[u]; if (was && was - (k + 1) > best) { best = was - (k + 1); climb = u; } });
     const tt = teamTable(), tmax = Math.max(1, ...tt.map(t => t.avg));
-    G.ref.child('top').set({ p: top.map(u => ({ n: G.players[u] || '', s: G.score[u], d: (G.lastD || {})[u] || 0, w: (G.prev || {})[u] || 0 })), t: tt.slice(0, 5).map(t => ({ n: t.name, s: t.avg, k: t.k })), d: decisive || null });
+    G.ref.child('top').set({ p: top.map(u => ({ n: G.players[u] || '', s: G.score[u], d: (G.lastD || {})[u] || 0, w: (G.prev || {})[u] || 0 })), t: tt.slice(0, 5).map(t => ({ n: t.name, s: t.avg, k: t.k })), d: decisive || null, mic: G.micInfo || null });
     const q = frame(`<div class="md-lb${G.teams ? ' with-teams' : ''}">${note ? `<p class="md-note">${esc(note)}</p>` : ''}
         <h2>${decisive ? B('🏁 لحظة الحسم: بقي سؤال واحد بنقاط مضاعفة', '🏁 Decisive moment: one question left, worth double') : B('الترتيب', 'Ranking')}</h2>
         ${G.teams ? `<div class="md-teams">${tt.slice(0, 5).map((t, k) => `<div class="md-team" style="--c:var(--qz${(t.k) % 6});--w:${Math.round(100 * t.avg / tmax)}%;--d:${k * 120}ms"><b>${k + 1}</b><span dir="auto">${esc(t.name)}</span><i></i><em>${t.avg}</em><small class="md-tmem">${Object.keys(G.players).filter(u => G.team[u] === t.k).sort(byRank).slice(0, 4).map((u, j) => `${j + 1}. ${esc(G.players[u] || '')} ${G.score[u] || 0}`).join(' · ')}</small></div>`).join('')}<small>${B('نتيجة الفريق متوسط نقاط أعضائه', 'A team’s score is its members’ average')}</small></div>` : ''}

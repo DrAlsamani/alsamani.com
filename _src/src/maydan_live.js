@@ -123,7 +123,7 @@ window.MDLive = (function () {
   }
   function frame(inner, bar, canPause) {
     if (G.note) { inner = inner.replace(/<\/div>\s*$/, `<p class="md-surv">${G.note}</p></div>`); G.note = null; }
-    (G.box || G.el).innerHTML = `<div class="md-scr">${inner}</div><div class="md-fx" aria-hidden="true"></div><div class="md-ctl">${bar || ''}<span class="md-sp"></span>${canPause ? `<button type="button" class="md-cb" data-pause>${B('إيقاف مؤقت', 'Pause')}</button>` : ''}<button type="button" class="md-cb" data-mute title="${T('الصوت', 'Sound')}">${mute ? '🔇' : '🔊'}</button><button type="button" class="md-cb" data-fs title="${T('ملء الشاشة', 'Full screen')}">⛶</button><button type="button" class="md-cb" data-end>${B('إنهاء', 'End')}</button></div>`;
+    (G.box || G.el).innerHTML = `<div class="md-scr">${inner}</div><div class="md-fx" aria-hidden="true"></div><div class="md-ctl">${bar || ''}<span class="md-sp"></span>${canPause && G.i >= 0 && !G.ended ? `<button type="button" class="md-cb md-micb${G.stageNext ? ' on' : ''}" data-mic>🎤 ${G.stageNext ? B('المنصة بعد هذه الجولة ✓', 'Stage next ✓') : B('افتح المنصة', 'Open the stage')}<small>${micTxt()}</small></button>` : ''}${canPause ? `<button type="button" class="md-cb" data-pause>${B('إيقاف مؤقت', 'Pause')}</button>` : ''}<button type="button" class="md-cb" data-mute title="${T('الصوت', 'Sound')}">${mute ? '🔇' : '🔊'}</button><button type="button" class="md-cb" data-fs title="${T('ملء الشاشة', 'Full screen')}">⛶</button><button type="button" class="md-cb" data-end>${B('إنهاء', 'End')}</button></div>`;
     clearTimeout(G.autoT);
     const q = s => G.el.querySelector(s);
     if (G.opts.auto && !G.ended) { const nb = G.el.querySelector('[data-next]'); if (nb) G.autoT = setTimeout(() => { if (nb.isConnected) nb.click(); }, G.el.querySelector('.md-lb') ? 6500 : 4500); }
@@ -131,6 +131,7 @@ window.MDLive = (function () {
     q('[data-fs]').onclick = () => document.fullscreenElement ? document.exitFullscreen() : G.el.requestFullscreen && G.el.requestFullscreen();
     q('[data-end]').onclick = () => { if (G.i < 0 || G.ended || confirmEnd()) close(); };
     if (q('[data-pause]')) q('[data-pause]').onclick = pause;
+    if (q('[data-mic]')) q('[data-mic]').onclick = () => { G.stageNext = !G.stageNext; micSync(); };
     return q;
   }
   function confirmEnd() {
@@ -146,6 +147,7 @@ window.MDLive = (function () {
     const fly = s => {
       const v = s.val() || {}; if (!v.e || seen[s.key] === v.t) return; seen[s.key] = v.t;
       if (now() - (v.t || 0) > 8000) return;
+      if (v.e === '🎤') return micVote(s.key);
       const fx = G && G.el.querySelector('.md-fx'); if (!fx) return;
       const e = document.createElement('span'); e.textContent = v.e; e.style.setProperty('--x', (8 + Math.random() * 84) + '%'); e.style.setProperty('--r', (Math.random() * 40 - 20) + 'deg');
       fx.appendChild(e); setTimeout(() => e.remove(), 2600);
@@ -165,6 +167,29 @@ window.MDLive = (function () {
     }
     if (G.fr) G.fr.hidden = !on;
     keep();
+  }
+
+  /* ---------- the stage on demand: the host opens it, or it opens when a quarter of the players ask ---------- */
+  const micNeed = () => Math.max(2, Math.ceil(Object.keys(G.players).length * .25));
+  const micCool = () => G.micAt != null && G.done - G.micAt < 2;   // a pause of two questions after each stage
+  const micTxt = () => G.stageNext ? '' : micCool() ? ` · ${T('استراحة', 'cooling down')}` : G.mic && G.mic.size ? ` · ${G.mic.size}/${micNeed()}` : '';
+  function micVote(u) {
+    if (!(u in G.players) || G.stageNext || micCool() || G.i < 0) return;
+    G.mic = G.mic || new Set(); G.mic.add(u);
+    if (G.mic.size >= micNeed()) { G.stageNext = true; SND.gold(); const fx = G.el.querySelector('.md-fx'); if (fx) { const e = document.createElement('span'); e.className = 'md-micfx'; e.textContent = T('🎤 فُتحت المنصة بعد هذه الجولة!', '🎤 The stage opens after this round!'); fx.appendChild(e); setTimeout(() => e.remove(), 3500); } }
+    micSync();
+  }
+  function micSync() {
+    G.micInfo = { n: G.mic ? G.mic.size : 0, need: micNeed(), on: !!G.stageNext, cool: micCool() };
+    G.ref.child('top/mic').set(G.micInfo).catch(() => {});
+    const b = G.el.querySelector('[data-mic]'); if (b) { b.classList.toggle('on', !!G.stageNext); b.innerHTML = `🎤 ${G.stageNext ? B('المنصة بعد هذه الجولة ✓', 'Stage next ✓') : B('افتح المنصة', 'Open the stage')}<small>${micTxt()}</small>`; }
+  }
+  // put a stage in before the next question
+  function stageNow() {
+    const at = G.done + 1;
+    G.quiz.qs.splice(at, 0, { type: 'stage', q: T('🎤 المنصة لكم: قل كلمتك', '🎤 The stage is yours: say your word'), opts: [], ok: [], pts: 0, time: 45 });
+    if (G.gold >= at) G.gold++;
+    G.stageNext = false; G.mic = new Set(); G.micAt = at; micSync(); keep();
   }
 
   // a statement on the stage: the name and the words in a speech bubble; the host can click one away
@@ -332,6 +357,7 @@ window.MDLive = (function () {
   /* ---------- a question ---------- */
   const multOf = i => (G.quiz.qs[i].pts || 0) * (i === G.gold ? 2 : 1) * (G.opts.final && i === G.quiz.qs.length - 1 && G.quiz.qs.length > 1 ? 2 : 1);
   async function next() {
+    if (G.stageNext && !G.ended && G.done + 1 < G.quiz.qs.length) stageNow();
     G.i = G.done + 1;
     // last survivor: alone it ends with one player left; with teams, when only one team still has someone in
     if (G.opts.surv && !G.teams && G.i > 0 && alive().length <= 1) return finish();
@@ -660,7 +686,7 @@ window.MDLive = (function () {
     let climb = null, best = 0;
     order.forEach((u, k) => { const was = (G.prev || {})[u]; if (was && was - (k + 1) > best) { best = was - (k + 1); climb = u; } });
     const tt = teamTable(), tmax = Math.max(1, ...tt.map(t => t.avg));
-    G.ref.child('top').set({ p: top.map(u => ({ n: G.players[u] || '', s: G.score[u], d: (G.lastD || {})[u] || 0, w: (G.prev || {})[u] || 0 })), t: tt.slice(0, 5).map(t => ({ n: t.name, s: t.avg, k: t.k })), d: decisive || null });
+    G.ref.child('top').set({ p: top.map(u => ({ n: G.players[u] || '', s: G.score[u], d: (G.lastD || {})[u] || 0, w: (G.prev || {})[u] || 0 })), t: tt.slice(0, 5).map(t => ({ n: t.name, s: t.avg, k: t.k })), d: decisive || null, mic: G.micInfo || null });
     const q = frame(`<div class="md-lb${G.teams ? ' with-teams' : ''}">${note ? `<p class="md-note">${esc(note)}</p>` : ''}
         <h2>${decisive ? B('🏁 لحظة الحسم: بقي سؤال واحد بنقاط مضاعفة', '🏁 Decisive moment: one question left, worth double') : B('الترتيب', 'Ranking')}</h2>
         ${G.teams ? `<div class="md-teams">${tt.slice(0, 5).map((t, k) => `<div class="md-team" style="--c:var(--qz${(t.k) % 6});--w:${Math.round(100 * t.avg / tmax)}%;--d:${k * 120}ms"><b>${k + 1}</b><span dir="auto">${esc(t.name)}</span><i></i><em>${t.avg}</em><small class="md-tmem">${Object.keys(G.players).filter(u => G.team[u] === t.k).sort(byRank).slice(0, 4).map((u, j) => `${j + 1}. ${esc(G.players[u] || '')} ${G.score[u] || 0}`).join(' · ')}</small></div>`).join('')}<small>${B('نتيجة الفريق متوسط نقاط أعضائه', 'A team’s score is its members’ average')}</small></div>` : ''}
