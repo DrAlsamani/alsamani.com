@@ -56,7 +56,7 @@ window.MDLive = (function () {
     const txt = quiz.qs.map(x => (x.q || '') + (x.opts || []).join('')).join('');
     // the screen's language: the questions' own, or the page's when there is no text (a games-only quiz)
     G = { ar: /[؀-ۿ]/.test(txt) || (!/[a-z]/i.test(txt) && document.documentElement.lang !== 'en'), pin, quiz, el, ref: db.ref('rooms/' + pin), players: {}, score: {}, qp: {}, out: {}, streak: {}, team: {}, teams: null, i: -1, done: -1,
-      opts: { every: 1, speed: true, gold: true, final: true, bet: false, pw: true, shuf: true, auto: false }, fans: {}, gold: -1, timer: null, subs: [] };
+      opts: { every: 1, speed: true, gold: true, final: true, bet: false, pw: true, shuf: true, auto: false, mic: true }, fans: {}, gold: -1, timer: null, subs: [] };
   }
   async function start(quiz) {
     const el = shell();
@@ -174,13 +174,13 @@ window.MDLive = (function () {
   const micCool = () => G.micAt != null && G.done - G.micAt < 2;   // a pause of two questions after each stage
   const micTxt = () => G.stageNext ? '' : micCool() ? ` · ${T('استراحة', 'cooling down')}` : G.mic && G.mic.size ? ` · ${G.mic.size}/${micNeed()}` : '';
   function micVote(u) {
-    if (!(u in G.players) || G.stageNext || micCool() || G.i < 0) return;
+    if (!G.opts.mic || !(u in G.players) || G.stageNext || micCool() || G.i < 0) return;
     G.mic = G.mic || new Set(); G.mic.add(u);
     if (G.mic.size >= micNeed()) { G.stageNext = true; SND.gold(); const fx = G.el.querySelector('.md-fx'); if (fx) { const e = document.createElement('span'); e.className = 'md-micfx'; e.textContent = T('🎤 فُتحت المنصة بعد هذه الجولة!', '🎤 The stage opens after this round!'); fx.appendChild(e); setTimeout(() => e.remove(), 3500); } }
     micSync();
   }
   function micSync() {
-    G.micInfo = { n: G.mic ? G.mic.size : 0, need: micNeed(), on: !!G.stageNext, cool: micCool() };
+    G.micInfo = { n: G.mic ? G.mic.size : 0, need: micNeed(), on: !!G.stageNext, cool: micCool(), off: !G.opts.mic };
     G.ref.child('top/mic').set(G.micInfo).catch(() => {});
     const b = G.el.querySelector('[data-mic]'); if (b) { b.classList.toggle('on', !!G.stageNext); b.innerHTML = `🎤 ${G.stageNext ? B('المنصة بعد هذه الجولة ✓', 'Stage next ✓') : B('افتح المنصة', 'Open the stage')}<small>${micTxt()}</small>`; }
   }
@@ -265,6 +265,7 @@ window.MDLive = (function () {
         <label class="md-ck"><input type="checkbox" data-o="final"${O.final ? ' checked' : ''}> ${B('🏁 لحظة الحسم: السؤال الأخير بنقاط مضاعفة', '🏁 The final question with double points')}</label>
         <label class="md-ck"><input type="checkbox" data-o="surv"${O.surv ? ' checked' : ''}> ${B('🏆 الناجي الأخير: من يخطئ يخرج من المنافسة ويتابع متفرجًا، ويفوز من يصمد حتى النهاية', '🏆 Last survivor: a wrong answer takes you out to watch; whoever lasts wins')} <small>${B('(للأفراد فقط؛ لا يعمل مع الفرق)', '(individuals only; off with teams)')}</small></label>
         <label class="md-ck"><input type="checkbox" data-o="pw"${O.pw ? ' checked' : ''}> ${B('🧰 أدوات التحدي لكل متسابق مرة واحدة: مضاعفة السؤال ×٢، وخطف النقاط من جارك في الترتيب، والانسحاب من سؤال بمتوسط نقاطك', '🧰 Challenge tools, once each: double a question, steal from a neighbour in the ranking, skip a question for your average')}</label>
+        <label class="md-ck"><input type="checkbox" data-o="mic"${O.mic ? ' checked' : ''}> ${B('🎤 منصة التصريحات: زر «اطلب المنصة» عند المشاركين، وتُفتح بعد الجولة إذا طلبها ٢٥٪ منهم (وتقدر تفتحها أنت متى شئت)', '🎤 The stage: players can ask for it, and it opens after the round when 25% ask (you can open it any time)')}</label>
         <label class="md-ck"><input type="checkbox" data-o="shuf"${O.shuf ? ' checked' : ''}> ${B('🔀 ترتيب عشوائي للأسئلة والخيارات في كل مرة', '🔀 Shuffle the questions and options each time')}</label>
         <label class="md-ck"><input type="checkbox" data-o="auto"${O.auto ? ' checked' : ''}> ${B('▶ تقدّم تلقائي (المشرف يلعب من جواله أيضًا: ادخل بالرمز نفسه)', '▶ Move on automatically (so the host can play on a phone too, with the same code)')}</label>
         <label class="md-ck"><input type="checkbox" data-o="bet"${O.bet ? ' checked' : ''}> ${B('🎯 الثقة: يراهن المشارك على إجابته فيكسب أو يخسر نقاطًا إضافية', '🎯 Confidence: players can bet on their answer to win or lose extra points')}</label>
@@ -347,6 +348,7 @@ window.MDLive = (function () {
     go.onclick = () => {
       if (G.phones) G.el.classList.add('started');
       G.lockJoin = !!q('[data-lock]').checked; placeAll(G.opts.tmode === 'auto');
+      micSync();
       if (O.shuf && !G.shuffled) { G.shuffled = true; G.quiz = shuffleQuiz(G.quiz); }
       // the golden question falls somewhere in the middle, never first or last
       const n = G.quiz.qs.length; G.gold = O.gold && n >= 4 ? 1 + Math.floor(Math.random() * (n - 2 - (O.final ? 1 : 0))) : -1;

@@ -86,7 +86,7 @@
   const RX = ['👏', '🔥', '😂', '😮', '💪', '❤️'];
   const PH = () => [T('كفو!', 'Bravo!'), T('قوية!', 'Nice one!'), T('يا حظك', 'Lucky!'), T('ركّز!', 'Focus!'), T('الله الله', 'Wow'), T('هههه', 'Haha')];
   let micOn = false;
-  const micBox = () => { if (FAN || !['rev', 'lb'].includes(st.ph)) return ''; const M = (TOP && TOP.mic) || { n: 0, need: 2 }; if (!M.n && !M.on) micOn = micOn && false; if (M.cool) return '';
+  const micBox = () => { if (FAN || !['rev', 'lb'].includes(st.ph)) return ''; const M = TOP && TOP.mic; if (!M || M.off) return ''; if (!M.n && !M.on) micOn = micOn && false; if (M.cool) return '';
     return `<div class="mp-mic"><button type="button" data-mic aria-pressed="${micOn || M.on}"${micOn || M.on ? ' disabled' : ''}>🎤 ${M.on ? B('فُتحت المنصة بعد هذه الجولة!', 'The stage opens after this round!') : micOn ? B('طلبت المنصة ✓', 'You asked for the stage ✓') : B('اطلب المنصة', 'Ask for the stage')}</button>${M.on ? '' : `<small>${B(`تُفتح إذا طلبها ${M.need} (٢٥٪ من المشاركين) · طلبها حتى الآن ${M.n}`, `Opens when ${M.need} ask (25% of players) · ${M.n} so far`)}</small>`}</div>`; };
   const rxBar = () => micBox() + `<div class="mp-rx">${RX.map(e => `<button type="button" data-rx="${e}">${e}</button>`).join('')}${PH().map(e => `<button type="button" class="ph" data-rx="${e}">${e}</button>`).join('')}</div>`;
   function rxBind() {

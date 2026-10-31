@@ -148,7 +148,7 @@
           <div class="qz-step2"><b>${B('٢', '2')}</b><p>${B('حين يكتب الأسئلة، انسخ رده كاملًا ثم اضغط:', 'When it has written them, copy its whole reply, then tap:')}</p><button type="button" class="btn solid" id="qzBack2">${B('لصق رد الذكاء الاصطناعي', 'Paste the AI’s reply')}</button></div></div>
       </div>
       <div id="qzQs" class="qz-qs"></div>
-      <div class="qz-addq"><button type="button" class="btn ghost" id="qzAddQ">${B('+ سؤال', '+ Question')}</button><button type="button" class="btn ghost" id="qzAddSt">${B('+ منصة التصريحات 🎤', '+ The stage 🎤')}</button><button type="button" class="btn ghost" id="qzAddTF">${B('+ صح أو خطأ', '+ True or false')}</button><button type="button" class="btn ghost" id="qzAddG">${B('+ تحدٍّ تفاعلي 🎮', '+ Challenge 🎮')}</button></div>
+      <div class="qz-addq"><button type="button" class="btn ghost" id="qzAddQ">${B('+ سؤال', '+ Question')}</button><button type="button" class="btn ghost" id="qzAddTF">${B('+ صح أو خطأ', '+ True or false')}</button><button type="button" class="btn ghost" id="qzAddG">${B('+ تحدٍّ تفاعلي 🎮', '+ Challenge 🎮')}</button></div>
       <div class="qz-spr"><span>🎲 ${B('وزّع تحديات بين الأسئلة: تحدٍّ بعد كل', 'Spread challenges between the questions: one after every')}</span><select id="qzEvery">${[1, 2, 3, 5, 10].map(n => `<option value="${n}"${n === 3 ? ' selected' : ''}>${n === 1 ? T('سؤال واحد', '1 question') : n === 2 ? T('سؤالين', '2 questions') : n + ' ' + T('أسئلة', 'questions')}</option>`).join('')}</select><button type="button" class="btn ghost" id="qzSpr">${B('وزّع', 'Spread')}</button></div>
       <div class="qz-bar"><div class="qz-chk" id="qzChk"></div><div class="qz-bar-b"><button type="button" class="btn solid md-go" id="qzGo">${B('ابدأ المسابقة ▶', 'Start the quiz ▶')}</button><button type="button" class="btn ghost" id="qzPv">${B('معاينة', 'Preview')}</button><button type="button" class="btn ghost" id="qzExp">${B('حفظ نسخة', 'Save a copy')}</button><button type="button" class="btn ghost" id="qzPub">📤 ${B('انشرها في المكتبة', 'Offer it to the library')}</button></div></div>`;
     const q = s => root.querySelector(s);
@@ -201,7 +201,6 @@
       Q.qs = out; draw(); later();
       toast(B(`وُزّع ${Math.max(k, 1)} تحديًا بين الأسئلة. غيّر أيًّا منها بزر 🔀.`, `${Math.max(k, 1)} challenges spread. Swap any with 🔀.`));
     };
-    q('#qzAddSt').onclick = () => { const x = norm({ type: 'open' }); setType(x, 'stage'); x.q = T('قل كلمتك للمجموعة 🎤', 'Say a word to the group 🎤'); x.time = 60; x.timeSet = true; Q.qs.push(x); draw(); focusLast(); later(); };
     q('#qzAddTF').onclick = () => { Q.qs.push(norm({ type: 'tf', opts: [T('صح', 'True'), T('خطأ', 'False')] })); draw(); focusLast(); later(); };
     q('#qzPv').onclick = () => preview(0);
     q('#qzPub').onclick = offer;
@@ -239,7 +238,7 @@
   }
   const RLIB = () => window.MDLib || [];
   const GAMES = () => window.MDGames ? MDGames.LIST : [];
-  const KINDS = () => [['mc', T('اختيار من متعدد', 'Multiple choice')], ['stage', T('🎤 منصة التصريحات (يكتب المشاركون ويظهر على الشاشة)', '🎤 The stage (players write, it shows on screen)')], ['tf', T('صح أو خطأ', 'True or false')], ['poll', T('تصويت (بلا إجابة صحيحة)', 'Poll (no right answer)')], ['num', T('الأقرب للرقم', 'Closest number')], ['word', T('خمّن الكلمة', 'Guess the word')], ['order', T('رتّب بالترتيب الصحيح', 'Put in order')], ['match', T('وصّل (مطابقة)', 'Match the pairs')], ['rapid', T('الجولة الخاطفة (صح أو خطأ متتالية)', 'Rapid round (true/false in a row)')], ['open', T('كتابة حرة (سحابة كلمات)', 'Free text (word cloud)')], ['game', T('تحدٍّ تفاعلي 🎮', 'Challenge 🎮')]];
+  const KINDS = () => [['mc', T('اختيار من متعدد', 'Multiple choice')], ['tf', T('صح أو خطأ', 'True or false')], ['poll', T('تصويت (بلا إجابة صحيحة)', 'Poll (no right answer)')], ['num', T('الأقرب للرقم', 'Closest number')], ['word', T('خمّن الكلمة', 'Guess the word')], ['order', T('رتّب بالترتيب الصحيح', 'Put in order')], ['match', T('وصّل (مطابقة)', 'Match the pairs')], ['rapid', T('الجولة الخاطفة (صح أو خطأ متتالية)', 'Rapid round (true/false in a row)')], ['open', T('كتابة حرة (سحابة كلمات)', 'Free text (word cloud)')], ['game', T('تحدٍّ تفاعلي 🎮', 'Challenge 🎮')]];
   const typeSel = t => `<select data-k="type" aria-label="type">${KINDS().map(([v, l]) => `<option value="${v}"${v === t ? ' selected' : ''}>${l}</option>`).join('')}</select>`;
   const TEXTY = ['num', 'word', 'order', 'open', 'match', 'rapid', 'stage'];
   function setType(x, t) {
