@@ -1726,11 +1726,11 @@ html.md-on{overflow:hidden}
 .md-set .md-ck input{width:auto!important;flex:none!important;min-width:0;margin-inline:0}.md-set .md-ck small{display:block;color:#6a7573;font-size:.75rem}
 .md-set .md-ck{flex-wrap:wrap}.md-set .md-ck small{flex-basis:100%;padding-inline-start:24px}
 /* the ranking moves: rows start at their old place and slide to the new one; arrows and this round's points beside each name */
-.md-lb ol.md-move{--rh:7.4vh;position:relative;display:block;height:calc(var(--n) * var(--rh))}
-.md-lb ol.md-move.many{--rh:min(4.2vh,46px)}
-.md-lb ol.md-move li{position:absolute;left:0;right:0;top:calc(var(--from) * var(--rh));height:calc(var(--rh) - .7vh);box-sizing:border-box;padding-block:0;transition:top .9s cubic-bezier(.3,.9,.3,1) var(--d)}
-.md-lb ol.md-move.many li{font-size:clamp(13px,2vh,22px);border-radius:9px}
-.md-lb ol.md-move li.go{top:calc(var(--to) * var(--rh))}
+.md-lb ol.md-slide{--rh:7.4vh;position:relative;display:block;height:calc(var(--n) * var(--rh))}
+.md-lb ol.md-slide.many{--rh:min(4.2vh,46px)}
+.md-lb ol.md-slide li{position:absolute;left:0;right:0;top:calc(var(--from) * var(--rh));height:calc(var(--rh) - .7vh);box-sizing:border-box;padding-block:0;transition:top .9s cubic-bezier(.3,.9,.3,1) var(--d)}
+.md-lb ol.md-slide.many li{font-size:clamp(13px,2vh,22px);border-radius:9px}
+.md-lb ol.md-slide li.go{top:calc(var(--to) * var(--rh))}
 .md-lb li u{text-decoration:none;font-size:.62em;font-weight:800;border-radius:6px;padding:0 5px}.md-lb li u.up{color:#1e7a4c;background:#dff3e8}.md-lb li u.dn{color:#b0533a;background:#f8e3dc}
 .md-lb li q{quotes:none;font-size:.62em;font-weight:800;color:#2f7d5b}
 .mp-qn{font-size:.75rem;opacity:.85;background:rgba(255,255,255,.14);border-radius:99px;padding:1px 9px;white-space:nowrap}
@@ -1753,6 +1753,20 @@ html.md-on{overflow:hidden}
 .mp-tb button[aria-pressed="true"],.mp-nb button[aria-pressed="true"]{background:#e0a458!important;border-color:#e0a458!important;color:#2a1a04!important;opacity:1!important}
 .mp-top b:empty{display:none}
 .md-team .md-tmem{grid-column:1/-1;font-size:.55em;opacity:.85;position:relative;z-index:1}
+/* tug of war: who is pulling, strongest nearest the knot */
+.md-crew{display:grid;grid-template-columns:1fr 1fr;gap:4vw;margin-top:1.4vh;direction:ltr}
+.md-crew>div{display:flex;flex-wrap:wrap;gap:6px;align-content:flex-start}.md-crew-a{flex-direction:row-reverse;justify-content:flex-start}
+.md-crew span{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.12);border-radius:99px;padding:3px 10px;font-size:calc(clamp(12px,1.5vw,20px) * var(--s,1));transition:font-size .3s}
+.md-crew-a span{box-shadow:inset 0 0 0 2px #2a7fa8}.md-crew-b span{box-shadow:inset 0 0 0 2px #b0533a}.md-crew span i{font-style:normal;font-weight:800;color:#e0a458}
+/* the camel race */
+.md-race{width:min(1000px,94vw);margin:2vh auto 0;display:grid;gap:1.2vh;direction:ltr}
+.md-lane{position:relative;height:clamp(46px,9vh,90px);border-radius:14px;background:linear-gradient(90deg,rgba(255,255,255,.06),rgba(255,255,255,.12));box-shadow:inset 0 0 0 3px var(--c);overflow:hidden}
+.md-lane::after{content:"";position:absolute;inset:auto 0 22% 0;border-top:2px dashed rgba(255,255,255,.18)}
+.md-ln{position:absolute;left:12px;top:6px;font-weight:800;font-size:clamp(13px,1.6vw,22px);color:#fff}
+.md-camel{position:absolute;bottom:4px;left:calc(var(--p) * .86 + 2%);font-style:normal;font-size:clamp(30px,6vh,60px);transform:scaleX(-1);transition:left .35s linear;filter:drop-shadow(0 3px 3px rgba(0,0,0,.4))}
+.md-flag{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:clamp(24px,4vh,44px)}
+.md-lane small{position:absolute;left:12px;bottom:4px;font-size:clamp(11px,1.3vw,17px);opacity:.9;color:#ffe2b0}
+.md-race.done .md-lane small{left:auto;right:60px;top:8px;bottom:auto}
 </style>
 <div id="mp" class="sn mp"><noscript><span class="ar">تعمل هذه الصفحة مع تفعيل JavaScript.</span><span class="en">This page needs JavaScript.</span></noscript></div>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script>window.MD_CFG={"apiKey": "AIzaSyA50i75DT1Is1a6Yn6snW1_JVObc8S3F0Y", "authDomain": "maydan-705ae.firebaseapp.com", "databaseURL": "https://maydan-705ae-default-rtdb.europe-west1.firebasedatabase.app", "projectId": "maydan-705ae", "appId": "1:342187013133:web:d5c2396f0db413f3c51144"};window.MD_MARK="<svg class=\"md-mark\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><rect x=\"4\" y=\"4\" width=\"40\" height=\"40\" rx=\"12\" fill=\"#23336F\"/><path d=\"M24 9l4.2 6.8 7.8-1.8-1.8 7.8L41 24l-6.8 4.2 1.8 7.8-7.8-1.8L24 39l-4.2-6.8-7.8 1.8 1.8-7.8L7 24l6.8-4.2-1.8-7.8 7.8 1.8z\" fill=\"#C9822B\"/><circle cx=\"24\" cy=\"24\" r=\"6.5\" fill=\"#23336F\"/><circle cx=\"24\" cy=\"24\" r=\"3\" fill=\"#F3E3C7\"/></svg>";</script><script>/* Maydan challenges: short games played on every phone at once. Every phone gets the same level (same seed),
@@ -2391,7 +2405,25 @@ window.MDGames = (function () {
     }
   };
 
-  const LIST = [sort, shoot, pairs, stroop, seq, odd, count, math, whack, stack, fly, slide, letters, taps, react, spots, more, maze, pattern, lights, catcher, find, aim, tug];
+  /* ---------- the camel race: every tap moves your team's camel ---------- */
+  const race = {
+    id: 'race', icon: '🐪', ar: 'سباق الهجن', en: 'Camel race', kind: ['جماعي', 'Team'], team: true,
+    howAr: 'لكل فريق هجين في مسار على الشاشة. انقر بأسرع ما تستطيع ليتقدّم هجين فريقك؛ يتقدّم بمعدل نقرات أعضائه، فكل واحد يفرق.',
+    howEn: 'Each team has a camel on the screen. Tap as fast as you can to move your team’s camel; it moves by the team’s average taps, so everyone counts.',
+    play(el, ctx) {
+      const side = ctx.side || { k: 0, name: ctx.ar ? 'فريقك' : 'Your team' };
+      const lab = h('p', 'mg-tside s' + (side.k % 2), (ctx.ar ? 'أنت في ' : 'You ride for ') + '<b></b>'); lab.querySelector('b').textContent = side.name;
+      const info = h('p', 'mg-info'), b = h('button', 'mg-big mg-pull s' + (side.k % 2), '🐪'); b.type = 'button';
+      el.append(lab, info, b);
+      let n = 0, lastT = 0;
+      const show = () => { info.textContent = (ctx.ar ? 'نقراتك: ' : 'Your taps: ') + n; };
+      b.addEventListener('pointerdown', e => { e.preventDefault(); const t = performance.now(); if (t - lastT < 55) return; lastT = t; n++; b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop'); show(); if (ctx.onTap) ctx.onTap(n); });
+      show();
+      return { score: () => n, stop: () => {} };
+    }
+  };
+
+  const LIST = [sort, shoot, pairs, stroop, seq, odd, count, math, whack, stack, fly, slide, letters, taps, react, spots, more, maze, pattern, lights, catcher, find, aim, tug, race];
   const byId = id => LIST.find(g => g.id === id) || LIST[0];
   // run a game in a box: returns {score(), stop()}; ctx.finish is called when a game ends early by being completed
   function run(id, box, opts) {
@@ -2584,7 +2616,7 @@ window.MDGames = (function () {
     };
     // tug of war: pulls go up live (a few times a second) so the rope moves on every screen
     let tug = {};
-    if (Q.g === 'tug') {
+    if (Q.g === 'tug' || Q.g === 'race') {
       const k = Q.ts && Q.ts[uid] != null ? Q.ts[uid] : 0; let pos = 0, pend = 0, lastW = 0, tm = null;
       const ref = R.child('tgp'), on = v => { pos = +v.val() || 0; }; ref.on('value', on);
       const push = () => { tm = null; lastW = Date.now(); R.child('tg/' + uid).set({ c: pend }).catch(() => {}); };

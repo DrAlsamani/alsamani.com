@@ -328,11 +328,11 @@ html.md-on{overflow:hidden}
 .md-set .md-ck input{width:auto!important;flex:none!important;min-width:0;margin-inline:0}.md-set .md-ck small{display:block;color:#6a7573;font-size:.75rem}
 .md-set .md-ck{flex-wrap:wrap}.md-set .md-ck small{flex-basis:100%;padding-inline-start:24px}
 /* the ranking moves: rows start at their old place and slide to the new one; arrows and this round's points beside each name */
-.md-lb ol.md-move{--rh:7.4vh;position:relative;display:block;height:calc(var(--n) * var(--rh))}
-.md-lb ol.md-move.many{--rh:min(4.2vh,46px)}
-.md-lb ol.md-move li{position:absolute;left:0;right:0;top:calc(var(--from) * var(--rh));height:calc(var(--rh) - .7vh);box-sizing:border-box;padding-block:0;transition:top .9s cubic-bezier(.3,.9,.3,1) var(--d)}
-.md-lb ol.md-move.many li{font-size:clamp(13px,2vh,22px);border-radius:9px}
-.md-lb ol.md-move li.go{top:calc(var(--to) * var(--rh))}
+.md-lb ol.md-slide{--rh:7.4vh;position:relative;display:block;height:calc(var(--n) * var(--rh))}
+.md-lb ol.md-slide.many{--rh:min(4.2vh,46px)}
+.md-lb ol.md-slide li{position:absolute;left:0;right:0;top:calc(var(--from) * var(--rh));height:calc(var(--rh) - .7vh);box-sizing:border-box;padding-block:0;transition:top .9s cubic-bezier(.3,.9,.3,1) var(--d)}
+.md-lb ol.md-slide.many li{font-size:clamp(13px,2vh,22px);border-radius:9px}
+.md-lb ol.md-slide li.go{top:calc(var(--to) * var(--rh))}
 .md-lb li u{text-decoration:none;font-size:.62em;font-weight:800;border-radius:6px;padding:0 5px}.md-lb li u.up{color:#1e7a4c;background:#dff3e8}.md-lb li u.dn{color:#b0533a;background:#f8e3dc}
 .md-lb li q{quotes:none;font-size:.62em;font-weight:800;color:#2f7d5b}
 .mp-qn{font-size:.75rem;opacity:.85;background:rgba(255,255,255,.14);border-radius:99px;padding:1px 9px;white-space:nowrap}
@@ -355,3 +355,17 @@ html.md-on{overflow:hidden}
 .mp-tb button[aria-pressed="true"],.mp-nb button[aria-pressed="true"]{background:#e0a458!important;border-color:#e0a458!important;color:#2a1a04!important;opacity:1!important}
 .mp-top b:empty{display:none}
 .md-team .md-tmem{grid-column:1/-1;font-size:.55em;opacity:.85;position:relative;z-index:1}
+/* tug of war: who is pulling, strongest nearest the knot */
+.md-crew{display:grid;grid-template-columns:1fr 1fr;gap:4vw;margin-top:1.4vh;direction:ltr}
+.md-crew>div{display:flex;flex-wrap:wrap;gap:6px;align-content:flex-start}.md-crew-a{flex-direction:row-reverse;justify-content:flex-start}
+.md-crew span{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.12);border-radius:99px;padding:3px 10px;font-size:calc(clamp(12px,1.5vw,20px) * var(--s,1));transition:font-size .3s}
+.md-crew-a span{box-shadow:inset 0 0 0 2px #2a7fa8}.md-crew-b span{box-shadow:inset 0 0 0 2px #b0533a}.md-crew span i{font-style:normal;font-weight:800;color:#e0a458}
+/* the camel race */
+.md-race{width:min(1000px,94vw);margin:2vh auto 0;display:grid;gap:1.2vh;direction:ltr}
+.md-lane{position:relative;height:clamp(46px,9vh,90px);border-radius:14px;background:linear-gradient(90deg,rgba(255,255,255,.06),rgba(255,255,255,.12));box-shadow:inset 0 0 0 3px var(--c);overflow:hidden}
+.md-lane::after{content:"";position:absolute;inset:auto 0 22% 0;border-top:2px dashed rgba(255,255,255,.18)}
+.md-ln{position:absolute;left:12px;top:6px;font-weight:800;font-size:clamp(13px,1.6vw,22px);color:#fff}
+.md-camel{position:absolute;bottom:4px;left:calc(var(--p) * .86 + 2%);font-style:normal;font-size:clamp(30px,6vh,60px);transform:scaleX(-1);transition:left .35s linear;filter:drop-shadow(0 3px 3px rgba(0,0,0,.4))}
+.md-flag{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:clamp(24px,4vh,44px)}
+.md-lane small{position:absolute;left:12px;bottom:4px;font-size:clamp(11px,1.3vw,17px);opacity:.9;color:#ffe2b0}
+.md-race.done .md-lane small{left:auto;right:60px;top:8px;bottom:auto}

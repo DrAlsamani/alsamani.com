@@ -634,7 +634,25 @@ window.MDGames = (function () {
     }
   };
 
-  const LIST = [sort, shoot, pairs, stroop, seq, odd, count, math, whack, stack, fly, slide, letters, taps, react, spots, more, maze, pattern, lights, catcher, find, aim, tug];
+  /* ---------- the camel race: every tap moves your team's camel ---------- */
+  const race = {
+    id: 'race', icon: '🐪', ar: 'سباق الهجن', en: 'Camel race', kind: ['جماعي', 'Team'], team: true,
+    howAr: 'لكل فريق هجين في مسار على الشاشة. انقر بأسرع ما تستطيع ليتقدّم هجين فريقك؛ يتقدّم بمعدل نقرات أعضائه، فكل واحد يفرق.',
+    howEn: 'Each team has a camel on the screen. Tap as fast as you can to move your team’s camel; it moves by the team’s average taps, so everyone counts.',
+    play(el, ctx) {
+      const side = ctx.side || { k: 0, name: ctx.ar ? 'فريقك' : 'Your team' };
+      const lab = h('p', 'mg-tside s' + (side.k % 2), (ctx.ar ? 'أنت في ' : 'You ride for ') + '<b></b>'); lab.querySelector('b').textContent = side.name;
+      const info = h('p', 'mg-info'), b = h('button', 'mg-big mg-pull s' + (side.k % 2), '🐪'); b.type = 'button';
+      el.append(lab, info, b);
+      let n = 0, lastT = 0;
+      const show = () => { info.textContent = (ctx.ar ? 'نقراتك: ' : 'Your taps: ') + n; };
+      b.addEventListener('pointerdown', e => { e.preventDefault(); const t = performance.now(); if (t - lastT < 55) return; lastT = t; n++; b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop'); show(); if (ctx.onTap) ctx.onTap(n); });
+      show();
+      return { score: () => n, stop: () => {} };
+    }
+  };
+
+  const LIST = [sort, shoot, pairs, stroop, seq, odd, count, math, whack, stack, fly, slide, letters, taps, react, spots, more, maze, pattern, lights, catcher, find, aim, tug, race];
   const byId = id => LIST.find(g => g.id === id) || LIST[0];
   // run a game in a box: returns {score(), stop()}; ctx.finish is called when a game ends early by being completed
   function run(id, box, opts) {

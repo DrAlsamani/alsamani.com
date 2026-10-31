@@ -180,7 +180,7 @@
     };
     // tug of war: pulls go up live (a few times a second) so the rope moves on every screen
     let tug = {};
-    if (Q.g === 'tug') {
+    if (Q.g === 'tug' || Q.g === 'race') {
       const k = Q.ts && Q.ts[uid] != null ? Q.ts[uid] : 0; let pos = 0, pend = 0, lastW = 0, tm = null;
       const ref = R.child('tgp'), on = v => { pos = +v.val() || 0; }; ref.on('value', on);
       const push = () => { tm = null; lastW = Date.now(); R.child('tg/' + uid).set({ c: pend }).catch(() => {}); };
