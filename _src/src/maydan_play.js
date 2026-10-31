@@ -139,13 +139,13 @@
   const nextI = () => st.ph === 'ready' ? st.i : st.i + 1;
   function pwx() { if (!PEND || PEND.i !== st.i || FAN) return {}; const o = { p: PEND.p.join(',') }; if (PEND.g) o.g = PEND.g; PEND.p.forEach(k => usedL.add(k)); PEND = null; return o; }
   function toolsBar() {
+    if (TOOLS && usedAll().has('x2') && (usedAll().has('st') || !(SC && (SC.up || SC.dn)))) return '';
     if (!TOOLS || (Q && Q.n && nextI() >= Q.n)) return '';
     const u = usedAll(), on = k => PEND && PEND.i === nextI() && PEND.p.includes(k), nb = SC ? [SC.up, SC.dn].filter(Boolean) : [];
 
     return `<div class="mp-tools"><p>${B('🧰 أدواتك للسؤال القادم (كل أداة مرة واحدة)', '🧰 Your tools for the next question (once each)')}</p><div class="mp-tb">
-      ${u.has('x2') ? `<button type="button" disabled>⚡×٢ ${B('استُخدمت', 'Used')}</button>` : `<button type="button" data-tool="x2" aria-pressed="${on('x2')}">⚡×٢ ${B('ضاعف نقاطه', 'Double it')}</button>`}
-      ${u.has('st') ? `<button type="button" disabled>🎯 ${B('استُخدمت', 'Used')}</button>` : !nb.length ? `<button type="button" disabled>🎯 ${B('اخطف (يحتاج منافسًا)', 'Steal (needs a rival)')}</button>` : `<button type="button" data-tool="st" aria-pressed="${on('st')}">🎯 ${B('اخطف من جارك', 'Steal from a neighbour')}</button>`}
-      <button type="button" disabled>🏳 ${u.has('sk') ? B('استُخدمت', 'Used') : B('الانسحاب: يظهر أثناء السؤال', 'Skip: shown during the question')}</button></div>
+      ${u.has('x2') ? '' : `<button type="button" data-tool="x2" aria-pressed="${on('x2')}">⚡×٢ ${B('ضاعف نقاطه', 'Double it')}</button>`}
+      ${u.has('st') || !nb.length ? '' : `<button type="button" data-tool="st" aria-pressed="${on('st')}">🎯 ${B('اخطف من جارك', 'Steal from a neighbour')}</button>`}</div>
       ${PEND && PEND.i === nextI() && PEND.p.includes('st') ? `<div class="mp-nb"><p>${B('ممن تخطف؟ ما تكسبه في السؤال القادم يُخصم منه', 'From whom? What you earn next is taken from them')}</p>${nb.map(x => `<button type="button" data-tg="${x.u}" aria-pressed="${PEND.g === x.u}"><span dir="auto">${x === SC.up ? '⬆' : '⬇'} ${esc(x.n)}</span><b>${x.s}</b></button>`).join('')}</div>` : ''}
       ${PEND && PEND.i === nextI() && PEND.p.length ? `<p class="mp-armed">✅ ${B('مفعّلة للسؤال القادم', 'Set for the next question')}</p>` : ''}</div>`;
   }
