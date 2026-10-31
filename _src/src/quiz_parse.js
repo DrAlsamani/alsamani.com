@@ -1,6 +1,13 @@
 /* alsamani.com/tools/quiz — reads questions written in the usual ways: pasted text, Word, Excel/CSV or PDF lines.
    Input is a list of lines ({s, em}); em marks text that was bold, coloured, underlined or highlighted in Word. */
 var QZParse = (function () {
+  // lines an AI or a writer sometimes leaves among the answers: the kind of question, or an instruction
+  const normI = t => String(t || '').replace(/[\u064B-\u0652\u0640]/g, '').replace(/[أإآ]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي').replace(/[()\[\]«»"“”:：.،,!؟?*\-–—_]/g, ' ').replace(/\s+/g, ' ').trim().toLowerCase();
+  const INSTR = [
+    /^(نوع السؤال )?(اختيار من متعدد|اختيار متعدد|الاختيار من متعدد|اختر الاجابه الصحيحه|اختر الاجابه|اختر|صح او خطا|صح ام خطا|صح خطا|ترتيب|الترتيب|رتب|رتب العبارات|رتب الجمل|رتب الكلمات|رتب ما ياتي|رتبها|بالترتيب|وصل|صل|التوصيل|وصل بين|الاقرب للرقم|رقم|كلمه|خمن الكلمه|استطلاع|تصويت|راي|خاطفه|الجوله الخاطفه|سؤال مقالي|مقالي|اجب|اجابه|الاجابه)( الصحيح| الصحيحه| التالي| التاليه| الاتيه| مما ياتي)?$/,
+    /^(question type )?(multiple choice|mcq|true or false|true false|order|ordering|put in order|arrange|match|matching|closest number|number|word|guess the word|poll|rapid|rapid round|open|choose|select|choose one|select one|answer)$/
+  ];
+  const isInstr = t => { const n = normI(t); return !!n && INSTR.some(r => r.test(n)); };
   const AR_LET = ['أ', 'ب', 'ج', 'د', 'ه', 'و', 'ز', 'ح'];
   const digits = s => s.replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d));
   const clean = s => digits(String(s || '')).replace(/[‎‏‪-‮ \t]/g, ' ').replace(/\s+/g, ' ').trim();
@@ -80,18 +87,17 @@ var QZParse = (function () {
       const n = q.n || i + 1;
       const km = q.q.match(KIND);
       if (km) {
-        const kind = kindOf(km[1]), text = q.q.replace(KIND, ' ').trim(), opts = q.opts.filter(o => o.t).map(o => o.t), a = clean(q.ans || key[n] || '');
+        const kind = kindOf(km[1]), text = q.q.replace(KIND, ' ').trim(), opts = q.opts.filter(o => o.t && !isInstr(o.t)).map(o => o.t), a = clean(q.ans || key[n] || '');
         if (kind === 'num') { const b = a.replace(/(\d),(?=\d)/g, '$1'), m = b.match(/-?\d+(?:\.\d+)?/); return { type: 'num', q: text, opts: [], ok: [], ans: m ? +m[0] : '', unit: m ? b.replace(m[0], '').trim() : '' }; }
         if (kind === 'word') return { type: 'word', q: text, opts: [], ok: [], ans: a.replace(/[.،,]$/, '') };
         if (kind === 'match') return { type: 'match', q: text, opts: [], ok: [], pairs: opts.map(o => o.split(/\s*(?:=|↔|⟷|<->|:)\s*/)).filter(p => p.length >= 2 && p[0] && p[1]).map(p => [p[0].trim(), p.slice(1).join(' ').trim()]).slice(0, 5) };
-        if (kind === 'rapid') { const st = q.opts.filter(o => o.t).slice(0, 20).map(o => { const f = /\s*[(\[]\s*(خطأ|خطا|خاطئ|false)\s*[)\]]\s*$/i.test(o.t); return { t: o.t.replace(/\s*[(\[]\s*(خطأ|خطا|خاطئ|false|صح|true)\s*[)\]]\s*$/i, '').trim(), v: !f }; }); return { type: 'rapid', q: text, opts: [], ok: [], items: st.map(z => z.t), truth: st.map(z => z.v) }; }
+        if (kind === 'rapid') { const st = q.opts.filter(o => o.t && !isInstr(o.t)).slice(0, 20).map(o => { const f = /\s*[(\[]\s*(خطأ|خطا|خاطئ|false)\s*[)\]]\s*$/i.test(o.t); return { t: o.t.replace(/\s*[(\[]\s*(خطأ|خطا|خاطئ|false|صح|true)\s*[)\]]\s*$/i, '').trim(), v: !f }; }); return { type: 'rapid', q: text, opts: [], ok: [], items: st.map(z => z.t), truth: st.map(z => z.v) }; }
         if (kind === 'order') return { type: 'order', q: text, opts: [], ok: [], items: opts.slice(0, 6) };
         if (kind === 'poll') return { type: 'poll', q: text, opts: opts.slice(0, 6), ok: [], pts: 0 };
         return { type: 'open', q: text, opts: [], ok: [], pts: 0 };
       }
-      // a line that only names the kind of question («اختيار من متعدد», “multiple choice”…) is an instruction, not an option
-      const KINDLINE = /^[\s(\[«"“]*(?:نوع السؤال\s*[:：]?\s*)?(?:اختيار من متعدد|اختيار متعدد|الاختيار من متعدد|صح\s*(?:أو|او|\/)\s*خطأ|صح أم خطأ|سؤال مقالي|multiple[- ]choice|true\s*(?:or|\/)\s*false|mcq)[\s)\]»."”]*$/i;
-      let opts = q.opts.filter(o => o.t && !(KINDLINE.test(o.t) && !o.ok));
+      // a line that only names the kind of question or gives an instruction is not an option
+      let opts = q.opts.filter(o => o.t && !(isInstr(o.t) && !o.ok));
       let type = 'mc';
       if (!opts.length && (TFQ.test(q.q) || (q.ans && (TRUE.test(q.ans) || FALSE.test(q.ans))) || (key[n] && (TRUE.test(key[n]) || FALSE.test(key[n]))))) {
         opts = [{ t: 'صح' }, { t: 'خطأ' }];
