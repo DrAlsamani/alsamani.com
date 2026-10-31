@@ -10,6 +10,7 @@
   const LET = () => (Q && Q.L ? Q.L === 'ar' : isAr()) ? ['أ', 'ب', 'ج', 'د', 'هـ', 'و'] : ['A', 'B', 'C', 'D', 'E', 'F'];
   const store = { get(k, d) { try { return localStorage.getItem('md.' + k) || d; } catch (e) { return d; } }, set(k, v) { try { localStorage.setItem('md.' + k, v); } catch (e) {} } };
   const TS = firebase.database.ServerValue.TIMESTAMP;
+  let TOOLS = false;
   let TOP = null, TEAMS = null, TMODE = 'pick', myTeam = null, bet = false, lastRx = 0;
   let db, uid, off = 0, R = null, me = null, st = {}, Q = null, OK = null, SC = null, sent = null, tick = null;
   const now = () => Date.now() + off;
@@ -58,8 +59,10 @@
       <label class="mp-l">${B('اسمك أو لقبك', 'Your name or nickname')}<input id="mpName" maxlength="24" autocomplete="nickname" dir="auto" value="${esc(store.get('name', ''))}"></label>
       <div id="mpTeams" class="mp-teams"></div>
       <p class="mp-err" ${err ? '' : 'hidden'}>${err || ''}</p>
-      <button type="button" class="btn solid mp-go" id="mpGo">${B('ادخل الميدان', 'Join')}</button></div>`;
+      <button type="button" class="btn solid mp-go" id="mpGo">${B('ادخل الميدان', 'Join')}</button>
+      <button type="button" class="btn ghost mp-go" id="mpFan">👀 ${B('ادخل متفرجًا', 'Just watch')}</button></div>`;
     const inp = root.querySelector('#mpName'), go = root.querySelector('#mpGo');
+    root.querySelector('#mpFan').onclick = async () => { const n = inp.value.trim().replace(/\s+/g, ' ').slice(0, 24) || T('مشجّع', 'A fan'); try { await within(R.child('pl/' + uid).set({ n, at: TS, w: 1 })); FAN = true; me = n; store.set('name', n); play(); } catch (e) { nameScreen(T('تعذّر الدخول؛ ربما أُقفلت المسابقة.', 'Could not join; the quiz may be closed.')); } };
     teamPick(root.querySelector('#mpTeams'));
     inp.focus(); inp.onkeydown = e => { if (e.key === 'Enter') go.click(); };
     go.onclick = async () => {
@@ -81,7 +84,8 @@
   }
   // a row of reactions that float up the big screen
   const RX = ['👏', '🔥', '😂', '😮', '💪', '❤️'];
-  const rxBar = () => `<div class="mp-rx">${RX.map(e => `<button type="button" data-rx="${e}">${e}</button>`).join('')}</div>`;
+  const PH = () => [T('كفو!', 'Bravo!'), T('قوية!', 'Nice one!'), T('يا حظك', 'Lucky!'), T('ركّز!', 'Focus!'), T('الله الله', 'Wow'), T('هههه', 'Haha')];
+  const rxBar = () => `<div class="mp-rx">${RX.map(e => `<button type="button" data-rx="${e}">${e}</button>`).join('')}${PH().map(e => `<button type="button" class="ph" data-rx="${e}">${e}</button>`).join('')}</div>`;
   function rxBind() {
     root.querySelectorAll('[data-rx]').forEach(b => b.onclick = () => {
       if (Date.now() - lastRx < 900) return; lastRx = Date.now();
@@ -92,7 +96,8 @@
   /* ---------- the game: follow the room and draw what this phone should show ---------- */
   function play() {
     R.child('st').on('value', s => { st = s.val() || {}; if (!s.exists()) return gone(); draw(); });
-    R.child('q').on('value', s => { Q = s.val(); });
+    R.child('q').on('value', s => { Q = s.val(); if (Q && Q.pw) TOOLS = true; });
+    R.child('pl/' + uid + '/w').once('value', s => { FAN = !!s.val(); });
     R.child('teams').on('value', t => { TEAMS = t.val(); });
     R.child('pl/' + uid + '/t').once('value', t => { if (t.val() != null) myTeam = +t.val(); });
     R.child('asg/' + uid).on('value', t => { if (t.val() != null) { myTeam = +t.val(); shown = ''; draw(); } });
@@ -112,20 +117,65 @@
     if (st.ph === 'ready') { if (!Q || Q.i !== st.i) { shown = ''; setTimeout(draw, 200); return; } bet = false; const gm = Q.type === 'game' && window.MDGames ? MDGames.byId(Q.g) : null; return screen(`<div class="mp-wait${Q.gold ? ' gold' : ''}"><p>${B('استعد…', 'Get ready…')}</p><p class="mp-big">${gm ? `${gm.icon} ${Q.L === 'en' ? gm.en : gm.ar}` : B('السؤال', 'Question') + ' ' + ((st.i || 0) + 1)}</p>${gm ? `<p class="mp-how">${Q.L === 'en' ? gm.howEn : gm.howAr}</p>` : ''}${Q.gold ? `<p class="mp-gold">${B('✨ السؤال الذهبي! نقاط مضاعفة', '✨ The golden question! Double points')}</p>` : Q.last ? `<p class="mp-gold">${B('🏁 السؤال الأخير — نقاط مضاعفة', '🏁 The last question — double points')}</p>` : ''}</div>`); }
     // last survivor: once out, a player watches the rest
     if (st.ph === 'q' && SC && SC.out && SC.q != null && SC.q < st.i) return screen(`<div class="mp-wait"><p class="mp-sym">👀</p><p class="mp-big">${B('أنت الآن متفرج', 'You are watching now')}</p><p>${B('خرجت من المنافسة؛ تابع الأسئلة على الشاشة وشجّع الناجين.', 'You are out of the race; follow along on the screen and cheer for those still in.')}</p><p class="mp-rank">${B(`الناجون: ${SC.left}`, `Still in: ${SC.left}`)}</p></div>` + rxBar());
+    if (FAN && ['q', 'rev', 'lb', 'ready'].includes(st.ph)) return screen('');
+    if (st.ph === 'q' && !FAN) tone(880, .15);
     if (st.ph === 'q') return question();
     if (st.ph === 'rev' || st.ph === 'lb') return result();
     if (st.ph === 'end') return final();
   }
   function screen(html, cls) {
     if (SC && SC.left != null && SC.q === st.i && st.ph === 'rev') html = (SC.out ? `<p class="mp-surv out">🏳 ${B('خرجت من المنافسة، وتكمل متفرجًا', 'You are out; keep watching')}</p>` : `<p class="mp-surv">🏆 ${B(`ما زلت في المنافسة · الناجون: ${SC.left}`, `Still in · ${SC.left} left`)}</p>`) + html;
-    root.innerHTML = `<div class="mp-play ${cls || ''}"><div class="mp-top"><span dir="auto">${esc(me)}${TEAMS && myTeam != null ? ` <i style="--c:var(--qz${(myTeam) % 6})">${esc(TEAMS[myTeam])}</i>` : ''}</span><b>${SC ? SC.s : 0}</b></div>${html}</div>`; if (R) rxBind(); }
+    if (FAN) html = fanHtml(html);
+    const qn = Q && Q.n && st.i >= 0 && ['q', 'ready', 'rev'].includes(st.ph) ? `<span class="mp-qn">${B(`السؤال ${st.i + 1} من ${Q.n}`, `Question ${st.i + 1} of ${Q.n}`)}</span>` : '';
+    const fx = SC && SC.q === st.i && st.ph === 'rev' ? pwNote() : '';
+    root.innerHTML = `<div class="mp-play ${cls || ''}"><div class="mp-top"><span dir="auto">${FAN ? '👀 ' : ''}${esc(me)}${TEAMS && myTeam != null ? ` <i style="--c:var(--qz${(myTeam) % 6})">${esc(TEAMS[myTeam])}</i>` : ''}</span>${qn}<b>${FAN ? '' : SC ? SC.s : 0}</b></div>${fx}${html}${!FAN && ['rev', 'lb', 'ready'].includes(st.ph) ? toolsBar() : ''}${!FAN && st.ph === 'q' && cls === 'q' ? skipBtn() : ''}</div>`; if (R) { rxBind(); toolsBind(); } }
+  /* ---------- challenge tools: chosen between questions, sent with the next answer ---------- */
+  let PEND = null; const usedL = new Set();
+  const usedAll = () => new Set([...usedL, ...String((SC && SC.used) || '').split(',').filter(Boolean)]);
+  const nextI = () => st.ph === 'ready' ? st.i : st.i + 1;
+  function pwx() { if (!PEND || PEND.i !== st.i || FAN) return {}; const o = { p: PEND.p.join(',') }; if (PEND.g) o.g = PEND.g; PEND.p.forEach(k => usedL.add(k)); PEND = null; return o; }
+  function toolsBar() {
+    if (!TOOLS || (Q && Q.n && nextI() >= Q.n)) return '';
+    const u = usedAll(), on = k => PEND && PEND.i === nextI() && PEND.p.includes(k), nb = SC ? [SC.up, SC.dn].filter(Boolean) : [];
+    if (u.has('x2') && u.has('st') && u.has('sk')) return '';
+    return `<div class="mp-tools"><p>${B('🧰 أدواتك للسؤال القادم (كل أداة مرة واحدة)', '🧰 Your tools for the next question (once each)')}</p><div class="mp-tb">
+      ${u.has('x2') ? '' : `<button type="button" data-tool="x2" aria-pressed="${on('x2')}">✖️2 ${B('ضاعف نقاطه', 'Double it')}</button>`}
+      ${u.has('st') || !nb.length ? '' : `<button type="button" data-tool="st" aria-pressed="${on('st')}">🎯 ${B('اخطف من جارك', 'Steal from a neighbour')}</button>`}</div>
+      ${PEND && PEND.i === nextI() && PEND.p.includes('st') ? `<div class="mp-nb"><p>${B('ممن تخطف؟ ما تكسبه في السؤال القادم يُخصم منه', 'From whom? What you earn next is taken from them')}</p>${nb.map(x => `<button type="button" data-tg="${x.u}" aria-pressed="${PEND.g === x.u}"><span dir="auto">${x === SC.up ? '⬆' : '⬇'} ${esc(x.n)}</span><b>${x.s}</b></button>`).join('')}</div>` : ''}
+      ${PEND && PEND.i === nextI() && PEND.p.length ? `<p class="mp-armed">✅ ${B('مفعّلة للسؤال القادم', 'Set for the next question')}</p>` : ''}</div>`;
+  }
+  function toolsBind() {
+    root.querySelectorAll('[data-tool]').forEach(b => b.onclick = () => { const k = b.dataset.tool, i = nextI(); if (!PEND || PEND.i !== i) PEND = { i, p: [] }; if (PEND.p.includes(k)) { PEND.p = PEND.p.filter(x => x !== k); if (k === 'st') PEND.g = null; } else { PEND.p.push(k); if (k === 'st') PEND.g = SC && SC.up ? SC.up.u : SC && SC.dn ? SC.dn.u : null; } buzz(20); tone(700, .12); shown = ''; draw(); });
+    root.querySelectorAll('[data-tg]').forEach(b => b.onclick = () => { if (PEND) PEND.g = b.dataset.tg; buzz(15); shown = ''; draw(); });
+    const sk = root.querySelector('[data-skip]'); if (sk) sk.onclick = async () => { if (!confirm(T('تنسحب من هذا السؤال وتأخذ متوسط نقاطك؟ (مرة واحدة في المسابقة)', 'Skip this question and take your average? (once per quiz)'))) return; usedL.add('sk'); sent = st.i; try { await R.child('an/' + st.i + '/' + uid).set({ a: -1, t: TS, p: 'sk' }); } catch (e) {} shown = ''; draw(); };
+  }
+  const skipBtn = () => TOOLS && Q && Q.pw && !usedAll().has('sk') && sent !== st.i ? `<button type="button" class="mp-skip" data-skip>🏳 ${B('انسحب من السؤال بمتوسط نقاطك', 'Skip it for your average')}</button>` : '';
+  function pwNote() {
+    const p = [].concat(SC.pw || []), out = [];
+    if (p.includes('x2')) out.push(`✖️2 ${B('ضاعفت نقاط السؤال', 'You doubled this one')}`);
+    if (p.includes('st')) out.push(`🎯 ${B(`خطفت ${Math.max(0, SC.d || 0)} من ${esc(SC.tg || '')}`, `You took ${Math.max(0, SC.d || 0)} from ${esc(SC.tg || '')}`)}`);
+    if (p.includes('sk')) out.push(`🏳 ${B(`انسحبت وأخذت متوسطك: ${SC.d}`, `Skipped for your average: ${SC.d}`)}`);
+    if (SC.hit) out.push(`💥 ${B(`خطف منك: ${esc(SC.hit)}`, `${esc(SC.hit)} took points from you`)}`);
+    return out.length ? `<div class="mp-pwn">${out.map(x => `<p>${x}</p>`).join('')}</div>` : '';
+  }
+  // sounds made on the phone
+  let acx = null;
+  function tone(f, d, v) { try { acx = acx || new (window.AudioContext || window.webkitAudioContext)(); if (acx.state === 'suspended') acx.resume(); const o = acx.createOscillator(), g = acx.createGain(), t = acx.currentTime; o.type = 'triangle'; o.frequency.value = f; g.gain.setValueAtTime(v || .06, t); g.gain.exponentialRampToValueAtTime(.0001, t + d); o.connect(g).connect(acx.destination); o.start(t); o.stop(t + d + .02); } catch (e) {} }
+  /* ---------- a fan: follows the questions and the ranking, and cheers ---------- */
+  let FAN = false;
+  function fanHtml(html) {
+    if (st.ph === 'q' && Q && Q.i === st.i) return `<div class="mp-wait"><p class="mp-qt" dir="auto">${esc(Q.q)}</p>${(Q.opts || []).length ? `<ol class="mp-fo">${Q.opts.map((o, j) => `<li style="--c:var(--qz${j})"><i>${LET()[j]}</i> <span dir="auto">${esc(o)}</span></li>`).join('')}</ol>` : ''}<p>👀 ${B('أنت متفرج: شجّع من هنا', 'You are watching: cheer from here')}</p></div>` + rxBar();
+    if ((st.ph === 'rev' || st.ph === 'lb') && TOP) return `<div class="mp-res end"><p class="mp-big">${B('الترتيب', 'Ranking')}</p>${topList()}</div>` + rxBar();
+    if (st.ph === 'end') return html;
+    return `<div class="mp-wait"><p class="mp-sym">👀</p><p class="mp-big">${B('أنت متفرج', 'You are watching')}</p><p>${B('تابع وشجّع بالتفاعلات.', 'Follow along and cheer.')}</p></div>` + rxBar();
+  }
   let game = null;
   function playGame() {
     if (sent === st.i) return screen(`<div class="mp-wait"><p class="mp-big">${B('أنهيت التحدي!', 'Challenge done!')}</p><p>${B('بانتظار البقية…', 'Waiting for the others…')}</p></div>`);
     screen(`<div class="mp-q mp-gq"><div class="mp-bar"><i id="mpBar"></i></div><div class="mp-gbox" id="mpG"></div></div>`, 'q');
     let send = async score => {
       if (sent === st.i) return; sent = st.i; buzz(30); if (game) { game.stop(); game = null; }
-      try { await R.child('an/' + st.i + '/' + uid).set({ a: Math.round(score), t: TS }); } catch (e) {}
+      try { await R.child('an/' + st.i + '/' + uid).set(Object.assign({ a: Math.round(score), t: TS }, pwx())); } catch (e) {}
       shown = ''; draw();
     };
     // tug of war: pulls go up live (a few times a second) so the rope moves on every screen
@@ -163,7 +213,7 @@
       ${Q.bet ? `<button type="button" class="mp-bet" id="mpBet" aria-pressed="${bet}">🎯 ${B('أراهن على إجابتي (+٣٠٠ أو −٣٠٠)', 'I bet on my answer (+300 or −300)')}</button>` : ''}
       <button type="button" class="btn solid mp-send" id="mpSend">${B('إرسال', 'Send')}</button></div>`, 'q');
     const inp = root.querySelector('#mpIn'), go = root.querySelector('#mpSend'), picked = [];
-    const send = async a => { sent = st.i; buzz(30); try { await R.child('an/' + st.i + '/' + uid).set(Object.assign({ a, t: TS }, bet ? { b: true } : {})); } catch (e) {} shown = ''; draw(); };
+    const send = async a => { sent = st.i; buzz(30); try { await R.child('an/' + st.i + '/' + uid).set(Object.assign({ a, t: TS }, bet ? { b: true } : {}, pwx())); } catch (e) {} shown = ''; draw(); };
     if (inp) { setTimeout(() => inp.focus(), 100); inp.onkeydown = e => { if (e.key === 'Enter') go.click(); }; }
     go.onclick = () => {
       if (T2 === 'match') { if (picked.length !== (Q.items || []).length) return; return send(picked.slice()); }
@@ -212,7 +262,7 @@
       ${multi ? `<button type="button" class="btn solid mp-send" id="mpSend" disabled>${B('إرسال', 'Send')}</button>` : ''}</div>`, 'q');
     const send = async a => {
       sent = st.i; buzz(30);
-      try { await R.child('an/' + st.i + '/' + uid).set(Object.assign({ a, t: TS }, bet ? { b: true } : {})); } catch (e) { /* the time ended first */ }
+      try { await R.child('an/' + st.i + '/' + uid).set(Object.assign({ a, t: TS }, bet ? { b: true } : {}, pwx())); } catch (e) { /* the time ended first */ }
       shown = ''; draw();
     };
     root.querySelectorAll('[data-j]').forEach(b => b.onclick = () => {
@@ -226,11 +276,12 @@
     tick = setInterval(() => {
       const left = Math.max(0, st.dur - (now() - st.t0) / 1000);
       if (bar) bar.style.width = (100 * left / st.dur) + '%';
+      if (left <= 5 && left > 0 && Math.ceil(left) !== tick.s) { tick.s = Math.ceil(left); tone(1300, .05, .04); }
       if (left <= 0) { clearInterval(tick); root.querySelectorAll('[data-j]').forEach(b => b.disabled = true); }
     }, 100);
   }
   // the standings as the big screen shows them: top teams and top five
-  const topList = () => !TOP ? '' : `<div class="mp-top5">${TOP.d ? `<p class="mp-gold">${B('🏁 بقي سؤال واحد بنقاط مضاعفة', '🏁 One question left, worth double')}</p>` : ''}${TOP.t && TOP.t.length ? `<ol class="mp-tl">${TOP.t.map(t => `<li style="--c:var(--qz${t.k % 6})"><span dir="auto">${esc(t.n)}</span><b>${t.s}</b></li>`).join('')}</ol>` : ''}<ol>${(TOP.p || []).map(p => `<li${p.n === me ? ' class="me"' : ''}><span dir="auto">${esc(p.n)}</span><b>${p.s}</b></li>`).join('')}</ol></div>`;
+  const topList = () => !TOP ? '' : `<div class="mp-top5">${TOP.d ? `<p class="mp-gold">${B('🏁 بقي سؤال واحد بنقاط مضاعفة', '🏁 One question left, worth double')}</p>` : ''}${TOP.t && TOP.t.length ? `<ol class="mp-tl">${TOP.t.map(t => `<li style="--c:var(--qz${t.k % 6})"><span dir="auto">${esc(t.n)}</span><b>${t.s}</b></li>`).join('')}</ol>` : ''}<ol class="mp-tops">${(TOP.p || []).map((p, k) => `<li${p.n === me ? ' class="me"' : ''}><i>${k + 1}</i>${p.w && p.w !== k + 1 ? `<u class="${p.w > k + 1 ? 'up' : 'dn'}">${p.w > k + 1 ? '▲' : '▼'}${Math.abs(p.w - k - 1)}</u>` : ''}<span dir="auto">${esc(p.n)}</span>${p.d ? `<q>${p.d > 0 ? '+' : ''}${p.d}</q>` : ''}<b>${p.s}</b></li>`).join('')}</ol></div>`;
   function result() {
     // wait for this question's own result, not the last one
     if (!SC || !OK || (SC.q != null && SC.q !== st.i)) { if (st.ph === 'rev') screen(`<div class="mp-wait"><p>${B('لحظة…', 'One moment…')}</p></div>`); shown = ''; return; }
@@ -262,7 +313,7 @@
         ${SC.gap != null && SC.r > 1 ? `<p class="mp-gap">🎯 ${B(`تحتاج ${SC.gap + 1} نقطة لتتجاوز ${esc(SC.above)}`, `You need ${SC.gap + 1} points to pass ${esc(SC.above)}`)}</p>` : SC.r === 1 ? `<p class="mp-gap">${B('أنت في الصدارة!', 'You are in the lead!')}</p>` : ''}</div>` + rxBar(), SC.c ? 'good' : 'bad');
     }
     const ok = SC.c, right = Q && Q.i === st.i ? [].concat(OK).map(j => `${LET()[j]}) ${esc(Q.opts[j])}`).join(' · ') : '';
-    if (st.ph === 'rev') buzz(ok ? [40, 60, 40] : 200);
+    if (st.ph === 'rev') { buzz(ok ? [40, 60, 40] : 200); ok ? (tone(660, .12), setTimeout(() => tone(990, .2), 120)) : tone(220, .3); }
     screen(`<div class="mp-res ${ok ? 'good' : 'bad'}"><p class="mp-sym">${ok ? '✓' : SC.a ? '✕' : '⏱'}</p>
       <p class="mp-big">${ok ? B('إجابة صحيحة', 'Correct') : SC.a ? B('إجابة خاطئة', 'Not this time') : B('انتهى الوقت', 'Time’s up')}</p>
       ${!ok && right ? `<p class="mp-right">${B('الإجابة الصحيحة:', 'Right answer:')} <span dir="auto">${right}</span></p>` : ''}
