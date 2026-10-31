@@ -156,3 +156,7 @@
 .qi-more{margin:22px 0 8px;border:1px solid var(--line);border-radius:16px;padding:10px 14px;background:var(--surface)}.qi-more summary{cursor:pointer;font-weight:700}
 .qz-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
 .qz-libmore{display:block;margin:12px auto 0}
+.qz-ins{display:flex;justify-content:center;margin:10px -4px -6px;position:relative}
+.qz-ins::before{content:"";position:absolute;inset:50% 8px auto;border-top:1px dashed var(--line)}
+.qz-insb,.qz-insm button{position:relative;font:inherit;font-size:.8125rem;border:1px dashed var(--accent);color:var(--accent);background:var(--surface);border-radius:99px;padding:3px 12px;cursor:pointer}
+.qz-insm{display:flex;gap:6px;position:relative}.qz-insm[hidden]{display:none}.qz-insm button{border-style:solid}

@@ -241,6 +241,18 @@
     const box = root.querySelector('#qzQs');
     box.innerHTML = Q.qs.map((x, i) => card(x, i)).join('');
     box.querySelectorAll('.qz-q').forEach((el, i) => bind(el, Q.qs[i]));
+    // between two questions: add one right here
+    box.querySelectorAll('.qz-q').forEach((el, i) => { if (i === Q.qs.length - 1) return;
+      const d = document.createElement('div'); d.className = 'qz-ins';
+      d.innerHTML = `<button type="button" class="qz-insb">＋ ${B('أضف هنا', 'Add here')}</button><span class="qz-insm" hidden><button type="button" data-ins="mc">${B('سؤال', 'Question')}</button><button type="button" data-ins="tf">${B('صح أو خطأ', 'True/false')}</button><button type="button" data-ins="game">🎮 ${B('تحدٍّ', 'Challenge')}</button></span>`;
+      el.appendChild(d);
+      d.querySelector('.qz-insb').onclick = () => { d.querySelector('.qz-insm').hidden = false; d.querySelector('.qz-insb').hidden = true; };
+      d.querySelectorAll('[data-ins]').forEach(b => b.onclick = () => {
+        const k = b.dataset.ins, x = k === 'tf' ? norm({ type: 'tf', opts: [T('صح', 'True'), T('خطأ', 'False')] }) : k === 'game' ? newGame(pickGames(1, Q.qs.filter(z => z.type === 'game').map(z => z.g))[0] || 'sort') : norm({});
+        Q.qs.splice(i + 1, 0, x); draw(); later();
+        const c = root.querySelectorAll('.qz-q')[i + 1]; if (c) { c.scrollIntoView({ block: 'center', behavior: 'smooth' }); const t = c.querySelector('textarea'); if (t) setTimeout(() => t.focus(), 350); }
+      });
+    });
     if (window.Sortable && !box._s) box._s = Sortable.create(box, { handle: '.qz-grip', animation: 150, onEnd: e => { const [m] = Q.qs.splice(e.oldIndex, 1); Q.qs.splice(e.newIndex, 0, m); draw(); later(); } });
   }
   const RLIB = () => window.MDLib || [];

@@ -1835,6 +1835,10 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
 .qi-more{margin:22px 0 8px;border:1px solid var(--line);border-radius:16px;padding:10px 14px;background:var(--surface)}.qi-more summary{cursor:pointer;font-weight:700}
 .qz-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
 .qz-libmore{display:block;margin:12px auto 0}
+.qz-ins{display:flex;justify-content:center;margin:10px -4px -6px;position:relative}
+.qz-ins::before{content:"";position:absolute;inset:50% 8px auto;border-top:1px dashed var(--line)}
+.qz-insb,.qz-insm button{position:relative;font:inherit;font-size:.8125rem;border:1px dashed var(--accent);color:var(--accent);background:var(--surface);border-radius:99px;padding:3px 12px;cursor:pointer}
+.qz-insm{display:flex;gap:6px;position:relative}.qz-insm[hidden]{display:none}.qz-insm button{border-style:solid}
 </style>
 <div id="qz" class="sn qz"><noscript><span class="ar">تعمل هذه الأداة مع تفعيل JavaScript.</span><span class="en">This tool needs JavaScript.</span></noscript></div>
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script><script>/* Maydan library: ready quizzes to start at once or open and edit. Written in the editor's own format. */
@@ -2486,6 +2490,18 @@ if (typeof module !== 'undefined') module.exports = QZParse;
     const box = root.querySelector('#qzQs');
     box.innerHTML = Q.qs.map((x, i) => card(x, i)).join('');
     box.querySelectorAll('.qz-q').forEach((el, i) => bind(el, Q.qs[i]));
+    // between two questions: add one right here
+    box.querySelectorAll('.qz-q').forEach((el, i) => { if (i === Q.qs.length - 1) return;
+      const d = document.createElement('div'); d.className = 'qz-ins';
+      d.innerHTML = `<button type="button" class="qz-insb">＋ ${B('أضف هنا', 'Add here')}</button><span class="qz-insm" hidden><button type="button" data-ins="mc">${B('سؤال', 'Question')}</button><button type="button" data-ins="tf">${B('صح أو خطأ', 'True/false')}</button><button type="button" data-ins="game">🎮 ${B('تحدٍّ', 'Challenge')}</button></span>`;
+      el.appendChild(d);
+      d.querySelector('.qz-insb').onclick = () => { d.querySelector('.qz-insm').hidden = false; d.querySelector('.qz-insb').hidden = true; };
+      d.querySelectorAll('[data-ins]').forEach(b => b.onclick = () => {
+        const k = b.dataset.ins, x = k === 'tf' ? norm({ type: 'tf', opts: [T('صح', 'True'), T('خطأ', 'False')] }) : k === 'game' ? newGame(pickGames(1, Q.qs.filter(z => z.type === 'game').map(z => z.g))[0] || 'sort') : norm({});
+        Q.qs.splice(i + 1, 0, x); draw(); later();
+        const c = root.querySelectorAll('.qz-q')[i + 1]; if (c) { c.scrollIntoView({ block: 'center', behavior: 'smooth' }); const t = c.querySelector('textarea'); if (t) setTimeout(() => t.focus(), 350); }
+      });
+    });
     if (window.Sortable && !box._s) box._s = Sortable.create(box, { handle: '.qz-grip', animation: 150, onEnd: e => { const [m] = Q.qs.splice(e.oldIndex, 1); Q.qs.splice(e.newIndex, 0, m); draw(); later(); } });
   }
   const RLIB = () => window.MDLib || [];
