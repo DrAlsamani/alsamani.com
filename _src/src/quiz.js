@@ -41,6 +41,8 @@
   const ADMIN = 'umar.photo@gmail.com';
 
   // the landing: what Maydan is, where it fits, and how it works
+  const SV = d => `<svg class="qz-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+  const IC = { eye: SV('<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>'), save: SV('<path d="M5 3h11l3 3v15H5z"/><path d="M8 3v5h7V3M8 21v-7h8v7"/>'), up: SV('<path d="M12 15V3M7 8l5-5 5 5"/><path d="M4 15v5h16v-5"/>'), shuffle: SV('<path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/>') };
   function intro() {
     const card = (i, a, e, da, de) => `<div class="qi-c"><span>${i}</span><b>${B(a, e)}</b><small>${B(da, de)}</small></div>`;
     return `<div class="qi">
@@ -54,14 +56,14 @@
   }
   function introMore() {
     const card = (i, a, e, da, de) => `<div class="qi-c"><span>${i}</span><b>${B(a, e)}</b><small>${B(da, de)}</small></div>`;
-    return `<details class="qi-more"><summary>💡 ${B('تعرّف على ميدان: أين تستخدمه، كيف يعمل، وطرق اللعب', 'About Maydan: where to use it, how it works, ways to play')}</summary><div class="qi">
+    return `<details class="qi-more"><summary>${B('تعرّف على ميدان: أين تستخدمه، كيف يعمل، وطرق اللعب', 'About Maydan: where to use it, how it works, ways to play')}</summary><div class="qi">
       <section><h3>${B('أين تستخدمه؟', 'Where to use it')}</h3><div class="qi-grid">
-        ${card('🏫', 'الفصول والقاعات', 'Classrooms and halls', 'مراجعة الدرس، وتقويم سريع، ومنافسة بين المجموعات.', 'Lesson review, quick checks and contests between groups.')}
-        ${card('🎭', 'المسارح والفعاليات الكبيرة', 'Theatres and big events', 'شاشة واحدة كبيرة ومئة مشارك من جوالاتهم في الوقت نفسه.', 'One big screen and up to a hundred players on their phones at once.')}
-        ${card('💼', 'الاجتماعات والورش', 'Meetings and workshops', 'افتتاح اللقاء بكسر الجليد، واستطلاع آراء، وسحابة كلمات.', 'Open with an ice-breaker, take a poll, gather a word cloud.')}
-        ${card('📱', 'عن بُعد: واتساب والمجموعات', 'Remote: WhatsApp and groups', 'لا يلزم أن تكونوا في مكان واحد: أرسل رابط الدخول في المجموعة، فيظهر السؤال والخيارات والنتيجة على جوال كل مشارك.', 'No need to be in one place: send the join link to the group, and each phone shows the question, the options and the result.')}
-        ${card('👨‍👩‍👧', 'العائلة والأصدقاء', 'Family and friends', 'سهرات ومناسبات ورحلات بمسابقات ألعاب للصغار والكبار.', 'Evenings, occasions and trips with game contests for all ages.')}
-        ${card('🎓', 'الأنشطة الطلابية والمخيمات', 'Student activities and camps', 'فرق تتنافس طوال البرنامج، والنتيجة النهائية مع منصة التتويج.', 'Teams compete through the programme, with a final podium.')}
+        ${card('', 'الفصول والقاعات', 'Classrooms and halls', 'مراجعة الدرس، وتقويم سريع، ومنافسة بين المجموعات.', 'Lesson review, quick checks and contests between groups.')}
+        ${card('', 'المسارح والفعاليات الكبيرة', 'Theatres and big events', 'شاشة واحدة كبيرة ومئة مشارك من جوالاتهم في الوقت نفسه.', 'One big screen and up to a hundred players on their phones at once.')}
+        ${card('', 'الاجتماعات والورش', 'Meetings and workshops', 'افتتاح اللقاء بكسر الجليد، واستطلاع آراء، وسحابة كلمات.', 'Open with an ice-breaker, take a poll, gather a word cloud.')}
+        ${card('', 'عن بُعد: واتساب والمجموعات', 'Remote: WhatsApp and groups', 'لا يلزم أن تكونوا في مكان واحد: أرسل رابط الدخول في المجموعة، فيظهر السؤال والخيارات والنتيجة على جوال كل مشارك.', 'No need to be in one place: send the join link to the group, and each phone shows the question, the options and the result.')}
+        ${card('', 'العائلة والأصدقاء', 'Family and friends', 'سهرات ومناسبات ورحلات بمسابقات ألعاب للصغار والكبار.', 'Evenings, occasions and trips with game contests for all ages.')}
+        ${card('', 'الأنشطة الطلابية والمخيمات', 'Student activities and camps', 'فرق تتنافس طوال البرنامج، والنتيجة النهائية مع منصة التتويج.', 'Teams compete through the programme, with a final podium.')}
       </div></section>
 
       <section><h3>${B('كيف يعمل؟', 'How it works')}</h3><ol class="qi-steps">
@@ -69,40 +71,40 @@
         <li><b>${B('اعرض الرمز', 'Show the code')}</b><small>${B('يدخل المشاركون من جوالاتهم بالرمز أو رمز QR أو رابط ترسله لهم.', 'Players join on their phones by code, QR code or a link you send.')}</small></li>
         <li><b>${B('العبوا', 'Play')}</b><small>${B('أسئلة وتحديات ونقاط وترتيب بعد كل جولة، حتى منصة التتويج.', 'Questions, challenges, points and a ranking after each round, up to the podium.')}</small></li></ol></section>
 
-      <section><h3>🔥 ${B('طرق لعب تشعل الحماس', 'Ways to play that fire people up')}</h3><div class="qi-grid">
-        ${card('⚡', 'الجولة الخاطفة', 'The rapid round', 'عشر عبارات أو أكثر تتوالى على الجوال: صح أم خطأ؟ كل عبارة بمئة نقطة، وفي آخر المسابقة تتضاعف فتقلب الترتيب.', 'Ten or more statements in a row on the phone: true or false? Each is worth 100 points, doubled at the end, and it can turn the ranking around.')}
-        ${card('🏆', 'الناجي الأخير', 'Last survivor', 'من يخطئ يخرج ويتابع متفرجًا، ويفوز من يصمد حتى النهاية. مثالي للمسارح والفعاليات الكبيرة.', 'A wrong answer takes you out to watch; whoever lasts wins. Ideal on stage and at big events.')}
-        ${card('🔗', 'وصّل', 'Match the pairs', 'صِل كل مصطلح بمعناه أو كل دولة بعاصمتها، ولكل توصيل صحيح نصيبه من النقاط.', 'Link each term to its meaning or each country to its capital; every right link earns its share.')}
-        ${card('🪢', 'شدّ الحبل', 'Tug of war', 'فريقان ينقران بأسرع ما يستطيعان، والحبل يتحرك على الشاشة لحظة بلحظة نحو الأقوى.', 'Two sides tap as fast as they can while the rope moves on the screen towards the stronger.')}
-        ${card('✨', 'السؤال الذهبي ولحظة الحسم', 'Golden question and finale', 'سؤال مفاجئ بنقاط مضاعفة، وسؤال أخير مضاعف يُبقي الأمل للجميع حتى النهاية.', 'A surprise double-points question and a doubled final one keep everyone in it to the end.')}
-        ${card('🎯', 'رهان الثقة', 'Confidence bets', 'يراهن المشارك على إجابته فيكسب نقاطًا إضافية أو يخسرها.', 'Players bet on their answer to win or lose extra points.')}
+      <section><h3>${B('طرق لعب تشعل الحماس', 'Ways to play that fire people up')}</h3><div class="qi-grid">
+        ${card('', 'الجولة الخاطفة', 'The rapid round', 'عشر عبارات أو أكثر تتوالى على الجوال: صح أم خطأ؟ كل عبارة بمئة نقطة، وفي آخر المسابقة تتضاعف فتقلب الترتيب.', 'Ten or more statements in a row on the phone: true or false? Each is worth 100 points, doubled at the end, and it can turn the ranking around.')}
+        ${card('', 'الناجي الأخير', 'Last survivor', 'من يخطئ يخرج ويتابع متفرجًا، ويفوز من يصمد حتى النهاية. مثالي للمسارح والفعاليات الكبيرة.', 'A wrong answer takes you out to watch; whoever lasts wins. Ideal on stage and at big events.')}
+        ${card('', 'وصّل', 'Match the pairs', 'صِل كل مصطلح بمعناه أو كل دولة بعاصمتها، ولكل توصيل صحيح نصيبه من النقاط.', 'Link each term to its meaning or each country to its capital; every right link earns its share.')}
+        ${card('', 'شدّ الحبل', 'Tug of war', 'فريقان ينقران بأسرع ما يستطيعان، والحبل يتحرك على الشاشة لحظة بلحظة نحو الأقوى.', 'Two sides tap as fast as they can while the rope moves on the screen towards the stronger.')}
+        ${card('', 'السؤال الذهبي ولحظة الحسم', 'Golden question and finale', 'سؤال مفاجئ بنقاط مضاعفة، وسؤال أخير مضاعف يُبقي الأمل للجميع حتى النهاية.', 'A surprise double-points question and a doubled final one keep everyone in it to the end.')}
+        ${card('', 'رهان الثقة', 'Confidence bets', 'يراهن المشارك على إجابته فيكسب نقاطًا إضافية أو يخسرها.', 'Players bet on their answer to win or lose extra points.')}
       </div></section>
 
-      <section class="qi-ai"><h3>✨ ${B('أسئلتك جاهزة في دقيقة بمساعدة الذكاء الاصطناعي', 'Your questions ready in a minute with AI')}</h3><ol class="qi-steps">
+      <section class="qi-ai"><h3>${B('أسئلتك جاهزة في دقيقة بمساعدة الذكاء الاصطناعي', 'Your questions ready in a minute with AI')}</h3><ol class="qi-steps">
         <li><b>${B('اكتب الموضوع', 'Type the topic')}</b><small>${B('مثل «٣٠ سؤالًا في الثقافة الإسلامية» أو الصق نص الدرس، واختر العدد والمستوى.', 'Like “30 questions on world capitals”, or paste the lesson, and choose the count and level.')}</small></li>
         <li><b>${B('انسخ التعليمات', 'Copy the instructions')}</b><small>${B('اضغط «نسخ التعليمات» والصقها في ChatGPT أو Claude أو أي مساعد.', 'Tap “Copy the instructions” and paste them into ChatGPT, Claude or any assistant.')}</small></li>
         <li><b>${B('الصق الرد', 'Paste the reply')}</b><small>${B('انسخ رده كاملًا واضغط «لصق رد الذكاء الاصطناعي»، فتُبنى الأسئلة بخياراتها وإجاباتها.', 'Copy its whole reply and tap “Paste the AI’s reply”; the questions are built with their options and answers.')}</small></li></ol>
         <p class="qi-note">${B('ويمكنك أيضًا لصق أسئلتك مكتوبة، أو رفع ملف Word أو Excel أو PDF، فيتعرّف ميدان على الأسئلة والإجابات.', 'You can also paste written questions or upload a Word, Excel or PDF file, and Maydan recognises the questions and answers.')}</p></section>
 
       <section><h3>${B('ما الذي يميّزه؟', 'What sets it apart')}</h3><div class="qi-grid">
-        ${card('🧩', 'أنواع أسئلة كثيرة', 'Many question kinds', 'اختيار من متعدد، وصح وخطأ، وخمّن الكلمة، والأقرب للرقم، والترتيب، ووصّل، والجولة الخاطفة، والصورة المخفية، والاستطلاع، وسحابة الكلمات.', 'Multiple choice, true/false, guess the word, closest number, ordering, matching, rapid rounds, hidden picture, polls and word clouds.')}
-        ${card('🎮', 'تحديات ألعاب بين الأسئلة', 'Game challenges between questions', '٢٤ تحديًا للذكاء والذاكرة والسرعة والمهارة، منها شدّ الحبل بين فريقين. وزّعها بين أسئلتك بضغطة.', '24 challenges of logic, memory, speed and skill, including a team tug of war. Spread them between your questions in one tap.')}
-        ${card('👥', 'فرق أو أفراد', 'Teams or individuals', 'من فريقين إلى ثلاثين، بأسماء تكتبها، ويختار المشارك فريقه أو توزّعهم أنت.', 'From two to thirty teams with your own names; players choose, or you place them.')}
-        ${card('🎓', 'درجات للأنشطة الصفية', 'Grades for class activities', 'حوّل النتائج إلى درجة من ٥ أو ١٠ أو أي رقم، من كل النقاط أو من الأسئلة وحدها، ونزّلها ملفًا بالأسماء.', 'Turn the results into a grade out of 5, 10 or any number, from all points or the questions alone, and download it with the names.')}
-        ${card('📽', 'مع شاشة أو بدونها', 'With or without a screen', 'إن تعطّل جهاز العرض استمرت المسابقة، فكل جوال يعرض السؤال والنتيجة والترتيب.', 'If the projector fails the quiz goes on: every phone shows the question, the result and the ranking.')}
-        ${card('⏸', 'أوقف وأكمل لاحقًا', 'Pause and resume', 'أوقف المسابقة متى شئت وأكملها من حيث توقفت، ونزّل النتائج ملف CSV.', 'Pause any time and pick up where you left off; download the results as CSV.')}
+        ${card('', 'أنواع أسئلة كثيرة', 'Many question kinds', 'اختيار من متعدد، وصح وخطأ، وخمّن الكلمة، والأقرب للرقم، والترتيب، ووصّل، والجولة الخاطفة، والصورة المخفية، والاستطلاع، وسحابة الكلمات.', 'Multiple choice, true/false, guess the word, closest number, ordering, matching, rapid rounds, hidden picture, polls and word clouds.')}
+        ${card('', 'تحديات ألعاب بين الأسئلة', 'Game challenges between questions', '٢٤ تحديًا للذكاء والذاكرة والسرعة والمهارة، منها شدّ الحبل بين فريقين. وزّعها بين أسئلتك بضغطة.', '24 challenges of logic, memory, speed and skill, including a team tug of war. Spread them between your questions in one tap.')}
+        ${card('', 'فرق أو أفراد', 'Teams or individuals', 'من فريقين إلى ثلاثين، بأسماء تكتبها، ويختار المشارك فريقه أو توزّعهم أنت.', 'From two to thirty teams with your own names; players choose, or you place them.')}
+        ${card('', 'درجات للأنشطة الصفية', 'Grades for class activities', 'حوّل النتائج إلى درجة من ٥ أو ١٠ أو أي رقم، من كل النقاط أو من الأسئلة وحدها، ونزّلها ملفًا بالأسماء.', 'Turn the results into a grade out of 5, 10 or any number, from all points or the questions alone, and download it with the names.')}
+        ${card('', 'مع شاشة أو بدونها', 'With or without a screen', 'إن تعطّل جهاز العرض استمرت المسابقة، فكل جوال يعرض السؤال والنتيجة والترتيب.', 'If the projector fails the quiz goes on: every phone shows the question, the result and the ranking.')}
+        ${card('', 'أوقف وأكمل لاحقًا', 'Pause and resume', 'أوقف المسابقة متى شئت وأكملها من حيث توقفت، ونزّل النتائج ملف CSV.', 'Pause any time and pick up where you left off; download the results as CSV.')}
       </div></section></div></details>`;
   }
   function home() {
     Q = null;
     const P = window.MDLive && MDLive.pending();
-    root.innerHTML = intro() + `${P ? `<div class="sn-card qz-resume"><p>⏸ ${B('مسابقة متوقفة', 'A paused quiz')}: <b>${esc(P.quiz.title || T('بلا عنوان', 'Untitled'))}</b> · ${B('أُنهي', 'done')} ${P.i + 1} ${T('من', 'of')} ${P.quiz.qs.length} · ${B('الرمز', 'code')} <span dir="ltr">${P.pin}</span></p>
+    root.innerHTML = intro() + `${P ? `<div class="sn-card qz-resume"><p>${B('مسابقة متوقفة', 'A paused quiz')}: <b>${esc(P.quiz.title || T('بلا عنوان', 'Untitled'))}</b> · ${B('أُنهي', 'done')} ${P.i + 1} ${T('من', 'of')} ${P.quiz.qs.length} · ${B('الرمز', 'code')} <span dir="ltr">${P.pin}</span></p>
         <div class="sn-two"><button type="button" class="btn solid" id="qzRes">${B('متابعة المسابقة ▶', 'Resume ▶')}</button><button type="button" class="btn ghost" id="qzDrop2">${B('إنهاؤها وحذفها', 'End and remove it')}</button></div></div>` : ''}<div class="sn-card qz-home" id="build">
-      <h2 class="qz-h">🛠 ${B('ابنِ مسابقتك', 'Build your quiz')}</h2>
+      <h2 class="qz-h">${B('ابنِ مسابقتك', 'Build your quiz')}</h2>
       <div class="qz-starts"><button type="button" class="btn solid" id="qzNew">${B('مسابقة أسئلة جديدة', 'New question quiz')}</button>
-        <div class="qz-gstart"><button type="button" class="btn ghost" id="qzNewG">🎮 ${B('مسابقة ألعاب وتحديات', 'A games-only quiz')}</button><label>${B('عدد التحديات', 'Challenges')} <select id="qzGn">${[5, 8, 10, 12, 15, 20, 24].map(n => `<option${n === 10 ? ' selected' : ''}>${n}</option>`).join('')}</select></label></div>
-        <p class="pt-fine">${B('في مسابقة الألعاب نختار لك تحديات متنوعة، وتقدر تغيّر أي واحد منها بزر 🔀 أو تختار غيره بنفسك.', 'We pick a varied set for you; swap any of them with 🔀 or choose another yourself.')}</p></div>
-      ${RLIB().length ? `<h2 class="qz-h" id="lib">📚 ${B('مكتبة ميدان: مسابقات جاهزة', 'The Maydan library: ready quizzes')}</h2><p class="pt-fine">${B('ابدأ أيًّا منها مباشرة، أو افتحها وعدّل عليها لتصير مسابقتك.', 'Start any of them now, or open one and make it your own.')}</p>
+        <div class="qz-gstart"><button type="button" class="btn ghost" id="qzNewG">${B('مسابقة ألعاب وتحديات', 'A games-only quiz')}</button><label>${B('عدد التحديات', 'Challenges')} <select id="qzGn">${[5, 8, 10, 12, 15, 20, 24].map(n => `<option${n === 10 ? ' selected' : ''}>${n}</option>`).join('')}</select></label></div>
+        <p class="pt-fine">${B('في مسابقة الألعاب نختار لك تحديات متنوعة، وتقدر تغيّر أي واحد منها بزر أو تختار غيره بنفسك.', 'We pick a varied set for you; swap any of them with or choose another yourself.')}</p></div>
+      ${RLIB().length ? `<h2 class="qz-h" id="lib">${B('مكتبة ميدان: مسابقات جاهزة', 'The Maydan library: ready quizzes')}</h2><p class="pt-fine">${B('ابدأ أيًّا منها مباشرة، أو افتحها وعدّل عليها لتصير مسابقتك.', 'Start any of them now, or open one and make it your own.')}</p>
       <div class="qz-lib">${RLIB().map((z, k) => `<div class="qz-lc"${k >= 5 ? ' data-more hidden' : ''}><span class="qz-li">${z.icon}</span><b>${esc(z.title)}</b><small>${esc(z.desc)}</small><em>${esc(z.who)} · ${z.qs.length} ${z.qs.every(x => x.type === 'game') ? B('تحديات', 'challenges') : B('فقرة', 'items')}</em><span class="qz-lb"><button type="button" class="btn solid" data-lgo="${z.id}">${B('ابدأ الآن ▶', 'Start now ▶')}</button><button type="button" class="btn ghost" data-led="${z.id}">${B('افتحها وعدّلها', 'Open and edit')}</button></span></div>`).join('')}</div>${RLIB().length > 5 ? `<button type="button" class="btn ghost qz-libmore" id="qzLibMore">${B(`عرض كل المسابقات (${RLIB().length})`, `Show all quizzes (${RLIB().length})`)}</button>` : ''}` : ''}
       ${list.length ? `<h2 class="qz-h">${B('مسابقاتك', 'Your quizzes')}</h2><ul class="qz-list">${list.map(x => `<li><button type="button" data-open="${x.id}"><b>${esc(x.title || T('بلا عنوان', 'Untitled'))}</b><small>${T('الأسئلة: ', 'Questions: ')}${x.qs.length}</small></button></li>`).join('')}</ul>` : ''}
       <label class="qz-imp btn ghost">${B('فتح نسخة محفوظة', 'Open a saved copy')}<input type="file" accept=".json,application/json" hidden id="qzImp"></label>
@@ -132,7 +134,7 @@
     root.innerHTML = `<div class="qz-top"><button type="button" class="sn-lnk" id="qzBack">${B('‹ مسابقاتي', '‹ My quizzes')}</button></div>
       <div class="sn-card"><label class="sn-lbl">${B('عنوان المسابقة', 'Quiz title')}<input type="text" id="qzTitle" maxlength="120" value="${esc(Q.title)}" placeholder="${T('مثال: مراجعة الوحدة الأولى', 'e.g. Unit 1 review')}"></label></div>
       <div class="sn-card qz-add"><h2 class="qz-h">${B('أضف الأسئلة', 'Add questions')}</h2>
-        <div class="qz-tabs" role="tablist"><button type="button" role="tab" data-tab="paste" aria-selected="true">${B('لصق', 'Paste')}</button><button type="button" role="tab" data-tab="file" aria-selected="false">${B('رفع ملف', 'Upload a file')}</button><button type="button" role="tab" data-tab="ai" aria-selected="false">🤖 ${B('بالذكاء الاصطناعي', 'With AI')}</button></div>
+        <div class="qz-tabs" role="tablist"><button type="button" role="tab" data-tab="paste" aria-selected="true">${B('لصق', 'Paste')}</button><button type="button" role="tab" data-tab="file" aria-selected="false">${B('رفع ملف', 'Upload a file')}</button><button type="button" role="tab" data-tab="ai" aria-selected="false">${B('بالذكاء الاصطناعي', 'With AI')}</button></div>
         <div data-pane="paste"><textarea id="qzPaste" rows="8" dir="auto" placeholder="${T('الصق الأسئلة هنا كما هي من Word أو واتساب أو أي مكان…', 'Paste the questions here as they are, from Word, WhatsApp or anywhere…')}"></textarea>
           <p class="qz-found" id="qzFound"></p>
           <div class="sn-two"><button type="button" class="btn solid" id="qzPasteOk" disabled>${B('أضف إلى المسابقة', 'Add to the quiz')}</button></div>
@@ -142,7 +144,7 @@
         <div data-pane="file" hidden><label class="qz-drop" id="qzDrop"><input type="file" id="qzFile" accept=".docx,.xlsx,.xls,.csv,.txt,.pdf" hidden><b>${B('اختر ملف الأسئلة', 'Choose the questions file')}</b><small>${B('Word أو Excel أو CSV أو PDF أو نص', 'Word, Excel, CSV, PDF or text')}</small></label>
           <p class="pt-fine">${B('في Word: إن كانت الإجابة الصحيحة بخط عريض أو ملوّنة أو مظللة أو تحتها خط، تُعرف تلقائيًا. ويُقبل قالب الاستيراد نفسه الذي يستعمله Kahoot.', 'In Word, a right answer in bold, colour, highlight or underline is recognised. Kahoot’s import template is accepted as it is.')}</p>
           <div class="sn-two"><button type="button" class="btn ghost" id="qzTpl">${B('تنزيل قالب Excel', 'Download an Excel template')}</button></div></div>
-        <div data-pane="ai" hidden><p class="qz-aih">✨ ${B('ابنِ الأسئلة بمساعدة الذكاء الاصطناعي: اكتب الموضوع وتوجيهاتك، ثم انسخ التعليمات إلى ChatGPT أو Claude والصق ردّه هنا.', 'Build the questions with AI: write the topic and your guidance, copy the instructions into ChatGPT or Claude, then paste its reply here.')}</p>
+        <div data-pane="ai" hidden><p class="qz-aih">${B('ابنِ الأسئلة بمساعدة الذكاء الاصطناعي: اكتب الموضوع وتوجيهاتك، ثم انسخ التعليمات إلى ChatGPT أو Claude والصق ردّه هنا.', 'Build the questions with AI: write the topic and your guidance, copy the instructions into ChatGPT or Claude, then paste its reply here.')}</p>
           <label class="sn-lbl">${B('الموضوع، أو الصق نص المحتوى الذي تريد بناء الأسئلة منه', 'The topic, or paste the content you want the questions built from')}<textarea id="qzTopic" rows="4" dir="auto" placeholder="${T('مثال: الفصل الثالث من مقرر ريادة الأعمال — نموذج العمل التجاري', 'e.g. Chapter 3 — the business model canvas')}"></textarea></label>
           <label class="sn-lbl">${B('توجيهاتك (اختياري)', 'Your guidance (optional)')}<textarea id="qzGuide" rows="3" dir="auto" placeholder="${T('مثال: ركّز على حياة الصحابة في مكة، واسأل عن المواقف لا التواريخ، وخلّها فيها مرح وتناسب طلاب المتوسط', 'e.g. Focus on…, ask about … rather than dates, keep it light-hearted, suitable for middle school')}"></textarea></label>
           <div class="qz-row"><label class="sn-lbl">${B('الفئة', 'Audience')}<select id="qzAud"><option value="">${T('عام', 'General')}</option><option value="kids">${T('أطفال', 'Children')}</option><option value="prim">${T('المرحلة الابتدائية', 'Primary school')}</option><option value="mid">${T('المرحلة المتوسطة', 'Middle school')}</option><option value="sec">${T('المرحلة الثانوية', 'Secondary school')}</option><option value="uni">${T('طلاب الجامعة', 'University students')}</option><option value="pro">${T('موظفون أو مختصون', 'Staff or specialists')}</option><option value="fam">${T('العائلة', 'Family')}</option></select></label>
@@ -154,10 +156,11 @@
           <div class="sn-two"><button type="button" class="btn solid" id="qzCopy">${B('نسخ التعليمات', 'Copy the instructions')}</button><a class="btn ghost" id="qzGpt" target="_blank" rel="noopener">${B('افتح في ChatGPT', 'Open in ChatGPT')}</a><a class="btn ghost" id="qzCl" target="_blank" rel="noopener">${B('افتح في Claude', 'Open in Claude')}</a></div>
           <div class="qz-step2"><b>${B('٢', '2')}</b><p>${B('حين يكتب الأسئلة، انسخ رده كاملًا ثم اضغط:', 'When it has written them, copy its whole reply, then tap:')}</p><button type="button" class="btn solid" id="qzBack2">${B('لصق رد الذكاء الاصطناعي', 'Paste the AI’s reply')}</button></div></div>
       </div>
+      <div class="qz-spr"><span>${B('وزّع تحديات بين الأسئلة: تحدٍّ بعد كل', 'Spread challenges between the questions: one after every')}</span><select id="qzEvery">${[1, 2, 3, 5, 10].map(n => `<option value="${n}"${n === 3 ? ' selected' : ''}>${n === 1 ? T('سؤال واحد', '1 question') : n === 2 ? T('سؤالين', '2 questions') : n + ' ' + T('أسئلة', 'questions')}</option>`).join('')}</select><button type="button" class="btn ghost" id="qzSpr">${B('وزّع', 'Spread')}</button></div>
       <div id="qzQs" class="qz-qs"></div>
-      <div class="qz-addq"><button type="button" class="btn ghost" id="qzAddQ">${B('+ سؤال', '+ Question')}</button><button type="button" class="btn ghost" id="qzAddTF">${B('+ صح أو خطأ', '+ True or false')}</button><button type="button" class="btn ghost" id="qzAddG">${B('+ تحدٍّ تفاعلي 🎮', '+ Challenge 🎮')}</button></div>
-      <div class="qz-spr"><span>🎲 ${B('وزّع تحديات بين الأسئلة: تحدٍّ بعد كل', 'Spread challenges between the questions: one after every')}</span><select id="qzEvery">${[1, 2, 3, 5, 10].map(n => `<option value="${n}"${n === 3 ? ' selected' : ''}>${n === 1 ? T('سؤال واحد', '1 question') : n === 2 ? T('سؤالين', '2 questions') : n + ' ' + T('أسئلة', 'questions')}</option>`).join('')}</select><button type="button" class="btn ghost" id="qzSpr">${B('وزّع', 'Spread')}</button></div>
-      <div class="qz-bar"><div class="qz-chk" id="qzChk"></div><div class="qz-bar-b"><button type="button" class="btn solid md-go" id="qzGo">${B('ابدأ المسابقة ▶', 'Start the quiz ▶')}</button><button type="button" class="qz-ib" id="qzPv" title="${T('معاينة', 'Preview')}">👁<small>${B('معاينة', 'Preview')}</small></button><button type="button" class="qz-ib" id="qzExp" title="${T('حفظ نسخة', 'Save a copy')}">💾<small>${B('حفظ', 'Save')}</small></button><button type="button" class="qz-ib" id="qzPub" title="${T('انشرها في المكتبة', 'Offer it to the library')}">📤<small>${B('نشر', 'Offer')}</small></button></div></div>`;
+      <div class="qz-addq"><button type="button" class="btn ghost" id="qzAddQ">${B('+ سؤال', '+ Question')}</button><button type="button" class="btn ghost" id="qzAddTF">${B('+ صح أو خطأ', '+ True or false')}</button><button type="button" class="btn ghost" id="qzAddG">${B('+ تحدٍّ تفاعلي ', '+ Challenge ')}</button></div>
+
+      <div class="qz-bar"><div class="qz-chk" id="qzChk"></div><div class="qz-bar-b"><button type="button" class="btn solid md-go" id="qzGo">${B('ابدأ المسابقة ▶', 'Start the quiz ▶')}</button><button type="button" class="qz-ib" id="qzPv" title="${T('معاينة', 'Preview')}">${IC.eye}<small>${B('معاينة', 'Preview')}</small></button><button type="button" class="qz-ib" id="qzExp" title="${T('حفظ نسخة', 'Save a copy')}">${IC.save}<small>${B('حفظ', 'Save')}</small></button><button type="button" class="qz-ib" id="qzPub" title="${T('انشرها في المكتبة', 'Offer it to the library')}">${IC.up}<small>${B('نشر', 'Offer')}</small></button></div></div>`;
     const q = s => root.querySelector(s);
     q('#qzBack').onclick = () => { persist(); home(); };
     q('#qzTitle').oninput = e => { Q.title = e.target.value; later(); };
@@ -206,7 +209,7 @@
       qs.forEach((z, j) => { out.push(z); if ((j + 1) % every === 0 && j < qs.length - 1 && k < gs.length) out.push(newGame(gs[k++])); });
       if (!k && gs.length) out.push(newGame(gs[0]));
       Q.qs = out; draw(); later();
-      toast(B(`وُزّع ${Math.max(k, 1)} تحديًا بين الأسئلة. غيّر أيًّا منها بزر 🔀.`, `${Math.max(k, 1)} challenges spread. Swap any with 🔀.`));
+      toast(B(`وُزّع ${Math.max(k, 1)} تحديًا بين الأسئلة. غيّر أيًّا منها بزر .`, `${Math.max(k, 1)} challenges spread. Swap any with .`));
     };
     q('#qzAddTF').onclick = () => { Q.qs.push(norm({ type: 'tf', opts: [T('صح', 'True'), T('خطأ', 'False')] })); draw(); focusLast(); later(); };
     q('#qzPv').onclick = () => preview(0);
@@ -244,7 +247,7 @@
     // between two questions: add one right here
     box.querySelectorAll('.qz-q').forEach((el, i) => { if (i === Q.qs.length - 1) return;
       const d = document.createElement('div'); d.className = 'qz-ins';
-      d.innerHTML = `<button type="button" class="qz-insb">＋ ${B('أضف هنا', 'Add here')}</button><span class="qz-insm" hidden><button type="button" data-ins="mc">${B('سؤال', 'Question')}</button><button type="button" data-ins="tf">${B('صح أو خطأ', 'True/false')}</button><button type="button" data-ins="game">🎮 ${B('تحدٍّ', 'Challenge')}</button></span>`;
+      d.innerHTML = `<button type="button" class="qz-insb">＋ ${B('أضف هنا', 'Add here')}</button><span class="qz-insm" hidden><button type="button" data-ins="mc">${B('سؤال', 'Question')}</button><button type="button" data-ins="tf">${B('صح أو خطأ', 'True/false')}</button><button type="button" data-ins="game">${B('تحدٍّ', 'Challenge')}</button></span>`;
       el.appendChild(d);
       d.querySelector('.qz-insb').onclick = () => { d.querySelector('.qz-insm').hidden = false; d.querySelector('.qz-insb').hidden = true; };
       d.querySelectorAll('[data-ins]').forEach(b => b.onclick = () => {
@@ -257,7 +260,7 @@
   }
   const RLIB = () => window.MDLib || [];
   const GAMES = () => window.MDGames ? MDGames.LIST : [];
-  const KINDS = () => [['mc', T('اختيار من متعدد', 'Multiple choice')], ['tf', T('صح أو خطأ', 'True or false')], ['poll', T('تصويت (بلا إجابة صحيحة)', 'Poll (no right answer)')], ['num', T('الأقرب للرقم', 'Closest number')], ['word', T('خمّن الكلمة', 'Guess the word')], ['order', T('رتّب بالترتيب الصحيح', 'Put in order')], ['match', T('وصّل (مطابقة)', 'Match the pairs')], ['rapid', T('الجولة الخاطفة (صح أو خطأ متتالية)', 'Rapid round (true/false in a row)')], ['open', T('كتابة حرة (سحابة كلمات)', 'Free text (word cloud)')], ['game', T('تحدٍّ تفاعلي 🎮', 'Challenge 🎮')]];
+  const KINDS = () => [['mc', T('اختيار من متعدد', 'Multiple choice')], ['tf', T('صح أو خطأ', 'True or false')], ['poll', T('تصويت (بلا إجابة صحيحة)', 'Poll (no right answer)')], ['num', T('الأقرب للرقم', 'Closest number')], ['word', T('خمّن الكلمة', 'Guess the word')], ['order', T('رتّب بالترتيب الصحيح', 'Put in order')], ['match', T('وصّل (مطابقة)', 'Match the pairs')], ['rapid', T('الجولة الخاطفة (صح أو خطأ متتالية)', 'Rapid round (true/false in a row)')], ['open', T('كتابة حرة (سحابة كلمات)', 'Free text (word cloud)')], ['game', T('تحدٍّ تفاعلي ', 'Challenge ')]];
   const typeSel = t => `<select data-k="type" aria-label="type">${KINDS().map(([v, l]) => `<option value="${v}"${v === t ? ' selected' : ''}>${l}</option>`).join('')}</select>`;
   const TEXTY = ['num', 'word', 'order', 'open', 'match', 'rapid', 'stage'];
   function setType(x, t) {
@@ -300,7 +303,7 @@
       ['كسر الجليد', 'Ice-breaker', [['بكلمة: كيف تشعر الآن؟', 'In a word: how do you feel right now?'], ['اكتب كلمة تصف فريقك', 'A word that describes your team']]],
       ['الختام', 'Closing', [['بكلمة: ماذا تعلّمت اليوم؟', 'In a word: what did you learn today?'], ['اكتب فكرة ستطبّقها بعد اللقاء', 'One idea you will put into practice']]]]
   };
-  const ideas = x => !IDEAS[x.type] || (x.q || '').trim() ? '' : `<div class="qz-ideas"><b>💡 ${B('اقتراحات جاهزة', 'Ready suggestions')}</b>${IDEAS[x.type].map(([a, e, list], g) => `<div><small>${B(a, e)}</small>${list.map((it, k) => `<button type="button" data-idea="${g}-${k}">${isAr() ? it[0] : it[1]}</button>`).join('')}</div>`).join('')}</div>`;
+  const ideas = x => !IDEAS[x.type] || (x.q || '').trim() ? '' : `<div class="qz-ideas"><b>${B('اقتراحات جاهزة', 'Ready suggestions')}</b>${IDEAS[x.type].map(([a, e, list], g) => `<div><small>${B(a, e)}</small>${list.map((it, k) => `<button type="button" data-idea="${g}-${k}">${isAr() ? it[0] : it[1]}</button>`).join('')}</div>`).join('')}</div>`;
   function card(x, i) {
     if (x.type === 'game') {
       const g = window.MDGames ? MDGames.byId(x.g) : { icon: '🎮', ar: '', en: '', howAr: '', howEn: '' }, t = x.time || 30;
@@ -309,7 +312,7 @@
         ${typeSel('game')}
         <select data-k="gtime" aria-label="time">${GTIMES.map(s => `<option value="${s}"${s === t ? ' selected' : ''}>${s} ${T('ث', 's')}</option>`).join('')}</select>
         <select data-k="pts" aria-label="points"><option value="1"${x.pts === 1 ? ' selected' : ''}>${T('نقاط عادية', 'Standard points')}</option><option value="2"${x.pts === 2 ? ' selected' : ''}>${T('نقاط مضاعفة', 'Double points')}</option><option value="0"${x.pts === 0 ? ' selected' : ''}>${T('بلا نقاط', 'No points')}</option></select>
-        <span class="qz-act"><button type="button" class="qz-ib" data-a="swap" title="${T('لعبة أخرى', 'Another game')}">🔀</button><button type="button" class="qz-ib" data-a="dup" title="${T('تكرار', 'Duplicate')}">⧉</button><button type="button" class="qz-ib" data-a="del" title="${T('حذف', 'Delete')}">✕</button></span></div>
+        <span class="qz-act"><button type="button" class="qz-ib" data-a="swap" title="${T('لعبة أخرى', 'Another game')}">${IC.shuffle}</button><button type="button" class="qz-ib" data-a="dup" title="${T('تكرار', 'Duplicate')}">⧉</button><button type="button" class="qz-ib" data-a="del" title="${T('حذف', 'Delete')}">✕</button></span></div>
       <div class="qz-gpick">${GAMES().map(z => `<button type="button" data-g="${z.id}" aria-pressed="${z.id === x.g}"><b>${z.icon}</b><span>${isAr() ? z.ar : z.en}</span><small>${isAr() ? z.kind[0] : z.kind[1]}</small></button>`).join('')}</div>
       <p class="qz-ghow"><b>${g.icon} ${isAr() ? g.ar : g.en}:</b> ${isAr() ? g.howAr : g.howEn}</p>
       <p class="qz-warn" hidden></p></div>`;
@@ -319,9 +322,9 @@
         ${typeSel(x.type)}
         <select data-k="time" aria-label="time" title="${T('وقت الإجابة', 'Time to answer')}">${TIMES.map(s => `<option value="${s}"${s === t ? ' selected' : ''}>${s} ${T('ث', 's')}${!x.timeSet && s === t ? ' ✦' : ''}</option>`).join('')}</select>
         <select data-k="pts" aria-label="points"><option value="1"${x.pts === 1 ? ' selected' : ''}>${T('نقاط عادية', 'Standard points')}</option><option value="2"${x.pts === 2 ? ' selected' : ''}>${T('نقاط مضاعفة', 'Double points')}</option><option value="0"${x.pts === 0 ? ' selected' : ''}>${T('بلا نقاط', 'No points')}</option></select>
-        <span class="qz-act"><label class="qz-ib" title="${T('صورة', 'Image')}">🖼<input type="file" accept="image/*" hidden data-k="img"></label><button type="button" class="qz-ib" data-a="dup" title="${T('تكرار', 'Duplicate')}">⧉</button><button type="button" class="qz-ib" data-a="del" title="${T('حذف', 'Delete')}">✕</button></span></div>
+        <span class="qz-act"><label class="qz-ib" title="${T('صورة', 'Image')}"><input type="file" accept="image/*" hidden data-k="img"></label><button type="button" class="qz-ib" data-a="dup" title="${T('تكرار', 'Duplicate')}">⧉</button><button type="button" class="qz-ib" data-a="del" title="${T('حذف', 'Delete')}">✕</button></span></div>
       <textarea data-k="q" rows="2" dir="auto" maxlength="300" placeholder="${x.type === 'word' ? T('تلميح عن الكلمة (مثال: عاصمة عربية)', 'A hint about the word (e.g. an Arab capital)') : x.type === 'num' ? T('السؤال (مثال: كم طول برج المملكة بالمتر؟)', 'The question (e.g. how tall is the Kingdom Tower in metres?)') : x.type === 'open' ? T('السؤال (مثال: صف رحلتنا بكلمة)', 'The question (e.g. describe our trip in one word)') : T('اكتب السؤال', 'Type the question')}">${esc(x.q)}</textarea>
-      ${x.img ? `<div class="qz-img"><img src="${x.img}" alt=""><button type="button" data-a="noimg">${B('إزالة الصورة', 'Remove image')}</button>${x.type === 'mc' ? `<label class="qz-rev"><input type="checkbox" data-k="reveal"${x.reveal ? ' checked' : ''}> ${B('🧩 أخفِ الصورة واكشفها تدريجيًا (الأسرع في التعرف يكسب أكثر)', '🧩 Hide the picture and reveal it bit by bit (the quickest to recognise it earns most)')}</label>` : ''}</div>` : ''}`;
+      ${x.img ? `<div class="qz-img"><img src="${x.img}" alt=""><button type="button" data-a="noimg">${B('إزالة الصورة', 'Remove image')}</button>${x.type === 'mc' ? `<label class="qz-rev"><input type="checkbox" data-k="reveal"${x.reveal ? ' checked' : ''}> ${B('أخفِ الصورة واكشفها تدريجيًا (الأسرع في التعرف يكسب أكثر)', 'Hide the picture and reveal it bit by bit (the quickest to recognise it earns most)')}</label>` : ''}</div>` : ''}`;
     if (TEXTY.includes(x.type)) {
       const body = x.type === 'num' ? `<div class="qz-row2"><label>${B('الجواب (رقم)', 'The answer (a number)')}<input type="number" data-k="ans" step="any" value="${esc(x.ans == null ? '' : x.ans)}"></label><label>${B('الوحدة (اختياري)', 'Unit (optional)')}<input type="text" data-k="unit" maxlength="20" value="${esc(x.unit || '')}" placeholder="${T('متر، سنة…', 'metres, years…')}"></label></div><p class="qz-ghow">${B('يكتب كل مشارك رقمًا، والأقرب إلى الجواب يكسب أكثر.', 'Everyone types a number; the closest earns most.')}</p>`
         : x.type === 'word' ? `<div class="qz-row2"><label>${B('الكلمة', 'The word')}<input type="text" data-k="ans" maxlength="24" dir="auto" value="${esc(x.ans || '')}"></label></div><p class="qz-ghow">${B('تنكشف حروف الكلمة واحدًا بعد الآخر على الشاشة والجوالات، ومن يكتبها أسرع يكسب أكثر.', 'The letters show one by one on the screen and the phones; the quickest to type it earns most.')}</p>`
@@ -537,10 +540,10 @@
   function offer() {
     if ((Q.qs || []).length < 5) return toast(B('أضف ٥ أسئلة على الأقل قبل النشر.', 'Add at least 5 questions first.'), 1);
     const d = document.createElement('div'); d.className = 'qz-modal';
-    d.innerHTML = `<div class="qz-mbox"><h3>📤 ${B('انشر مسابقتك في مكتبة ميدان', 'Offer your quiz to the Maydan library')}</h3>
+    d.innerHTML = `<div class="qz-mbox"><h3>${B('انشر مسابقتك في مكتبة ميدان', 'Offer your quiz to the Maydan library')}</h3>
       <p class="pt-fine">${B('تصل المسابقة إلى صاحب الموقع فيراجعها، وإن قُبلت تظهر في المكتبة باسمك ليستفيد منها الجميع.', 'It goes to the site’s author for review; if accepted it appears in the library under your name.')}</p>
       <label class="sn-lbl">${B('الاسم الذي يظهر مع المسابقة', 'The name shown with the quiz')}<input id="qpN" maxlength="40" dir="auto"></label>
-      <p class="qz-warn">⚠️ ${B('تأكد أن الاسم مناسب للنشر العام (اسمك أو اسم جهتك)، فهو يظهر للجميع.', 'Make sure the name suits public view (yours or your organisation’s); everyone will see it.')}</p>
+      <p class="qz-warn">${B('تأكد أن الاسم مناسب للنشر العام (اسمك أو اسم جهتك)، فهو يظهر للجميع.', 'Make sure the name suits public view (yours or your organisation’s); everyone will see it.')}</p>
       <label class="sn-lbl">${B('لمن تناسب؟ (مثال: طلاب المتوسط، العائلة)', 'Who is it for? (e.g. middle school, families)')}<input id="qpW" maxlength="60" dir="auto"></label>
       <label class="sn-lbl">${B('وصف قصير', 'A short description')}<input id="qpD" maxlength="140" dir="auto"></label>
       <label class="sn-lbl">${B('بريدك (اختياري، لا يُنشر)', 'Your email (optional, never published)')}<input id="qpE" type="email" dir="ltr"></label>

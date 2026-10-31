@@ -1839,6 +1839,8 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
 .qz-ins::before{content:"";position:absolute;inset:50% 8px auto;border-top:1px dashed var(--line)}
 .qz-insb,.qz-insm button{position:relative;font:inherit;font-size:.8125rem;border:1px dashed var(--accent);color:var(--accent);background:var(--surface);border-radius:99px;padding:3px 12px;cursor:pointer}
 .qz-insm{display:flex;gap:6px;position:relative}.qz-insm[hidden]{display:none}.qz-insm button{border-style:solid}
+.qz-svg{width:20px;height:20px;display:block}.qz-ib .qz-svg{margin:0 auto}
+.qz-ib{padding:5px 8px 4px;gap:2px}.qz-ib small{line-height:1}
 </style>
 <div id="qz" class="sn qz"><noscript><span class="ar">تعمل هذه الأداة مع تفعيل JavaScript.</span><span class="en">This tool needs JavaScript.</span></noscript></div>
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script><script>/* Maydan library: ready quizzes to start at once or open and edit. Written in the editor's own format. */
@@ -2290,6 +2292,8 @@ if (typeof module !== 'undefined') module.exports = QZParse;
   const ADMIN = 'umar.photo@gmail.com';
 
   // the landing: what Maydan is, where it fits, and how it works
+  const SV = d => `<svg class="qz-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+  const IC = { eye: SV('<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>'), save: SV('<path d="M5 3h11l3 3v15H5z"/><path d="M8 3v5h7V3M8 21v-7h8v7"/>'), up: SV('<path d="M12 15V3M7 8l5-5 5 5"/><path d="M4 15v5h16v-5"/>'), shuffle: SV('<path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/>') };
   function intro() {
     const card = (i, a, e, da, de) => `<div class="qi-c"><span>${i}</span><b>${B(a, e)}</b><small>${B(da, de)}</small></div>`;
     return `<div class="qi">
@@ -2303,14 +2307,14 @@ if (typeof module !== 'undefined') module.exports = QZParse;
   }
   function introMore() {
     const card = (i, a, e, da, de) => `<div class="qi-c"><span>${i}</span><b>${B(a, e)}</b><small>${B(da, de)}</small></div>`;
-    return `<details class="qi-more"><summary>💡 ${B('تعرّف على ميدان: أين تستخدمه، كيف يعمل، وطرق اللعب', 'About Maydan: where to use it, how it works, ways to play')}</summary><div class="qi">
+    return `<details class="qi-more"><summary>${B('تعرّف على ميدان: أين تستخدمه، كيف يعمل، وطرق اللعب', 'About Maydan: where to use it, how it works, ways to play')}</summary><div class="qi">
       <section><h3>${B('أين تستخدمه؟', 'Where to use it')}</h3><div class="qi-grid">
-        ${card('🏫', 'الفصول والقاعات', 'Classrooms and halls', 'مراجعة الدرس، وتقويم سريع، ومنافسة بين المجموعات.', 'Lesson review, quick checks and contests between groups.')}
-        ${card('🎭', 'المسارح والفعاليات الكبيرة', 'Theatres and big events', 'شاشة واحدة كبيرة ومئة مشارك من جوالاتهم في الوقت نفسه.', 'One big screen and up to a hundred players on their phones at once.')}
-        ${card('💼', 'الاجتماعات والورش', 'Meetings and workshops', 'افتتاح اللقاء بكسر الجليد، واستطلاع آراء، وسحابة كلمات.', 'Open with an ice-breaker, take a poll, gather a word cloud.')}
-        ${card('📱', 'عن بُعد: واتساب والمجموعات', 'Remote: WhatsApp and groups', 'لا يلزم أن تكونوا في مكان واحد: أرسل رابط الدخول في المجموعة، فيظهر السؤال والخيارات والنتيجة على جوال كل مشارك.', 'No need to be in one place: send the join link to the group, and each phone shows the question, the options and the result.')}
-        ${card('👨‍👩‍👧', 'العائلة والأصدقاء', 'Family and friends', 'سهرات ومناسبات ورحلات بمسابقات ألعاب للصغار والكبار.', 'Evenings, occasions and trips with game contests for all ages.')}
-        ${card('🎓', 'الأنشطة الطلابية والمخيمات', 'Student activities and camps', 'فرق تتنافس طوال البرنامج، والنتيجة النهائية مع منصة التتويج.', 'Teams compete through the programme, with a final podium.')}
+        ${card('', 'الفصول والقاعات', 'Classrooms and halls', 'مراجعة الدرس، وتقويم سريع، ومنافسة بين المجموعات.', 'Lesson review, quick checks and contests between groups.')}
+        ${card('', 'المسارح والفعاليات الكبيرة', 'Theatres and big events', 'شاشة واحدة كبيرة ومئة مشارك من جوالاتهم في الوقت نفسه.', 'One big screen and up to a hundred players on their phones at once.')}
+        ${card('', 'الاجتماعات والورش', 'Meetings and workshops', 'افتتاح اللقاء بكسر الجليد، واستطلاع آراء، وسحابة كلمات.', 'Open with an ice-breaker, take a poll, gather a word cloud.')}
+        ${card('', 'عن بُعد: واتساب والمجموعات', 'Remote: WhatsApp and groups', 'لا يلزم أن تكونوا في مكان واحد: أرسل رابط الدخول في المجموعة، فيظهر السؤال والخيارات والنتيجة على جوال كل مشارك.', 'No need to be in one place: send the join link to the group, and each phone shows the question, the options and the result.')}
+        ${card('', 'العائلة والأصدقاء', 'Family and friends', 'سهرات ومناسبات ورحلات بمسابقات ألعاب للصغار والكبار.', 'Evenings, occasions and trips with game contests for all ages.')}
+        ${card('', 'الأنشطة الطلابية والمخيمات', 'Student activities and camps', 'فرق تتنافس طوال البرنامج، والنتيجة النهائية مع منصة التتويج.', 'Teams compete through the programme, with a final podium.')}
       </div></section>
 
       <section><h3>${B('كيف يعمل؟', 'How it works')}</h3><ol class="qi-steps">
@@ -2318,40 +2322,40 @@ if (typeof module !== 'undefined') module.exports = QZParse;
         <li><b>${B('اعرض الرمز', 'Show the code')}</b><small>${B('يدخل المشاركون من جوالاتهم بالرمز أو رمز QR أو رابط ترسله لهم.', 'Players join on their phones by code, QR code or a link you send.')}</small></li>
         <li><b>${B('العبوا', 'Play')}</b><small>${B('أسئلة وتحديات ونقاط وترتيب بعد كل جولة، حتى منصة التتويج.', 'Questions, challenges, points and a ranking after each round, up to the podium.')}</small></li></ol></section>
 
-      <section><h3>🔥 ${B('طرق لعب تشعل الحماس', 'Ways to play that fire people up')}</h3><div class="qi-grid">
-        ${card('⚡', 'الجولة الخاطفة', 'The rapid round', 'عشر عبارات أو أكثر تتوالى على الجوال: صح أم خطأ؟ كل عبارة بمئة نقطة، وفي آخر المسابقة تتضاعف فتقلب الترتيب.', 'Ten or more statements in a row on the phone: true or false? Each is worth 100 points, doubled at the end, and it can turn the ranking around.')}
-        ${card('🏆', 'الناجي الأخير', 'Last survivor', 'من يخطئ يخرج ويتابع متفرجًا، ويفوز من يصمد حتى النهاية. مثالي للمسارح والفعاليات الكبيرة.', 'A wrong answer takes you out to watch; whoever lasts wins. Ideal on stage and at big events.')}
-        ${card('🔗', 'وصّل', 'Match the pairs', 'صِل كل مصطلح بمعناه أو كل دولة بعاصمتها، ولكل توصيل صحيح نصيبه من النقاط.', 'Link each term to its meaning or each country to its capital; every right link earns its share.')}
-        ${card('🪢', 'شدّ الحبل', 'Tug of war', 'فريقان ينقران بأسرع ما يستطيعان، والحبل يتحرك على الشاشة لحظة بلحظة نحو الأقوى.', 'Two sides tap as fast as they can while the rope moves on the screen towards the stronger.')}
-        ${card('✨', 'السؤال الذهبي ولحظة الحسم', 'Golden question and finale', 'سؤال مفاجئ بنقاط مضاعفة، وسؤال أخير مضاعف يُبقي الأمل للجميع حتى النهاية.', 'A surprise double-points question and a doubled final one keep everyone in it to the end.')}
-        ${card('🎯', 'رهان الثقة', 'Confidence bets', 'يراهن المشارك على إجابته فيكسب نقاطًا إضافية أو يخسرها.', 'Players bet on their answer to win or lose extra points.')}
+      <section><h3>${B('طرق لعب تشعل الحماس', 'Ways to play that fire people up')}</h3><div class="qi-grid">
+        ${card('', 'الجولة الخاطفة', 'The rapid round', 'عشر عبارات أو أكثر تتوالى على الجوال: صح أم خطأ؟ كل عبارة بمئة نقطة، وفي آخر المسابقة تتضاعف فتقلب الترتيب.', 'Ten or more statements in a row on the phone: true or false? Each is worth 100 points, doubled at the end, and it can turn the ranking around.')}
+        ${card('', 'الناجي الأخير', 'Last survivor', 'من يخطئ يخرج ويتابع متفرجًا، ويفوز من يصمد حتى النهاية. مثالي للمسارح والفعاليات الكبيرة.', 'A wrong answer takes you out to watch; whoever lasts wins. Ideal on stage and at big events.')}
+        ${card('', 'وصّل', 'Match the pairs', 'صِل كل مصطلح بمعناه أو كل دولة بعاصمتها، ولكل توصيل صحيح نصيبه من النقاط.', 'Link each term to its meaning or each country to its capital; every right link earns its share.')}
+        ${card('', 'شدّ الحبل', 'Tug of war', 'فريقان ينقران بأسرع ما يستطيعان، والحبل يتحرك على الشاشة لحظة بلحظة نحو الأقوى.', 'Two sides tap as fast as they can while the rope moves on the screen towards the stronger.')}
+        ${card('', 'السؤال الذهبي ولحظة الحسم', 'Golden question and finale', 'سؤال مفاجئ بنقاط مضاعفة، وسؤال أخير مضاعف يُبقي الأمل للجميع حتى النهاية.', 'A surprise double-points question and a doubled final one keep everyone in it to the end.')}
+        ${card('', 'رهان الثقة', 'Confidence bets', 'يراهن المشارك على إجابته فيكسب نقاطًا إضافية أو يخسرها.', 'Players bet on their answer to win or lose extra points.')}
       </div></section>
 
-      <section class="qi-ai"><h3>✨ ${B('أسئلتك جاهزة في دقيقة بمساعدة الذكاء الاصطناعي', 'Your questions ready in a minute with AI')}</h3><ol class="qi-steps">
+      <section class="qi-ai"><h3>${B('أسئلتك جاهزة في دقيقة بمساعدة الذكاء الاصطناعي', 'Your questions ready in a minute with AI')}</h3><ol class="qi-steps">
         <li><b>${B('اكتب الموضوع', 'Type the topic')}</b><small>${B('مثل «٣٠ سؤالًا في الثقافة الإسلامية» أو الصق نص الدرس، واختر العدد والمستوى.', 'Like “30 questions on world capitals”, or paste the lesson, and choose the count and level.')}</small></li>
         <li><b>${B('انسخ التعليمات', 'Copy the instructions')}</b><small>${B('اضغط «نسخ التعليمات» والصقها في ChatGPT أو Claude أو أي مساعد.', 'Tap “Copy the instructions” and paste them into ChatGPT, Claude or any assistant.')}</small></li>
         <li><b>${B('الصق الرد', 'Paste the reply')}</b><small>${B('انسخ رده كاملًا واضغط «لصق رد الذكاء الاصطناعي»، فتُبنى الأسئلة بخياراتها وإجاباتها.', 'Copy its whole reply and tap “Paste the AI’s reply”; the questions are built with their options and answers.')}</small></li></ol>
         <p class="qi-note">${B('ويمكنك أيضًا لصق أسئلتك مكتوبة، أو رفع ملف Word أو Excel أو PDF، فيتعرّف ميدان على الأسئلة والإجابات.', 'You can also paste written questions or upload a Word, Excel or PDF file, and Maydan recognises the questions and answers.')}</p></section>
 
       <section><h3>${B('ما الذي يميّزه؟', 'What sets it apart')}</h3><div class="qi-grid">
-        ${card('🧩', 'أنواع أسئلة كثيرة', 'Many question kinds', 'اختيار من متعدد، وصح وخطأ، وخمّن الكلمة، والأقرب للرقم، والترتيب، ووصّل، والجولة الخاطفة، والصورة المخفية، والاستطلاع، وسحابة الكلمات.', 'Multiple choice, true/false, guess the word, closest number, ordering, matching, rapid rounds, hidden picture, polls and word clouds.')}
-        ${card('🎮', 'تحديات ألعاب بين الأسئلة', 'Game challenges between questions', '٢٤ تحديًا للذكاء والذاكرة والسرعة والمهارة، منها شدّ الحبل بين فريقين. وزّعها بين أسئلتك بضغطة.', '24 challenges of logic, memory, speed and skill, including a team tug of war. Spread them between your questions in one tap.')}
-        ${card('👥', 'فرق أو أفراد', 'Teams or individuals', 'من فريقين إلى ثلاثين، بأسماء تكتبها، ويختار المشارك فريقه أو توزّعهم أنت.', 'From two to thirty teams with your own names; players choose, or you place them.')}
-        ${card('🎓', 'درجات للأنشطة الصفية', 'Grades for class activities', 'حوّل النتائج إلى درجة من ٥ أو ١٠ أو أي رقم، من كل النقاط أو من الأسئلة وحدها، ونزّلها ملفًا بالأسماء.', 'Turn the results into a grade out of 5, 10 or any number, from all points or the questions alone, and download it with the names.')}
-        ${card('📽', 'مع شاشة أو بدونها', 'With or without a screen', 'إن تعطّل جهاز العرض استمرت المسابقة، فكل جوال يعرض السؤال والنتيجة والترتيب.', 'If the projector fails the quiz goes on: every phone shows the question, the result and the ranking.')}
-        ${card('⏸', 'أوقف وأكمل لاحقًا', 'Pause and resume', 'أوقف المسابقة متى شئت وأكملها من حيث توقفت، ونزّل النتائج ملف CSV.', 'Pause any time and pick up where you left off; download the results as CSV.')}
+        ${card('', 'أنواع أسئلة كثيرة', 'Many question kinds', 'اختيار من متعدد، وصح وخطأ، وخمّن الكلمة، والأقرب للرقم، والترتيب، ووصّل، والجولة الخاطفة، والصورة المخفية، والاستطلاع، وسحابة الكلمات.', 'Multiple choice, true/false, guess the word, closest number, ordering, matching, rapid rounds, hidden picture, polls and word clouds.')}
+        ${card('', 'تحديات ألعاب بين الأسئلة', 'Game challenges between questions', '٢٤ تحديًا للذكاء والذاكرة والسرعة والمهارة، منها شدّ الحبل بين فريقين. وزّعها بين أسئلتك بضغطة.', '24 challenges of logic, memory, speed and skill, including a team tug of war. Spread them between your questions in one tap.')}
+        ${card('', 'فرق أو أفراد', 'Teams or individuals', 'من فريقين إلى ثلاثين، بأسماء تكتبها، ويختار المشارك فريقه أو توزّعهم أنت.', 'From two to thirty teams with your own names; players choose, or you place them.')}
+        ${card('', 'درجات للأنشطة الصفية', 'Grades for class activities', 'حوّل النتائج إلى درجة من ٥ أو ١٠ أو أي رقم، من كل النقاط أو من الأسئلة وحدها، ونزّلها ملفًا بالأسماء.', 'Turn the results into a grade out of 5, 10 or any number, from all points or the questions alone, and download it with the names.')}
+        ${card('', 'مع شاشة أو بدونها', 'With or without a screen', 'إن تعطّل جهاز العرض استمرت المسابقة، فكل جوال يعرض السؤال والنتيجة والترتيب.', 'If the projector fails the quiz goes on: every phone shows the question, the result and the ranking.')}
+        ${card('', 'أوقف وأكمل لاحقًا', 'Pause and resume', 'أوقف المسابقة متى شئت وأكملها من حيث توقفت، ونزّل النتائج ملف CSV.', 'Pause any time and pick up where you left off; download the results as CSV.')}
       </div></section></div></details>`;
   }
   function home() {
     Q = null;
     const P = window.MDLive && MDLive.pending();
-    root.innerHTML = intro() + `${P ? `<div class="sn-card qz-resume"><p>⏸ ${B('مسابقة متوقفة', 'A paused quiz')}: <b>${esc(P.quiz.title || T('بلا عنوان', 'Untitled'))}</b> · ${B('أُنهي', 'done')} ${P.i + 1} ${T('من', 'of')} ${P.quiz.qs.length} · ${B('الرمز', 'code')} <span dir="ltr">${P.pin}</span></p>
+    root.innerHTML = intro() + `${P ? `<div class="sn-card qz-resume"><p>${B('مسابقة متوقفة', 'A paused quiz')}: <b>${esc(P.quiz.title || T('بلا عنوان', 'Untitled'))}</b> · ${B('أُنهي', 'done')} ${P.i + 1} ${T('من', 'of')} ${P.quiz.qs.length} · ${B('الرمز', 'code')} <span dir="ltr">${P.pin}</span></p>
         <div class="sn-two"><button type="button" class="btn solid" id="qzRes">${B('متابعة المسابقة ▶', 'Resume ▶')}</button><button type="button" class="btn ghost" id="qzDrop2">${B('إنهاؤها وحذفها', 'End and remove it')}</button></div></div>` : ''}<div class="sn-card qz-home" id="build">
-      <h2 class="qz-h">🛠 ${B('ابنِ مسابقتك', 'Build your quiz')}</h2>
+      <h2 class="qz-h">${B('ابنِ مسابقتك', 'Build your quiz')}</h2>
       <div class="qz-starts"><button type="button" class="btn solid" id="qzNew">${B('مسابقة أسئلة جديدة', 'New question quiz')}</button>
-        <div class="qz-gstart"><button type="button" class="btn ghost" id="qzNewG">🎮 ${B('مسابقة ألعاب وتحديات', 'A games-only quiz')}</button><label>${B('عدد التحديات', 'Challenges')} <select id="qzGn">${[5, 8, 10, 12, 15, 20, 24].map(n => `<option${n === 10 ? ' selected' : ''}>${n}</option>`).join('')}</select></label></div>
-        <p class="pt-fine">${B('في مسابقة الألعاب نختار لك تحديات متنوعة، وتقدر تغيّر أي واحد منها بزر 🔀 أو تختار غيره بنفسك.', 'We pick a varied set for you; swap any of them with 🔀 or choose another yourself.')}</p></div>
-      ${RLIB().length ? `<h2 class="qz-h" id="lib">📚 ${B('مكتبة ميدان: مسابقات جاهزة', 'The Maydan library: ready quizzes')}</h2><p class="pt-fine">${B('ابدأ أيًّا منها مباشرة، أو افتحها وعدّل عليها لتصير مسابقتك.', 'Start any of them now, or open one and make it your own.')}</p>
+        <div class="qz-gstart"><button type="button" class="btn ghost" id="qzNewG">${B('مسابقة ألعاب وتحديات', 'A games-only quiz')}</button><label>${B('عدد التحديات', 'Challenges')} <select id="qzGn">${[5, 8, 10, 12, 15, 20, 24].map(n => `<option${n === 10 ? ' selected' : ''}>${n}</option>`).join('')}</select></label></div>
+        <p class="pt-fine">${B('في مسابقة الألعاب نختار لك تحديات متنوعة، وتقدر تغيّر أي واحد منها بزر أو تختار غيره بنفسك.', 'We pick a varied set for you; swap any of them with or choose another yourself.')}</p></div>
+      ${RLIB().length ? `<h2 class="qz-h" id="lib">${B('مكتبة ميدان: مسابقات جاهزة', 'The Maydan library: ready quizzes')}</h2><p class="pt-fine">${B('ابدأ أيًّا منها مباشرة، أو افتحها وعدّل عليها لتصير مسابقتك.', 'Start any of them now, or open one and make it your own.')}</p>
       <div class="qz-lib">${RLIB().map((z, k) => `<div class="qz-lc"${k >= 5 ? ' data-more hidden' : ''}><span class="qz-li">${z.icon}</span><b>${esc(z.title)}</b><small>${esc(z.desc)}</small><em>${esc(z.who)} · ${z.qs.length} ${z.qs.every(x => x.type === 'game') ? B('تحديات', 'challenges') : B('فقرة', 'items')}</em><span class="qz-lb"><button type="button" class="btn solid" data-lgo="${z.id}">${B('ابدأ الآن ▶', 'Start now ▶')}</button><button type="button" class="btn ghost" data-led="${z.id}">${B('افتحها وعدّلها', 'Open and edit')}</button></span></div>`).join('')}</div>${RLIB().length > 5 ? `<button type="button" class="btn ghost qz-libmore" id="qzLibMore">${B(`عرض كل المسابقات (${RLIB().length})`, `Show all quizzes (${RLIB().length})`)}</button>` : ''}` : ''}
       ${list.length ? `<h2 class="qz-h">${B('مسابقاتك', 'Your quizzes')}</h2><ul class="qz-list">${list.map(x => `<li><button type="button" data-open="${x.id}"><b>${esc(x.title || T('بلا عنوان', 'Untitled'))}</b><small>${T('الأسئلة: ', 'Questions: ')}${x.qs.length}</small></button></li>`).join('')}</ul>` : ''}
       <label class="qz-imp btn ghost">${B('فتح نسخة محفوظة', 'Open a saved copy')}<input type="file" accept=".json,application/json" hidden id="qzImp"></label>
@@ -2381,7 +2385,7 @@ if (typeof module !== 'undefined') module.exports = QZParse;
     root.innerHTML = `<div class="qz-top"><button type="button" class="sn-lnk" id="qzBack">${B('‹ مسابقاتي', '‹ My quizzes')}</button></div>
       <div class="sn-card"><label class="sn-lbl">${B('عنوان المسابقة', 'Quiz title')}<input type="text" id="qzTitle" maxlength="120" value="${esc(Q.title)}" placeholder="${T('مثال: مراجعة الوحدة الأولى', 'e.g. Unit 1 review')}"></label></div>
       <div class="sn-card qz-add"><h2 class="qz-h">${B('أضف الأسئلة', 'Add questions')}</h2>
-        <div class="qz-tabs" role="tablist"><button type="button" role="tab" data-tab="paste" aria-selected="true">${B('لصق', 'Paste')}</button><button type="button" role="tab" data-tab="file" aria-selected="false">${B('رفع ملف', 'Upload a file')}</button><button type="button" role="tab" data-tab="ai" aria-selected="false">🤖 ${B('بالذكاء الاصطناعي', 'With AI')}</button></div>
+        <div class="qz-tabs" role="tablist"><button type="button" role="tab" data-tab="paste" aria-selected="true">${B('لصق', 'Paste')}</button><button type="button" role="tab" data-tab="file" aria-selected="false">${B('رفع ملف', 'Upload a file')}</button><button type="button" role="tab" data-tab="ai" aria-selected="false">${B('بالذكاء الاصطناعي', 'With AI')}</button></div>
         <div data-pane="paste"><textarea id="qzPaste" rows="8" dir="auto" placeholder="${T('الصق الأسئلة هنا كما هي من Word أو واتساب أو أي مكان…', 'Paste the questions here as they are, from Word, WhatsApp or anywhere…')}"></textarea>
           <p class="qz-found" id="qzFound"></p>
           <div class="sn-two"><button type="button" class="btn solid" id="qzPasteOk" disabled>${B('أضف إلى المسابقة', 'Add to the quiz')}</button></div>
@@ -2391,7 +2395,7 @@ if (typeof module !== 'undefined') module.exports = QZParse;
         <div data-pane="file" hidden><label class="qz-drop" id="qzDrop"><input type="file" id="qzFile" accept=".docx,.xlsx,.xls,.csv,.txt,.pdf" hidden><b>${B('اختر ملف الأسئلة', 'Choose the questions file')}</b><small>${B('Word أو Excel أو CSV أو PDF أو نص', 'Word, Excel, CSV, PDF or text')}</small></label>
           <p class="pt-fine">${B('في Word: إن كانت الإجابة الصحيحة بخط عريض أو ملوّنة أو مظللة أو تحتها خط، تُعرف تلقائيًا. ويُقبل قالب الاستيراد نفسه الذي يستعمله Kahoot.', 'In Word, a right answer in bold, colour, highlight or underline is recognised. Kahoot’s import template is accepted as it is.')}</p>
           <div class="sn-two"><button type="button" class="btn ghost" id="qzTpl">${B('تنزيل قالب Excel', 'Download an Excel template')}</button></div></div>
-        <div data-pane="ai" hidden><p class="qz-aih">✨ ${B('ابنِ الأسئلة بمساعدة الذكاء الاصطناعي: اكتب الموضوع وتوجيهاتك، ثم انسخ التعليمات إلى ChatGPT أو Claude والصق ردّه هنا.', 'Build the questions with AI: write the topic and your guidance, copy the instructions into ChatGPT or Claude, then paste its reply here.')}</p>
+        <div data-pane="ai" hidden><p class="qz-aih">${B('ابنِ الأسئلة بمساعدة الذكاء الاصطناعي: اكتب الموضوع وتوجيهاتك، ثم انسخ التعليمات إلى ChatGPT أو Claude والصق ردّه هنا.', 'Build the questions with AI: write the topic and your guidance, copy the instructions into ChatGPT or Claude, then paste its reply here.')}</p>
           <label class="sn-lbl">${B('الموضوع، أو الصق نص المحتوى الذي تريد بناء الأسئلة منه', 'The topic, or paste the content you want the questions built from')}<textarea id="qzTopic" rows="4" dir="auto" placeholder="${T('مثال: الفصل الثالث من مقرر ريادة الأعمال — نموذج العمل التجاري', 'e.g. Chapter 3 — the business model canvas')}"></textarea></label>
           <label class="sn-lbl">${B('توجيهاتك (اختياري)', 'Your guidance (optional)')}<textarea id="qzGuide" rows="3" dir="auto" placeholder="${T('مثال: ركّز على حياة الصحابة في مكة، واسأل عن المواقف لا التواريخ، وخلّها فيها مرح وتناسب طلاب المتوسط', 'e.g. Focus on…, ask about … rather than dates, keep it light-hearted, suitable for middle school')}"></textarea></label>
           <div class="qz-row"><label class="sn-lbl">${B('الفئة', 'Audience')}<select id="qzAud"><option value="">${T('عام', 'General')}</option><option value="kids">${T('أطفال', 'Children')}</option><option value="prim">${T('المرحلة الابتدائية', 'Primary school')}</option><option value="mid">${T('المرحلة المتوسطة', 'Middle school')}</option><option value="sec">${T('المرحلة الثانوية', 'Secondary school')}</option><option value="uni">${T('طلاب الجامعة', 'University students')}</option><option value="pro">${T('موظفون أو مختصون', 'Staff or specialists')}</option><option value="fam">${T('العائلة', 'Family')}</option></select></label>
@@ -2403,10 +2407,11 @@ if (typeof module !== 'undefined') module.exports = QZParse;
           <div class="sn-two"><button type="button" class="btn solid" id="qzCopy">${B('نسخ التعليمات', 'Copy the instructions')}</button><a class="btn ghost" id="qzGpt" target="_blank" rel="noopener">${B('افتح في ChatGPT', 'Open in ChatGPT')}</a><a class="btn ghost" id="qzCl" target="_blank" rel="noopener">${B('افتح في Claude', 'Open in Claude')}</a></div>
           <div class="qz-step2"><b>${B('٢', '2')}</b><p>${B('حين يكتب الأسئلة، انسخ رده كاملًا ثم اضغط:', 'When it has written them, copy its whole reply, then tap:')}</p><button type="button" class="btn solid" id="qzBack2">${B('لصق رد الذكاء الاصطناعي', 'Paste the AI’s reply')}</button></div></div>
       </div>
+      <div class="qz-spr"><span>${B('وزّع تحديات بين الأسئلة: تحدٍّ بعد كل', 'Spread challenges between the questions: one after every')}</span><select id="qzEvery">${[1, 2, 3, 5, 10].map(n => `<option value="${n}"${n === 3 ? ' selected' : ''}>${n === 1 ? T('سؤال واحد', '1 question') : n === 2 ? T('سؤالين', '2 questions') : n + ' ' + T('أسئلة', 'questions')}</option>`).join('')}</select><button type="button" class="btn ghost" id="qzSpr">${B('وزّع', 'Spread')}</button></div>
       <div id="qzQs" class="qz-qs"></div>
-      <div class="qz-addq"><button type="button" class="btn ghost" id="qzAddQ">${B('+ سؤال', '+ Question')}</button><button type="button" class="btn ghost" id="qzAddTF">${B('+ صح أو خطأ', '+ True or false')}</button><button type="button" class="btn ghost" id="qzAddG">${B('+ تحدٍّ تفاعلي 🎮', '+ Challenge 🎮')}</button></div>
-      <div class="qz-spr"><span>🎲 ${B('وزّع تحديات بين الأسئلة: تحدٍّ بعد كل', 'Spread challenges between the questions: one after every')}</span><select id="qzEvery">${[1, 2, 3, 5, 10].map(n => `<option value="${n}"${n === 3 ? ' selected' : ''}>${n === 1 ? T('سؤال واحد', '1 question') : n === 2 ? T('سؤالين', '2 questions') : n + ' ' + T('أسئلة', 'questions')}</option>`).join('')}</select><button type="button" class="btn ghost" id="qzSpr">${B('وزّع', 'Spread')}</button></div>
-      <div class="qz-bar"><div class="qz-chk" id="qzChk"></div><div class="qz-bar-b"><button type="button" class="btn solid md-go" id="qzGo">${B('ابدأ المسابقة ▶', 'Start the quiz ▶')}</button><button type="button" class="qz-ib" id="qzPv" title="${T('معاينة', 'Preview')}">👁<small>${B('معاينة', 'Preview')}</small></button><button type="button" class="qz-ib" id="qzExp" title="${T('حفظ نسخة', 'Save a copy')}">💾<small>${B('حفظ', 'Save')}</small></button><button type="button" class="qz-ib" id="qzPub" title="${T('انشرها في المكتبة', 'Offer it to the library')}">📤<small>${B('نشر', 'Offer')}</small></button></div></div>`;
+      <div class="qz-addq"><button type="button" class="btn ghost" id="qzAddQ">${B('+ سؤال', '+ Question')}</button><button type="button" class="btn ghost" id="qzAddTF">${B('+ صح أو خطأ', '+ True or false')}</button><button type="button" class="btn ghost" id="qzAddG">${B('+ تحدٍّ تفاعلي ', '+ Challenge ')}</button></div>
+
+      <div class="qz-bar"><div class="qz-chk" id="qzChk"></div><div class="qz-bar-b"><button type="button" class="btn solid md-go" id="qzGo">${B('ابدأ المسابقة ▶', 'Start the quiz ▶')}</button><button type="button" class="qz-ib" id="qzPv" title="${T('معاينة', 'Preview')}">${IC.eye}<small>${B('معاينة', 'Preview')}</small></button><button type="button" class="qz-ib" id="qzExp" title="${T('حفظ نسخة', 'Save a copy')}">${IC.save}<small>${B('حفظ', 'Save')}</small></button><button type="button" class="qz-ib" id="qzPub" title="${T('انشرها في المكتبة', 'Offer it to the library')}">${IC.up}<small>${B('نشر', 'Offer')}</small></button></div></div>`;
     const q = s => root.querySelector(s);
     q('#qzBack').onclick = () => { persist(); home(); };
     q('#qzTitle').oninput = e => { Q.title = e.target.value; later(); };
@@ -2455,7 +2460,7 @@ if (typeof module !== 'undefined') module.exports = QZParse;
       qs.forEach((z, j) => { out.push(z); if ((j + 1) % every === 0 && j < qs.length - 1 && k < gs.length) out.push(newGame(gs[k++])); });
       if (!k && gs.length) out.push(newGame(gs[0]));
       Q.qs = out; draw(); later();
-      toast(B(`وُزّع ${Math.max(k, 1)} تحديًا بين الأسئلة. غيّر أيًّا منها بزر 🔀.`, `${Math.max(k, 1)} challenges spread. Swap any with 🔀.`));
+      toast(B(`وُزّع ${Math.max(k, 1)} تحديًا بين الأسئلة. غيّر أيًّا منها بزر .`, `${Math.max(k, 1)} challenges spread. Swap any with .`));
     };
     q('#qzAddTF').onclick = () => { Q.qs.push(norm({ type: 'tf', opts: [T('صح', 'True'), T('خطأ', 'False')] })); draw(); focusLast(); later(); };
     q('#qzPv').onclick = () => preview(0);
@@ -2493,7 +2498,7 @@ if (typeof module !== 'undefined') module.exports = QZParse;
     // between two questions: add one right here
     box.querySelectorAll('.qz-q').forEach((el, i) => { if (i === Q.qs.length - 1) return;
       const d = document.createElement('div'); d.className = 'qz-ins';
-      d.innerHTML = `<button type="button" class="qz-insb">＋ ${B('أضف هنا', 'Add here')}</button><span class="qz-insm" hidden><button type="button" data-ins="mc">${B('سؤال', 'Question')}</button><button type="button" data-ins="tf">${B('صح أو خطأ', 'True/false')}</button><button type="button" data-ins="game">🎮 ${B('تحدٍّ', 'Challenge')}</button></span>`;
+      d.innerHTML = `<button type="button" class="qz-insb">＋ ${B('أضف هنا', 'Add here')}</button><span class="qz-insm" hidden><button type="button" data-ins="mc">${B('سؤال', 'Question')}</button><button type="button" data-ins="tf">${B('صح أو خطأ', 'True/false')}</button><button type="button" data-ins="game">${B('تحدٍّ', 'Challenge')}</button></span>`;
       el.appendChild(d);
       d.querySelector('.qz-insb').onclick = () => { d.querySelector('.qz-insm').hidden = false; d.querySelector('.qz-insb').hidden = true; };
       d.querySelectorAll('[data-ins]').forEach(b => b.onclick = () => {
@@ -2506,7 +2511,7 @@ if (typeof module !== 'undefined') module.exports = QZParse;
   }
   const RLIB = () => window.MDLib || [];
   const GAMES = () => window.MDGames ? MDGames.LIST : [];
-  const KINDS = () => [['mc', T('اختيار من متعدد', 'Multiple choice')], ['tf', T('صح أو خطأ', 'True or false')], ['poll', T('تصويت (بلا إجابة صحيحة)', 'Poll (no right answer)')], ['num', T('الأقرب للرقم', 'Closest number')], ['word', T('خمّن الكلمة', 'Guess the word')], ['order', T('رتّب بالترتيب الصحيح', 'Put in order')], ['match', T('وصّل (مطابقة)', 'Match the pairs')], ['rapid', T('الجولة الخاطفة (صح أو خطأ متتالية)', 'Rapid round (true/false in a row)')], ['open', T('كتابة حرة (سحابة كلمات)', 'Free text (word cloud)')], ['game', T('تحدٍّ تفاعلي 🎮', 'Challenge 🎮')]];
+  const KINDS = () => [['mc', T('اختيار من متعدد', 'Multiple choice')], ['tf', T('صح أو خطأ', 'True or false')], ['poll', T('تصويت (بلا إجابة صحيحة)', 'Poll (no right answer)')], ['num', T('الأقرب للرقم', 'Closest number')], ['word', T('خمّن الكلمة', 'Guess the word')], ['order', T('رتّب بالترتيب الصحيح', 'Put in order')], ['match', T('وصّل (مطابقة)', 'Match the pairs')], ['rapid', T('الجولة الخاطفة (صح أو خطأ متتالية)', 'Rapid round (true/false in a row)')], ['open', T('كتابة حرة (سحابة كلمات)', 'Free text (word cloud)')], ['game', T('تحدٍّ تفاعلي ', 'Challenge ')]];
   const typeSel = t => `<select data-k="type" aria-label="type">${KINDS().map(([v, l]) => `<option value="${v}"${v === t ? ' selected' : ''}>${l}</option>`).join('')}</select>`;
   const TEXTY = ['num', 'word', 'order', 'open', 'match', 'rapid', 'stage'];
   function setType(x, t) {
@@ -2549,7 +2554,7 @@ if (typeof module !== 'undefined') module.exports = QZParse;
       ['كسر الجليد', 'Ice-breaker', [['بكلمة: كيف تشعر الآن؟', 'In a word: how do you feel right now?'], ['اكتب كلمة تصف فريقك', 'A word that describes your team']]],
       ['الختام', 'Closing', [['بكلمة: ماذا تعلّمت اليوم؟', 'In a word: what did you learn today?'], ['اكتب فكرة ستطبّقها بعد اللقاء', 'One idea you will put into practice']]]]
   };
-  const ideas = x => !IDEAS[x.type] || (x.q || '').trim() ? '' : `<div class="qz-ideas"><b>💡 ${B('اقتراحات جاهزة', 'Ready suggestions')}</b>${IDEAS[x.type].map(([a, e, list], g) => `<div><small>${B(a, e)}</small>${list.map((it, k) => `<button type="button" data-idea="${g}-${k}">${isAr() ? it[0] : it[1]}</button>`).join('')}</div>`).join('')}</div>`;
+  const ideas = x => !IDEAS[x.type] || (x.q || '').trim() ? '' : `<div class="qz-ideas"><b>${B('اقتراحات جاهزة', 'Ready suggestions')}</b>${IDEAS[x.type].map(([a, e, list], g) => `<div><small>${B(a, e)}</small>${list.map((it, k) => `<button type="button" data-idea="${g}-${k}">${isAr() ? it[0] : it[1]}</button>`).join('')}</div>`).join('')}</div>`;
   function card(x, i) {
     if (x.type === 'game') {
       const g = window.MDGames ? MDGames.byId(x.g) : { icon: '🎮', ar: '', en: '', howAr: '', howEn: '' }, t = x.time || 30;
@@ -2558,7 +2563,7 @@ if (typeof module !== 'undefined') module.exports = QZParse;
         ${typeSel('game')}
         <select data-k="gtime" aria-label="time">${GTIMES.map(s => `<option value="${s}"${s === t ? ' selected' : ''}>${s} ${T('ث', 's')}</option>`).join('')}</select>
         <select data-k="pts" aria-label="points"><option value="1"${x.pts === 1 ? ' selected' : ''}>${T('نقاط عادية', 'Standard points')}</option><option value="2"${x.pts === 2 ? ' selected' : ''}>${T('نقاط مضاعفة', 'Double points')}</option><option value="0"${x.pts === 0 ? ' selected' : ''}>${T('بلا نقاط', 'No points')}</option></select>
-        <span class="qz-act"><button type="button" class="qz-ib" data-a="swap" title="${T('لعبة أخرى', 'Another game')}">🔀</button><button type="button" class="qz-ib" data-a="dup" title="${T('تكرار', 'Duplicate')}">⧉</button><button type="button" class="qz-ib" data-a="del" title="${T('حذف', 'Delete')}">✕</button></span></div>
+        <span class="qz-act"><button type="button" class="qz-ib" data-a="swap" title="${T('لعبة أخرى', 'Another game')}">${IC.shuffle}</button><button type="button" class="qz-ib" data-a="dup" title="${T('تكرار', 'Duplicate')}">⧉</button><button type="button" class="qz-ib" data-a="del" title="${T('حذف', 'Delete')}">✕</button></span></div>
       <div class="qz-gpick">${GAMES().map(z => `<button type="button" data-g="${z.id}" aria-pressed="${z.id === x.g}"><b>${z.icon}</b><span>${isAr() ? z.ar : z.en}</span><small>${isAr() ? z.kind[0] : z.kind[1]}</small></button>`).join('')}</div>
       <p class="qz-ghow"><b>${g.icon} ${isAr() ? g.ar : g.en}:</b> ${isAr() ? g.howAr : g.howEn}</p>
       <p class="qz-warn" hidden></p></div>`;
@@ -2568,9 +2573,9 @@ if (typeof module !== 'undefined') module.exports = QZParse;
         ${typeSel(x.type)}
         <select data-k="time" aria-label="time" title="${T('وقت الإجابة', 'Time to answer')}">${TIMES.map(s => `<option value="${s}"${s === t ? ' selected' : ''}>${s} ${T('ث', 's')}${!x.timeSet && s === t ? ' ✦' : ''}</option>`).join('')}</select>
         <select data-k="pts" aria-label="points"><option value="1"${x.pts === 1 ? ' selected' : ''}>${T('نقاط عادية', 'Standard points')}</option><option value="2"${x.pts === 2 ? ' selected' : ''}>${T('نقاط مضاعفة', 'Double points')}</option><option value="0"${x.pts === 0 ? ' selected' : ''}>${T('بلا نقاط', 'No points')}</option></select>
-        <span class="qz-act"><label class="qz-ib" title="${T('صورة', 'Image')}">🖼<input type="file" accept="image/*" hidden data-k="img"></label><button type="button" class="qz-ib" data-a="dup" title="${T('تكرار', 'Duplicate')}">⧉</button><button type="button" class="qz-ib" data-a="del" title="${T('حذف', 'Delete')}">✕</button></span></div>
+        <span class="qz-act"><label class="qz-ib" title="${T('صورة', 'Image')}"><input type="file" accept="image/*" hidden data-k="img"></label><button type="button" class="qz-ib" data-a="dup" title="${T('تكرار', 'Duplicate')}">⧉</button><button type="button" class="qz-ib" data-a="del" title="${T('حذف', 'Delete')}">✕</button></span></div>
       <textarea data-k="q" rows="2" dir="auto" maxlength="300" placeholder="${x.type === 'word' ? T('تلميح عن الكلمة (مثال: عاصمة عربية)', 'A hint about the word (e.g. an Arab capital)') : x.type === 'num' ? T('السؤال (مثال: كم طول برج المملكة بالمتر؟)', 'The question (e.g. how tall is the Kingdom Tower in metres?)') : x.type === 'open' ? T('السؤال (مثال: صف رحلتنا بكلمة)', 'The question (e.g. describe our trip in one word)') : T('اكتب السؤال', 'Type the question')}">${esc(x.q)}</textarea>
-      ${x.img ? `<div class="qz-img"><img src="${x.img}" alt=""><button type="button" data-a="noimg">${B('إزالة الصورة', 'Remove image')}</button>${x.type === 'mc' ? `<label class="qz-rev"><input type="checkbox" data-k="reveal"${x.reveal ? ' checked' : ''}> ${B('🧩 أخفِ الصورة واكشفها تدريجيًا (الأسرع في التعرف يكسب أكثر)', '🧩 Hide the picture and reveal it bit by bit (the quickest to recognise it earns most)')}</label>` : ''}</div>` : ''}`;
+      ${x.img ? `<div class="qz-img"><img src="${x.img}" alt=""><button type="button" data-a="noimg">${B('إزالة الصورة', 'Remove image')}</button>${x.type === 'mc' ? `<label class="qz-rev"><input type="checkbox" data-k="reveal"${x.reveal ? ' checked' : ''}> ${B('أخفِ الصورة واكشفها تدريجيًا (الأسرع في التعرف يكسب أكثر)', 'Hide the picture and reveal it bit by bit (the quickest to recognise it earns most)')}</label>` : ''}</div>` : ''}`;
     if (TEXTY.includes(x.type)) {
       const body = x.type === 'num' ? `<div class="qz-row2"><label>${B('الجواب (رقم)', 'The answer (a number)')}<input type="number" data-k="ans" step="any" value="${esc(x.ans == null ? '' : x.ans)}"></label><label>${B('الوحدة (اختياري)', 'Unit (optional)')}<input type="text" data-k="unit" maxlength="20" value="${esc(x.unit || '')}" placeholder="${T('متر، سنة…', 'metres, years…')}"></label></div><p class="qz-ghow">${B('يكتب كل مشارك رقمًا، والأقرب إلى الجواب يكسب أكثر.', 'Everyone types a number; the closest earns most.')}</p>`
         : x.type === 'word' ? `<div class="qz-row2"><label>${B('الكلمة', 'The word')}<input type="text" data-k="ans" maxlength="24" dir="auto" value="${esc(x.ans || '')}"></label></div><p class="qz-ghow">${B('تنكشف حروف الكلمة واحدًا بعد الآخر على الشاشة والجوالات، ومن يكتبها أسرع يكسب أكثر.', 'The letters show one by one on the screen and the phones; the quickest to type it earns most.')}</p>`
@@ -2786,10 +2791,10 @@ if (typeof module !== 'undefined') module.exports = QZParse;
   function offer() {
     if ((Q.qs || []).length < 5) return toast(B('أضف ٥ أسئلة على الأقل قبل النشر.', 'Add at least 5 questions first.'), 1);
     const d = document.createElement('div'); d.className = 'qz-modal';
-    d.innerHTML = `<div class="qz-mbox"><h3>📤 ${B('انشر مسابقتك في مكتبة ميدان', 'Offer your quiz to the Maydan library')}</h3>
+    d.innerHTML = `<div class="qz-mbox"><h3>${B('انشر مسابقتك في مكتبة ميدان', 'Offer your quiz to the Maydan library')}</h3>
       <p class="pt-fine">${B('تصل المسابقة إلى صاحب الموقع فيراجعها، وإن قُبلت تظهر في المكتبة باسمك ليستفيد منها الجميع.', 'It goes to the site’s author for review; if accepted it appears in the library under your name.')}</p>
       <label class="sn-lbl">${B('الاسم الذي يظهر مع المسابقة', 'The name shown with the quiz')}<input id="qpN" maxlength="40" dir="auto"></label>
-      <p class="qz-warn">⚠️ ${B('تأكد أن الاسم مناسب للنشر العام (اسمك أو اسم جهتك)، فهو يظهر للجميع.', 'Make sure the name suits public view (yours or your organisation’s); everyone will see it.')}</p>
+      <p class="qz-warn">${B('تأكد أن الاسم مناسب للنشر العام (اسمك أو اسم جهتك)، فهو يظهر للجميع.', 'Make sure the name suits public view (yours or your organisation’s); everyone will see it.')}</p>
       <label class="sn-lbl">${B('لمن تناسب؟ (مثال: طلاب المتوسط، العائلة)', 'Who is it for? (e.g. middle school, families)')}<input id="qpW" maxlength="60" dir="auto"></label>
       <label class="sn-lbl">${B('وصف قصير', 'A short description')}<input id="qpD" maxlength="140" dir="auto"></label>
       <label class="sn-lbl">${B('بريدك (اختياري، لا يُنشر)', 'Your email (optional, never published)')}<input id="qpE" type="email" dir="ltr"></label>
@@ -3382,6 +3387,7 @@ html.mp-embed body{padding-top:0!important}
 .mp-mic button[aria-pressed="true"]{background:#e0a458;border-color:#c98a3a;color:#2a1a04;opacity:1}.mp-mic small{display:block;margin-top:5px;font-size:.75rem;opacity:.8}
 .mp-mic{margin:8px 0 2px}.mp-mic button{font-size:.875rem;padding:7px 14px;border-radius:99px}.mp-mic small{font-size:.6875rem}
 .mp-tb button:disabled{opacity:.55!important;background:#e3e6f0!important;border-color:#d5d9e6!important;color:#4a5272!important;font-weight:600;font-size:.8125rem}
+.md-svg{width:20px;height:20px;display:block}
 </style><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script>window.MD_CFG={"apiKey": "AIzaSyA50i75DT1Is1a6Yn6snW1_JVObc8S3F0Y", "authDomain": "maydan-705ae.firebaseapp.com", "databaseURL": "https://maydan-705ae-default-rtdb.europe-west1.firebasedatabase.app", "projectId": "maydan-705ae", "appId": "1:342187013133:web:d5c2396f0db413f3c51144"};window.MD_MARK="<svg class=\"md-mark\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><rect x=\"4\" y=\"4\" width=\"40\" height=\"40\" rx=\"12\" fill=\"#23336F\"/><path d=\"M24 9l4.2 6.8 7.8-1.8-1.8 7.8L41 24l-6.8 4.2 1.8 7.8-7.8-1.8L24 39l-4.2-6.8-7.8 1.8 1.8-7.8L7 24l6.8-4.2-1.8-7.8 7.8 1.8z\" fill=\"#C9822B\"/><circle cx=\"24\" cy=\"24\" r=\"6.5\" fill=\"#23336F\"/><circle cx=\"24\" cy=\"24\" r=\"3\" fill=\"#F3E3C7\"/></svg>";</script><script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script><script>/* Maydan challenges: short games played on every phone at once. Every phone gets the same level (same seed),
    so the race is fair. Each game reports a score; higher is better. */
 window.MDGames = (function () {
@@ -4165,18 +4171,20 @@ window.MDLive = (function () {
     Object.keys(G.players).forEach(u => { sc[u] = sc[u] || { s: G.score[u] || 0, d: 0, c: false, a: false }; sc[u].out = G.out[u] != null; sc[u].left = left.length; });
     const order = Object.keys(sc).sort(byRank);
     order.forEach((u, k) => { sc[u].r = k + 1; sc[u].of = order.length; delete sc[u].gap; if (k && G.out[u] == null) { sc[u].gap = G.score[order[k - 1]] - G.score[u]; sc[u].above = G.players[order[k - 1]] || ''; } });
-    G.note = !judged ? `🏆 ${B(`الناجون: ${left.length}`, `Still in: ${left.length}`)}`
-      : spared ? `🛟 ${B(`أخطأ الجميع، فنجوا كلهم هذه المرة. الناجون: ${left.length}`, `Everyone missed, so all are spared this time. Still in: ${left.length}`)}`
-      : !G.teams && left.length <= 1 ? `🏆 ${B(`الناجي الأخير: ${esc(G.players[left[0]] || '')}! اضغط التالي لإعلان النتيجة`, `The last survivor: ${esc(G.players[left[0]] || '')}! Press next for the results`)}`
-      : `🏆 ${B(`خرج ${lose.length} · بقي ${left.length}`, `${lose.length} out · ${left.length} still in`)}${lose.length && lose.length <= 6 ? ` <small dir="auto">${lose.map(u => esc(G.players[u] || '')).join('، ')}</small>` : ''}`;
+    G.note = !judged ? `${B(`الناجون: ${left.length}`, `Still in: ${left.length}`)}`
+      : spared ? `${B(`أخطأ الجميع، فنجوا كلهم هذه المرة. الناجون: ${left.length}`, `Everyone missed, so all are spared this time. Still in: ${left.length}`)}`
+      : !G.teams && left.length <= 1 ? `${B(`الناجي الأخير: ${esc(G.players[left[0]] || '')}! اضغط التالي لإعلان النتيجة`, `The last survivor: ${esc(G.players[left[0]] || '')}! Press next for the results`)}`
+      : `${B(`خرج ${lose.length} · بقي ${left.length}`, `${lose.length} out · ${left.length} still in`)}${lose.length && lose.length <= 6 ? ` <small dir="auto">${lose.map(u => esc(G.players[u] || '')).join('، ')}</small>` : ''}`;
   }
+  const SV = d => `<svg class="md-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+  const IC = { vol: SV('<path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16 9a4 4 0 0 1 0 6M19 6a8 8 0 0 1 0 12"/>'), mute: SV('<path d="M4 9v6h4l5 4V5L8 9z"/><path d="m17 9 5 6M22 9l-5 6"/>'), fs: SV('<path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>') };
   function frame(inner, bar, canPause) {
     if (G.note) { inner = inner.replace(/<\/div>\s*$/, `<p class="md-surv">${G.note}</p></div>`); G.note = null; }
-    (G.box || G.el).innerHTML = `<div class="md-scr">${inner}</div><div class="md-fx" aria-hidden="true"></div><div class="md-ctl">${bar || ''}<span class="md-sp"></span>${canPause && G.i >= 0 && !G.ended ? `<button type="button" class="md-cb md-micb${G.stageNext ? ' on' : ''}" data-mic>🎤 ${G.stageNext ? B('المنصة بعد هذه الجولة ✓', 'Stage next ✓') : B('افتح المنصة', 'Open the stage')}<small>${micTxt()}</small></button>` : ''}${canPause ? `<button type="button" class="md-cb" data-pause>${B('إيقاف مؤقت', 'Pause')}</button>` : ''}<button type="button" class="md-cb" data-mute title="${T('الصوت', 'Sound')}">${mute ? '🔇' : '🔊'}</button><button type="button" class="md-cb" data-fs title="${T('ملء الشاشة', 'Full screen')}">⛶</button><button type="button" class="md-cb" data-end>${B('إنهاء', 'End')}</button></div>`;
+    (G.box || G.el).innerHTML = `<div class="md-scr">${inner}</div><div class="md-fx" aria-hidden="true"></div><div class="md-ctl">${bar || ''}<span class="md-sp"></span>${canPause && G.i >= 0 && !G.ended ? `<button type="button" class="md-cb md-micb${G.stageNext ? ' on' : ''}" data-mic>${G.stageNext ? B('المنصة بعد هذه الجولة ✓', 'Stage next ✓') : B('افتح المنصة', 'Open the stage')}<small>${micTxt()}</small></button>` : ''}${canPause ? `<button type="button" class="md-cb" data-pause>${B('إيقاف مؤقت', 'Pause')}</button>` : ''}<button type="button" class="md-cb" data-mute title="${T('الصوت', 'Sound')}">${mute ? IC.mute : IC.vol}</button><button type="button" class="md-cb" data-fs title="${T('ملء الشاشة', 'Full screen')}">${IC.fs}</button><button type="button" class="md-cb" data-end>${B('إنهاء', 'End')}</button></div>`;
     clearTimeout(G.autoT);
     const q = s => G.el.querySelector(s);
     if (G.opts.auto && !G.ended) { const nb = G.el.querySelector('[data-next]'); if (nb) G.autoT = setTimeout(() => { if (nb.isConnected) nb.click(); }, G.el.querySelector('.md-lb') ? 6500 : 4500); }
-    q('[data-mute]').onclick = e => { mute = !mute; e.currentTarget.textContent = mute ? '🔇' : '🔊'; };
+    q('[data-mute]').onclick = e => { mute = !mute; e.currentTarget.innerHTML = mute ? IC.mute : IC.vol; };
     q('[data-fs]').onclick = () => document.fullscreenElement ? document.exitFullscreen() : G.el.requestFullscreen && G.el.requestFullscreen();
     q('[data-end]').onclick = () => { if (G.i < 0 || G.ended || confirmEnd()) close(); };
     if (q('[data-pause]')) q('[data-pause]').onclick = pause;
@@ -4225,18 +4233,18 @@ window.MDLive = (function () {
   function micVote(u) {
     if (!G.opts.mic || !(u in G.players) || G.stageNext || micCool() || G.i < 0) return;
     G.mic = G.mic || new Set(); G.mic.add(u);
-    if (G.mic.size >= micNeed()) { G.stageNext = true; SND.gold(); const fx = G.el.querySelector('.md-fx'); if (fx) { const e = document.createElement('span'); e.className = 'md-micfx'; e.textContent = T('🎤 فُتحت المنصة بعد هذه الجولة!', '🎤 The stage opens after this round!'); fx.appendChild(e); setTimeout(() => e.remove(), 3500); } }
+    if (G.mic.size >= micNeed()) { G.stageNext = true; SND.gold(); const fx = G.el.querySelector('.md-fx'); if (fx) { const e = document.createElement('span'); e.className = 'md-micfx'; e.textContent = T('فُتحت المنصة بعد هذه الجولة!', 'The stage opens after this round!'); fx.appendChild(e); setTimeout(() => e.remove(), 3500); } }
     micSync();
   }
   function micSync() {
     G.micInfo = { n: G.mic ? G.mic.size : 0, need: micNeed(), on: !!G.stageNext, cool: micCool(), off: !G.opts.mic };
     G.ref.child('top/mic').set(G.micInfo).catch(() => {});
-    const b = G.el.querySelector('[data-mic]'); if (b) { b.classList.toggle('on', !!G.stageNext); b.innerHTML = `🎤 ${G.stageNext ? B('المنصة بعد هذه الجولة ✓', 'Stage next ✓') : B('افتح المنصة', 'Open the stage')}<small>${micTxt()}</small>`; }
+    const b = G.el.querySelector('[data-mic]'); if (b) { b.classList.toggle('on', !!G.stageNext); b.innerHTML = `${G.stageNext ? B('المنصة بعد هذه الجولة ✓', 'Stage next ✓') : B('افتح المنصة', 'Open the stage')}<small>${micTxt()}</small>`; }
   }
   // put a stage in before the next question
   function stageNow() {
     const at = G.done + 1;
-    G.quiz.qs.splice(at, 0, { type: 'stage', q: T('🎤 المنصة لكم: قل كلمتك', '🎤 The stage is yours: say your word'), opts: [], ok: [], pts: 0, time: 45 });
+    G.quiz.qs.splice(at, 0, { type: 'stage', q: T('المنصة لكم: قل كلمتك', 'The stage is yours: say your word'), opts: [], ok: [], pts: 0, time: 45 });
     if (G.gold >= at) G.gold++;
     G.stageNext = false; G.mic = new Set(); G.micAt = at; micSync(); keep();
   }
@@ -4310,18 +4318,18 @@ window.MDLive = (function () {
         <h3>${B('إعدادات المسابقة', 'Quiz settings')}</h3>
         <label>${B('عرض الترتيب', 'Show the ranking')}<select data-o="every">${[[1, T('بعد كل سؤال', 'After every question')], [3, T('كل ٣ أسئلة', 'Every 3 questions')], [5, T('كل ٥ أسئلة', 'Every 5 questions')], [0, T('في النهاية فقط', 'Only at the end')]].map(([v, l]) => `<option value="${v}"${O.every === v ? ' selected' : ''}>${l}</option>`).join('')}</select></label>
         <label class="md-ck"><input type="checkbox" data-o="speed"${O.speed ? ' checked' : ''}> ${B('السرعة تزيد النقاط', 'Speed adds points')}</label>
-        <label class="md-ck"><input type="checkbox" data-o="gold"${O.gold ? ' checked' : ''}> ${B('✨ سؤال ذهبي مفاجئ بنقاط مضاعفة', '✨ A surprise golden question with double points')}</label>
-        <label class="md-ck"><input type="checkbox" data-o="final"${O.final ? ' checked' : ''}> ${B('🏁 لحظة الحسم: السؤال الأخير بنقاط مضاعفة', '🏁 The final question with double points')}</label>
-        <label class="md-ck"><input type="checkbox" data-o="surv"${O.surv ? ' checked' : ''}> ${B('🏆 الناجي الأخير: من يخطئ يخرج من المنافسة ويتابع متفرجًا، ويفوز من يصمد حتى النهاية', '🏆 Last survivor: a wrong answer takes you out to watch; whoever lasts wins')} <small>${B('(للأفراد فقط؛ لا يعمل مع الفرق)', '(individuals only; off with teams)')}</small></label>
-        <label class="md-ck"><input type="checkbox" data-o="pw"${O.pw ? ' checked' : ''}> ${B('🧰 أدوات التحدي لكل متسابق مرة واحدة: مضاعفة السؤال ×٢، وخطف النقاط من جارك في الترتيب، والانسحاب من سؤال بمتوسط نقاطك', '🧰 Challenge tools, once each: double a question, steal from a neighbour in the ranking, skip a question for your average')}</label>
-        <label class="md-ck"><input type="checkbox" data-o="mic"${O.mic ? ' checked' : ''}> ${B('🎤 منصة التصريحات: زر «اطلب المنصة» عند المشاركين، وتُفتح بعد الجولة إذا طلبها ٢٥٪ منهم (وتقدر تفتحها أنت متى شئت)', '🎤 The stage: players can ask for it, and it opens after the round when 25% ask (you can open it any time)')}</label>
-        <label class="md-ck"><input type="checkbox" data-o="shuf"${O.shuf ? ' checked' : ''}> ${B('🔀 ترتيب عشوائي للأسئلة والخيارات في كل مرة', '🔀 Shuffle the questions and options each time')}</label>
+        <label class="md-ck"><input type="checkbox" data-o="gold"${O.gold ? ' checked' : ''}> ${B('سؤال ذهبي مفاجئ بنقاط مضاعفة', 'A surprise golden question with double points')}</label>
+        <label class="md-ck"><input type="checkbox" data-o="final"${O.final ? ' checked' : ''}> ${B('لحظة الحسم: السؤال الأخير بنقاط مضاعفة', 'The final question with double points')}</label>
+        <label class="md-ck"><input type="checkbox" data-o="surv"${O.surv ? ' checked' : ''}> ${B('الناجي الأخير: من يخطئ يخرج من المنافسة ويتابع متفرجًا، ويفوز من يصمد حتى النهاية', 'Last survivor: a wrong answer takes you out to watch; whoever lasts wins')} <small>${B('(للأفراد فقط؛ لا يعمل مع الفرق)', '(individuals only; off with teams)')}</small></label>
+        <label class="md-ck"><input type="checkbox" data-o="pw"${O.pw ? ' checked' : ''}> ${B('أدوات التحدي لكل متسابق مرة واحدة: مضاعفة السؤال ×٢، وخطف النقاط من جارك في الترتيب، والانسحاب من سؤال بمتوسط نقاطك', 'Challenge tools, once each: double a question, steal from a neighbour in the ranking, skip a question for your average')}</label>
+        <label class="md-ck"><input type="checkbox" data-o="mic"${O.mic ? ' checked' : ''}> ${B('منصة التصريحات: زر «اطلب المنصة» عند المشاركين، وتُفتح بعد الجولة إذا طلبها ٢٥٪ منهم (وتقدر تفتحها أنت متى شئت)', 'The stage: players can ask for it, and it opens after the round when 25% ask (you can open it any time)')}</label>
+        <label class="md-ck"><input type="checkbox" data-o="shuf"${O.shuf ? ' checked' : ''}> ${B('ترتيب عشوائي للأسئلة والخيارات في كل مرة', 'Shuffle the questions and options each time')}</label>
         <label class="md-ck"><input type="checkbox" data-o="auto"${O.auto ? ' checked' : ''}> ${B('▶ تقدّم تلقائي (المشرف يلعب من جواله أيضًا: ادخل بالرمز نفسه)', '▶ Move on automatically (so the host can play on a phone too, with the same code)')}</label>
-        <label class="md-ck"><input type="checkbox" data-o="bet"${O.bet ? ' checked' : ''}> ${B('🎯 الثقة: يراهن المشارك على إجابته فيكسب أو يخسر نقاطًا إضافية', '🎯 Confidence: players can bet on their answer to win or lose extra points')}</label>
+        <label class="md-ck"><input type="checkbox" data-o="bet"${O.bet ? ' checked' : ''}> ${B('الثقة: يراهن المشارك على إجابته فيكسب أو يخسر نقاطًا إضافية', 'Confidence: players can bet on their answer to win or lose extra points')}</label>
         <button type="button" class="btn solid" data-done>${B('تم', 'Done')}</button></div>
-      <div class="md-mode"><span>${B('كيف تعرضون المسابقة؟', 'How will you follow the quiz?')}</span><button type="button" data-mode="screen" aria-pressed="${!G.phones}">📺 ${B('شاشة عرض', 'A big screen')}</button><button type="button" data-mode="phones" aria-pressed="${!!G.phones}">📱 ${B('جوالات فقط (وأنا ألعب معهم)', 'Phones only (and I play too)')}</button></div>
+      <div class="md-mode"><span>${B('كيف تعرضون المسابقة؟', 'How will you follow the quiz?')}</span><button type="button" data-mode="screen" aria-pressed="${!G.phones}">${B('شاشة عرض', 'A big screen')}</button><button type="button" data-mode="phones" aria-pressed="${!!G.phones}">${B('جوالات فقط (وأنا ألعب معهم)', 'Phones only (and I play too)')}</button></div>
       <div class="md-set md-teamp" id="mdTeamP" hidden>
-        <h3>👥 ${B('الفرق', 'Teams')}</h3>
+        <h3>${B('الفرق', 'Teams')}</h3>
         <label>${B('عدد الفرق', 'Number of teams')}<select data-o="teams"><option value="0">${T('بلا فرق (كل مشارك وحده)', 'No teams (everyone on their own)')}</option>${[2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 15, 20, 25, 30].map(n => `<option value="${n}"${G.teams && G.teams.length === n ? ' selected' : ''}>${n} ${n <= 10 ? T('فرق', 'teams') : T('فريقًا', 'teams')}</option>`).join('')}</select></label>
         <label data-tmode hidden>${B('كيف يُوزَّع المشاركون؟', 'How are players placed?')}<select data-o="tmode">
           <option value="pick"${!['auto', 'host'].includes(G.opts.tmode) ? ' selected' : ''}>${T('يختار كل مشارك فريقه من جواله', 'Each player picks a team on their phone')}</option>
@@ -4332,9 +4340,9 @@ window.MDLive = (function () {
         <button type="button" class="btn solid" data-tdone>${B('تم', 'Done')}</button></div>
       <div class="md-move" id="mdMove" hidden></div>`,
       `<button type="button" class="btn solid md-start" data-go disabled>${B('ابدأ', 'Start')}</button>
-       <button type="button" class="md-cb md-cbt" data-teams>👥 ${B('الفرق', 'Teams')}</button>
-       <button type="button" class="md-cb" data-set>⚙ ${B('الإعدادات', 'Settings')}</button>
-       <button type="button" class="md-cb" data-share>🔗 ${B('رابط الدخول', 'Join link')}</button>
+       <button type="button" class="md-cb md-cbt" data-teams>${B('الفرق', 'Teams')}</button>
+       <button type="button" class="md-cb" data-set>${B('الإعدادات', 'Settings')}</button>
+       <button type="button" class="md-cb" data-share>${B('رابط الدخول', 'Join link')}</button>
        <label class="md-opt"><input type="checkbox" data-lock> ${B('إقفال الدخول', 'Lock joining')}</label>`, true);
     q('[data-share]').onclick = async e => {
       const link = url, text = T(`ادخل مسابقة «${G.quiz.title || 'ميدان'}»: `, `Join “${G.quiz.title || 'Maydan'}”: `) + link;
@@ -4364,7 +4372,7 @@ window.MDLive = (function () {
     };
     const count = () => { if (q('#mdN')) { q('#mdN').textContent = Object.keys(G.players).length; go.disabled = !Object.keys(G.players).length; } };
     sub(G.ref.child('pl'), 'child_added', s => {
-      const v = s.val() || {}; if (v.w) { G.fans[s.key] = v.n; const f = q('#mdFans'); if (f) f.textContent = Object.keys(G.fans).length ? '👀 ' + Object.keys(G.fans).length : ''; return; }
+      const v = s.val() || {}; if (v.w) { G.fans[s.key] = v.n; const f = q('#mdFans'); if (f) f.textContent = Object.keys(G.fans).length ? '' + Object.keys(G.fans).length : ''; return; }
       G.players[s.key] = v.n; if (!(s.key in G.score)) G.score[s.key] = 0; G.streak[s.key] = G.streak[s.key] || 0; if (v.t != null) G.team[s.key] = +v.t;
       draw(); SND.join(); count();
     });
@@ -4418,10 +4426,10 @@ window.MDLive = (function () {
     const x = G.quiz.qs[G.i], n = G.quiz.qs.length, m = multOf(G.i), gold = G.i === G.gold, last = G.opts.final && G.i === n - 1 && n > 1;
     // the question is read first, alone and large; then it moves up as the options and the clock appear.
     // The reading time follows its length, so everyone starts answering on equal terms.
-    const tag = gold ? `<span class="md-gold">${B('✨ السؤال الذهبي — نقاط مضاعفة', '✨ The golden question — double points')}</span>` : last ? `<span class="md-x2">${B('🏁 السؤال الأخير — نقاط مضاعفة', '🏁 The last question — double points')}</span>` : m === 2 ? `<span class="md-x2">${B('نقاط مضاعفة ×٢', 'Double points ×2')}</span>` : '';
+    const tag = gold ? `<span class="md-gold">${B('السؤال الذهبي — نقاط مضاعفة', 'The golden question — double points')}</span>` : last ? `<span class="md-x2">${B('السؤال الأخير — نقاط مضاعفة', 'The last question — double points')}</span>` : m === 2 ? `<span class="md-x2">${B('نقاط مضاعفة ×٢', 'Double points ×2')}</span>` : '';
     if (x.type === 'game') return nextGame(x, n, m, gold, last, tag);
     const q = frame(`<div class="md-q md-pre${gold ? ' is-gold' : ''}">
-        <div class="md-qtop"><span class="md-qn">${x.type === 'stage' ? '🎤 ' + B('المنصة', 'The stage') : `${B('السؤال', 'Question')} ${qNo(G.i)} ${T('من', 'of')} ${qTot()}`}</span>${tag}</div>
+        <div class="md-qtop"><span class="md-qn">${x.type === 'stage' ? '' + B('المنصة', 'The stage') : `${B('السؤال', 'Question')} ${qNo(G.i)} ${T('من', 'of')} ${qTot()}`}</span>${tag}</div>
         <h2 class="md-qt" dir="auto">${esc(x.q)}</h2>
         <div class="md-mid"><div class="md-clock"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" class="md-ring0"/><circle cx="50" cy="50" r="44" class="md-ring" id="mdRing"/></svg><b id="mdT">${x.time}</b></div>
           ${x.img ? (x.reveal ? `<div class="md-pic"><img src="${x.img}" alt=""><div class="md-veil">${veil(x.time)}</div></div>` : `<img class="md-img" src="${x.img}" alt="">`) : '<span></span>'}
@@ -4438,13 +4446,13 @@ window.MDLive = (function () {
   function veil(t) { const d = Array.from({ length: 24 }, (_, k) => k).sort(() => Math.random() - .5); return d.map(k => `<i style="--d:${(k * t * .85 / 24).toFixed(2)}s"></i>`).join(''); }
   // what sits under the question: the options, or a prompt for the text kinds
   function centre(x) {
-    if (x.type === 'num') return `<p class="md-prompt">🔢 ${B('اكتب رقمًا على جوالك', 'Type a number on your phone')}${x.unit ? ` <small>(${esc(x.unit)})</small>` : ''}</p>`;
+    if (x.type === 'num') return `<p class="md-prompt">${B('اكتب رقمًا على جوالك', 'Type a number on your phone')}${x.unit ? ` <small>(${esc(x.unit)})</small>` : ''}</p>`;
     if (x.type === 'word') { x._order = x._order || shuffleIdx([...x.ans].map((c, k) => c === ' ' ? -1 : k).filter(k => k >= 0)); return `<p class="md-mask" id="mdW" dir="auto">${mask(x, 0)}</p><p class="md-prompt">${B('خمّن الكلمة واكتبها على جوالك', 'Guess the word and type it on your phone')}</p>`; }
     if (x.type === 'order') { x._sh = x._sh || shuffleIdx(x.items.map((_, k) => k), true); return `<div class="md-order">${x._sh.map((k, j) => `<div class="md-tile" style="--c:var(--qz${j % 6});--d:${j * 80}ms"><i>${LET()[j]}</i><span dir="auto">${esc(x.items[k])}</span></div>`).join('')}</div><p class="md-prompt">${B('رتّبها على جوالك من الأول إلى الأخير', 'Put them in order on your phone, first to last')}</p>`; }
-    if (x.type === 'match') { x._mr = x._mr || shuffleIdx(x.pairs.map((_, k) => k), true); return `<div class="md-match"><div>${x.pairs.map((p, j) => `<div class="md-tile" style="--c:var(--qz${j % 6});--d:${j * 80}ms"><i>${j + 1}</i><span dir="auto">${esc(p[0])}</span></div>`).join('')}</div><div>${x._mr.map((k, j) => `<div class="md-tile" style="--c:#6b7393;--d:${(j + x.pairs.length) * 80}ms"><i>${LET()[j]}</i><span dir="auto">${esc(x.pairs[k][1])}</span></div>`).join('')}</div></div><p class="md-prompt">🔗 ${B('صِل كل عنصر بما يقابله على جوالك', 'Match each item on your phone')}</p>`; }
-    if (x.type === 'rapid') return `<p class="md-prompt md-rapid">⚡ ${B(`${x.items.length} عبارات تظهر على جوالك واحدة بعد أخرى: صح أم خطأ؟ أسرع وأدق!`, `${x.items.length} statements on your phone, one after another: true or false? Fast and right!`)}</p>`;
-    if (x.type === 'stage') return `<div class="md-stage" id="mdStage"><p class="md-prompt">🎤 ${B('اكتب تصريحك من جوالك ويظهر هنا باسمك', 'Write on your phone; it shows here with your name')}</p></div>`;
-    if (x.type === 'open') return `<p class="md-prompt">✍️ ${B('اكتب إجابتك على جوالك', 'Write your answer on your phone')}</p>`;
+    if (x.type === 'match') { x._mr = x._mr || shuffleIdx(x.pairs.map((_, k) => k), true); return `<div class="md-match"><div>${x.pairs.map((p, j) => `<div class="md-tile" style="--c:var(--qz${j % 6});--d:${j * 80}ms"><i>${j + 1}</i><span dir="auto">${esc(p[0])}</span></div>`).join('')}</div><div>${x._mr.map((k, j) => `<div class="md-tile" style="--c:#6b7393;--d:${(j + x.pairs.length) * 80}ms"><i>${LET()[j]}</i><span dir="auto">${esc(x.pairs[k][1])}</span></div>`).join('')}</div></div><p class="md-prompt">${B('صِل كل عنصر بما يقابله على جوالك', 'Match each item on your phone')}</p>`; }
+    if (x.type === 'rapid') return `<p class="md-prompt md-rapid">${B(`${x.items.length} عبارات تظهر على جوالك واحدة بعد أخرى: صح أم خطأ؟ أسرع وأدق!`, `${x.items.length} statements on your phone, one after another: true or false? Fast and right!`)}</p>`;
+    if (x.type === 'stage') return `<div class="md-stage" id="mdStage"><p class="md-prompt">${B('اكتب تصريحك من جوالك ويظهر هنا باسمك', 'Write on your phone; it shows here with your name')}</p></div>`;
+    if (x.type === 'open') return `<p class="md-prompt">${B('اكتب إجابتك على جوالك', 'Write your answer on your phone')}</p>`;
     return `<div class="md-tiles">${x.opts.map((o, j) => `<div class="md-tile" style="--c:var(--qz${j});--d:${j * 80}ms"><i>${LET()[j]}</i><span dir="auto">${esc(o)}</span></div>`).join('')}</div>`;
   }
   const shuffleIdx = (a, notSame) => { let r; do { r = a.slice().sort(() => Math.random() - .5); } while (notSame && a.length > 1 && r.every((v, k) => v === a[k])); return r; };
@@ -4521,7 +4529,7 @@ window.MDLive = (function () {
   function raceAvg(x, taps) { const n = x._tug.names.length, sum = new Array(n).fill(0), cnt = new Array(n).fill(0); Object.keys(x._tug.sides).forEach(u => { const k = x._tug.sides[u]; cnt[k]++; sum[k] += taps[u] || 0; }); return sum.map((v, k) => cnt[k] ? v / cnt[k] : 0); }
   function raceDraw(x, taps) {
     raceAvg(x, taps).forEach((a, j) => { const c = G.el.querySelector('#mdCam' + j); if (c) c.style.setProperty('--p', Math.min(100, 100 * a / RACE_END) + '%');
-      const best = Object.keys(x._tug.sides).filter(u => x._tug.sides[u] === j).sort((p, q) => (taps[q] || 0) - (taps[p] || 0))[0], l = G.el.querySelector('#mdLead' + j); if (l) l.textContent = best && taps[best] ? `⭐ ${(G.players[best] || '').slice(0, 14)} ${taps[best]}` : ''; });
+      const best = Object.keys(x._tug.sides).filter(u => x._tug.sides[u] === j).sort((p, q) => (taps[q] || 0) - (taps[p] || 0))[0], l = G.el.querySelector('#mdLead' + j); if (l) l.textContent = best && taps[best] ? `${(G.players[best] || '').slice(0, 14)} ${taps[best]}` : ''; });
   }
   // average pulls per player on each side; -1 means the first side has it all, 1 the second
   function tugPos(x, taps) {
@@ -4628,13 +4636,13 @@ window.MDLive = (function () {
       const got = us.filter(u => ans[u] && !isNaN(+ans[u].a)).sort((a, b) => Math.abs(+ans[a].a - x.ans) - Math.abs(+ans[b].a - x.ans) || ans[a].t - ans[b].t);
       const best = got.length ? Math.abs(+ans[got[0]].a - x.ans) : 0;
       got.forEach((u, k) => { const df = Math.abs(+ans[u].a - x.ans), c = df === best || df <= Math.abs(x.ans) * .05; sc[u] = { c, d: m ? Math.round(1000 * m * Math.max(.1, 1 - k / Math.max(1, got.length))) : 0, g: +ans[u].a, a: true }; if (c) right++; });
-      body = `<p class="md-big">${esc(x.ans)} ${esc(x.unit || '')}</p><ol class="md-near">${got.slice(0, 5).map(u => `<li><span dir="auto">${esc(G.players[u])}</span><em>${esc(ans[u].a)}</em><small>${+ans[u].a === x.ans ? '🎯' : (+ans[u].a > x.ans ? '+' : '−') + Math.abs(+ans[u].a - x.ans)}</small></li>`).join('')}</ol>`;
+      body = `<p class="md-big">${esc(x.ans)} ${esc(x.unit || '')}</p><ol class="md-near">${got.slice(0, 5).map(u => `<li><span dir="auto">${esc(G.players[u])}</span><em>${esc(ans[u].a)}</em><small>${+ans[u].a === x.ans ? '' : (+ans[u].a > x.ans ? '+' : '−') + Math.abs(+ans[u].a - x.ans)}</small></li>`).join('')}</ol>`;
     } else if (x.type === 'word' || x.type === 'order') {
       const fast = [];
       us.forEach(u => { const a = ans[u]; if (!a) return; const c = x.type === 'word' ? normW(a.a) === normW(x.ans) : JSON.stringify([].concat(a.a).map(k => x._sh[k])) === JSON.stringify(x.items.map((_, k) => k)); sc[u] = { c, d: c && m ? speed(a) : 0, a: true }; if (c) { right++; fast.push(u); } });
       fast.sort((a, b) => ans[a].t - ans[b].t);
       body = x.type === 'word' ? `<p class="md-big" dir="auto">${esc(x.ans)}</p>` : `<ol class="md-near md-ord">${x.items.map(v => `<li><span dir="auto">${esc(v)}</span></li>`).join('')}</ol>`;
-      body += fast.length ? `<p class="md-stat">⚡ ${B('الأسرع', 'Fastest')}: ${fast.slice(0, 3).map(u => esc(G.players[u])).join('، ')}</p>` : '';
+      body += fast.length ? `<p class="md-stat">${B('الأسرع', 'Fastest')}: ${fast.slice(0, 3).map(u => esc(G.players[u])).join('، ')}</p>` : '';
     } else if (x.type === 'match' || x.type === 'rapid') {
       // a share of the points for each right link or statement, still faster is better
       const n = x.type === 'match' ? x.pairs.length : x.items.length, per = new Array(n).fill(0), full = [];
@@ -4647,7 +4655,7 @@ window.MDLive = (function () {
       full.sort((a, b) => ans[a].t - ans[b].t);
       body = x.type === 'match' ? `<div class="md-pairs">${x.pairs.map((p, j) => `<div><span dir="auto">${esc(p[0])}</span><i>↔</i><span dir="auto">${esc(p[1])}</span><small>${Math.round(100 * per[j] / Math.max(1, Object.keys(ans).length))}%</small></div>`).join('')}</div>`
         : `<ol class="md-rlist${x.items.length > 8 ? ' many' : ''}">${x.items.map((v, j) => `<li class="${x.truth[j] ? 't' : 'f'}"><b>${x.truth[j] ? T('صح', 'True') : T('خطأ', 'False')}</b><span dir="auto">${esc(v)}</span><small>${Math.round(100 * per[j] / Math.max(1, Object.keys(ans).length))}%</small></li>`).join('')}</ol>`;
-      body += full.length ? `<p class="md-stat">⚡ ${B('العلامة الكاملة', 'Full marks')}: ${full.slice(0, 3).map(u => esc(G.players[u])).join('، ')}</p>` : '';
+      body += full.length ? `<p class="md-stat">${B('العلامة الكاملة', 'Full marks')}: ${full.slice(0, 3).map(u => esc(G.players[u])).join('، ')}</p>` : '';
     } else if (x.type === 'stage') {
       const said = us.filter(u => ans[u] && typeof ans[u].a === 'string' && ans[u].a.trim()).sort((a, b) => ans[a].t - ans[b].t);
       said.forEach(u => { sc[u] = { c: true, d: 0, a: true }; });
@@ -4719,7 +4727,7 @@ window.MDLive = (function () {
     const n = G.quiz.qs.length, lastQ = G.i === n - 1;
     const showBoard = !lastQ && ((G.opts.every && (G.i + 1) % G.opts.every === 0) || (G.opts.final && G.i === n - 2 && n > 2));
     const top = Object.keys(raw).filter(u => u in G.players).sort((a, b) => raw[b] - raw[a]).slice(0, 5);
-    const raceRes = race ? `<h2 class="md-tugwin">🏆 ${B('الأول', 'First:')} ${esc(x._tug.names[place.indexOf(0)])}</h2>${raceView2(x, race, raw)}` : '';
+    const raceRes = race ? `<h2 class="md-tugwin">${B('الأول', 'First:')} ${esc(x._tug.names[place.indexOf(0)])}</h2>${raceView2(x, race, raw)}` : '';
     const q = frame(`<div class="md-lb">${raceRes}${tug ? `<h2 class="md-tugwin">🏆 ${B('فاز', 'Winner:')} ${esc(x._tug.names[win])}</h2><div class="md-tug"><div class="md-tug-sides"><span>${esc(x._tug.names[0])}<small>${T('معدل الشدّات', 'Avg pulls')}: ${Math.round(tug.avg[0])}</small></span><span>${esc(x._tug.names[1])}<small>${T('معدل الشدّات', 'Avg pulls')}: ${Math.round(tug.avg[1])}</small></span></div><div class="mg-rope"><i class="a"></i><i class="b"></i><span class="knot" style="left:${win ? 92 : 8}%">🎀</span></div></div><h3>${B('أقوى الشادّين', 'Strongest pullers')}</h3>` : `<h2>${g.icon} ${B('أبطال التحدي', 'Challenge champions')}: ${esc(G.ar ? g.ar : g.en)}</h2>`}
         <ol>${top.map((u, k) => `<li style="--d:${k * 90}ms"><b>${k + 1}</b><span dir="auto">${esc(G.players[u] || '')}</span><em>${raw[u]}</em><small class="md-plus">+${sc[u].d}</small></li>`).join('')}</ol>
         <p class="md-stat">${B(`شارك ${Object.keys(ans).length} من ${Object.keys(G.players).length}`, `${Object.keys(ans).length} of ${Object.keys(G.players).length} took part`)}</p></div>`,
@@ -4741,9 +4749,9 @@ window.MDLive = (function () {
     const tt = teamTable(), tmax = Math.max(1, ...tt.map(t => t.avg));
     G.ref.child('top').set({ p: top.map(u => ({ n: G.players[u] || '', s: G.score[u], d: (G.lastD || {})[u] || 0, w: (G.prev || {})[u] || 0 })), t: tt.slice(0, 5).map(t => ({ n: t.name, s: t.avg, k: t.k })), d: decisive || null, mic: G.micInfo || null });
     const q = frame(`<div class="md-lb${G.teams ? ' with-teams' : ''}">${note ? `<p class="md-note">${esc(note)}</p>` : ''}
-        <h2>${decisive ? B('🏁 لحظة الحسم: بقي سؤال واحد بنقاط مضاعفة', '🏁 Decisive moment: one question left, worth double') : B('الترتيب', 'Ranking')}</h2>
+        <h2>${decisive ? B('لحظة الحسم: بقي سؤال واحد بنقاط مضاعفة', 'Decisive moment: one question left, worth double') : B('الترتيب', 'Ranking')}</h2>
         ${G.teams ? `<div class="md-teams">${tt.slice(0, 5).map((t, k) => `<div class="md-team" style="--c:var(--qz${(t.k) % 6});--w:${Math.round(100 * t.avg / tmax)}%;--d:${k * 120}ms"><b>${k + 1}</b><span dir="auto">${esc(t.name)}</span><i></i><em>${t.avg}</em><small class="md-tmem">${Object.keys(G.players).filter(u => G.team[u] === t.k).sort(byRank).slice(0, 4).map((u, j) => `${j + 1}. ${esc(G.players[u] || '')} ${G.score[u] || 0}`).join(' · ')}</small></div>`).join('')}<small>${B('نتيجة الفريق متوسط نقاط أعضائه', 'A team’s score is its members’ average')}</small></div>` : ''}
-        <ol class="md-slide${top.length > 8 ? ' many' : ''}" style="--n:${top.length}">${top.map((u, k) => `<li style="--d:${k * 40}ms;--from:${Math.min(top.length, ((G.prev || {})[u] || k + 1)) - 1};--to:${k}" data-mv>${(G.prev || {})[u] && G.prev[u] !== k + 1 ? `<u class="${G.prev[u] > k + 1 ? 'up' : 'dn'}">${G.prev[u] > k + 1 ? '▲' : '▼'}${Math.abs(G.prev[u] - k - 1)}</u>` : ''}${(G.lastD || {})[u] ? `<q>${G.lastD[u] > 0 ? '+' : ''}${G.lastD[u]}</q>` : ''}${G.teams && G.team[u] != null ? `<s style="--c:var(--qz${(G.team[u]) % 6})"></s>` : ''}<b>${k + 1}</b><span dir="auto">${esc(G.players[u] || '')}</span>${decisive && k ? `<small>−${G.score[top[k - 1]] - G.score[u]}</small>` : ''}<em>${G.score[u]}</em>${G.streak[u] >= 3 ? `<i title="${T('إجابات صحيحة متتالية', 'right answers in a row')}">🔥${G.streak[u]}</i>` : ''}</li>`).join('')}</ol>
+        <ol class="md-slide${top.length > 8 ? ' many' : ''}" style="--n:${top.length}">${top.map((u, k) => `<li style="--d:${k * 40}ms;--from:${Math.min(top.length, ((G.prev || {})[u] || k + 1)) - 1};--to:${k}" data-mv>${(G.prev || {})[u] && G.prev[u] !== k + 1 ? `<u class="${G.prev[u] > k + 1 ? 'up' : 'dn'}">${G.prev[u] > k + 1 ? '▲' : '▼'}${Math.abs(G.prev[u] - k - 1)}</u>` : ''}${(G.lastD || {})[u] ? `<q>${G.lastD[u] > 0 ? '+' : ''}${G.lastD[u]}</q>` : ''}${G.teams && G.team[u] != null ? `<s style="--c:var(--qz${(G.team[u]) % 6})"></s>` : ''}<b>${k + 1}</b><span dir="auto">${esc(G.players[u] || '')}</span>${decisive && k ? `<small>−${G.score[top[k - 1]] - G.score[u]}</small>` : ''}<em>${G.score[u]}</em>${G.streak[u] >= 3 ? `<i title="${T('إجابات صحيحة متتالية', 'right answers in a row')}">${G.streak[u]}</i>` : ''}</li>`).join('')}</ol>
         ${climb && best >= (order.length >= 6 ? 2 : 1) ? `<p class="md-climb">${B(`⬆ الصاعد: ${esc(G.players[climb])} تقدّم ${best} ${best === 1 ? 'مركزًا' : 'مراكز'}`, `⬆ Riser: ${esc(G.players[climb])} climbed ${best} place${best > 1 ? 's' : ''}`)}</p>` : ''}</div>`,
       `<button type="button" class="btn solid" data-next>${B('السؤال التالي', 'Next question')}</button>`, true);
     q('[data-next]').onclick = next;
@@ -4758,7 +4766,7 @@ window.MDLive = (function () {
     await G.ref.child('st').set({ ph: 'end', i: G.i, lock: true });
     const p = k => order[k] ? `<div class="md-pod md-p${k + 1}"><span class="md-pn" dir="auto">${esc(G.players[order[k]] || '')}</span><b>${G.score[order[k]]}</b><div class="md-step">${k + 1}</div></div>` : '<div class="md-pod md-empty"></div>';
     const q = frame(`<div class="md-end"><h2>${esc(G.quiz.title || T('ميدان', 'Maydan'))}</h2>
-        ${tt.length ? `<p class="md-wteam" style="--c:var(--qz${(tt[0].k) % 6})">${B(`🏆 الفريق الفائز: ${esc(tt[0].name)}`, `🏆 Winning team: ${esc(tt[0].name)}`)} <em>${tt[0].avg}</em></p>` : ''}
+        ${tt.length ? `<p class="md-wteam" style="--c:var(--qz${(tt[0].k) % 6})">${B(`الفريق الفائز: ${esc(tt[0].name)}`, `Winning team: ${esc(tt[0].name)}`)} <em>${tt[0].avg}</em></p>` : ''}
         <div class="md-podium">${p(1)}${p(0)}${p(2)}</div>
         <ol class="md-rest" start="4">${order.slice(3, 10).map(u => `<li><span dir="auto">${esc(G.players[u] || '')}</span><em>${G.score[u]}</em></li>`).join('')}</ol></div>`,
       `<button type="button" class="btn ghost" data-csv>${B('تحميل النتائج', 'Download results')}</button>

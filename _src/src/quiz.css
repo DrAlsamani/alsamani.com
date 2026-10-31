@@ -160,3 +160,5 @@
 .qz-ins::before{content:"";position:absolute;inset:50% 8px auto;border-top:1px dashed var(--line)}
 .qz-insb,.qz-insm button{position:relative;font:inherit;font-size:.8125rem;border:1px dashed var(--accent);color:var(--accent);background:var(--surface);border-radius:99px;padding:3px 12px;cursor:pointer}
 .qz-insm{display:flex;gap:6px;position:relative}.qz-insm[hidden]{display:none}.qz-insm button{border-style:solid}
+.qz-svg{width:20px;height:20px;display:block}.qz-ib .qz-svg{margin:0 auto}
+.qz-ib{padding:5px 8px 4px;gap:2px}.qz-ib small{line-height:1}

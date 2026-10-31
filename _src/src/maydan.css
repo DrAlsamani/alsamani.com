@@ -398,3 +398,4 @@ html.mp-embed body{padding-top:0!important}
 .mp-mic button[aria-pressed="true"]{background:#e0a458;border-color:#c98a3a;color:#2a1a04;opacity:1}.mp-mic small{display:block;margin-top:5px;font-size:.75rem;opacity:.8}
 .mp-mic{margin:8px 0 2px}.mp-mic button{font-size:.875rem;padding:7px 14px;border-radius:99px}.mp-mic small{font-size:.6875rem}
 .mp-tb button:disabled{opacity:.55!important;background:#e3e6f0!important;border-color:#d5d9e6!important;color:#4a5272!important;font-weight:600;font-size:.8125rem}
+.md-svg{width:20px;height:20px;display:block}

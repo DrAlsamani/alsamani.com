@@ -116,18 +116,20 @@ window.MDLive = (function () {
     Object.keys(G.players).forEach(u => { sc[u] = sc[u] || { s: G.score[u] || 0, d: 0, c: false, a: false }; sc[u].out = G.out[u] != null; sc[u].left = left.length; });
     const order = Object.keys(sc).sort(byRank);
     order.forEach((u, k) => { sc[u].r = k + 1; sc[u].of = order.length; delete sc[u].gap; if (k && G.out[u] == null) { sc[u].gap = G.score[order[k - 1]] - G.score[u]; sc[u].above = G.players[order[k - 1]] || ''; } });
-    G.note = !judged ? `🏆 ${B(`الناجون: ${left.length}`, `Still in: ${left.length}`)}`
-      : spared ? `🛟 ${B(`أخطأ الجميع، فنجوا كلهم هذه المرة. الناجون: ${left.length}`, `Everyone missed, so all are spared this time. Still in: ${left.length}`)}`
-      : !G.teams && left.length <= 1 ? `🏆 ${B(`الناجي الأخير: ${esc(G.players[left[0]] || '')}! اضغط التالي لإعلان النتيجة`, `The last survivor: ${esc(G.players[left[0]] || '')}! Press next for the results`)}`
-      : `🏆 ${B(`خرج ${lose.length} · بقي ${left.length}`, `${lose.length} out · ${left.length} still in`)}${lose.length && lose.length <= 6 ? ` <small dir="auto">${lose.map(u => esc(G.players[u] || '')).join('، ')}</small>` : ''}`;
+    G.note = !judged ? `${B(`الناجون: ${left.length}`, `Still in: ${left.length}`)}`
+      : spared ? `${B(`أخطأ الجميع، فنجوا كلهم هذه المرة. الناجون: ${left.length}`, `Everyone missed, so all are spared this time. Still in: ${left.length}`)}`
+      : !G.teams && left.length <= 1 ? `${B(`الناجي الأخير: ${esc(G.players[left[0]] || '')}! اضغط التالي لإعلان النتيجة`, `The last survivor: ${esc(G.players[left[0]] || '')}! Press next for the results`)}`
+      : `${B(`خرج ${lose.length} · بقي ${left.length}`, `${lose.length} out · ${left.length} still in`)}${lose.length && lose.length <= 6 ? ` <small dir="auto">${lose.map(u => esc(G.players[u] || '')).join('، ')}</small>` : ''}`;
   }
+  const SV = d => `<svg class="md-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+  const IC = { vol: SV('<path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16 9a4 4 0 0 1 0 6M19 6a8 8 0 0 1 0 12"/>'), mute: SV('<path d="M4 9v6h4l5 4V5L8 9z"/><path d="m17 9 5 6M22 9l-5 6"/>'), fs: SV('<path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>') };
   function frame(inner, bar, canPause) {
     if (G.note) { inner = inner.replace(/<\/div>\s*$/, `<p class="md-surv">${G.note}</p></div>`); G.note = null; }
-    (G.box || G.el).innerHTML = `<div class="md-scr">${inner}</div><div class="md-fx" aria-hidden="true"></div><div class="md-ctl">${bar || ''}<span class="md-sp"></span>${canPause && G.i >= 0 && !G.ended ? `<button type="button" class="md-cb md-micb${G.stageNext ? ' on' : ''}" data-mic>🎤 ${G.stageNext ? B('المنصة بعد هذه الجولة ✓', 'Stage next ✓') : B('افتح المنصة', 'Open the stage')}<small>${micTxt()}</small></button>` : ''}${canPause ? `<button type="button" class="md-cb" data-pause>${B('إيقاف مؤقت', 'Pause')}</button>` : ''}<button type="button" class="md-cb" data-mute title="${T('الصوت', 'Sound')}">${mute ? '🔇' : '🔊'}</button><button type="button" class="md-cb" data-fs title="${T('ملء الشاشة', 'Full screen')}">⛶</button><button type="button" class="md-cb" data-end>${B('إنهاء', 'End')}</button></div>`;
+    (G.box || G.el).innerHTML = `<div class="md-scr">${inner}</div><div class="md-fx" aria-hidden="true"></div><div class="md-ctl">${bar || ''}<span class="md-sp"></span>${canPause && G.i >= 0 && !G.ended ? `<button type="button" class="md-cb md-micb${G.stageNext ? ' on' : ''}" data-mic>${G.stageNext ? B('المنصة بعد هذه الجولة ✓', 'Stage next ✓') : B('افتح المنصة', 'Open the stage')}<small>${micTxt()}</small></button>` : ''}${canPause ? `<button type="button" class="md-cb" data-pause>${B('إيقاف مؤقت', 'Pause')}</button>` : ''}<button type="button" class="md-cb" data-mute title="${T('الصوت', 'Sound')}">${mute ? IC.mute : IC.vol}</button><button type="button" class="md-cb" data-fs title="${T('ملء الشاشة', 'Full screen')}">${IC.fs}</button><button type="button" class="md-cb" data-end>${B('إنهاء', 'End')}</button></div>`;
     clearTimeout(G.autoT);
     const q = s => G.el.querySelector(s);
     if (G.opts.auto && !G.ended) { const nb = G.el.querySelector('[data-next]'); if (nb) G.autoT = setTimeout(() => { if (nb.isConnected) nb.click(); }, G.el.querySelector('.md-lb') ? 6500 : 4500); }
-    q('[data-mute]').onclick = e => { mute = !mute; e.currentTarget.textContent = mute ? '🔇' : '🔊'; };
+    q('[data-mute]').onclick = e => { mute = !mute; e.currentTarget.innerHTML = mute ? IC.mute : IC.vol; };
     q('[data-fs]').onclick = () => document.fullscreenElement ? document.exitFullscreen() : G.el.requestFullscreen && G.el.requestFullscreen();
     q('[data-end]').onclick = () => { if (G.i < 0 || G.ended || confirmEnd()) close(); };
     if (q('[data-pause]')) q('[data-pause]').onclick = pause;
@@ -176,18 +178,18 @@ window.MDLive = (function () {
   function micVote(u) {
     if (!G.opts.mic || !(u in G.players) || G.stageNext || micCool() || G.i < 0) return;
     G.mic = G.mic || new Set(); G.mic.add(u);
-    if (G.mic.size >= micNeed()) { G.stageNext = true; SND.gold(); const fx = G.el.querySelector('.md-fx'); if (fx) { const e = document.createElement('span'); e.className = 'md-micfx'; e.textContent = T('🎤 فُتحت المنصة بعد هذه الجولة!', '🎤 The stage opens after this round!'); fx.appendChild(e); setTimeout(() => e.remove(), 3500); } }
+    if (G.mic.size >= micNeed()) { G.stageNext = true; SND.gold(); const fx = G.el.querySelector('.md-fx'); if (fx) { const e = document.createElement('span'); e.className = 'md-micfx'; e.textContent = T('فُتحت المنصة بعد هذه الجولة!', 'The stage opens after this round!'); fx.appendChild(e); setTimeout(() => e.remove(), 3500); } }
     micSync();
   }
   function micSync() {
     G.micInfo = { n: G.mic ? G.mic.size : 0, need: micNeed(), on: !!G.stageNext, cool: micCool(), off: !G.opts.mic };
     G.ref.child('top/mic').set(G.micInfo).catch(() => {});
-    const b = G.el.querySelector('[data-mic]'); if (b) { b.classList.toggle('on', !!G.stageNext); b.innerHTML = `🎤 ${G.stageNext ? B('المنصة بعد هذه الجولة ✓', 'Stage next ✓') : B('افتح المنصة', 'Open the stage')}<small>${micTxt()}</small>`; }
+    const b = G.el.querySelector('[data-mic]'); if (b) { b.classList.toggle('on', !!G.stageNext); b.innerHTML = `${G.stageNext ? B('المنصة بعد هذه الجولة ✓', 'Stage next ✓') : B('افتح المنصة', 'Open the stage')}<small>${micTxt()}</small>`; }
   }
   // put a stage in before the next question
   function stageNow() {
     const at = G.done + 1;
-    G.quiz.qs.splice(at, 0, { type: 'stage', q: T('🎤 المنصة لكم: قل كلمتك', '🎤 The stage is yours: say your word'), opts: [], ok: [], pts: 0, time: 45 });
+    G.quiz.qs.splice(at, 0, { type: 'stage', q: T('المنصة لكم: قل كلمتك', 'The stage is yours: say your word'), opts: [], ok: [], pts: 0, time: 45 });
     if (G.gold >= at) G.gold++;
     G.stageNext = false; G.mic = new Set(); G.micAt = at; micSync(); keep();
   }
@@ -261,18 +263,18 @@ window.MDLive = (function () {
         <h3>${B('إعدادات المسابقة', 'Quiz settings')}</h3>
         <label>${B('عرض الترتيب', 'Show the ranking')}<select data-o="every">${[[1, T('بعد كل سؤال', 'After every question')], [3, T('كل ٣ أسئلة', 'Every 3 questions')], [5, T('كل ٥ أسئلة', 'Every 5 questions')], [0, T('في النهاية فقط', 'Only at the end')]].map(([v, l]) => `<option value="${v}"${O.every === v ? ' selected' : ''}>${l}</option>`).join('')}</select></label>
         <label class="md-ck"><input type="checkbox" data-o="speed"${O.speed ? ' checked' : ''}> ${B('السرعة تزيد النقاط', 'Speed adds points')}</label>
-        <label class="md-ck"><input type="checkbox" data-o="gold"${O.gold ? ' checked' : ''}> ${B('✨ سؤال ذهبي مفاجئ بنقاط مضاعفة', '✨ A surprise golden question with double points')}</label>
-        <label class="md-ck"><input type="checkbox" data-o="final"${O.final ? ' checked' : ''}> ${B('🏁 لحظة الحسم: السؤال الأخير بنقاط مضاعفة', '🏁 The final question with double points')}</label>
-        <label class="md-ck"><input type="checkbox" data-o="surv"${O.surv ? ' checked' : ''}> ${B('🏆 الناجي الأخير: من يخطئ يخرج من المنافسة ويتابع متفرجًا، ويفوز من يصمد حتى النهاية', '🏆 Last survivor: a wrong answer takes you out to watch; whoever lasts wins')} <small>${B('(للأفراد فقط؛ لا يعمل مع الفرق)', '(individuals only; off with teams)')}</small></label>
-        <label class="md-ck"><input type="checkbox" data-o="pw"${O.pw ? ' checked' : ''}> ${B('🧰 أدوات التحدي لكل متسابق مرة واحدة: مضاعفة السؤال ×٢، وخطف النقاط من جارك في الترتيب، والانسحاب من سؤال بمتوسط نقاطك', '🧰 Challenge tools, once each: double a question, steal from a neighbour in the ranking, skip a question for your average')}</label>
-        <label class="md-ck"><input type="checkbox" data-o="mic"${O.mic ? ' checked' : ''}> ${B('🎤 منصة التصريحات: زر «اطلب المنصة» عند المشاركين، وتُفتح بعد الجولة إذا طلبها ٢٥٪ منهم (وتقدر تفتحها أنت متى شئت)', '🎤 The stage: players can ask for it, and it opens after the round when 25% ask (you can open it any time)')}</label>
-        <label class="md-ck"><input type="checkbox" data-o="shuf"${O.shuf ? ' checked' : ''}> ${B('🔀 ترتيب عشوائي للأسئلة والخيارات في كل مرة', '🔀 Shuffle the questions and options each time')}</label>
+        <label class="md-ck"><input type="checkbox" data-o="gold"${O.gold ? ' checked' : ''}> ${B('سؤال ذهبي مفاجئ بنقاط مضاعفة', 'A surprise golden question with double points')}</label>
+        <label class="md-ck"><input type="checkbox" data-o="final"${O.final ? ' checked' : ''}> ${B('لحظة الحسم: السؤال الأخير بنقاط مضاعفة', 'The final question with double points')}</label>
+        <label class="md-ck"><input type="checkbox" data-o="surv"${O.surv ? ' checked' : ''}> ${B('الناجي الأخير: من يخطئ يخرج من المنافسة ويتابع متفرجًا، ويفوز من يصمد حتى النهاية', 'Last survivor: a wrong answer takes you out to watch; whoever lasts wins')} <small>${B('(للأفراد فقط؛ لا يعمل مع الفرق)', '(individuals only; off with teams)')}</small></label>
+        <label class="md-ck"><input type="checkbox" data-o="pw"${O.pw ? ' checked' : ''}> ${B('أدوات التحدي لكل متسابق مرة واحدة: مضاعفة السؤال ×٢، وخطف النقاط من جارك في الترتيب، والانسحاب من سؤال بمتوسط نقاطك', 'Challenge tools, once each: double a question, steal from a neighbour in the ranking, skip a question for your average')}</label>
+        <label class="md-ck"><input type="checkbox" data-o="mic"${O.mic ? ' checked' : ''}> ${B('منصة التصريحات: زر «اطلب المنصة» عند المشاركين، وتُفتح بعد الجولة إذا طلبها ٢٥٪ منهم (وتقدر تفتحها أنت متى شئت)', 'The stage: players can ask for it, and it opens after the round when 25% ask (you can open it any time)')}</label>
+        <label class="md-ck"><input type="checkbox" data-o="shuf"${O.shuf ? ' checked' : ''}> ${B('ترتيب عشوائي للأسئلة والخيارات في كل مرة', 'Shuffle the questions and options each time')}</label>
         <label class="md-ck"><input type="checkbox" data-o="auto"${O.auto ? ' checked' : ''}> ${B('▶ تقدّم تلقائي (المشرف يلعب من جواله أيضًا: ادخل بالرمز نفسه)', '▶ Move on automatically (so the host can play on a phone too, with the same code)')}</label>
-        <label class="md-ck"><input type="checkbox" data-o="bet"${O.bet ? ' checked' : ''}> ${B('🎯 الثقة: يراهن المشارك على إجابته فيكسب أو يخسر نقاطًا إضافية', '🎯 Confidence: players can bet on their answer to win or lose extra points')}</label>
+        <label class="md-ck"><input type="checkbox" data-o="bet"${O.bet ? ' checked' : ''}> ${B('الثقة: يراهن المشارك على إجابته فيكسب أو يخسر نقاطًا إضافية', 'Confidence: players can bet on their answer to win or lose extra points')}</label>
         <button type="button" class="btn solid" data-done>${B('تم', 'Done')}</button></div>
-      <div class="md-mode"><span>${B('كيف تعرضون المسابقة؟', 'How will you follow the quiz?')}</span><button type="button" data-mode="screen" aria-pressed="${!G.phones}">📺 ${B('شاشة عرض', 'A big screen')}</button><button type="button" data-mode="phones" aria-pressed="${!!G.phones}">📱 ${B('جوالات فقط (وأنا ألعب معهم)', 'Phones only (and I play too)')}</button></div>
+      <div class="md-mode"><span>${B('كيف تعرضون المسابقة؟', 'How will you follow the quiz?')}</span><button type="button" data-mode="screen" aria-pressed="${!G.phones}">${B('شاشة عرض', 'A big screen')}</button><button type="button" data-mode="phones" aria-pressed="${!!G.phones}">${B('جوالات فقط (وأنا ألعب معهم)', 'Phones only (and I play too)')}</button></div>
       <div class="md-set md-teamp" id="mdTeamP" hidden>
-        <h3>👥 ${B('الفرق', 'Teams')}</h3>
+        <h3>${B('الفرق', 'Teams')}</h3>
         <label>${B('عدد الفرق', 'Number of teams')}<select data-o="teams"><option value="0">${T('بلا فرق (كل مشارك وحده)', 'No teams (everyone on their own)')}</option>${[2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 15, 20, 25, 30].map(n => `<option value="${n}"${G.teams && G.teams.length === n ? ' selected' : ''}>${n} ${n <= 10 ? T('فرق', 'teams') : T('فريقًا', 'teams')}</option>`).join('')}</select></label>
         <label data-tmode hidden>${B('كيف يُوزَّع المشاركون؟', 'How are players placed?')}<select data-o="tmode">
           <option value="pick"${!['auto', 'host'].includes(G.opts.tmode) ? ' selected' : ''}>${T('يختار كل مشارك فريقه من جواله', 'Each player picks a team on their phone')}</option>
@@ -283,9 +285,9 @@ window.MDLive = (function () {
         <button type="button" class="btn solid" data-tdone>${B('تم', 'Done')}</button></div>
       <div class="md-move" id="mdMove" hidden></div>`,
       `<button type="button" class="btn solid md-start" data-go disabled>${B('ابدأ', 'Start')}</button>
-       <button type="button" class="md-cb md-cbt" data-teams>👥 ${B('الفرق', 'Teams')}</button>
-       <button type="button" class="md-cb" data-set>⚙ ${B('الإعدادات', 'Settings')}</button>
-       <button type="button" class="md-cb" data-share>🔗 ${B('رابط الدخول', 'Join link')}</button>
+       <button type="button" class="md-cb md-cbt" data-teams>${B('الفرق', 'Teams')}</button>
+       <button type="button" class="md-cb" data-set>${B('الإعدادات', 'Settings')}</button>
+       <button type="button" class="md-cb" data-share>${B('رابط الدخول', 'Join link')}</button>
        <label class="md-opt"><input type="checkbox" data-lock> ${B('إقفال الدخول', 'Lock joining')}</label>`, true);
     q('[data-share]').onclick = async e => {
       const link = url, text = T(`ادخل مسابقة «${G.quiz.title || 'ميدان'}»: `, `Join “${G.quiz.title || 'Maydan'}”: `) + link;
@@ -315,7 +317,7 @@ window.MDLive = (function () {
     };
     const count = () => { if (q('#mdN')) { q('#mdN').textContent = Object.keys(G.players).length; go.disabled = !Object.keys(G.players).length; } };
     sub(G.ref.child('pl'), 'child_added', s => {
-      const v = s.val() || {}; if (v.w) { G.fans[s.key] = v.n; const f = q('#mdFans'); if (f) f.textContent = Object.keys(G.fans).length ? '👀 ' + Object.keys(G.fans).length : ''; return; }
+      const v = s.val() || {}; if (v.w) { G.fans[s.key] = v.n; const f = q('#mdFans'); if (f) f.textContent = Object.keys(G.fans).length ? '' + Object.keys(G.fans).length : ''; return; }
       G.players[s.key] = v.n; if (!(s.key in G.score)) G.score[s.key] = 0; G.streak[s.key] = G.streak[s.key] || 0; if (v.t != null) G.team[s.key] = +v.t;
       draw(); SND.join(); count();
     });
@@ -369,10 +371,10 @@ window.MDLive = (function () {
     const x = G.quiz.qs[G.i], n = G.quiz.qs.length, m = multOf(G.i), gold = G.i === G.gold, last = G.opts.final && G.i === n - 1 && n > 1;
     // the question is read first, alone and large; then it moves up as the options and the clock appear.
     // The reading time follows its length, so everyone starts answering on equal terms.
-    const tag = gold ? `<span class="md-gold">${B('✨ السؤال الذهبي — نقاط مضاعفة', '✨ The golden question — double points')}</span>` : last ? `<span class="md-x2">${B('🏁 السؤال الأخير — نقاط مضاعفة', '🏁 The last question — double points')}</span>` : m === 2 ? `<span class="md-x2">${B('نقاط مضاعفة ×٢', 'Double points ×2')}</span>` : '';
+    const tag = gold ? `<span class="md-gold">${B('السؤال الذهبي — نقاط مضاعفة', 'The golden question — double points')}</span>` : last ? `<span class="md-x2">${B('السؤال الأخير — نقاط مضاعفة', 'The last question — double points')}</span>` : m === 2 ? `<span class="md-x2">${B('نقاط مضاعفة ×٢', 'Double points ×2')}</span>` : '';
     if (x.type === 'game') return nextGame(x, n, m, gold, last, tag);
     const q = frame(`<div class="md-q md-pre${gold ? ' is-gold' : ''}">
-        <div class="md-qtop"><span class="md-qn">${x.type === 'stage' ? '🎤 ' + B('المنصة', 'The stage') : `${B('السؤال', 'Question')} ${qNo(G.i)} ${T('من', 'of')} ${qTot()}`}</span>${tag}</div>
+        <div class="md-qtop"><span class="md-qn">${x.type === 'stage' ? '' + B('المنصة', 'The stage') : `${B('السؤال', 'Question')} ${qNo(G.i)} ${T('من', 'of')} ${qTot()}`}</span>${tag}</div>
         <h2 class="md-qt" dir="auto">${esc(x.q)}</h2>
         <div class="md-mid"><div class="md-clock"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" class="md-ring0"/><circle cx="50" cy="50" r="44" class="md-ring" id="mdRing"/></svg><b id="mdT">${x.time}</b></div>
           ${x.img ? (x.reveal ? `<div class="md-pic"><img src="${x.img}" alt=""><div class="md-veil">${veil(x.time)}</div></div>` : `<img class="md-img" src="${x.img}" alt="">`) : '<span></span>'}
@@ -389,13 +391,13 @@ window.MDLive = (function () {
   function veil(t) { const d = Array.from({ length: 24 }, (_, k) => k).sort(() => Math.random() - .5); return d.map(k => `<i style="--d:${(k * t * .85 / 24).toFixed(2)}s"></i>`).join(''); }
   // what sits under the question: the options, or a prompt for the text kinds
   function centre(x) {
-    if (x.type === 'num') return `<p class="md-prompt">🔢 ${B('اكتب رقمًا على جوالك', 'Type a number on your phone')}${x.unit ? ` <small>(${esc(x.unit)})</small>` : ''}</p>`;
+    if (x.type === 'num') return `<p class="md-prompt">${B('اكتب رقمًا على جوالك', 'Type a number on your phone')}${x.unit ? ` <small>(${esc(x.unit)})</small>` : ''}</p>`;
     if (x.type === 'word') { x._order = x._order || shuffleIdx([...x.ans].map((c, k) => c === ' ' ? -1 : k).filter(k => k >= 0)); return `<p class="md-mask" id="mdW" dir="auto">${mask(x, 0)}</p><p class="md-prompt">${B('خمّن الكلمة واكتبها على جوالك', 'Guess the word and type it on your phone')}</p>`; }
     if (x.type === 'order') { x._sh = x._sh || shuffleIdx(x.items.map((_, k) => k), true); return `<div class="md-order">${x._sh.map((k, j) => `<div class="md-tile" style="--c:var(--qz${j % 6});--d:${j * 80}ms"><i>${LET()[j]}</i><span dir="auto">${esc(x.items[k])}</span></div>`).join('')}</div><p class="md-prompt">${B('رتّبها على جوالك من الأول إلى الأخير', 'Put them in order on your phone, first to last')}</p>`; }
-    if (x.type === 'match') { x._mr = x._mr || shuffleIdx(x.pairs.map((_, k) => k), true); return `<div class="md-match"><div>${x.pairs.map((p, j) => `<div class="md-tile" style="--c:var(--qz${j % 6});--d:${j * 80}ms"><i>${j + 1}</i><span dir="auto">${esc(p[0])}</span></div>`).join('')}</div><div>${x._mr.map((k, j) => `<div class="md-tile" style="--c:#6b7393;--d:${(j + x.pairs.length) * 80}ms"><i>${LET()[j]}</i><span dir="auto">${esc(x.pairs[k][1])}</span></div>`).join('')}</div></div><p class="md-prompt">🔗 ${B('صِل كل عنصر بما يقابله على جوالك', 'Match each item on your phone')}</p>`; }
-    if (x.type === 'rapid') return `<p class="md-prompt md-rapid">⚡ ${B(`${x.items.length} عبارات تظهر على جوالك واحدة بعد أخرى: صح أم خطأ؟ أسرع وأدق!`, `${x.items.length} statements on your phone, one after another: true or false? Fast and right!`)}</p>`;
-    if (x.type === 'stage') return `<div class="md-stage" id="mdStage"><p class="md-prompt">🎤 ${B('اكتب تصريحك من جوالك ويظهر هنا باسمك', 'Write on your phone; it shows here with your name')}</p></div>`;
-    if (x.type === 'open') return `<p class="md-prompt">✍️ ${B('اكتب إجابتك على جوالك', 'Write your answer on your phone')}</p>`;
+    if (x.type === 'match') { x._mr = x._mr || shuffleIdx(x.pairs.map((_, k) => k), true); return `<div class="md-match"><div>${x.pairs.map((p, j) => `<div class="md-tile" style="--c:var(--qz${j % 6});--d:${j * 80}ms"><i>${j + 1}</i><span dir="auto">${esc(p[0])}</span></div>`).join('')}</div><div>${x._mr.map((k, j) => `<div class="md-tile" style="--c:#6b7393;--d:${(j + x.pairs.length) * 80}ms"><i>${LET()[j]}</i><span dir="auto">${esc(x.pairs[k][1])}</span></div>`).join('')}</div></div><p class="md-prompt">${B('صِل كل عنصر بما يقابله على جوالك', 'Match each item on your phone')}</p>`; }
+    if (x.type === 'rapid') return `<p class="md-prompt md-rapid">${B(`${x.items.length} عبارات تظهر على جوالك واحدة بعد أخرى: صح أم خطأ؟ أسرع وأدق!`, `${x.items.length} statements on your phone, one after another: true or false? Fast and right!`)}</p>`;
+    if (x.type === 'stage') return `<div class="md-stage" id="mdStage"><p class="md-prompt">${B('اكتب تصريحك من جوالك ويظهر هنا باسمك', 'Write on your phone; it shows here with your name')}</p></div>`;
+    if (x.type === 'open') return `<p class="md-prompt">${B('اكتب إجابتك على جوالك', 'Write your answer on your phone')}</p>`;
     return `<div class="md-tiles">${x.opts.map((o, j) => `<div class="md-tile" style="--c:var(--qz${j});--d:${j * 80}ms"><i>${LET()[j]}</i><span dir="auto">${esc(o)}</span></div>`).join('')}</div>`;
   }
   const shuffleIdx = (a, notSame) => { let r; do { r = a.slice().sort(() => Math.random() - .5); } while (notSame && a.length > 1 && r.every((v, k) => v === a[k])); return r; };
@@ -472,7 +474,7 @@ window.MDLive = (function () {
   function raceAvg(x, taps) { const n = x._tug.names.length, sum = new Array(n).fill(0), cnt = new Array(n).fill(0); Object.keys(x._tug.sides).forEach(u => { const k = x._tug.sides[u]; cnt[k]++; sum[k] += taps[u] || 0; }); return sum.map((v, k) => cnt[k] ? v / cnt[k] : 0); }
   function raceDraw(x, taps) {
     raceAvg(x, taps).forEach((a, j) => { const c = G.el.querySelector('#mdCam' + j); if (c) c.style.setProperty('--p', Math.min(100, 100 * a / RACE_END) + '%');
-      const best = Object.keys(x._tug.sides).filter(u => x._tug.sides[u] === j).sort((p, q) => (taps[q] || 0) - (taps[p] || 0))[0], l = G.el.querySelector('#mdLead' + j); if (l) l.textContent = best && taps[best] ? `⭐ ${(G.players[best] || '').slice(0, 14)} ${taps[best]}` : ''; });
+      const best = Object.keys(x._tug.sides).filter(u => x._tug.sides[u] === j).sort((p, q) => (taps[q] || 0) - (taps[p] || 0))[0], l = G.el.querySelector('#mdLead' + j); if (l) l.textContent = best && taps[best] ? `${(G.players[best] || '').slice(0, 14)} ${taps[best]}` : ''; });
   }
   // average pulls per player on each side; -1 means the first side has it all, 1 the second
   function tugPos(x, taps) {
@@ -579,13 +581,13 @@ window.MDLive = (function () {
       const got = us.filter(u => ans[u] && !isNaN(+ans[u].a)).sort((a, b) => Math.abs(+ans[a].a - x.ans) - Math.abs(+ans[b].a - x.ans) || ans[a].t - ans[b].t);
       const best = got.length ? Math.abs(+ans[got[0]].a - x.ans) : 0;
       got.forEach((u, k) => { const df = Math.abs(+ans[u].a - x.ans), c = df === best || df <= Math.abs(x.ans) * .05; sc[u] = { c, d: m ? Math.round(1000 * m * Math.max(.1, 1 - k / Math.max(1, got.length))) : 0, g: +ans[u].a, a: true }; if (c) right++; });
-      body = `<p class="md-big">${esc(x.ans)} ${esc(x.unit || '')}</p><ol class="md-near">${got.slice(0, 5).map(u => `<li><span dir="auto">${esc(G.players[u])}</span><em>${esc(ans[u].a)}</em><small>${+ans[u].a === x.ans ? '🎯' : (+ans[u].a > x.ans ? '+' : '−') + Math.abs(+ans[u].a - x.ans)}</small></li>`).join('')}</ol>`;
+      body = `<p class="md-big">${esc(x.ans)} ${esc(x.unit || '')}</p><ol class="md-near">${got.slice(0, 5).map(u => `<li><span dir="auto">${esc(G.players[u])}</span><em>${esc(ans[u].a)}</em><small>${+ans[u].a === x.ans ? '' : (+ans[u].a > x.ans ? '+' : '−') + Math.abs(+ans[u].a - x.ans)}</small></li>`).join('')}</ol>`;
     } else if (x.type === 'word' || x.type === 'order') {
       const fast = [];
       us.forEach(u => { const a = ans[u]; if (!a) return; const c = x.type === 'word' ? normW(a.a) === normW(x.ans) : JSON.stringify([].concat(a.a).map(k => x._sh[k])) === JSON.stringify(x.items.map((_, k) => k)); sc[u] = { c, d: c && m ? speed(a) : 0, a: true }; if (c) { right++; fast.push(u); } });
       fast.sort((a, b) => ans[a].t - ans[b].t);
       body = x.type === 'word' ? `<p class="md-big" dir="auto">${esc(x.ans)}</p>` : `<ol class="md-near md-ord">${x.items.map(v => `<li><span dir="auto">${esc(v)}</span></li>`).join('')}</ol>`;
-      body += fast.length ? `<p class="md-stat">⚡ ${B('الأسرع', 'Fastest')}: ${fast.slice(0, 3).map(u => esc(G.players[u])).join('، ')}</p>` : '';
+      body += fast.length ? `<p class="md-stat">${B('الأسرع', 'Fastest')}: ${fast.slice(0, 3).map(u => esc(G.players[u])).join('، ')}</p>` : '';
     } else if (x.type === 'match' || x.type === 'rapid') {
       // a share of the points for each right link or statement, still faster is better
       const n = x.type === 'match' ? x.pairs.length : x.items.length, per = new Array(n).fill(0), full = [];
@@ -598,7 +600,7 @@ window.MDLive = (function () {
       full.sort((a, b) => ans[a].t - ans[b].t);
       body = x.type === 'match' ? `<div class="md-pairs">${x.pairs.map((p, j) => `<div><span dir="auto">${esc(p[0])}</span><i>↔</i><span dir="auto">${esc(p[1])}</span><small>${Math.round(100 * per[j] / Math.max(1, Object.keys(ans).length))}%</small></div>`).join('')}</div>`
         : `<ol class="md-rlist${x.items.length > 8 ? ' many' : ''}">${x.items.map((v, j) => `<li class="${x.truth[j] ? 't' : 'f'}"><b>${x.truth[j] ? T('صح', 'True') : T('خطأ', 'False')}</b><span dir="auto">${esc(v)}</span><small>${Math.round(100 * per[j] / Math.max(1, Object.keys(ans).length))}%</small></li>`).join('')}</ol>`;
-      body += full.length ? `<p class="md-stat">⚡ ${B('العلامة الكاملة', 'Full marks')}: ${full.slice(0, 3).map(u => esc(G.players[u])).join('، ')}</p>` : '';
+      body += full.length ? `<p class="md-stat">${B('العلامة الكاملة', 'Full marks')}: ${full.slice(0, 3).map(u => esc(G.players[u])).join('، ')}</p>` : '';
     } else if (x.type === 'stage') {
       const said = us.filter(u => ans[u] && typeof ans[u].a === 'string' && ans[u].a.trim()).sort((a, b) => ans[a].t - ans[b].t);
       said.forEach(u => { sc[u] = { c: true, d: 0, a: true }; });
@@ -670,7 +672,7 @@ window.MDLive = (function () {
     const n = G.quiz.qs.length, lastQ = G.i === n - 1;
     const showBoard = !lastQ && ((G.opts.every && (G.i + 1) % G.opts.every === 0) || (G.opts.final && G.i === n - 2 && n > 2));
     const top = Object.keys(raw).filter(u => u in G.players).sort((a, b) => raw[b] - raw[a]).slice(0, 5);
-    const raceRes = race ? `<h2 class="md-tugwin">🏆 ${B('الأول', 'First:')} ${esc(x._tug.names[place.indexOf(0)])}</h2>${raceView2(x, race, raw)}` : '';
+    const raceRes = race ? `<h2 class="md-tugwin">${B('الأول', 'First:')} ${esc(x._tug.names[place.indexOf(0)])}</h2>${raceView2(x, race, raw)}` : '';
     const q = frame(`<div class="md-lb">${raceRes}${tug ? `<h2 class="md-tugwin">🏆 ${B('فاز', 'Winner:')} ${esc(x._tug.names[win])}</h2><div class="md-tug"><div class="md-tug-sides"><span>${esc(x._tug.names[0])}<small>${T('معدل الشدّات', 'Avg pulls')}: ${Math.round(tug.avg[0])}</small></span><span>${esc(x._tug.names[1])}<small>${T('معدل الشدّات', 'Avg pulls')}: ${Math.round(tug.avg[1])}</small></span></div><div class="mg-rope"><i class="a"></i><i class="b"></i><span class="knot" style="left:${win ? 92 : 8}%">🎀</span></div></div><h3>${B('أقوى الشادّين', 'Strongest pullers')}</h3>` : `<h2>${g.icon} ${B('أبطال التحدي', 'Challenge champions')}: ${esc(G.ar ? g.ar : g.en)}</h2>`}
         <ol>${top.map((u, k) => `<li style="--d:${k * 90}ms"><b>${k + 1}</b><span dir="auto">${esc(G.players[u] || '')}</span><em>${raw[u]}</em><small class="md-plus">+${sc[u].d}</small></li>`).join('')}</ol>
         <p class="md-stat">${B(`شارك ${Object.keys(ans).length} من ${Object.keys(G.players).length}`, `${Object.keys(ans).length} of ${Object.keys(G.players).length} took part`)}</p></div>`,
@@ -692,9 +694,9 @@ window.MDLive = (function () {
     const tt = teamTable(), tmax = Math.max(1, ...tt.map(t => t.avg));
     G.ref.child('top').set({ p: top.map(u => ({ n: G.players[u] || '', s: G.score[u], d: (G.lastD || {})[u] || 0, w: (G.prev || {})[u] || 0 })), t: tt.slice(0, 5).map(t => ({ n: t.name, s: t.avg, k: t.k })), d: decisive || null, mic: G.micInfo || null });
     const q = frame(`<div class="md-lb${G.teams ? ' with-teams' : ''}">${note ? `<p class="md-note">${esc(note)}</p>` : ''}
-        <h2>${decisive ? B('🏁 لحظة الحسم: بقي سؤال واحد بنقاط مضاعفة', '🏁 Decisive moment: one question left, worth double') : B('الترتيب', 'Ranking')}</h2>
+        <h2>${decisive ? B('لحظة الحسم: بقي سؤال واحد بنقاط مضاعفة', 'Decisive moment: one question left, worth double') : B('الترتيب', 'Ranking')}</h2>
         ${G.teams ? `<div class="md-teams">${tt.slice(0, 5).map((t, k) => `<div class="md-team" style="--c:var(--qz${(t.k) % 6});--w:${Math.round(100 * t.avg / tmax)}%;--d:${k * 120}ms"><b>${k + 1}</b><span dir="auto">${esc(t.name)}</span><i></i><em>${t.avg}</em><small class="md-tmem">${Object.keys(G.players).filter(u => G.team[u] === t.k).sort(byRank).slice(0, 4).map((u, j) => `${j + 1}. ${esc(G.players[u] || '')} ${G.score[u] || 0}`).join(' · ')}</small></div>`).join('')}<small>${B('نتيجة الفريق متوسط نقاط أعضائه', 'A team’s score is its members’ average')}</small></div>` : ''}
-        <ol class="md-slide${top.length > 8 ? ' many' : ''}" style="--n:${top.length}">${top.map((u, k) => `<li style="--d:${k * 40}ms;--from:${Math.min(top.length, ((G.prev || {})[u] || k + 1)) - 1};--to:${k}" data-mv>${(G.prev || {})[u] && G.prev[u] !== k + 1 ? `<u class="${G.prev[u] > k + 1 ? 'up' : 'dn'}">${G.prev[u] > k + 1 ? '▲' : '▼'}${Math.abs(G.prev[u] - k - 1)}</u>` : ''}${(G.lastD || {})[u] ? `<q>${G.lastD[u] > 0 ? '+' : ''}${G.lastD[u]}</q>` : ''}${G.teams && G.team[u] != null ? `<s style="--c:var(--qz${(G.team[u]) % 6})"></s>` : ''}<b>${k + 1}</b><span dir="auto">${esc(G.players[u] || '')}</span>${decisive && k ? `<small>−${G.score[top[k - 1]] - G.score[u]}</small>` : ''}<em>${G.score[u]}</em>${G.streak[u] >= 3 ? `<i title="${T('إجابات صحيحة متتالية', 'right answers in a row')}">🔥${G.streak[u]}</i>` : ''}</li>`).join('')}</ol>
+        <ol class="md-slide${top.length > 8 ? ' many' : ''}" style="--n:${top.length}">${top.map((u, k) => `<li style="--d:${k * 40}ms;--from:${Math.min(top.length, ((G.prev || {})[u] || k + 1)) - 1};--to:${k}" data-mv>${(G.prev || {})[u] && G.prev[u] !== k + 1 ? `<u class="${G.prev[u] > k + 1 ? 'up' : 'dn'}">${G.prev[u] > k + 1 ? '▲' : '▼'}${Math.abs(G.prev[u] - k - 1)}</u>` : ''}${(G.lastD || {})[u] ? `<q>${G.lastD[u] > 0 ? '+' : ''}${G.lastD[u]}</q>` : ''}${G.teams && G.team[u] != null ? `<s style="--c:var(--qz${(G.team[u]) % 6})"></s>` : ''}<b>${k + 1}</b><span dir="auto">${esc(G.players[u] || '')}</span>${decisive && k ? `<small>−${G.score[top[k - 1]] - G.score[u]}</small>` : ''}<em>${G.score[u]}</em>${G.streak[u] >= 3 ? `<i title="${T('إجابات صحيحة متتالية', 'right answers in a row')}">${G.streak[u]}</i>` : ''}</li>`).join('')}</ol>
         ${climb && best >= (order.length >= 6 ? 2 : 1) ? `<p class="md-climb">${B(`⬆ الصاعد: ${esc(G.players[climb])} تقدّم ${best} ${best === 1 ? 'مركزًا' : 'مراكز'}`, `⬆ Riser: ${esc(G.players[climb])} climbed ${best} place${best > 1 ? 's' : ''}`)}</p>` : ''}</div>`,
       `<button type="button" class="btn solid" data-next>${B('السؤال التالي', 'Next question')}</button>`, true);
     q('[data-next]').onclick = next;
@@ -709,7 +711,7 @@ window.MDLive = (function () {
     await G.ref.child('st').set({ ph: 'end', i: G.i, lock: true });
     const p = k => order[k] ? `<div class="md-pod md-p${k + 1}"><span class="md-pn" dir="auto">${esc(G.players[order[k]] || '')}</span><b>${G.score[order[k]]}</b><div class="md-step">${k + 1}</div></div>` : '<div class="md-pod md-empty"></div>';
     const q = frame(`<div class="md-end"><h2>${esc(G.quiz.title || T('ميدان', 'Maydan'))}</h2>
-        ${tt.length ? `<p class="md-wteam" style="--c:var(--qz${(tt[0].k) % 6})">${B(`🏆 الفريق الفائز: ${esc(tt[0].name)}`, `🏆 Winning team: ${esc(tt[0].name)}`)} <em>${tt[0].avg}</em></p>` : ''}
+        ${tt.length ? `<p class="md-wteam" style="--c:var(--qz${(tt[0].k) % 6})">${B(`الفريق الفائز: ${esc(tt[0].name)}`, `Winning team: ${esc(tt[0].name)}`)} <em>${tt[0].avg}</em></p>` : ''}
         <div class="md-podium">${p(1)}${p(0)}${p(2)}</div>
         <ol class="md-rest" start="4">${order.slice(3, 10).map(u => `<li><span dir="auto">${esc(G.players[u] || '')}</span><em>${G.score[u]}</em></li>`).join('')}</ol></div>`,
       `<button type="button" class="btn ghost" data-csv>${B('تحميل النتائج', 'Download results')}</button>

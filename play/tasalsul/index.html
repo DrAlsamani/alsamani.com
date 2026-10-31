@@ -1807,10 +1807,10 @@ window.KH = (function () {
   let clk = null;
   const on = (ref, ev, fn) => { ref.on(ev, fn); G.off.push(() => ref.off(ev, fn)); };
 
-  const rules = open => `<details class="kh-rules"${open ? ' open' : ''}><summary>📖 ${B('كيف تُلعب؟', 'How to play')}</summary>
+  const rules = open => `<details class="kh-rules"${open ? ' open' : ''}><summary>${B('كيف تُلعب؟', 'How to play')}</summary>
         <ol><li>${B('لكل فريق لون. في دورك اختر ورقة من يدك، ثم ضع قطعتك على إحدى خانتيها في اللوح (لكل ورقة خانتان).', 'Each team has a colour. On your turn pick a card, then put your chip on one of its two spaces.')}</li>
         <li>${B('<b>السلسلة</b>: خمس قطع متتالية من لونك أفقيًا أو عموديًا أو قطريًا. الزوايا ★ مجانية للجميع.', '<b>A sequence</b>: five of your chips in a row, across, down or diagonal. The ★ corners count for everyone.')}</li>
-        <li>${B('<b>👀 ولد أبو عينين</b> (♦ و♣): ضع قطعتك في أي خانة فارغة. <b>👁 ولد أبو عين</b> (♠ و♥): أزل قطعة خصم، إلا إن كانت في سلسلة مكتملة.', '<b>👀 Two-eyed jacks</b> (♦ ♣): put your chip on any empty space. <b>👁 One-eyed jacks</b> (♠ ♥): remove a rival chip unless it is in a finished sequence.')}</li>
+        <li>${B('<b>ولد أبو عينين</b> (♦ و♣): ضع قطعتك في أي خانة فارغة. <b>ولد أبو عين</b> (♠ و♥): أزل قطعة خصم، إلا إن كانت في سلسلة مكتملة.', '<b>Two-eyed jacks</b> (♦ ♣): put your chip on any empty space. <b>One-eyed jacks</b> (♠ ♥): remove a rival chip unless it is in a finished sequence.')}</li>
         <li>${B('<b>الفوز</b>: يفوز أول فريق يكمل عدد السلاسل المختار عند بدء اللعبة (واحدة أو اثنتان أو ثلاث). ويمكن اختيار صف من أربع للعب أسرع.', '<b>Winning</b>: the first team to make the number of sequences chosen at the start (one, two or three). Rows of four make a quicker game.')}</li>
         <li>${B('<b>الورقة الميتة</b>: إن امتلأت خانتاها فاستبدلها بورقة جديدة مرة في الدور.', '<b>A dead card</b>: if both its spaces are taken, swap it for a new one, once a turn.')}</li></ol></details>`;
   /* ---------- home ---------- */
@@ -1819,14 +1819,14 @@ window.KH = (function () {
     const P = store.get('run', null), fresh = P && Date.now() - P.at < 864e5;
     const p = new URLSearchParams(location.search).get('k');
     if (p && /^\d{6}$/.test(p)) return joinCode(p);
-    root.innerHTML = `${fresh ? `<div class="kh-card kh-resume"><p>⏸ ${B('لعبة لم تكتمل', 'An unfinished game')} · ${B('الرمز', 'code')} <span dir="ltr">${P.pin}</span></p><div class="kh-row"><button type="button" class="btn solid" id="khRes">${B('أكمل اللعبة ▶', 'Resume ▶')}</button><button type="button" class="btn ghost" id="khDrop">${B('احذفها', 'Remove it')}</button></div></div>` : ''}
+    root.innerHTML = `${fresh ? `<div class="kh-card kh-resume"><p>${B('لعبة لم تكتمل', 'An unfinished game')} · ${B('الرمز', 'code')} <span dir="ltr">${P.pin}</span></p><div class="kh-row"><button type="button" class="btn solid" id="khRes">${B('أكمل اللعبة ▶', 'Resume ▶')}</button><button type="button" class="btn ghost" id="khDrop">${B('احذفها', 'Remove it')}</button></div></div>` : ''}
       <div class="kh-hero"><div class="kh-mini">${demo()}</div><div>
         <h2>${B('خمس في صف… قبل خصمك!', 'Five in a row… before the others!')}</h2>
         <p>${B('العب ورقة من يدك وضع قطعتك على خانتها، وكوّن صفًّا من خمس قطع. ولد أبو عينين يضعك في أي مكان، وولد أبو عين يشيل قطعة خصمك.', 'Play a card and put your chip on its space, and make a row of five. A two-eyed jack goes anywhere; a one-eyed jack removes a rival chip.')}</p></div></div>
       <div class="kh-modes">
-        <button type="button" class="kh-mode" data-go="host"><b>👥 ${B('العب مع الآخرين', 'Play with others')}</b><small>${B('أنشئ لعبة وشارك رمزها: اللوح على شاشة كبيرة والأوراق في الجوالات، أو كلٌّ من مكانه عن بُعد.', 'Create a game and share its code: the board on a big screen and the hands on phones, or everyone remote.')}</small></button>
-        <button type="button" class="kh-mode" data-go="join"><b>🔢 ${B('ادخل برمز', 'Join with a code')}</b><small>${B('عندك رمز لعبة؟ ادخل واختر فريقك.', 'Got a game code? Join and pick your team.')}</small></button>
-        <button type="button" class="kh-mode" data-go="bot"><b>🤖 ${B('العب ضد الجهاز', 'Play the computer')}</b><small>${B('جرّب اللعبة وحدك وتعلّم قواعدها.', 'Try it on your own and learn the rules.')}</small></button>
+        <button type="button" class="kh-mode" data-go="host"><b>${B('العب مع الآخرين', 'Play with others')}</b><small>${B('أنشئ لعبة وشارك رمزها: اللوح على شاشة كبيرة والأوراق في الجوالات، أو كلٌّ من مكانه عن بُعد.', 'Create a game and share its code: the board on a big screen and the hands on phones, or everyone remote.')}</small></button>
+        <button type="button" class="kh-mode" data-go="join"><b>${B('ادخل برمز', 'Join with a code')}</b><small>${B('عندك رمز لعبة؟ ادخل واختر فريقك.', 'Got a game code? Join and pick your team.')}</small></button>
+        <button type="button" class="kh-mode" data-go="bot"><b>${B('العب ضد الجهاز', 'Play the computer')}</b><small>${B('جرّب اللعبة وحدك وتعلّم قواعدها.', 'Try it on your own and learn the rules.')}</small></button>
       </div>
       ${rules()}`;
     if (fresh) { root.querySelector('#khRes').onclick = () => resumeHost(P); root.querySelector('#khDrop').onclick = async () => { store.del('run'); try { await fb(); await wipe(P.pin); } catch (e) {} home(); }; }
@@ -1841,7 +1841,7 @@ window.KH = (function () {
   /* ---------- a new game: teams, row length, and who this device is ---------- */
   function setup(bot) {
     const o = Object.assign({ teams: 2, L: 4, need: 3, role: 'play', tt: 15, lv: 2 }, store.get('cfg2', {})); if (!o.need) o.need = 3; if (![5, 10, 15, 30, 60].includes(o.tt)) o.tt = 15;
-    root.innerHTML = `<div class="kh-card"><h2>${bot ? '🤖 ' + B('العب ضد الجهاز', 'Play the computer') : '👥 ' + B('لعبة جديدة', 'A new game')}</h2>
+    root.innerHTML = `<div class="kh-card"><h2>${bot ? '' + B('العب ضد الجهاز', 'Play the computer') : '' + B('لعبة جديدة', 'A new game')}</h2>
       <div class="kh-opt"><span>${B('عدد الفرق', 'Teams')}</span><div class="kh-seg" data-k="teams"><button type="button" data-v="2">${B('فريقان', 'Two')}</button><button type="button" data-v="3">${B('ثلاثة فرق', 'Three')}</button></div></div>
       <div class="kh-opt"><span>${B('طول الصف', 'Row length')}</span><div class="kh-seg" data-k="L"><button type="button" data-v="4">${B('أربع (أسرع)', 'Four (quicker)')}</button><button type="button" data-v="5">${B('خمس (الأصلية)', 'Five (classic)')}</button></div></div>
       <div class="kh-opt"><span>${B('سلاسل الفوز', 'Sequences to win')}</span><div class="kh-seg" data-k="need"><button type="button" data-v="1">${B('واحدة', 'One')}</button><button type="button" data-v="2">${B('اثنتان', 'Two')}</button><button type="button" data-v="3">${B('ثلاث', 'Three')}</button></div></div>
@@ -1897,14 +1897,14 @@ window.KH = (function () {
     const url = 'https://' + JOIN + '/?k=' + G.pin;
     let qr = ''; try { const q = qrcode(0, 'M'); q.addData(url); q.make(); qr = q.createSvgTag({ cellSize: 5, margin: 1, scalable: true }); } catch (e) {}
     root.innerHTML = `<div class="kh-card kh-lobby"><div class="kh-join"><div><p>${B('ادخلوا من جوالاتكم على', 'Join on your phones at')}</p><p class="kh-url" dir="ltr">${JOIN}</p><p>${B('واكتبوا الرمز', 'and enter the code')}</p><p class="kh-pin" dir="ltr">${G.pin.slice(0, 3)} ${G.pin.slice(3)}</p>
-      <button type="button" class="btn ghost" id="khShare">🔗 ${B('أرسل رابط الدخول', 'Send the join link')}</button></div><div class="kh-qr">${qr}</div></div>
+      <button type="button" class="btn ghost" id="khShare">${B('أرسل رابط الدخول', 'Send the join link')}</button></div><div class="kh-qr">${qr}</div></div>
       <div class="kh-teams" id="khTeams"></div><p class="kh-note">${B('انقر اسم أي لاعب لنقله إلى فريق آخر. ومن أراد المتابعة فقط يدخل بالرمز نفسه ويختار «شاهد فقط»، ولو بعد بدء اللعب.', 'Tap a player’s name to move them. Anyone who only wants to follow enters the same code and picks “Just watch”, even after the start.')}</p>
       <div class="kh-row"><button type="button" class="btn solid" id="khStart" disabled>${B('ابدأ اللعب ▶', 'Start ▶')}</button><button type="button" class="btn ghost" id="khEnd">${B('إلغاء', 'Cancel')}</button></div></div>`;
     root.querySelector('#khShare').onclick = async e => { const text = T('تعال العب تسلسل: ', 'Come and play Tasalsul: ') + url; try { if (navigator.share && /iP(hone|ad)|Android/i.test(navigator.userAgent)) await navigator.share({ text }); else { await navigator.clipboard.writeText(text); e.currentTarget.textContent = '✓ ' + T('نُسخ', 'Copied'); } } catch (er) {} };
     root.querySelector('#khEnd').onclick = async () => { await wipe(G.pin); store.del('run'); home(); };
     const draw = () => {
       const ids = Object.keys(G.names), box = root.querySelector('#khTeams'); if (!box) return;
-      box.innerHTML = [...Array(G.o.teams).keys()].map(k => { const m = ids.filter(u => G.tm[u] === k); return `<div class="kh-team" style="--c:${COL[k]}"><h4>${TN(k)} <small>${m.length}</small></h4>${m.map(u => `<button type="button" data-u="${u}" dir="auto">${esc(G.names[u])}${u === G.me ? ' ⭐' : ''}</button>`).join('')}</div>`; }).join('');
+      box.innerHTML = [...Array(G.o.teams).keys()].map(k => { const m = ids.filter(u => G.tm[u] === k); return `<div class="kh-team" style="--c:${COL[k]}"><h4>${TN(k)} <small>${m.length}</small></h4>${m.map(u => `<button type="button" data-u="${u}" dir="auto">${esc(G.names[u])}${u === G.me ? ' ' : ''}</button>`).join('')}</div>`; }).join('');
       box.querySelectorAll('[data-u]').forEach(b => b.onclick = () => { const u = b.dataset.u; G.tm[u] = (G.tm[u] + 1) % G.o.teams; G.ref.child('tm').set(G.tm); draw(); });
       root.querySelector('#khStart').disabled = [...Array(G.o.teams).keys()].some(k => !ids.some(u => G.tm[u] === k));
     };
@@ -1982,10 +1982,10 @@ window.KH = (function () {
   /* ---------- a player who joins with a code ---------- */
   function joinCode(pre) {
     stop();
-    root.innerHTML = `<div class="kh-card kh-narrow"><h2>🔢 ${B('ادخل اللعبة', 'Join a game')}</h2>
+    root.innerHTML = `<div class="kh-card kh-narrow"><h2>${B('ادخل اللعبة', 'Join a game')}</h2>
       <label class="kh-opt"><span>${B('رمز اللعبة', 'Game code')}</span><input id="khP" inputmode="numeric" maxlength="7" dir="ltr" placeholder="123 456" value="${esc(pre || '')}"></label>
       <label class="kh-opt"><span>${B('اسمك', 'Your name')}</span><input id="khN" maxlength="24" dir="auto" value="${esc(store.get('name', ''))}"></label>
-      <p class="kh-err" hidden></p><div class="kh-row"><button type="button" class="btn solid" id="khGo">${B('ادخل لاعبًا', 'Join as a player')}</button><button type="button" class="btn ghost" id="khWatch">👀 ${B('شاهد فقط', 'Just watch')}</button><button type="button" class="btn ghost" id="khBack">${B('رجوع', 'Back')}</button></div></div>`;
+      <p class="kh-err" hidden></p><div class="kh-row"><button type="button" class="btn solid" id="khGo">${B('ادخل لاعبًا', 'Join as a player')}</button><button type="button" class="btn ghost" id="khWatch">${B('شاهد فقط', 'Just watch')}</button><button type="button" class="btn ghost" id="khBack">${B('رجوع', 'Back')}</button></div></div>`;
     const err = t => { const e = root.querySelector('.kh-err'); e.hidden = false; e.innerHTML = t; };
     root.querySelector('#khBack').onclick = () => { history.replaceState(null, '', location.pathname); home(); };
     const pin = root.querySelector('#khP');
@@ -2019,7 +2019,7 @@ window.KH = (function () {
       if (!G) return;
       if (G.stt === 'lobby' || !G.P) {
         const k = G.tm[uid];
-        root.innerHTML = `<div class="kh-card kh-narrow kh-wait"><p class="kh-big">${B('أنت في اللعبة!', 'You are in!')}</p>${k != null ? `<p class="kh-tm" style="--c:${COL[k]}">${B('فريقك', 'Your team')}: <b>${TN(k)}</b></p>` : ''}${G.cfg ? `<p class="kh-cfgbox">⚙ ${B(`صف من ${G.cfg.L === 4 ? 'أربع' : 'خمس'} قطع · يفوز من يكمل ${['', 'سلسلة واحدة', 'سلسلتين', 'ثلاث سلاسل'][G.cfg.need] || G.cfg.need}${G.cfg.tt ? ` · ${G.cfg.tt} ثانية لكل دور` : ''}`, `Rows of ${G.cfg.L} · first to ${G.cfg.need} sequences wins${G.cfg.tt ? ` · ${G.cfg.tt} s a turn` : ''}`)}</p>` : ''}<p>${B('انتظر حتى يبدأ منشئ اللعبة. وفي الأثناء تعرّف على القواعد:', 'Wait for the game to start. Meanwhile, here are the rules:')}</p></div>${rules(true)}`;
+        root.innerHTML = `<div class="kh-card kh-narrow kh-wait"><p class="kh-big">${B('أنت في اللعبة!', 'You are in!')}</p>${k != null ? `<p class="kh-tm" style="--c:${COL[k]}">${B('فريقك', 'Your team')}: <b>${TN(k)}</b></p>` : ''}${G.cfg ? `<p class="kh-cfgbox">${B(`صف من ${G.cfg.L === 4 ? 'أربع' : 'خمس'} قطع · يفوز من يكمل ${['', 'سلسلة واحدة', 'سلسلتين', 'ثلاث سلاسل'][G.cfg.need] || G.cfg.need}${G.cfg.tt ? ` · ${G.cfg.tt} ثانية لكل دور` : ''}`, `Rows of ${G.cfg.L} · first to ${G.cfg.need} sequences wins${G.cfg.tt ? ` · ${G.cfg.tt} s a turn` : ''}`)}</p>` : ''}<p>${B('انتظر حتى يبدأ منشئ اللعبة. وفي الأثناء تعرّف على القواعد:', 'Wait for the game to start. Meanwhile, here are the rules:')}</p></div>${rules(true)}`;
         return;
       }
       view({ P: G.P, hand: G.hand, me: uid, names: G.names, act: (k, c, i) => { G.ref.child('mv/' + uid).set({ k, c: c || '', x: i == null ? -1 : i, t: TS() }).catch(() => toast(B('تعذّر الإرسال.', 'Could not send.'), 1)); return ''; }, again: () => { history.replaceState(null, '', location.pathname); home(); } });
@@ -2044,7 +2044,7 @@ window.KH = (function () {
     listenRx();
     on(G.ref.child('g'), 'value', s => {
       G.P = s.val();
-      if (!G.P) { root.innerHTML = `<div class="kh-card kh-narrow kh-wait"><p class="kh-big">👀 ${B('أنت تشاهد', 'You are watching')}</p><p>${B('لم تبدأ اللعبة بعد؛ ستظهر هنا حين تبدأ.', 'The game has not started yet; it will show here when it does.')}</p></div>`; return; }
+      if (!G.P) { root.innerHTML = `<div class="kh-card kh-narrow kh-wait"><p class="kh-big">${B('أنت تشاهد', 'You are watching')}</p><p>${B('لم تبدأ اللعبة بعد؛ ستظهر هنا حين تبدأ.', 'The game has not started yet; it will show here when it does.')}</p></div>`; return; }
       G.redraw = () => view({ P: G.P, hand: null, me: null, names: G.names, screen: true, watch: true, act: () => '', again: leave }); G.redraw();
     });
   }
@@ -2061,8 +2061,8 @@ window.KH = (function () {
     on(G.ref.child('rx'), 'child_added', fly); on(G.ref.child('rx'), 'child_changed', fly);
   }
   // the stands: everyone watching, by name; a fan's chip jumps when they react
-  const stands = () => { const a = Object.entries((G && G.aud) || {}); const open = G && (G.standsOpen || (G.mode === 'host' && !G.me)); return `<div class="kh-stands${open ? ' open' : ''}"${a.length ? '' : ' hidden'}><button type="button" data-stands>👀 ${B('المدرجات', 'The stands')} <small>${a.length}</small><span class="kh-recent"></span></button><div>${a.slice(0, 40).map(([u, v]) => `<span class="kh-fan${blocked.has(u) ? ' blk' : ''}" data-fan="${u}" dir="auto">${esc((v.n || '').slice(0, 14))}</span>`).join('')}${a.length > 40 ? `<span class="kh-fan">+${a.length - 40}</span>` : ''}</div></div>`; };
-  function cheer(u, e) { const rc = root.querySelector('.kh-recent'); if (rc) { rc.textContent = `${(G.aud[u] || {}).n || ''} ${[...e].length <= 2 ? e : '💬'}`; rc.classList.remove('go'); void rc.offsetWidth; rc.classList.add('go'); } const f = root.querySelector(`[data-fan="${u}"]`); if (!f) return; f.dataset.e = [...e].length <= 2 ? e : '💬'; f.classList.remove('go'); void f.offsetWidth; f.classList.add('go'); }
+  const stands = () => { const a = Object.entries((G && G.aud) || {}); const open = G && (G.standsOpen || (G.mode === 'host' && !G.me)); return `<div class="kh-stands${open ? ' open' : ''}"${a.length ? '' : ' hidden'}><button type="button" data-stands>${B('المدرجات', 'The stands')} <small>${a.length}</small><span class="kh-recent"></span></button><div>${a.slice(0, 40).map(([u, v]) => `<span class="kh-fan${blocked.has(u) ? ' blk' : ''}" data-fan="${u}" dir="auto">${esc((v.n || '').slice(0, 14))}</span>`).join('')}${a.length > 40 ? `<span class="kh-fan">+${a.length - 40}</span>` : ''}</div></div>`; };
+  function cheer(u, e) { const rc = root.querySelector('.kh-recent'); if (rc) { rc.textContent = `${(G.aud[u] || {}).n || ''} ${[...e].length <= 2 ? e : ''}`; rc.classList.remove('go'); void rc.offsetWidth; rc.classList.add('go'); } const f = root.querySelector(`[data-fan="${u}"]`); if (!f) return; f.dataset.e = [...e].length <= 2 ? e : ''; f.classList.remove('go'); void f.offsetWidth; f.classList.add('go'); }
   function float(e, who) {
     const b = root.querySelector('.kh-board') || root, r = b.getBoundingClientRect(), d = document.createElement('div'), big = [...e].length <= 2;
     d.className = 'kh-fly' + (big ? ' emo' : ' say');
@@ -2075,9 +2075,9 @@ window.KH = (function () {
     G.ref.child('rx/' + uid).set({ e, t: TS() }).catch(() => {});
   }
   const people = () => { const all = Object.assign({}, ...Object.entries((G && G.aud) || {}).map(([u, v]) => ({ [u]: v.n })), (G && G.names) || {}); delete all[uid]; return Object.entries(all); };
-  const rxSet = online => `<div class="kh-rxset" hidden>${online ? `<label><input type="checkbox" data-mute${muted ? ' checked' : ''}> 🔕 ${B('أوقف كل التفاعلات عندي', 'Turn off all reactions for me')}</label>${people().length ? `<p>${B('حظر شخص (لن تصلك تفاعلاته):', 'Block someone (you will not see their reactions):')}</p><div>${people().map(([u, n]) => `<button type="button" data-blk="${u}" aria-pressed="${blocked.has(u)}" dir="auto">${blocked.has(u) ? '🚫 ' : ''}${esc(n || '')}</button>`).join('')}</div>` : ''}<p class="kh-note">${B('يخصّ جهازك وحدك، ولا يعلم به أحد.', 'This is for your device only; nobody is told.')}</p>` : ''}</div>`;
+  const rxSet = online => `<div class="kh-rxset" hidden>${online ? `<label><input type="checkbox" data-mute${muted ? ' checked' : ''}> ${B('أوقف كل التفاعلات عندي', 'Turn off all reactions for me')}</label>${people().length ? `<p>${B('حظر شخص (لن تصلك تفاعلاته):', 'Block someone (you will not see their reactions):')}</p><div>${people().map(([u, n]) => `<button type="button" data-blk="${u}" aria-pressed="${blocked.has(u)}" dir="auto">${blocked.has(u) ? '' : ''}${esc(n || '')}</button>`).join('')}</div>` : ''}<p class="kh-note">${B('يخصّ جهازك وحدك، ولا يعلم به أحد.', 'This is for your device only; nobody is told.')}</p>` : ''}</div>`;
   // one row under the hand: react, and settings; each opens its own small panel
-  const rxBar = react => `<div class="kh-rx">${react ? `<button type="button" class="kh-tab" data-say>😊 ${B('تفاعل', 'React')}</button>` : ''}${G && G.mode !== 'local' ? `<button type="button" class="kh-tab" data-rxset>${muted && react ? '🔕' : '⚙'} ${B('الإعدادات', 'Settings')}</button>` : ''}${react ? `<div class="kh-says" hidden><div class="kh-emo">${EMO.map(e => `<button type="button" data-rx="${e}">${e}</button>`).join('')}</div><div class="kh-phr">${SAY().map(t => `<button type="button" data-rx="${esc(t)}">${esc(t)}</button>`).join('')}</div></div>` : ''}${rxSet(G && G.mode !== 'local')}</div>`;
+  const rxBar = react => `<div class="kh-rx">${react ? `<button type="button" class="kh-tab" data-say>${B('تفاعل', 'React')}</button>` : ''}${G && G.mode !== 'local' ? `<button type="button" class="kh-tab" data-rxset>${B('الإعدادات', 'Settings')}</button>` : ''}${react ? `<div class="kh-says" hidden><div class="kh-emo">${EMO.map(e => `<button type="button" data-rx="${e}">${e}</button>`).join('')}</div><div class="kh-phr">${SAY().map(t => `<button type="button" data-rx="${esc(t)}">${esc(t)}</button>`).join('')}</div></div>` : ''}${rxSet(G && G.mode !== 'local')}</div>`;
 
   /* ---------- the table: the board, the teams, whose turn, and this player's hand ---------- */
   let sel = null, lastSeen = -1, winShown = -1;
@@ -2090,7 +2090,7 @@ window.KH = (function () {
     x.font = '40px system-ui, sans-serif'; x.fillStyle = '#d9e8e1'; x.fillText(T(`الجولات حتى الآن · صف من ${P.L} · ${P.need} للفوز`, `Rounds so far · rows of ${P.L} · ${P.need} to win`), W / 2, 340);
     for (let k = 0; k < n; k++) { const y = 430 + k * 190, mem = Object.keys(team).filter(u => team[u] === k).map(u => names[u] || '').join('، ');
       x.fillStyle = COL[k]; x.beginPath(); x.roundRect(110, y, W - 220, 160, 30); x.fill();
-      x.fillStyle = '#fff'; x.font = 'bold 54px system-ui, sans-serif'; x.fillText(`${TN(k)}${k === lead ? ' 🏆' : ''}   ${ser[k] || 0}`, W / 2, y + 70); x.font = '36px system-ui, sans-serif'; x.fillText(mem.slice(0, 48), W / 2, y + 126); }
+      x.fillStyle = '#fff'; x.font = 'bold 54px system-ui, sans-serif'; x.fillText(`${TN(k)}${k === lead ? ' ' : ''}   ${ser[k] || 0}`, W / 2, y + 70); x.font = '36px system-ui, sans-serif'; x.fillText(mem.slice(0, 48), W / 2, y + 126); }
     x.fillStyle = '#e0a458'; x.font = 'bold 40px system-ui, sans-serif'; x.fillText('alsamani.com/play/tasalsul', W / 2, H - 60);
     const text = T(`نتيجة تسلسل: ${[...Array(n).keys()].map(k => `${TN(k)} ${ser[k] || 0}`).join(' – ')}. تحدّونا على alsamani.com/play/tasalsul`, `Tasalsul: ${[...Array(n).keys()].map(k => `${TN(k)} ${ser[k] || 0}`).join(' – ')}. Challenge us at alsamani.com/play/tasalsul`);
     const blob = await new Promise(r => cv.toBlob(r, 'image/png')), file = new File([blob], 'tasalsul.png', { type: 'image/png' });
@@ -2103,8 +2103,8 @@ window.KH = (function () {
     const t = P.win, team = P.team || {}, who = t >= 0 ? Object.keys(team).filter(u => team[u] === t).map(u => esc(names[u] || '')).join('، ') : '';
     const d = document.createElement('div'); d.className = 'kh-win'; d.style.setProperty('--c', t >= 0 ? COL[t] : '#888');
     d.innerHTML = `<div class="kh-conf">${Array.from({ length: 60 }, (_, k) => `<i style="--x:${Math.random() * 100}%;--d:${(Math.random() * 1.6).toFixed(2)}s;--r:${Math.floor(Math.random() * 360)}deg;--k:${['#e0a458', '#fff', COL[0], COL[1], COL[2]][k % 5]}"></i>`).join('')}</div>
-      <div class="kh-winbox"><p class="kh-trophy">${t >= 0 ? '🏆' : '🤝'}</p><h2>${t >= 0 ? B(`فاز الفريق ${TN(t)}!`, `${TN(t)} wins!`) : B('تعادل!', 'A draw!')}</h2>${who ? `<p dir="auto">${who}</p>` : ''}
-      <div class="kh-row">${G && G.mode === 'player' ? '' : `<button type="button" class="btn solid" data-w="again">${G && G.mode === 'host' ? B('جولة جديدة ▶', 'Another round ▶') : B('لعبة جديدة', 'New game')}</button>`}<button type="button" class="btn ghost" data-w="share">📤 ${B('شارك', 'Share')}</button><button type="button" class="btn ghost" data-w="board">${B('عرض اللوح', 'See the board')}</button></div></div>`;
+      <div class="kh-winbox"><p class="kh-trophy">${t >= 0 ? '' : ''}</p><h2>${t >= 0 ? B(`فاز الفريق ${TN(t)}!`, `${TN(t)} wins!`) : B('تعادل!', 'A draw!')}</h2>${who ? `<p dir="auto">${who}</p>` : ''}
+      <div class="kh-row">${G && G.mode === 'player' ? '' : `<button type="button" class="btn solid" data-w="again">${G && G.mode === 'host' ? B('جولة جديدة ▶', 'Another round ▶') : B('لعبة جديدة', 'New game')}</button>`}<button type="button" class="btn ghost" data-w="share">${B('شارك', 'Share')}</button><button type="button" class="btn ghost" data-w="board">${B('عرض اللوح', 'See the board')}</button></div></div>`;
     document.body.appendChild(d); buzz([100, 60, 100, 60, 200]);
     d.querySelector('[data-w="board"]').onclick = () => d.remove();
     const ag = d.querySelector('[data-w="again"]'); if (ag) ag.onclick = () => { d.remove(); again(); };
@@ -2135,23 +2135,23 @@ window.KH = (function () {
     // how many turns until mine
     const ord = P.order || [], nT = ord.length, untilMe = me != null && !mine && nT ? (() => { for (let k = 1; k <= nT; k++) if (ord[(P.n + k) % nT] === me) return k; return 0; })() : 0;
     const rulesLine = `<p class="kh-cfg">${B(`صف من ${P.L === 4 ? 'أربع' : 'خمس'} · ${['', 'سلسلة واحدة', 'سلسلتان', 'ثلاث سلاسل'][P.need] || P.need} للفوز${P.tt ? ` · ${P.tt} ثانية للدور` : ''}`, `Rows of ${P.L} · ${P.need} to win${P.tt ? ` · ${P.tt} s a turn` : ''}`)}${P.ser && P.ser.some(x => x) || P.rnd ? ` · ${B('الجولات', 'Rounds')}: ${P.ser.map((x, k) => `<b style="color:${COL[k]}">${x}</b>`).join(' – ')}` : ''}</p>`;
-    if (L && P.n !== lastSeen) { lastSeen = P.n; if (L.auto) toast(`⏱ ${B(`انتهى وقت ${esc(names[L.id] || '')}، فلُعبت ورقة عنه`, `${esc(names[L.id] || '')} ran out of time; a card was played for them`)}`); else if (L.made) { toast(`🎉 ${B(`فريق ${TN(L.t)} أكمل سلسلة!`, `${TN(L.t)} made a sequence!`)}`); buzz([60, 40, 60]); } else if (L.rm) toast(`👁 ${B(`${esc(names[L.id] || '')} أزال قطعة من فريق ${TN(L.t)}`, `${esc(names[L.id] || '')} removed a ${TN(L.t)} chip`)}`); if (mine) buzz(40); }
+    if (L && P.n !== lastSeen) { lastSeen = P.n; if (L.auto) toast(`${B(`انتهى وقت ${esc(names[L.id] || '')}، فلُعبت ورقة عنه`, `${esc(names[L.id] || '')} ran out of time; a card was played for them`)}`); else if (L.made) { toast(`${B(`فريق ${TN(L.t)} أكمل سلسلة!`, `${TN(L.t)} made a sequence!`)}`); buzz([60, 40, 60]); } else if (L.rm) toast(`${B(`${esc(names[L.id] || '')} أزال قطعة من فريق ${TN(L.t)}`, `${esc(names[L.id] || '')} removed a ${TN(L.t)} chip`)}`); if (mine) buzz(40); }
     const teamsBar = [...Array(P.teams).keys()].map(k => `<div class="kh-ts${P.order && names && turn != null && team[turn] === k ? ' on' : ''}" style="--c:${COL[k]}"><b>${TN(k)}</b><span>${'●'.repeat(P.seqs[k] || 0)}${'○'.repeat(Math.max(0, P.need - (P.seqs[k] || 0)))}</span><small dir="auto">${Object.keys(team).filter(u => team[u] === k).map(u => esc(names[u] || '')).join('، ')}</small></div>`).join('');
-    const status = P.win >= 0 ? `🏆 ${B(`فاز فريق ${TN(P.win)}!`, `${TN(P.win)} wins!`)}` : P.win === -2 ? B('تعادل!', 'A draw!')
-      : mine ? `<b>${B('دورك!', 'Your turn!')}</b> ${sel ? (KH.oneEyed(sel) ? B('👁 ولد أبو عين: اختر قطعة خصم لإزالتها', '👁 One-eyed jack: pick a rival chip to remove') : KH.twoEyed(sel) ? B('👀 ولد أبو عينين: ضع قطعتك في أي خانة فارغة', '👀 Two-eyed jack: put your chip on any empty space') : dead ? B('خانتا هذه الورقة ممتلئتان؛ استبدلها', 'both its spaces are taken; swap it') : B('اختر إحدى الخانتين المضيئتين', 'pick one of the lit spaces')) : B('اختر ورقة من يدك', 'pick a card')}`
+    const status = P.win >= 0 ? `${B(`فاز فريق ${TN(P.win)}!`, `${TN(P.win)} wins!`)}` : P.win === -2 ? B('تعادل!', 'A draw!')
+      : mine ? `<b>${B('دورك!', 'Your turn!')}</b> ${sel ? (KH.oneEyed(sel) ? B('ولد أبو عين: اختر قطعة خصم لإزالتها', 'One-eyed jack: pick a rival chip to remove') : KH.twoEyed(sel) ? B('ولد أبو عينين: ضع قطعتك في أي خانة فارغة', 'Two-eyed jack: put your chip on any empty space') : dead ? B('خانتا هذه الورقة ممتلئتان؛ استبدلها', 'both its spaces are taken; swap it') : B('اختر إحدى الخانتين المضيئتين', 'pick one of the lit spaces')) : B('اختر ورقة من يدك', 'pick a card')}`
       : `${B('دور', 'Turn:')} <b dir="auto" style="color:${COL[team[turn]]}">${esc(names[turn] || '')}</b> (${TN(team[turn])})${untilMe ? ` · <span class="kh-soon${untilMe === 1 ? ' next' : ''}">${untilMe === 1 ? B('أنت التالي!', 'You are next!') : B(`دورك بعد ${untilMe}`, `You play in ${untilMe}`)}</span>` : ''}`;
     root.innerHTML = `<div class="kh-game${screen ? ' kh-screen' : ''} kh-real">
       <div class="kh-bar">${teamsBar}</div>${rulesLine}
       ${G && G.mode !== 'local' ? stands() : ''}
-      <p class="kh-status">${P.dl && P.win === -1 ? `<span class="kh-clock${mine ? ' me' : ''}" id="khClk"></span> ` : ''}${watch ? `<span class="kh-eye">👀 ${B('مشاهدة', 'Watching')}</span> ` : ''}${status}</p>
+      <p class="kh-status">${P.dl && P.win === -1 ? `<span class="kh-clock${mine ? ' me' : ''}" id="khClk"></span> ` : ''}${watch ? `<span class="kh-eye">${B('مشاهدة', 'Watching')}</span> ` : ''}${status}</p>
       <div class="kh-board${can.length ? ' picking' : ''}">${lay.map((c, i) => { const b = board[i], inq = b >= 0 && sq[b] && sq[b].has(i);
         return `<div class="kh-cell${can.includes(i) ? ' can' : sel && lay[i] === sel ? ' twin' : ''}${L && L.i === i ? ' last' + (fresh ? ' drop' : '') : ''}${P.win >= 0 && inq && b === P.win ? ' won' : ''}" data-i="${i}">${card(c)}${b >= 0 ? `<i class="kh-chip${inq ? ' seq' : ''}" style="--c:${COL[b]}"></i>` : ''}${L && L.i === i && L.rm && fresh ? `<i class="kh-chip ghost" style="--c:${COL[L.t]}"></i>` : ''}</div>`; }).join('')}</div>
       ${me != null && !screen ? `<div class="kh-hand${mine ? ' mine' : ''}">${hand.map(c => `<button type="button" class="kh-hc${sel === c ? ' on' : ''}${mine && !KH.twoEyed(c) && !KH.oneEyed(c) && !legalOf(c).length ? ' dead' : ''}" data-c="${c}" style="--c:${myT != null ? COL[myT] : '#888'}">${card(c)}</button>`).join('')}</div>
         <div class="kh-row kh-acts">${dead ? `<button type="button" class="btn ghost" id="khSwap">↻ ${B('استبدل الورقة الميتة', 'Swap the dead card')}</button>` : ''}${stuck ? `<button type="button" class="btn ghost" id="khPass">${B('لا حركة لديك: تخطَّ الدور', 'No move: pass')}</button>` : ''}</div>` : ''}
-      ${screen ? `<div class="kh-row"><button type="button" class="btn ghost" id="khFs">⛶ ${B('ملء الشاشة', 'Full screen')}</button></div>` : ''}
+      ${screen ? `<div class="kh-row"><button type="button" class="btn ghost" id="khFs">${B('ملء الشاشة', 'Full screen')}</button></div>` : ''}
       ${rxBar(G && G.mode !== 'local' && P.win === -1 && !(G.mode === 'host' && !G.me))}
       <div class="kh-help">${rules(false)}</div>
-      ${P.win !== -1 ? `<div class="kh-row">${G && G.mode === 'player' ? `<p class="kh-note">${B('بانتظار المضيف يبدأ جولة جديدة…', 'Waiting for the host to start another round…')}</p>` : `<button type="button" class="btn solid" id="khAgain">${G && G.mode === 'host' ? B('جولة جديدة ▶', 'Another round ▶') : B('لعبة جديدة', 'New game')}</button>`}<button type="button" class="btn ghost" id="khShareR">📤 ${B('شارك النتيجة', 'Share the result')}</button>${end ? `<button type="button" class="btn ghost" id="khEndS">${B('إنهاء الجلسة', 'End the session')}</button>` : ''}</div>` : ''}</div>`;
+      ${P.win !== -1 ? `<div class="kh-row">${G && G.mode === 'player' ? `<p class="kh-note">${B('بانتظار المضيف يبدأ جولة جديدة…', 'Waiting for the host to start another round…')}</p>` : `<button type="button" class="btn solid" id="khAgain">${G && G.mode === 'host' ? B('جولة جديدة ▶', 'Another round ▶') : B('لعبة جديدة', 'New game')}</button>`}<button type="button" class="btn ghost" id="khShareR">${B('شارك النتيجة', 'Share the result')}</button>${end ? `<button type="button" class="btn ghost" id="khEndS">${B('إنهاء الجلسة', 'End the session')}</button>` : ''}</div>` : ''}</div>`;
     root.querySelectorAll('[data-c]').forEach(b => b.onclick = () => { sel = sel === b.dataset.c ? null : b.dataset.c; buzz(8); view({ P, hand, me, names, screen, watch, act, again }); });
     root.querySelectorAll('.kh-cell.can').forEach(c => c.onclick = () => { const s = sel; sel = null; buzz(20); act('p', s, +c.dataset.i); });
     const sw = root.querySelector('#khSwap'); if (sw) sw.onclick = () => { const s = sel; sel = null; act('s', s); };
@@ -2161,11 +2161,11 @@ window.KH = (function () {
     const es = root.querySelector('#khEndS'); if (es) es.onclick = () => { if (confirm(T('تنهي الجلسة لكل اللاعبين؟', 'End the session for everyone?'))) end(); };
     if (P.win !== -1 && winShown !== P.rnd + ':' + P.n) { winShown = P.rnd + ':' + P.n; SND.win(); celebrate(P, names, again); }
     const ck = root.querySelector('#khClk');
-    if (ck) { let warned = false; const tick = () => { const left = Math.max(0, Math.ceil((P.dl - now()) / 1000)); ck.textContent = '⏱ ' + left; ck.style.setProperty('--p', P.tt ? Math.round(100 * left / P.tt) + '%' : '100%'); ck.classList.toggle('hot', left <= 10); if (mine && left <= 5 && !warned) { warned = true; buzz([80, 60, 80]); } if (mine && left <= 5 && left > 0 && left !== lastTick) { lastTick = left; SND.tick(); } }; tick(); clk = setInterval(tick, 250); }
+    if (ck) { let warned = false; const tick = () => { const left = Math.max(0, Math.ceil((P.dl - now()) / 1000)); ck.textContent = '' + left; ck.style.setProperty('--p', P.tt ? Math.round(100 * left / P.tt) + '%' : '100%'); ck.classList.toggle('hot', left <= 10); if (mine && left <= 5 && !warned) { warned = true; buzz([80, 60, 80]); } if (mine && left <= 5 && left > 0 && left !== lastTick) { lastTick = left; SND.tick(); } }; tick(); clk = setInterval(tick, 250); }
     root.querySelectorAll('[data-rx]').forEach(b => b.onclick = () => { sendRx(b.dataset.rx); const ss = root.querySelector('.kh-says'); if (ss) ss.hidden = true; });
     const rs = root.querySelector('[data-rxset]'); if (rs) rs.onclick = () => { const p = root.querySelector('.kh-rxset'), q = root.querySelector('.kh-says'); p.hidden = !p.hidden; if (q) q.hidden = true; };
-    const mu = root.querySelector('[data-mute]'); if (mu) mu.onchange = () => { muted = mu.checked; store.set('mute', muted); rs.firstChild.textContent = (muted ? '🔕' : '⚙') + ' '; };
-    root.querySelectorAll('[data-blk]').forEach(b => b.onclick = () => { const u = b.dataset.blk; if (blocked.has(u)) blocked.delete(u); else blocked.add(u); store.set('blk', [...blocked]); b.setAttribute('aria-pressed', blocked.has(u)); b.textContent = (blocked.has(u) ? '🚫 ' : '') + b.textContent.replace(/^🚫 /, ''); const f = root.querySelector(`[data-fan="${u}"]`); if (f) f.classList.toggle('blk', blocked.has(u)); });
+    const mu = root.querySelector('[data-mute]'); if (mu) mu.onchange = () => { muted = mu.checked; store.set('mute', muted);  };
+    root.querySelectorAll('[data-blk]').forEach(b => b.onclick = () => { const u = b.dataset.blk; if (blocked.has(u)) blocked.delete(u); else blocked.add(u); store.set('blk', [...blocked]); b.setAttribute('aria-pressed', blocked.has(u)); b.textContent = (blocked.has(u) ? '' : '') + b.textContent.replace(/^/, ''); const f = root.querySelector(`[data-fan="${u}"]`); if (f) f.classList.toggle('blk', blocked.has(u)); });
     const sy = root.querySelector('[data-say]'); if (sy) sy.onclick = () => { const ss = root.querySelector('.kh-says'); ss.hidden = !ss.hidden; root.querySelector('.kh-rxset').hidden = true; };
     const sb = root.querySelector('[data-stands]'); if (sb) sb.onclick = () => { G.standsOpen = !G.standsOpen; sb.parentNode.classList.toggle('open', G.standsOpen); };
     const fs = root.querySelector('#khFs'); if (fs) fs.onclick = () => document.fullscreenElement ? document.exitFullscreen() : root.requestFullscreen && root.requestFullscreen();
