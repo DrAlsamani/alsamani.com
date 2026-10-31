@@ -47,9 +47,14 @@
       <section class="qi-hero"><p class="qi-eye">${B('منصة الألعاب التفاعلية', 'Interactive games')}</p>
         <h2>${B('اجعل كل لقاء ميدانًا للتفاعل', 'Turn any gathering into a lively contest')}</h2>
         <p>${B('سؤال أو تحدٍّ على الشاشة، وكل مشارك يجيب من جواله دون تطبيق ولا تسجيل. الأسرع والأدق يتصدّر، والفرق تتنافس، والنتائج تظهر فورًا.', 'A question or a challenge on the screen, and everyone answers from their phone with no app and no sign-up. The quickest right answers lead, teams compete, and results show at once.')}</p>
-        <div class="qi-act"><a class="btn solid" href="#build">${B('ابنِ مسابقتك', 'Build a quiz')}</a><a class="btn ghost" href="#lib">${B('جرّب مسابقة جاهزة', 'Try a ready quiz')}</a></div>
+        <div class="qi-act"><button type="button" class="btn solid" data-newq>${B('ابنِ مسابقتك', 'Build a quiz')}</button><a class="btn ghost" href="#lib">${B('جرّب مسابقة جاهزة', 'Try a ready quiz')}</a></div>
         <div class="qi-stats"><span><b>10</b>${B('أنواع أسئلة', 'question kinds')}</span><span><b>25</b>${B('تحديًا تفاعليًا', 'game challenges')}</span><span><b>30</b>${B('فريقًا كحدٍّ أعلى', 'teams at most')}</span><span><b>100</b>${B('سؤال في المسابقة', 'questions a quiz')}</span></div></section>
 
+      </div>`;
+  }
+  function introMore() {
+    const card = (i, a, e, da, de) => `<div class="qi-c"><span>${i}</span><b>${B(a, e)}</b><small>${B(da, de)}</small></div>`;
+    return `<details class="qi-more"><summary>💡 ${B('تعرّف على ميدان: أين تستخدمه، كيف يعمل، وطرق اللعب', 'About Maydan: where to use it, how it works, ways to play')}</summary><div class="qi">
       <section><h3>${B('أين تستخدمه؟', 'Where to use it')}</h3><div class="qi-grid">
         ${card('🏫', 'الفصول والقاعات', 'Classrooms and halls', 'مراجعة الدرس، وتقويم سريع، ومنافسة بين المجموعات.', 'Lesson review, quick checks and contests between groups.')}
         ${card('🎭', 'المسارح والفعاليات الكبيرة', 'Theatres and big events', 'شاشة واحدة كبيرة ومئة مشارك من جوالاتهم في الوقت نفسه.', 'One big screen and up to a hundred players on their phones at once.')}
@@ -86,7 +91,7 @@
         ${card('🎓', 'درجات للأنشطة الصفية', 'Grades for class activities', 'حوّل النتائج إلى درجة من ٥ أو ١٠ أو أي رقم، من كل النقاط أو من الأسئلة وحدها، ونزّلها ملفًا بالأسماء.', 'Turn the results into a grade out of 5, 10 or any number, from all points or the questions alone, and download it with the names.')}
         ${card('📽', 'مع شاشة أو بدونها', 'With or without a screen', 'إن تعطّل جهاز العرض استمرت المسابقة، فكل جوال يعرض السؤال والنتيجة والترتيب.', 'If the projector fails the quiz goes on: every phone shows the question, the result and the ranking.')}
         ${card('⏸', 'أوقف وأكمل لاحقًا', 'Pause and resume', 'أوقف المسابقة متى شئت وأكملها من حيث توقفت، ونزّل النتائج ملف CSV.', 'Pause any time and pick up where you left off; download the results as CSV.')}
-      </div></section></div>`;
+      </div></section></div></details>`;
   }
   function home() {
     Q = null;
@@ -101,9 +106,10 @@
       <div class="qz-lib">${RLIB().map(z => `<div class="qz-lc"><span class="qz-li">${z.icon}</span><b>${esc(z.title)}</b><small>${esc(z.desc)}</small><em>${esc(z.who)} · ${z.qs.length} ${z.qs.every(x => x.type === 'game') ? B('تحديات', 'challenges') : B('فقرة', 'items')}</em><span class="qz-lb"><button type="button" class="btn solid" data-lgo="${z.id}">${B('ابدأ الآن ▶', 'Start now ▶')}</button><button type="button" class="btn ghost" data-led="${z.id}">${B('افتحها وعدّلها', 'Open and edit')}</button></span></div>`).join('')}</div>` : ''}
       ${list.length ? `<h2 class="qz-h">${B('مسابقاتك', 'Your quizzes')}</h2><ul class="qz-list">${list.map(x => `<li><button type="button" data-open="${x.id}"><b>${esc(x.title || T('بلا عنوان', 'Untitled'))}</b><small>${T('الأسئلة: ', 'Questions: ')}${x.qs.length}</small></button></li>`).join('')}</ul>` : ''}
       <label class="qz-imp btn ghost">${B('فتح نسخة محفوظة', 'Open a saved copy')}<input type="file" accept=".json,application/json" hidden id="qzImp"></label>
-      <p class="pt-fine">${B('تُحفظ المسابقات في هذا المتصفح.', 'Quizzes are kept in this browser.')}</p></div>`;
+      <p class="pt-fine">${B('تُحفظ المسابقات في هذا المتصفح.', 'Quizzes are kept in this browser.')}</p></div>${introMore()}`;
     if (P) { root.querySelector('#qzRes').onclick = () => MDLive.resume(); root.querySelector('#qzDrop2').onclick = async () => { await MDLive.discard(); home(); }; }
     root.querySelector('#qzNew').onclick = () => { Q = { id: uid(), title: '', qs: [] }; editor(); };
+    root.querySelectorAll('[data-newq]').forEach(b => b.onclick = () => root.querySelector('#qzNew').click());
     const fromLib = id => { const z = RLIB().find(v => v.id === id); return { id: uid(), title: z.title, qs: z.qs.map(x => norm(JSON.parse(JSON.stringify(x)))) }; };
     root.querySelectorAll('[data-led]').forEach(b => b.onclick = () => { Q = fromLib(b.dataset.led); persist(); editor(); });
     root.querySelectorAll('[data-lgo]').forEach(b => b.onclick = () => { if (!window.MDLive) return toast(B('تعذّر تشغيل المسابقة الآن.', 'The quiz cannot start right now.'), 1); MDLive.start(live(fromLib(b.dataset.lgo))); });
@@ -125,7 +131,7 @@
     root.innerHTML = `<div class="qz-top"><button type="button" class="sn-lnk" id="qzBack">${B('‹ مسابقاتي', '‹ My quizzes')}</button></div>
       <div class="sn-card"><label class="sn-lbl">${B('عنوان المسابقة', 'Quiz title')}<input type="text" id="qzTitle" maxlength="120" value="${esc(Q.title)}" placeholder="${T('مثال: مراجعة الوحدة الأولى', 'e.g. Unit 1 review')}"></label></div>
       <div class="sn-card qz-add"><h2 class="qz-h">${B('أضف الأسئلة', 'Add questions')}</h2>
-        <div class="qz-tabs" role="tablist"><button type="button" role="tab" data-tab="paste" aria-selected="true">${B('لصق', 'Paste')}</button><button type="button" role="tab" data-tab="file" aria-selected="false">${B('رفع ملف', 'Upload a file')}</button><button type="button" role="tab" data-tab="ai" aria-selected="false">${B('ابنِ الأسئلة بمساعدة الذكاء الاصطناعي', 'Build the questions with AI')}</button></div>
+        <div class="qz-tabs" role="tablist"><button type="button" role="tab" data-tab="paste" aria-selected="true">${B('لصق', 'Paste')}</button><button type="button" role="tab" data-tab="file" aria-selected="false">${B('رفع ملف', 'Upload a file')}</button><button type="button" role="tab" data-tab="ai" aria-selected="false">🤖 ${B('بالذكاء الاصطناعي', 'With AI')}</button></div>
         <div data-pane="paste"><textarea id="qzPaste" rows="8" dir="auto" placeholder="${T('الصق الأسئلة هنا كما هي من Word أو واتساب أو أي مكان…', 'Paste the questions here as they are, from Word, WhatsApp or anywhere…')}"></textarea>
           <p class="qz-found" id="qzFound"></p>
           <div class="sn-two"><button type="button" class="btn solid" id="qzPasteOk" disabled>${B('أضف إلى المسابقة', 'Add to the quiz')}</button></div>
@@ -135,7 +141,7 @@
         <div data-pane="file" hidden><label class="qz-drop" id="qzDrop"><input type="file" id="qzFile" accept=".docx,.xlsx,.xls,.csv,.txt,.pdf" hidden><b>${B('اختر ملف الأسئلة', 'Choose the questions file')}</b><small>${B('Word أو Excel أو CSV أو PDF أو نص', 'Word, Excel, CSV, PDF or text')}</small></label>
           <p class="pt-fine">${B('في Word: إن كانت الإجابة الصحيحة بخط عريض أو ملوّنة أو مظللة أو تحتها خط، تُعرف تلقائيًا. ويُقبل قالب الاستيراد نفسه الذي يستعمله Kahoot.', 'In Word, a right answer in bold, colour, highlight or underline is recognised. Kahoot’s import template is accepted as it is.')}</p>
           <div class="sn-two"><button type="button" class="btn ghost" id="qzTpl">${B('تنزيل قالب Excel', 'Download an Excel template')}</button></div></div>
-        <div data-pane="ai" hidden>
+        <div data-pane="ai" hidden><p class="qz-aih">✨ ${B('ابنِ الأسئلة بمساعدة الذكاء الاصطناعي: اكتب الموضوع وتوجيهاتك، ثم انسخ التعليمات إلى ChatGPT أو Claude والصق ردّه هنا.', 'Build the questions with AI: write the topic and your guidance, copy the instructions into ChatGPT or Claude, then paste its reply here.')}</p>
           <label class="sn-lbl">${B('الموضوع، أو الصق نص المحتوى الذي تريد بناء الأسئلة منه', 'The topic, or paste the content you want the questions built from')}<textarea id="qzTopic" rows="4" dir="auto" placeholder="${T('مثال: الفصل الثالث من مقرر ريادة الأعمال — نموذج العمل التجاري', 'e.g. Chapter 3 — the business model canvas')}"></textarea></label>
           <label class="sn-lbl">${B('توجيهاتك (اختياري)', 'Your guidance (optional)')}<textarea id="qzGuide" rows="3" dir="auto" placeholder="${T('مثال: ركّز على حياة الصحابة في مكة، واسأل عن المواقف لا التواريخ، وخلّها فيها مرح وتناسب طلاب المتوسط', 'e.g. Focus on…, ask about … rather than dates, keep it light-hearted, suitable for middle school')}"></textarea></label>
           <div class="qz-row"><label class="sn-lbl">${B('الفئة', 'Audience')}<select id="qzAud"><option value="">${T('عام', 'General')}</option><option value="kids">${T('أطفال', 'Children')}</option><option value="prim">${T('المرحلة الابتدائية', 'Primary school')}</option><option value="mid">${T('المرحلة المتوسطة', 'Middle school')}</option><option value="sec">${T('المرحلة الثانوية', 'Secondary school')}</option><option value="uni">${T('طلاب الجامعة', 'University students')}</option><option value="pro">${T('موظفون أو مختصون', 'Staff or specialists')}</option><option value="fam">${T('العائلة', 'Family')}</option></select></label>
@@ -150,7 +156,7 @@
       <div id="qzQs" class="qz-qs"></div>
       <div class="qz-addq"><button type="button" class="btn ghost" id="qzAddQ">${B('+ سؤال', '+ Question')}</button><button type="button" class="btn ghost" id="qzAddTF">${B('+ صح أو خطأ', '+ True or false')}</button><button type="button" class="btn ghost" id="qzAddG">${B('+ تحدٍّ تفاعلي 🎮', '+ Challenge 🎮')}</button></div>
       <div class="qz-spr"><span>🎲 ${B('وزّع تحديات بين الأسئلة: تحدٍّ بعد كل', 'Spread challenges between the questions: one after every')}</span><select id="qzEvery">${[1, 2, 3, 5, 10].map(n => `<option value="${n}"${n === 3 ? ' selected' : ''}>${n === 1 ? T('سؤال واحد', '1 question') : n === 2 ? T('سؤالين', '2 questions') : n + ' ' + T('أسئلة', 'questions')}</option>`).join('')}</select><button type="button" class="btn ghost" id="qzSpr">${B('وزّع', 'Spread')}</button></div>
-      <div class="qz-bar"><div class="qz-chk" id="qzChk"></div><div class="qz-bar-b"><button type="button" class="btn solid md-go" id="qzGo">${B('ابدأ المسابقة ▶', 'Start the quiz ▶')}</button><button type="button" class="btn ghost" id="qzPv">${B('معاينة', 'Preview')}</button><button type="button" class="btn ghost" id="qzExp">${B('حفظ نسخة', 'Save a copy')}</button><button type="button" class="btn ghost" id="qzPub">📤 ${B('انشرها في المكتبة', 'Offer it to the library')}</button></div></div>`;
+      <div class="qz-bar"><div class="qz-chk" id="qzChk"></div><div class="qz-bar-b"><button type="button" class="btn solid md-go" id="qzGo">${B('ابدأ المسابقة ▶', 'Start the quiz ▶')}</button><button type="button" class="qz-ib" id="qzPv" title="${T('معاينة', 'Preview')}">👁<small>${B('معاينة', 'Preview')}</small></button><button type="button" class="qz-ib" id="qzExp" title="${T('حفظ نسخة', 'Save a copy')}">💾<small>${B('حفظ', 'Save')}</small></button><button type="button" class="qz-ib" id="qzPub" title="${T('انشرها في المكتبة', 'Offer it to the library')}">📤<small>${B('نشر', 'Offer')}</small></button></div></div>`;
     const q = s => root.querySelector(s);
     q('#qzBack').onclick = () => { persist(); home(); };
     q('#qzTitle').oninput = e => { Q.title = e.target.value; later(); };
