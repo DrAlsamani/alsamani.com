@@ -15,6 +15,7 @@
   const now = () => Date.now() + off;
   const buzz = ms => { try { navigator.vibrate && navigator.vibrate(ms); } catch (e) {} };
 
+  const within = (p, ms) => Promise.race([p, new Promise((_, no) => setTimeout(() => no(new Error('slow')), ms || 12000))]);
   async function ready() {
     if (db) return;
     firebase.initializeApp(CFG);
@@ -38,11 +39,11 @@
       if (pin.length !== 6) return codeScreen(T('الرمز ستة أرقام.', 'The code has six digits.'));
       go.disabled = true;
       try {
-        await ready();
-        const s = await db.ref('rooms/' + pin + '/st').once('value');
+        await within(ready());
+        const s = await within(db.ref('rooms/' + pin + '/st').once('value'));
         if (!s.exists()) return codeScreen(T('لا توجد مسابقة بهذا الرمز. تأكد منه على الشاشة.', 'No quiz with this code. Check it on the screen.'));
         R = db.ref('rooms/' + pin);
-        const mine = (await R.child('pl/' + uid).once('value')).val();
+        const mine = (await within(R.child('pl/' + uid).once('value'))).val();
         if (mine) { me = mine.n; return play(); }
         if (s.val().lock) return codeScreen(T('أُقفل الدخول إلى هذه المسابقة.', 'This quiz is closed to new players.'));
         R.child('tmode').on('value', t => { TMODE = t.val() || 'pick'; const box = root.querySelector('#mpTeams'); if (box) teamPick(box); });
@@ -66,8 +67,9 @@
       if (!n) return nameScreen(T('اكتب اسمًا يظهر على الشاشة.', 'Type a name to show on the screen.'));
       if (TEAMS && TMODE === 'pick' && myTeam == null) { const e = root.querySelector('.mp-err'); e.hidden = false; e.textContent = T('اختر فريقك.', 'Choose your team.'); return; }
       go.disabled = true;
-      try { await R.child('pl/' + uid).set(Object.assign({ n, at: TS }, TEAMS && myTeam != null ? { t: myTeam } : {})); me = n; store.set('name', n); play(); }
-      catch (e) { nameScreen(T('تعذّر الدخول؛ ربما أُقفلت المسابقة.', 'Could not join; the quiz may be closed.')); }
+      go.textContent = T('لحظة…', 'One moment…');
+      try { await within(R.child('pl/' + uid).set(Object.assign({ n, at: TS }, TEAMS && myTeam != null ? { t: myTeam } : {}))); me = n; store.set('name', n); play(); }
+      catch (e) { nameScreen(e && e.message === 'slow' ? T('الاتصال بطيء؛ اضغط «ادخل الميدان» مرة أخرى.', 'The connection is slow; press Join again.') : T('تعذّر الدخول؛ ربما أُقفلت المسابقة.', 'Could not join; the quiz may be closed.')); }
     };
   }
 

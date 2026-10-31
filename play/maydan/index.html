@@ -2097,7 +2097,9 @@ var QZParse = (function () {
         if (kind === 'poll') return { type: 'poll', q: text, opts: opts.slice(0, 6), ok: [], pts: 0 };
         return { type: 'open', q: text, opts: [], ok: [], pts: 0 };
       }
-      let opts = q.opts.filter(o => o.t);
+      // a line that only names the kind of question («اختيار من متعدد», “multiple choice”…) is an instruction, not an option
+      const KINDLINE = /^[\s(\[«"“]*(?:نوع السؤال\s*[:：]?\s*)?(?:اختيار من متعدد|اختيار متعدد|الاختيار من متعدد|صح\s*(?:أو|او|\/)\s*خطأ|صح أم خطأ|سؤال مقالي|multiple[- ]choice|true\s*(?:or|\/)\s*false|mcq)[\s)\]»."”]*$/i;
+      let opts = q.opts.filter(o => o.t && !(KINDLINE.test(o.t) && !o.ok));
       let type = 'mc';
       if (!opts.length && (TFQ.test(q.q) || (q.ans && (TRUE.test(q.ans) || FALSE.test(q.ans))) || (key[n] && (TRUE.test(key[n]) || FALSE.test(key[n]))))) {
         opts = [{ t: 'صح' }, { t: 'خطأ' }];
@@ -2303,10 +2305,11 @@ if (typeof module !== 'undefined') module.exports = QZParse;
   // the editor's quiz in the form the live screen plays
   const live = Q => ({ title: Q.title, qs: Q.qs.map(x => x.type === 'game' ? { type: 'game', g: x.g, q: '', opts: [], ok: [], pts: x.pts, time: x.time || 30, seed: 1 + Math.floor(Math.random() * 1e9) } : ({ type: x.type, q: x.q, opts: TEXTY.includes(x.type) ? [] : x.opts.filter(o => o.trim()), ok: x.type === 'poll' || TEXTY.includes(x.type) ? [] : x.ok.map(j => x.opts.slice(0, j).filter(o => o.trim()).length), pts: x.type === 'open' || x.type === 'poll' ? 0 : x.pts, img: x.img, reveal: !!(x.reveal && x.img && x.type === 'mc'), ans: x.ans, unit: x.unit || '', items: x.type === 'order' ? x.items.filter(v => v.trim()) : x.type === 'rapid' ? x.items.filter(v => v.trim()) : null, truth: x.type === 'rapid' ? x.items.map((v, j) => v.trim() ? !!x.truth[j] : null).filter(v => v != null) : null, pairs: x.type === 'match' ? x.pairs.filter(p => p[0].trim() && p[1].trim()).map(p => [p[0].trim(), p[1].trim()]) : null, time: x.timeSet ? x.time : suggest(x) })) });
   function editor() {
+    setTimeout(() => { const h = document.querySelector('.md-page') || root; window.scrollTo({ top: Math.max(0, h.getBoundingClientRect().top + scrollY - 70), behavior: 'instant' }); }, 0);
     root.innerHTML = `<div class="qz-top"><button type="button" class="sn-lnk" id="qzBack">${B('‹ مسابقاتي', '‹ My quizzes')}</button></div>
       <div class="sn-card"><label class="sn-lbl">${B('عنوان المسابقة', 'Quiz title')}<input type="text" id="qzTitle" maxlength="120" value="${esc(Q.title)}" placeholder="${T('مثال: مراجعة الوحدة الأولى', 'e.g. Unit 1 review')}"></label></div>
       <div class="sn-card qz-add"><h2 class="qz-h">${B('أضف الأسئلة', 'Add questions')}</h2>
-        <div class="qz-tabs" role="tablist"><button type="button" role="tab" data-tab="paste" aria-selected="true">${B('لصق', 'Paste')}</button><button type="button" role="tab" data-tab="file" aria-selected="false">${B('رفع ملف', 'Upload a file')}</button><button type="button" role="tab" data-tab="ai" aria-selected="false">${B('بالذكاء الاصطناعي', 'With AI')}</button></div>
+        <div class="qz-tabs" role="tablist"><button type="button" role="tab" data-tab="paste" aria-selected="true">${B('لصق', 'Paste')}</button><button type="button" role="tab" data-tab="file" aria-selected="false">${B('رفع ملف', 'Upload a file')}</button><button type="button" role="tab" data-tab="ai" aria-selected="false">${B('ابنِ الأسئلة بمساعدة الذكاء الاصطناعي', 'Build the questions with AI')}</button></div>
         <div data-pane="paste"><textarea id="qzPaste" rows="8" dir="auto" placeholder="${T('الصق الأسئلة هنا كما هي من Word أو واتساب أو أي مكان…', 'Paste the questions here as they are, from Word, WhatsApp or anywhere…')}"></textarea>
           <p class="qz-found" id="qzFound"></p>
           <div class="sn-two"><button type="button" class="btn solid" id="qzPasteOk" disabled>${B('أضف إلى المسابقة', 'Add to the quiz')}</button></div>
@@ -2318,7 +2321,10 @@ if (typeof module !== 'undefined') module.exports = QZParse;
           <div class="sn-two"><button type="button" class="btn ghost" id="qzTpl">${B('تنزيل قالب Excel', 'Download an Excel template')}</button></div></div>
         <div data-pane="ai" hidden>
           <label class="sn-lbl">${B('الموضوع، أو الصق نص المحتوى الذي تريد بناء الأسئلة منه', 'The topic, or paste the content you want the questions built from')}<textarea id="qzTopic" rows="4" dir="auto" placeholder="${T('مثال: الفصل الثالث من مقرر ريادة الأعمال — نموذج العمل التجاري', 'e.g. Chapter 3 — the business model canvas')}"></textarea></label>
-          <div class="qz-row"><label class="sn-lbl">${B('عدد الأسئلة', 'Questions')}<select id="qzN">${[5, 10, 15, 20, 30, 40, 50, 75, 100].map(n => `<option${n === 10 ? ' selected' : ''}>${n}</option>`).join('')}</select></label>
+          <label class="sn-lbl">${B('توجيهاتك (اختياري)', 'Your guidance (optional)')}<textarea id="qzGuide" rows="3" dir="auto" placeholder="${T('مثال: ركّز على حياة الصحابة في مكة، واسأل عن المواقف لا التواريخ، وخلّها فيها مرح وتناسب طلاب المتوسط', 'e.g. Focus on…, ask about … rather than dates, keep it light-hearted, suitable for middle school')}"></textarea></label>
+          <div class="qz-row"><label class="sn-lbl">${B('الفئة', 'Audience')}<select id="qzAud"><option value="">${T('عام', 'General')}</option><option value="kids">${T('أطفال', 'Children')}</option><option value="prim">${T('المرحلة الابتدائية', 'Primary school')}</option><option value="mid">${T('المرحلة المتوسطة', 'Middle school')}</option><option value="sec">${T('المرحلة الثانوية', 'Secondary school')}</option><option value="uni">${T('طلاب الجامعة', 'University students')}</option><option value="pro">${T('موظفون أو مختصون', 'Staff or specialists')}</option><option value="fam">${T('العائلة', 'Family')}</option></select></label>
+            <label class="sn-lbl">${B('الطابع', 'Tone')}<select id="qzTone"><option value="">${T('معتدل', 'Balanced')}</option><option value="fun">${T('مرح وخفيف', 'Fun and light')}</option><option value="serious">${T('جاد وعلمي', 'Serious')}</option><option value="challenge">${T('تحدٍّ قوي', 'Hard challenge')}</option></select></label></div>
+          <div class="qz-row"><label class="sn-lbl">${B('عدد الأسئلة', 'Questions')}<select id="qzN">${[5, 10, 15, 20, 30, 40, 50, 75, 100].map(n => `<option${n === 20 ? ' selected' : ''}>${n}</option>`).join('')}</select></label>
             <label class="sn-lbl">${B('المستوى', 'Level')}<select id="qzLv"><option value="mixed">${T('متنوع', 'Mixed')}</option><option value="easy">${T('سهل', 'Easy')}</option><option value="mid">${T('متوسط', 'Medium')}</option><option value="hard">${T('صعب', 'Hard')}</option></select></label>
             <label class="sn-lbl">${B('النوع', 'Type')}<select id="qzTy"><option value="mc">${T('اختيار من متعدد', 'Multiple choice')}</option><option value="all" selected>${T('منوّعة: كل أنواع الأسئلة', 'Varied: every question kind')}</option><option value="mix">${T('مزيج مع صح وخطأ', 'Mixed with true/false')}</option><option value="tf">${T('صح وخطأ', 'True/false')}</option></select></label>
             <label class="sn-lbl">${B('اللغة', 'Language')}<select id="qzLg"><option value="ar">العربية</option><option value="en">English</option></select></label></div>
@@ -2355,9 +2361,9 @@ if (typeof module !== 'undefined') module.exports = QZParse;
     dz.addEventListener('drop', e => { e.preventDefault(); dz.classList.remove('on'); const f = e.dataTransfer.files[0]; if (f) fromFile(f); });
     q('#qzTpl').onclick = template;
     // AI
-    const prompt = () => aiPrompt(q('#qzTopic').value.trim(), +q('#qzN').value, q('#qzLv').value, q('#qzTy').value, q('#qzLg').value);
+    const prompt = () => aiPrompt(q('#qzTopic').value.trim(), +q('#qzN').value, q('#qzLv').value, q('#qzTy').value, q('#qzLg').value, { guide: q('#qzGuide').value.trim(), aud: q('#qzAud').value, tone: q('#qzTone').value });
     const links = () => { const p = encodeURIComponent(prompt()); q('#qzGpt').href = 'https://chatgpt.com/?q=' + p; q('#qzCl').href = 'https://claude.ai/new?q=' + p; };
-    ['#qzTopic', '#qzN', '#qzLv', '#qzTy', '#qzLg'].forEach(s => { q(s).oninput = q(s).onchange = links; }); links();
+    ['#qzTopic', '#qzGuide', '#qzAud', '#qzTone', '#qzN', '#qzLv', '#qzTy', '#qzLg'].forEach(s => { q(s).oninput = q(s).onchange = links; }); links();
     // step 2: bring the AI's reply into the paste box (straight from the clipboard where the browser allows it)
     q('#qzBack2').onclick = async () => {
       root.querySelector('[data-tab=paste]').click();
@@ -2691,8 +2697,13 @@ if (typeof module !== 'undefined') module.exports = QZParse;
 
   /* ---------- the AI instructions ---------- */
   const usable = x => x.q && (x.type === 'match' ? (x.pairs || []).length >= 2 : x.type === 'rapid' ? (x.items || []).length >= 3 : x.type === 'num' ? x.ans !== '' && x.ans != null : x.type === 'word' ? !!x.ans : x.type === 'order' ? (x.items || []).length >= 2 : x.type === 'open' ? true : x.opts.filter(o => o.trim()).length >= 2);
-  function aiPrompt(topic, n, lv, ty, lg) {
-    const ar = lg === 'ar', all = ty === 'all';
+  function aiPrompt(topic, n, lv, ty, lg, x) {
+    const ar = lg === 'ar', all = ty === 'all'; x = x || {};
+    const AUD = { kids: ['تناسب الأطفال بلغة بسيطة جدًا', 'suitable for young children, in very simple words'], prim: ['تناسب طلاب المرحلة الابتدائية', 'suitable for primary school pupils'], mid: ['تناسب طلاب المرحلة المتوسطة', 'suitable for middle school students'], sec: ['تناسب طلاب المرحلة الثانوية', 'suitable for secondary school students'], uni: ['تناسب طلاب الجامعة', 'suitable for university students'], pro: ['تناسب الموظفين والمختصين', 'suitable for staff and specialists'], fam: ['تناسب العائلة بكل أعمارها', 'suitable for a family of all ages'] }[x.aud];
+    const TONE = { fun: ['بأسلوب مرح وخفيف يضحك المشاركين دون إسفاف', 'in a fun, light style that makes people smile'], serious: ['بأسلوب جاد ودقيق علميًا', 'in a serious, precise style'], challenge: ['بأسلوب تحدٍّ قوي يميّز المتمكنين', 'as a hard challenge that sets the experts apart'] }[x.tone];
+    const extra = (AUD ? `\n- ${AUD[ar ? 0 : 1]}.` : '') + (TONE ? `\n- ${TONE[ar ? 0 : 1]}.` : '') + (x.guide ? (ar ? `\n- توجيهات صاحب المسابقة (التزم بها): ${x.guide}` : `\n- The quiz author's guidance (follow it): ${x.guide}`) : '')
+      + (ar ? '\n- لا تكتب نوع السؤال (مثل «اختيار من متعدد» أو «صح أو خطأ») خيارًا ولا سطرًا مستقلًا تحت الخيارات.\n- راجع كل إجابة صحيحة مرة ثانية قبل كتابتها، واحذف أي سؤال لست متأكدًا من جوابه أو مختلفًا فيه.'
+        : '\n- Never write the question kind (such as “multiple choice”) as an option or as a line under the options.\n- Check each right answer a second time before writing it; drop any question whose answer is uncertain or disputed.');
     const LV = { mixed: ar ? 'متنوعة الصعوبة (سهلة ومتوسطة وصعبة)' : 'of mixed difficulty (easy, medium and hard)', easy: ar ? 'سهلة' : 'easy', mid: ar ? 'متوسطة الصعوبة' : 'of medium difficulty', hard: ar ? 'صعبة تتطلب تفكيرًا' : 'hard, requiring thought' }[lv];
     const TY = { mc: ar ? 'من نوع اختيار من متعدد بأربعة خيارات' : 'multiple choice with four options', mix: ar ? 'أغلبها اختيار من متعدد بأربعة خيارات، وبعضها صح أو خطأ' : 'mostly multiple choice with four options, some true or false', tf: ar ? 'من نوع صح أو خطأ' : 'true or false', all: ar ? 'منوّعة الأنواع' : 'of varied kinds' }[ty];
     const mix = ar ? `
@@ -2786,7 +2797,7 @@ c) option
 - السؤال لا يتجاوز ١٢٠ حرفًا، والخيار لا يتجاوز ٧٥ حرفًا، لأنها تُعرض على شاشة.
 - خيار واحد صحيح في كل سؤال، والخيارات الخاطئة معقولة وليست واضحة الخطأ.
 - وزّع موضع الإجابة الصحيحة بين أ وب وج ود بالتساوي تقريبًا.
-- لا تكرر الأسئلة، ولا تضع «كل ما سبق» أو «لا شيء مما سبق».${all ? mix : ''}
+- لا تكرر الأسئلة، ولا تضع «كل ما سبق» أو «لا شيء مما سبق».${extra}${all ? mix : ''}
 - تأكد من صحة كل معلومة وكل إجابة.
 - إن لم يتسع رد واحد لكل الأسئلة، فتوقف بعد سؤال كامل، وأكمل الترقيم حين أكتب «أكمل».
 
@@ -2799,7 +2810,7 @@ Rules:
 - Each question at most 120 characters and each option at most 75 characters, as they are shown on a screen.
 - One right answer per question; wrong options should be plausible, not obviously wrong.
 - Spread the position of the right answer across a, b, c and d about evenly.
-- No repeated questions, no “all of the above” or “none of the above”.${all ? mix : ''}
+- No repeated questions, no “all of the above” or “none of the above”.${extra}${all ? mix : ''}
 - Make sure every fact and every answer is correct.
 - If one reply cannot hold them all, stop after a whole question and continue the numbering when I write “continue”.
 
@@ -3189,6 +3200,8 @@ html.md-on{overflow:hidden}
 .mp-surv{margin:0 0 10px;text-align:center;font-weight:700;border-radius:12px;padding:8px;background:color-mix(in srgb,#e0a458 20%,transparent)}.mp-surv.out{background:color-mix(in srgb,#b0533a 22%,transparent)}
 .md-rlist.many{grid-template-columns:1fr 1fr;width:min(1200px,96vw);gap:6px}.md-rlist.many li{padding:6px 12px;font-size:clamp(.8rem,1.3vw,1.05rem)}
 .mp-in.bad{border-color:#c0392b;animation:mpShake .3s}@keyframes mpShake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.md-set .md-ck input{width:auto!important;flex:none!important;min-width:0;margin-inline:0}.md-set .md-ck small{display:block;color:#6a7573;font-size:.75rem}
+.md-set .md-ck{flex-wrap:wrap}.md-set .md-ck small{flex-basis:100%;padding-inline-start:24px}
 </style><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script>window.MD_CFG={"apiKey": "AIzaSyA50i75DT1Is1a6Yn6snW1_JVObc8S3F0Y", "authDomain": "maydan-705ae.firebaseapp.com", "databaseURL": "https://maydan-705ae-default-rtdb.europe-west1.firebasedatabase.app", "projectId": "maydan-705ae", "appId": "1:342187013133:web:d5c2396f0db413f3c51144"};window.MD_MARK="<svg class=\"md-mark\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><rect x=\"4\" y=\"4\" width=\"40\" height=\"40\" rx=\"12\" fill=\"#23336F\"/><path d=\"M24 9l4.2 6.8 7.8-1.8-1.8 7.8L41 24l-6.8 4.2 1.8 7.8-7.8-1.8L24 39l-4.2-6.8-7.8 1.8 1.8-7.8L7 24l6.8-4.2-1.8-7.8 7.8 1.8z\" fill=\"#C9822B\"/><circle cx=\"24\" cy=\"24\" r=\"6.5\" fill=\"#23336F\"/><circle cx=\"24\" cy=\"24\" r=\"3\" fill=\"#F3E3C7\"/></svg>";</script><script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script><script>/* Maydan challenges: short games played on every phone at once. Every phone gets the same level (same seed),
    so the race is fair. Each game reports a score; higher is better. */
 window.MDGames = (function () {
@@ -3677,6 +3690,7 @@ window.MDGames = (function () {
       while (st.length) { const c = st[st.length - 1], x = c % N, y = Math.floor(c / N), nb = [[0, -1, 0, 2], [1, 0, 1, 3], [0, 1, 2, 0], [-1, 0, 3, 1]].map(([dx, dy, a, b]) => [x + dx, y + dy, a, b]).filter(([nx, ny]) => nx >= 0 && ny >= 0 && nx < N && ny < N && !seen.has(ny * N + nx));
         if (!nb.length) { st.pop(); continue; } const [nx, ny, a, b] = nb[Math.floor(r() * nb.length)], n = ny * N + nx; wall[c][a] = 0; wall[n][b] = 0; seen.add(n); st.push(n); }
       const box = h('div', 'mg-maze'), pad = h('div', 'mg-arrows'); el.append(box, pad);
+      box.dir = 'ltr'; pad.dir = 'ltr';   // the grid and its walls are drawn left to right, whatever the page's direction
       box.style.gridTemplateColumns = `repeat(${N},1fr)`;
       const cells = wall.map(w => { const c = h('i'); c.style.borderWidth = w.map(v => v ? '2px' : '0').join(' '); box.appendChild(c); return c; });
       let at = 0, done = false; const goal = N * N - 1; cells[goal].textContent = '🚩';
@@ -3942,7 +3956,7 @@ window.MDLive = (function () {
   const byRank = (a, b) => (G.opts.surv ? outv(b) - outv(a) : 0) || (G.score[b] || 0) - (G.score[a] || 0);
   const alive = () => Object.keys(G.players).filter(u => G.out[u] == null);
   function survive(x, sc) {
-    if (!G.opts.surv) return;
+    if (!G.opts.surv || G.teams) return;   // last survivor is a game of individuals; with teams it is set aside
     const live = alive(), judged = !['poll', 'open', 'game'].includes(x.type);
     const lose = judged ? live.filter(u => !sc[u] || !sc[u].c) : [];
     // when everyone still in would go out, they are all spared this time
@@ -3954,7 +3968,7 @@ window.MDLive = (function () {
     order.forEach((u, k) => { sc[u].r = k + 1; sc[u].of = order.length; delete sc[u].gap; if (k && G.out[u] == null) { sc[u].gap = G.score[order[k - 1]] - G.score[u]; sc[u].above = G.players[order[k - 1]] || ''; } });
     G.note = !judged ? `🏆 ${B(`الناجون: ${left.length}`, `Still in: ${left.length}`)}`
       : spared ? `🛟 ${B(`أخطأ الجميع، فنجوا كلهم هذه المرة. الناجون: ${left.length}`, `Everyone missed, so all are spared this time. Still in: ${left.length}`)}`
-      : left.length <= 1 ? `🏆 ${B(`الناجي الأخير: ${esc(G.players[left[0]] || '')}! اضغط التالي لإعلان النتيجة`, `The last survivor: ${esc(G.players[left[0]] || '')}! Press next for the results`)}`
+      : !G.teams && left.length <= 1 ? `🏆 ${B(`الناجي الأخير: ${esc(G.players[left[0]] || '')}! اضغط التالي لإعلان النتيجة`, `The last survivor: ${esc(G.players[left[0]] || '')}! Press next for the results`)}`
       : `🏆 ${B(`خرج ${lose.length} · بقي ${left.length}`, `${lose.length} out · ${left.length} still in`)}${lose.length && lose.length <= 6 ? ` <small dir="auto">${lose.map(u => esc(G.players[u] || '')).join('، ')}</small>` : ''}`;
   }
   function frame(inner, bar, canPause) {
@@ -4023,7 +4037,7 @@ window.MDLive = (function () {
         <label class="md-ck"><input type="checkbox" data-o="speed"${O.speed ? ' checked' : ''}> ${B('السرعة تزيد النقاط', 'Speed adds points')}</label>
         <label class="md-ck"><input type="checkbox" data-o="gold"${O.gold ? ' checked' : ''}> ${B('✨ سؤال ذهبي مفاجئ بنقاط مضاعفة', '✨ A surprise golden question with double points')}</label>
         <label class="md-ck"><input type="checkbox" data-o="final"${O.final ? ' checked' : ''}> ${B('🏁 لحظة الحسم: السؤال الأخير بنقاط مضاعفة', '🏁 The final question with double points')}</label>
-        <label class="md-ck"><input type="checkbox" data-o="surv"${O.surv ? ' checked' : ''}> ${B('🏆 الناجي الأخير: من يخطئ يخرج من المنافسة ويتابع متفرجًا، ويفوز من يصمد حتى النهاية', '🏆 Last survivor: a wrong answer takes you out to watch; whoever lasts wins')}</label>
+        <label class="md-ck"><input type="checkbox" data-o="surv"${O.surv ? ' checked' : ''}> ${B('🏆 الناجي الأخير: من يخطئ يخرج من المنافسة ويتابع متفرجًا، ويفوز من يصمد حتى النهاية', '🏆 Last survivor: a wrong answer takes you out to watch; whoever lasts wins')} <small>${B('(للأفراد فقط؛ لا يعمل مع الفرق)', '(individuals only; off with teams)')}</small></label>
         <label class="md-ck"><input type="checkbox" data-o="bet"${O.bet ? ' checked' : ''}> ${B('🎯 الثقة: يراهن المشارك على إجابته فيكسب أو يخسر نقاطًا إضافية', '🎯 Confidence: players can bet on their answer to win or lose extra points')}</label>
         <button type="button" class="btn solid" data-done>${B('تم', 'Done')}</button></div>
       <div class="md-set md-teamp" id="mdTeamP" hidden>
@@ -4110,7 +4124,8 @@ window.MDLive = (function () {
   const multOf = i => (G.quiz.qs[i].pts || 0) * (i === G.gold ? 2 : 1) * (G.opts.final && i === G.quiz.qs.length - 1 && G.quiz.qs.length > 1 ? 2 : 1);
   async function next() {
     G.i = G.done + 1;
-    if (G.opts.surv && G.i > 0 && alive().length <= 1) return finish();
+    // last survivor: alone it ends with one player left; with teams, when only one team still has someone in
+    if (G.opts.surv && !G.teams && G.i > 0 && alive().length <= 1) return finish();
     if (G.i >= G.quiz.qs.length) return finish();
     const x = G.quiz.qs[G.i], n = G.quiz.qs.length, m = multOf(G.i), gold = G.i === G.gold, last = G.opts.final && G.i === n - 1 && n > 1;
     // the question is read first, alone and large; then it moves up as the options and the clock appear.
@@ -4205,7 +4220,7 @@ window.MDLive = (function () {
     q('[data-skip]').disabled = false;
     const ring = q('#mdRing'), C = 2 * Math.PI * 44; ring.style.strokeDasharray = C;
     let got = 0, last = -1;
-    sub(G.ref.child('an/' + G.i), 'child_added', () => { got++; const a = q('#mdA'); if (a) a.textContent = got; if (got >= (G.opts.surv ? alive() : Object.keys(G.players)).length) reveal(); });
+    sub(G.ref.child('an/' + G.i), 'child_added', () => { got++; const a = q('#mdA'); if (a) a.textContent = got; if (got >= (G.opts.surv && !G.teams ? alive() : Object.keys(G.players)).length) reveal(); });
     q('[data-skip]').onclick = () => reveal();
     if (x.g === 'tug') {
       let taps = {}, sentAt = 0;

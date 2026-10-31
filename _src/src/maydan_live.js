@@ -105,7 +105,7 @@ window.MDLive = (function () {
   const byRank = (a, b) => (G.opts.surv ? outv(b) - outv(a) : 0) || (G.score[b] || 0) - (G.score[a] || 0);
   const alive = () => Object.keys(G.players).filter(u => G.out[u] == null);
   function survive(x, sc) {
-    if (!G.opts.surv) return;
+    if (!G.opts.surv || G.teams) return;   // last survivor is a game of individuals; with teams it is set aside
     const live = alive(), judged = !['poll', 'open', 'game'].includes(x.type);
     const lose = judged ? live.filter(u => !sc[u] || !sc[u].c) : [];
     // when everyone still in would go out, they are all spared this time
@@ -117,7 +117,7 @@ window.MDLive = (function () {
     order.forEach((u, k) => { sc[u].r = k + 1; sc[u].of = order.length; delete sc[u].gap; if (k && G.out[u] == null) { sc[u].gap = G.score[order[k - 1]] - G.score[u]; sc[u].above = G.players[order[k - 1]] || ''; } });
     G.note = !judged ? `🏆 ${B(`الناجون: ${left.length}`, `Still in: ${left.length}`)}`
       : spared ? `🛟 ${B(`أخطأ الجميع، فنجوا كلهم هذه المرة. الناجون: ${left.length}`, `Everyone missed, so all are spared this time. Still in: ${left.length}`)}`
-      : left.length <= 1 ? `🏆 ${B(`الناجي الأخير: ${esc(G.players[left[0]] || '')}! اضغط التالي لإعلان النتيجة`, `The last survivor: ${esc(G.players[left[0]] || '')}! Press next for the results`)}`
+      : !G.teams && left.length <= 1 ? `🏆 ${B(`الناجي الأخير: ${esc(G.players[left[0]] || '')}! اضغط التالي لإعلان النتيجة`, `The last survivor: ${esc(G.players[left[0]] || '')}! Press next for the results`)}`
       : `🏆 ${B(`خرج ${lose.length} · بقي ${left.length}`, `${lose.length} out · ${left.length} still in`)}${lose.length && lose.length <= 6 ? ` <small dir="auto">${lose.map(u => esc(G.players[u] || '')).join('، ')}</small>` : ''}`;
   }
   function frame(inner, bar, canPause) {
@@ -186,7 +186,7 @@ window.MDLive = (function () {
         <label class="md-ck"><input type="checkbox" data-o="speed"${O.speed ? ' checked' : ''}> ${B('السرعة تزيد النقاط', 'Speed adds points')}</label>
         <label class="md-ck"><input type="checkbox" data-o="gold"${O.gold ? ' checked' : ''}> ${B('✨ سؤال ذهبي مفاجئ بنقاط مضاعفة', '✨ A surprise golden question with double points')}</label>
         <label class="md-ck"><input type="checkbox" data-o="final"${O.final ? ' checked' : ''}> ${B('🏁 لحظة الحسم: السؤال الأخير بنقاط مضاعفة', '🏁 The final question with double points')}</label>
-        <label class="md-ck"><input type="checkbox" data-o="surv"${O.surv ? ' checked' : ''}> ${B('🏆 الناجي الأخير: من يخطئ يخرج من المنافسة ويتابع متفرجًا، ويفوز من يصمد حتى النهاية', '🏆 Last survivor: a wrong answer takes you out to watch; whoever lasts wins')}</label>
+        <label class="md-ck"><input type="checkbox" data-o="surv"${O.surv ? ' checked' : ''}> ${B('🏆 الناجي الأخير: من يخطئ يخرج من المنافسة ويتابع متفرجًا، ويفوز من يصمد حتى النهاية', '🏆 Last survivor: a wrong answer takes you out to watch; whoever lasts wins')} <small>${B('(للأفراد فقط؛ لا يعمل مع الفرق)', '(individuals only; off with teams)')}</small></label>
         <label class="md-ck"><input type="checkbox" data-o="bet"${O.bet ? ' checked' : ''}> ${B('🎯 الثقة: يراهن المشارك على إجابته فيكسب أو يخسر نقاطًا إضافية', '🎯 Confidence: players can bet on their answer to win or lose extra points')}</label>
         <button type="button" class="btn solid" data-done>${B('تم', 'Done')}</button></div>
       <div class="md-set md-teamp" id="mdTeamP" hidden>
@@ -273,7 +273,8 @@ window.MDLive = (function () {
   const multOf = i => (G.quiz.qs[i].pts || 0) * (i === G.gold ? 2 : 1) * (G.opts.final && i === G.quiz.qs.length - 1 && G.quiz.qs.length > 1 ? 2 : 1);
   async function next() {
     G.i = G.done + 1;
-    if (G.opts.surv && G.i > 0 && alive().length <= 1) return finish();
+    // last survivor: alone it ends with one player left; with teams, when only one team still has someone in
+    if (G.opts.surv && !G.teams && G.i > 0 && alive().length <= 1) return finish();
     if (G.i >= G.quiz.qs.length) return finish();
     const x = G.quiz.qs[G.i], n = G.quiz.qs.length, m = multOf(G.i), gold = G.i === G.gold, last = G.opts.final && G.i === n - 1 && n > 1;
     // the question is read first, alone and large; then it moves up as the options and the clock appear.
@@ -368,7 +369,7 @@ window.MDLive = (function () {
     q('[data-skip]').disabled = false;
     const ring = q('#mdRing'), C = 2 * Math.PI * 44; ring.style.strokeDasharray = C;
     let got = 0, last = -1;
-    sub(G.ref.child('an/' + G.i), 'child_added', () => { got++; const a = q('#mdA'); if (a) a.textContent = got; if (got >= (G.opts.surv ? alive() : Object.keys(G.players)).length) reveal(); });
+    sub(G.ref.child('an/' + G.i), 'child_added', () => { got++; const a = q('#mdA'); if (a) a.textContent = got; if (got >= (G.opts.surv && !G.teams ? alive() : Object.keys(G.players)).length) reveal(); });
     q('[data-skip]').onclick = () => reveal();
     if (x.g === 'tug') {
       let taps = {}, sentAt = 0;

@@ -227,7 +227,7 @@
         const s = (await db.ref('kh/' + p + '/st').once('value')).val();
         if (!s) { e.currentTarget.disabled = false; return err(B('لا توجد لعبة بهذا الرمز.', 'No game with this code.')); }
         const mine = (await db.ref('kh/' + p + '/pl/' + uid).once('value')).val();
-        if (!mine) { if (s !== 'lobby') { e.currentTarget.disabled = false; return err(B('بدأت هذه اللعبة؛ لا يمكن الدخول الآن.', 'This game has started; you cannot join now.')); } await db.ref('kh/' + p + '/pl/' + uid).set({ n, at: TS() }); }
+        if (!mine) { if (s !== 'lobby') { toast(B('بدأت اللعبة، فدخلت متفرجًا وتقدر تتفاعل.', 'The game has started, so you are in as a fan and can react.')); return watch(p, n); }   // the game is on: come in to watch instead await db.ref('kh/' + p + '/pl/' + uid).set({ n, at: TS() }); }
         player(p);
       } catch (er) { console.error('kh join', er && er.message); e.currentTarget.disabled = false; err(B('تعذّر الدخول. تأكد من الإنترنت.', 'Could not join. Check the internet.')); }
     };

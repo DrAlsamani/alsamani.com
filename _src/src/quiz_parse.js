@@ -89,7 +89,9 @@ var QZParse = (function () {
         if (kind === 'poll') return { type: 'poll', q: text, opts: opts.slice(0, 6), ok: [], pts: 0 };
         return { type: 'open', q: text, opts: [], ok: [], pts: 0 };
       }
-      let opts = q.opts.filter(o => o.t);
+      // a line that only names the kind of question («اختيار من متعدد», “multiple choice”…) is an instruction, not an option
+      const KINDLINE = /^[\s(\[«"“]*(?:نوع السؤال\s*[:：]?\s*)?(?:اختيار من متعدد|اختيار متعدد|الاختيار من متعدد|صح\s*(?:أو|او|\/)\s*خطأ|صح أم خطأ|سؤال مقالي|multiple[- ]choice|true\s*(?:or|\/)\s*false|mcq)[\s)\]»."”]*$/i;
+      let opts = q.opts.filter(o => o.t && !(KINDLINE.test(o.t) && !o.ok));
       let type = 'mc';
       if (!opts.length && (TFQ.test(q.q) || (q.ans && (TRUE.test(q.ans) || FALSE.test(q.ans))) || (key[n] && (TRUE.test(key[n]) || FALSE.test(key[n]))))) {
         opts = [{ t: 'صح' }, { t: 'خطأ' }];

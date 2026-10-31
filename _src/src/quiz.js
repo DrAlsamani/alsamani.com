@@ -121,10 +121,11 @@
   // the editor's quiz in the form the live screen plays
   const live = Q => ({ title: Q.title, qs: Q.qs.map(x => x.type === 'game' ? { type: 'game', g: x.g, q: '', opts: [], ok: [], pts: x.pts, time: x.time || 30, seed: 1 + Math.floor(Math.random() * 1e9) } : ({ type: x.type, q: x.q, opts: TEXTY.includes(x.type) ? [] : x.opts.filter(o => o.trim()), ok: x.type === 'poll' || TEXTY.includes(x.type) ? [] : x.ok.map(j => x.opts.slice(0, j).filter(o => o.trim()).length), pts: x.type === 'open' || x.type === 'poll' ? 0 : x.pts, img: x.img, reveal: !!(x.reveal && x.img && x.type === 'mc'), ans: x.ans, unit: x.unit || '', items: x.type === 'order' ? x.items.filter(v => v.trim()) : x.type === 'rapid' ? x.items.filter(v => v.trim()) : null, truth: x.type === 'rapid' ? x.items.map((v, j) => v.trim() ? !!x.truth[j] : null).filter(v => v != null) : null, pairs: x.type === 'match' ? x.pairs.filter(p => p[0].trim() && p[1].trim()).map(p => [p[0].trim(), p[1].trim()]) : null, time: x.timeSet ? x.time : suggest(x) })) });
   function editor() {
+    setTimeout(() => { const h = document.querySelector('.md-page') || root; window.scrollTo({ top: Math.max(0, h.getBoundingClientRect().top + scrollY - 70), behavior: 'instant' }); }, 0);
     root.innerHTML = `<div class="qz-top"><button type="button" class="sn-lnk" id="qzBack">${B('‹ مسابقاتي', '‹ My quizzes')}</button></div>
       <div class="sn-card"><label class="sn-lbl">${B('عنوان المسابقة', 'Quiz title')}<input type="text" id="qzTitle" maxlength="120" value="${esc(Q.title)}" placeholder="${T('مثال: مراجعة الوحدة الأولى', 'e.g. Unit 1 review')}"></label></div>
       <div class="sn-card qz-add"><h2 class="qz-h">${B('أضف الأسئلة', 'Add questions')}</h2>
-        <div class="qz-tabs" role="tablist"><button type="button" role="tab" data-tab="paste" aria-selected="true">${B('لصق', 'Paste')}</button><button type="button" role="tab" data-tab="file" aria-selected="false">${B('رفع ملف', 'Upload a file')}</button><button type="button" role="tab" data-tab="ai" aria-selected="false">${B('بالذكاء الاصطناعي', 'With AI')}</button></div>
+        <div class="qz-tabs" role="tablist"><button type="button" role="tab" data-tab="paste" aria-selected="true">${B('لصق', 'Paste')}</button><button type="button" role="tab" data-tab="file" aria-selected="false">${B('رفع ملف', 'Upload a file')}</button><button type="button" role="tab" data-tab="ai" aria-selected="false">${B('ابنِ الأسئلة بمساعدة الذكاء الاصطناعي', 'Build the questions with AI')}</button></div>
         <div data-pane="paste"><textarea id="qzPaste" rows="8" dir="auto" placeholder="${T('الصق الأسئلة هنا كما هي من Word أو واتساب أو أي مكان…', 'Paste the questions here as they are, from Word, WhatsApp or anywhere…')}"></textarea>
           <p class="qz-found" id="qzFound"></p>
           <div class="sn-two"><button type="button" class="btn solid" id="qzPasteOk" disabled>${B('أضف إلى المسابقة', 'Add to the quiz')}</button></div>
@@ -136,7 +137,10 @@
           <div class="sn-two"><button type="button" class="btn ghost" id="qzTpl">${B('تنزيل قالب Excel', 'Download an Excel template')}</button></div></div>
         <div data-pane="ai" hidden>
           <label class="sn-lbl">${B('الموضوع، أو الصق نص المحتوى الذي تريد بناء الأسئلة منه', 'The topic, or paste the content you want the questions built from')}<textarea id="qzTopic" rows="4" dir="auto" placeholder="${T('مثال: الفصل الثالث من مقرر ريادة الأعمال — نموذج العمل التجاري', 'e.g. Chapter 3 — the business model canvas')}"></textarea></label>
-          <div class="qz-row"><label class="sn-lbl">${B('عدد الأسئلة', 'Questions')}<select id="qzN">${[5, 10, 15, 20, 30, 40, 50, 75, 100].map(n => `<option${n === 10 ? ' selected' : ''}>${n}</option>`).join('')}</select></label>
+          <label class="sn-lbl">${B('توجيهاتك (اختياري)', 'Your guidance (optional)')}<textarea id="qzGuide" rows="3" dir="auto" placeholder="${T('مثال: ركّز على حياة الصحابة في مكة، واسأل عن المواقف لا التواريخ، وخلّها فيها مرح وتناسب طلاب المتوسط', 'e.g. Focus on…, ask about … rather than dates, keep it light-hearted, suitable for middle school')}"></textarea></label>
+          <div class="qz-row"><label class="sn-lbl">${B('الفئة', 'Audience')}<select id="qzAud"><option value="">${T('عام', 'General')}</option><option value="kids">${T('أطفال', 'Children')}</option><option value="prim">${T('المرحلة الابتدائية', 'Primary school')}</option><option value="mid">${T('المرحلة المتوسطة', 'Middle school')}</option><option value="sec">${T('المرحلة الثانوية', 'Secondary school')}</option><option value="uni">${T('طلاب الجامعة', 'University students')}</option><option value="pro">${T('موظفون أو مختصون', 'Staff or specialists')}</option><option value="fam">${T('العائلة', 'Family')}</option></select></label>
+            <label class="sn-lbl">${B('الطابع', 'Tone')}<select id="qzTone"><option value="">${T('معتدل', 'Balanced')}</option><option value="fun">${T('مرح وخفيف', 'Fun and light')}</option><option value="serious">${T('جاد وعلمي', 'Serious')}</option><option value="challenge">${T('تحدٍّ قوي', 'Hard challenge')}</option></select></label></div>
+          <div class="qz-row"><label class="sn-lbl">${B('عدد الأسئلة', 'Questions')}<select id="qzN">${[5, 10, 15, 20, 30, 40, 50, 75, 100].map(n => `<option${n === 20 ? ' selected' : ''}>${n}</option>`).join('')}</select></label>
             <label class="sn-lbl">${B('المستوى', 'Level')}<select id="qzLv"><option value="mixed">${T('متنوع', 'Mixed')}</option><option value="easy">${T('سهل', 'Easy')}</option><option value="mid">${T('متوسط', 'Medium')}</option><option value="hard">${T('صعب', 'Hard')}</option></select></label>
             <label class="sn-lbl">${B('النوع', 'Type')}<select id="qzTy"><option value="mc">${T('اختيار من متعدد', 'Multiple choice')}</option><option value="all" selected>${T('منوّعة: كل أنواع الأسئلة', 'Varied: every question kind')}</option><option value="mix">${T('مزيج مع صح وخطأ', 'Mixed with true/false')}</option><option value="tf">${T('صح وخطأ', 'True/false')}</option></select></label>
             <label class="sn-lbl">${B('اللغة', 'Language')}<select id="qzLg"><option value="ar">العربية</option><option value="en">English</option></select></label></div>
@@ -173,9 +177,9 @@
     dz.addEventListener('drop', e => { e.preventDefault(); dz.classList.remove('on'); const f = e.dataTransfer.files[0]; if (f) fromFile(f); });
     q('#qzTpl').onclick = template;
     // AI
-    const prompt = () => aiPrompt(q('#qzTopic').value.trim(), +q('#qzN').value, q('#qzLv').value, q('#qzTy').value, q('#qzLg').value);
+    const prompt = () => aiPrompt(q('#qzTopic').value.trim(), +q('#qzN').value, q('#qzLv').value, q('#qzTy').value, q('#qzLg').value, { guide: q('#qzGuide').value.trim(), aud: q('#qzAud').value, tone: q('#qzTone').value });
     const links = () => { const p = encodeURIComponent(prompt()); q('#qzGpt').href = 'https://chatgpt.com/?q=' + p; q('#qzCl').href = 'https://claude.ai/new?q=' + p; };
-    ['#qzTopic', '#qzN', '#qzLv', '#qzTy', '#qzLg'].forEach(s => { q(s).oninput = q(s).onchange = links; }); links();
+    ['#qzTopic', '#qzGuide', '#qzAud', '#qzTone', '#qzN', '#qzLv', '#qzTy', '#qzLg'].forEach(s => { q(s).oninput = q(s).onchange = links; }); links();
     // step 2: bring the AI's reply into the paste box (straight from the clipboard where the browser allows it)
     q('#qzBack2').onclick = async () => {
       root.querySelector('[data-tab=paste]').click();
@@ -509,8 +513,13 @@
 
   /* ---------- the AI instructions ---------- */
   const usable = x => x.q && (x.type === 'match' ? (x.pairs || []).length >= 2 : x.type === 'rapid' ? (x.items || []).length >= 3 : x.type === 'num' ? x.ans !== '' && x.ans != null : x.type === 'word' ? !!x.ans : x.type === 'order' ? (x.items || []).length >= 2 : x.type === 'open' ? true : x.opts.filter(o => o.trim()).length >= 2);
-  function aiPrompt(topic, n, lv, ty, lg) {
-    const ar = lg === 'ar', all = ty === 'all';
+  function aiPrompt(topic, n, lv, ty, lg, x) {
+    const ar = lg === 'ar', all = ty === 'all'; x = x || {};
+    const AUD = { kids: ['تناسب الأطفال بلغة بسيطة جدًا', 'suitable for young children, in very simple words'], prim: ['تناسب طلاب المرحلة الابتدائية', 'suitable for primary school pupils'], mid: ['تناسب طلاب المرحلة المتوسطة', 'suitable for middle school students'], sec: ['تناسب طلاب المرحلة الثانوية', 'suitable for secondary school students'], uni: ['تناسب طلاب الجامعة', 'suitable for university students'], pro: ['تناسب الموظفين والمختصين', 'suitable for staff and specialists'], fam: ['تناسب العائلة بكل أعمارها', 'suitable for a family of all ages'] }[x.aud];
+    const TONE = { fun: ['بأسلوب مرح وخفيف يضحك المشاركين دون إسفاف', 'in a fun, light style that makes people smile'], serious: ['بأسلوب جاد ودقيق علميًا', 'in a serious, precise style'], challenge: ['بأسلوب تحدٍّ قوي يميّز المتمكنين', 'as a hard challenge that sets the experts apart'] }[x.tone];
+    const extra = (AUD ? `\n- ${AUD[ar ? 0 : 1]}.` : '') + (TONE ? `\n- ${TONE[ar ? 0 : 1]}.` : '') + (x.guide ? (ar ? `\n- توجيهات صاحب المسابقة (التزم بها): ${x.guide}` : `\n- The quiz author's guidance (follow it): ${x.guide}`) : '')
+      + (ar ? '\n- لا تكتب نوع السؤال (مثل «اختيار من متعدد» أو «صح أو خطأ») خيارًا ولا سطرًا مستقلًا تحت الخيارات.\n- راجع كل إجابة صحيحة مرة ثانية قبل كتابتها، واحذف أي سؤال لست متأكدًا من جوابه أو مختلفًا فيه.'
+        : '\n- Never write the question kind (such as “multiple choice”) as an option or as a line under the options.\n- Check each right answer a second time before writing it; drop any question whose answer is uncertain or disputed.');
     const LV = { mixed: ar ? 'متنوعة الصعوبة (سهلة ومتوسطة وصعبة)' : 'of mixed difficulty (easy, medium and hard)', easy: ar ? 'سهلة' : 'easy', mid: ar ? 'متوسطة الصعوبة' : 'of medium difficulty', hard: ar ? 'صعبة تتطلب تفكيرًا' : 'hard, requiring thought' }[lv];
     const TY = { mc: ar ? 'من نوع اختيار من متعدد بأربعة خيارات' : 'multiple choice with four options', mix: ar ? 'أغلبها اختيار من متعدد بأربعة خيارات، وبعضها صح أو خطأ' : 'mostly multiple choice with four options, some true or false', tf: ar ? 'من نوع صح أو خطأ' : 'true or false', all: ar ? 'منوّعة الأنواع' : 'of varied kinds' }[ty];
     const mix = ar ? `
@@ -604,7 +613,7 @@ c) option
 - السؤال لا يتجاوز ١٢٠ حرفًا، والخيار لا يتجاوز ٧٥ حرفًا، لأنها تُعرض على شاشة.
 - خيار واحد صحيح في كل سؤال، والخيارات الخاطئة معقولة وليست واضحة الخطأ.
 - وزّع موضع الإجابة الصحيحة بين أ وب وج ود بالتساوي تقريبًا.
-- لا تكرر الأسئلة، ولا تضع «كل ما سبق» أو «لا شيء مما سبق».${all ? mix : ''}
+- لا تكرر الأسئلة، ولا تضع «كل ما سبق» أو «لا شيء مما سبق».${extra}${all ? mix : ''}
 - تأكد من صحة كل معلومة وكل إجابة.
 - إن لم يتسع رد واحد لكل الأسئلة، فتوقف بعد سؤال كامل، وأكمل الترقيم حين أكتب «أكمل».
 
@@ -617,7 +626,7 @@ Rules:
 - Each question at most 120 characters and each option at most 75 characters, as they are shown on a screen.
 - One right answer per question; wrong options should be plausible, not obviously wrong.
 - Spread the position of the right answer across a, b, c and d about evenly.
-- No repeated questions, no “all of the above” or “none of the above”.${all ? mix : ''}
+- No repeated questions, no “all of the above” or “none of the above”.${extra}${all ? mix : ''}
 - Make sure every fact and every answer is correct.
 - If one reply cannot hold them all, stop after a whole question and continue the numbering when I write “continue”.
 

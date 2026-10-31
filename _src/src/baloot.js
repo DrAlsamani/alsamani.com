@@ -283,7 +283,7 @@
       btn.disabled = true; store.set('name', n);
       try {
         const v = await check(p); if (!v) { btn.disabled = false; return err(B('لا توجد طاولة بلوت بهذا الرمز.', 'No Baloot table with this code.')); }
-        if (!(v.pl && v.pl[uid])) { if (v.st !== 'lobby') { btn.disabled = false; return err(B('بدأت اللعبة؛ يمكنك المشاهدة.', 'The game has started; you can watch.')); } await db.ref('kh/' + p + '/pl/' + uid).set({ n, at: TS() }); }
+        if (!(v.pl && v.pl[uid])) { if (v.st !== 'lobby') { toast(B('بدأت اللعبة، فدخلت متفرجًا.', 'The game has started; you are in as a fan.')); return watch(p, n); } await db.ref('kh/' + p + '/pl/' + uid).set({ n, at: TS() }); }
         player(p);
       } catch (e) { btn.disabled = false; err(B('تعذّر الدخول. تأكد من الإنترنت.', 'Could not join. Check the internet.')); }
     };

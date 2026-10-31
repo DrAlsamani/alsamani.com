@@ -486,6 +486,7 @@ window.MDGames = (function () {
       while (st.length) { const c = st[st.length - 1], x = c % N, y = Math.floor(c / N), nb = [[0, -1, 0, 2], [1, 0, 1, 3], [0, 1, 2, 0], [-1, 0, 3, 1]].map(([dx, dy, a, b]) => [x + dx, y + dy, a, b]).filter(([nx, ny]) => nx >= 0 && ny >= 0 && nx < N && ny < N && !seen.has(ny * N + nx));
         if (!nb.length) { st.pop(); continue; } const [nx, ny, a, b] = nb[Math.floor(r() * nb.length)], n = ny * N + nx; wall[c][a] = 0; wall[n][b] = 0; seen.add(n); st.push(n); }
       const box = h('div', 'mg-maze'), pad = h('div', 'mg-arrows'); el.append(box, pad);
+      box.dir = 'ltr'; pad.dir = 'ltr';   // the grid and its walls are drawn left to right, whatever the page's direction
       box.style.gridTemplateColumns = `repeat(${N},1fr)`;
       const cells = wall.map(w => { const c = h('i'); c.style.borderWidth = w.map(v => v ? '2px' : '0').join(' '); box.appendChild(c); return c; });
       let at = 0, done = false; const goal = N * N - 1; cells[goal].textContent = '🚩';
