@@ -1538,6 +1538,18 @@ html[dir=ltr] .jr-dch.fd .jr-fold::before{transform:rotate(-45deg)}
 .kh-winbox .btn.ghost{color:#13281f;border-color:#13281f}
 .kh-conf{position:absolute;inset:0;overflow:hidden;pointer-events:none}.kh-conf i{position:absolute;top:-20px;left:var(--x);width:9px;height:14px;background:var(--k);border-radius:2px;transform:rotate(var(--r));animation:khConf 3.2s linear var(--d) infinite}
 @keyframes khConf{to{top:110%;transform:rotate(calc(var(--r) + 540deg))}}
+/* the turn comes: a big word in the middle of the screen */
+.kh-yourturn{position:fixed;inset:0;z-index:90;display:grid;place-content:center;justify-items:center;gap:6px;pointer-events:none;background:radial-gradient(circle,rgba(224,164,88,.35),transparent 60%);animation:khYT 1.5s ease-out forwards}
+.kh-yourturn b{font-size:clamp(48px,14vw,96px);color:#fff;text-shadow:0 4px 18px rgba(0,0,0,.6),0 0 30px #e0a458}.kh-yourturn small{color:#fff;font-size:1rem;background:rgba(0,0,0,.45);border-radius:99px;padding:3px 12px}
+@keyframes khYT{0%{opacity:0;transform:scale(.6)}15%{opacity:1;transform:scale(1.05)}25%{transform:scale(1)}80%{opacity:1}100%{opacity:0}}
+.kh-cfg{text-align:center;font-size:.8125rem;opacity:.85;margin:2px 0}
+.kh-soon{background:rgba(255,255,255,.15);border-radius:99px;padding:1px 9px;font-weight:700}.kh-soon.next{background:#e0a458;color:#3a2604;animation:khHot 1s infinite}
+.kh-clock{font-size:1.125rem;min-width:4em;background:conic-gradient(rgba(224,164,88,.55) var(--p,100%),rgba(255,255,255,.12) 0)}
+/* a card chosen before the turn: its two spaces glow so you are ready */
+.kh-board .kh-cell.twin{outline:3px solid #ffd27a!important;outline-offset:-3px;box-shadow:0 0 0 3px rgba(255,210,122,.35),0 0 16px 4px rgba(255,210,122,.8)!important;animation:khTw 1.1s ease-in-out infinite;z-index:2;position:relative}
+@keyframes khTw{50%{box-shadow:0 0 0 3px rgba(255,210,122,.15),0 0 6px 1px rgba(255,210,122,.4)}}
+.kh-hc.on{box-shadow:0 0 0 3px #ffd27a,0 10px 20px rgba(0,0,0,.45)!important;transform:translateY(-12px)!important}
+.kh-cfgbox{background:rgba(224,164,88,.18);border:1px solid rgba(224,164,88,.6);border-radius:12px;padding:8px 12px;font-weight:600}
 .bl{--felt:#0f4d3a;--felt2:#0b3b2c;--gold:#e0a458;--us:#3fa36b;--them:#d0574f}
 .bl-home{display:grid;gap:12px;max-width:640px;margin:0 auto}
 .bl-mode{display:grid;gap:4px;text-align:start;font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px 20px;cursor:pointer}

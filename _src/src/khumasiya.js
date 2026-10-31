@@ -10,6 +10,11 @@
   const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const store = { get(k, d) { try { const v = localStorage.getItem('kh.' + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } }, set(k, v) { try { localStorage.setItem('kh.' + k, JSON.stringify(v)); } catch (e) {} }, del(k) { try { localStorage.removeItem('kh.' + k); } catch (e) {} } };
   const toast = (html, bad) => { let t = document.getElementById('khToast'); if (!t) { t = document.createElement('div'); t.id = 'khToast'; t.className = 'sn-toast'; t.setAttribute('role', 'status'); document.body.appendChild(t); } t.innerHTML = html; t.classList.toggle('bad', !!bad); t.classList.add('on'); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('on'), 3200); };
+  // short sounds made in the browser (no files)
+  let ac = null;
+  const tone = (f, d, type, v, at) => { if (store.get('snd', true) === false) return; try { ac = ac || new (window.AudioContext || window.webkitAudioContext)(); if (ac.state === 'suspended') ac.resume(); const o = ac.createOscillator(), g = ac.createGain(), t = ac.currentTime + (at || 0); o.type = type || 'sine'; o.frequency.setValueAtTime(f, t); g.gain.setValueAtTime(v || .07, t); g.gain.exponentialRampToValueAtTime(.0001, t + d); o.connect(g).connect(ac.destination); o.start(t); o.stop(t + d + .02); } catch (e) {} };
+  const SND = { turn: () => { tone(660, .15, 'triangle', .09); tone(880, .15, 'triangle', .09, .14); tone(1175, .25, 'triangle', .09, .28); }, chip: () => tone(320, .09, 'square', .05), tick: () => tone(1300, .05, 'square', .04),
+    seq: () => [523, 659, 784, 1047].forEach((f, k) => tone(f, .3, 'triangle', .08, k * .1)), win: () => [523, 659, 784, 1047, 1319].forEach((f, k) => tone(f, .4, 'triangle', .09, k * .14)) };
   const buzz = p => { try { navigator.vibrate && navigator.vibrate(p); } catch (e) {} };
   const COL = ['#2a6fdb', '#d64545', '#2f9e5b'];
   const TN = k => [T('الأزرق', 'Blue'), T('الأحمر', 'Red'), T('الأخضر', 'Green')][k];
@@ -72,13 +77,13 @@
 
   /* ---------- a new game: teams, row length, and who this device is ---------- */
   function setup(bot) {
-    const o = Object.assign({ teams: 2, L: 5, role: 'play', tt: 45, lv: 2 }, store.get('cfg', {})); if (!o.need) o.need = o.teams === 2 ? 2 : 1;
+    const o = Object.assign({ teams: 2, L: 4, need: 3, role: 'play', tt: 15, lv: 2 }, store.get('cfg2', {})); if (!o.need) o.need = 3; if (![5, 10, 15, 30, 60].includes(o.tt)) o.tt = 15;
     root.innerHTML = `<div class="kh-card"><h2>${bot ? '🤖 ' + B('العب ضد الجهاز', 'Play the computer') : '👥 ' + B('لعبة جديدة', 'A new game')}</h2>
       <div class="kh-opt"><span>${B('عدد الفرق', 'Teams')}</span><div class="kh-seg" data-k="teams"><button type="button" data-v="2">${B('فريقان', 'Two')}</button><button type="button" data-v="3">${B('ثلاثة فرق', 'Three')}</button></div></div>
-      <div class="kh-opt"><span>${B('طول الصف', 'Row length')}</span><div class="kh-seg" data-k="L"><button type="button" data-v="5">${B('خمس (الأصلية)', 'Five (classic)')}</button><button type="button" data-v="4">${B('أربع (أسرع)', 'Four (quicker)')}</button></div></div>
+      <div class="kh-opt"><span>${B('طول الصف', 'Row length')}</span><div class="kh-seg" data-k="L"><button type="button" data-v="4">${B('أربع (أسرع)', 'Four (quicker)')}</button><button type="button" data-v="5">${B('خمس (الأصلية)', 'Five (classic)')}</button></div></div>
       <div class="kh-opt"><span>${B('سلاسل الفوز', 'Sequences to win')}</span><div class="kh-seg" data-k="need"><button type="button" data-v="1">${B('واحدة', 'One')}</button><button type="button" data-v="2">${B('اثنتان', 'Two')}</button><button type="button" data-v="3">${B('ثلاث', 'Three')}</button></div></div>
       ${bot ? `<div class="kh-opt"><span>${B('مستوى الجهاز', 'Computer level')}</span><div class="kh-seg" data-k="lv"><button type="button" data-v="1">${B('سهل', 'Easy')}</button><button type="button" data-v="2">${B('متوسط', 'Medium')}</button><button type="button" data-v="3">${B('صعب', 'Hard')}</button></div></div>` : ''}
-      ${bot ? '' : `<div class="kh-opt"><span>${B('وقت الدور', 'Time per turn')}</span><div class="kh-seg" data-k="tt"><button type="button" data-v="30">${B('٣٠ ثانية', '30 s')}</button><button type="button" data-v="45">${B('٤٥ ثانية', '45 s')}</button><button type="button" data-v="60">${B('دقيقة', '1 min')}</button><button type="button" data-v="0">${B('بلا وقت', 'No limit')}</button></div></div>`}
+      ${bot ? '' : `<div class="kh-opt"><span>${B('وقت الدور', 'Time per turn')}</span><div class="kh-seg" data-k="tt">${[[5, '٥ ثوانٍ', '5 s'], [10, '١٠ ثوانٍ', '10 s'], [15, '١٥ ثانية', '15 s'], [30, '٣٠ ثانية', '30 s'], [60, 'دقيقة', '1 min']].map(([v, a, e]) => `<button type="button" data-v="${v}">${B(a, e)}</button>`).join('')}</div></div>`}
       ${bot ? '' : `<div class="kh-opt"><span>${B('هذا الجهاز', 'This device')}</span><div class="kh-seg" data-k="role"><button type="button" data-v="play">${B('ألعب منه', 'I play on it')}</button><button type="button" data-v="screen">${B('شاشة عرض فقط', 'A display screen only')}</button></div></div>`}
       <label class="kh-opt kh-name" ${!bot && o.role === 'screen' ? 'hidden' : ''}><span>${B('اسمك', 'Your name')}</span><input id="khN" maxlength="24" dir="auto" value="${esc(store.get('name', ''))}"></label>
       <p class="kh-note" id="khNote"></p>
@@ -89,12 +94,12 @@
       const nw = ['', 'سلسلة واحدة', 'سلسلتين', 'ثلاث سلاسل'][o.need], ne = ['', 'one sequence', 'two sequences', 'three sequences'][o.need];
       root.querySelector('#khNote').innerHTML = B(`يفوز أول فريق يكمل <b>${nw}</b>، كل سلسلة ${o.L === 4 ? 'أربع' : 'خمس'} قطع متتالية.${o.teams === 3 && o.need > 1 ? ' (مع ثلاثة فرق تطول اللعبة.)' : ''}`, `The first team to make <b>${ne}</b> of ${o.L} wins.`);
     };
-    root.querySelectorAll('.kh-seg button').forEach(b => b.onclick = () => { const k = b.parentNode.dataset.k; o[k] = k === 'role' ? b.dataset.v : +b.dataset.v; if (k === 'teams' && !o.needSet) o.need = o.teams === 2 ? 2 : 1; if (k === 'need') o.needSet = 1; paint(); });
+    root.querySelectorAll('.kh-seg button').forEach(b => b.onclick = () => { const k = b.parentNode.dataset.k; o[k] = k === 'role' ? b.dataset.v : +b.dataset.v;  paint(); });
     paint();
     root.querySelector('#khBack').onclick = home;
     root.querySelector('#khGo').onclick = () => {
       const n = (root.querySelector('#khN') || {}).value; if (n != null && n.trim()) store.set('name', n.trim().slice(0, 24));
-      store.set('cfg', o);
+      store.set('cfg2', o);
       if (bot) return local(o, (n || '').trim() || T('أنت', 'You'));
       if (o.role === 'play' && !(n || '').trim()) { toast(B('اكتب اسمك.', 'Write your name.'), 1); return; }
       host(o, (n || '').trim());
@@ -119,9 +124,9 @@
     stop(); root.innerHTML = `<div class="kh-card"><p>${B('لحظة…', 'One moment…')}</p></div>`;
     try { await fb(); } catch (e) { root.innerHTML = `<div class="kh-card"><p>${B('تعذّر الاتصال. تأكد من الإنترنت.', 'Could not connect. Check the internet.')}</p><button type="button" class="btn ghost" id="khBack">${B('رجوع', 'Back')}</button></div>`; root.querySelector('#khBack').onclick = home; return; }
     let pin = null;
-    for (let t = 0; t < 6 && !pin; t++) { const p = String(100000 + Math.floor(Math.random() * 900000)); try { await db.ref('kh/' + p).set({ host: uid, at: TS(), st: 'lobby', cfg: { teams: o.teams, L: o.L, need: o.need } }); pin = p; } catch (e) {} }
+    for (let t = 0; t < 6 && !pin; t++) { const p = String(100000 + Math.floor(Math.random() * 900000)); try { await db.ref('kh/' + p).set({ host: uid, at: TS(), st: 'lobby', cfg: { teams: o.teams, L: o.L, need: o.need, tt: o.tt || 0 } }); pin = p; } catch (e) {} }
     if (!pin) { toast(B('تعذّر إنشاء اللعبة.', 'Could not create the game.'), 1); return home(); }
-    G = { mode: 'host', pin, o: Object.assign({ tt: 45 }, o), ref: db.ref('kh/' + pin), names: {}, tm: {}, off: [], me: o.role === 'play' ? uid : null };
+    G = { mode: 'host', pin, o: Object.assign({ tt: 15 }, o), ser: new Array(o.teams).fill(0), rnd: 0, ref: db.ref('kh/' + pin), names: {}, tm: {}, off: [], me: o.role === 'play' ? uid : null };
     if (G.me) await G.ref.child('pl/' + uid).set({ n: name, at: TS() });
     lobby();
   }
@@ -158,7 +163,7 @@
   }
   // what everyone sees, then each hand to its owner only
   // the turn clock: when it runs out, the computer plays a sensible move for that player
-  const pubOf = () => Object.assign(KH.pub(G.st), { dl: G.dl || 0 });
+  const pubOf = () => Object.assign(KH.pub(G.st), { dl: G.dl || 0, tt: G.o.tt || 0, ser: G.ser || null, rnd: G.rnd || 0 });
   function clock() {
     const st = G.st; clearTimeout(G.tt);
     if (!G.o.tt || st.win !== -1) { G.dl = 0; return; }
@@ -176,7 +181,8 @@
   }
   async function publish(all) {
     const st = G.st; clock();
-    store.set('run', { pin: G.pin, st, names: G.names, tm: G.tm, o: G.o, me: G.me, at: Date.now() });
+    if (st.win !== -1 && G.counted !== G.rnd) { G.counted = G.rnd; if (st.win >= 0) { G.ser = G.ser || new Array(G.o.teams).fill(0); G.ser[st.win]++; } }
+    store.set('run', { pin: G.pin, st, names: G.names, tm: G.tm, o: G.o, me: G.me, ser: G.ser, rnd: G.rnd, counted: G.counted, at: Date.now() });
     await G.ref.update({ g: pubOf(), names: G.names, st: st.win !== -1 ? 'end' : 'play' });
     const ids = all ? Object.keys(st.hands) : [G.lastBy].filter(Boolean);
     await Promise.all(ids.map(id => db.ref('khh/' + G.pin + '/' + id).set(st.hands[id])));
@@ -192,16 +198,21 @@
     on(G.ref.child('mv'), 'child_added', s => { const v = s.val() || {}; apply(s.key, v.k, v.c, v.x); s.ref.remove(); });
     show();
   }
+  async function nextRound() {
+    const players = Object.keys(G.names).filter(id => G.tm[id] != null).map(id => ({ id, team: G.tm[id] })).sort(() => Math.random() - .5);
+    G.rnd = (G.rnd || 0) + 1; G.dl = 0; G.dlN = null; G.st = KH.create({ players, teams: G.o.teams, L: G.o.L, need: G.o.need });
+    winShown = -1; lastSeen = -1; await publish(true); show();
+  }
   function show() {
     const st = G.st;
-    view({ P: pubOf(), hand: G.me ? st.hands[G.me] : null, me: G.me, names: G.names, screen: !G.me, act: (k, c, i) => apply(G.me, k, c, i), again: async () => { store.del('run'); await wipe(G.pin); home(); } });
+    view({ P: pubOf(), hand: G.me ? st.hands[G.me] : null, me: G.me, names: G.names, screen: !G.me, act: (k, c, i) => apply(G.me, k, c, i), again: nextRound, end: async () => { store.del('run'); await wipe(G.pin); home(); } });
   }
   async function resumeHost(P) {
     stop();
     try { await fb(); } catch (e) { toast(B('تعذّر الاتصال.', 'Could not connect.'), 1); return; }
     const snap = await db.ref('kh/' + P.pin + '/host').once('value');
     if (snap.val() !== uid) { store.del('run'); toast(B('انتهت هذه اللعبة.', 'This game has ended.'), 1); return home(); }
-    G = { mode: 'host', pin: P.pin, o: Object.assign({ tt: 0 }, P.o), ref: db.ref('kh/' + P.pin), names: P.names, tm: P.tm, off: [], me: P.me, st: P.st };
+    G = { mode: 'host', pin: P.pin, o: Object.assign({ tt: 0 }, P.o), ref: db.ref('kh/' + P.pin), names: P.names, tm: P.tm, off: [], me: P.me, st: P.st, ser: P.ser, rnd: P.rnd || 0, counted: P.counted };
     run(); publish(false);
   }
 
@@ -227,7 +238,7 @@
         const s = (await db.ref('kh/' + p + '/st').once('value')).val();
         if (!s) { e.currentTarget.disabled = false; return err(B('لا توجد لعبة بهذا الرمز.', 'No game with this code.')); }
         const mine = (await db.ref('kh/' + p + '/pl/' + uid).once('value')).val();
-        if (!mine) { if (s !== 'lobby') { toast(B('بدأت اللعبة، فدخلت متفرجًا وتقدر تتفاعل.', 'The game has started, so you are in as a fan and can react.')); return watch(p, n); }   // the game is on: come in to watch instead await db.ref('kh/' + p + '/pl/' + uid).set({ n, at: TS() }); }
+        if (!mine) { if (s !== 'lobby') { toast(B('بدأت اللعبة، فدخلت متفرجًا وتقدر تتفاعل.', 'The game has started, so you are in as a fan and can react.')); return watch(p, n); } await db.ref('kh/' + p + '/pl/' + uid).set({ n, at: TS() }); }
         player(p);
       } catch (er) { console.error('kh join', er && er.message); e.currentTarget.disabled = false; err(B('تعذّر الدخول. تأكد من الإنترنت.', 'Could not join. Check the internet.')); }
     };
@@ -245,13 +256,14 @@
       if (!G) return;
       if (G.stt === 'lobby' || !G.P) {
         const k = G.tm[uid];
-        root.innerHTML = `<div class="kh-card kh-narrow kh-wait"><p class="kh-big">${B('أنت في اللعبة!', 'You are in!')}</p>${k != null ? `<p class="kh-tm" style="--c:${COL[k]}">${B('فريقك', 'Your team')}: <b>${TN(k)}</b></p>` : ''}<p>${B('انتظر حتى يبدأ منشئ اللعبة. وفي الأثناء تعرّف على القواعد:', 'Wait for the game to start. Meanwhile, here are the rules:')}</p></div>${rules(true)}`;
+        root.innerHTML = `<div class="kh-card kh-narrow kh-wait"><p class="kh-big">${B('أنت في اللعبة!', 'You are in!')}</p>${k != null ? `<p class="kh-tm" style="--c:${COL[k]}">${B('فريقك', 'Your team')}: <b>${TN(k)}</b></p>` : ''}${G.cfg ? `<p class="kh-cfgbox">⚙ ${B(`صف من ${G.cfg.L === 4 ? 'أربع' : 'خمس'} قطع · يفوز من يكمل ${['', 'سلسلة واحدة', 'سلسلتين', 'ثلاث سلاسل'][G.cfg.need] || G.cfg.need}${G.cfg.tt ? ` · ${G.cfg.tt} ثانية لكل دور` : ''}`, `Rows of ${G.cfg.L} · first to ${G.cfg.need} sequences wins${G.cfg.tt ? ` · ${G.cfg.tt} s a turn` : ''}`)}</p>` : ''}<p>${B('انتظر حتى يبدأ منشئ اللعبة. وفي الأثناء تعرّف على القواعد:', 'Wait for the game to start. Meanwhile, here are the rules:')}</p></div>${rules(true)}`;
         return;
       }
       view({ P: G.P, hand: G.hand, me: uid, names: G.names, act: (k, c, i) => { G.ref.child('mv/' + uid).set({ k, c: c || '', x: i == null ? -1 : i, t: TS() }).catch(() => toast(B('تعذّر الإرسال.', 'Could not send.'), 1)); return ''; }, again: () => { history.replaceState(null, '', location.pathname); home(); } });
     };
     on(G.ref.child('st'), 'value', s => { if (!s.exists()) { stop(); root.innerHTML = `<div class="kh-card kh-narrow"><p class="kh-big">${B('انتهت اللعبة', 'The game has ended')}</p><button type="button" class="btn ghost" id="khHome">${B('الرئيسية', 'Home')}</button></div>`; root.querySelector('#khHome').onclick = () => { history.replaceState(null, '', location.pathname); home(); }; return; } G.stt = s.val(); draw(); });
     on(G.ref.child('tm'), 'value', s => { G.tm = s.val() || {}; if (G.stt === 'lobby') draw(); });
+    on(G.ref.child('cfg'), 'value', s => { G.cfg = s.val(); if (G.stt === 'lobby') draw(); });
     on(G.ref.child('names'), 'value', s => { G.names = s.val() || {}; });
     listenRx();
     on(G.ref.child('g'), 'value', s => { G.P = s.val(); draw(); });
@@ -306,18 +318,37 @@
 
   /* ---------- the table: the board, the teams, whose turn, and this player's hand ---------- */
   let sel = null, lastSeen = -1, winShown = -1;
+  async function shareResult(P, names) {
+    const team = P.team || {}, n = P.teams, ser = P.ser || new Array(n).fill(0), cv = document.createElement('canvas'), W = 1080, H = 1080; cv.width = W; cv.height = H;
+    const x = cv.getContext('2d'); const g = x.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#0f4d3a'); g.addColorStop(1, '#082a20'); x.fillStyle = g; x.fillRect(0, 0, W, H);
+    x.textAlign = 'center'; x.direction = 'rtl'; x.fillStyle = '#e0a458'; x.font = 'bold 84px system-ui, sans-serif'; x.fillText(T('تسلسل', 'Tasalsul'), W / 2, 150);
+    x.fillStyle = '#fff'; x.font = 'bold 60px system-ui, sans-serif'; x.fillText(P.win >= 0 ? T(`فاز الفريق ${TN(P.win)}`, `${TN(P.win)} won`) : T('تعادل', 'A draw'), W / 2, 260);
+    const best = Math.max(...ser), lead = ser.filter(v => v === best).length === 1 && best > 0 ? ser.indexOf(best) : -1;
+    x.font = '40px system-ui, sans-serif'; x.fillStyle = '#d9e8e1'; x.fillText(T(`الجولات حتى الآن · صف من ${P.L} · ${P.need} للفوز`, `Rounds so far · rows of ${P.L} · ${P.need} to win`), W / 2, 340);
+    for (let k = 0; k < n; k++) { const y = 430 + k * 190, mem = Object.keys(team).filter(u => team[u] === k).map(u => names[u] || '').join('، ');
+      x.fillStyle = COL[k]; x.beginPath(); x.roundRect(110, y, W - 220, 160, 30); x.fill();
+      x.fillStyle = '#fff'; x.font = 'bold 54px system-ui, sans-serif'; x.fillText(`${TN(k)}${k === lead ? ' 🏆' : ''}   ${ser[k] || 0}`, W / 2, y + 70); x.font = '36px system-ui, sans-serif'; x.fillText(mem.slice(0, 48), W / 2, y + 126); }
+    x.fillStyle = '#e0a458'; x.font = 'bold 40px system-ui, sans-serif'; x.fillText('alsamani.com/play/tasalsul', W / 2, H - 60);
+    const text = T(`نتيجة تسلسل: ${[...Array(n).keys()].map(k => `${TN(k)} ${ser[k] || 0}`).join(' – ')}. تحدّونا على alsamani.com/play/tasalsul`, `Tasalsul: ${[...Array(n).keys()].map(k => `${TN(k)} ${ser[k] || 0}`).join(' – ')}. Challenge us at alsamani.com/play/tasalsul`);
+    const blob = await new Promise(r => cv.toBlob(r, 'image/png')), file = new File([blob], 'tasalsul.png', { type: 'image/png' });
+    try { if (navigator.canShare && navigator.canShare({ files: [file] })) return await navigator.share({ files: [file], text }); } catch (e) { if (e && e.name === 'AbortError') return; }
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'tasalsul.png'; a.click();
+    window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
+  }
   function celebrate(P, names, again) {
     document.querySelectorAll('.kh-win').forEach(x => x.remove());
     const t = P.win, team = P.team || {}, who = t >= 0 ? Object.keys(team).filter(u => team[u] === t).map(u => esc(names[u] || '')).join('، ') : '';
     const d = document.createElement('div'); d.className = 'kh-win'; d.style.setProperty('--c', t >= 0 ? COL[t] : '#888');
     d.innerHTML = `<div class="kh-conf">${Array.from({ length: 60 }, (_, k) => `<i style="--x:${Math.random() * 100}%;--d:${(Math.random() * 1.6).toFixed(2)}s;--r:${Math.floor(Math.random() * 360)}deg;--k:${['#e0a458', '#fff', COL[0], COL[1], COL[2]][k % 5]}"></i>`).join('')}</div>
       <div class="kh-winbox"><p class="kh-trophy">${t >= 0 ? '🏆' : '🤝'}</p><h2>${t >= 0 ? B(`فاز الفريق ${TN(t)}!`, `${TN(t)} wins!`) : B('تعادل!', 'A draw!')}</h2>${who ? `<p dir="auto">${who}</p>` : ''}
-      <div class="kh-row"><button type="button" class="btn solid" data-w="again">${B('لعبة جديدة', 'New game')}</button><button type="button" class="btn ghost" data-w="board">${B('عرض اللوح', 'See the board')}</button></div></div>`;
+      <div class="kh-row">${G && G.mode === 'player' ? '' : `<button type="button" class="btn solid" data-w="again">${G && G.mode === 'host' ? B('جولة جديدة ▶', 'Another round ▶') : B('لعبة جديدة', 'New game')}</button>`}<button type="button" class="btn ghost" data-w="share">📤 ${B('شارك', 'Share')}</button><button type="button" class="btn ghost" data-w="board">${B('عرض اللوح', 'See the board')}</button></div></div>`;
     document.body.appendChild(d); buzz([100, 60, 100, 60, 200]);
     d.querySelector('[data-w="board"]').onclick = () => d.remove();
-    d.querySelector('[data-w="again"]').onclick = () => { d.remove(); again(); };
+    const ag = d.querySelector('[data-w="again"]'); if (ag) ag.onclick = () => { d.remove(); again(); };
+    d.querySelector('[data-w="share"]').onclick = () => shareResult(P, names);
   }
-  function view({ P, hand, me, names, screen, watch, act, again }) {
+  let lastTurn = null, lastTick = -1;
+  function view({ P, hand, me, names, screen, watch, act, again, end }) {
     const lay = P.lay.split(','), board = P.board.split('').map(c => c === '.' ? -1 : +c);
     const sq = (P.sq || []).map(s => new Set(String(s || '').split(',').filter(Boolean).map(Number)));
     const team = P.team || {}, myT = me != null ? team[me] : null, turn = P.turn, mine = turn === me && P.win === -1;
@@ -333,13 +364,21 @@
     clearInterval(clk);
     // news of the last move
     const fresh = !!L && P.n !== lastSeen;
+    if (fresh && L) { if (L.made) SND.seq(); else SND.chip(); }
+    // the turn has come to this player: a sound, a buzz and a big word on the screen
+    const turnKey = P.rnd + ':' + P.n;
+    if (mine && lastTurn !== turnKey) { lastTurn = turnKey; SND.turn(); buzz([120, 60, 120]); setTimeout(() => { const b = document.createElement('div'); b.className = 'kh-yourturn'; b.innerHTML = `<b>${B('دورك!', 'Your turn!')}</b>${sel ? `<small>${B('ورقتك المختارة جاهزة', 'Your chosen card is ready')}</small>` : ''}`; document.body.appendChild(b); setTimeout(() => b.remove(), 1500); }, 30); }
+    else if (!mine) lastTurn = null;
+    // how many turns until mine
+    const ord = P.order || [], nT = ord.length, untilMe = me != null && !mine && nT ? (() => { for (let k = 1; k <= nT; k++) if (ord[(P.n + k) % nT] === me) return k; return 0; })() : 0;
+    const rulesLine = `<p class="kh-cfg">${B(`صف من ${P.L === 4 ? 'أربع' : 'خمس'} · ${['', 'سلسلة واحدة', 'سلسلتان', 'ثلاث سلاسل'][P.need] || P.need} للفوز${P.tt ? ` · ${P.tt} ثانية للدور` : ''}`, `Rows of ${P.L} · ${P.need} to win${P.tt ? ` · ${P.tt} s a turn` : ''}`)}${P.ser && P.ser.some(x => x) || P.rnd ? ` · ${B('الجولات', 'Rounds')}: ${P.ser.map((x, k) => `<b style="color:${COL[k]}">${x}</b>`).join(' – ')}` : ''}</p>`;
     if (L && P.n !== lastSeen) { lastSeen = P.n; if (L.auto) toast(`⏱ ${B(`انتهى وقت ${esc(names[L.id] || '')}، فلُعبت ورقة عنه`, `${esc(names[L.id] || '')} ran out of time; a card was played for them`)}`); else if (L.made) { toast(`🎉 ${B(`فريق ${TN(L.t)} أكمل سلسلة!`, `${TN(L.t)} made a sequence!`)}`); buzz([60, 40, 60]); } else if (L.rm) toast(`👁 ${B(`${esc(names[L.id] || '')} أزال قطعة من فريق ${TN(L.t)}`, `${esc(names[L.id] || '')} removed a ${TN(L.t)} chip`)}`); if (mine) buzz(40); }
     const teamsBar = [...Array(P.teams).keys()].map(k => `<div class="kh-ts${P.order && names && turn != null && team[turn] === k ? ' on' : ''}" style="--c:${COL[k]}"><b>${TN(k)}</b><span>${'●'.repeat(P.seqs[k] || 0)}${'○'.repeat(Math.max(0, P.need - (P.seqs[k] || 0)))}</span><small dir="auto">${Object.keys(team).filter(u => team[u] === k).map(u => esc(names[u] || '')).join('، ')}</small></div>`).join('');
     const status = P.win >= 0 ? `🏆 ${B(`فاز فريق ${TN(P.win)}!`, `${TN(P.win)} wins!`)}` : P.win === -2 ? B('تعادل!', 'A draw!')
       : mine ? `<b>${B('دورك!', 'Your turn!')}</b> ${sel ? (KH.oneEyed(sel) ? B('👁 ولد أبو عين: اختر قطعة خصم لإزالتها', '👁 One-eyed jack: pick a rival chip to remove') : KH.twoEyed(sel) ? B('👀 ولد أبو عينين: ضع قطعتك في أي خانة فارغة', '👀 Two-eyed jack: put your chip on any empty space') : dead ? B('خانتا هذه الورقة ممتلئتان؛ استبدلها', 'both its spaces are taken; swap it') : B('اختر إحدى الخانتين المضيئتين', 'pick one of the lit spaces')) : B('اختر ورقة من يدك', 'pick a card')}`
-      : `${B('دور', 'Turn:')} <b dir="auto" style="color:${COL[team[turn]]}">${esc(names[turn] || '')}</b> (${TN(team[turn])})`;
+      : `${B('دور', 'Turn:')} <b dir="auto" style="color:${COL[team[turn]]}">${esc(names[turn] || '')}</b> (${TN(team[turn])})${untilMe ? ` · <span class="kh-soon${untilMe === 1 ? ' next' : ''}">${untilMe === 1 ? B('أنت التالي!', 'You are next!') : B(`دورك بعد ${untilMe}`, `You play in ${untilMe}`)}</span>` : ''}`;
     root.innerHTML = `<div class="kh-game${screen ? ' kh-screen' : ''} kh-real">
-      <div class="kh-bar">${teamsBar}</div>
+      <div class="kh-bar">${teamsBar}</div>${rulesLine}
       ${G && G.mode !== 'local' ? stands() : ''}
       <p class="kh-status">${P.dl && P.win === -1 ? `<span class="kh-clock${mine ? ' me' : ''}" id="khClk"></span> ` : ''}${watch ? `<span class="kh-eye">👀 ${B('مشاهدة', 'Watching')}</span> ` : ''}${status}</p>
       <div class="kh-board${can.length ? ' picking' : ''}">${lay.map((c, i) => { const b = board[i], inq = b >= 0 && sq[b] && sq[b].has(i);
@@ -349,15 +388,17 @@
       ${screen ? `<div class="kh-row"><button type="button" class="btn ghost" id="khFs">⛶ ${B('ملء الشاشة', 'Full screen')}</button></div>` : ''}
       ${rxBar(G && G.mode !== 'local' && P.win === -1 && !(G.mode === 'host' && !G.me))}
       <div class="kh-help">${rules(false)}</div>
-      ${P.win !== -1 ? `<div class="kh-row"><button type="button" class="btn solid" id="khAgain">${B('لعبة جديدة', 'New game')}</button></div>` : ''}</div>`;
+      ${P.win !== -1 ? `<div class="kh-row">${G && G.mode === 'player' ? `<p class="kh-note">${B('بانتظار المضيف يبدأ جولة جديدة…', 'Waiting for the host to start another round…')}</p>` : `<button type="button" class="btn solid" id="khAgain">${G && G.mode === 'host' ? B('جولة جديدة ▶', 'Another round ▶') : B('لعبة جديدة', 'New game')}</button>`}<button type="button" class="btn ghost" id="khShareR">📤 ${B('شارك النتيجة', 'Share the result')}</button>${end ? `<button type="button" class="btn ghost" id="khEndS">${B('إنهاء الجلسة', 'End the session')}</button>` : ''}</div>` : ''}</div>`;
     root.querySelectorAll('[data-c]').forEach(b => b.onclick = () => { sel = sel === b.dataset.c ? null : b.dataset.c; buzz(8); view({ P, hand, me, names, screen, watch, act, again }); });
     root.querySelectorAll('.kh-cell.can').forEach(c => c.onclick = () => { const s = sel; sel = null; buzz(20); act('p', s, +c.dataset.i); });
     const sw = root.querySelector('#khSwap'); if (sw) sw.onclick = () => { const s = sel; sel = null; act('s', s); };
     const ps = root.querySelector('#khPass'); if (ps) ps.onclick = () => act('n');
     const ag = root.querySelector('#khAgain'); if (ag) ag.onclick = again;
-    if (P.win !== -1 && winShown !== P.n) { winShown = P.n; celebrate(P, names, again); }
+    const sr = root.querySelector('#khShareR'); if (sr) sr.onclick = () => shareResult(P, names);
+    const es = root.querySelector('#khEndS'); if (es) es.onclick = () => { if (confirm(T('تنهي الجلسة لكل اللاعبين؟', 'End the session for everyone?'))) end(); };
+    if (P.win !== -1 && winShown !== P.rnd + ':' + P.n) { winShown = P.rnd + ':' + P.n; SND.win(); celebrate(P, names, again); }
     const ck = root.querySelector('#khClk');
-    if (ck) { let warned = false; const tick = () => { const left = Math.max(0, Math.ceil((P.dl - now()) / 1000)); ck.textContent = '⏱ ' + left; ck.classList.toggle('hot', left <= 10); if (mine && left <= 5 && !warned) { warned = true; buzz([80, 60, 80]); } }; tick(); clk = setInterval(tick, 250); }
+    if (ck) { let warned = false; const tick = () => { const left = Math.max(0, Math.ceil((P.dl - now()) / 1000)); ck.textContent = '⏱ ' + left; ck.style.setProperty('--p', P.tt ? Math.round(100 * left / P.tt) + '%' : '100%'); ck.classList.toggle('hot', left <= 10); if (mine && left <= 5 && !warned) { warned = true; buzz([80, 60, 80]); } if (mine && left <= 5 && left > 0 && left !== lastTick) { lastTick = left; SND.tick(); } }; tick(); clk = setInterval(tick, 250); }
     root.querySelectorAll('[data-rx]').forEach(b => b.onclick = () => { sendRx(b.dataset.rx); const ss = root.querySelector('.kh-says'); if (ss) ss.hidden = true; });
     const rs = root.querySelector('[data-rxset]'); if (rs) rs.onclick = () => { const p = root.querySelector('.kh-rxset'), q = root.querySelector('.kh-says'); p.hidden = !p.hidden; if (q) q.hidden = true; };
     const mu = root.querySelector('[data-mute]'); if (mu) mu.onchange = () => { muted = mu.checked; store.set('mute', muted); rs.firstChild.textContent = (muted ? '🔕' : '⚙') + ' '; };
