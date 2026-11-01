@@ -2618,7 +2618,7 @@ window.MDGames = (function () {
   const PH = () => [T('كفو!', 'Bravo!'), T('قوية!', 'Nice one!'), T('يا حظك', 'Lucky!'), T('ركّز!', 'Focus!'), T('الله الله', 'Wow'), T('هههه', 'Haha')];
   let micOn = false;
   const micBox = () => { if (FAN || !['rev', 'lb'].includes(st.ph)) return ''; const M = TOP && TOP.mic; if (!M || M.off) return ''; if (!M.n && !M.on) micOn = micOn && false; if (M.cool) return '';
-    return `<div class="mp-mic"><button type="button" data-mic aria-pressed="${micOn || M.on}"${micOn || M.on ? ' disabled' : ''}>${M.on ? B('فُتحت المنصة بعد هذه الجولة!', 'The stage opens after this round!') : micOn ? B('طلبت المنصة ✓', 'You asked for the stage ✓') : B('اطلب المنصة', 'Ask for the stage')}</button>${M.on ? '' : `<small>${B(`تُفتح إذا طلبها ${M.need} (٢٥٪ من المشاركين) · طلبها حتى الآن ${M.n}`, `Opens when ${M.need} ask (25% of players) · ${M.n} so far`)}</small>`}</div>`; };
+    return `<div class="mp-mic"><button type="button" data-mic aria-pressed="${micOn || M.on}"${micOn || M.on ? ' disabled' : ''}>${M.on ? B('تُفتح المنصة بعد هذه الجولة!', 'The stage opens after this round!') : micOn ? B('طلبت المنصة ✓', 'You asked for the stage ✓') : B('اطلب المنصة', 'Ask for the stage')}</button>${M.on ? '' : `<small>${B(`تُفتح إذا طلبها ${M.need} (٢٥٪ من المشاركين) · طلبها حتى الآن ${M.n}`, `Opens when ${M.need} ask (25% of players) · ${M.n} so far`)}</small>`}</div>`; };
   const rxBar = () => micBox() + `<div class="mp-rx">${RX.map(e => `<button type="button" data-rx="${e}">${e}</button>`).join('')}${PH().map(e => `<button type="button" class="ph" data-rx="${e}">${e}</button>`).join('')}</div>`;
   function rxBind() {
     const mb = root.querySelector('[data-mic]'); if (mb) mb.onclick = () => { micOn = true; R.child('rx/' + uid).set({ e: '🎤', t: TS }).catch(() => {}); buzz(30); shown = ''; draw(); };
@@ -2691,7 +2691,7 @@ window.MDGames = (function () {
     const p = [].concat(SC.pw || []), out = [];
     if (p.includes('x2')) out.push(`×٢ ${B('ضاعفت نقاط السؤال', 'You doubled this one')}`);
     if (p.includes('st')) out.push(`${B(`خطفت ${Math.max(0, SC.d || 0)} من ${esc(SC.tg || '')}`, `You took ${Math.max(0, SC.d || 0)} from ${esc(SC.tg || '')}`)}`);
-    if (p.includes('sk')) out.push(`${B(`انسحبت وأخذت متوسطك: ${SC.d}`, `Skipped for your average: ${SC.d}`)}`);
+    if (p.includes('sk') && Q && Q.type === 'game') out.push(`${B(`انسحبت وأخذت متوسطك: ${SC.d}`, `Skipped for your average: ${SC.d}`)}`);
     if (SC.hit) out.push(`${B(`خطف منك: ${esc(SC.hit)}`, `${esc(SC.hit)} took points from you`)}`);
     return out.length ? `<div class="mp-pwn">${out.map(x => `<p>${x}</p>`).join('')}</div>` : '';
   }
@@ -2831,6 +2831,16 @@ window.MDGames = (function () {
     if (st.ph === 'lb' && TOP) return screen(`<div class="mp-res end"><p class="mp-big">${B('الترتيب', 'Ranking')}</p>${topList()}<p class="mp-rank">${B(`مركزك: ${SC.r}`, `Your place: ${SC.r}`)}</p></div>` + rxBar(), 'end');
     if (game) { game.stop(); game = null; }
     if (Q && Q.i === st.i && (Q.type === 'poll' || Q.type === 'open' || Q.type === 'stage')) return screen(`<div class="mp-res end"><p class="mp-sym"></p><p class="mp-big">${SC.a ? B('شكرًا، وصلت مشاركتك', 'Thanks, your answer is in') : B('انتهى الوقت', 'Time’s up')}</p><p>${B('انظر النتائج على الشاشة', 'See the results on the screen')}</p><p class="mp-rank">${B(`مركزك: ${SC.r}`, `Your place: ${SC.r}`)}</p></div>` + rxBar(), 'end');
+    // skipped for the average: no right or wrong, just the answer and what the skip brought
+    if (Q && Q.i === st.i && Q.type !== 'game' && [].concat(SC.pw || []).includes('sk')) {
+      const ol = v => `<ol class="mp-ordr">${[].concat(v).map(z => `<li dir="auto">${esc(z)}</li>`).join('')}</ol>`;
+      const ans = Q.type === 'order' || Q.type === 'match' ? ol(OK) : ['num', 'word'].includes(Q.type) ? `<b dir="auto">${esc(OK)}${Q.unit ? ' ' + esc(Q.unit) : ''}</b>` : Q.type === 'rapid' ? '' : `<span dir="auto">${[].concat(OK).map(j => `${LET()[j]}) ${esc(Q.opts[j])}`).join(' · ')}</span>`;
+      return screen(`<div class="mp-res end"><p class="mp-big">${B('انسحبت من هذا السؤال', 'You skipped this one')}</p>
+        ${ans ? `<p class="mp-right">${B('الإجابة الصحيحة:', 'The right answer:')} ${ans}</p>` : ''}
+        <p class="mp-plus">+${SC.d || 0}</p><p>${B('متوسط نقاطك في الأسئلة السابقة', 'Your average from the earlier questions')}</p>
+        <p class="mp-rank">${B(`مركزك: ${SC.r}`, `Your place: ${SC.r}`)}</p>
+        ${SC.gap != null && SC.r > 1 ? `<p class="mp-gap">${B(`تحتاج ${SC.gap + 1} نقطة لتتجاوز ${esc(SC.above)}`, `You need ${SC.gap + 1} points to pass ${esc(SC.above)}`)}</p>` : SC.r === 1 ? `<p class="mp-gap">${B('أنت في الصدارة!', 'You are in the lead!')}</p>` : ''}</div>` + rxBar(), 'end');
+    }
     if (Q && Q.i === st.i && (Q.type === 'match' || Q.type === 'rapid')) {
       const ok2 = SC.c; if (st.ph === 'rev') buzz(ok2 ? [40, 60, 40] : 200);
       const key = Q.type === 'match' ? `<ol class="mp-ordr">${[].concat(OK).map(v => `<li dir="auto">${esc(v)}</li>`).join('')}</ol>` : '';

@@ -41,6 +41,32 @@ window.MDLive = (function () {
   const forget = () => { try { localStorage.removeItem(SAVE); } catch (e) {} };
   function pending() { try { const s = JSON.parse(localStorage.getItem(SAVE) || 'null'); return s && Date.now() - s.at < 7 * 864e5 ? s : null; } catch (e) { return null; } }
 
+  /* ---------- usage: anonymous counts in this device's own record (no names, no answers) ----------
+     rooms/s<uid>/sum holds the counts; rooms/mdreg lists the devices so the counts can be added up later */
+  let statK = null;
+  async function statRoom() {
+    if (statK) return statK;
+    const k = 's' + uid, r = db.ref('rooms/' + k);
+    if (!(await r.child('host').once('value')).val()) await r.set({ host: uid, at: TS, title: 'stats', n: 0, st: { ph: 'end', i: -1, lock: true } });
+    let on = null; try { on = localStorage.getItem('md-reg'); } catch (e) {}
+    if (!on) { try { await db.ref('rooms/mdreg/pl/' + uid).set({ n: 'h', at: TS }); await db.ref('rooms/mdreg/an/0/' + uid).set({ a: '1', t: TS }); } catch (e) {} try { localStorage.setItem('md-reg', '1'); } catch (e) {} }
+    return (statK = k);
+  }
+  const KEY = v => String(v || '').replace(/[.#$\[\]\/]/g, '_').slice(0, 40) || '_';
+  function stat(add) {
+    const INC = firebase.database.ServerValue.increment, up = {};
+    Object.keys(add).forEach(k => { if (add[k]) up[k] = INC(add[k]); });
+    if (!Object.keys(up).length) return;
+    ready().then(statRoom).then(k => db.ref('rooms/' + k + '/sum').update(up)).catch(() => {});
+  }
+  const srcOf = Q => Q.lib ? 'lib/' + KEY(Q.lib) + (Q.libEd ? '~' : '') : Q.gen ? 'gen/' + KEY(Q.gen) : 'own/all';
+  // the item just played: who was there, who took part, and how many reactions it drew until the next one
+  function statFlush() {
+    if (!G || !G.sp) return;
+    const z = G.sp; G.sp = null;
+    stat({ [`i/${z.k}/n`]: 1, [`i/${z.k}/p`]: z.p, [`i/${z.k}/a`]: z.a, [`i/${z.k}/rx`]: G.rxc || 0 });
+  }
+
   /* ---------- the room ---------- */
   let G = null; // the running game
   function shell() {
@@ -149,7 +175,8 @@ window.MDLive = (function () {
     const fly = s => {
       const v = s.val() || {}; if (!v.e || seen[s.key] === v.t) return; seen[s.key] = v.t;
       if (now() - (v.t || 0) > 8000) return;
-      if (v.e === '🎤') return micVote(s.key);
+      if (v.e === '🎤') { stat({ 'x/mic': 1 }); return micVote(s.key); }
+      if (G) G.rxc = (G.rxc || 0) + 1;
       const fx = G && G.el.querySelector('.md-fx'); if (!fx) return;
       const e = document.createElement('span'); e.textContent = v.e; e.style.setProperty('--x', (8 + Math.random() * 84) + '%'); e.style.setProperty('--r', (Math.random() * 40 - 20) + 'deg');
       fx.appendChild(e); setTimeout(() => e.remove(), 2600);
@@ -178,7 +205,7 @@ window.MDLive = (function () {
   function micVote(u) {
     if (!G.opts.mic || !(u in G.players) || G.stageNext || micCool() || G.i < 0) return;
     G.mic = G.mic || new Set(); G.mic.add(u);
-    if (G.mic.size >= micNeed()) { G.stageNext = true; SND.gold(); const fx = G.el.querySelector('.md-fx'); if (fx) { const e = document.createElement('span'); e.className = 'md-micfx'; e.textContent = T('فُتحت المنصة بعد هذه الجولة!', 'The stage opens after this round!'); fx.appendChild(e); setTimeout(() => e.remove(), 3500); } }
+    if (G.mic.size >= micNeed()) { G.stageNext = true; SND.gold(); const fx = G.el.querySelector('.md-fx'); if (fx) { const e = document.createElement('span'); e.className = 'md-micfx'; e.textContent = T('تُفتح المنصة بعد هذه الجولة!', 'The stage opens after this round!'); fx.appendChild(e); setTimeout(() => e.remove(), 3500); } }
     micSync();
   }
   function micSync() {
@@ -363,8 +390,10 @@ window.MDLive = (function () {
   // the place of an item among the real questions (the stage is not counted)
   const qNo = i => G.quiz.qs.slice(0, i + 1).filter(z => z.type !== 'stage').length, qTot = () => G.quiz.qs.filter(z => z.type !== 'stage').length;
   async function next() {
-    if (G.stageNext && !G.ended && G.done + 1 < G.quiz.qs.length) stageNow();
+    if (G.stageNext && !G.ended && G.done + 1 <= G.quiz.qs.length) stageNow();
+    statFlush(); G.rxc = 0;
     G.i = G.done + 1;
+    if (G.i === 0) stat({ [srcOf(G.quiz) + '/go']: 1, [srcOf(G.quiz) + '/p']: Object.keys(G.players).length, [G.phones ? 'x/phones' : 'x/screen']: 1, [G.teams ? 'x/teams' : 'x/solo']: 1 });
     // last survivor: alone it ends with one player left; with teams, when only one team still has someone in
     if (G.opts.surv && !G.teams && G.i > 0 && alive().length <= 1) return finish();
     if (G.i >= G.quiz.qs.length) return finish();
@@ -539,6 +568,7 @@ window.MDLive = (function () {
     G.subs.forEach(f => f()); G.subs = [];
     keepPlayers(); reactions();
     const ans = (await G.ref.child('an/' + G.i).once('value')).val() || {};
+    G.sp = { k: x.type === 'game' ? 'g_' + KEY(x.g) : 't_' + KEY(x.type), p: Object.keys(G.players).length, a: Object.keys(ans).filter(u => u in G.players).length };
     G.pws = {}; Object.keys(ans).forEach(u => { const a = ans[u]; if (a && a.p && G.opts.pw && u in G.players) { G.pws[u] = a; if (/sk/.test(a.p)) delete ans[u]; } });
     if (G.opts.surv) Object.keys(ans).forEach(u => { if (G.out[u] != null) delete ans[u]; });
     if (x.type === 'game') return revealGame(x, m, ans);
@@ -583,7 +613,7 @@ window.MDLive = (function () {
         <div class="md-tiles">${x.opts.map((o, j) => `<div class="md-tile${okSet.has(j) ? ' right' : ' wrong'}" style="--c:var(--qz${j})"><i>${LET()[j]}</i><span dir="auto">${esc(o)}</span>${okSet.has(j) ? '<b>✓</b>' : ''}</div>`).join('')}</div>
         <p class="md-stat">${B(`أجاب إجابة صحيحة ${right} من ${Object.keys(G.players).length}`, `${right} of ${Object.keys(G.players).length} answered correctly`)}</p></div>`,
       `<button type="button" class="btn solid" data-next>${lastQ ? B('النتيجة النهائية', 'Final results') : showBoard ? B('الترتيب', 'Ranking') : B('السؤال التالي', 'Next question')}</button>`, true);
-    q('[data-next]').onclick = () => lastQ ? finish() : showBoard ? board() : next();
+    q('[data-next]').onclick = () => lastQ && !G.stageNext ? finish() : showBoard && !lastQ ? board() : next();
   }
   // Arabic answers match whatever the hamza, taa marbuta or alif maqsura
   const normW = s => String(s || '').trim().toLowerCase().replace(/[\u064B-\u0652\u0640]/g, '').replace(/[أإآ]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي').replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/\s+/g, ' ');
@@ -650,7 +680,7 @@ window.MDLive = (function () {
         ${['open', 'poll', 'stage'].includes(x.type) ? `<p class="md-stat">${B(`شارك ${Object.keys(ans).length} من ${N}`, `${Object.keys(ans).length} of ${N} took part`)}</p>` : `<p class="md-stat">${x.type === 'match' ? B(`وصّل الكل صحيحًا ${right} من ${N}`, `${right} of ${N} matched all`) : x.type === 'rapid' ? B(`أصاب ٧٠٪ فأكثر ${right} من ${N}`, `${right} of ${N} got 70% or more`) : B(`${x.type === 'num' ? 'الأقرب' : 'أصاب'} ${right} من ${N}`, `${right} of ${N} ${x.type === 'num' ? 'closest' : 'right'}`)}</p>`}</div>`,
       `<button type="button" class="btn solid" data-next>${lastQ ? B('النتيجة النهائية', 'Final results') : showBoard ? B('الترتيب', 'Ranking') : B('التالي', 'Next')}</button>`, true);
     q('.md-cloud') && q('.md-cloud').querySelectorAll('span').forEach(e => e.onclick = () => e.remove());
-    q('[data-next]').onclick = () => lastQ ? finish() : showBoard ? board() : next();
+    q('[data-next]').onclick = () => lastQ && !G.stageNext ? finish() : showBoard && !lastQ ? board() : next();
   }
   async function revealGame(x, m, ans) {
     const g = MDGames.byId(x.g), sc = {}, raw = {};
@@ -692,7 +722,7 @@ window.MDLive = (function () {
         <ol>${top.map((u, k) => `<li style="--d:${k * 90}ms"><b>${k + 1}</b><span dir="auto">${esc(G.players[u] || '')}</span><em>${raw[u]}</em><small class="md-plus">+${sc[u].d}</small></li>`).join('')}</ol>
         <p class="md-stat">${B(`شارك ${Object.keys(ans).length} من ${Object.keys(G.players).length}`, `${Object.keys(ans).length} of ${Object.keys(G.players).length} took part`)}</p></div>`,
       `<button type="button" class="btn solid" data-next>${lastQ ? B('النتيجة النهائية', 'Final results') : showBoard ? B('الترتيب', 'Ranking') : B('التالي', 'Next')}</button>`, true);
-    q('[data-next]').onclick = () => lastQ ? finish() : showBoard ? board() : next();
+    q('[data-next]').onclick = () => lastQ && !G.stageNext ? finish() : showBoard && !lastQ ? board() : next();
   }
   function keepPlayers() {
     sub(G.ref.child('pl'), 'child_added', s => { const v = s.val() || {}; if (v.w) { G.fans[s.key] = v.n; return; } if (!(s.key in G.players) || !(s.key in G.score)) { G.players[s.key] = v.n; if (!(s.key in G.score)) G.score[s.key] = 0; if (v.t != null) G.team[s.key] = +v.t; placeAll(); } });
@@ -721,6 +751,7 @@ window.MDLive = (function () {
   /* ---------- the end: the winning team, then the podium from third to first ---------- */
   async function finish() {
     G.ended = true; clearInterval(G.timer); forget();
+    statFlush(); stat({ [srcOf(G.quiz) + '/f']: 1 });
     const order = Object.keys(G.score).filter(u => u in G.players).sort(byRank), tt = teamTable();
     await G.ref.child('top').set({ p: order.slice(0, 5).map(u => ({ n: G.players[u] || '', s: G.score[u] })), t: tt.slice(0, 5).map(t => ({ n: t.name, s: t.avg, k: t.k })) });
     await G.ref.child('st').set({ ph: 'end', i: G.i, lock: true });
@@ -746,5 +777,5 @@ window.MDLive = (function () {
   }
 
   document.addEventListener('keydown', e => { if (!G) return; if (e.key === 'Escape' && !document.fullscreenElement) { if (G.i < 0 || G.ended) close(); } });
-  return { start, resume, pending, discard: async () => { const s = pending(); forget(); if (s) { try { await ready(); await db.ref('rooms/' + s.pin).remove(); } catch (e) {} } } };
+  return { start, resume, pending, stat, discard: async () => { const s = pending(); forget(); if (s) { try { await ready(); await db.ref('rooms/' + s.pin).remove(); } catch (e) {} } } };
 })();

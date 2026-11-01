@@ -113,11 +113,11 @@
     const lm = root.querySelector('#qzLibMore'); if (lm) lm.onclick = () => { root.querySelectorAll('[data-more]').forEach(e => { e.hidden = false; }); lm.remove(); };
     root.querySelector('#qzNew').onclick = () => { Q = { id: uid(), title: '', qs: [] }; editor(); };
     root.querySelectorAll('[data-newq]').forEach(b => b.onclick = () => root.querySelector('#qzNew').click());
-    const fromLib = id => { const z = RLIB().find(v => v.id === id); return { id: uid(), title: z.title, qs: z.qs.map(x => norm(JSON.parse(JSON.stringify(x)))) }; };
-    root.querySelectorAll('[data-led]').forEach(b => b.onclick = () => { Q = fromLib(b.dataset.led); persist(); editor(); });
+    const fromLib = id => { const z = RLIB().find(v => v.id === id); return { id: uid(), title: z.title, lib: z.id, qs: z.qs.map(x => norm(JSON.parse(JSON.stringify(x)))) }; };
+    root.querySelectorAll('[data-led]').forEach(b => b.onclick = () => { Q = fromLib(b.dataset.led); Q.libEd = 1; persist(); window.MDLive && MDLive.stat && MDLive.stat({ ['lib/' + Q.lib + '/ed']: 1 }); editor(); });
     root.querySelectorAll('[data-lgo]').forEach(b => b.onclick = () => { if (!window.MDLive) return toast(B('تعذّر تشغيل المسابقة الآن.', 'The quiz cannot start right now.'), 1); MDLive.start(live(fromLib(b.dataset.lgo))); });
     if (location.hash === '#lib') setTimeout(() => { const h = root.querySelector('#lib'); if (h) h.scrollIntoView({ block: 'start' }); }, 300);
-    root.querySelector('#qzNewG').onclick = () => { Q = { id: uid(), title: T('مسابقة الألعاب والتحديات', 'Games and challenges'), qs: pickGames(+root.querySelector('#qzGn').value).map(newGame) }; persist(); editor(); };
+    root.querySelector('#qzNewG').onclick = () => { Q = { id: uid(), gen: 'games', title: T('مسابقة الألعاب والتحديات', 'Games and challenges'), qs: pickGames(+root.querySelector('#qzGn').value).map(newGame) }; persist(); editor(); };
     root.querySelectorAll('[data-open]').forEach(b => b.onclick = () => { Q = JSON.parse(JSON.stringify(list.find(x => x.id === b.dataset.open))); Q.qs = Q.qs.map(norm); editor(); });
     root.querySelector('#qzImp').onchange = async e => {
       const f = e.target.files[0]; if (!f) return;
@@ -128,7 +128,7 @@
 
   /* ---------- editor ---------- */
   // the editor's quiz in the form the live screen plays
-  const live = Q => ({ title: Q.title, qs: Q.qs.map(x => x.type === 'game' ? { type: 'game', g: x.g, q: '', opts: [], ok: [], pts: x.pts, time: x.time || 30, seed: 1 + Math.floor(Math.random() * 1e9) } : ({ type: x.type, q: x.q, opts: TEXTY.includes(x.type) ? [] : x.opts.filter(o => o.trim()), ok: x.type === 'poll' || TEXTY.includes(x.type) ? [] : x.ok.map(j => x.opts.slice(0, j).filter(o => o.trim()).length), pts: x.type === 'open' || x.type === 'poll' || x.type === 'stage' ? 0 : x.pts, img: x.img, reveal: !!(x.reveal && x.img && x.type === 'mc'), ans: x.ans, unit: x.unit || '', items: x.type === 'order' ? x.items.filter(v => v.trim()) : x.type === 'rapid' ? x.items.filter(v => v.trim()) : null, truth: x.type === 'rapid' ? x.items.map((v, j) => v.trim() ? !!x.truth[j] : null).filter(v => v != null) : null, pairs: x.type === 'match' ? x.pairs.filter(p => p[0].trim() && p[1].trim()).map(p => [p[0].trim(), p[1].trim()]) : null, time: x.timeSet ? x.time : suggest(x) })) });
+  const live = Q => ({ title: Q.title, lib: Q.lib || null, libEd: Q.libEd || 0, gen: Q.gen || null, qs: Q.qs.map(x => x.type === 'game' ? { type: 'game', g: x.g, q: '', opts: [], ok: [], pts: x.pts, time: x.time || 30, seed: 1 + Math.floor(Math.random() * 1e9) } : ({ type: x.type, q: x.q, opts: TEXTY.includes(x.type) ? [] : x.opts.filter(o => o.trim()), ok: x.type === 'poll' || TEXTY.includes(x.type) ? [] : x.ok.map(j => x.opts.slice(0, j).filter(o => o.trim()).length), pts: x.type === 'open' || x.type === 'poll' || x.type === 'stage' ? 0 : x.pts, img: x.img, reveal: !!(x.reveal && x.img && x.type === 'mc'), ans: x.ans, unit: x.unit || '', items: x.type === 'order' ? x.items.filter(v => v.trim()) : x.type === 'rapid' ? x.items.filter(v => v.trim()) : null, truth: x.type === 'rapid' ? x.items.map((v, j) => v.trim() ? !!x.truth[j] : null).filter(v => v != null) : null, pairs: x.type === 'match' ? x.pairs.filter(p => p[0].trim() && p[1].trim()).map(p => [p[0].trim(), p[1].trim()]) : null, time: x.timeSet ? x.time : suggest(x) })) });
   function editor() {
     setTimeout(() => { const h = document.querySelector('.md-page') || root; window.scrollTo({ top: Math.max(0, h.getBoundingClientRect().top + scrollY - 70), behavior: 'instant' }); }, 0);
     root.innerHTML = `<div class="qz-top"><button type="button" class="sn-lnk" id="qzBack">${B('‹ مسابقاتي', '‹ My quizzes')}</button></div>
