@@ -23,6 +23,7 @@
     beacon: SV('<path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.7.7 1 1.5 1 2.5h6c0-1 .3-1.8 1-2.5A6 6 0 0 0 12 3z"/>'),
     shield: SV('<path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/>'),
     herd: SV('<circle cx="7" cy="9" r="2.5"/><circle cx="17" cy="9" r="2.5"/><circle cx="12" cy="7" r="2.5"/><path d="M3 19a4 4 0 0 1 8 0M13 19a4 4 0 0 1 8 0M8 17a4 4 0 0 1 8 0"/>'),
+    clock: SV('<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>'),
     court: SV('<path d="M14 4l6 6M11 7l6 6M12.5 5.5l-4 4M18.5 11.5l-4 4M10 11L4 17l3 3 6-6"/><path d="M14 21h7"/>'),
     stage: SV('<path d="M3 4h18M4 4c0 5 2 7 5 8M20 4c0 5-2 7-5 8"/><path d="M3 20h18M7 20l1.5-5h7L17 20"/><circle cx="12" cy="10" r="2"/>'),
     mime: SV('<circle cx="12" cy="5" r="2.5"/><path d="M12 8v6M12 14l-4 6M12 14l4 6M5 9l7 2 7-4"/>'),
@@ -89,6 +90,8 @@
     { id: 'whose', rAr: ["سؤال للكل، وكل واحد يجاوب سرًا من جواله.", "تظهر الإجابات على الشاشة وحدة وحدة.", "خمّنوا صاحب كل إجابة."], rEn: ["One question; everyone answers in secret.", "The answers appear on the screen one by one.", "Guess who wrote each one."], icon: IC.whose, ar: 'مين قالها؟', en: 'Who said it?', min: 3, dAr: 'سؤال للجميع وكل واحد يجيب سرًا، ثم تظهر الإجابات واحدة واحدة: خمّنوا صاحبها.', dEn: 'One question for all, each answers in secret; then the answers appear one by one: guess whose it is.' },
   ];
   const gameOf = id => GAMES.find(g => g.id === id);
+  // the games, in three kinds, so the host finds the right one quickly
+  const GROUPS = [['act', 'تمثيل وحركة', 'Acting and moving', ['stage', 'court', 'silent', 'mime']], ['think', 'تخمين وذكاء', 'Guessing and wits', ['spy', 'who', 'letters', 'draw']], ['fun', 'ضحك ومقالب', 'Laughs and bluffs', ['ball', 'lie', 'herd', 'whose']]];
 
   /* ---------- the connection ---------- */
   let db = null, uid = null, off = 0;
@@ -207,6 +210,12 @@
     root.querySelector('#smHost').onclick = () => host();
     if (R0) { root.querySelector('#smRes').onclick = () => host(R0); root.querySelector('#smDrop').onclick = async () => { store.set('host', null); try { await fb(); await db.ref('khh/' + R0.pin).remove(); await db.ref('kh/' + R0.pin).remove(); } catch (e) {} home(); }; }
     if (p && !nm.value) setTimeout(() => nm.focus(), 100);
+    // back after a reload or a dropped connection: straight back into the same game, same points
+    const pj = store.get('pj', null), pk = p.replace(/\D/g, '');
+    if (!err && pj && Date.now() - pj.at < 6 * 36e5 && nm.value) {
+      if (pk && pk === pj.pin) return join(pk, nm.value.trim());
+      if (!pk) { const c = document.createElement('div'); c.className = 'sm-card sm-resume'; c.innerHTML = `<p>${B(`كنت في لعبة رمزها ${pj.pin.slice(0, 3)} ${pj.pin.slice(3)}`, `You were in game ${pj.pin}`)}</p><div class="sm-row"><button type="button" class="btn solid">${B('ارجع لها', 'Go back in')}</button></div>`; c.querySelector('button').onclick = () => join(pj.pin, nm.value.trim()); root.querySelector('.sm-home').prepend(c); }
+    }
   }
 
   /* =====================================================================================
@@ -235,7 +244,7 @@
       const mv = s => { const v = s.val() || {}; if (S.seq[s.key] === v.x) return; S.seq[s.key] = v.x; const k = String(v.k || '');
         if (k === 'r:' + S.rc) { S.remote = s.key; delete S.pl[s.key]; delete S.sc[s.key]; delete S.tm[s.key]; if (S.roster) delete S.roster[s.key]; pushScores(); pushTeams(); hostDraw(); return; }
         if (s.key === S.remote) { if (k.startsWith('c:')) { const b = ctlButtons()[+k.slice(2)]; if (b) b.click(); } return; }
-        if (S.roster && !S.roster[s.key]) return; if (S.g && S.gs && v.k) { try { S.gs.move(s.key, String(v.k)); } catch (e) { console.error(e); } } };
+        if (S.roster && !S.roster[s.key]) return; if (S.g && S.gs && S.gs.move && v.k) { try { S.gs.move(s.key, String(v.k)); } catch (e) { console.error(e); } } };
       on(S.ref.child('mv'), 'child_added', mv); on(S.ref.child('mv'), 'child_changed', mv);
       const seen = {}, wave = {}; const rx = s => { const v = s.val() || {}; if (!v.e || seen[s.key] === v.t || now() - (v.t || 0) > 8000) return; seen[s.key] = v.t; fly(v.e);
         // three or more people sending the same reaction within a moment: the room is in it together
@@ -313,7 +322,7 @@
     const eve = n >= 2 ? `<button type="button" class="sm-eve" data-eve><b>${B('سهرة متكاملة', 'A whole evening')}</b><small>${B('حدّد المدة، فتُرتّب لك تشكيلة ألعاب تتوالى وحدها وتنتهي بالتتويج. تقدر تغيّرها قبل البدء.', 'Pick the length; a lineup of games is set to run on its own and end with the podium. You can change it before you start.')}</small></button>` : '';
     const q = frame(`<div class="sm-pick"><h2>${S.played ? B('اختر اللعبة التالية', 'Choose the next game') : B('اختر اللعبة', 'Choose a game')}</h2>${invite}${eve}
       <div class="sm-catrow"><span>${B('الكلمات:', 'Words:')}</span>${cats.map(c => `<button type="button" data-cat="${c}" aria-pressed="${S.cat === c}">${c === 'mix' ? B('منوّعة', 'Mixed') : B(CAT[c][0], CAT[c][1])}</button>`).join('')}<button type="button" class="sm-catset" data-set>${B('كلماتك والإعدادات', 'Your words and settings')}</button></div>
-      <div class="sm-games">${GAMES.map(g => `<button type="button" class="sm-game" data-g="${g.id}"${n < g.min ? ' disabled' : ''}><i>${g.icon}</i><b>${B(g.ar, g.en)}</b><small>${B(g.dAr, g.dEn)}</small>${n < g.min ? `<em>${B(`تحتاج ${g.min} لاعبين على الأقل`, `Needs at least ${g.min} players`)}</em>` : ''}</button>`).join('')}</div></div>`, S.played ? `<button type="button" class="btn ghost" data-final>${B('ختام الجلسة', 'End with the podium')}</button>` : '');
+      ${GROUPS.map(([k, ga, ge, ids]) => `<div class="sm-kind sm-kind-${k}"><h3>${B(ga, ge)}</h3><div class="sm-games">${ids.map(gameOf).filter(Boolean).map(g => `<button type="button" class="sm-game" data-g="${g.id}"${n < g.min ? ' disabled' : ''}><i>${g.icon}</i><b>${B(g.ar, g.en)}</b><small>${B(g.dAr, g.dEn)}</small><span class="sm-meta"><span>${IC.clock || ''}${B(`نحو ${MINS[g.id] || 5} دقائق`, `About ${MINS[g.id] || 5} min`)}</span><span class="${n < g.min ? 'need' : ''}">${B(`من ${g.min} لاعبين`, `${g.min}+ players`)}</span></span></button>`).join('')}</div></div>`).join('')}</div>`, S.played ? `<button type="button" class="btn ghost" data-final>${B('ختام الجلسة', 'End with the podium')}</button>` : '');
     HE().querySelectorAll('[data-g]').forEach(b => b.onclick = () => { S.auto = null; startGame(b.dataset.g); });
     if (q('[data-eve]')) q('[data-eve]').onclick = () => evening();
     HE().querySelectorAll('[data-cat]').forEach(b => b.onclick = () => { S.cat = b.dataset.cat; store.set('cat', S.cat); picker(); });
@@ -1308,18 +1317,20 @@
       await within(fb());
       const s = await within(db.ref('kh/' + pin + '/host').once('value'));
       if (!s.exists()) return home(T('لا توجد جلسة بهذا الرمز.', 'No session with this code.'));
-      await within(db.ref('kh/' + pin + '/pl/' + uid).set({ n: name, at: TS() }));
-      store.set('name', name);
+      // back after a reload: this phone is already in, under the name it joined with
+      const me = await within(db.ref('kh/' + pin + '/pl/' + uid).once('value'));
+      if (me.exists()) name = (me.val() || {}).n || name; else await within(db.ref('kh/' + pin + '/pl/' + uid).set({ n: name, at: TS() }));
+      store.set('name', name); store.set('pj', { pin, at: Date.now() });
       S = { mode: 'player', pin, ref: db.ref('kh/' + pin), me: name, g: null, p: null, sc: {}, x: 0 }; document.documentElement.classList.add('sm-in'); scrollTo(0, 0);
       on(S.ref.child('g'), 'value', v => { const was = S.g; S.g = v.val(); if (!was || !S.g || was.ph !== S.g.ph || was.id !== S.g.id || was.r !== S.g.r || was.turn !== S.g.turn) { S.sent = null; S.bpick = null; S.top = true; buzz(30); if (S.g && was && S.g.turn !== was.turn) S.inkData = ''; if (S.g && (!was || was.id !== S.g.id)) S.lt = []; } phone(); });
       on(db.ref('khh/' + pin + '/' + uid), 'value', v => { const o = S.p; S.p = v.val(); if (S.p && o && S.p.no && S.p.no !== o.no) { buzz(120); flash(T('لا، جرّب غيرها', 'No, try another'), 'no'); } if (S.p && o && S.p.truth && S.p.truth !== o.truth) { buzz([30, 40, 30]); flash(T('هذه هي الحقيقة! اكتب كذبة', 'That is the truth! Write a lie'), 'near'); } if (S.p && o && S.p.near && S.p.near !== o.near) { buzz([30, 40, 30]); flash(T('قريب جدًا!', 'So close!'), 'near'); } if (S.p && S.p.ok && (!o || o.ok !== S.p.ok)) { buzz([40, 60, 40]); flash(T('صح! خمّنتها', 'Right! You got it'), 'ok'); } phone(); });
       on(S.ref.child('sc'), 'value', v => { S.sc = v.val() || {}; phone(); });
       on(S.ref.child('tm'), 'value', v => { S.tm = v.val() || null; phone(); });
       on(S.ref.child('rb'), 'value', v => { S.rb = v.val(); phone(); });
-      on(S.ref.child('host'), 'value', v => { if (!v.exists()) { stopAll(); home(T('انتهت الجلسة.', 'The session has ended.')); } });
+      on(S.ref.child('host'), 'value', v => { if (!v.exists()) { store.set('pj', null); stopAll(); home(T('انتهت الجلسة.', 'The session has ended.')); } });
       S.clk = setInterval(phoneClock, 250); subs.push(() => clearInterval(S && S.clk));
       phone();
-    } catch (e) { home(T('تعذّر الدخول. تأكد من الإنترنت.', 'Could not join. Check the internet.')); }
+    } catch (e) { console.error(e); home(T('تعذّر الدخول. تأكد من الإنترنت.', 'Could not join. Check the internet.')); }
   }
   const send = k => { if (!S) return; S.x++; S.ref.child('mv/' + uid).set({ k, c: '', x: S.x, t: TS() }).catch(() => {}); };
   const RX = ['👏', '😂', '🔥', '😮', '❤️', '🤔'];

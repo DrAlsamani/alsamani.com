@@ -380,3 +380,15 @@ html.sm-homeview,html.sm-homeview body{overflow-x:clip}
 .sm-burst{position:absolute;left:50%;top:40%;transform:translate(-50%,-50%);font-size:3.2rem;font-weight:900;color:#fff;text-shadow:0 4px 30px rgba(242,184,75,.9);white-space:nowrap;animation:smBurst 2.6s ease-out forwards;z-index:5}
 @keyframes smBurst{0%{opacity:0;transform:translate(-50%,-50%) scale(.3)}15%{opacity:1;transform:translate(-50%,-50%) scale(1.15)}70%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-70%) scale(1)}}
 .sm-occst{color:#2bb3a3;font-weight:700}
+/* the picker, in three kinds */
+.sm-kind{max-width:1100px;margin:0 auto 2.4vh;width:100%}
+.sm-kind h3{margin:0 0 1.2vh;font-size:1.05rem;display:flex;align-items:center;gap:10px;color:#f2b84b}
+.sm-kind h3:after{content:'';flex:1;height:1px;background:rgba(242,184,75,.3)}
+.sm-kind-think h3{color:#2bb3a3}.sm-kind-think h3:after{background:rgba(43,179,163,.3)}
+.sm-kind-fun h3{color:#f0a0b4}.sm-kind-fun h3:after{background:rgba(240,160,180,.3)}
+.sm-meta{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.85rem;opacity:.75}
+.sm-meta span{display:inline-flex;align-items:center;gap:5px}
+.sm-meta svg{width:15px;height:15px}
+.sm-pick{display:flex;flex-direction:column;gap:1.4vh}.sm-pick>*{margin-block:0!important}
+.sm-meta .need{color:#f0a0b4;opacity:1}
+@media (min-width:821px){.sm-kind .sm-games{grid-template-columns:repeat(4,1fr)!important}}
