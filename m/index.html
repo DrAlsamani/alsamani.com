@@ -2697,7 +2697,7 @@ window.MDGames = (function () {
   }
   // a row of reactions that float up the big screen
   const RX = ['👏', '🔥', '😂', '😮', '💪', '❤️'];
-  const PH = () => [T('كفو!', 'Bravo!'), T('قوية!', 'Nice one!'), T('يا حظك', 'Lucky!'), T('ركّز!', 'Focus!'), T('الله الله', 'Wow'), T('هههه', 'Haha')];
+  const PH = () => [T('كفو!', 'Bravo!'), T('قوية!', 'Nice!'), T('يا حظك', 'Lucky!'), T('ركّز!', 'Focus!'), T('يا سلام', 'Wow'), T('هههه', 'Haha')];
   let micOn = false;
   const micBox = () => { if (FAN || !['rev', 'lb'].includes(st.ph)) return ''; const M = TOP && TOP.mic; if (!M || M.off) return ''; if (!M.n && !M.on) micOn = micOn && false; if (M.cool) return '';
     return `<div class="mp-mic"><button type="button" data-mic aria-pressed="${micOn || M.on}"${micOn || M.on ? ' disabled' : ''}>${M.on ? B('تُفتح منصة التصريحات بعد هذه الجولة!', 'The stage opens after this round!') : micOn ? B('طلبت منصة التصريحات ✓', 'You asked for the stage ✓') : B('اطلب منصة التصريحات', 'Ask for the stage')}</button>${M.on ? '' : `<small>${B(`تُفتح إذا طلبها ${M.need} (٢٥٪ من المشاركين) · طلبها حتى الآن ${M.n}`, `Opens when ${M.need} ask (25% of players) · ${M.n} so far`)}</small>`}</div>`; };
