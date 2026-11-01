@@ -146,3 +146,12 @@
 .sm-next{margin-top:2.4vh;color:var(--sa);font-weight:700;font-size:.8em}
 .sm-ctl .btn svg,.sm-cardb svg{width:1.1em;height:1.1em;vertical-align:-.15em;margin-inline-end:.4em}.sm-cardb{margin-top:14px}
 .sm-lists{display:flex;flex-wrap:wrap;gap:8px;margin:-6px 0 18px}.sm-lists select,.sm-lists input{flex:1 1 180px;margin:0;font:inherit;border-radius:10px;padding:8px 10px;background:rgba(0,0,0,.25);color:inherit;border:1.5px solid rgba(255,255,255,.2)}
+/* the bluff */
+.sm-lie{text-align:center}.sm-fact i{font-style:normal;color:var(--sa);letter-spacing:.1em}
+.sm-opts{display:flex;flex-wrap:wrap;gap:1.4vh 1vw;justify-content:center;max-width:1100px;margin:2vh auto}
+.sm-opts span{background:rgba(255,255,255,.09);border-radius:16px;padding:1.6vh 1.6vw;font-size:1.25em;font-weight:700}
+.sm-opts.res div{background:rgba(255,255,255,.07);border-radius:16px;padding:1.4vh 1.4vw;display:grid;gap:.5vh;min-width:200px;animation:smIn .5s both}
+.sm-opts.res div.truth{background:rgba(43,179,163,.25);outline:3px solid var(--st)}
+.sm-opts.res b{font-size:1.2em}.sm-opts.res small{opacity:.75}.sm-opts.res em{display:flex;flex-wrap:wrap;gap:.4vw;justify-content:center;font-style:normal}
+.sm-opts.res em i{font-style:normal;font-size:.8em;background:var(--c);color:#17153a;border-radius:999px;padding:.2vh .7vw}
+.sm-votes button[disabled]{opacity:.45}

@@ -18,6 +18,7 @@
   const SND = { join: () => tone(880, .12, 'triangle', .06), go: () => [523, 659, 784].forEach((f, k) => tone(f, .2, 'triangle', .08, k * .1)), ok: () => { tone(784, .12, 'triangle', .08); tone(1175, .2, 'triangle', .08, .1); }, no: () => tone(220, .25, 'sawtooth', .05), tick: () => tone(1300, .04, 'square', .03), win: () => [523, 659, 784, 1047, 1319].forEach((f, k) => tone(f, .35, 'triangle', .09, k * .13)) };
   const SV = d => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
   const IC = {
+    lie: SV('<path d="M12 3a6 6 0 0 0-6 6v3l-2 4h16l-2-4V9a6 6 0 0 0-6-6z"/><path d="M9 20h6M12 7v3M12 13v.1"/>'),
     save: SV('<path d="M12 4v11M7 10l5 5 5-5M5 19h14"/>'),
     share: SV('<circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="m8.2 10.8 7.6-4.4M8.2 13.2l7.6 4.4"/>'),
     whose: SV('<path d="M4 5h16v10H9l-5 4z"/><path d="M9 9h6M9 12h3"/><circle cx="18" cy="18" r="3"/>'),
@@ -70,6 +71,7 @@
     { id: 'who', icon: IC.who, ar: 'من أنا؟', en: 'Who am I?', min: 2, dAr: 'لكل لاعب شخصية يراها الجميع إلا هو. يسأل بنعم أو لا حتى يعرف من هو.', dEn: 'Each player has an identity everyone sees but them. Ask yes-or-no questions to find it.' },
     { id: 'draw', icon: IC.draw, ar: 'ارسم وخمّن', en: 'Draw and guess', min: 2, dAr: 'واحد يرسم في جواله والرسمة تظهر على الشاشة، والبقية يخمّنون بأسرع ما يمكن.', dEn: 'One draws on their phone, the drawing shows on the screen, the others guess as fast as they can.' },
     { id: 'letters', icon: IC.letters, ar: 'إنسان حيوان نبات جماد بلاد', en: 'Name, animal, plant, thing, country', min: 2, dAr: 'حرف واحد للجميع: املأ الخانات الخمس قبل أن يقول أحدهم «ستوب».', dEn: 'One letter for all: fill the five boxes before someone calls stop.' },
+    { id: 'lie', icon: IC.lie, ar: 'الكذبة', en: 'The bluff', min: 3, dAr: 'معلومة غريبة ناقصة: كل واحد يكتب كذبة مقنعة، ثم ابحثوا عن الحقيقة بين الأكاذيب.', dEn: 'A strange fact with a blank: each writes a convincing lie, then find the truth among the lies.' },
     { id: 'whose', icon: IC.whose, ar: 'مين قالها؟', en: 'Who said it?', min: 3, dAr: 'سؤال للجميع وكل واحد يجيب سرًا، ثم تظهر الإجابات واحدة واحدة: خمّنوا صاحبها.', dEn: 'One question for all, each answers in secret; then the answers appear one by one: guess whose it is.' },
   ];
   const gameOf = id => GAMES.find(g => g.id === id);
@@ -175,7 +177,10 @@
       const R = res && pin === res.pin ? res : {};
       S = { mode: 'host', pin, ref: db.ref('kh/' + pin), pl: {}, sc: R.sc || {}, stt: R.stt || {}, played: !!R.played, gn: R.gn || 0, rc: R.rc || String(1000 + Math.floor(Math.random() * 9000)), remote: R.remote || null, teams: !!R.teams, tm: R.tm || {}, g: null, gs: null, seq: {}, L: isAr() ? 'ar' : 'en', cat: store.get('cat', 'mix') };
       saveHost(); if (R.pin) { pub({ ph: 'pick' }); pushScores(); }
-      on(S.ref.child('pl'), 'child_added', s => { if (s.key === S.remote) return; const v = s.val() || {}; S.pl[s.key] = v.n || '؟'; if (S.sc[s.key] == null) S.sc[s.key] = 0; if (S.teams && S.tm[s.key] == null) { S.tm[s.key] = teamCount(0) <= teamCount(1) ? 0 : 1; pushTeams(); } SND.join(); hostDraw(); });
+      on(S.ref.child('pl'), 'child_added', s => { if (s.key === S.remote) return; const v = s.val() || {}; S.pl[s.key] = v.n || '؟'; if (S.sc[s.key] == null) S.sc[s.key] = 0; if (S.teams && S.tm[s.key] == null) { S.tm[s.key] = teamCount(0) <= teamCount(1) ? 0 : 1; pushTeams(); } SND.join();
+        // arriving mid-game: the game takes them in from where it is, when it can
+        if (S.roster && !S.roster[s.key] && S.gs && S.gs.join) { S.roster[s.key] = 1; try { S.gs.join(s.key); } catch (e) { console.error(e); } }
+        hostDraw(); });
       on(S.ref.child('pl'), 'child_removed', s => { delete S.pl[s.key]; hostDraw(); });
       const mv = s => { const v = s.val() || {}; if (S.seq[s.key] === v.x) return; S.seq[s.key] = v.x; const k = String(v.k || '');
         if (k === 'r:' + S.rc) { S.remote = s.key; delete S.pl[s.key]; delete S.sc[s.key]; delete S.tm[s.key]; if (S.roster) delete S.roster[s.key]; pushScores(); pushTeams(); hostDraw(); return; }
@@ -296,7 +301,7 @@
   }
   function hostDraw() { if (!S || S.mode !== 'host') return; if (S.gs && S.gs.view) S.gs.view(); else picker(); }
   function startGame(id) {
-    const mk = { spy: Spy, who: Who, draw: Draw, letters: Letters, whose: Whose }[id]; if (!mk) return;
+    const mk = { spy: Spy, who: Who, draw: Draw, letters: Letters, whose: Whose, lie: Lie }[id]; if (!mk) return;
     S.gn++; S.roster = {}; players().forEach(u => { S.roster[u] = 1; }); S.gs = mk(); S.gs.id = id; S.played = true; SND.go(); S.gs.start(); stat({ ['samar/' + id + '/n']: 1, ['samar/' + id + '/p']: players().length });
   }
   // after a game: the points it gave, then back to the choice of games
@@ -342,6 +347,7 @@
         us.forEach(u => priv(u, st.spies.includes(u) ? { g: 'spy', role: 'spy', cat: st.cat, two: st.spies.length > 1 } : { g: 'spy', role: 'in', w: st.word, cat: st.cat, two: st.spies.length > 1 }));
         G.hint();
       },
+      join(u) { priv(u, { g: 'spy', role: 'in', w: st.word, cat: st.cat, two: st.spies.length > 1 }); },
       hint() { st.hints = {}; phase('hint', 60, { r: st.r, cat: st.cat, n: 0, two: st.spies.length > 1 }); G.view(); },
       move(u, k) {
         const us = inGame();
@@ -405,6 +411,7 @@
         st.asks = shuffle(us); st.ask = 0; st.askAt = now();
         phase('play', 240, { cat: st.cat, ask: nameOf(asker()), au: asker().slice(0, 8) }); G.view();
       },
+      join(u) { const used = Object.values(st.id), pool = words(st.cat, S.L).filter(w => !used.includes(w)); st.id[u] = pick(pool.length ? pool : words(st.cat, S.L)); st.asks.push(u); inGame().forEach(o => priv(o, mine(o))); },
       // the turn to ask moves on every 30 seconds, or when the host says so; those who are done are skipped
       nextAsk() {
         for (let k = 0; k < st.asks.length; k++) { st.ask++; if (!st.solved[asker()] && asker() in S.pl) break; }
@@ -459,6 +466,7 @@
         inGame().forEach(u => priv(u, u === st.drawer ? mine() : { g: 'draw', role: 'guess', t: st.turn }));
         phase('choose', 12, { drawer: nameOf(st.drawer), du: st.drawer.slice(0, 8), turn: st.turn + 1, of: st.order.length }); G.view();
       },
+      join(u) { priv(u, { g: 'draw', role: 'guess', t: st.turn }); },
       go(i) { st.word = st.opts[i] || st.opts[0]; S.ph = 'draw'; priv(st.drawer, mine()); st.t0 = now(); phase('draw', 80, { drawer: nameOf(st.drawer), du: st.drawer.slice(0, 8), turn: st.turn + 1, of: st.order.length, len: [...st.word].length }); G.view(); },
       move(u, k) {
         if (S.ph === 'choose' && u === st.drawer && k.startsWith('w:')) return G.go(+k.slice(2));
@@ -501,6 +509,93 @@
     return G;
   }
 
+  /* ---------- the bluff: write a lie, find the truth ---------- */
+  // [question, truth] in Arabic, then in English
+  const FACTS = [
+    ['حيوان ينام قرابة عشرين ساعة في اليوم: ____', 'الكوالا', 'An animal that sleeps about twenty hours a day: ____', 'The koala'],
+    ['عدد قلوب الأخطبوط: ____', 'ثلاثة', 'The number of hearts an octopus has: ____', 'Three'],
+    ['لون دم الأخطبوط: ____', 'أزرق', 'The colour of an octopus’s blood: ____', 'Blue'],
+    ['عدد عظام الإنسان البالغ: ____', '206', 'The number of bones in an adult human: ____', '206'],
+    ['أصغر عظمة في جسم الإنسان موجودة في ____', 'الأذن', 'The smallest bone in the human body is in the ____', 'Ear'],
+    ['معدن يكون سائلًا في درجة حرارة الغرفة: ____', 'الزئبق', 'A metal that is liquid at room temperature: ____', 'Mercury'],
+    ['عاصمة أستراليا: ____', 'كانبرا', 'The capital of Australia: ____', 'Canberra'],
+    ['عاصمة كندا: ____', 'أوتاوا', 'The capital of Canada: ____', 'Ottawa'],
+    ['عدد عيون النحلة: ____', 'خمس', 'The number of eyes a bee has: ____', 'Five'],
+    ['أشد كواكب المجموعة الشمسية حرارة: ____', 'الزهرة', 'The hottest planet in the solar system: ____', 'Venus'],
+    ['الكوكب الذي يدور وهو مستلقٍ على جانبه: ____', 'أورانوس', 'The planet that spins lying on its side: ____', 'Uranus'],
+    ['الطائر الوحيد الذي يستطيع الطيران إلى الخلف: ____', 'الطنان', 'The only bird that can fly backwards: ____', 'The hummingbird'],
+    ['اللغة الرسمية في البرازيل: ____', 'البرتغالية', 'The official language of Brazil: ____', 'Portuguese'],
+    ['أكبر صحراء رملية متصلة في العالم: ____', 'الربع الخالي', 'The largest continuous sand desert in the world: ____', 'The Empty Quarter'],
+    ['أصلب مادة في الطبيعة: ____', 'الألماس', 'The hardest natural material: ____', 'Diamond'],
+    ['اسم صغير الحصان: ____', 'المهر', 'The name for a young horse: ____', 'A foal'],
+    ['أقدم جامعة ما زالت تعمل في العالم: ____', 'القرويين', 'The oldest university still running: ____', 'Al-Qarawiyyin'],
+    ['عدد مفاتيح البيانو: ____', '88', 'The number of keys on a piano: ____', '88'],
+    ['يصل ضوء الشمس إلى الأرض في نحو ____ دقائق', '8', 'Sunlight reaches the Earth in about ____ minutes', '8'],
+    ['حيوان ينام بنصف دماغه والنصف الآخر صاحٍ: ____', 'الدلفين', 'An animal that sleeps with half its brain awake: ____', 'The dolphin'],
+    ['العضو الذي يستطيع أن يجدد نفسه في جسم الإنسان: ____', 'الكبد', 'The organ that can regrow itself in the human body: ____', 'The liver'],
+    ['البلد الذي فيه أكبر عدد من البحيرات: ____', 'كندا', 'The country with the most lakes: ____', 'Canada'],
+    ['أعلى قمة في الوطن العربي: جبل ____', 'توبقال', 'The highest peak in the Arab world: Mount ____', 'Toubkal'],
+    ['الحيوان الذي لا يستطيع القفز: ____', 'الفيل', 'The animal that cannot jump: ____', 'The elephant'],
+    ['عدد الدول العربية: ____', '22', 'The number of Arab countries: ____', '22'],
+    ['الفاكهة التي تحتوي بذورها على الخارج: ____', 'الفراولة', 'The fruit with its seeds on the outside: ____', 'The strawberry']
+  ];
+  const digits = t => String(t || '').replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d));
+  const same = (a, b) => norm(digits(a)) === norm(digits(b));
+  function Lie() {
+    const st = { r: 0, used: [], gained: {} }, ROUNDS = 3;
+    const G = {
+      start() { S.lastGame = 'lie'; st.r = 0; st.gained = {}; S.liesUsed = S.liesUsed || []; G.round(); },
+      round() {
+        st.r++; const L = S.L === 'ar' ? 0 : 2, pool = FACTS.filter(f => !S.liesUsed.includes(f[0])), f = pick(pool.length ? pool : FACTS); S.liesUsed.push(f[0]);
+        st.q = f[L]; st.truth = f[L + 1]; st.lies = {}; st.picks = {};
+        inGame().forEach(u => priv(u, { g: 'lie', r: st.r }));
+        phase('lie', 60, { q: st.q, r: st.r, of: ROUNDS, n: 0 }); G.view();
+      },
+      move(u, k) {
+        if (S.ph === 'lie' && k.startsWith('l:') && !st.lies[u]) {
+          const t = k.slice(2, 50).trim(); if (!t) return;
+          if (same(t, st.truth)) { db.ref('khh/' + S.pin + '/' + u + '/truth').set(Date.now()).catch(() => {}); return; }
+          st.lies[u] = t; SND.join(); pub(Object.assign({}, S.g, { n: Object.keys(st.lies).length })); G.view(); if (Object.keys(st.lies).length >= inGame().length) G.choose();
+        } else if (S.ph === 'opts' && k.startsWith('p:') && st.picks[u] == null) {
+          const i = +k.slice(2); if (!st.opts[i] || st.opts[i].by.includes(u)) return;
+          st.picks[u] = i; pub(Object.assign({}, S.g, { n: Object.keys(st.picks).length })); G.view(); if (Object.keys(st.picks).length >= inGame().length) G.reveal();
+        }
+      },
+      join(u) { priv(u, { g: 'lie', r: st.r, own: -1 }); },
+      choose() {
+        // the same lie written twice is one option with two authors
+        const opts = [{ t: st.truth, by: [], truth: 1 }];
+        Object.keys(st.lies).forEach(u => { const o = opts.find(x => same(x.t, st.lies[u])); if (o && !o.truth) o.by.push(u); else if (!o) opts.push({ t: st.lies[u], by: [u] }); });
+        st.opts = shuffle(opts);
+        inGame().forEach(u => priv(u, { g: 'lie', r: st.r, own: st.opts.findIndex(o => o.by.includes(u)) }));
+        phase('opts', 30, { q: st.q, r: st.r, of: ROUNDS, n: 0, opts: st.opts.map(o => o.t) }); G.view();
+      },
+      reveal() {
+        const g = (u, n) => { add(u, n); st.gained[u] = (st.gained[u] || 0) + n; };
+        Object.keys(st.picks).forEach(u => { const o = st.opts[st.picks[u]]; if (o.truth) { g(u, 100); tally(u, 'det'); } else o.by.forEach(a => { g(a, 50); tally(a, 'myst'); }); });
+        pushScores();
+        const res = st.opts.map((o, i) => ({ t: o.t, truth: !!o.truth, by: o.by.map(nameOf), got: Object.keys(st.picks).filter(u => st.picks[u] === i).map(nameOf) }));
+        phase('reveal', 12, { q: st.q, r: st.r, of: ROUNDS, truth: st.truth, res }); G.view();
+      },
+      tick() { if (!S.end || left() > 0) return; if (S.ph === 'lie') G.choose(); else if (S.ph === 'opts') G.reveal(); else if (S.ph === 'reveal') G.next(); },
+      next() { if (st.r >= ROUNDS) return gameOver(st.gained, B('انتهت جولات الكذبة', 'The bluffing is over')); G.round(); },
+      view() {
+        const ph = S.ph, us = inGame(), rd = `<p class="sm-sub">${B(`السؤال ${st.r} من ${ROUNDS}`, `Question ${st.r} of ${ROUNDS}`)}</p>`, qh = `<h2 class="sm-fact" dir="auto">${esc(st.q).replace('____', '<i>____</i>')}</h2>`;
+        let body = '', foot = '';
+        if (ph === 'lie') { body = rd + qh + `<p class="sm-sub">${B('اكتب في جوالك كذبة تقنع الآخرين أنها الحقيقة', 'On your phone, write a lie that will pass for the truth')}</p><p class="sm-count" dir="ltr">${Object.keys(st.lies).length} / ${us.length}</p>`; foot = `<button type="button" class="btn ghost" data-skip>${B('اعرض الخيارات', 'Show the options')}</button>`; }
+        else if (ph === 'opts') { body = rd + qh + `<div class="sm-opts">${st.opts.map(o => `<span dir="auto">${esc(o.t)}</span>`).join('')}</div><p class="sm-count" dir="ltr">${Object.keys(st.picks).length} / ${us.length}</p>`; foot = `<button type="button" class="btn ghost" data-skip>${B('اكشف الحقيقة', 'Reveal the truth')}</button>`; }
+        else if (ph === 'reveal') {
+          body = rd + qh + `<div class="sm-opts res">${st.opts.map((o, i) => { const got = Object.keys(st.picks).filter(u => st.picks[u] === i);
+            return `<div class="${o.truth ? 'truth' : ''}"><b dir="auto">${esc(o.t)}</b><small>${o.truth ? B('الحقيقة', 'The truth') : B(`كذبة ${o.by.map(u => esc(nameOf(u))).join(' و')}`, `${o.by.map(u => esc(nameOf(u))).join(' and ')}’s lie`)}</small>${got.length ? `<em>${got.map(u => `<i style="--c:${colOf(u)}" dir="auto">${esc(nameOf(u))}</i>`).join('')}</em>` : ''}</div>`; }).join('')}</div>`;
+          foot = `<button type="button" class="btn ghost" data-skip>${st.r >= ROUNDS ? B('النتيجة', 'The result') : B('السؤال التالي', 'Next question')}</button>`;
+        }
+        const q = frame(`<div class="sm-g sm-lie">${body}</div>`, foot);
+        if (q('[data-skip]')) q('[data-skip]').onclick = () => ph === 'lie' ? G.choose() : ph === 'opts' ? G.reveal() : G.next();
+      }
+    };
+    return G;
+  }
+
   /* ---------- who said it: anonymous answers, then guess the author ---------- */
   const ASKS = {
     ar: ['أغرب أكلة جربتها في حياتك', 'لو صار عندك قوة خارقة ليوم واحد، وش تكون؟', 'أول شيء تسويه لو ربحت مليون', 'عادة عندك ما يعرفها أحد', 'وظيفة كنت تحلم فيها وأنت صغير', 'أكثر كلمة تقولها في يومك', 'لو تعيش في أي زمن، أي زمن تختار؟', 'شيء تخاف منه وتستحي تقوله', 'أغرب هدية جتك', 'وش تسوي أول ما تصحى؟', 'لو تقدر تتكلم لغة حيوان، أي حيوان؟', 'أكلة تقدر تاكلها كل يوم', 'مكان تتمنى تزوره', 'أطرف موقف صار لك في المدرسة', 'لو كتبت كتاب، وش عنوانه؟', 'شيء تعلمته متأخر', 'أسوأ نصيحة سمعتها', 'لو صرت مسؤول عن مدينتك يوم واحد، وش أول قرار؟', 'مهارة تتمنى تتقنها', 'لو حياتك فلم، وش اسمه؟', 'أكثر شيء يضحكك', 'شيء تحتفظ فيه من سنين', 'لو رجع فيك الزمن عشر سنين، وش تقول لنفسك؟', 'أغرب حلم تذكره', 'برنامج أو مسلسل ما تمل منه', 'لو تختار اسم ثاني لنفسك', 'شيء ما تقدر تعيش بدونه', 'أكثر موقف إحراج صار لك', 'رياضة تتمنى تلعبها باحتراف', 'وش أول شيء تشتريه لو سافرت؟'],
@@ -521,6 +616,7 @@
         else if (S.ph === 'guess' && k.startsWith('v:') && u !== st.au && !st.votes[u] && k.slice(2) in S.pl) { st.votes[u] = k.slice(2); pub(Object.assign({}, S.g, { n: Object.keys(st.votes).length })); G.view(); if (Object.keys(st.votes).length >= inGame().length - 1) G.reveal(); }
       },
       // a few answers, chosen at random, keep the game short in a big room
+      join(u) { priv(u, { g: 'whose' }); },
       order() { const cap = +store.get('wcap', 8) || 0; st.q = shuffle(Object.keys(st.ans)); if (cap) st.q = st.q.slice(0, cap); st.k = -1; if (st.q.length < 2) return gameOver({}, B('إجابات قليلة، جرّبوها مرة أخرى', 'Too few answers; try it again')); G.next(); },
       next() {
         st.k++; if (st.k >= st.q.length) return gameOver(st.gained, B(`«${esc(st.ask)}»`, `“${esc(st.ask)}”`));
@@ -556,6 +652,7 @@
     const st = { ans: {}, bad: {}, used: [], r: 0, total: {} }, ROUNDS = 3;
     const G = {
       start() { S.lastGame = 'letters'; st.cats = LCATS(); st.used = []; st.r = 0; st.total = {}; inGame().forEach(u => priv(u, { g: 'letters', cats: st.cats })); G.round(); },
+      join(u) { priv(u, { g: 'letters', cats: st.cats }); },
       round() {
         st.r++; st.letter = pick(LETTERS[S.L].filter(l => !st.used.includes(l))); st.used.push(st.letter); st.ans = {}; st.bad = {}; st.stop = null;
         phase('write', 120, { letter: st.letter, cats: st.cats, n: 0, r: st.r, of: ROUNDS }); G.view();
@@ -614,7 +711,7 @@
       store.set('name', name);
       S = { mode: 'player', pin, ref: db.ref('kh/' + pin), me: name, g: null, p: null, sc: {}, x: 0 };
       on(S.ref.child('g'), 'value', v => { const was = S.g; S.g = v.val(); if (!was || !S.g || was.ph !== S.g.ph || was.id !== S.g.id || was.r !== S.g.r || was.turn !== S.g.turn) { S.sent = null; buzz(30); if (S.g && was && S.g.turn !== was.turn) S.inkData = ''; if (S.g && (!was || was.id !== S.g.id)) S.lt = []; } phone(); });
-      on(db.ref('khh/' + pin + '/' + uid), 'value', v => { const o = S.p; S.p = v.val(); if (S.p && o && S.p.no && S.p.no !== o.no) { buzz(120); flash(T('لا، جرّب غيرها', 'No, try another'), 'no'); } if (S.p && o && S.p.near && S.p.near !== o.near) { buzz([30, 40, 30]); flash(T('قريب جدًا!', 'So close!'), 'near'); } if (S.p && S.p.ok && (!o || o.ok !== S.p.ok)) { buzz([40, 60, 40]); flash(T('صح! خمّنتها', 'Right! You got it'), 'ok'); } phone(); });
+      on(db.ref('khh/' + pin + '/' + uid), 'value', v => { const o = S.p; S.p = v.val(); if (S.p && o && S.p.no && S.p.no !== o.no) { buzz(120); flash(T('لا، جرّب غيرها', 'No, try another'), 'no'); } if (S.p && o && S.p.truth && S.p.truth !== o.truth) { buzz([30, 40, 30]); flash(T('هذه هي الحقيقة! اكتب كذبة', 'That is the truth! Write a lie'), 'near'); } if (S.p && o && S.p.near && S.p.near !== o.near) { buzz([30, 40, 30]); flash(T('قريب جدًا!', 'So close!'), 'near'); } if (S.p && S.p.ok && (!o || o.ok !== S.p.ok)) { buzz([40, 60, 40]); flash(T('صح! خمّنتها', 'Right! You got it'), 'ok'); } phone(); });
       on(S.ref.child('sc'), 'value', v => { S.sc = v.val() || {}; phone(); });
       on(S.ref.child('tm'), 'value', v => { S.tm = v.val() || null; phone(); });
       on(S.ref.child('rb'), 'value', v => { S.rb = v.val(); phone(); });
@@ -645,13 +742,14 @@
     else if (!g || !g.id || g.ph === 'pick') body = wait('أنت في الجلسة! تُختار اللعبة على الشاشة.', 'You are in! The game is chosen on the screen.') + `<div class="sm-form sm-hostme">${S.hm ? '' : `<button type="button" class="btn ghost" data-hostme>${B('أنا المضيف: أتحكّم من جوالي', 'I am the host: control from my phone')}</button>`}<div ${S.hm ? '' : 'hidden '}data-hm><input id="smRc" data-keep="rc" inputmode="numeric" maxlength="4" dir="ltr" placeholder="${T('رمز التحكم من الإعدادات', 'The code from the settings')}"><button type="button" class="btn solid" data-rcgo>${B('اربط', 'Connect')}</button></div></div>`;
     else if (g.ph === 'over') body = `<div class="sm-pw"><p class="sm-big">${esc(g.note || T('انتهت اللعبة', 'The game is over'))}</p>${g.gained && g.gained[uid] ? `<p class="sm-plus">+${g.gained[uid]}</p>` : ''}${mineL()}</div>`;
     // arrived in the middle of a game: watch this one, play the next
-    else if (!S.p || S.p.gn !== g.gn) body = wait('دخلت والجولة جارية. تابع الشاشة، وتلعب معنا من اللعبة القادمة.', 'You joined mid-game. Watch the screen; you play from the next game.');
+    else if (!S.p || S.p.gn !== g.gn) body = wait('لحظة… ندخلك في اللعبة الجارية', 'One moment… joining you into the game');
     else if (g.id === 'letters' && g.ph === 'rres') body = `<div class="sm-pw"><p class="sm-big">${B(`حرف «${esc(g.letter)}»`, `The letter ${esc(g.letter)}`)}</p>${g.gained && g.gained[uid] ? `<p class="sm-plus">+${g.gained[uid]}</p>` : ''}${p.letter === g.letter ? mineL() : ''}<p class="sm-sub">${B('الحرف التالي بعد قليل…', 'The next letter is coming…')}</p></div>`;
     else if (g.id === 'spy') body = phoneSpy(g, p);
     else if (g.id === 'who') body = phoneWho(g, p);
     else if (g.id === 'draw') body = phoneDraw(g, p);
     else if (g.id === 'letters') body = phoneLetters(g, p);
     else if (g.id === 'whose') body = phoneWhose(g, p);
+    else if (g.id === 'lie') body = phoneLie(g, p);
     // the drawer's pad stays as it is; only the list of who got it and the points change
     if (g && g.id === 'draw' && g.ph === 'draw' && p.role === 'drawer' && S.padT === g.turn && root.querySelector('#smPad')) {
       const gl = root.querySelector('#smGot'); if (gl) gl.innerHTML = gotHtml(p); const t = root.querySelector('.sm-top b'); if (t) t.textContent = my; return; }
@@ -699,6 +797,14 @@
     if (p.ok) return `<div class="sm-pw ok"><p class="sm-big">${B('خمّنتها!', 'You got it!')}</p><p class="sm-word" dir="auto">${esc(p.ok)}</p></div><canvas id="smView" class="sm-view" width="600" height="600"></canvas>`;
     return `<canvas id="smView" class="sm-view" width="600" height="600"></canvas><div class="sm-form"><p>${B(`يرسم «${esc(g.drawer)}»: ${g.len} حروف`, `${esc(g.drawer)} is drawing: ${g.len} letters`)}</p><input id="smIn" data-keep="g" maxlength="30" dir="auto" autocomplete="off" placeholder="${T('ما هذه؟', 'What is it?')}"><button type="button" class="btn solid" data-send="g" data-stay>${B('خمّن', 'Guess')}</button></div>`;
   }
+  function phoneLie(g, p) {
+    const qh = `<p class="sm-sub">${B(`السؤال ${g.r} من ${g.of}`, `Question ${g.r} of ${g.of}`)}</p><p class="sm-big sm-fact" dir="auto">${esc(g.q || '')}</p>`;
+    if (g.ph === 'lie') return S.sent === 'l' ? qh + `<div class="sm-pw"><p class="sm-big">${B('وصلت كذبتك', 'Your lie is in')}</p></div>` : qh + `<div class="sm-form"><input id="smIn" data-keep="l${g.r}" maxlength="40" dir="auto" autocomplete="off" placeholder="${T('كذبة مقنعة', 'A convincing lie')}"><button type="button" class="btn solid" data-send="l">${B('أرسل', 'Send')}</button></div>`;
+    if (g.ph === 'opts') return S.sent === 'v' ? qh + `<div class="sm-pw"><p class="sm-big">${B('وصل اختيارك', 'Your choice is in')}</p></div>` : qh + `<div class="sm-votes"><p>${B('أين الحقيقة؟', 'Which one is true?')}</p>${(g.opts || []).map((t, i) => i === p.own ? `<button type="button" disabled dir="auto">${esc(t)} · ${B('كذبتك', 'yours')}</button>` : `<button type="button" data-pick="${i}" dir="auto">${esc(t)}</button>`).join('')}</div>`;
+    if (g.ph === 'reveal') { const R = (g.res || []).map(r => ({ truth: !!r.truth, by: r.by || [], got: r.got || [] })), mine = R.find(r => r.got.includes(S.me)), fooled = R.filter(r => !r.truth && r.by.includes(S.me)).reduce((a, r) => a + r.got.length, 0);
+      return qh + `<div class="sm-pw"><p>${B('الحقيقة', 'The truth')}</p><p class="sm-word" dir="auto">${esc(g.truth)}</p><p class="sm-big">${mine && mine.truth ? B('عرفتها! +١٠٠', 'You found it! +100') : mine ? B('صدّقت كذبة', 'You fell for a lie') : ''}</p>${fooled ? `<p class="sm-plus">${B(`صدّق كذبتك ${fooled}`, `${fooled} fell for your lie`)} · +${fooled * 50}</p>` : ''}</div>`; }
+    return qh;
+  }
   function phoneWhose(g) {
     const mine = g.au === uid.slice(0, 8);
     if (g.ph === 'write') return S.sent === 'a' ? `<div class="sm-pw"><p class="sm-big">${B('وصلت إجابتك. انتظر البقية…', 'Your answer is in. Waiting for the others…')}</p></div>`
@@ -719,6 +825,7 @@
     root.querySelectorAll('[data-send]').forEach(b => b.onclick = () => { const v = (inp && inp.value || '').trim(); if (!v) return; send(b.dataset.send + ':' + v); if (!b.hasAttribute('data-stay')) S.sent = b.dataset.send; else inp.value = ''; buzz(20); phone(); });
     if (inp) { if (!document.activeElement || document.activeElement === document.body) setTimeout(() => inp.focus(), 50); inp.onkeydown = e => { if (e.key === 'Enter') { const b = q('[data-send]'); if (b) b.click(); } }; }
     root.querySelectorAll('[data-vote]').forEach(b => b.onclick = () => { send('v:' + b.dataset.vote); S.sent = 'v'; buzz(20); phone(); });
+    root.querySelectorAll('[data-pick]').forEach(b => b.onclick = () => { send('p:' + b.dataset.pick); S.sent = 'v'; buzz(20); phone(); });
     root.querySelectorAll('[data-word]').forEach(b => b.onclick = () => { send('w:' + b.dataset.word); buzz(20); });
     const hm = q('[data-hostme]'); if (hm) hm.onclick = () => { S.hm = true; phone(); const i = q('#smRc'); if (i) i.focus(); }; if (q('[data-rcgo]')) { q('[data-rcgo]').onclick = () => { const v = q('#smRc').value.replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/\D/g, ''); if (v.length === 4) { send('r:' + v); buzz(20); } }; }
     const cb = q('[data-card]'); if (cb && g && g.ph === 'final') cb.onclick = () => saveCard(g.rank || [], g.titles || [], g.tw >= -1 ? g.tw : null);
