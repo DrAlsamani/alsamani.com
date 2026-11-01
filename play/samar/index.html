@@ -1654,7 +1654,7 @@ html[dir=ltr] .jr-dch.fd .jr-fold::before{transform:rotate(-45deg)}
         <p class="sm-err" ${err ? '' : 'hidden'}>${err || ''}</p>
         <button type="button" class="btn solid" id="smGo">${B('ادخل', 'Join')}</button></div>
       ${R0 ? `<div class="sm-card sm-resume"><p>${B(`جلسة مفتوحة على هذا الجهاز، رمزها ${R0.pin}`, `A session is open on this device, code ${R0.pin}`)}</p><div class="sm-row"><button type="button" class="btn solid" id="smRes">${B('تابع الجلسة', 'Carry on')}</button><button type="button" class="btn ghost" id="smDrop">${B('أنهِها', 'End it')}</button></div></div>` : ''}
-      <div class="sm-card sm-host"><h2>${B('افتح جلسة', 'Open a session')}</h2><p>${B('على الشاشة الكبيرة أو اللابتوب: يظهر رمز يدخل به الجميع من جوالاتهم، ثم تختارون اللعبة.', 'On the big screen or a laptop: a code appears for everyone to join from their phones, then you choose the game.')}</p>
+      <div class="sm-card sm-host"><h2>${B('افتح جلسة', 'Open a session')}</h2><p>${B('من اللابتوب أو التلفزيون أو حتى جوالك: يظهر رمز يدخل به الجميع من جوالاتهم، ثم تختارون اللعبة. الشاشة الكبيرة تحلّي الجو، لكن اللعبة تمشي بدونها.', 'From a laptop, a TV or even your phone: a code appears for everyone to join from their phones, then you choose the game. A big screen makes it livelier, but the game runs without one.')}</p>
         <button type="button" class="btn ghost" id="smHost">${B('افتح جلسة جديدة', 'Open a new session')}</button></div>
       <div class="sm-gl">${GAMES.map(g => `<div class="sm-gi"><i>${g.icon}</i><b>${B(g.ar, g.en)}</b><small>${B(g.dAr, g.dEn)}</small></div>`).join('')}</div></div>`;
     const pin = root.querySelector('#smPin'), nm = root.querySelector('#smName');
