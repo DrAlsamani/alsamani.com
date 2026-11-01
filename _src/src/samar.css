@@ -78,3 +78,36 @@
 @media (max-width:820px){.sm-screen{grid-template-columns:1fr;grid-template-rows:auto 1fr auto}.sm-side{grid-row:auto;flex-direction:row;padding:10px}.sm-board{flex-direction:row;flex-wrap:wrap}.sm-qr{width:80px}.sm-games{grid-template-columns:1fr}.sm-drawrow{grid-template-columns:1fr}.sm-cvw{width:100%}.sm-ctl{grid-column:1}}
 #smLive{position:fixed;inset:0;z-index:1000}.sm-on body{overflow:hidden}
 .sm-let .sm-letter{margin:0 0 3vh}.sm-let .sm-cats{margin-bottom:2vh}
+
+/* resume, the words row, settings */
+.sm-resume{border-top:4px solid var(--st)}.sm-resume p{margin:0 0 12px;font-weight:600}.sm-row{display:flex;gap:10px;flex-wrap:wrap}
+.sm-catrow{display:flex;flex-wrap:wrap;gap:.8vh .6vw;justify-content:center;align-items:center;margin:0 auto 2.4vh;max-width:1100px;font-size:.85em}
+.sm-catrow span{opacity:.7}.sm-catrow button{font:inherit;color:var(--ink);background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.14);border-radius:999px;padding:.6vh 1.1vw;cursor:pointer}
+.sm-catrow button[aria-pressed=true]{background:var(--sa);color:var(--sn);border-color:var(--sa);font-weight:700}.sm-catrow .sm-catset{border-style:dashed}
+.sm-ov{position:fixed;inset:0;z-index:80;background:rgba(10,8,30,.7);display:grid;place-items:center;padding:16px}
+.sm-ovb{background:var(--sn2);color:var(--ink);border-radius:20px;padding:24px;width:min(620px,100%);max-height:90vh;overflow:auto;font-size:16px}
+.sm-ovb h3{margin:0 0 6px}.sm-ovb p{margin:0 0 10px;opacity:.75;line-height:1.7;font-size:.92em}
+.sm-ovb textarea,.sm-ovb input{font:inherit;width:100%;box-sizing:border-box;border-radius:12px;border:1.5px solid rgba(255,255,255,.2);background:rgba(0,0,0,.25);color:inherit;padding:10px 12px;margin-bottom:16px}
+/* the end of the session */
+.sm-final{text-align:center}.sm-podium{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:end;gap:1.4vw;max-width:900px;margin:4vh auto 3vh}
+.sm-pod{display:grid;gap:.6vh;justify-items:center}.sm-pod span{font-weight:700;font-size:1.1em;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.sm-pod b{color:var(--sa);font-size:1.3em}
+.sm-pod i{display:grid;place-items:center;width:100%;border-radius:16px 16px 0 0;background:linear-gradient(var(--c),rgba(255,255,255,.06));font-style:normal;font-size:2.2em;font-weight:800;color:var(--sn);animation:smRise .9s ease-out both}
+.sm-pod.p1 i{height:24vh}.sm-pod.p2 i{height:16vh;animation-delay:.3s}.sm-pod.p3 i{height:11vh;animation-delay:.5s}
+@keyframes smRise{from{transform:scaleY(0);transform-origin:bottom}to{transform:scaleY(1);transform-origin:bottom}}
+.sm-titles{display:flex;flex-wrap:wrap;gap:1.2vh 1vw;justify-content:center}.sm-titles div{background:rgba(255,255,255,.08);border:1.5px solid rgba(242,184,75,.4);border-radius:16px;padding:1.2vh 1.4vw;display:grid;gap:.3vh;animation:smIn .5s var(--d) both}
+.sm-titles b{color:var(--sa)}@keyframes smIn{from{opacity:0;transform:translateY(12px)}}
+/* the vote, who asks, close guesses */
+.sm-votemap{display:flex;flex-wrap:wrap;gap:1vh .8vw;justify-content:center;font-size:.5em;margin-top:2.4vh}
+.sm-votemap span{display:inline-flex;align-items:center;gap:.4em;background:rgba(255,255,255,.08);border-inline-start:4px solid var(--c);border-radius:10px;padding:.6vh .8vw}
+.sm-votemap span.ok{background:rgba(43,179,163,.22)}.sm-votemap svg{width:1em;height:1em;opacity:.6}[dir=rtl] .sm-votemap svg{transform:scaleX(-1)}
+.sm-whoc.ask{outline:3px solid var(--sa);outline-offset:3px}.sm-whoc small{position:absolute;top:-1.4em;inset-inline:0;color:var(--sa);font-weight:700;font-size:.75em}
+.sm-turn{background:var(--sa,#f2b84b);color:#17153a;font-weight:800;text-align:center;border-radius:14px;padding:10px;margin:0 0 10px}
+.sm-hint1{font-weight:700;color:#1f8f6f;margin:0}.sm-hb{justify-self:center}
+.sm-flash.near{background:#d58a1c}
+/* the drawer: sizes, undo, who got it */
+.sm-tools .sz{background:var(--surface,#eee);display:grid;place-items:center}.sm-tools .sz i{width:var(--s);height:var(--s);border-radius:50%;background:#222}
+.sm-tools [data-undo]{background:var(--surface,#eee);display:grid;place-items:center}.sm-tools [data-undo] svg{width:20px;height:20px}
+.sm-got{text-align:center;margin:8px 0 0;font-size:.95rem;opacity:.85}.sm-got b{display:inline-block;background:rgba(31,143,111,.15);color:#1f8f6f;border-radius:999px;padding:2px 10px;margin:2px}
+/* a phone at the end */
+.sm-pfinal{text-align:center}.sm-rank{font-size:4.4rem;font-weight:800;line-height:1;margin:6px 0;color:var(--sa,#f2b84b)}.sm-ttl{display:inline-block;background:#17153a;color:#f2b84b;font-weight:700;border-radius:999px;padding:6px 16px;margin:4px}
+.sm-mini{list-style:none;padding:0;margin:14px auto 0;max-width:280px;display:grid;gap:6px}.sm-mini li{display:flex;justify-content:space-between;background:rgba(0,0,0,.05);border-radius:10px;padding:6px 12px}
