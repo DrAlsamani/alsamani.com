@@ -131,11 +131,14 @@
       for (let k = 0; k < 6 && !pin; k++) { const p = String(100000 + Math.floor(Math.random() * 900000)); try { await within(db.ref('kh/' + p).set({ host: uid, at: TS(), st: 'lobby', cfg: { teams: 0, L: 0, need: 0, tt: 0 } })); pin = p; } catch (e) {} }
       if (!pin) throw new Error('pin');
       const R = res && pin === res.pin ? res : {};
-      S = { mode: 'host', pin, ref: db.ref('kh/' + pin), pl: {}, sc: R.sc || {}, stt: R.stt || {}, played: !!R.played, gn: R.gn || 0, g: null, gs: null, seq: {}, L: isAr() ? 'ar' : 'en', cat: store.get('cat', 'mix') };
+      S = { mode: 'host', pin, ref: db.ref('kh/' + pin), pl: {}, sc: R.sc || {}, stt: R.stt || {}, played: !!R.played, gn: R.gn || 0, rc: R.rc || String(1000 + Math.floor(Math.random() * 9000)), remote: R.remote || null, teams: !!R.teams, tm: R.tm || {}, g: null, gs: null, seq: {}, L: isAr() ? 'ar' : 'en', cat: store.get('cat', 'mix') };
       saveHost(); if (R.pin) { pub({ ph: 'pick' }); pushScores(); }
-      on(S.ref.child('pl'), 'child_added', s => { const v = s.val() || {}; S.pl[s.key] = v.n || '؟'; if (S.sc[s.key] == null) S.sc[s.key] = 0; SND.join(); hostDraw(); });
+      on(S.ref.child('pl'), 'child_added', s => { if (s.key === S.remote) return; const v = s.val() || {}; S.pl[s.key] = v.n || '؟'; if (S.sc[s.key] == null) S.sc[s.key] = 0; if (S.teams && S.tm[s.key] == null) { S.tm[s.key] = teamCount(0) <= teamCount(1) ? 0 : 1; pushTeams(); } SND.join(); hostDraw(); });
       on(S.ref.child('pl'), 'child_removed', s => { delete S.pl[s.key]; hostDraw(); });
-      const mv = s => { const v = s.val() || {}; if (S.seq[s.key] === v.x) return; S.seq[s.key] = v.x; if (S.roster && !S.roster[s.key]) return; if (S.g && S.gs && v.k) { try { S.gs.move(s.key, String(v.k)); } catch (e) { console.error(e); } } };
+      const mv = s => { const v = s.val() || {}; if (S.seq[s.key] === v.x) return; S.seq[s.key] = v.x; const k = String(v.k || '');
+        if (k === 'r:' + S.rc) { S.remote = s.key; delete S.pl[s.key]; delete S.sc[s.key]; delete S.tm[s.key]; if (S.roster) delete S.roster[s.key]; pushScores(); pushTeams(); hostDraw(); return; }
+        if (s.key === S.remote) { if (k.startsWith('c:')) { const b = ctlButtons()[+k.slice(2)]; if (b) b.click(); } return; }
+        if (S.roster && !S.roster[s.key]) return; if (S.g && S.gs && v.k) { try { S.gs.move(s.key, String(v.k)); } catch (e) { console.error(e); } } };
       on(S.ref.child('mv'), 'child_added', mv); on(S.ref.child('mv'), 'child_changed', mv);
       const seen = {}; const rx = s => { const v = s.val() || {}; if (!v.e || seen[s.key] === v.t || now() - (v.t || 0) > 8000) return; seen[s.key] = v.t; fly(v.e); };
       on(S.ref.child('rx'), 'child_added', rx); on(S.ref.child('rx'), 'child_changed', rx);
@@ -150,7 +153,7 @@
   const pub = o => { S.g = Object.assign({ id: S.gs ? S.gs.id : null, gn: S.gn, at: now() }, o); return S.ref.child('g').set(S.g).catch(() => {}); };
   const priv = (u, o) => db.ref('khh/' + S.pin + '/' + u).set(Object.assign({ gn: S.gn }, o)).catch(() => {});
   // the session is kept on this device, so a reload or a closed tab can pick it up again
-  const saveHost = () => store.set('host', { pin: S.pin, sc: S.sc, stt: S.stt, played: S.played, gn: S.gn, at: Date.now() });
+  const saveHost = () => store.set('host', { pin: S.pin, sc: S.sc, stt: S.stt, played: S.played, gn: S.gn, rc: S.rc, remote: S.remote, teams: S.teams, tm: S.tm, at: Date.now() });
   const tally = (u, k, n) => { if (!(u in S.pl)) return; const t = S.stt[u] = S.stt[u] || {}; t[k] = (t[k] || 0) + (n == null ? 1 : n); };
   const add = (u, n) => { if (!(u in S.pl)) return; S.sc[u] = (S.sc[u] || 0) + Math.round(n); };
   const pushScores = () => { saveHost(); return S.ref.child('sc').set(S.sc).catch(() => {}); };
@@ -159,22 +162,35 @@
   function paintClock() { const c = HE().querySelector('#smClock'); if (!c) return; const l = left(); c.textContent = S.end ? Math.ceil(l) : ''; c.classList.toggle('low', S.end && l <= 10); }
   function fly(e) { const fx = HE().querySelector('.sm-fx'); if (!fx) return; const s = document.createElement('span'); s.textContent = e; s.style.setProperty('--x', (6 + Math.random() * 86) + '%'); fx.appendChild(s); setTimeout(() => s.remove(), 2600); }
 
-  const boardHtml = () => players().sort((a, b) => (S.sc[b] || 0) - (S.sc[a] || 0)).map(u => `<li style="--c:${colOf(u)}"><i></i><span dir="auto">${esc(nameOf(u))}</span><b>${S.sc[u] || 0}</b></li>`).join('') || `<li class="sm-none">${B('بانتظار اللاعبين…', 'Waiting for players…')}</li>`;
-  const board = () => { const o = HE().querySelector('.sm-board'); if (o) o.innerHTML = boardHtml(); };
+  const TEAMS = [['الصقور', 'Falcons', '#f2b84b'], ['النجوم', 'Stars', '#2bb3a3']];
+  const teamCount = t => players().filter(u => S.tm[u] === t).length;
+  const teamSum = t => players().filter(u => S.tm[u] === t).reduce((a, u) => a + (S.sc[u] || 0), 0);
+  const pushTeams = () => { saveHost(); return S.ref.child('tm').set(S.teams ? S.tm : null).catch(() => {}); };
+  const teamsHtml = () => S.teams ? `<div class="sm-teams">${TEAMS.map((t, k) => `<div style="--c:${t[2]}"><span>${B(t[0], t[1])}</span><b>${teamSum(k)}</b></div>`).join('')}</div>` : '';
+  // the buttons a phone remote can press: the games to choose, and the buttons at the foot of the screen
+  const ctlButtons = () => [...HE().querySelectorAll('.sm-stage [data-g]:not([disabled]), .sm-ctl > .btn')];
+  function pushRemote() {
+    if (!S.remote) return;
+    const tx = (e, c) => { const z = e && (e.querySelector(c) || e); return (z.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 60); };
+    const b = ctlButtons().map(x => { const t = x.querySelector('b') || x; return { a: tx(t, '.ar'), e: tx(t, '.en') }; });
+    S.ref.child('rb').set({ u: S.remote.slice(0, 8), b, at: now() }).catch(() => {});
+  }
+  const boardHtml = () => players().sort((a, b) => (S.sc[b] || 0) - (S.sc[a] || 0)).map(u => `<li style="--c:${colOf(u)}"${S.teams && S.tm[u] != null ? ` class="tm" data-t="${S.tm[u]}"` : ''}><i></i><span dir="auto">${esc(nameOf(u))}</span><b>${S.sc[u] || 0}</b></li>`).join('') || `<li class="sm-none">${B('بانتظار اللاعبين…', 'Waiting for players…')}</li>`;
+  const board = () => { const o = HE().querySelector('.sm-board'); if (o) o.innerHTML = boardHtml(); const t = HE().querySelector('.sm-teams'); if (t) t.outerHTML = teamsHtml(); };
   // the frame of the screen: the code to join, the players and the session points, and the stage in the middle
   function frame(stage, foot) {
     const url = `${location.origin}/play/samar/?k=${S.pin}`;
     let qr = ''; try { const q = qrcode(0, 'M'); q.addData(url); q.make(); qr = q.createSvgTag({ cellSize: 4, margin: 1, scalable: true }); } catch (e) {}
     const order = players().sort((a, b) => (S.sc[b] || 0) - (S.sc[a] || 0));
     HE().innerHTML = `<div class="sm-screen"><div class="sm-side"><div class="sm-code"><div class="sm-qr">${qr}</div><p dir="ltr">${JOIN}</p><b dir="ltr">${S.pin.slice(0, 3)} ${S.pin.slice(3)}</b></div>
-      <ol class="sm-board">${boardHtml()}</ol></div>
+      ${teamsHtml()}<ol class="sm-board">${boardHtml()}</ol></div>
       <div class="sm-stage">${stage}</div><div class="sm-fx" aria-hidden="true"></div>
       <div class="sm-ctl">${foot || ''}<span class="sm-sp"></span><b class="sm-clock" id="smClock"></b><button type="button" class="sm-cb" data-mute>${store.get('mute', false) ? IC.mute : IC.vol}</button><button type="button" class="sm-cb" data-fs>${IC.fs}</button><button type="button" class="sm-cb" data-end>${B('إنهاء الجلسة', 'End the session')}</button></div></div>`;
     const q = s => HE().querySelector(s);
     q('[data-mute]').onclick = e => { const m = !store.get('mute', false); store.set('mute', m); e.currentTarget.innerHTML = m ? IC.mute : IC.vol; };
     q('[data-fs]').onclick = () => document.fullscreenElement ? document.exitFullscreen() : HE().requestFullscreen && HE().requestFullscreen().catch(() => {});
     q('[data-end]').onclick = () => { if (!confirm(T('إنهاء الجلسة لكل اللاعبين؟', 'End the session for everyone?'))) return; db.ref('khh/' + S.pin).remove(); S.ref.remove(); store.set('host', null); HE().remove(); document.documentElement.classList.remove('sm-on'); home(); };
-    paintClock();
+    paintClock(); setTimeout(pushRemote, 0);
     return q;
   }
   // between games: choose the next one
@@ -196,10 +212,12 @@
       <textarea data-w rows="7" dir="auto">${esc(store.get('mine', ''))}</textarea>
       <h3>${B('خانات لعبة الحروف', 'The letter game’s boxes')}</h3><p>${B('من ٣ إلى ٦، مفصولة بفواصل. اتركها فارغة لـ«إنسان، حيوان، نبات، جماد، بلاد».', 'From 3 to 6, separated by commas. Leave it empty for the usual five.')}</p>
       <input data-lc dir="auto" value="${esc(store.get('lcats', ''))}" placeholder="${T('إنسان، حيوان، نبات، جماد، بلاد', 'Name, Animal, Plant, Thing, Country')}">
+      <h3>${B('فريقان', 'Two teams')}</h3><label class="sm-chk"><input type="checkbox" data-tm${S.teams ? ' checked' : ''}> ${B('قسّم اللاعبين إلى الصقور والنجوم، ونقاط كل لاعب تُضاف لفريقه', 'Split the players into Falcons and Stars; each player’s points count for their team')}</label>
+      <h3>${B('تحكّم من جوالك', 'Control from your phone')}</h3><p>${S.remote ? B('جوال التحكم متصل.', 'A phone remote is connected.') : B(`ادخل الجلسة من جوالك، واضغط «أنا المضيف» واكتب الرمز <b dir="ltr">${S.rc}</b>. يصير جوالك ريموت ولا يُحسب لاعبًا.`, `Join from your phone, tap “I am the host” and type <b dir="ltr">${S.rc}</b>. Your phone becomes a remote and is not counted as a player.`)}</p>
       <div class="sm-row"><button type="button" class="btn solid" data-ok>${B('احفظ', 'Save')}</button><button type="button" class="btn ghost" data-x>${B('إغلاق', 'Close')}</button></div></div>`;
     HE().appendChild(d);
     d.querySelector('[data-x]').onclick = () => d.remove();
-    d.querySelector('[data-ok]').onclick = () => { store.set('mine', d.querySelector('[data-w]').value); store.set('lcats', d.querySelector('[data-lc]').value); if (mineWords().length >= 6) { S.cat = 'mine'; store.set('cat', 'mine'); } d.remove(); picker(); };
+    d.querySelector('[data-ok]').onclick = () => { const on2 = d.querySelector('[data-tm]').checked; if (on2 !== S.teams) { S.teams = on2; S.tm = {}; if (on2) shuffle(players()).forEach((u, k) => { S.tm[u] = k % 2; }); pushTeams(); } store.set('mine', d.querySelector('[data-w]').value); store.set('lcats', d.querySelector('[data-lc]').value); if (mineWords().length >= 6) { S.cat = 'mine'; store.set('cat', 'mine'); } d.remove(); picker(); };
   }
   // the end of the session: the podium, and a title for what each one did best
   function finale() {
@@ -208,10 +226,12 @@
     const TT = [['spy', 'الجاسوس الأخطر', 'The sneakiest spy'], ['art', 'الرسام', 'The artist'], ['quick', 'سريع البديهة', 'The quickest mind'], ['self', 'يعرف نفسه', 'Knows themselves'], ['let', 'سيد الحروف', 'Master of letters'], ['det', 'المحقق', 'The detective']];
     const titles = TT.map(([k, ar, en]) => { const r = best(k); return r ? { k, ar, en, u: r.u, n: nameOf(r.u) } : null; }).filter(Boolean);
     const pod = k => order[k] ? `<div class="sm-pod p${k + 1}" style="--c:${colOf(order[k])}"><span dir="auto">${esc(nameOf(order[k]))}</span><b>${S.sc[order[k]] || 0}</b><i>${k + 1}</i></div>` : '<div class="sm-pod"></div>';
-    S.gs = { id: null, view: () => { const q = frame(`<div class="sm-final"><h2>${B('ختام الجلسة', 'The end of the session')}</h2><div class="sm-podium">${pod(1)}${pod(0)}${pod(2)}</div>
+    const tw = S.teams ? (teamSum(0) === teamSum(1) ? -1 : teamSum(0) > teamSum(1) ? 0 : 1) : null;
+    const teamLine = tw == null ? '' : `<p class="sm-tw">${tw < 0 ? B('تعادل الفريقان!', 'The teams are level!') : B(`فاز فريق ${TEAMS[tw][0]}`, `The ${TEAMS[tw][1]} win`)} <span dir="ltr">${teamSum(0)} : ${teamSum(1)}</span></p>`;
+    S.gs = { id: null, view: () => { const q = frame(`<div class="sm-final"><h2>${B('ختام الجلسة', 'The end of the session')}</h2>${teamLine}<div class="sm-podium">${pod(1)}${pod(0)}${pod(2)}</div>
         ${titles.length ? `<div class="sm-titles">${titles.map((t, k) => `<div style="--d:${k * .3 + 1}s"><b>${B(t.ar, t.en)}</b><span dir="auto">${esc(t.n)}</span></div>`).join('')}</div>` : ''}</div>`,
         `<button type="button" class="btn ghost" data-pick>${B('نكمل اللعب', 'Keep playing')}</button>`); q('[data-pick]').onclick = () => { S.gs = null; pub({ ph: 'pick' }); picker(); }; } };
-    S.roster = null; pub({ ph: 'final', rank: order.map(u => ({ u: u.slice(0, 8), n: nameOf(u), s: S.sc[u] || 0 })), titles: titles.map(t => ({ ar: t.ar, en: t.en, n: t.n, u: t.u.slice(0, 8) })) }); SND.win(); hostDraw();
+    S.roster = null; pub({ ph: 'final', rank: order.map(u => ({ u: u.slice(0, 8), n: nameOf(u), s: S.sc[u] || 0 })), titles: titles.map(t => ({ ar: t.ar, en: t.en, n: t.n, u: t.u.slice(0, 8) })), tw: tw == null ? -2 : tw }); SND.win(); hostDraw();
   }
   function hostDraw() { if (!S || S.mode !== 'host') return; if (S.gs && S.gs.view) S.gs.view(); else picker(); }
   function startGame(id) {
@@ -473,6 +493,8 @@
       on(S.ref.child('g'), 'value', v => { const was = S.g; S.g = v.val(); if (!was || !S.g || was.ph !== S.g.ph || was.id !== S.g.id || was.r !== S.g.r || was.turn !== S.g.turn) { S.sent = null; buzz(30); if (S.g && was && S.g.turn !== was.turn) S.inkData = ''; if (S.g && (!was || was.id !== S.g.id)) S.lt = []; } phone(); });
       on(db.ref('khh/' + pin + '/' + uid), 'value', v => { const o = S.p; S.p = v.val(); if (S.p && o && S.p.no && S.p.no !== o.no) { buzz(120); flash(T('لا، جرّب غيرها', 'No, try another'), 'no'); } if (S.p && o && S.p.near && S.p.near !== o.near) { buzz([30, 40, 30]); flash(T('قريب جدًا!', 'So close!'), 'near'); } if (S.p && S.p.ok && (!o || o.ok !== S.p.ok)) { buzz([40, 60, 40]); flash(T('صح! خمّنتها', 'Right! You got it'), 'ok'); } phone(); });
       on(S.ref.child('sc'), 'value', v => { S.sc = v.val() || {}; phone(); });
+      on(S.ref.child('tm'), 'value', v => { S.tm = v.val() || null; phone(); });
+      on(S.ref.child('rb'), 'value', v => { S.rb = v.val(); phone(); });
       on(S.ref.child('host'), 'value', v => { if (!v.exists()) { stopAll(); home(T('انتهت الجلسة.', 'The session has ended.')); } });
       S.clk = setInterval(phoneClock, 250); subs.push(() => clearInterval(S && S.clk));
       phone();
@@ -489,8 +511,15 @@
     let body = '';
     const wait = (a, e) => `<div class="sm-pw"><p class="sm-big">${B(a, e)}</p></div>`;
     const mineL = () => p.g === 'letters' && p.mine && p.cats ? `<ul class="sm-mine">${p.cats.map((c, i) => `<li class="${p.bad && p.bad[i] ? 'bad' : ''}"><i>${esc(c)}</i><b dir="auto">${esc(p.mine[i] || '—')}</b></li>`).join('')}</ul>` : '';
+    // this phone is the host's remote: the screen's buttons, as big buttons
+    if (S.rb && S.rb.u === uid.slice(0, 8)) {
+      const html = `<div class="sm-phone sm-remote"><div class="sm-top"><span>${B('جوال التحكم', 'The remote')}</span><b dir="ltr">${S.pin}</b></div><div class="sm-rbs">${(S.rb.b || []).map((t, i) => `<button type="button" class="btn solid" data-rc="${i}">${B(esc(t.a), esc(t.e))}</button>`).join('') || `<p class="sm-sub">${B('لا أزرار الآن، انتظر الشاشة…', 'No buttons right now; follow the screen…')}</p>`}</div></div>`;
+      if (html === S.html) return; S.html = html; root.innerHTML = html;
+      root.querySelectorAll('[data-rc]').forEach(b => b.onclick = () => { send('c:' + b.dataset.rc); buzz(20); });
+      return;
+    }
     if (g && g.ph === 'final') body = phoneFinal(g);
-    else if (!g || !g.id || g.ph === 'pick') body = wait('أنت في الجلسة! تُختار اللعبة على الشاشة.', 'You are in! The game is chosen on the screen.');
+    else if (!g || !g.id || g.ph === 'pick') body = wait('أنت في الجلسة! تُختار اللعبة على الشاشة.', 'You are in! The game is chosen on the screen.') + `<div class="sm-form sm-hostme">${S.hm ? '' : `<button type="button" class="btn ghost" data-hostme>${B('أنا المضيف: أتحكّم من جوالي', 'I am the host: control from my phone')}</button>`}<div ${S.hm ? '' : 'hidden '}data-hm><input id="smRc" data-keep="rc" inputmode="numeric" maxlength="4" dir="ltr" placeholder="${T('رمز التحكم من الإعدادات', 'The code from the settings')}"><button type="button" class="btn solid" data-rcgo>${B('اربط', 'Connect')}</button></div></div>`;
     else if (g.ph === 'over') body = `<div class="sm-pw"><p class="sm-big">${esc(g.note || T('انتهت اللعبة', 'The game is over'))}</p>${g.gained && g.gained[uid] ? `<p class="sm-plus">+${g.gained[uid]}</p>` : ''}${mineL()}</div>`;
     // arrived in the middle of a game: watch this one, play the next
     else if (!S.p || S.p.gn !== g.gn) body = wait('دخلت والجولة جارية. تابع الشاشة، وتلعب معنا من اللعبة القادمة.', 'You joined mid-game. Watch the screen; you play from the next game.');
@@ -502,7 +531,8 @@
     // the drawer's pad stays as it is; only the list of who got it and the points change
     if (g && g.id === 'draw' && g.ph === 'draw' && p.role === 'drawer' && S.padT === g.turn && root.querySelector('#smPad')) {
       const gl = root.querySelector('#smGot'); if (gl) gl.innerHTML = gotHtml(p); const t = root.querySelector('.sm-top b'); if (t) t.textContent = my; return; }
-    const html = `<div class="sm-phone"><div class="sm-top"><span dir="auto">${esc(S.me)}</span><b>${my}</b></div>${g && g.dur ? '<div class="sm-bar"><i id="smBar"></i></div>' : ''}${body}${rxBar()}</div>`;
+    const tmi = S.tm && S.tm[uid] != null ? `<em class="sm-tmb" style="--c:${['#f2b84b', '#2bb3a3'][S.tm[uid]]}">${[B('الصقور', 'Falcons'), B('النجوم', 'Stars')][S.tm[uid]]}</em>` : '';
+    const html = `<div class="sm-phone"><div class="sm-top"><span dir="auto">${esc(S.me)}${tmi}</span><b>${my}</b></div>${g && g.dur ? '<div class="sm-bar"><i id="smBar"></i></div>' : ''}${body}${rxBar()}</div>`;
     if (html === S.html && root.querySelector('.sm-phone')) return; S.html = html;
     const keep = [...root.querySelectorAll('input[data-keep]')].map(i => [i.dataset.keep, i.value]), fk = document.activeElement && document.activeElement.dataset ? document.activeElement.dataset.keep : null;
     root.innerHTML = html;
@@ -523,7 +553,8 @@
   const gotHtml = p => (p.got || []).length ? `${B('خمّنها:', 'Got it:')} ${p.got.map(n => `<b dir="auto">${esc(n)}</b>`).join(' ')}` : B('لم يخمّنها أحد بعد', 'Nobody has it yet');
   function phoneFinal(g) {
     const r = g.rank || [], k = r.findIndex(x => x.u === uid.slice(0, 8)), t = (g.titles || []).filter(x => x.u === uid.slice(0, 8));
-    return `<div class="sm-pw sm-pfinal"><p class="sm-sub">${B('ختام الجلسة', 'The end of the session')}</p>${k >= 0 ? `<p class="sm-rank">${k + 1}</p><p class="sm-big">${B(`مركزك من ${r.length}`, `Your place of ${r.length}`)}</p><p class="sm-plus">${r[k].s}</p>` : ''}${t.map(x => `<p class="sm-ttl">${B(x.ar, x.en)}</p>`).join('')}
+    const myT = S.tm && S.tm[uid] != null ? S.tm[uid] : null, tl = g.tw >= -1 && myT != null ? `<p class="sm-ttl">${g.tw === -1 ? B('تعادل الفريقان', 'The teams are level') : g.tw === myT ? B('فاز فريقك!', 'Your team won!') : B('فاز الفريق الآخر', 'The other team won')}</p>` : '';
+    return `<div class="sm-pw sm-pfinal"><p class="sm-sub">${B('ختام الجلسة', 'The end of the session')}</p>${tl}${k >= 0 ? `<p class="sm-rank">${k + 1}</p><p class="sm-big">${B(`مركزك من ${r.length}`, `Your place of ${r.length}`)}</p><p class="sm-plus">${r[k].s}</p>` : ''}${t.map(x => `<p class="sm-ttl">${B(x.ar, x.en)}</p>`).join('')}
       <ol class="sm-mini">${r.slice(0, 3).map(x => `<li><span dir="auto">${esc(x.n)}</span><b>${x.s}</b></li>`).join('')}</ol></div>`;
   }
   const phoneHints = g => (g.hints || []).length ? `<div class="sm-phints">${g.hints[g.hints.length - 1].map(h => `<span><i dir="auto">${esc(h.n)}</i><b dir="auto">${esc(h.h)}</b></span>`).join('')}</div>` : '';
@@ -555,6 +586,7 @@
     if (inp) { if (!document.activeElement || document.activeElement === document.body) setTimeout(() => inp.focus(), 50); inp.onkeydown = e => { if (e.key === 'Enter') { const b = q('[data-send]'); if (b) b.click(); } }; }
     root.querySelectorAll('[data-vote]').forEach(b => b.onclick = () => { send('v:' + b.dataset.vote); S.sent = 'v'; buzz(20); phone(); });
     root.querySelectorAll('[data-word]').forEach(b => b.onclick = () => { send('w:' + b.dataset.word); buzz(20); });
+    const hm = q('[data-hostme]'); if (hm) hm.onclick = () => { S.hm = true; phone(); const i = q('#smRc'); if (i) i.focus(); }; if (q('[data-rcgo]')) { q('[data-rcgo]').onclick = () => { const v = q('#smRc').value.replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/\D/g, ''); if (v.length === 4) { send('r:' + v); buzz(20); } }; }
     const hb = q('[data-hint]'); if (hb) hb.onclick = () => { send('h:1'); buzz(20); };
     // the letter game: what is typed goes out quietly as it is written, and "stop" sends it all at once
     const ls = root.querySelectorAll('[data-l]'); if (ls.length) { const vals = () => [...ls].map(i => i.value.trim()); let t = null; ls.forEach(i => i.oninput = () => { S.lt = vals(); clearTimeout(t); t = setTimeout(() => send('a:' + JSON.stringify(S.lt)), 700); });
