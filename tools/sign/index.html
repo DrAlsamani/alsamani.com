@@ -1540,10 +1540,16 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
 .sn-drv input{margin-top:5px;flex:none;width:18px;height:18px}
 .sn-drvbar{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin:10px 0 0;padding:10px 14px;border-radius:12px;background:var(--soft,rgba(37,99,235,.06));font-size:.95rem}
 .sn-drvbar svg{flex:none;color:var(--accent,#2563eb)}
+.sn-aiq{margin:10px 0 0;display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline}
+.sn-aiq small{color:var(--muted);font-size:.85rem}
+.sn-fixl{list-style:none;padding:0;margin:8px 0 14px;display:grid;gap:8px}
+.sn-fixl li{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:baseline;padding:8px 12px;border:1px solid var(--line);border-radius:10px}
+.sn-fixl s{color:var(--muted)}.sn-fixl b{color:var(--accent,#2563eb)}
 </style>
 <div id="sn" class="sn" data-api="https://script.google.com/macros/s/AKfycbx8-M5oOYDU-TaWyLaySlqZHvBffRiDI6QH85_hBh5y_9uYrvUdxwD3hKNzGoJ4K7UOXQ/exec"><noscript><span class="ar">تعمل هذه الأداة مع تفعيل JavaScript.</span><span class="en">This tool needs JavaScript.</span></noscript></div>
 <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+<script>window.MD_CFG={"apiKey": "AIzaSyA50i75DT1Is1a6Yn6snW1_JVObc8S3F0Y", "authDomain": "maydan-705ae.firebaseapp.com", "databaseURL": "https://maydan-705ae-default-rtdb.europe-west1.firebasedatabase.app", "projectId": "maydan-705ae", "appId": "1:342187013133:web:d5c2396f0db413f3c51144"};</script>
 <script>async function snLinesOf(page,OPS){
   const ol=await page.getOperatorList();const V=[],H=[];let m=[1,0,0,1,0,0];const st=[];
   const mul=(a,b)=>[a[0]*b[0]+a[2]*b[1],a[1]*b[0]+a[3]*b[1],a[0]*b[2]+a[2]*b[3],a[1]*b[2]+a[3]*b[3],a[0]*b[4]+a[2]*b[5]+a[4],a[1]*b[4]+a[3]*b[5]+a[5]];
@@ -1562,7 +1568,15 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
 }
 
 function snNorm(s){return (s||'').normalize('NFKC').replace(/[ـ‎‏‪-‮ً-ْ]/g,'').replace(/ی/g,'ي').replace(/ھ/g,'ه').replace(/ک/g,'ك')}
-function snFix(s){return snNorm(s).replace(/هللا/g,'الله').replace(/ا([أإآ])ل/g,'ال$1').replace(/\s+/g,' ').trim()}
+// Word's Arabic PDFs often store two-letter ligatures backwards (سالم read as سامل, محمد as حممد, الصمعاني as الصمعاين).
+// A word that is not a known name but becomes one when such a pair is turned round is put right; nothing leaves the device.
+const SN_NAMES=new Set('محمد أحمد محمود حامد حمد حمدان حمود حمزة مصطفى إبراهيم ابراهيم إسماعيل اسماعيل يوسف يحيى عمر عثمان علي حسن حسين حسان سالم سلمان سليمان سلمى سلطان مسلم ملحم خالد مخلد فهد سعد سعود ناصر منصور مساعد مشعل مشاري ماجد مجيد مجدي عبدالمجيد عبدالله الله عبدالعزيز العزيز عبدالرحمن الرحمن عبدالرحيم الرحيم عبدالكريم الكريم عبدالمحسن المحسن محسن عبدالملك الملك عبدالحميد الحميد عبدالحكيم الحكيم حكيم عبدالإله الإله إلهام جمال جميل جميلة جمانة جمعة مهند معاذ معتز معاوية محيي حمدي حلمي حليمة حمادة نايف نواف تركي بندر فيصل وليد زياد هاني هشام طلال بدر راشد رشيد صالح صلاح عادل عامر تامر ياسر ياسين أنس أيمن إيمان نوف نورة نورا سارة مريم منى هند هيا لمى لمياء حنان أمل أمينة أميمة عائشة فاطمة خديجة رحمة رحمه نجلاء نجود حصة لطيفة منيرة مشاعل شهد ريم رهف جود دلال سلوى ليلى غادة وفاء مها ملاك لجين لينا رنا رغد مي مياء حمدة محمدة جمال الدين بن بنت أبو أبا آل العلي الأحمد المحمد الحمد الحمدان الحمود السالم المسلم السليمان الحسين الحسن الحمادي المحمدي'.split(' '));
+const SN_LIG='لمحجخني';
+function snLig(w){if(SN_NAMES.has(w)||w.length<3)return w;
+  if(/^ال.{2,}اين$/.test(w))return w.slice(0,-2)+'ني';
+  for(let i=0;i<w.length-1;i++){if(SN_LIG.includes(w[i])&&SN_LIG.includes(w[i+1])&&w[i]!==w[i+1]){const v=w.slice(0,i)+w[i+1]+w[i]+w.slice(i+2);if(SN_NAMES.has(v))return v}}
+  return w}
+function snFix(s){return snNorm(s).replace(/هللا/g,'الله').replace(/ا([أإآ])ل/g,'ال$1').replace(/\s+/g,' ').trim().split(' ').map(snLig).join(' ')}
 function snKey(s){return snNorm(s).replace(/\s+/g,'')}
 function snLines(items){const lines=[];items.slice().sort((a,b)=>b.y-a.y).forEach(i=>{let l=lines.find(l=>Math.abs(l.y-i.y)<Math.min(l.fs,i.fs)*.45);if(!l){l={y:i.y,fs:i.fs,it:[]};lines.push(l)}l.it.push(i)});return lines}
 function snJoin(its,fs){its=its.slice().sort((a,b)=>(b.x+b.w)-(a.x+a.w));let s='',left=null;
@@ -1686,6 +1700,21 @@ async function snDetectPage(page,pi,OPS){
     }
     return j;
   }
+  /* ---------- Gemini through the project's Firebase AI Logic, with App Check (only the names are ever sent) ---------- */
+  let gm = null;
+  async function gemini(p) {
+    if (!gm) {
+      const u = n => `https://www.gstatic.com/firebasejs/11.10.0/firebase-${n}.js`;
+      const [{ initializeApp, getApps }, { initializeAppCheck, ReCaptchaEnterpriseProvider }, { getAI, getGenerativeModel, VertexAIBackend }] = await Promise.all([import(u('app')), import(u('app-check')), import(u('ai'))]);
+      const app = getApps().find(a => a.name === 'snai') || initializeApp(window.MD_CFG, 'snai');
+      try { initializeAppCheck(app, { provider: new ReCaptchaEnterpriseProvider('6Le4gQsuAAAAAE3jS1mLgG9B2XT8AucvEecF6Kp4'), isTokenAutoRefreshEnabled: false }); } catch (e) {}
+      const ai = getAI(app, { backend: new VertexAIBackend('global') });
+      gm = ['gemini-3.6-flash', 'gemini-3.8-flash', 'gemini-3-flash-preview', 'gemini-flash-latest'].map(m => getGenerativeModel(ai, { model: m, generationConfig: { temperature: 0.1, thinkingConfig: { thinkingBudget: 512 } } }));
+    }
+    for (const m of gm) { try { return (await m.generateContent(p)).response.text(); } catch (e) { if (!/not.?found|404/i.test(String(e && e.message))) throw e; } }
+    throw new Error('no model');
+  }
+
   /* ---------- the coordinator's own Google Drive: the minutes and the signed copy are kept there.
      Access is limited to the files this tool creates (drive.file); nothing else in the Drive is visible to it. ---------- */
   const GCID = '342187013133-ainojvc448dolkv6ipk2l2l7di0rkfhf.apps.googleusercontent.com', DSCOPE = 'https://www.googleapis.com/auth/drive.file';
@@ -1919,7 +1948,8 @@ async function snDetectPage(page,pi,OPS){
       <div id="snRev" hidden>
       <div class="sn-card">
         <p>${B('اضغط على الصفحة حيث تريد مربع توقيع، ثم اكتب اسم العضو داخله. واسحب أي مربع لتعديل موضعه، أو احذفه بعلامة ×.', 'Tap the page where a signature box should go, then type the member’s name inside it. Drag a box to move it, or remove it with ×.')}</p>
-        <details class="sn-det"${found ? '' : ' open'}><summary>${B('أسماء الأعضاء', 'Member names')} <b id="snNc"></b></summary><ol class="sn-list" id="snList"></ol></details>
+        <details class="sn-det"${found ? '' : ' open'}><summary>${B('أسماء الأعضاء', 'Member names')} <b id="snNc"></b></summary><ol class="sn-list" id="snList"></ol>
+          <p class="sn-aiq"><button type="button" class="sn-lnk" id="snAiNames">${B('دقّق الأسماء بالذكاء الاصطناعي', 'Check the names with AI')}</button> <small>${B('لبعض ملفات PDF تُقرأ فيها الحروف العربية خطأ. تُرسل الأسماء وحدها لا المحضر.', 'For PDFs whose Arabic letters read wrongly. Only the names are sent, not the minutes.')}</small></p></details>
         <div class="sn-tools">        ${found ? `<button type="button" class="sn-lnk" id="snJump">${B('الانتقال إلى جدول التواقيع', 'Go to the signature table')}</button>` : ''}</div>
       </div>
       <div class="sn-pages" id="snPagesHost"></div>
@@ -1934,6 +1964,23 @@ async function snDetectPage(page,pi,OPS){
       list.querySelectorAll('input').forEach(inp => inp.oninput = () => { slots[+inp.dataset.i].n = inp.value; setName(+inp.dataset.i); });
       list.querySelectorAll('.sn-del').forEach(b => b.onclick = () => { slots.splice(+b.dataset.i, 1); drawList(); place(); });
     }
+    // the AI reads the names alone and puts right letters the PDF stored wrongly; the coordinator approves each change
+    ed.querySelector('#snAiNames').onclick = async ev => {
+      const btn = ev.currentTarget, idx = slots.map((x, i) => i).filter(i => (slots[i].n || '').trim()); if (!idx.length) return toast(B('لا أسماء لتدقيقها.', 'No names to check.'));
+      const uniq = [...new Set(idx.map(i => slots[i].n.trim()))], was = btn.innerHTML; btn.disabled = true; btn.innerHTML = B('لحظة…', 'One moment…');
+      try {
+        const raw = await gemini(`These are people's names (Arabic, possibly with titles like أ.د. or د.) read from a PDF whose Arabic text layer is damaged: two-letter ligatures are often stored backwards (سامل for سالم, حممد for محمد, الصمعاين for الصمعاني, حسني for حسين, أمحد for أحمد), and a ligature can come out as a Latin letter or symbol (Fمر for تامر). Correct each name to its most likely real spelling. Keep titles and word order, change nothing that is already right, and do not invent names. Return only a JSON array of strings, the same length and order as the input.
+${JSON.stringify(uniq)}`);
+        const out = JSON.parse(raw.slice(raw.indexOf('['), raw.lastIndexOf(']') + 1)); if (!Array.isArray(out) || out.length !== uniq.length) throw new Error('shape');
+        const fix = {}; uniq.forEach((n, k) => { const v = String(out[k] || '').trim(); if (v && v !== n && v.length <= 120) fix[n] = v; });
+        btn.innerHTML = was; btn.disabled = false;
+        if (!Object.keys(fix).length) return toast(B('الأسماء سليمة، لا تصحيح.', 'The names look right; nothing to correct.'));
+        const sh = sheet(`<h3>${B('تصحيح مقترح للأسماء', 'Suggested corrections')}</h3><ul class="sn-fixl">${Object.keys(fix).map(n => `<li><s dir="auto">${esc(n)}</s><b dir="auto">${esc(fix[n])}</b></li>`).join('')}</ul>
+          <div class="sn-sb"><button type="button" class="btn solid" data-act="ok">${B('اعتمد التصحيح', 'Apply')}</button><button type="button" class="btn ghost" data-act="x">${B('إلغاء', 'Cancel')}</button></div>`);
+        sh.querySelector('[data-act=x]').onclick = close;
+        sh.querySelector('[data-act=ok]').onclick = () => { slots.forEach((x, i) => { const v = fix[(x.n || '').trim()]; if (v) { x.n = v; setName(i); } }); drawList(); close(); toast(B('صُحّحت الأسماء.', 'Names corrected.')); };
+      } catch (e) { console.error(e); btn.innerHTML = was; btn.disabled = false; toast(B('تعذّر التدقيق الآن، جرّب بعد قليل.', 'Could not check now; try again shortly.'), 1); }
+    };
     function place() {
       placeBoxes(views, slots, { edit: 1, onBox: (b, i, v) => {
         b.querySelector('.sn-bx').onclick = e => { e.stopPropagation(); slots.splice(i, 1); drawList(); place(); };

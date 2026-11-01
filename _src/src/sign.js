@@ -56,6 +56,21 @@
     }
     return j;
   }
+  /* ---------- Gemini through the project's Firebase AI Logic, with App Check (only the names are ever sent) ---------- */
+  let gm = null;
+  async function gemini(p) {
+    if (!gm) {
+      const u = n => `https://www.gstatic.com/firebasejs/11.10.0/firebase-${n}.js`;
+      const [{ initializeApp, getApps }, { initializeAppCheck, ReCaptchaEnterpriseProvider }, { getAI, getGenerativeModel, VertexAIBackend }] = await Promise.all([import(u('app')), import(u('app-check')), import(u('ai'))]);
+      const app = getApps().find(a => a.name === 'snai') || initializeApp(window.MD_CFG, 'snai');
+      try { initializeAppCheck(app, { provider: new ReCaptchaEnterpriseProvider('6Le4gQsuAAAAAE3jS1mLgG9B2XT8AucvEecF6Kp4'), isTokenAutoRefreshEnabled: false }); } catch (e) {}
+      const ai = getAI(app, { backend: new VertexAIBackend('global') });
+      gm = ['gemini-3.6-flash', 'gemini-3.8-flash', 'gemini-3-flash-preview', 'gemini-flash-latest'].map(m => getGenerativeModel(ai, { model: m, generationConfig: { temperature: 0.1, thinkingConfig: { thinkingBudget: 512 } } }));
+    }
+    for (const m of gm) { try { return (await m.generateContent(p)).response.text(); } catch (e) { if (!/not.?found|404/i.test(String(e && e.message))) throw e; } }
+    throw new Error('no model');
+  }
+
   /* ---------- the coordinator's own Google Drive: the minutes and the signed copy are kept there.
      Access is limited to the files this tool creates (drive.file); nothing else in the Drive is visible to it. ---------- */
   const GCID = '342187013133-ainojvc448dolkv6ipk2l2l7di0rkfhf.apps.googleusercontent.com', DSCOPE = 'https://www.googleapis.com/auth/drive.file';
@@ -289,7 +304,8 @@
       <div id="snRev" hidden>
       <div class="sn-card">
         <p>${B('اضغط على الصفحة حيث تريد مربع توقيع، ثم اكتب اسم العضو داخله. واسحب أي مربع لتعديل موضعه، أو احذفه بعلامة ×.', 'Tap the page where a signature box should go, then type the member’s name inside it. Drag a box to move it, or remove it with ×.')}</p>
-        <details class="sn-det"${found ? '' : ' open'}><summary>${B('أسماء الأعضاء', 'Member names')} <b id="snNc"></b></summary><ol class="sn-list" id="snList"></ol></details>
+        <details class="sn-det"${found ? '' : ' open'}><summary>${B('أسماء الأعضاء', 'Member names')} <b id="snNc"></b></summary><ol class="sn-list" id="snList"></ol>
+          <p class="sn-aiq"><button type="button" class="sn-lnk" id="snAiNames">${B('دقّق الأسماء بالذكاء الاصطناعي', 'Check the names with AI')}</button> <small>${B('لبعض ملفات PDF تُقرأ فيها الحروف العربية خطأ. تُرسل الأسماء وحدها لا المحضر.', 'For PDFs whose Arabic letters read wrongly. Only the names are sent, not the minutes.')}</small></p></details>
         <div class="sn-tools">        ${found ? `<button type="button" class="sn-lnk" id="snJump">${B('الانتقال إلى جدول التواقيع', 'Go to the signature table')}</button>` : ''}</div>
       </div>
       <div class="sn-pages" id="snPagesHost"></div>
@@ -304,6 +320,23 @@
       list.querySelectorAll('input').forEach(inp => inp.oninput = () => { slots[+inp.dataset.i].n = inp.value; setName(+inp.dataset.i); });
       list.querySelectorAll('.sn-del').forEach(b => b.onclick = () => { slots.splice(+b.dataset.i, 1); drawList(); place(); });
     }
+    // the AI reads the names alone and puts right letters the PDF stored wrongly; the coordinator approves each change
+    ed.querySelector('#snAiNames').onclick = async ev => {
+      const btn = ev.currentTarget, idx = slots.map((x, i) => i).filter(i => (slots[i].n || '').trim()); if (!idx.length) return toast(B('لا أسماء لتدقيقها.', 'No names to check.'));
+      const uniq = [...new Set(idx.map(i => slots[i].n.trim()))], was = btn.innerHTML; btn.disabled = true; btn.innerHTML = B('لحظة…', 'One moment…');
+      try {
+        const raw = await gemini(`These are people's names (Arabic, possibly with titles like أ.د. or د.) read from a PDF whose Arabic text layer is damaged: two-letter ligatures are often stored backwards (سامل for سالم, حممد for محمد, الصمعاين for الصمعاني, حسني for حسين, أمحد for أحمد), and a ligature can come out as a Latin letter or symbol (Fمر for تامر). Correct each name to its most likely real spelling. Keep titles and word order, change nothing that is already right, and do not invent names. Return only a JSON array of strings, the same length and order as the input.
+${JSON.stringify(uniq)}`);
+        const out = JSON.parse(raw.slice(raw.indexOf('['), raw.lastIndexOf(']') + 1)); if (!Array.isArray(out) || out.length !== uniq.length) throw new Error('shape');
+        const fix = {}; uniq.forEach((n, k) => { const v = String(out[k] || '').trim(); if (v && v !== n && v.length <= 120) fix[n] = v; });
+        btn.innerHTML = was; btn.disabled = false;
+        if (!Object.keys(fix).length) return toast(B('الأسماء سليمة، لا تصحيح.', 'The names look right; nothing to correct.'));
+        const sh = sheet(`<h3>${B('تصحيح مقترح للأسماء', 'Suggested corrections')}</h3><ul class="sn-fixl">${Object.keys(fix).map(n => `<li><s dir="auto">${esc(n)}</s><b dir="auto">${esc(fix[n])}</b></li>`).join('')}</ul>
+          <div class="sn-sb"><button type="button" class="btn solid" data-act="ok">${B('اعتمد التصحيح', 'Apply')}</button><button type="button" class="btn ghost" data-act="x">${B('إلغاء', 'Cancel')}</button></div>`);
+        sh.querySelector('[data-act=x]').onclick = close;
+        sh.querySelector('[data-act=ok]').onclick = () => { slots.forEach((x, i) => { const v = fix[(x.n || '').trim()]; if (v) { x.n = v; setName(i); } }); drawList(); close(); toast(B('صُحّحت الأسماء.', 'Names corrected.')); };
+      } catch (e) { console.error(e); btn.innerHTML = was; btn.disabled = false; toast(B('تعذّر التدقيق الآن، جرّب بعد قليل.', 'Could not check now; try again shortly.'), 1); }
+    };
     function place() {
       placeBoxes(views, slots, { edit: 1, onBox: (b, i, v) => {
         b.querySelector('.sn-bx').onclick = e => { e.stopPropagation(); slots.splice(i, 1); drawList(); place(); };

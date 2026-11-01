@@ -138,3 +138,8 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
 .sn-drv input{margin-top:5px;flex:none;width:18px;height:18px}
 .sn-drvbar{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin:10px 0 0;padding:10px 14px;border-radius:12px;background:var(--soft,rgba(37,99,235,.06));font-size:.95rem}
 .sn-drvbar svg{flex:none;color:var(--accent,#2563eb)}
+.sn-aiq{margin:10px 0 0;display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline}
+.sn-aiq small{color:var(--muted);font-size:.85rem}
+.sn-fixl{list-style:none;padding:0;margin:8px 0 14px;display:grid;gap:8px}
+.sn-fixl li{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:baseline;padding:8px 12px;border:1px solid var(--line);border-radius:10px}
+.sn-fixl s{color:var(--muted)}.sn-fixl b{color:var(--accent,#2563eb)}

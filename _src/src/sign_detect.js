@@ -16,7 +16,15 @@ async function snLinesOf(page,OPS){
 }
 
 function snNorm(s){return (s||'').normalize('NFKC').replace(/[ـ‎‏‪-‮ً-ْ]/g,'').replace(/ی/g,'ي').replace(/ھ/g,'ه').replace(/ک/g,'ك')}
-function snFix(s){return snNorm(s).replace(/هللا/g,'الله').replace(/ا([أإآ])ل/g,'ال$1').replace(/\s+/g,' ').trim()}
+// Word's Arabic PDFs often store two-letter ligatures backwards (سالم read as سامل, محمد as حممد, الصمعاني as الصمعاين).
+// A word that is not a known name but becomes one when such a pair is turned round is put right; nothing leaves the device.
+const SN_NAMES=new Set('محمد أحمد محمود حامد حمد حمدان حمود حمزة مصطفى إبراهيم ابراهيم إسماعيل اسماعيل يوسف يحيى عمر عثمان علي حسن حسين حسان سالم سلمان سليمان سلمى سلطان مسلم ملحم خالد مخلد فهد سعد سعود ناصر منصور مساعد مشعل مشاري ماجد مجيد مجدي عبدالمجيد عبدالله الله عبدالعزيز العزيز عبدالرحمن الرحمن عبدالرحيم الرحيم عبدالكريم الكريم عبدالمحسن المحسن محسن عبدالملك الملك عبدالحميد الحميد عبدالحكيم الحكيم حكيم عبدالإله الإله إلهام جمال جميل جميلة جمانة جمعة مهند معاذ معتز معاوية محيي حمدي حلمي حليمة حمادة نايف نواف تركي بندر فيصل وليد زياد هاني هشام طلال بدر راشد رشيد صالح صلاح عادل عامر تامر ياسر ياسين أنس أيمن إيمان نوف نورة نورا سارة مريم منى هند هيا لمى لمياء حنان أمل أمينة أميمة عائشة فاطمة خديجة رحمة رحمه نجلاء نجود حصة لطيفة منيرة مشاعل شهد ريم رهف جود دلال سلوى ليلى غادة وفاء مها ملاك لجين لينا رنا رغد مي مياء حمدة محمدة جمال الدين بن بنت أبو أبا آل العلي الأحمد المحمد الحمد الحمدان الحمود السالم المسلم السليمان الحسين الحسن الحمادي المحمدي'.split(' '));
+const SN_LIG='لمحجخني';
+function snLig(w){if(SN_NAMES.has(w)||w.length<3)return w;
+  if(/^ال.{2,}اين$/.test(w))return w.slice(0,-2)+'ني';
+  for(let i=0;i<w.length-1;i++){if(SN_LIG.includes(w[i])&&SN_LIG.includes(w[i+1])&&w[i]!==w[i+1]){const v=w.slice(0,i)+w[i+1]+w[i]+w.slice(i+2);if(SN_NAMES.has(v))return v}}
+  return w}
+function snFix(s){return snNorm(s).replace(/هللا/g,'الله').replace(/ا([أإآ])ل/g,'ال$1').replace(/\s+/g,' ').trim().split(' ').map(snLig).join(' ')}
 function snKey(s){return snNorm(s).replace(/\s+/g,'')}
 function snLines(items){const lines=[];items.slice().sort((a,b)=>b.y-a.y).forEach(i=>{let l=lines.find(l=>Math.abs(l.y-i.y)<Math.min(l.fs,i.fs)*.45);if(!l){l={y:i.y,fs:i.fs,it:[]};lines.push(l)}l.it.push(i)});return lines}
 function snJoin(its,fs){its=its.slice().sort((a,b)=>(b.x+b.w)-(a.x+a.w));let s='',left=null;
