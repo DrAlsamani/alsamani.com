@@ -220,14 +220,17 @@ window.MDLive = (function () {
         try { await within(db.ref('rooms/' + p).set({ host: uid, at: TS, title: quiz.title || '', n: quiz.qs.length, st: { ph: 'lobby', i: -1, lock: false } }), 8000); pin = p; } catch (e) { if (e.message === 'timeout') throw e; /* taken: try another */ }
       }
       if (!pin) throw new Error('pin');
-      fresh(quiz, el, pin); keep(); lobby(); sweep();
+      fresh(quiz, el, pin); keep(); lobby(); remember('rooms', pin);
     } catch (e) { fail(el, () => start(quiz)); }
   }
-  // housekeeping: rooms left open for more than three days are cleared by whoever opens a new one
-  function sweep() {
-    ['rooms', 'kh'].forEach(n => db.ref(n).orderByChild('at').endAt(Date.now() - 72 * 36e5).limitToFirst(20).once('value')
-      .then(v => v.forEach(c => { if (/^\d{6}$/.test(c.key)) db.ref(n + '/' + c.key).remove().catch(() => {}); })).catch(() => {}));
+  // housekeeping: this device's own rooms, left open for more than three days, are cleared when it opens a new one
+  function sweep(cur) {
+    let L = []; try { L = JSON.parse(localStorage.getItem('fbRooms') || '[]'); } catch (e) {}
+    const old = Date.now() - 72 * 36e5, keep = [];
+    L.forEach(r => { if (r.pin === cur || r.at > old) keep.push(r); else { db.ref(r.n + '/' + r.pin).remove().catch(() => {}); if (r.n === 'kh') db.ref('khh/' + r.pin).remove().catch(() => {}); } });
+    return keep;
   }
+  function remember(n, pin) { try { const L = sweep(pin).filter(r => r.pin !== pin); L.push({ n, pin, at: Date.now() }); localStorage.setItem('fbRooms', JSON.stringify(L.slice(-40))); } catch (e) {} }
   // pick up a paused game: the same room, the same players, the scores so far
   async function resume() {
     const s = pending(); if (!s) return;

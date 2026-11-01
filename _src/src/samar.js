@@ -130,6 +130,15 @@
     const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
   }
 
+  // housekeeping: this device's own rooms, left open for more than three days, are cleared when it opens a new one
+  function sweep(cur) {
+    let L = []; try { L = JSON.parse(localStorage.getItem('fbRooms') || '[]'); } catch (e) {}
+    const old = Date.now() - 72 * 36e5, keep = [];
+    L.forEach(r => { if (r.pin === cur || r.at > old) keep.push(r); else { db.ref(r.n + '/' + r.pin).remove().catch(() => {}); if (r.n === 'kh') db.ref('khh/' + r.pin).remove().catch(() => {}); } });
+    return keep;
+  }
+  function remember(n, pin) { try { const L = sweep(pin).filter(r => r.pin !== pin); L.push({ n, pin, at: Date.now() }); localStorage.setItem('fbRooms', JSON.stringify(L.slice(-40))); } catch (e) {} }
+
   /* ---------- usage: anonymous counts (no names), added to the same record Maydan keeps ---------- */
   async function stat(add) {
     try { const k = 's' + uid, r = db.ref('rooms/' + k), INC = firebase.database.ServerValue.increment, up = {};
@@ -177,9 +186,7 @@
       const R = res && pin === res.pin ? res : {};
       S = { mode: 'host', pin, ref: db.ref('kh/' + pin), pl: {}, sc: R.sc || {}, stt: R.stt || {}, played: !!R.played, gn: R.gn || 0, rc: R.rc || String(1000 + Math.floor(Math.random() * 9000)), remote: R.remote || null, teams: !!R.teams, tm: R.tm || {}, g: null, gs: null, seq: {}, L: isAr() ? 'ar' : 'en', cat: store.get('cat', 'mix') };
       saveHost(); if (R.pin) { pub({ ph: 'pick' }); pushScores(); }
-      // housekeeping: sessions and rooms left open for more than three days are cleared by whoever opens a new one
-      ['kh', 'rooms'].forEach(n => db.ref(n).orderByChild('at').endAt(Date.now() - 72 * 36e5).limitToFirst(20).once('value')
-        .then(v => v.forEach(c => { if (/^\d{6}$/.test(c.key) && c.key !== pin) db.ref(n + '/' + c.key).remove().catch(() => {}); })).catch(() => {}));
+      remember('kh', pin);
       on(S.ref.child('pl'), 'child_added', s => { if (s.key === S.remote) return; const v = s.val() || {}; S.pl[s.key] = v.n || '؟'; if (S.sc[s.key] == null) S.sc[s.key] = 0; if (S.teams && S.tm[s.key] == null) { S.tm[s.key] = teamCount(0) <= teamCount(1) ? 0 : 1; pushTeams(); } SND.join();
         // arriving mid-game: the game takes them in from where it is, when it can
         if (S.roster && !S.roster[s.key] && S.gs && S.gs.join) { S.roster[s.key] = 1; try { S.gs.join(s.key); } catch (e) { console.error(e); } }
