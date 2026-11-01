@@ -22,15 +22,20 @@ body:after{content:"";position:absolute;inset:auto 0 0 0;height:14px;background:
 <body><div class="r">${MARK}<div><p class="e">منصة الألعاب التفاعلية</p><h1>${h}</h1><p class="en">${en}</p></div></div><p class="q">${sub}</p><div class="f"><b>${foot}</b><span>alsamani.com</span></div></body></html>`;
 const khMark = `<svg class="md-mark" viewBox="0 0 48 48"><rect x="4" y="4" width="40" height="40" rx="12" fill="#0b3b2c"/><g fill="#e0a458"><circle cx="12" cy="36" r="4"/><circle cx="18" cy="30" r="4"/><circle cx="24" cy="24" r="4"/><circle cx="30" cy="18" r="4"/><circle cx="36" cy="12" r="4"/></g></svg>`;
 const kh = game('تسلسل', 'على طريقة لعبة سيكوينس المعروفة: كوّن صفوفك من أربع أو خمس قبل خصمك، مع الأصدقاء والفرق. على شاشة وجوالات، أو عن بُعد، أو ضد الجهاز.', 'Tasalsul · rows of four or five', '').replace(MARK, khMark).replace(/background:#1f2a5c/, 'background:#0f4d3a');
+const smMark = `<svg class="md-mark" viewBox="0 0 48 48" aria-hidden="true"><rect x="4" y="4" width="40" height="40" rx="12" fill="#17153a"/><path d="M27 12a12 12 0 1 0 9 20a10 10 0 1 1-9-20z" fill="#f2b84b"/><path d="M33 13l1.2 2.6 2.8.4-2 2 .5 2.8-2.5-1.3-2.5 1.3.5-2.8-2-2 2.8-.4z" fill="#f4eedf"/><circle cx="14" cy="34" r="1.6" fill="#2bb3a3"/><circle cx="20" cy="37" r="1.2" fill="#e0607e"/></svg>`;
+const sm = game('سمر', 'تحلو سهرتكم مع سمر: ألعاب تفاعلية متنوعة وممتعة للآخر. شخص يستضيف اللعبة ويديرها، والباقي يشاركون من جوالاتهم.', 'Samar · games for your evening', '').replace(MARK, smMark)
+  .replace('background:#1f2a5c', 'background:#17153a').replace('background:#e0a458}', 'background:#f2b84b}').replace('.e{color:#e0a458', '.e{color:#f2b84b')
+  .replace(/background-image:url\("[^"]+"\)/, 'background-image:radial-gradient(2px 2px at 12% 20%,#fff8,transparent 60%),radial-gradient(1.5px 1.5px at 30% 70%,#fff6,transparent 60%),radial-gradient(2px 2px at 55% 12%,#fff8,transparent 60%),radial-gradient(1.5px 1.5px at 70% 80%,#fff5,transparent 60%),radial-gradient(2px 2px at 88% 30%,#ffe9b4aa,transparent 60%),radial-gradient(1.5px 1.5px at 6% 85%,#fff5,transparent 60%),radial-gradient(1.5px 1.5px at 44% 45%,#fff4,transparent 60%),radial-gradient(ellipse 70% 60% at 80% 0,#7c8cf833,transparent 70%),linear-gradient(160deg,#0e0c29,#1f1b4f)');
 const only = process.argv[2];
 const cards = [
   ['site', site], ['site-oa', oaOnly],
   ['play', game('منصة الألعاب التفاعلية'.replace('منصة ', ''), 'منصة تعليمية ترفيهية للتوظيف داخل بيئة التعلم والأنشطة والاجتماعات.', 'Interactive games', '')],
   ['play-maydan', game('ميدان', 'مسابقات تفاعلية حيّة: سؤال على الشاشة، والجميع يجيب من جواله. أسئلة وتحديات وفرق ومكتبة جاهزة.', 'Maydan · live quizzes', '')],
   ['play-tasalsul', kh],
+  ['play-samar', sm],
   ['m', game('ادخل الميدان', 'اكتب رمز المسابقة الظاهر على الشاشة، ثم اسمك، وابدأ اللعب.', 'Maydan · join the quiz', 'ميدان')]];
 (async () => {
-  const b = await chromium.launch({ proxy: { server: process.env.HTTPS_PROXY } }); const c = await b.newContext({ viewport: { width: 1200, height: 630 }, ignoreHTTPSErrors: true }); const p = await c.newPage();
+  const b = await chromium.launch({ args: ['--proxy-server=' + process.env.HTTPS_PROXY, '--ignore-certificate-errors'] }); const c = await b.newContext({ viewport: { width: 1200, height: 630 }, ignoreHTTPSErrors: true }); const p = await c.newPage();
   for (const [f, h] of cards.filter(c => !only || c[0].startsWith(only))) { await p.setContent(h, { waitUntil: 'networkidle' }); await p.evaluate(() => document.fonts.ready); await p.screenshot({ path: 'img/og/' + f + '.jpg', type: 'jpeg', quality: 88 }); }
   await b.close(); console.log('done');
 })();
