@@ -218,3 +218,14 @@ html.sm-homeview #sm .sm-card .btn.ghost{background:transparent!important;color:
 .sm-herd div.win{background:rgba(242,184,75,.2);outline:3px solid var(--sa)}
 .sm-herd b{font-size:1.25em}.sm-herd i{font-style:normal;font-size:1.6em;font-weight:800;color:var(--sa)}.sm-herd small{opacity:.75;font-size:.75em}
 .sm-actor .sm-word{font-size:2.4rem}.sm-actor .btn{margin-top:10px}
+/* the evening builder */
+.sm-eveb{max-width:560px}.sm-lens{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 16px}
+.sm-lens button,.sm-addg button{font:inherit;color:inherit;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.16);border-radius:999px;padding:6px 14px;cursor:pointer}
+.sm-lens button[aria-pressed=true]{background:#f2b84b;color:#17153a;border-color:#f2b84b;font-weight:700}
+.sm-line{list-style:none;padding:0;margin:0 0 12px;display:grid;gap:8px;counter-reset:l}
+.sm-line li{display:grid;grid-template-columns:auto 1fr auto auto auto;gap:8px;align-items:center;background:rgba(255,255,255,.06);border-radius:14px;padding:8px 10px}
+.sm-line li i{display:grid;place-items:center;width:36px;height:36px;border-radius:10px;background:rgba(242,184,75,.14);color:#f2b84b}.sm-line li i svg{width:20px;height:20px}
+.sm-line li span{display:grid}.sm-line li small{opacity:.65;font-size:.85em}
+.sm-line li button{font:inherit;width:32px;height:32px;border-radius:9px;border:0;background:rgba(255,255,255,.08);color:inherit;cursor:pointer}.sm-line li button[disabled]{opacity:.3;cursor:default}
+.sm-addg{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:12px;font-size:.92em}.sm-addg span{opacity:.7}
+.sm-tot{color:#f2b84b;font-weight:600;margin:4px 0 14px}

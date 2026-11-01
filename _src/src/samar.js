@@ -280,12 +280,12 @@
     const n = players().length;
     const cats = ['mix'].concat(Object.keys(CAT).filter(k => k !== 'mine' || mineWords().length >= 6));
     const invite = n < 2 ? `<p class="sm-invite">${n ? B('دخل لاعب واحد. الألعاب تُفتح من لاعبين فأكثر.', 'One player is in. The games open from two players.') : B('ادعُ الحاضرين: يمسحون الرمز، أو يدخلون الرابط ويكتبون الرقم، أو أرسل لهم الرابط. الألعاب تُفتح حين يدخل لاعبان.', 'Invite everyone: they scan the code, or open the link and type the number, or send them the link. The games open once two players are in.')}</p>` : '';
-    const eve = n >= 2 ? `<button type="button" class="sm-eve" data-eve><b>${B('سهرة متكاملة', 'A whole evening')}</b><small>${B(`${n >= 3 ? 'خمس ألعاب' : 'ثلاث ألعاب'} تتوالى وحدها، وتنتهي بالتتويج والألقاب. نحو ${n >= 3 ? 25 : 15} دقيقة.`, `${n >= 3 ? 'Five' : 'Three'} games one after another, ending with the podium and the titles. About ${n >= 3 ? 25 : 15} minutes.`)}</small></button>` : '';
+    const eve = n >= 2 ? `<button type="button" class="sm-eve" data-eve><b>${B('سهرة متكاملة', 'A whole evening')}</b><small>${B('حدّد المدة، فتُرتّب لك تشكيلة ألعاب تتوالى وحدها وتنتهي بالتتويج. تقدر تغيّرها قبل البدء.', 'Pick the length; a lineup of games is set to run on its own and end with the podium. You can change it before you start.')}</small></button>` : '';
     const q = frame(`<div class="sm-pick"><h2>${S.played ? B('اختر اللعبة التالية', 'Choose the next game') : B('اختر اللعبة', 'Choose a game')}</h2>${invite}${eve}
       <div class="sm-catrow"><span>${B('الكلمات:', 'Words:')}</span>${cats.map(c => `<button type="button" data-cat="${c}" aria-pressed="${S.cat === c}">${c === 'mix' ? B('منوّعة', 'Mixed') : B(CAT[c][0], CAT[c][1])}</button>`).join('')}<button type="button" class="sm-catset" data-set>${B('كلماتك والإعدادات', 'Your words and settings')}</button></div>
       <div class="sm-games">${GAMES.map(g => `<button type="button" class="sm-game" data-g="${g.id}"${n < g.min ? ' disabled' : ''}><i>${g.icon}</i><b>${B(g.ar, g.en)}</b><small>${B(g.dAr, g.dEn)}</small>${n < g.min ? `<em>${B(`تحتاج ${g.min} لاعبين على الأقل`, `Needs at least ${g.min} players`)}</em>` : ''}</button>`).join('')}</div></div>`, S.played ? `<button type="button" class="btn ghost" data-final>${B('ختام الجلسة', 'End with the podium')}</button>` : '');
     HE().querySelectorAll('[data-g]').forEach(b => b.onclick = () => { S.auto = null; startGame(b.dataset.g); });
-    if (q('[data-eve]')) q('[data-eve]').onclick = () => { S.auto = players().length >= 3 ? ['whose', 'who', 'draw', 'spy', 'letters'] : ['who', 'draw', 'letters']; startGame(S.auto.shift()); };
+    if (q('[data-eve]')) q('[data-eve]').onclick = () => evening();
     HE().querySelectorAll('[data-cat]').forEach(b => b.onclick = () => { S.cat = b.dataset.cat; store.set('cat', S.cat); picker(); });
     HE().querySelector('[data-set]').onclick = settings;
     if (q('[data-final]')) q('[data-final]').onclick = finale;
@@ -330,6 +330,31 @@
       ld.onclick = () => { const L = lists(); delete L[ls.value]; store.set('lists', L); d.remove(); settings(); }; }
     d.querySelector('[data-lsave]').onclick = () => { const nm = d.querySelector('[data-lname]').value.trim(), w = d.querySelector('[data-w]').value.trim(); if (!nm || !w) return; const L = lists(); L[nm] = w; store.set('lists', L); store.set('mine', w); if (mineWords().length >= 6) { S.cat = 'mine'; store.set('cat', 'mine'); } d.remove(); settings(); };
     d.querySelector('[data-ok]').onclick = () => { const on2 = d.querySelector('[data-tm]').checked; if (on2 !== S.teams) { S.teams = on2; S.tm = {}; if (on2) shuffle(players()).forEach((u, k) => { S.tm[u] = k % 2; }); pushTeams(); } store.set('mine', d.querySelector('[data-w]').value); store.set('asks', d.querySelector('[data-asks]').value); store.set('wcap', +d.querySelector('[data-wcap]').value); store.set('wsec', +d.querySelector('[data-wsec]').value); store.set('lcats', d.querySelector('[data-lc]').value); if (mineWords().length >= 6) { S.cat = 'mine'; store.set('cat', 'mine'); } d.remove(); picker(); };
+  }
+  // a whole evening: a length, a lineup that fits it, and the host's own changes before it starts
+  const MINS = { herd: 3, whose: 4, who: 5, draw: 6, spy: 5, lie: 5, mime: 6, letters: 7 };
+  const ORDER = ['herd', 'whose', 'who', 'draw', 'spy', 'lie', 'mime', 'letters'];
+  function lineup(len) { const n = players().length, ok = ORDER.filter(id => n >= gameOf(id).min), L = []; let t = 0; for (const id of ok) { if (t + MINS[id] > len + 2) continue; L.push(id); t += MINS[id]; } return L.length ? L : ok.slice(0, 1); }
+  function evening(len, L) {
+    len = len || store.get('eveLen', 30); L = L || lineup(len);
+    const n = players().length, total = L.reduce((a, id) => a + MINS[id], 0), spare = GAMES.filter(g => !L.includes(g.id) && n >= g.min);
+    const d = HE().querySelector('.sm-ov') || document.createElement('div'); d.className = 'sm-ov';
+    d.innerHTML = `<div class="sm-ovb sm-eveb"><h3>${B('سهرة متكاملة', 'A whole evening')}</h3>
+      <div class="sm-lens">${[15, 30, 45, 60].map(m => `<button type="button" data-len="${m}" aria-pressed="${m === len}">${B(`${m} دقيقة`, `${m} min`)}</button>`).join('')}</div>
+      <ol class="sm-line">${L.map((id, k) => { const g = gameOf(id); return `<li><i>${g.icon}</i><span><b>${B(g.ar, g.en)}</b><small>${B(`نحو ${MINS[id]} دقائق`, `about ${MINS[id]} min`)}</small></span>
+        <button type="button" data-up="${k}" aria-label="${T('للأعلى', 'Up')}"${k ? '' : ' disabled'}>↑</button><button type="button" data-dn="${k}" aria-label="${T('للأسفل', 'Down')}"${k < L.length - 1 ? '' : ' disabled'}>↓</button><button type="button" data-rm="${k}" aria-label="${T('احذف', 'Remove')}">×</button></li>`; }).join('')}</ol>
+      ${spare.length ? `<div class="sm-addg"><span>${B('أضف لعبة:', 'Add a game:')}</span>${spare.map(g => `<button type="button" data-addg="${g.id}">${B(g.ar, g.en)}</button>`).join('')}</div>` : ''}
+      <p class="sm-tot">${B(`المدة التقديرية: نحو ${total} دقيقة، ثم التتويج`, `Estimated: about ${total} minutes, then the podium`)}</p>
+      <div class="sm-row"><button type="button" class="btn solid" data-go${L.length ? '' : ' disabled'}>${B('ابدأ السهرة', 'Start the evening')}</button><button type="button" class="btn ghost" data-x>${B('إلغاء', 'Cancel')}</button></div></div>`;
+    if (!d.parentNode) HE().appendChild(d);
+    const re = (len2, L2) => evening(len2, L2);
+    d.querySelectorAll('[data-len]').forEach(b => b.onclick = () => { store.set('eveLen', +b.dataset.len); re(+b.dataset.len); });
+    d.querySelectorAll('[data-up]').forEach(b => b.onclick = () => { const k = +b.dataset.up, M = L.slice(); [M[k - 1], M[k]] = [M[k], M[k - 1]]; re(len, M); });
+    d.querySelectorAll('[data-dn]').forEach(b => b.onclick = () => { const k = +b.dataset.dn, M = L.slice(); [M[k + 1], M[k]] = [M[k], M[k + 1]]; re(len, M); });
+    d.querySelectorAll('[data-rm]').forEach(b => b.onclick = () => re(len, L.filter((_, k) => k !== +b.dataset.rm)));
+    d.querySelectorAll('[data-addg]').forEach(b => b.onclick = () => re(len, L.concat(b.dataset.addg)));
+    d.querySelector('[data-x]').onclick = () => d.remove();
+    d.querySelector('[data-go]').onclick = () => { d.remove(); S.auto = L.slice(); startGame(S.auto.shift()); };
   }
   const lists = () => { const L = store.get('lists', {}); return L && typeof L === 'object' ? L : {}; };
   // the end of the session: the podium, and a title for what each one did best
