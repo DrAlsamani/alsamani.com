@@ -201,3 +201,7 @@
 .qz-list li .qz-del{width:46px;flex:none;padding:0;justify-content:center}
 .qz-list li.qz-ask button{width:auto;padding:8px 18px;justify-content:center}
 .qz-list li.qz-ask .qz-yes{background:#c0392b!important;border-color:#c0392b!important;color:#fff!important}
+.qz-acct{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;border:1px dashed var(--line);border-radius:12px;margin:4px 0}
+.qz-acct p{margin:0;display:flex;align-items:center;gap:8px;flex-wrap:wrap;flex:1;min-width:220px}
+.qz-acct svg{width:20px;height:20px;flex:none;color:var(--accent,#2563eb)}
+.qz-acct em{font-style:normal;color:#c0392b}

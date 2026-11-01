@@ -34,7 +34,41 @@
   let list = store.get('list', []), Q = null;
   // ask the browser to keep this site's storage, so saved quizzes are not cleared to free space
   try { if (list.length && navigator.storage && navigator.storage.persist) navigator.storage.persisted().then(p => { if (!p) navigator.storage.persist(); }); } catch (e) {}
-  const persist = () => { if (!Q) return; Q.at = Date.now(); const i = list.findIndex(x => x.id === Q.id); if (i >= 0) list[i] = Q; else list.unshift(Q); if (!store.set('list', list)) toast(B('امتلأت مساحة الحفظ في المتصفح، فاحفظ نسخة في جهازك أو صغّر الصور.', 'Browser storage is full; save a copy to your device or use smaller images.'), 1); };
+  /* ---------- the quizzes in the host's Google account: on any device, safe from a cleared browser ---------- */
+  let onHome = false;
+  const Cloud = {
+    user: null,
+    init() {
+      try { if (!window.firebase || !window.MD_CFG) return; if (!firebase.apps.length) firebase.initializeApp(window.MD_CFG);
+        firebase.auth().onAuthStateChanged(u => { const g = u && !u.isAnonymous && u.providerData.some(p => p.providerId === 'google.com') ? u : null; const was = Cloud.user; Cloud.user = g; if (g) Cloud.pull(); else if (was && onHome) home(); });
+      } catch (e) { console.error(e); }
+    },
+    ref() { return firebase.database().ref('mq/' + Cloud.user.uid); },
+    // the device's and the account's quizzes become one list; the newer copy of each wins, and deletions stay deleted
+    async pull() {
+      try {
+        const v = (await Cloud.ref().once('value')).val() || {}, gone = store.get('gone', []), by = {};
+        list.forEach(z => { by[z.id] = z; });
+        Object.keys(v).forEach(id => { if (gone.includes(id)) { Cloud.ref().child(id).remove().catch(() => {}); return; } let z = null; try { z = JSON.parse(v[id].j); } catch (e) {} if (!z || !Array.isArray(z.qs)) return; z.id = id; z.at = v[id].at || z.at || 0; if (!by[id] || (by[id].at || 0) < z.at) by[id] = z; });
+        list = Object.values(by).sort((a, b) => (b.at || 0) - (a.at || 0)); store.set('list', list); store.set('gone', []);
+        const up = {}; list.forEach(z => { if (!v[z.id] || (v[z.id].at || 0) < (z.at || 0)) up[z.id] = { j: JSON.stringify(z), at: z.at || Date.now() }; });
+        if (Object.keys(up).length) await Cloud.ref().update(up);
+        Cloud.ok = true;
+      } catch (e) { console.error(e); Cloud.ok = false; Cloud.err = e && e.code || String(e); }
+      if (onHome) home();
+    },
+    put(z) { if (!Cloud.user) return; Cloud.ref().child(z.id).set({ j: JSON.stringify(z), at: z.at || Date.now() }).catch(e => console.error(e)); },
+    del(id) { if (Cloud.user) Cloud.ref().child(id).remove().catch(() => {}); else { const g = store.get('gone', []); g.push(id); store.set('gone', g.slice(-200)); } },
+    async signIn() {
+      const a = firebase.auth(), p = new firebase.auth.GoogleAuthProvider(); p.setCustomParameters({ prompt: 'select_account' });
+      // an anonymous visitor keeps the same id when the account is linked; an account already used elsewhere simply signs in
+      try { if (a.currentUser && a.currentUser.isAnonymous) await a.currentUser.linkWithPopup(p); else await a.signInWithPopup(p); }
+      catch (e) { if (e.code === 'auth/credential-already-in-use' && e.credential) await a.signInWithCredential(e.credential); else throw e; }
+      const u = a.currentUser; if (u) { Cloud.user = u; await Cloud.pull(); }
+    }
+  };
+  Cloud.init();
+  const persist = () => { if (!Q) return; Q.at = Date.now(); const i = list.findIndex(x => x.id === Q.id); if (i >= 0) list[i] = Q; else list.unshift(Q); Cloud.put(Q); if (!store.set('list', list)) toast(B('امتلأت مساحة الحفظ في المتصفح، فاحفظ نسخة في جهازك أو صغّر الصور.', 'Browser storage is full; save a copy to your device or use smaller images.'), 1); };
   let tSave; const later = () => { clearTimeout(tSave); tSave = setTimeout(() => { persist(); checks(); }, 400); };
 
   /* ---------- home: saved quizzes ---------- */
@@ -44,7 +78,7 @@
 
   // the landing: what Maydan is, where it fits, and how it works
   const SV = d => `<svg class="qz-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
-  const IC = { trash: SV('<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/>'), eye: SV('<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>'), save: SV('<path d="M5 3h11l3 3v15H5z"/><path d="M8 3v5h7V3M8 21v-7h8v7"/>'), up: SV('<path d="M12 15V3M7 8l5-5 5 5"/><path d="M4 15v5h16v-5"/>'), shuffle: SV('<path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/>') };
+  const IC = { cloud: SV('<path d="M7 18h10a4 4 0 0 0 .5-7.97A6 6 0 0 0 6 9.5 4.25 4.25 0 0 0 7 18z"/>'), trash: SV('<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/>'), eye: SV('<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>'), save: SV('<path d="M5 3h11l3 3v15H5z"/><path d="M8 3v5h7V3M8 21v-7h8v7"/>'), up: SV('<path d="M12 15V3M7 8l5-5 5 5"/><path d="M4 15v5h16v-5"/>'), shuffle: SV('<path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/>') };
   function intro() {
     const card = (i, a, e, da, de) => `<div class="qi-c"><span>${i}</span><b>${B(a, e)}</b><small>${B(da, de)}</small></div>`;
     return `<div class="qi">
@@ -111,6 +145,8 @@
       ${RLIB().length ? `<h2 class="qz-h" id="lib">${B('مكتبة ميدان: مسابقات جاهزة', 'The Maydan library: ready quizzes')}</h2><p class="pt-fine">${B('ابدأ أيًّا منها مباشرة، أو افتحها وعدّل عليها لتصير مسابقتك.', 'Start any of them now, or open one and make it your own.')}</p>
       <div class="qz-lib">${RLIB().map((z, k) => `<div class="qz-lc"${k >= 5 ? ' data-more hidden' : ''}><span class="qz-li">${z.icon}</span><b>${esc(z.title)}</b><small>${esc(z.desc)}</small><em>${esc(z.who)} · ${z.qs.length} ${z.qs.every(x => x.type === 'game') ? B('تحديات', 'challenges') : B('فقرة', 'items')}</em><span class="qz-lb"><button type="button" class="btn solid" data-lgo="${z.id}">${B('ابدأ الآن ▶', 'Start now ▶')}</button><button type="button" class="btn ghost" data-led="${z.id}">${B('افتحها وعدّلها', 'Open and edit')}</button></span></div>`).join('')}</div>${RLIB().length > 5 ? `<button type="button" class="btn ghost qz-libmore" id="qzLibMore">${B(`عرض كل المسابقات (${RLIB().length})`, `Show all quizzes (${RLIB().length})`)}</button>` : ''}` : ''}
       ${list.length ? `<h2 class="qz-h">${B(`مسابقاتك (${list.length})`, `Your quizzes (${list.length})`)}</h2><ul class="qz-list">${list.map(x => `<li data-li="${x.id}"><button type="button" data-open="${x.id}"><b>${esc(x.title || T('بلا عنوان', 'Untitled'))}</b><small>${T('الأسئلة: ', 'Questions: ')}${x.qs.length}${x.at ? ' · ' + new Date(x.at).toLocaleDateString(isAr() ? 'ar-SA-u-ca-gregory-nu-arab' : 'en-GB', { day: 'numeric', month: 'short' }) : ''}</small></button><button type="button" class="qz-del" data-del="${x.id}" title="${T('احذف', 'Delete')}" aria-label="${T('احذف', 'Delete')}">${IC.trash}</button></li>`).join('')}</ul>` : ''}
+      <div class="qz-acct">${Cloud.user ? `<p>${IC.cloud}${B('مسابقاتك محفوظة في حسابك', 'Your quizzes are saved in your account')} <b dir="ltr">${esc(Cloud.user.email || '')}</b>${Cloud.ok === false ? ` <em>${B('تعذّرت المزامنة الآن', 'Could not sync right now')}</em>` : ''}</p><button type="button" class="sn-lnk" id="qzOut">${B('خروج من الحساب', 'Sign out')}</button>`
+        : `<p>${IC.cloud}${B('احفظ مسابقاتك في حسابك على Google: تلقاها في أي جهاز، وما تضيع لو انمسح المتصفح.', 'Keep your quizzes in your Google account: on any device, and safe if the browser is cleared.')}</p><button type="button" class="btn solid" id="qzG">${B('ادخل بحساب Google', 'Sign in with Google')}</button>`}</div>
       <div class="qz-keep"><label class="qz-imp btn ghost">${B('فتح نسخة محفوظة', 'Open a saved copy')}<input type="file" accept=".json,application/json" hidden id="qzImp"></label>${list.length ? `<button type="button" class="btn ghost" id="qzAll">${IC.save}${B('احفظ نسخة من كل مسابقاتي', 'Save a copy of all my quizzes')}</button>` : ''}</div>
       <p class="pt-fine">${B('تُحفظ المسابقات في هذا المتصفح وتبقى ما دام لم يُمسح سجله. وللاحتياط، احفظ نسخة منها كلها في ملف، وافتحها في أي متصفح أو جهاز.', 'Quizzes stay in this browser unless its data is cleared. To be safe, save a copy of them all in one file and open it on any browser or device.')}</p></div>${window.MDX ? `<div class="sn-card" id="qzLg">${MDX.listHtml()}</div>` : ''}${introMore()}`;
     if (window.MDX) MDX.bindList(root.querySelector('#qzLg'), home);
@@ -124,20 +160,26 @@
     root.querySelectorAll('[data-lgo]').forEach(b => b.onclick = () => { if (!window.MDLive) return toast(B('تعذّر تشغيل المسابقة الآن.', 'The quiz cannot start right now.'), 1); MDLive.start(live(fromLib(b.dataset.lgo))); });
     if (location.hash === '#lib') setTimeout(() => { const h = root.querySelector('#lib'); if (h) h.scrollIntoView({ block: 'start' }); }, 300);
     root.querySelector('#qzNewG').onclick = () => { Q = { id: uid(), gen: 'games', title: T('مسابقة الألعاب والتحديات', 'Games and challenges'), qs: pickGames(+root.querySelector('#qzGn').value).map(newGame) }; persist(); editor(); };
+    onHome = true;
+    const gb = root.querySelector('#qzG'); if (gb) gb.onclick = async () => { gb.disabled = true; try { await Cloud.signIn(); toast(B('تم. مسابقاتك الآن في حسابك.', 'Done. Your quizzes are now in your account.')); }
+      catch (e) { console.error(e); gb.disabled = false; const c = e && e.code || '';
+        if (c === 'auth/popup-closed-by-user' || c === 'auth/cancelled-popup-request') return;
+        toast(c === 'auth/operation-not-allowed' ? B('الدخول بحساب Google لم يُفعَّل بعد في الموقع.', 'Google sign-in is not switched on yet.') : c === 'auth/unauthorized-domain' ? B('هذا النطاق غير مسموح للدخول بعد.', 'This domain is not allowed to sign in yet.') : c === 'auth/popup-blocked' ? B('المتصفح منع نافذة الدخول؛ اسمح بالنوافذ المنبثقة وجرّب.', 'The browser blocked the sign-in window; allow pop-ups and try again.') : B('تعذّر الدخول الآن، جرّب بعد قليل.', 'Could not sign in now; try again shortly.'), 1); } };
+    const ob = root.querySelector('#qzOut'); if (ob) ob.onclick = async () => { await firebase.auth().signOut(); Cloud.user = null; Cloud.ok = null; home(); toast(B('خرجت من الحساب. مسابقاتك باقية في هذا المتصفح أيضًا.', 'Signed out. Your quizzes stay in this browser too.')); };
     root.querySelectorAll('[data-open]').forEach(b => b.onclick = () => { Q = JSON.parse(JSON.stringify(list.find(x => x.id === b.dataset.open))); Q.qs = Q.qs.map(norm); editor(); });
     // delete from the list, after a clear yes
     root.querySelectorAll('[data-del]').forEach(b => b.onclick = () => {
       const id = b.dataset.del, z = list.find(x => x.id === id), li = b.closest('li'); if (!z) return;
       li.classList.add('qz-ask'); li.innerHTML = `<p>${B(`تحذف «${esc(z.title || T('بلا عنوان', 'Untitled'))}» نهائيًا؟`, `Delete «${esc(z.title || T('بلا عنوان', 'Untitled'))}» for good?`)}</p><span><button type="button" class="btn solid qz-yes">${B('احذف', 'Delete')}</button><button type="button" class="btn ghost qz-no">${B('تراجع', 'Keep it')}</button></span>`;
       li.querySelector('.qz-no').onclick = home;
-      li.querySelector('.qz-yes').onclick = () => { list = list.filter(x => x.id !== id); store.set('list', list); home(); toast(B('حُذفت المسابقة.', 'Quiz deleted.')); };
+      li.querySelector('.qz-yes').onclick = () => { list = list.filter(x => x.id !== id); store.set('list', list); Cloud.del(id); home(); toast(B('حُذفت المسابقة.', 'Quiz deleted.')); };
     });
     const all = root.querySelector('#qzAll'); if (all) all.onclick = () => save(new Blob([JSON.stringify({ all: list.map(z => ({ title: z.title, qs: z.qs.map(({ id, timeSet, ...r }) => r) })) }, null, 1)], { type: 'application/json' }), T('مسابقاتي', 'my-quizzes') + '-' + new Date().toISOString().slice(0, 10) + '.json');
     root.querySelector('#qzImp').onchange = async e => {
       const f = e.target.files[0]; if (!f) return;
       try { const j = JSON.parse(await f.text());
         // a copy of all the quizzes: add the ones not here yet
-        if (Array.isArray(j.all)) { let n = 0; j.all.forEach(z => { if (!z || !Array.isArray(z.qs)) return; const k = JSON.stringify(z.qs); if (list.some(x => x.title === z.title && JSON.stringify(x.qs.map(({ id, timeSet, ...r }) => r)) === k)) return; list.push({ id: uid(), title: z.title || '', qs: z.qs.map(norm), at: Date.now() }); n++; }); store.set('list', list); home(); toast(B(`أُضيفت ${n} مسابقة.`, `${n} quizzes added.`)); return; }
+        if (Array.isArray(j.all)) { let n = 0; j.all.forEach(z => { if (!z || !Array.isArray(z.qs)) return; const k = JSON.stringify(z.qs); if (list.some(x => x.title === z.title && JSON.stringify(x.qs.map(({ id, timeSet, ...r }) => r)) === k)) return; const nz = { id: uid(), title: z.title || '', qs: z.qs.map(norm), at: Date.now() }; list.push(nz); Cloud.put(nz); n++; }); store.set('list', list); home(); toast(B(`أُضيفت ${n} مسابقة.`, `${n} quizzes added.`)); return; }
         if (!Array.isArray(j.qs)) throw 0; Q = { id: uid(), title: j.title || '', qs: j.qs.map(norm) }; persist(); editor(); toast(B('فُتحت النسخة.', 'Copy opened.')); }
       catch (er) { toast(B('هذا الملف ليس نسخة مسابقة.', 'That file is not a quiz copy.'), 1); }
     };
@@ -147,6 +189,7 @@
   // the editor's quiz in the form the live screen plays
   const live = Q => ({ title: Q.title, lib: Q.lib || null, libEd: Q.libEd || 0, gen: Q.gen || null, qs: Q.qs.map(x => x.type === 'game' ? { type: 'game', g: x.g, q: '', opts: [], ok: [], pts: x.pts, time: x.time || 30, seed: 1 + Math.floor(Math.random() * 1e9) } : ({ type: x.type, q: x.q, opts: TEXTY.includes(x.type) ? [] : x.opts.filter(o => o.trim()), ok: x.type === 'poll' || TEXTY.includes(x.type) ? [] : x.ok.map(j => x.opts.slice(0, j).filter(o => o.trim()).length), pts: x.type === 'open' || x.type === 'poll' || x.type === 'stage' ? 0 : x.pts, img: x.img, reveal: !!(x.reveal && x.img && x.type === 'mc'), ans: x.ans, unit: x.unit || '', items: x.type === 'order' ? x.items.filter(v => v.trim()) : x.type === 'rapid' ? x.items.filter(v => v.trim()) : null, truth: x.type === 'rapid' ? x.items.map((v, j) => v.trim() ? !!x.truth[j] : null).filter(v => v != null) : null, pairs: x.type === 'match' ? x.pairs.filter(p => p[0].trim() && p[1].trim()).map(p => [p[0].trim(), p[1].trim()]) : null, time: x.timeSet ? x.time : suggest(x) })) });
   function editor() {
+    onHome = false;
     setTimeout(() => { const h = document.querySelector('.md-page') || root; window.scrollTo({ top: Math.max(0, h.getBoundingClientRect().top + scrollY - 70), behavior: 'instant' }); }, 0);
     root.innerHTML = `<div class="qz-top"><button type="button" class="sn-lnk" id="qzBack">${B('‹ مسابقاتي', '‹ My quizzes')}</button></div>
       <div class="sn-card"><label class="sn-lbl">${B('عنوان المسابقة', 'Quiz title')}<input type="text" id="qzTitle" maxlength="120" value="${esc(Q.title)}" placeholder="${T('مثال: مراجعة الوحدة الأولى', 'e.g. Unit 1 review')}"></label></div>
