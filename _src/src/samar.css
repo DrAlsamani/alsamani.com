@@ -140,3 +140,9 @@
 }
 @media (min-width:821px){.sm-games{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))!important}.sm-game small{line-height:1.6}}
 .sm-lead{text-align:center;max-width:620px;margin:-6px auto 20px;line-height:1.9;opacity:.85}
+/* a whole evening, the card, saved lists */
+.sm-eve{display:grid;gap:.4vh;width:100%;max-width:1100px;margin:0 auto 2vh;text-align:start;font:inherit;color:var(--sn);background:linear-gradient(120deg,#f2b84b,#f6cf7a);border:0;border-radius:18px;padding:2vh 1.6vw;cursor:pointer}
+.sm-eve b{font-size:1.3em}.sm-eve small{opacity:.8;line-height:1.6}
+.sm-next{margin-top:2.4vh;color:var(--sa);font-weight:700;font-size:.8em}
+.sm-ctl .btn svg,.sm-cardb svg{width:1.1em;height:1.1em;vertical-align:-.15em;margin-inline-end:.4em}.sm-cardb{margin-top:14px}
+.sm-lists{display:flex;flex-wrap:wrap;gap:8px;margin:-6px 0 18px}.sm-lists select,.sm-lists input{flex:1 1 180px;margin:0;font:inherit;border-radius:10px;padding:8px 10px;background:rgba(0,0,0,.25);color:inherit;border:1.5px solid rgba(255,255,255,.2)}

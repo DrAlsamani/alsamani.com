@@ -1541,6 +1541,12 @@ html[dir=ltr] .jr-dch.fd .jr-fold::before{transform:rotate(-45deg)}
 }
 @media (min-width:821px){.sm-games{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))!important}.sm-game small{line-height:1.6}}
 .sm-lead{text-align:center;max-width:620px;margin:-6px auto 20px;line-height:1.9;opacity:.85}
+/* a whole evening, the card, saved lists */
+.sm-eve{display:grid;gap:.4vh;width:100%;max-width:1100px;margin:0 auto 2vh;text-align:start;font:inherit;color:var(--sn);background:linear-gradient(120deg,#f2b84b,#f6cf7a);border:0;border-radius:18px;padding:2vh 1.6vw;cursor:pointer}
+.sm-eve b{font-size:1.3em}.sm-eve small{opacity:.8;line-height:1.6}
+.sm-next{margin-top:2.4vh;color:var(--sa);font-weight:700;font-size:.8em}
+.sm-ctl .btn svg,.sm-cardb svg{width:1.1em;height:1.1em;vertical-align:-.15em;margin-inline-end:.4em}.sm-cardb{margin-top:14px}
+.sm-lists{display:flex;flex-wrap:wrap;gap:8px;margin:-6px 0 18px}.sm-lists select,.sm-lists input{flex:1 1 180px;margin:0;font:inherit;border-radius:10px;padding:8px 10px;background:rgba(0,0,0,.25);color:inherit;border:1.5px solid rgba(255,255,255,.2)}
 </style>
 <div id="sm" class="sm"><noscript><span class="ar">تعمل هذه اللعبة مع تفعيل JavaScript.</span><span class="en">This game needs JavaScript.</span></noscript></div>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script>window.MD_CFG={"apiKey": "AIzaSyA50i75DT1Is1a6Yn6snW1_JVObc8S3F0Y", "authDomain": "maydan-705ae.firebaseapp.com", "databaseURL": "https://maydan-705ae-default-rtdb.europe-west1.firebasedatabase.app", "projectId": "maydan-705ae", "appId": "1:342187013133:web:d5c2396f0db413f3c51144"};window.MD_MARK="<svg class=\"md-mark\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><rect x=\"4\" y=\"4\" width=\"40\" height=\"40\" rx=\"12\" fill=\"#23336F\"/><path d=\"M24 9l4.2 6.8 7.8-1.8-1.8 7.8L41 24l-6.8 4.2 1.8 7.8-7.8-1.8L24 39l-4.2-6.8-7.8 1.8 1.8-7.8L7 24l6.8-4.2-1.8-7.8 7.8 1.8z\" fill=\"#C9822B\"/><circle cx=\"24\" cy=\"24\" r=\"6.5\" fill=\"#23336F\"/><circle cx=\"24\" cy=\"24\" r=\"3\" fill=\"#F3E3C7\"/></svg>";</script><script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script><script>/* Samar (alsamani.com/play/samar): games for a gathering, on one code — the screen shows the play and each phone
@@ -1563,6 +1569,7 @@ html[dir=ltr] .jr-dch.fd .jr-fold::before{transform:rotate(-45deg)}
   const SND = { join: () => tone(880, .12, 'triangle', .06), go: () => [523, 659, 784].forEach((f, k) => tone(f, .2, 'triangle', .08, k * .1)), ok: () => { tone(784, .12, 'triangle', .08); tone(1175, .2, 'triangle', .08, .1); }, no: () => tone(220, .25, 'sawtooth', .05), tick: () => tone(1300, .04, 'square', .03), win: () => [523, 659, 784, 1047, 1319].forEach((f, k) => tone(f, .35, 'triangle', .09, k * .13)) };
   const SV = d => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
   const IC = {
+    save: SV('<path d="M12 4v11M7 10l5 5 5-5M5 19h14"/>'),
     share: SV('<circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="m8.2 10.8 7.6-4.4M8.2 13.2l7.6 4.4"/>'),
     whose: SV('<path d="M4 5h16v10H9l-5 4z"/><path d="M9 9h6M9 12h3"/><circle cx="18" cy="18" r="3"/>'),
     arrow: SV('<path d="M5 12h14M13 6l6 6-6 6"/>'), undo: SV('<path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/>'),
@@ -1633,6 +1640,44 @@ html[dir=ltr] .jr-dch.fd .jr-fold::before{transform:rotate(-45deg)}
   const subs = [];
   const on = (ref, ev, fn) => { ref.on(ev, fn); subs.push(() => ref.off(ev, fn)); };
   const stopAll = () => { subs.splice(0).forEach(f => f()); if (S && S.tm) clearInterval(S.tm); S = null; };
+
+  /* ---------- the evening's card: a picture to keep or send to the group ---------- */
+  function cardCanvas(rank, titles, tw) {
+    const W = 1080, H = 1350, c = document.createElement('canvas'); c.width = W; c.height = H; const x = c.getContext('2d');
+    const F = (getComputedStyle(document.body).fontFamily || 'sans-serif'), ar = isAr();
+    const g = x.createRadialGradient(W * .3, 0, 50, W * .5, H * .4, H); g.addColorStop(0, '#2d2870'); g.addColorStop(.7, '#17153a'); x.fillStyle = g; x.fillRect(0, 0, W, H);
+    for (let k = 0; k < 70; k++) { x.fillStyle = `rgba(255,255,255,${Math.random() * .5})`; x.beginPath(); x.arc(Math.random() * W, Math.random() * H * .45, Math.random() * 2.2, 0, 7); x.fill(); }
+    x.direction = ar ? 'rtl' : 'ltr'; x.textAlign = 'center'; x.textBaseline = 'middle';
+    // the moon of the logo
+    { const m = document.createElement('canvas'); m.width = m.height = 140; const y = m.getContext('2d'); y.fillStyle = '#f2b84b'; y.beginPath(); y.arc(70, 70, 56, 0, 7); y.fill(); y.globalCompositeOperation = 'destination-out'; y.beginPath(); y.arc(96, 52, 50, 0, 7); y.fill(); x.drawImage(m, W / 2 - 70, 60); }
+    x.fillStyle = '#f4eedf'; x.font = `800 72px ${F}`; x.fillText(T('سهرة سمر', 'A Samar evening'), W / 2, 255);
+    x.font = `500 32px ${F}`; x.globalAlpha = .7; x.fillText(new Date().toLocaleDateString(ar ? 'ar-SA-u-ca-gregory-nu-arab' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' }), W / 2, 315); x.globalAlpha = 1;
+    if (tw != null) { x.font = `700 40px ${F}`; x.fillStyle = '#f2b84b'; x.fillText(tw < 0 ? T('تعادل الفريقان', 'The teams are level') : T(`فاز فريق ${['الصقور', 'النجوم'][tw]}`, `The ${['Falcons', 'Stars'][tw]} win`), W / 2, 380); }
+    // the podium
+    const P = [[1, W / 2 - 300, 230], [0, W / 2, 330], [2, W / 2 + 300, 170]], base = 820, cols = ['#f2b84b', '#2bb3a3', '#e0607e'];
+    (ar ? P.map(p => [p[0], W - p[1], p[2]]) : P).forEach(([k, cx, h]) => { const r = rank[k]; if (!r) return;
+      x.fillStyle = cols[k]; x.globalAlpha = .9; x.beginPath(); x.roundRect(cx - 130, base - h, 260, h, [22, 22, 0, 0]); x.fill(); x.globalAlpha = 1;
+      x.fillStyle = '#17153a'; x.font = `800 96px ${F}`; x.fillText(String(k + 1), cx, base - h / 2);
+      x.fillStyle = '#f4eedf'; x.font = `700 42px ${F}`; x.fillText(r.n.slice(0, 14), cx, base - h - 90); x.fillStyle = '#f2b84b'; x.font = `700 36px ${F}`; x.fillText(String(r.s), cx, base - h - 40); });
+    // the titles, then the rest of the ranking
+    let y = 900;
+    titles.slice(0, 6).forEach((t, k) => { const col = k % 2, row = Math.floor(k / 2), cx = W / 2 + (col ? 1 : -1) * (ar ? -1 : 1) * 250, cy = y + row * 104;
+      x.fillStyle = 'rgba(255,255,255,.08)'; x.beginPath(); x.roundRect(cx - 235, cy - 44, 470, 88, 24); x.fill();
+      x.fillStyle = '#f2b84b'; x.font = `700 28px ${F}`; x.fillText(ar ? t.ar : t.en, cx, cy - 17, 440);
+      x.fillStyle = '#f4eedf'; x.font = `600 32px ${F}`; x.fillText(t.n, cx, cy + 20, 440); });
+    y += Math.ceil(Math.min(titles.length, 6) / 2) * 104 + 20;
+    x.font = `500 30px ${F}`; x.fillStyle = 'rgba(244,238,223,.75)';
+    const rest = rank.slice(3, 9).map((r, k) => `${k + 4}. ${r.n} (${r.s})`).join('   ·   ');
+    if (rest && y < H - 110) x.fillText(rest, W / 2, y, W - 120);
+    x.font = `600 30px ${F}`; x.fillStyle = 'rgba(244,238,223,.55)'; x.fillText('alsamani.com/play/samar', W / 2, H - 60);
+    return c;
+  }
+  async function saveCard(rank, titles, tw) {
+    const c = cardCanvas(rank, titles, tw), name = 'samar-' + new Date().toISOString().slice(0, 10) + '.png';
+    const blob = await new Promise(r => c.toBlob(r, 'image/png'));
+    try { const f = new File([blob], name, { type: 'image/png' }); if (navigator.canShare && navigator.canShare({ files: [f] })) { await navigator.share({ files: [f], title: T('سهرة سمر', 'A Samar evening') }); return; } } catch (e) { if (e && e.name === 'AbortError') return; }
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  }
 
   /* ---------- usage: anonymous counts (no names), added to the same record Maydan keeps ---------- */
   async function stat(add) {
@@ -1749,10 +1794,12 @@ html[dir=ltr] .jr-dch.fd .jr-fold::before{transform:rotate(-45deg)}
     const n = players().length;
     const cats = ['mix'].concat(Object.keys(CAT).filter(k => k !== 'mine' || mineWords().length >= 6));
     const invite = n < 2 ? `<p class="sm-invite">${n ? B('دخل لاعب واحد. الألعاب تُفتح من لاعبين فأكثر.', 'One player is in. The games open from two players.') : B('ادعُ الحاضرين: يمسحون الرمز، أو يدخلون الرابط ويكتبون الرقم، أو أرسل لهم الرابط. الألعاب تُفتح حين يدخل لاعبان.', 'Invite everyone: they scan the code, or open the link and type the number, or send them the link. The games open once two players are in.')}</p>` : '';
-    const q = frame(`<div class="sm-pick"><h2>${S.played ? B('اختر اللعبة التالية', 'Choose the next game') : B('اختر اللعبة', 'Choose a game')}</h2>${invite}
+    const eve = n >= 2 ? `<button type="button" class="sm-eve" data-eve><b>${B('سهرة متكاملة', 'A whole evening')}</b><small>${B(`${n >= 3 ? 'خمس ألعاب' : 'ثلاث ألعاب'} تتوالى وحدها، وتنتهي بالتتويج والألقاب. نحو ${n >= 3 ? 25 : 15} دقيقة.`, `${n >= 3 ? 'Five' : 'Three'} games one after another, ending with the podium and the titles. About ${n >= 3 ? 25 : 15} minutes.`)}</small></button>` : '';
+    const q = frame(`<div class="sm-pick"><h2>${S.played ? B('اختر اللعبة التالية', 'Choose the next game') : B('اختر اللعبة', 'Choose a game')}</h2>${invite}${eve}
       <div class="sm-catrow"><span>${B('الكلمات:', 'Words:')}</span>${cats.map(c => `<button type="button" data-cat="${c}" aria-pressed="${S.cat === c}">${c === 'mix' ? B('منوّعة', 'Mixed') : B(CAT[c][0], CAT[c][1])}</button>`).join('')}<button type="button" class="sm-catset" data-set>${B('كلماتك والإعدادات', 'Your words and settings')}</button></div>
       <div class="sm-games">${GAMES.map(g => `<button type="button" class="sm-game" data-g="${g.id}"${n < g.min ? ' disabled' : ''}><i>${g.icon}</i><b>${B(g.ar, g.en)}</b><small>${B(g.dAr, g.dEn)}</small>${n < g.min ? `<em>${B(`تحتاج ${g.min} لاعبين على الأقل`, `Needs at least ${g.min} players`)}</em>` : ''}</button>`).join('')}</div></div>`, S.played ? `<button type="button" class="btn ghost" data-final>${B('ختام الجلسة', 'End with the podium')}</button>` : '');
-    HE().querySelectorAll('[data-g]').forEach(b => b.onclick = () => startGame(b.dataset.g));
+    HE().querySelectorAll('[data-g]').forEach(b => b.onclick = () => { S.auto = null; startGame(b.dataset.g); });
+    if (q('[data-eve]')) q('[data-eve]').onclick = () => { S.auto = players().length >= 3 ? ['whose', 'who', 'draw', 'spy', 'letters'] : ['who', 'draw', 'letters']; startGame(S.auto.shift()); };
     HE().querySelectorAll('[data-cat]').forEach(b => b.onclick = () => { S.cat = b.dataset.cat; store.set('cat', S.cat); picker(); });
     HE().querySelector('[data-set]').onclick = settings;
     if (q('[data-final]')) q('[data-final]').onclick = finale;
@@ -1762,6 +1809,8 @@ html[dir=ltr] .jr-dch.fd .jr-fold::before{transform:rotate(-45deg)}
     const d = document.createElement('div'); d.className = 'sm-ov';
     d.innerHTML = `<div class="sm-ovb"><h3>${B('كلماتك', 'Your words')}</h3><p>${B('كلمة في كل سطر، أو افصل بينها بفواصل. تُستعمل في الكلمة السرية ومن أنا؟ وارسم وخمّن حين تختار «كلماتك». مناسبة لمصطلحات درس أو مقرر.', 'One word a line, or separated by commas. Used in the secret word, who am I and draw and guess when you choose “Your words”. Good for the terms of a lesson or a course.')}</p>
       <textarea data-w rows="7" dir="auto">${esc(store.get('mine', ''))}</textarea>
+      <div class="sm-lists">${Object.keys(lists()).length ? `<select data-lsel><option value="">${T('قوائمك المحفوظة…', 'Your saved lists…')}</option>${Object.keys(lists()).map(k => `<option>${esc(k)}</option>`).join('')}</select><button type="button" class="btn ghost" data-ldel hidden>${B('احذفها', 'Delete')}</button>` : ''}
+        <input data-lname dir="auto" maxlength="40" placeholder="${T('اسم القائمة، مثل: الفصل الثالث', 'A name for the list, e.g. Chapter 3')}"><button type="button" class="btn ghost" data-lsave>${B('احفظ القائمة', 'Save the list')}</button></div>
       <h3>${B('خانات لعبة الحروف', 'The letter game’s boxes')}</h3><p>${B('من ٣ إلى ٦، مفصولة بفواصل. اتركها فارغة لـ«إنسان، حيوان، نبات، جماد، بلاد».', 'From 3 to 6, separated by commas. Leave it empty for the usual five.')}</p>
       <input data-lc dir="auto" value="${esc(store.get('lcats', ''))}" placeholder="${T('إنسان، حيوان، نبات، جماد، بلاد', 'Name, Animal, Plant, Thing, Country')}">
       <h3>${B('أسئلة «مين قالها؟»', 'Questions for “Who said it?”')}</h3><p>${B('سؤال في كل سطر، تُطرح بالترتيب. اتركها فارغة للأسئلة الجاهزة.', 'One question a line, asked in order. Leave it empty for the ready questions.')}</p>
@@ -1773,10 +1822,16 @@ html[dir=ltr] .jr-dch.fd .jr-fold::before{transform:rotate(-45deg)}
       <div class="sm-row"><button type="button" class="btn solid" data-ok>${B('احفظ', 'Save')}</button><button type="button" class="btn ghost" data-x>${B('إغلاق', 'Close')}</button></div></div>`;
     HE().appendChild(d);
     d.querySelector('[data-x]').onclick = () => d.remove();
+    const ls = d.querySelector('[data-lsel]'), ld = d.querySelector('[data-ldel]');
+    if (ls) { ls.onchange = () => { if (!ls.value) { ld.hidden = true; return; } d.querySelector('[data-w]').value = lists()[ls.value] || ''; d.querySelector('[data-lname]').value = ls.value; ld.hidden = false; };
+      ld.onclick = () => { const L = lists(); delete L[ls.value]; store.set('lists', L); d.remove(); settings(); }; }
+    d.querySelector('[data-lsave]').onclick = () => { const nm = d.querySelector('[data-lname]').value.trim(), w = d.querySelector('[data-w]').value.trim(); if (!nm || !w) return; const L = lists(); L[nm] = w; store.set('lists', L); store.set('mine', w); if (mineWords().length >= 6) { S.cat = 'mine'; store.set('cat', 'mine'); } d.remove(); settings(); };
     d.querySelector('[data-ok]').onclick = () => { const on2 = d.querySelector('[data-tm]').checked; if (on2 !== S.teams) { S.teams = on2; S.tm = {}; if (on2) shuffle(players()).forEach((u, k) => { S.tm[u] = k % 2; }); pushTeams(); } store.set('mine', d.querySelector('[data-w]').value); store.set('asks', d.querySelector('[data-asks]').value); store.set('wcap', +d.querySelector('[data-wcap]').value); store.set('wsec', +d.querySelector('[data-wsec]').value); store.set('lcats', d.querySelector('[data-lc]').value); if (mineWords().length >= 6) { S.cat = 'mine'; store.set('cat', 'mine'); } d.remove(); picker(); };
   }
+  const lists = () => { const L = store.get('lists', {}); return L && typeof L === 'object' ? L : {}; };
   // the end of the session: the podium, and a title for what each one did best
   function finale() {
+    S.auto = null; S.end = 0;
     const order = players().sort((a, b) => (S.sc[b] || 0) - (S.sc[a] || 0)), St = u => S.stt[u] || {};
     const best = (k, min) => { let w = null, v = 0; players().forEach(u => { const x = St(u)[k] || 0; if (x >= (min || 1) && x > v) { v = x; w = u; } }); return w ? { u: w, v } : null; };
     const TT = [['spy', 'الجاسوس الأخطر', 'The sneakiest spy'], ['art', 'الرسام', 'The artist'], ['quick', 'سريع البديهة', 'The quickest mind'], ['self', 'يعرف نفسه', 'Knows themselves'], ['let', 'سيد الحروف', 'Master of letters'], ['myst', 'الغامض', 'The mystery'], ['det', 'المحقق', 'The detective']];
@@ -1786,7 +1841,8 @@ html[dir=ltr] .jr-dch.fd .jr-fold::before{transform:rotate(-45deg)}
     const teamLine = tw == null ? '' : `<p class="sm-tw">${tw < 0 ? B('تعادل الفريقان!', 'The teams are level!') : B(`فاز فريق ${TEAMS[tw][0]}`, `The ${TEAMS[tw][1]} win`)} <span dir="ltr">${teamSum(0)} : ${teamSum(1)}</span></p>`;
     S.gs = { id: null, view: () => { const q = frame(`<div class="sm-final"><h2>${B('ختام الجلسة', 'The end of the session')}</h2>${teamLine}<div class="sm-podium">${pod(1)}${pod(0)}${pod(2)}</div>
         ${titles.length ? `<div class="sm-titles">${titles.map((t, k) => `<div style="--d:${k * .3 + 1}s"><b>${B(t.ar, t.en)}</b><span dir="auto">${esc(t.n)}</span></div>`).join('')}</div>` : ''}</div>`,
-        `<button type="button" class="btn ghost" data-pick>${B('نكمل اللعب', 'Keep playing')}</button>`); q('[data-pick]').onclick = () => { S.gs = null; pub({ ph: 'pick' }); picker(); }; } };
+        `<button type="button" class="btn solid" data-card>${IC.save}${B('احفظ بطاقة السهرة', 'Save the evening’s card')}</button><button type="button" class="btn ghost" data-pick>${B('نكمل اللعب', 'Keep playing')}</button>`); q('[data-pick]').onclick = () => { S.gs = null; pub({ ph: 'pick' }); picker(); };
+        q('[data-card]').onclick = () => saveCard(order.map(u => ({ n: nameOf(u), s: S.sc[u] || 0 })), titles, tw == null ? null : tw); } };
     S.roster = null; pub({ ph: 'final', rank: order.map(u => ({ u: u.slice(0, 8), n: nameOf(u), s: S.sc[u] || 0 })), titles: titles.map(t => ({ ar: t.ar, en: t.en, n: t.n, u: t.u.slice(0, 8) })), tw: tw == null ? -2 : tw }); SND.win(); hostDraw();
   }
   function hostDraw() { if (!S || S.mode !== 'host') return; if (S.gs && S.gs.view) S.gs.view(); else picker(); }
@@ -1801,7 +1857,19 @@ html[dir=ltr] .jr-dch.fd .jr-fold::before{transform:rotate(-45deg)}
     S.gs = { id: null, view: () => { const q = frame(`<div class="sm-over"><h2>${note || B('انتهت اللعبة', 'The game is over')}</h2>
         <ol class="sm-gain">${order.map(u => `<li style="--c:${colOf(u)}"><span dir="auto">${esc(nameOf(u))}</span><b>+${gained[u]}</b></li>`).join('') || `<li>${B('لا نقاط هذه المرة', 'No points this time')}</li>`}</ol></div>`,
         `<button type="button" class="btn solid" data-again>${B('العب مرة أخرى', 'Play it again')}</button><button type="button" class="btn ghost" data-pick>${B('لعبة أخرى', 'Another game')}</button><button type="button" class="btn ghost" data-final>${B('ختام الجلسة', 'End with the podium')}</button>`);
-      q('[data-again]').onclick = () => startGame(S.lastId); q('[data-pick]').onclick = () => { S.gs = null; pub({ ph: 'pick' }); picker(); }; q('[data-final]').onclick = finale; } };
+      q('[data-again]').onclick = () => startGame(S.lastId); q('[data-pick]').onclick = () => { S.auto = null; S.gs = null; pub({ ph: 'pick' }); picker(); }; q('[data-final]').onclick = finale; } };
+    // in a whole evening, the next game starts by itself after a short pause
+    if (S.auto) {
+      const nx = () => { while (S.auto.length && players().length < gameOf(S.auto[0]).min) S.auto.shift(); return S.auto[0]; };
+      const go = () => { const id = nx(); if (id) startGame(S.auto.shift()); else finale(); };
+      S.end = now() + 12000;
+      S.gs = { id: null, tick() { if (S.end && left() <= 0) { S.end = 0; go(); } }, view: () => { const id = nx(), g = id && gameOf(id);
+        const q = frame(`<div class="sm-over"><h2>${note || B('انتهت اللعبة', 'The game is over')}</h2>
+          <ol class="sm-gain">${order.map(u => `<li style="--c:${colOf(u)}"><span dir="auto">${esc(nameOf(u))}</span><b>+${gained[u]}</b></li>`).join('') || `<li>${B('لا نقاط هذه المرة', 'No points this time')}</li>`}</ol>
+          <p class="sm-next">${g ? B(`التالية: «${g.ar}»`, `Next: ${g.en}`) : B('التالي: ختام السهرة', 'Next: the end of the evening')}</p></div>`,
+          `<button type="button" class="btn solid" data-go>${g ? B('ابدأها الآن', 'Start it now') : B('إلى الختام', 'To the end')}</button><button type="button" class="btn ghost" data-stop>${B('أوقف السهرة', 'Stop the evening')}</button>`);
+        q('[data-go]').onclick = () => { S.end = 0; go(); }; q('[data-stop]').onclick = () => { S.auto = null; S.end = 0; S.gs = null; pub({ ph: 'pick' }); picker(); }; } };
+    }
     S.roster = null; S.lastId = S.lastGame; pub({ ph: 'over', gained, note: note ? note.replace(/<div[\s\S]*$/, '').replace(/<[^>]+>/g, '') : '' }); SND.win(); hostDraw();
   }
 
@@ -1934,7 +2002,7 @@ html[dir=ltr] .jr-dch.fd .jr-fold::before{transform:rotate(-45deg)}
     const st = { turn: -1, order: [], got: {}, ink: '', gained: {} };
     const mine = () => { const o = { g: 'draw', role: 'drawer', t: st.turn, got: Object.keys(st.got).map(nameOf) }; if (S.ph === 'choose') o.opts = st.opts; else o.word = st.word; return o; };
     const G = {
-      start() { S.lastGame = 'draw'; st.order = shuffle(inGame()).slice(0, 8); st.turn = -1; st.gained = {}; G.next(); },
+      start() { S.lastGame = 'draw'; st.order = shuffle(inGame()).slice(0, S.auto ? 4 : 8); st.turn = -1; st.gained = {}; G.next(); },
       next() {
         st.turn++; if (st.turn >= st.order.length) return gameOver(st.gained); if (!(st.order[st.turn] in S.pl)) return G.next();
         st.drawer = st.order[st.turn]; st.got = {}; st.ink = ''; st.feed = []; st.cat = catFor(S.cat); st.opts = shuffle(words(st.cat, S.L)).slice(0, 3); st.word = st.opts[0];
@@ -2162,7 +2230,7 @@ html[dir=ltr] .jr-dch.fd .jr-fold::before{transform:rotate(-45deg)}
     const r = g.rank || [], k = r.findIndex(x => x.u === uid.slice(0, 8)), t = (g.titles || []).filter(x => x.u === uid.slice(0, 8));
     const myT = S.tm && S.tm[uid] != null ? S.tm[uid] : null, tl = g.tw >= -1 && myT != null ? `<p class="sm-ttl">${g.tw === -1 ? B('تعادل الفريقان', 'The teams are level') : g.tw === myT ? B('فاز فريقك!', 'Your team won!') : B('فاز الفريق الآخر', 'The other team won')}</p>` : '';
     return `<div class="sm-pw sm-pfinal"><p class="sm-sub">${B('ختام الجلسة', 'The end of the session')}</p>${tl}${k >= 0 ? `<p class="sm-rank">${k + 1}</p><p class="sm-big">${B(`مركزك من ${r.length}`, `Your place of ${r.length}`)}</p><p class="sm-plus">${r[k].s}</p>` : ''}${t.map(x => `<p class="sm-ttl">${B(x.ar, x.en)}</p>`).join('')}
-      <ol class="sm-mini">${r.slice(0, 3).map(x => `<li><span dir="auto">${esc(x.n)}</span><b>${x.s}</b></li>`).join('')}</ol></div>`;
+      <ol class="sm-mini">${r.slice(0, 3).map(x => `<li><span dir="auto">${esc(x.n)}</span><b>${x.s}</b></li>`).join('')}</ol><button type="button" class="btn solid sm-cardb" data-card>${IC.save}${B('احفظ بطاقة السهرة', 'Save the evening’s card')}</button></div>`;
   }
   const phoneHints = g => (g.hints || []).length ? `<div class="sm-phints">${g.hints[g.hints.length - 1].map(h => `<span><i dir="auto">${esc(h.n)}</i><b dir="auto">${esc(h.h)}</b></span>`).join('')}</div>` : '';
   function phoneWho(g, p) {
@@ -2204,6 +2272,7 @@ html[dir=ltr] .jr-dch.fd .jr-fold::before{transform:rotate(-45deg)}
     root.querySelectorAll('[data-vote]').forEach(b => b.onclick = () => { send('v:' + b.dataset.vote); S.sent = 'v'; buzz(20); phone(); });
     root.querySelectorAll('[data-word]').forEach(b => b.onclick = () => { send('w:' + b.dataset.word); buzz(20); });
     const hm = q('[data-hostme]'); if (hm) hm.onclick = () => { S.hm = true; phone(); const i = q('#smRc'); if (i) i.focus(); }; if (q('[data-rcgo]')) { q('[data-rcgo]').onclick = () => { const v = q('#smRc').value.replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/\D/g, ''); if (v.length === 4) { send('r:' + v); buzz(20); } }; }
+    const cb = q('[data-card]'); if (cb && g && g.ph === 'final') cb.onclick = () => saveCard(g.rank || [], g.titles || [], g.tw >= -1 ? g.tw : null);
     const hb = q('[data-hint]'); if (hb) hb.onclick = () => { send('h:1'); buzz(20); };
     // the letter game: what is typed goes out quietly as it is written, and "stop" sends it all at once
     const ls = root.querySelectorAll('[data-l]'); if (ls.length) { const vals = () => [...ls].map(i => i.value.trim()); let t = null; ls.forEach(i => i.oninput = () => { S.lt = vals(); clearTimeout(t); t = setTimeout(() => send('a:' + JSON.stringify(S.lt)), 700); });
