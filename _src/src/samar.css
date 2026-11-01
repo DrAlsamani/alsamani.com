@@ -211,3 +211,10 @@ html.sm-homeview .sm-gi small{color:rgba(244,238,223,.72);font-size:.93rem}
 html.sm-homeview #sm .sm-card .btn.solid{background:#f2b84b!important;color:#17153a!important;border-color:#f2b84b!important}
 html.sm-homeview #sm .sm-card .btn.ghost{background:transparent!important;color:#f4eedf!important;border:1.5px solid rgba(244,238,223,.45)!important}
 @media (max-width:600px){html.sm-homeview section:has(> #sm)::after{width:90px;height:90px;top:40px;opacity:.6}html.sm-homeview .sm-gl{grid-template-columns:1fr 1fr;gap:10px}html.sm-homeview .sm-gi{padding:14px}html.sm-homeview .sm-gi small{font-size:.82rem}html.sm-homeview .sm-gi i{width:42px;height:42px}}
+/* think alike, act it out */
+.sm-herdg,.sm-mime{text-align:center}
+.sm-herd{display:flex;flex-wrap:wrap;gap:1.2vh 1vw;justify-content:center;max-width:1100px;margin:2vh auto}
+.sm-herd div{background:rgba(255,255,255,.07);border-radius:16px;padding:1.4vh 1.4vw;display:grid;gap:.4vh;min-width:180px;animation:smIn .45s both}
+.sm-herd div.win{background:rgba(242,184,75,.2);outline:3px solid var(--sa)}
+.sm-herd b{font-size:1.25em}.sm-herd i{font-style:normal;font-size:1.6em;font-weight:800;color:var(--sa)}.sm-herd small{opacity:.75;font-size:.75em}
+.sm-actor .sm-word{font-size:2.4rem}.sm-actor .btn{margin-top:10px}

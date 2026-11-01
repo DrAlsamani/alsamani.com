@@ -1612,6 +1612,13 @@ html.sm-homeview .sm-gi small{color:rgba(244,238,223,.72);font-size:.93rem}
 html.sm-homeview #sm .sm-card .btn.solid{background:#f2b84b!important;color:#17153a!important;border-color:#f2b84b!important}
 html.sm-homeview #sm .sm-card .btn.ghost{background:transparent!important;color:#f4eedf!important;border:1.5px solid rgba(244,238,223,.45)!important}
 @media (max-width:600px){html.sm-homeview section:has(> #sm)::after{width:90px;height:90px;top:40px;opacity:.6}html.sm-homeview .sm-gl{grid-template-columns:1fr 1fr;gap:10px}html.sm-homeview .sm-gi{padding:14px}html.sm-homeview .sm-gi small{font-size:.82rem}html.sm-homeview .sm-gi i{width:42px;height:42px}}
+/* think alike, act it out */
+.sm-herdg,.sm-mime{text-align:center}
+.sm-herd{display:flex;flex-wrap:wrap;gap:1.2vh 1vw;justify-content:center;max-width:1100px;margin:2vh auto}
+.sm-herd div{background:rgba(255,255,255,.07);border-radius:16px;padding:1.4vh 1.4vw;display:grid;gap:.4vh;min-width:180px;animation:smIn .45s both}
+.sm-herd div.win{background:rgba(242,184,75,.2);outline:3px solid var(--sa)}
+.sm-herd b{font-size:1.25em}.sm-herd i{font-style:normal;font-size:1.6em;font-weight:800;color:var(--sa)}.sm-herd small{opacity:.75;font-size:.75em}
+.sm-actor .sm-word{font-size:2.4rem}.sm-actor .btn{margin-top:10px}
 </style>
 <div id="sm" class="sm"><noscript><span class="ar">تعمل هذه اللعبة مع تفعيل JavaScript.</span><span class="en">This game needs JavaScript.</span></noscript></div>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script>window.MD_CFG={"apiKey": "AIzaSyA50i75DT1Is1a6Yn6snW1_JVObc8S3F0Y", "authDomain": "maydan-705ae.firebaseapp.com", "databaseURL": "https://maydan-705ae-default-rtdb.europe-west1.firebasedatabase.app", "projectId": "maydan-705ae", "appId": "1:342187013133:web:d5c2396f0db413f3c51144"};window.MD_MARK="<svg class=\"md-mark\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><rect x=\"4\" y=\"4\" width=\"40\" height=\"40\" rx=\"12\" fill=\"#23336F\"/><path d=\"M24 9l4.2 6.8 7.8-1.8-1.8 7.8L41 24l-6.8 4.2 1.8 7.8-7.8-1.8L24 39l-4.2-6.8-7.8 1.8 1.8-7.8L7 24l6.8-4.2-1.8-7.8 7.8 1.8z\" fill=\"#C9822B\"/><circle cx=\"24\" cy=\"24\" r=\"6.5\" fill=\"#23336F\"/><circle cx=\"24\" cy=\"24\" r=\"3\" fill=\"#F3E3C7\"/></svg>";</script><script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script><script>/* Samar (alsamani.com/play/samar): games for a gathering, on one code — the screen shows the play and each phone
@@ -1634,6 +1641,8 @@ html.sm-homeview #sm .sm-card .btn.ghost{background:transparent!important;color:
   const SND = { join: () => tone(880, .12, 'triangle', .06), go: () => [523, 659, 784].forEach((f, k) => tone(f, .2, 'triangle', .08, k * .1)), ok: () => { tone(784, .12, 'triangle', .08); tone(1175, .2, 'triangle', .08, .1); }, no: () => tone(220, .25, 'sawtooth', .05), tick: () => tone(1300, .04, 'square', .03), win: () => [523, 659, 784, 1047, 1319].forEach((f, k) => tone(f, .35, 'triangle', .09, k * .13)) };
   const SV = d => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
   const IC = {
+    herd: SV('<circle cx="7" cy="9" r="2.5"/><circle cx="17" cy="9" r="2.5"/><circle cx="12" cy="7" r="2.5"/><path d="M3 19a4 4 0 0 1 8 0M13 19a4 4 0 0 1 8 0M8 17a4 4 0 0 1 8 0"/>'),
+    mime: SV('<circle cx="12" cy="5" r="2.5"/><path d="M12 8v6M12 14l-4 6M12 14l4 6M5 9l7 2 7-4"/>'),
     lie: SV('<path d="M12 3a6 6 0 0 0-6 6v3l-2 4h16l-2-4V9a6 6 0 0 0-6-6z"/><path d="M9 20h6M12 7v3M12 13v.1"/>'),
     save: SV('<path d="M12 4v11M7 10l5 5 5-5M5 19h14"/>'),
     share: SV('<circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="m8.2 10.8 7.6-4.4M8.2 13.2l7.6 4.4"/>'),
@@ -1688,6 +1697,8 @@ html.sm-homeview #sm .sm-card .btn.ghost{background:transparent!important;color:
     { id: 'draw', icon: IC.draw, ar: 'ارسم وخمّن', en: 'Draw and guess', min: 2, dAr: 'واحد يرسم في جواله والرسمة تظهر على الشاشة، والبقية يخمّنون بأسرع ما يمكن.', dEn: 'One draws on their phone, the drawing shows on the screen, the others guess as fast as they can.' },
     { id: 'letters', icon: IC.letters, ar: 'إنسان حيوان نبات جماد بلاد', en: 'Name, animal, plant, thing, country', min: 2, dAr: 'حرف واحد للجميع: املأ الخانات الخمس قبل أن يقول أحدهم «ستوب».', dEn: 'One letter for all: fill the five boxes before someone calls stop.' },
     { id: 'lie', icon: IC.lie, ar: 'الكذبة', en: 'The bluff', min: 3, dAr: 'معلومة غريبة ناقصة: كل واحد يكتب كذبة مقنعة، ثم ابحثوا عن الحقيقة بين الأكاذيب.', dEn: 'A strange fact with a blank: each writes a convincing lie, then find the truth among the lies.' },
+    { id: 'herd', icon: IC.herd, ar: 'ذوق الجماعة', en: 'Think alike', min: 3, dAr: 'سؤال بسيط، وكل واحد يكتب الإجابة اللي يتوقع أن الأغلبية بتكتبها. النقاط لمن وافق الجماعة.', dEn: 'A simple question; write the answer you expect most will write. Points for matching the crowd.' },
+    { id: 'mime', icon: IC.mime, ar: 'مثّلها', en: 'Act it out', min: 3, dAr: 'تظهر كلمة في جوال واحد فقط، فيمثّلها بلا كلام، والبقية يخمّنون من جوالاتهم.', dEn: 'A word appears on one phone only; they act it out without words while the others guess on their phones.' },
     { id: 'whose', icon: IC.whose, ar: 'مين قالها؟', en: 'Who said it?', min: 3, dAr: 'سؤال للجميع وكل واحد يجيب سرًا، ثم تظهر الإجابات واحدة واحدة: خمّنوا صاحبها.', dEn: 'One question for all, each answers in secret; then the answers appear one by one: guess whose it is.' },
   ];
   const gameOf = id => GAMES.find(g => g.id === id);
@@ -1949,7 +1960,7 @@ html.sm-homeview #sm .sm-card .btn.ghost{background:transparent!important;color:
     S.auto = null; S.end = 0;
     const order = players().sort((a, b) => (S.sc[b] || 0) - (S.sc[a] || 0)), St = u => S.stt[u] || {};
     const best = (k, min) => { let w = null, v = 0; players().forEach(u => { const x = St(u)[k] || 0; if (x >= (min || 1) && x > v) { v = x; w = u; } }); return w ? { u: w, v } : null; };
-    const TT = [['spy', 'الجاسوس الأخطر', 'The sneakiest spy'], ['art', 'الرسام', 'The artist'], ['quick', 'سريع البديهة', 'The quickest mind'], ['self', 'يعرف نفسه', 'Knows themselves'], ['let', 'سيد الحروف', 'Master of letters'], ['myst', 'الغامض', 'The mystery'], ['det', 'المحقق', 'The detective']];
+    const TT = [['spy', 'الجاسوس الأخطر', 'The sneakiest spy'], ['art', 'الرسام', 'The artist'], ['quick', 'سريع البديهة', 'The quickest mind'], ['self', 'يعرف نفسه', 'Knows themselves'], ['let', 'سيد الحروف', 'Master of letters'], ['myst', 'الغامض', 'The mystery'], ['herd', 'قلب الجماعة', 'In tune with the crowd'], ['mime', 'الممثل', 'The actor'], ['det', 'المحقق', 'The detective']];
     const titles = TT.map(([k, ar, en]) => { const r = best(k); return r ? { k, ar, en, u: r.u, n: nameOf(r.u) } : null; }).filter(Boolean);
     const place = u => 1 + players().filter(o => (S.sc[o] || 0) > (S.sc[u] || 0)).length;
     const pod = k => order[k] ? `<div class="sm-pod p${k + 1}" style="--c:${colOf(order[k])}"><span dir="auto">${esc(nameOf(order[k]))}</span><b>${S.sc[order[k]] || 0}</b><i>${place(order[k])}</i></div>` : '<div class="sm-pod"></div>';
@@ -1963,7 +1974,7 @@ html.sm-homeview #sm .sm-card .btn.ghost{background:transparent!important;color:
   }
   function hostDraw() { if (!S || S.mode !== 'host') return; if (S.gs && S.gs.view) S.gs.view(); else picker(); }
   function startGame(id) {
-    const mk = { spy: Spy, who: Who, draw: Draw, letters: Letters, whose: Whose, lie: Lie }[id]; if (!mk) return;
+    const mk = { spy: Spy, who: Who, draw: Draw, letters: Letters, whose: Whose, lie: Lie, herd: Herd, mime: Mime }[id]; if (!mk) return;
     S.gn++; S.roster = {}; players().forEach(u => { S.roster[u] = 1; }); S.gs = mk(); S.gs.id = id; S.played = true; SND.go(); S.gs.start(); stat({ ['samar/' + id + '/n']: 1, ['samar/' + id + '/p']: players().length });
   }
   // after a game: the points it gave, then back to the choice of games
@@ -2258,6 +2269,90 @@ html.sm-homeview #sm .sm-card .btn.ghost{background:transparent!important;color:
     return G;
   }
 
+  /* ---------- think alike: match the crowd ---------- */
+  const HERD = {
+    ar: ['أفضل وقت لشرب القهوة', 'أشهر أكلة في رمضان', 'أول شيء تسويه لما تصحى', 'لون سيارة يحبه الأغلب', 'أكثر تطبيق تفتحه في جوالك', 'أجمل فصل في السنة', 'حيوان أليف تتمناه', 'أكلة ما تمل منها', 'أفضل مدينة للسياحة في المملكة', 'رياضة يحبها أغلب الناس', 'أشهر حلى سعودي', 'هدية مناسبة لأي شخص', 'أكثر شيء ينسونه الناس', 'مشروب الضيافة الأول', 'أفضل وجبة في اليوم', 'شيء لازم يكون في السيارة', 'أشهر لعبة في الطفولة', 'مكان تروح له في الإجازة', 'أكثر شيء يزعج في الزحمة', 'فاكهة الصيف'],
+    en: ['The best time for coffee', 'The most popular breakfast', 'The first thing you do after waking up', 'The most common car colour', 'The app you open most', 'The best season of the year', 'A pet you wish you had', 'A food you never tire of', 'The best city to visit', 'A sport most people love', 'A gift that suits anyone', 'Something people always forget', 'The best meal of the day', 'Something every car needs', 'A favourite childhood game', 'A holiday destination', 'The most annoying thing in traffic', 'The fruit of summer', 'A word for a perfect weekend', 'The best pizza topping']
+  };
+  function Herd() {
+    const st = { r: 0, gained: {} }, ROUNDS = 4;
+    const G = {
+      start() { S.lastGame = 'herd'; st.r = 0; st.gained = {}; S.herdUsed = S.herdUsed || []; inGame().forEach(u => priv(u, { g: 'herd' })); G.round(); },
+      join(u) { priv(u, { g: 'herd' }); },
+      round() {
+        st.r++; const pool = HERD[S.L].filter(q => !S.herdUsed.includes(q)); st.q = pick(pool.length ? pool : HERD[S.L]); S.herdUsed.push(st.q); st.ans = {};
+        phase('write', 30, { q: st.q, r: st.r, of: ROUNDS, n: 0 }); G.view();
+      },
+      move(u, k) {
+        if (S.ph !== 'write' || !k.startsWith('a:') || st.ans[u]) return;
+        const a = k.slice(2, 40).trim(); if (!a) return; st.ans[u] = a; SND.join();
+        pub(Object.assign({}, S.g, { n: Object.keys(st.ans).length })); G.view(); if (Object.keys(st.ans).length >= inGame().length) G.reveal();
+      },
+      reveal() {
+        // answers written the same way (spelling aside) are one group; the biggest group wins
+        const groups = {}; Object.keys(st.ans).forEach(u => { const n = norm(digits(st.ans[u])); (groups[n] = groups[n] || { t: st.ans[u], us: [] }).us.push(u); });
+        st.groups = Object.values(groups).sort((a, b) => b.us.length - a.us.length); const top = st.groups.length ? st.groups[0].us.length : 0, g = (u, n) => { add(u, n); st.gained[u] = (st.gained[u] || 0) + n; };
+        st.groups.forEach(x => { if (top > 1 && x.us.length === top) x.us.forEach(u => { g(u, 100); tally(u, 'herd'); }); else if (x.us.length > 1) x.us.forEach(u => g(u, 30)); });
+        pushScores();
+        phase('reveal', 9, { q: st.q, r: st.r, of: ROUNDS, groups: st.groups.slice(0, 8).map(x => ({ t: x.t, n: x.us.length, us: x.us.map(nameOf) })), top }); G.view();
+      },
+      next() { if (st.r >= ROUNDS) return gameOver(st.gained, B('انتهت جولات ذوق الجماعة', 'Think alike is over')); G.round(); },
+      tick() { if (!S.end || left() > 0) return; if (S.ph === 'write') G.reveal(); else if (S.ph === 'reveal') G.next(); },
+      view() {
+        const ph = S.ph, rd = `<p class="sm-sub">${B(`السؤال ${st.r} من ${ROUNDS}`, `Question ${st.r} of ${ROUNDS}`)}</p>`;
+        let body = '', foot = '';
+        if (ph === 'write') { body = rd + `<h2 dir="auto">${esc(st.q)}</h2><p class="sm-sub">${B('اكتب في جوالك الإجابة اللي تتوقع أن أغلب الحاضرين بيكتبونها', 'On your phone, write what you think most people here will write')}</p><p class="sm-count" dir="ltr">${Object.keys(st.ans).length} / ${inGame().length}</p>`; foot = `<button type="button" class="btn ghost" data-skip>${B('اعرض الإجابات', 'Show the answers')}</button>`; }
+        else { const top = st.groups.length ? st.groups[0].us.length : 0;
+          body = rd + `<h2 dir="auto">${esc(st.q)}</h2><div class="sm-herd">${st.groups.map(x => `<div class="${top > 1 && x.us.length === top ? 'win' : ''}"><b dir="auto">${esc(x.t)}</b><i>${x.us.length}</i><small>${x.us.map(u => esc(nameOf(u))).join('، ')}</small></div>`).join('')}</div>`;
+          foot = `<button type="button" class="btn ghost" data-skip>${st.r >= ROUNDS ? B('النتيجة', 'The result') : B('السؤال التالي', 'Next question')}</button>`; }
+        const q = frame(`<div class="sm-g sm-herdg">${body}</div>`, foot);
+        if (q('[data-skip]')) q('[data-skip]').onclick = () => ph === 'write' ? G.reveal() : G.next();
+      }
+    };
+    return G;
+  }
+
+  /* ---------- act it out: one phone sees the word, the others guess ---------- */
+  function Mime() {
+    const st = { turn: -1, order: [], got: {}, gained: {} };
+    const mine = () => ({ g: 'mime', role: 'actor', t: st.turn, word: st.word, got: Object.keys(st.got).map(nameOf) });
+    const G = {
+      start() { S.lastGame = 'mime'; st.order = shuffle(inGame()).slice(0, S.auto ? 4 : 6); st.turn = -1; st.gained = {}; G.next(); },
+      join(u) { priv(u, { g: 'mime', role: 'guess', t: st.turn }); },
+      next() {
+        st.turn++; if (st.turn >= st.order.length) return gameOver(st.gained, B('انتهى التمثيل', 'The acting is over')); if (!(st.order[st.turn] in S.pl)) return G.next();
+        st.actor = st.order[st.turn]; st.got = {}; st.feed = []; st.cat = catFor(S.cat); st.word = pick(words(st.cat, S.L));
+        inGame().forEach(u => priv(u, u === st.actor ? mine() : { g: 'mime', role: 'guess', t: st.turn }));
+        phase('act', 75, { actor: nameOf(st.actor), au: st.actor.slice(0, 8), turn: st.turn + 1, of: st.order.length, cat: st.cat, len: [...st.word].length }); G.view();
+      },
+      move(u, k) {
+        if (S.ph === 'act' && u === st.actor && k === 'p:skip') { st.word = pick(words(st.cat, S.L).filter(w => w !== st.word)); priv(st.actor, mine()); return; }
+        if (S.ph !== 'act' || u === st.actor || !k.startsWith('g:') || st.got[u]) return;
+        const gs = k.slice(2, 40);
+        if (norm(gs) === norm(st.word)) {
+          const first = !Object.keys(st.got).length, pts = 100 + Math.round(150 * left() / 75) + (first ? 50 : 0);
+          st.got[u] = pts; add(u, pts); add(st.actor, 60); tally(st.actor, 'mime', 60); if (first) tally(u, 'quick');
+          st.gained[u] = (st.gained[u] || 0) + pts; st.gained[st.actor] = (st.gained[st.actor] || 0) + 60; SND.ok(); st.feed.unshift({ u, ok: 1, first });
+          db.ref('khh/' + S.pin + '/' + u + '/ok').set(st.word).catch(() => {}); priv(st.actor, mine()); pushScores();
+          if (Object.keys(st.got).length >= inGame().filter(x => x !== st.actor).length) return G.reveal();
+        } else { st.feed.unshift({ u, g: gs }); miss(u, gs, st.word); }
+        st.feed = st.feed.slice(0, 12); G.feed(); board();
+      },
+      reveal() { phase('reveal', 6, { word: st.word, actor: nameOf(st.actor) }); G.view(); },
+      tick() { if (!S.end || left() > 0) return; if (S.ph === 'act') G.reveal(); else if (S.ph === 'reveal') G.next(); },
+      feed() { const f = HE().querySelector('#smFeed'); if (f) f.innerHTML = (st.feed || []).map(z => `<li class="${z.ok ? 'ok' : ''}" style="--c:${colOf(z.u)}"><span dir="auto">${esc(nameOf(z.u))}</span>${z.ok ? `<b>${z.first ? B('أول من خمّن! +٥٠', 'first to get it! +50') : B('خمّن الكلمة!', 'got it!')}</b>` : `<i dir="auto">${esc(z.g)}</i>`}</li>`).join(''); },
+      view() {
+        const ph = S.ph;
+        const head = ph === 'reveal' ? `<p class="sm-word">${esc(st.word)}</p>` : `<p class="sm-mask" dir="auto">${[...st.word].map(c => c === ' ' ? '&nbsp;&nbsp;' : '_').join(' ')}</p>`;
+        const q = frame(`<div class="sm-g sm-mime"><p class="sm-sub">${B(`الدور ${st.turn + 1} من ${st.order.length}`, `Turn ${st.turn + 1} of ${st.order.length}`)} · ${B('الفئة:', 'Category:')} <b>${B(CAT[st.cat][0], CAT[st.cat][1])}</b></p>
+          <h2>${B(`«${esc(nameOf(st.actor))}» يمثّل الآن`, `${esc(nameOf(st.actor))} is acting`)}</h2><p class="sm-sub">${B('بلا كلام ولا أصوات. خمّنوا من جوالاتكم.', 'No words, no sounds. Guess on your phones.')}</p>${head}<ol class="sm-feed" id="smFeed"></ol></div>`,
+          ph === 'act' ? `<button type="button" class="btn ghost" data-skip>${B('أنهِ الدور', 'End this turn')}</button>` : '');
+        G.feed(); if (q('[data-skip]')) q('[data-skip]').onclick = () => G.reveal();
+      }
+    };
+    return G;
+  }
+
   /* ---------- who said it: anonymous answers, then guess the author ---------- */
   const ASKS = {
     ar: ['أغرب أكلة جربتها في حياتك', 'لو صار عندك قوة خارقة ليوم واحد، وش تكون؟', 'أول شيء تسويه لو ربحت مليون', 'عادة عندك ما يعرفها أحد', 'وظيفة كنت تحلم فيها وأنت صغير', 'أكثر كلمة تقولها في يومك', 'لو تعيش في أي زمن، أي زمن تختار؟', 'شيء تخاف منه وتستحي تقوله', 'أغرب هدية جتك', 'وش تسوي أول ما تصحى؟', 'لو تقدر تتكلم لغة حيوان، أي حيوان؟', 'أكلة تقدر تاكلها كل يوم', 'مكان تتمنى تزوره', 'أطرف موقف صار لك في المدرسة', 'لو كتبت كتاب، وش عنوانه؟', 'شيء تعلمته متأخر', 'أسوأ نصيحة سمعتها', 'لو صرت مسؤول عن مدينتك يوم واحد، وش أول قرار؟', 'مهارة تتمنى تتقنها', 'لو حياتك فلم، وش اسمه؟', 'أكثر شيء يضحكك', 'شيء تحتفظ فيه من سنين', 'لو رجع فيك الزمن عشر سنين، وش تقول لنفسك؟', 'أغرب حلم تذكره', 'برنامج أو مسلسل ما تمل منه', 'لو تختار اسم ثاني لنفسك', 'شيء ما تقدر تعيش بدونه', 'أكثر موقف إحراج صار لك', 'رياضة تتمنى تلعبها باحتراف', 'وش أول شيء تشتريه لو سافرت؟'],
@@ -2413,6 +2508,8 @@ html.sm-homeview #sm .sm-card .btn.ghost{background:transparent!important;color:
     else if (g.id === 'letters') body = phoneLetters(g, p);
     else if (g.id === 'whose') body = phoneWhose(g, p);
     else if (g.id === 'lie') body = phoneLie(g, p);
+    else if (g.id === 'herd') body = phoneHerd(g, p);
+    else if (g.id === 'mime') body = phoneMime(g, p);
     // the drawer's pad stays as it is; only the list of who got it and the points change
     if (g && g.id === 'draw' && g.ph === 'draw' && p.role === 'drawer' && S.padT === g.turn && root.querySelector('#smPad')) {
       const gl = root.querySelector('#smGot'); if (gl) gl.innerHTML = gotHtml(p); const t = root.querySelector('.sm-top b'); if (t) t.textContent = my; return; }
@@ -2461,6 +2558,18 @@ html.sm-homeview #sm .sm-card .btn.ghost{background:transparent!important;color:
     if (p.ok) return `<div class="sm-pw ok"><p class="sm-big">${B('خمّنتها!', 'You got it!')}</p><p class="sm-word" dir="auto">${esc(p.ok)}</p></div><canvas id="smView" class="sm-view" width="600" height="600"></canvas>`;
     return `<canvas id="smView" class="sm-view" width="600" height="600"></canvas><div class="sm-form"><p>${B(`يرسم «${esc(g.drawer)}»: ${g.len} حروف`, `${esc(g.drawer)} is drawing: ${g.len} letters`)}</p><input id="smIn" data-keep="g" maxlength="30" dir="auto" autocomplete="off" placeholder="${T('ما هذه؟', 'What is it?')}"><button type="button" class="btn solid" data-send="g" data-stay>${B('خمّن', 'Guess')}</button></div>`;
   }
+  function phoneHerd(g) {
+    const qh = `<p class="sm-sub">${B(`السؤال ${g.r} من ${g.of}`, `Question ${g.r} of ${g.of}`)}</p><p class="sm-big" dir="auto">${esc(g.q || '')}</p>`;
+    if (g.ph === 'write') return S.sent === 'a' ? qh + `<div class="sm-pw"><p class="sm-big">${B('وصلت إجابتك', 'Your answer is in')}</p></div>` : qh + `<div class="sm-form"><small>${B('اكتب ما تتوقع أن الأغلبية بتكتبه', 'Write what you think most will write')}</small><input id="smIn" data-keep="a${g.r}" maxlength="30" dir="auto" autocomplete="off"><button type="button" class="btn solid" data-send="a">${B('أرسل', 'Send')}</button></div>`;
+    const gs = g.groups || [], mine = gs.find(x => (x.us || []).includes(S.me));
+    return qh + `<div class="sm-pw">${mine ? `<p class="sm-big">${mine.n === g.top && g.top > 1 ? B('وافقت الجماعة!', 'You matched the crowd!') : mine.n > 1 ? B('وافقك بعضهم', 'Some agreed with you') : B('كنت وحدك هالمرة', 'You stood alone this time')}</p><p class="sm-sub">${B(`كتب مثلك ${mine.n - 1}`, `${mine.n - 1} wrote the same`)}</p>` : ''}${gs[0] ? `<p class="sm-sub">${B('الأكثر:', 'Most wrote:')} <b dir="auto">${esc(gs[0].t)}</b></p>` : ''}</div>`;
+  }
+  function phoneMime(g, p) {
+    if (g.ph === 'reveal') return `<div class="sm-pw"><p>${B('الكلمة كانت', 'The word was')}</p><p class="sm-word" dir="auto">${esc(g.word)}</p></div>`;
+    if (p.role === 'actor') return `<div class="sm-pw sm-actor"><p>${B('مثّل هذه الكلمة بلا كلام:', 'Act out this word, no talking:')}</p><p class="sm-word" dir="auto">${esc(p.word || '')}</p><button type="button" class="btn ghost" data-mskip>${B('كلمة أخرى', 'Another word')}</button><p class="sm-got">${gotHtml(p)}</p></div>`;
+    if (p.ok) return `<div class="sm-pw ok"><p class="sm-big">${B('خمّنتها!', 'You got it!')}</p><p class="sm-word" dir="auto">${esc(p.ok)}</p></div>`;
+    return `<div class="sm-form"><p>${B(`«${esc(g.actor)}» يمثّل: ${g.len} حروف`, `${esc(g.actor)} is acting: ${g.len} letters`)}</p><input id="smIn" data-keep="g" maxlength="30" dir="auto" autocomplete="off" placeholder="${T('ما هذه؟', 'What is it?')}"><button type="button" class="btn solid" data-send="g" data-stay>${B('خمّن', 'Guess')}</button></div>`;
+  }
   function phoneLie(g, p) {
     const qh = `<p class="sm-sub">${B(`السؤال ${g.r} من ${g.of}`, `Question ${g.r} of ${g.of}`)}</p><p class="sm-big sm-fact" dir="auto">${esc(g.q || '').replace('____', '<i>____</i>')}</p>`;
     if (g.ph === 'lie') return S.sent === 'l' ? qh + `<div class="sm-pw"><p class="sm-big">${B('وصلت كذبتك', 'Your lie is in')}</p></div>` : qh + `<div class="sm-form"><input id="smIn" data-keep="l${g.r}" maxlength="40" dir="auto" autocomplete="off" placeholder="${T('كذبة مقنعة', 'A convincing lie')}"><button type="button" class="btn solid" data-send="l">${B('أرسل', 'Send')}</button></div>`;
@@ -2493,6 +2602,7 @@ html.sm-homeview #sm .sm-card .btn.ghost{background:transparent!important;color:
     root.querySelectorAll('[data-word]').forEach(b => b.onclick = () => { send('w:' + b.dataset.word); buzz(20); });
     const hm = q('[data-hostme]'); if (hm) hm.onclick = () => { S.hm = true; phone(); const i = q('#smRc'); if (i) i.focus(); }; if (q('[data-rcgo]')) { q('[data-rcgo]').onclick = () => { const v = q('#smRc').value.replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/\D/g, ''); if (v.length === 4) { send('r:' + v); buzz(20); } }; }
     const cb = q('[data-card]'); if (cb && g && g.ph === 'final') cb.onclick = () => saveCard(g.rank || [], g.titles || [], g.tw >= -1 ? g.tw : null);
+    const ms = q('[data-mskip]'); if (ms) ms.onclick = () => { send('p:skip'); buzz(20); };
     const hb = q('[data-hint]'); if (hb) hb.onclick = () => { send('h:1'); buzz(20); };
     // the letter game: what is typed goes out quietly as it is written, and "stop" sends it all at once
     const ls = root.querySelectorAll('[data-l]'); if (ls.length) { const vals = () => [...ls].map(i => i.value.trim()); let t = null; ls.forEach(i => i.oninput = () => { S.lt = vals(); clearTimeout(t); t = setTimeout(() => send('a:' + JSON.stringify(S.lt)), 700); });
