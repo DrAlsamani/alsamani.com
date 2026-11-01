@@ -160,3 +160,54 @@ html.sm-in .tl-crumb,html.sm-in .sm-head,html.sm-in .sm-lead{display:none}
 .sm-final h2{font-size:clamp(24px,4.4vh,52px);text-align:center;margin:0 0 1vh}
 .sm-plus,.sm-gain b,.sm-whoc em{direction:ltr;unicode-bidi:isolate}
 .sm-aiw{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 10px}.sm-aiw input{flex:1 1 200px;margin:0!important}.sm-aiw .btn{color:var(--ink);border-color:rgba(255,255,255,.3)}
+
+/* ---------- the home page: a night sky of its own ---------- */
+html.sm-homeview section:has(> #sm){position:relative;isolation:isolate;color:#f4eedf;padding-bottom:64px}
+html.sm-homeview section:has(> #sm)::before{content:'';position:absolute;z-index:-1;top:-40px;bottom:0;left:50%;width:100vw;transform:translateX(-50%);
+  background:
+    radial-gradient(1.4px 1.4px at 12% 18%,rgba(255,255,255,.9),transparent 60%),radial-gradient(1px 1px at 27% 8%,rgba(255,255,255,.7),transparent 60%),
+    radial-gradient(1.2px 1.2px at 41% 22%,rgba(255,255,255,.8),transparent 60%),radial-gradient(1px 1px at 58% 12%,rgba(255,255,255,.6),transparent 60%),
+    radial-gradient(1.6px 1.6px at 73% 26%,rgba(255,236,190,.9),transparent 60%),radial-gradient(1px 1px at 86% 9%,rgba(255,255,255,.7),transparent 60%),
+    radial-gradient(1.2px 1.2px at 93% 34%,rgba(255,255,255,.6),transparent 60%),radial-gradient(1px 1px at 6% 42%,rgba(255,255,255,.5),transparent 60%),
+    radial-gradient(1px 1px at 34% 46%,rgba(255,255,255,.45),transparent 60%),radial-gradient(1.3px 1.3px at 66% 52%,rgba(255,255,255,.5),transparent 60%),
+    radial-gradient(1px 1px at 18% 70%,rgba(255,255,255,.35),transparent 60%),radial-gradient(1px 1px at 82% 74%,rgba(255,255,255,.35),transparent 60%),
+    radial-gradient(ellipse 60% 40% at 50% 0,rgba(124,140,248,.28),transparent 70%),
+    linear-gradient(180deg,#0e0c29 0%,#17153a 45%,#1f1b4f 100%)}
+html.sm-homeview section:has(> #sm)::after{content:'';position:absolute;z-index:-1;top:30px;inset-inline-end:max(4%,calc(50% - 640px));width:150px;height:150px;border-radius:50%;
+  box-shadow:-26px 14px 0 0 rgba(242,184,75,.16);opacity:.9;pointer-events:none}
+html.sm-homeview .tl-crumb,html.sm-homeview .tl-crumb a{color:rgba(244,238,223,.65)}
+html.sm-homeview .sm-head{flex-direction:column;text-align:center;gap:10px;margin:18px 0 6px}
+html.sm-homeview .sm-head .sm-mark{width:84px;height:84px;filter:drop-shadow(0 8px 28px rgba(242,184,75,.35))}
+html.sm-homeview .sm-head h1{font-size:clamp(44px,7vw,68px);line-height:1;color:#fff;letter-spacing:-.01em}
+html.sm-homeview .sm-head p{opacity:1;color:#f2b84b;font-size:1.25rem;font-weight:600;margin-top:6px}
+html.sm-homeview .sm-lead{color:rgba(244,238,223,.8);max-width:560px;margin:0 auto 34px;font-size:1.05rem}
+html.sm-homeview .sm-home{max-width:1000px;gap:22px}
+html.sm-homeview .sm-acts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:18px}
+html.sm-homeview .sm-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);box-shadow:0 20px 50px -20px rgba(0,0,0,.6);backdrop-filter:blur(6px);color:#f4eedf;border-radius:22px;padding:24px}
+html.sm-homeview .sm-card h2{font-size:1.3rem;color:#fff}
+html.sm-homeview .sm-card p{color:rgba(244,238,223,.78);line-height:1.8}
+html.sm-homeview .sm-card label{color:rgba(244,238,223,.85)}
+html.sm-homeview .sm-card input{background:rgba(0,0,0,.28);border-color:rgba(255,255,255,.16);color:#fff}
+html.sm-homeview .sm-card input::placeholder{color:rgba(255,255,255,.35)}
+html.sm-homeview .sm-card input:focus{outline:none;border-color:#f2b84b;box-shadow:0 0 0 3px rgba(242,184,75,.25)}
+html.sm-homeview .sm-join{border-top:3px solid #f2b84b}
+html.sm-homeview .sm-host{border-top:3px solid #2bb3a3;display:flex;flex-direction:column}
+html.sm-homeview .sm-host .btn{margin-top:auto;align-self:flex-start}
+html.sm-homeview .sm-card .btn.solid{background:#f2b84b;color:#17153a;border-color:#f2b84b;font-weight:700;min-height:46px;padding-inline:26px}
+html.sm-homeview .sm-card .btn.ghost{color:#f4eedf;border-color:rgba(244,238,223,.45);min-height:46px;padding-inline:22px}
+html.sm-homeview .sm-card .btn.ghost:hover{background:rgba(255,255,255,.08)}
+html.sm-homeview .sm-err{color:#ff9aa9}
+html.sm-homeview .sm-resume{border-top:3px solid #7c8cf8}
+html.sm-homeview .sm-glt{display:flex;align-items:center;gap:14px;margin:26px 0 2px;font-size:1.15rem;color:#f2b84b;font-weight:700}
+html.sm-homeview .sm-glt::before,html.sm-homeview .sm-glt::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(242,184,75,.4),transparent)}
+html.sm-homeview .sm-gl{grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:14px}
+html.sm-homeview .sm-gi{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:20px;gap:8px;transition:transform .25s,border-color .25s,background .25s}
+html.sm-homeview .sm-gi:hover{transform:translateY(-3px);border-color:rgba(242,184,75,.45);background:rgba(255,255,255,.08)}
+html.sm-homeview .sm-gi i{display:grid;place-items:center;width:52px;height:52px;border-radius:16px;background:rgba(242,184,75,.12);margin-bottom:4px}
+html.sm-homeview .sm-gi i svg{width:28px;height:28px}
+html.sm-homeview .sm-gi b{font-size:1.12rem;color:#fff}
+html.sm-homeview .sm-gi small{color:rgba(244,238,223,.72);font-size:.93rem}
+@media (prefers-reduced-motion:no-preference){html.sm-homeview .sm-head .sm-mark{animation:smFloat 6s ease-in-out infinite}@keyframes smFloat{50%{transform:translateY(-6px)}}}
+html.sm-homeview #sm .sm-card .btn.solid{background:#f2b84b!important;color:#17153a!important;border-color:#f2b84b!important}
+html.sm-homeview #sm .sm-card .btn.ghost{background:transparent!important;color:#f4eedf!important;border:1.5px solid rgba(244,238,223,.45)!important}
+@media (max-width:600px){html.sm-homeview section:has(> #sm)::after{width:90px;height:90px;top:40px;opacity:.6}html.sm-homeview .sm-gl{grid-template-columns:1fr 1fr;gap:10px}html.sm-homeview .sm-gi{padding:14px}html.sm-homeview .sm-gi small{font-size:.82rem}html.sm-homeview .sm-gi i{width:42px;height:42px}}

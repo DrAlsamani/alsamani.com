@@ -164,19 +164,21 @@
 
   /* ---------- home ---------- */
   function home(err) {
-    stopAll();
+    stopAll(); document.documentElement.classList.add('sm-homeview');
     const R0 = (() => { const h = store.get('host', null); return h && Date.now() - h.at < 12 * 36e5 ? h : null; })();
     const p = new URLSearchParams(location.search).get('k') || '';
     root.innerHTML = `<div class="sm-home">
+      ${R0 ? `<div class="sm-card sm-resume"><p>${B(`جلسة مفتوحة على هذا الجهاز، رمزها ${R0.pin}`, `A session is open on this device, code ${R0.pin}`)}</p><div class="sm-row"><button type="button" class="btn solid" id="smRes">${B('تابع الجلسة', 'Carry on')}</button><button type="button" class="btn ghost" id="smDrop">${B('أنهِها', 'End it')}</button></div></div>` : ''}
+      <div class="sm-acts">
       <div class="sm-card sm-join"><h2>${B('ادخل اللعبة', 'Join a game')}</h2>
         <label>${B('الرمز', 'Code')}<input id="smPin" inputmode="numeric" maxlength="7" dir="ltr" placeholder="123 456" value="${esc(p)}"></label>
         <label>${B('اسمك', 'Your name')}<input id="smName" maxlength="20" dir="auto" value="${esc(store.get('name', ''))}"></label>
         <p class="sm-err" ${err ? '' : 'hidden'}>${err || ''}</p>
         <button type="button" class="btn solid" id="smGo">${B('ادخل', 'Join')}</button></div>
-      ${R0 ? `<div class="sm-card sm-resume"><p>${B(`جلسة مفتوحة على هذا الجهاز، رمزها ${R0.pin}`, `A session is open on this device, code ${R0.pin}`)}</p><div class="sm-row"><button type="button" class="btn solid" id="smRes">${B('تابع الجلسة', 'Carry on')}</button><button type="button" class="btn ghost" id="smDrop">${B('أنهِها', 'End it')}</button></div></div>` : ''}
       <div class="sm-card sm-host"><h2>${B('افتح جلسة', 'Open a session')}</h2><p>${B('من اللابتوب أو التلفزيون أو حتى جوالك: يظهر رمز يدخل به الجميع من جوالاتهم، ثم تختارون اللعبة. الشاشة الكبيرة تحلّي الجو، لكن اللعبة تمشي بدونها.', 'From a laptop, a TV or even your phone: a code appears for everyone to join from their phones, then you choose the game. A big screen makes it livelier, but the game runs without one.')}</p>
         <button type="button" class="btn ghost" id="smHost">${B('افتح جلسة جديدة', 'Open a new session')}</button></div>
-      <div class="sm-gl">${GAMES.map(g => `<div class="sm-gi"><i>${g.icon}</i><b>${B(g.ar, g.en)}</b><small>${B(g.dAr, g.dEn)}</small></div>`).join('')}</div></div>`;
+      </div>
+      <h2 class="sm-glt">${B('ألعاب السهرة', 'The games of the evening')}</h2><div class="sm-gl">${GAMES.map(g => `<div class="sm-gi"><i>${g.icon}</i><b>${B(g.ar, g.en)}</b><small>${B(g.dAr, g.dEn)}</small></div>`).join('')}</div></div>`;
     const pin = root.querySelector('#smPin'), nm = root.querySelector('#smName');
     pin.oninput = () => { pin.value = pin.value.replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[^\d ]/g, ''); };
     root.querySelector('#smGo').onclick = () => join(pin.value.replace(/\D/g, ''), nm.value.trim().replace(/\s+/g, ' ').slice(0, 20));
@@ -191,6 +193,7 @@
   // the screen: a layer on the page's body, so nothing on the page can clip or cover it
   const HE = () => { let e = document.getElementById('smLive'); if (!e) { e = document.createElement('div'); e.id = 'smLive'; e.className = 'sm'; document.body.appendChild(e); document.documentElement.classList.add('sm-on'); } return e; };
   async function host(res) {
+    document.documentElement.classList.remove('sm-homeview');
     root.innerHTML = `<div class="sm-card sm-wait">${B('جارٍ فتح الجلسة…', 'Opening the session…')}</div>`;
     try {
       await within(fb());
@@ -743,6 +746,7 @@
      the player: a phone
      ===================================================================================== */
   async function join(pin, name) {
+    document.documentElement.classList.remove('sm-homeview');
     if (pin.length !== 6) return home(T('الرمز ستة أرقام.', 'The code has six digits.'));
     if (!name) return home(T('اكتب اسمك.', 'Type your name.'));
     root.innerHTML = `<div class="sm-card sm-wait">${B('لحظة…', 'One moment…')}</div>`;

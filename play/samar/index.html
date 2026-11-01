@@ -1561,6 +1561,57 @@ html.sm-in .tl-crumb,html.sm-in .sm-head,html.sm-in .sm-lead{display:none}
 .sm-final h2{font-size:clamp(24px,4.4vh,52px);text-align:center;margin:0 0 1vh}
 .sm-plus,.sm-gain b,.sm-whoc em{direction:ltr;unicode-bidi:isolate}
 .sm-aiw{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 10px}.sm-aiw input{flex:1 1 200px;margin:0!important}.sm-aiw .btn{color:var(--ink);border-color:rgba(255,255,255,.3)}
+
+/* ---------- the home page: a night sky of its own ---------- */
+html.sm-homeview section:has(> #sm){position:relative;isolation:isolate;color:#f4eedf;padding-bottom:64px}
+html.sm-homeview section:has(> #sm)::before{content:'';position:absolute;z-index:-1;top:-40px;bottom:0;left:50%;width:100vw;transform:translateX(-50%);
+  background:
+    radial-gradient(1.4px 1.4px at 12% 18%,rgba(255,255,255,.9),transparent 60%),radial-gradient(1px 1px at 27% 8%,rgba(255,255,255,.7),transparent 60%),
+    radial-gradient(1.2px 1.2px at 41% 22%,rgba(255,255,255,.8),transparent 60%),radial-gradient(1px 1px at 58% 12%,rgba(255,255,255,.6),transparent 60%),
+    radial-gradient(1.6px 1.6px at 73% 26%,rgba(255,236,190,.9),transparent 60%),radial-gradient(1px 1px at 86% 9%,rgba(255,255,255,.7),transparent 60%),
+    radial-gradient(1.2px 1.2px at 93% 34%,rgba(255,255,255,.6),transparent 60%),radial-gradient(1px 1px at 6% 42%,rgba(255,255,255,.5),transparent 60%),
+    radial-gradient(1px 1px at 34% 46%,rgba(255,255,255,.45),transparent 60%),radial-gradient(1.3px 1.3px at 66% 52%,rgba(255,255,255,.5),transparent 60%),
+    radial-gradient(1px 1px at 18% 70%,rgba(255,255,255,.35),transparent 60%),radial-gradient(1px 1px at 82% 74%,rgba(255,255,255,.35),transparent 60%),
+    radial-gradient(ellipse 60% 40% at 50% 0,rgba(124,140,248,.28),transparent 70%),
+    linear-gradient(180deg,#0e0c29 0%,#17153a 45%,#1f1b4f 100%)}
+html.sm-homeview section:has(> #sm)::after{content:'';position:absolute;z-index:-1;top:30px;inset-inline-end:max(4%,calc(50% - 640px));width:150px;height:150px;border-radius:50%;
+  box-shadow:-26px 14px 0 0 rgba(242,184,75,.16);opacity:.9;pointer-events:none}
+html.sm-homeview .tl-crumb,html.sm-homeview .tl-crumb a{color:rgba(244,238,223,.65)}
+html.sm-homeview .sm-head{flex-direction:column;text-align:center;gap:10px;margin:18px 0 6px}
+html.sm-homeview .sm-head .sm-mark{width:84px;height:84px;filter:drop-shadow(0 8px 28px rgba(242,184,75,.35))}
+html.sm-homeview .sm-head h1{font-size:clamp(44px,7vw,68px);line-height:1;color:#fff;letter-spacing:-.01em}
+html.sm-homeview .sm-head p{opacity:1;color:#f2b84b;font-size:1.25rem;font-weight:600;margin-top:6px}
+html.sm-homeview .sm-lead{color:rgba(244,238,223,.8);max-width:560px;margin:0 auto 34px;font-size:1.05rem}
+html.sm-homeview .sm-home{max-width:1000px;gap:22px}
+html.sm-homeview .sm-acts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:18px}
+html.sm-homeview .sm-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);box-shadow:0 20px 50px -20px rgba(0,0,0,.6);backdrop-filter:blur(6px);color:#f4eedf;border-radius:22px;padding:24px}
+html.sm-homeview .sm-card h2{font-size:1.3rem;color:#fff}
+html.sm-homeview .sm-card p{color:rgba(244,238,223,.78);line-height:1.8}
+html.sm-homeview .sm-card label{color:rgba(244,238,223,.85)}
+html.sm-homeview .sm-card input{background:rgba(0,0,0,.28);border-color:rgba(255,255,255,.16);color:#fff}
+html.sm-homeview .sm-card input::placeholder{color:rgba(255,255,255,.35)}
+html.sm-homeview .sm-card input:focus{outline:none;border-color:#f2b84b;box-shadow:0 0 0 3px rgba(242,184,75,.25)}
+html.sm-homeview .sm-join{border-top:3px solid #f2b84b}
+html.sm-homeview .sm-host{border-top:3px solid #2bb3a3;display:flex;flex-direction:column}
+html.sm-homeview .sm-host .btn{margin-top:auto;align-self:flex-start}
+html.sm-homeview .sm-card .btn.solid{background:#f2b84b;color:#17153a;border-color:#f2b84b;font-weight:700;min-height:46px;padding-inline:26px}
+html.sm-homeview .sm-card .btn.ghost{color:#f4eedf;border-color:rgba(244,238,223,.45);min-height:46px;padding-inline:22px}
+html.sm-homeview .sm-card .btn.ghost:hover{background:rgba(255,255,255,.08)}
+html.sm-homeview .sm-err{color:#ff9aa9}
+html.sm-homeview .sm-resume{border-top:3px solid #7c8cf8}
+html.sm-homeview .sm-glt{display:flex;align-items:center;gap:14px;margin:26px 0 2px;font-size:1.15rem;color:#f2b84b;font-weight:700}
+html.sm-homeview .sm-glt::before,html.sm-homeview .sm-glt::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(242,184,75,.4),transparent)}
+html.sm-homeview .sm-gl{grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:14px}
+html.sm-homeview .sm-gi{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:20px;gap:8px;transition:transform .25s,border-color .25s,background .25s}
+html.sm-homeview .sm-gi:hover{transform:translateY(-3px);border-color:rgba(242,184,75,.45);background:rgba(255,255,255,.08)}
+html.sm-homeview .sm-gi i{display:grid;place-items:center;width:52px;height:52px;border-radius:16px;background:rgba(242,184,75,.12);margin-bottom:4px}
+html.sm-homeview .sm-gi i svg{width:28px;height:28px}
+html.sm-homeview .sm-gi b{font-size:1.12rem;color:#fff}
+html.sm-homeview .sm-gi small{color:rgba(244,238,223,.72);font-size:.93rem}
+@media (prefers-reduced-motion:no-preference){html.sm-homeview .sm-head .sm-mark{animation:smFloat 6s ease-in-out infinite}@keyframes smFloat{50%{transform:translateY(-6px)}}}
+html.sm-homeview #sm .sm-card .btn.solid{background:#f2b84b!important;color:#17153a!important;border-color:#f2b84b!important}
+html.sm-homeview #sm .sm-card .btn.ghost{background:transparent!important;color:#f4eedf!important;border:1.5px solid rgba(244,238,223,.45)!important}
+@media (max-width:600px){html.sm-homeview section:has(> #sm)::after{width:90px;height:90px;top:40px;opacity:.6}html.sm-homeview .sm-gl{grid-template-columns:1fr 1fr;gap:10px}html.sm-homeview .sm-gi{padding:14px}html.sm-homeview .sm-gi small{font-size:.82rem}html.sm-homeview .sm-gi i{width:42px;height:42px}}
 </style>
 <div id="sm" class="sm"><noscript><span class="ar">تعمل هذه اللعبة مع تفعيل JavaScript.</span><span class="en">This game needs JavaScript.</span></noscript></div>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script>window.MD_CFG={"apiKey": "AIzaSyA50i75DT1Is1a6Yn6snW1_JVObc8S3F0Y", "authDomain": "maydan-705ae.firebaseapp.com", "databaseURL": "https://maydan-705ae-default-rtdb.europe-west1.firebasedatabase.app", "projectId": "maydan-705ae", "appId": "1:342187013133:web:d5c2396f0db413f3c51144"};window.MD_MARK="<svg class=\"md-mark\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><rect x=\"4\" y=\"4\" width=\"40\" height=\"40\" rx=\"12\" fill=\"#23336F\"/><path d=\"M24 9l4.2 6.8 7.8-1.8-1.8 7.8L41 24l-6.8 4.2 1.8 7.8-7.8-1.8L24 39l-4.2-6.8-7.8 1.8 1.8-7.8L7 24l6.8-4.2-1.8-7.8 7.8 1.8z\" fill=\"#C9822B\"/><circle cx=\"24\" cy=\"24\" r=\"6.5\" fill=\"#23336F\"/><circle cx=\"24\" cy=\"24\" r=\"3\" fill=\"#F3E3C7\"/></svg>";</script><script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script><script>/* Samar (alsamani.com/play/samar): games for a gathering, on one code — the screen shows the play and each phone
@@ -1729,19 +1780,21 @@ html.sm-in .tl-crumb,html.sm-in .sm-head,html.sm-in .sm-lead{display:none}
 
   /* ---------- home ---------- */
   function home(err) {
-    stopAll();
+    stopAll(); document.documentElement.classList.add('sm-homeview');
     const R0 = (() => { const h = store.get('host', null); return h && Date.now() - h.at < 12 * 36e5 ? h : null; })();
     const p = new URLSearchParams(location.search).get('k') || '';
     root.innerHTML = `<div class="sm-home">
+      ${R0 ? `<div class="sm-card sm-resume"><p>${B(`جلسة مفتوحة على هذا الجهاز، رمزها ${R0.pin}`, `A session is open on this device, code ${R0.pin}`)}</p><div class="sm-row"><button type="button" class="btn solid" id="smRes">${B('تابع الجلسة', 'Carry on')}</button><button type="button" class="btn ghost" id="smDrop">${B('أنهِها', 'End it')}</button></div></div>` : ''}
+      <div class="sm-acts">
       <div class="sm-card sm-join"><h2>${B('ادخل اللعبة', 'Join a game')}</h2>
         <label>${B('الرمز', 'Code')}<input id="smPin" inputmode="numeric" maxlength="7" dir="ltr" placeholder="123 456" value="${esc(p)}"></label>
         <label>${B('اسمك', 'Your name')}<input id="smName" maxlength="20" dir="auto" value="${esc(store.get('name', ''))}"></label>
         <p class="sm-err" ${err ? '' : 'hidden'}>${err || ''}</p>
         <button type="button" class="btn solid" id="smGo">${B('ادخل', 'Join')}</button></div>
-      ${R0 ? `<div class="sm-card sm-resume"><p>${B(`جلسة مفتوحة على هذا الجهاز، رمزها ${R0.pin}`, `A session is open on this device, code ${R0.pin}`)}</p><div class="sm-row"><button type="button" class="btn solid" id="smRes">${B('تابع الجلسة', 'Carry on')}</button><button type="button" class="btn ghost" id="smDrop">${B('أنهِها', 'End it')}</button></div></div>` : ''}
       <div class="sm-card sm-host"><h2>${B('افتح جلسة', 'Open a session')}</h2><p>${B('من اللابتوب أو التلفزيون أو حتى جوالك: يظهر رمز يدخل به الجميع من جوالاتهم، ثم تختارون اللعبة. الشاشة الكبيرة تحلّي الجو، لكن اللعبة تمشي بدونها.', 'From a laptop, a TV or even your phone: a code appears for everyone to join from their phones, then you choose the game. A big screen makes it livelier, but the game runs without one.')}</p>
         <button type="button" class="btn ghost" id="smHost">${B('افتح جلسة جديدة', 'Open a new session')}</button></div>
-      <div class="sm-gl">${GAMES.map(g => `<div class="sm-gi"><i>${g.icon}</i><b>${B(g.ar, g.en)}</b><small>${B(g.dAr, g.dEn)}</small></div>`).join('')}</div></div>`;
+      </div>
+      <h2 class="sm-glt">${B('ألعاب السهرة', 'The games of the evening')}</h2><div class="sm-gl">${GAMES.map(g => `<div class="sm-gi"><i>${g.icon}</i><b>${B(g.ar, g.en)}</b><small>${B(g.dAr, g.dEn)}</small></div>`).join('')}</div></div>`;
     const pin = root.querySelector('#smPin'), nm = root.querySelector('#smName');
     pin.oninput = () => { pin.value = pin.value.replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[^\d ]/g, ''); };
     root.querySelector('#smGo').onclick = () => join(pin.value.replace(/\D/g, ''), nm.value.trim().replace(/\s+/g, ' ').slice(0, 20));
@@ -1756,6 +1809,7 @@ html.sm-in .tl-crumb,html.sm-in .sm-head,html.sm-in .sm-lead{display:none}
   // the screen: a layer on the page's body, so nothing on the page can clip or cover it
   const HE = () => { let e = document.getElementById('smLive'); if (!e) { e = document.createElement('div'); e.id = 'smLive'; e.className = 'sm'; document.body.appendChild(e); document.documentElement.classList.add('sm-on'); } return e; };
   async function host(res) {
+    document.documentElement.classList.remove('sm-homeview');
     root.innerHTML = `<div class="sm-card sm-wait">${B('جارٍ فتح الجلسة…', 'Opening the session…')}</div>`;
     try {
       await within(fb());
@@ -2308,6 +2362,7 @@ html.sm-in .tl-crumb,html.sm-in .sm-head,html.sm-in .sm-lead{display:none}
      the player: a phone
      ===================================================================================== */
   async function join(pin, name) {
+    document.documentElement.classList.remove('sm-homeview');
     if (pin.length !== 6) return home(T('الرمز ستة أرقام.', 'The code has six digits.'));
     if (!name) return home(T('اكتب اسمك.', 'Type your name.'));
     root.innerHTML = `<div class="sm-card sm-wait">${B('لحظة…', 'One moment…')}</div>`;
