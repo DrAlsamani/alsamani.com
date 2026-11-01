@@ -16,14 +16,58 @@
   };
   const b64 = buf => { let s = ''; const u = new Uint8Array(buf); for (let i = 0; i < u.length; i += 0x8000) s += String.fromCharCode.apply(null, u.subarray(i, i + 0x8000)); return btoa(s); };
   const unb64 = s => { const b = atob(s), u = new Uint8Array(b.length); for (let i = 0; i < b.length; i++) u[i] = b.charCodeAt(i); return u; };
+  /* ---------- end-to-end encryption: the minutes, the names and the signatures are sealed on this device.
+     The key lives only in the link after #, which browsers never send to any server, so the service keeps
+     sealed files it cannot read; only those holding the link can open them. ---------- */
+  const u8 = s => new TextEncoder().encode(s), str = b => new TextDecoder().decode(b);
+  const b64u = b => b64(b).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''), unb64u = s => unb64(s.replace(/-/g, '+').replace(/_/g, '/') + '==='.slice((s.length + 3) % 4));
+  const EK = {}, META = {};
+  const ekRaw = id => (store.get('ek', {}))[id] || null;
+  const ekSet = (id, k) => { const m = store.get('ek', {}); m[id] = k; store.set('ek', m); };
+  async function ekOf(id) { const r = ekRaw(id); if (!r) return null; return EK[id] = EK[id] || await crypto.subtle.importKey('raw', unb64u(r), 'AES-GCM', false, ['encrypt', 'decrypt']); }
+  async function seal(k, bytes) { const iv = crypto.getRandomValues(new Uint8Array(12)), ct = new Uint8Array(await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, k, bytes)), o = new Uint8Array(12 + ct.length); o.set(iv); o.set(ct, 12); return o; }
+  async function unseal(k, bytes) { return new Uint8Array(await crypto.subtle.decrypt({ name: 'AES-GCM', iv: bytes.slice(0, 12) }, k, bytes.slice(12))); }
+  // the minutes and their names travel as one sealed parcel: [length of the details][details][the PDF]
+  const pack = (meta, pdf) => { const m = u8(JSON.stringify(meta)), o = new Uint8Array(4 + m.length + pdf.length); new DataView(o.buffer).setUint32(0, m.length); o.set(m, 4); o.set(pdf, 4 + m.length); return o; };
+  const unpack = b => { const n = new DataView(b.buffer, b.byteOffset).getUint32(0); return { meta: JSON.parse(str(b.slice(4, 4 + n))), pdf: b.slice(4 + n) }; };
+  const PNG = 'data:image/png;base64,';
+  async function sealBody(body) {
+    if (body.a === 'create') {
+      const raw = crypto.getRandomValues(new Uint8Array(32)), k = await crypto.subtle.importKey('raw', raw, 'AES-GCM', false, ['encrypt', 'decrypt']);
+      const meta = { title: body.title, slots: body.slots.map(x => ({ n: x.n, r: x.r })) };
+      return Object.assign({}, body, { title: '', pdf: b64(await seal(k, pack(meta, unb64(body.pdf)))), slots: body.slots.map(x => Object.assign({}, x, { n: '', r: '' })), _e: b64u(raw) });
+    }
+    const k = body.id && await ekOf(body.id); if (!k) return body;
+    const o = Object.assign({}, body);
+    if (o.png) o.png = PNG + b64(await seal(k, unb64(o.png.slice(PNG.length))));
+    if (o.n) o.n = 'E:' + b64u(await seal(k, u8(String(o.n).slice(0, 28))));
+    return o;
+  }
+  async function openReply(body, j) {
+    if (body.a === 'create') { j.e = body._e; return j; }
+    const id = body.id, k = id && await ekOf(id); if (!k) return j;
+    if (body.a === 'pdf' && j.pdf) { const { meta, pdf } = unpack(await unseal(k, unb64(j.pdf))); META[id] = meta; j.pdf = b64(pdf); return j; }
+    if (Array.isArray(j.slots)) {
+      const M = META[id] || { slots: [] }; if (M.title != null) j.title = M.title;
+      for (let i = 0; i < j.slots.length; i++) { const x = j.slots[i]; if (x.gone) continue;
+        if (!x.free && M.slots[i]) { x.n = M.slots[i].n; x.r = M.slots[i].r; }
+        if (x.n && /^E:/.test(x.n)) { try { x.n = str(await unseal(k, unb64u(x.n.slice(2)))); } catch (e) { x.n = ''; } }
+        if (x.sig && x.sig.startsWith(PNG)) { try { x.sig = PNG + b64(await unseal(k, unb64(x.sig.slice(PNG.length)))); } catch (e) {} } }
+    }
+    return j;
+  }
   async function call(body, tries) {
-    let j;
+    if (!tries) { const raw = body; body = await sealBody(body); body._raw = raw; }
+    const res = await send(body, tries); return openReply(body, res);
+  }
+  async function send(body, tries) {
+    let j; const sent = Object.assign({}, body); delete sent._raw; delete sent._e;
     try {
       const ac = new AbortController(), to = setTimeout(() => ac.abort(), 45000);
-      const r = await fetch(API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body), signal: ac.signal });
+      const r = await fetch(API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(sent), signal: ac.signal });
       j = await r.json(); clearTimeout(to);
     } catch (e) {
-      if ((body.a === 'get' || body.a === 'pdf') && !tries) return call(body, 1);
+      if ((body.a === 'get' || body.a === 'pdf') && !tries) return send(body, 1);
       throw e;
     }
     if (!j.ok) { const e = new Error(j.error || 'error'); e.code = j.error; throw e; }
@@ -147,7 +191,7 @@
         <h2>${B('ارفع المحضر', 'Upload the minutes')}</h2>
         <p>${B('ملف PDF فيه جدول التواقيع. تحدد الأداة خانة كل عضو تلقائيًا.', 'A PDF with the signature table. The tool finds each member’s box automatically.')}</p>
         <button type="button" class="btn solid" id="snPick">${B('اختيار الملف', 'Choose file')}</button>
-        <p class="sn-fine">${B('يُحفظ المحضر مؤقتًا لإتمام التوقيع فقط، ويُحذف تلقائيًا بعد ٧ أيام، ويستطيع المنسق حذفه فورًا.', 'The minutes are kept only while signing is open and are deleted automatically after 7 days; the coordinator can delete them at once.')}</p>
+        <p class="sn-fine">${B('يُشفَّر المحضر والأسماء والتواقيع في جهازك قبل أن تخرج منه، ومفتاحها في الرابط وحده؛ فلا يقرؤها أحد غير من معه الرابط، ولا حتى الموقع. ويُحذف تلقائيًا بعد ٧ أيام، أو فور أن يحذفه المنسق بعد تحميل نسخته.', 'The minutes, names and signatures are encrypted on your device before they leave it, and the key lives only in the link: no one without the link can read them, not even this site. They are deleted after 7 days, or as soon as the coordinator removes them after downloading.')}</p>
       </div>
       <div id="snEdit" hidden></div>`;
     const f = root.querySelector('#snFile');
@@ -302,20 +346,21 @@
       const btn = ev.currentTarget; btn.disabled = true; btn.classList.add('busy');
       try {
         const j = await call({ a: 'create', title: ed.querySelector('#snTitle').value.trim() || title, pdf: b64(buf), slots: slots.map(s => ({ p: s.p, n: s.n.trim(), r: s.r || '', x: s.x, y: s.y, w: s.w, h: s.h })) });
-        const keys = store.get('keys', {}); keys[j.id] = j.k; store.set('keys', keys);
+        const keys = store.get('keys', {}); keys[j.id] = j.k; store.set('keys', keys); ekSet(j.id, j.e);
         if (slots.length) {
           const t = { title: ed.querySelector('#snTitle').value.trim() || title, pages: doc.numPages, slots: slots.map(s => ({ pe: doc.numPages - 1 - s.p, n: s.n.trim(), r: s.r || '', x: s.x, y: s.y, w: s.w, h: s.h })) };
           const key = JSON.stringify(t.slots.map(s => [s.pe, Math.round(s.x), Math.round(s.y)]));
           store.set('tpl', [t].concat(tpls().filter(o => JSON.stringify(o.slots.map(s => [s.pe, Math.round(s.x), Math.round(s.y)])) !== key)).slice(0, 8));
         }
-        location.href = '?s=' + j.id + '&new=1#k=' + j.k;
+        location.href = '?s=' + j.id + '&new=1#k=' + j.k + '&e=' + j.e;
       } catch (e) { toast(errMsg(e), 1); btn.disabled = false; btn.classList.remove('busy'); }
     };
   }
 
   /* ---------- a signing session ---------- */
   async function sessionView(id) {
-    const hk = (location.hash.match(/k=([a-f0-9]+)/) || [])[1];
+    const hk = (location.hash.match(/k=([a-f0-9]+)/) || [])[1], he = (location.hash.match(/e=([A-Za-z0-9_-]{30,})/) || [])[1];
+    if (he) ekSet(id, he);
     const keys = store.get('keys', {});
     if (hk) { keys[id] = hk; store.set('keys', keys); }
     const key = keys[id];
@@ -323,12 +368,12 @@
     root.innerHTML = `<div class="sn-card sn-load">${B('جارٍ فتح المحضر…', 'Opening the minutes…')}</div>`;
     let S, doc, bytes;
     try {
-      const [g, p] = await Promise.all([call({ a: 'get', id, k: key }), call({ a: 'pdf', id })]);
+      const p = await call({ a: 'pdf', id }), g = await call({ a: 'get', id, k: key });
       S = g; bytes = unb64(p.pdf);
       doc = await pdfjsLib.getDocument({ data: bytes.slice(0), cMapUrl: PDFJS + 'cmaps/', cMapPacked: true, standardFontDataUrl: PDFJS + 'standard_fonts/', disableFontFace: true }).promise;
     } catch (e) { root.innerHTML = `<div class="sn-card"><p>${errMsg(e)}</p><p><a class="btn ghost" href="./">${B('محضر جديد', 'New minutes')}</a></p></div>`; return; }
     const admin = !!S.admin;
-    const link = location.origin + location.pathname + '?s=' + id;
+    const E = ekRaw(id), base = location.origin + location.pathname + '?s=' + id, link = base + (E ? '#e=' + E : '');
     root.innerHTML = `
       ${admin && /new=1/.test(location.search) ? `<div class="sn-card sn-share"><h2>${B('الرابط جاهز', 'The link is ready')}</h2>
         <p>${B('أرسل هذا الرابط في قروب الاجتماع، وكل عضو يوقّع في خانته:', 'Send this link to the meeting group; each member signs in their own box:')}</p>
@@ -356,7 +401,7 @@
     const copy = async (txt, okMsg) => { try { await navigator.clipboard.writeText(txt); toast(okMsg); } catch (e) { prompt('', txt); } };
     if (root.querySelector('#snCopy')) {
       root.querySelector('#snCopy').onclick = () => copy(link, B('نُسخ الرابط.', 'Link copied.'));
-      root.querySelector('#snAdminCopy').onclick = () => copy(link + '#k=' + key, B('نُسخ رابط الإدارة. لا ترسله في القروب.', 'Management link copied. Do not share it with the group.'));
+      root.querySelector('#snAdminCopy').onclick = () => copy(base + '#k=' + key + (E ? '&e=' + E : ''), B('نُسخ رابط الإدارة. لا ترسله في القروب.', 'Management link copied. Do not share it with the group.'));
       root.querySelector('#snWa').href = 'https://wa.me/?text=' + encodeURIComponent((S.title ? S.title + '\n' : '') + (isAr() ? 'رابط توقيع المحضر: ' : 'Sign the minutes here: ') + link);
     }
     // a member who signed before on this device: offer their own box straight away
@@ -552,6 +597,8 @@
           const ask = () => { const sh = sheet(`<h3>${B('المحضر جاهز', 'The minutes are ready')}</h3><p class="sn-hint"><bdi>${esc(name)}</bdi></p><div class="sn-sb"><button type="button" class="btn solid" data-act="sh">${B('مشاركة أو حفظ الملف', 'Share or save the file')}</button><button type="button" class="btn ghost" data-act="x">${B('إغلاق', 'Close')}</button></div>`); sh.querySelector('[data-act=sh]').onclick = () => { close(); navigator.share({ files: [file], title: name }).catch(() => {}); }; sh.querySelector('[data-act=x]').onclick = close; };
           share();
         } else save();
+        // all signed and in the coordinator's hands: nothing needs to stay on the service any more
+        if (admin && S.slots.some(s => s.sig) && S.slots.every(s => s.sig || s.free || s.gone)) setTimeout(() => { if (!document.querySelector('.sn-sheet')) { const d = root.querySelector('#snDelete'); if (d) d.click(); } }, 2500);
       } catch (e) { toast(B('تعذّر إنشاء الملف.', 'The file could not be created.'), 1); }
       btn.disabled = false;
     };
@@ -563,7 +610,7 @@
       };
       root.querySelector('#snLock').onclick = async () => { try { S = await call({ a: 'lock', id, k: key, on: !S.locked }); draw(); } catch (e) { toast(errMsg(e), 1); } };
       root.querySelector('#snDelete').onclick = () => {
-        const sh = sheet(`<h3>${B('حذف المحضر نهائيًا؟', 'Delete these minutes for good?')}</h3><p>${B('حمّل نسختك الموقّعة أولًا. بعد الحذف لن يعمل الرابط لأحد.', 'Download your signed copy first. After deletion the link stops working for everyone.')}</p>
+        const sh = sheet(`<h3>${B('حذف المحضر نهائيًا؟', 'Delete these minutes for good?')}</h3><p>${B('تأكد أنك حمّلت نسختك الموقّعة. بعد الحذف لا يبقى من المحضر شيء على الخادم، ولن يعمل الرابط لأحد.', 'Make sure you have your signed copy. After deletion nothing of the minutes stays on the server, and the link stops working for everyone.')}</p>
           <div class="sn-sb"><button type="button" class="btn sn-danger" data-act="del">${B('حذف', 'Delete')}</button><button type="button" class="btn ghost" data-act="x">${B('إلغاء', 'Cancel')}</button></div>`);
         sh.querySelector('[data-act=x]').onclick = close;
         sh.querySelector('[data-act=del]').onclick = async () => { try { await call({ a: 'delete', id, k: key }); delete keys[id]; store.set('keys', keys); store.del('mine.' + id); location.href = './'; } catch (e) { toast(errMsg(e), 1); } };
