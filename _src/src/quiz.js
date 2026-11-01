@@ -110,7 +110,8 @@
       <div class="qz-lib">${RLIB().map((z, k) => `<div class="qz-lc"${k >= 5 ? ' data-more hidden' : ''}><span class="qz-li">${z.icon}</span><b>${esc(z.title)}</b><small>${esc(z.desc)}</small><em>${esc(z.who)} · ${z.qs.length} ${z.qs.every(x => x.type === 'game') ? B('تحديات', 'challenges') : B('فقرة', 'items')}</em><span class="qz-lb"><button type="button" class="btn solid" data-lgo="${z.id}">${B('ابدأ الآن ▶', 'Start now ▶')}</button><button type="button" class="btn ghost" data-led="${z.id}">${B('افتحها وعدّلها', 'Open and edit')}</button></span></div>`).join('')}</div>${RLIB().length > 5 ? `<button type="button" class="btn ghost qz-libmore" id="qzLibMore">${B(`عرض كل المسابقات (${RLIB().length})`, `Show all quizzes (${RLIB().length})`)}</button>` : ''}` : ''}
       ${list.length ? `<h2 class="qz-h">${B('مسابقاتك', 'Your quizzes')}</h2><ul class="qz-list">${list.map(x => `<li><button type="button" data-open="${x.id}"><b>${esc(x.title || T('بلا عنوان', 'Untitled'))}</b><small>${T('الأسئلة: ', 'Questions: ')}${x.qs.length}</small></button></li>`).join('')}</ul>` : ''}
       <label class="qz-imp btn ghost">${B('فتح نسخة محفوظة', 'Open a saved copy')}<input type="file" accept=".json,application/json" hidden id="qzImp"></label>
-      <p class="pt-fine">${B('تُحفظ المسابقات في هذا المتصفح.', 'Quizzes are kept in this browser.')}</p></div>${introMore()}`;
+      <p class="pt-fine">${B('تُحفظ المسابقات في هذا المتصفح.', 'Quizzes are kept in this browser.')}</p></div>${window.MDX ? `<div class="sn-card" id="qzLg">${MDX.listHtml()}</div>` : ''}${introMore()}`;
+    if (window.MDX) MDX.bindList(root.querySelector('#qzLg'), home);
     if (P) { root.querySelector('#qzRes').onclick = () => MDLive.resume(); root.querySelector('#qzDrop2').onclick = async () => { await MDLive.discard(); home(); }; }
     const lm = root.querySelector('#qzLibMore'); if (lm) lm.onclick = () => { root.querySelectorAll('[data-more]').forEach(e => { e.hidden = false; }); lm.remove(); };
     { const h = root.querySelector('#qzHow'); if (h) h.querySelector('.qi-vframe').onclick = () => { const f = h.querySelector('.qi-vframe'); if (f.querySelector('video')) return; const L = isAr() ? 'ar' : 'en'; f.innerHTML = `<video controls autoplay playsinline poster="/img/video/maydan-howto-${L}.jpg" src="/img/video/maydan-howto-${L}.mp4"></video>`; h.classList.add('on'); }; }
@@ -743,5 +744,8 @@ ${exEn}`;
   // after a live game closes or pauses, the list shows whether one is waiting
   document.addEventListener('md:closed', () => { if (!Q) home(); else editor(); });
   // the live part loads after this file, so the list waits for it to know about a paused game
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', home); else setTimeout(home, 0);
+  // a league's standings from a shared link
+  const LG = new URLSearchParams(location.search).get('lg');
+  const first = () => LG && window.MDX ? MDX.viewShared(root, LG.replace(/[^a-z0-9]/gi, '').slice(0, 12)) : home();
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', first); else setTimeout(first, 0);
 })();

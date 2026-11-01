@@ -11,6 +11,7 @@
   const store = { get(k, d) { try { return localStorage.getItem('md.' + k) || d; } catch (e) { return d; } }, set(k, v) { try { localStorage.setItem('md.' + k, v); } catch (e) {} } };
   const TS = firebase.database.ServerValue.TIMESTAMP;
   let TOOLS = false;
+  let SIDREQ = false;
   let PM = false, RV = null, SB = [], CM = null, RCON = false, ASKQ = null;
   const REMOTE = new URLSearchParams(location.search).get('rc') || '';   // phones only: the flag, everyone's answers, the stage's statements
   let TOP = null, TEAMS = null, TMODE = 'pick', myTeam = null, bet = false, lastRx = 0;
@@ -45,7 +46,7 @@
         await within(ready());
         const s = await within(db.ref('rooms/' + pin + '/st').once('value'));
         if (!s.exists()) return codeScreen(T('لا توجد مسابقة بهذا الرمز. تأكد منه على الشاشة.', 'No quiz with this code. Check it on the screen.'));
-        R = db.ref('rooms/' + pin); loadH();
+        R = db.ref('rooms/' + pin); loadH(); SIDREQ = !!(await within(R.child('sidreq').once('value'))).val();
         const mine = (await within(R.child('pl/' + uid).once('value'))).val();
         if (REMOTE) { if (!mine) await within(R.child('pl/' + uid).set({ n: T('جوال المضيف', 'Host phone'), at: TS, w: 1 })); FAN = true; me = ''; R.child('rx/' + uid).set({ e: '@' + REMOTE, t: TS }).catch(() => {}); return play(); }
         if (mine) { me = mine.n; return play(); }
@@ -57,20 +58,33 @@
     };
     if (p.replace(/\D/g, '').length === 6 && !err) setTimeout(() => go.click(), 50);
   }
+
+  function avPick(box, inp) {
+    if (!box) return;
+    let a = store.get('av', ''); if (!/^\d\d$/.test(a)) { a = String(Math.floor(Math.random() * 6)) + Math.floor(Math.random() * 8); store.set('av', a); }
+    const L = () => (inp && inp.value.trim().charAt(0)) || '؟';
+    const paint = () => { box.innerHTML = `<p class="mp-l">${B('شكلك في الميدان', 'Your figure')}</p><div class="mp-avrow">${AVS.map((_, k) => `<button type="button" data-s="${k}" aria-pressed="${+a[0] === k}" style="${avSt(String(k) + a[1])}"><span>${esc(L())}</span></button>`).join('')}</div><div class="mp-avcol">${AVC.map((c, k) => `<button type="button" data-c="${k}" aria-pressed="${+a[1] === k}" style="background:${c}"></button>`).join('')}</div>`;
+      box.querySelectorAll('[data-s]').forEach(b => b.onclick = () => { a = b.dataset.s + a[1]; store.set('av', a); paint(); });
+      box.querySelectorAll('[data-c]').forEach(b => b.onclick = () => { a = a[0] + b.dataset.c; store.set('av', a); paint(); }); };
+    paint(); if (inp) inp.addEventListener('input', () => box.querySelectorAll('[data-s] span').forEach(sp => { sp.textContent = L(); }));
+  }
   function nameScreen(err) {
     root.innerHTML = `<div class="mp-card"><a class="mp-logo" href="/play/maydan/">${window.MD_MARK || ''}<b>${B('ميدان', 'Maydan')}</b></a>
       <label class="mp-l">${B('اسمك أو لقبك', 'Your name or nickname')}<input id="mpName" maxlength="24" autocomplete="nickname" dir="auto" value="${esc(store.get('name', ''))}"></label>
+      ${SIDREQ ? `<label class="mp-l">${B('الرقم الأكاديمي', 'Student ID')}<input id="mpSid" inputmode="numeric" maxlength="12" dir="ltr" autocomplete="off" value="${esc(store.get('sid', ''))}"></label>` : ''}
+      <div class="mp-av" id="mpAv"></div>
       <div id="mpTeams" class="mp-teams"></div>
       <p class="mp-err" ${err ? '' : 'hidden'}>${err || ''}</p>
       <button type="button" class="btn solid mp-go" id="mpGo">${B('ادخل الميدان', 'Join')}</button>
       <button type="button" class="btn ghost mp-go" id="mpFan">${B('ادخل متفرجًا', 'Just watch')}</button></div>`;
     const inp = root.querySelector('#mpName'), go = root.querySelector('#mpGo');
     root.querySelector('#mpFan').onclick = async () => { const n = inp.value.trim().replace(/\s+/g, ' ').slice(0, 24) || T('مشجّع', 'A fan'); try { await within(R.child('pl/' + uid).set({ n, at: TS, w: 1 })); FAN = true; me = n; store.set('name', n); play(); } catch (e) { nameScreen(T('تعذّر الدخول؛ ربما أُقفلت المسابقة.', 'Could not join; the quiz may be closed.')); } };
-    teamPick(root.querySelector('#mpTeams'));
+    teamPick(root.querySelector('#mpTeams')); avPick(root.querySelector('#mpAv'), inp);
     inp.focus(); inp.onkeydown = e => { if (e.key === 'Enter') go.click(); };
     go.onclick = async () => {
       const n = inp.value.trim().replace(/\s+/g, ' ').slice(0, 24);
       if (!n) return nameScreen(T('اكتب اسمًا يظهر على الشاشة.', 'Type a name to show on the screen.'));
+      if (SIDREQ) { const v = (root.querySelector('#mpSid').value || '').replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/\D/g, ''); if (v.length < 5) { const e = root.querySelector('.mp-err'); e.hidden = false; e.textContent = T('اكتب رقمك الأكاديمي.', 'Type your student ID.'); return; } store.set('sid', v); }
       if (TEAMS && TMODE === 'pick' && myTeam == null) { const e = root.querySelector('.mp-err'); e.hidden = false; e.textContent = T('اختر فريقك.', 'Choose your team.'); return; }
       go.disabled = true;
       go.textContent = T('لحظة…', 'One moment…');
@@ -102,6 +116,9 @@
 
   /* ---------- the game: follow the room and draw what this phone should show ---------- */
   function play() {
+    { const a = store.get('av', ''); if (a && R && !REMOTE) setTimeout(() => R.child('rx/' + uid).set({ e: '%' + a, t: TS }).catch(() => {}), 400); }
+    // a graded quiz: the student ID goes to the host in two short parts
+    if (R && !REMOTE) R.child('sidreq').once('value', s2 => { const id = store.get('sid', ''); if (!s2.val() || !id || FAN) return; setTimeout(() => R.child('rx/' + uid).set({ e: '#0' + id.slice(0, 6), t: TS }).catch(() => {}), 1200); setTimeout(() => R.child('rx/' + uid).set({ e: '#1' + id.slice(6, 12), t: TS }).catch(() => {}), 2400); });
     R.child('st').on('value', s => { st = s.val() || {}; if (!s.exists()) return gone(); draw(); tryAsk(); askBtn(); });
     R.child('q').on('value', s => { Q = s.val(); if (Q && Q.pw) TOOLS = true; });
     R.child('pl/' + uid + '/w').once('value', s => { FAN = !!s.val(); });
@@ -243,8 +260,11 @@
   function tone(f, d, v) { try { acx = acx || new (window.AudioContext || window.webkitAudioContext)(); if (acx.state === 'suspended') acx.resume(); const o = acx.createOscillator(), g = acx.createGain(), t = acx.currentTime; o.type = 'triangle'; o.frequency.value = f; g.gain.setValueAtTime(v || .06, t); g.gain.exponentialRampToValueAtTime(.0001, t + d); o.connect(g).connect(acx.destination); o.start(t); o.stop(t + d + .02); } catch (e) {} }
   /* ---------- a fan: follows the questions and the ranking, and cheers ---------- */
   let FAN = false;
+  // each player's figure: a shape and a colour they chose ('%' + shape digit + colour digit, sent once on joining)
+  const AVS = ['polygon(50% 0,61% 22%,85% 15%,78% 39%,100% 50%,78% 61%,85% 85%,61% 78%,50% 100%,39% 78%,15% 85%,22% 61%,0 50%,22% 39%,15% 15%,39% 22%)', 'polygon(50% 0,63% 27%,93% 25%,76% 50%,93% 75%,63% 73%,50% 100%,37% 73%,7% 75%,24% 50%,7% 25%,37% 27%)', 'circle(50%)', 'polygon(50% 0,100% 50%,50% 100%,0 50%)', 'polygon(25% 4%,75% 4%,100% 50%,75% 96%,25% 96%,0 50%)', 'polygon(50% 0,100% 22%,88% 72%,50% 100%,12% 72%,0 22%)'], AVC = ['#C9822B', '#2a7fa8', '#2e8b57', '#b0533a', '#7a4fb5', '#d14d8b', '#23336F', '#1f8f8a'];
+  const avSt = a => { a = String(a || ''); if (!/^\d\d$/.test(a)) return ''; return `--fs:${AVS[+a[0]] || AVS[0]};--fc:${AVC[+a[1]] || AVC[0]};`; };
   const arenaFan = quiet => { const A = TOP && TOP.ar; if (!A || A.i !== st.i) return quiet ? '' : `<p>${B('التحدي جارٍ…', 'The challenge is on…')}</p>`;
-    return `<div class="mp-arena">${A.g.map(gr => `<div class="mp-al" style="--c:var(--qz${gr.k % 6})"><b dir="auto">${esc(gr.n)}</b>${gr.p.map(x => `<i style="left:${x.p}%" class="${x.d ? 'done' : ''}${x.n === me ? ' me' : ''}" title="${esc(x.n)}">${esc(x.n.charAt(0))}</i>`).join('')}</div>`).join('')}</div>`; };
+    return `<div class="mp-arena">${A.g.map(gr => `<div class="mp-al" style="--c:var(--qz${gr.k % 6})"><b dir="auto">${esc(gr.n)}</b>${gr.p.map(x => `<i style="left:${x.p}%;${avSt(x.a)}" class="${x.d ? 'done' : ''}${x.n === me ? ' me' : ''}" title="${esc(x.n)}">${esc(x.n.charAt(0))}</i>`).join('')}</div>`).join('')}</div>`; };
   function fanHtml(html) {
     if (st.ph === 'q' && Q && Q.i === st.i && Q.type === 'game') return `<div class="mp-wait"><p class="mp-qt" dir="auto">${esc(Q.q)}</p>${arenaFan()}</div>` + rxBar();
     if (st.ph === 'q' && Q && Q.i === st.i) return `<div class="mp-wait"><p class="mp-qt" dir="auto">${esc(Q.q)}</p>${(Q.opts || []).length ? `<ol class="mp-fo">${Q.opts.map((o, j) => `<li style="--c:var(--qz${j})"><i>${LET()[j]}</i> <span dir="auto">${esc(o)}</span></li>`).join('')}</ol>` : ''}<p>${B('أنت متفرج: شجّع من هنا', 'You are watching: cheer from here')}</p></div>` + rxBar();
@@ -367,7 +387,7 @@
     }, 100);
   }
   // the standings as the big screen shows them: top teams and top five
-  const topList = () => !TOP ? '' : `<div class="mp-top5">${TOP.d ? `<p class="mp-gold">${B('بقي سؤال واحد بنقاط مضاعفة', 'One question left, worth double')}</p>` : ''}${TOP.t && TOP.t.length ? `<ol class="mp-tl">${TOP.t.map(t => `<li style="--c:var(--qz${t.k % 6})"><span dir="auto">${esc(t.n)}</span><b>${t.s}</b></li>`).join('')}</ol>` : ''}<ol class="mp-tops">${(TOP.p || []).map((p, k) => `<li${p.n === me ? ' class="me"' : ''}><i>${k + 1}</i>${p.w && p.w !== k + 1 ? `<u class="${p.w > k + 1 ? 'up' : 'dn'}">${p.w > k + 1 ? '▲' : '▼'}${Math.abs(p.w - k - 1)}</u>` : ''}<span dir="auto">${esc(p.n)}</span>${p.d ? `<q>${p.d > 0 ? '+' : ''}${p.d}</q>` : ''}<b>${p.s}</b></li>`).join('')}</ol></div>`;
+  const topList = () => !TOP ? '' : `<div class="mp-top5">${TOP.d ? `<p class="mp-gold">${B('بقي سؤال واحد بنقاط مضاعفة', 'One question left, worth double')}</p>` : ''}${TOP.t && TOP.t.length ? `<ol class="mp-tl">${TOP.t.map(t => `<li style="--c:var(--qz${t.k % 6})"><span dir="auto">${esc(t.n)}</span><b>${t.s}</b></li>`).join('')}</ol>` : ''}<ol class="mp-tops">${(TOP.p || []).map((p, k) => `<li${p.n === me ? ' class="me"' : ''}><i>${k + 1}</i>${p.w && p.w !== k + 1 ? `<u class="${p.w > k + 1 ? 'up' : 'dn'}">${p.w > k + 1 ? '▲' : '▼'}${Math.abs(p.w - k - 1)}</u>` : ''}<span dir="auto">${esc(p.n)}</span>${p.d ? `<q>${p.d > 0 ? '+' : ''}${p.d}</q>` : ''}<b>${p.s}</b></li>`).join('')}${!FAN && SC && SC.r && !(TOP.p || []).some(p => p.n === me) ? `<li class="me far"><i>${SC.r}</i><span dir="auto">${esc(me)}</span><b>${SC.s}</b></li>` : ''}</ol></div>`;
   function result() {
     // wait for this question's own result, not the last one
     if (!SC || !OK || (SC.q != null && SC.q !== st.i)) { if (st.ph === 'rev') screen(`<div class="mp-wait"><p>${B('لحظة…', 'One moment…')}</p></div>`); shown = ''; return; }
@@ -502,7 +522,7 @@
     const WW = Math.max(VW * 3, 900), x0 = 60, X = v => x0 + (WW - x0 - 80) * v / max, LH = (VH - 40) / lanes, Y = l => 26 + l * LH + LH / 2;
     world.style.width = WW + 'px';
     world.innerHTML = `<i class="mp-rpstart" style="left:${x0}px"></i><i class="mp-rpfin" style="left:${WW - 60}px"></i>` + [...Array(lanes).keys()].map(l => `<i class="mp-rplane" style="top:${26 + l * LH}px;height:${LH}px"></i>`).join('')
-      + [...Array(n).keys()].map(p => `<em class="mp-rpr${p === D.me ? ' me' : ''}" data-p="${p}" style="--c:var(--qz${p % 6});top:${Y(lane[p]) + (p === D.me ? 0 : (p % 3 - 1) * 4)}px;left:${x0}px"><span>${esc((J.n[p] || '?').trim().charAt(0))}</span><small dir="auto">${esc(p === D.me ? T('أنت', 'You') : J.n[p] || '')}</small></em>`).join('');
+      + [...Array(n).keys()].map(p => `<em class="mp-rpr${p === D.me ? ' me' : ''}" data-p="${p}" style="--c:var(--qz${p % 6});${avSt((J.a || [])[p])}top:${Y(lane[p]) + (p === D.me ? 0 : (p % 3 - 1) * 4)}px;left:${x0}px"><span>${esc((J.n[p] || '?').trim().charAt(0))}</span><small dir="auto">${esc(p === D.me ? T('أنت', 'You') : J.n[p] || '')}</small></em>`).join('');
     const R = [...world.querySelectorAll('.mp-rpr')], q = box.querySelector('#mpRpQ'), r = box.querySelector('#mpRpR');
     const at = t => {   // t = -1 is the start line
       R.forEach(e => { const p = +e.dataset.p; e.style.left = X(t < 0 ? 0 : J.s[p][t]) + 'px'; });

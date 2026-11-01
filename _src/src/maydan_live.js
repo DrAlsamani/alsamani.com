@@ -37,7 +37,7 @@ window.MDLive = (function () {
   };
 
   /* ---------- keeping a game so it can be resumed ---------- */
-  const keep = () => { if (!G) return; try { localStorage.setItem(SAVE, JSON.stringify({ pin: G.pin, quiz: G.quiz, i: G.done, score: G.score, qp: G.qp, out: G.out, streak: G.streak, team: G.team, teams: G.teams, opts: G.opts, gold: G.gold, players: G.players, phones: !!G.phones, used: G.used || {}, jr: G.jr || [], jrAt: G.jrAt, lockJoin: !!G.lockJoin, shuffled: !!G.shuffled, at: Date.now() })); } catch (e) {} };
+  const keep = () => { if (!G) return; try { localStorage.setItem(SAVE, JSON.stringify({ pin: G.pin, quiz: G.quiz, i: G.done, score: G.score, qp: G.qp, out: G.out, streak: G.streak, team: G.team, teams: G.teams, opts: G.opts, gold: G.gold, players: G.players, phones: !!G.phones, used: G.used || {}, jr: G.jr || [], jrAt: G.jrAt, qlog: G.qlog || [], aw: G.aw || {}, av: G.av || {}, sid: G.sid || {}, league: G.league || null, lockJoin: !!G.lockJoin, shuffled: !!G.shuffled, at: Date.now() })); } catch (e) {} };
   const forget = () => { try { localStorage.removeItem(SAVE); } catch (e) {} };
   function pending() { try { const s = JSON.parse(localStorage.getItem(SAVE) || 'null'); return s && Date.now() - s.at < 7 * 864e5 ? s : null; } catch (e) { return null; } }
 
@@ -75,15 +75,28 @@ window.MDLive = (function () {
   }
   function journeyOut(order) {
     const us = order.slice(0, 30), J = G.jr || [];
-    return { k: us.map(u => u.slice(0, 8)), n: us.map(u => G.players[u] || ''), s: us.map(u => J.map(o => o[u] || 0)) };
+    return { k: us.map(u => u.slice(0, 8)), n: us.map(u => G.players[u] || ''), a: us.map(u => (G.av || {})[u] || ''), s: us.map(u => J.map(o => o[u] || 0)) };
   }
 
 
+  // each player's figure: a shape and a colour they chose ('%' + shape digit + colour digit, sent once on joining)
+  const AVS = ['polygon(50% 0,61% 22%,85% 15%,78% 39%,100% 50%,78% 61%,85% 85%,61% 78%,50% 100%,39% 78%,15% 85%,22% 61%,0 50%,22% 39%,15% 15%,39% 22%)', 'polygon(50% 0,63% 27%,93% 25%,76% 50%,93% 75%,63% 73%,50% 100%,37% 73%,7% 75%,24% 50%,7% 25%,37% 27%)', 'circle(50%)', 'polygon(50% 0,100% 50%,50% 100%,0 50%)', 'polygon(25% 4%,75% 4%,100% 50%,75% 96%,25% 96%,0 50%)', 'polygon(50% 0,100% 22%,88% 72%,50% 100%,12% 72%,0 22%)'], AVC = ['#C9822B', '#2a7fa8', '#2e8b57', '#b0533a', '#7a4fb5', '#d14d8b', '#23336F', '#1f8f8a'];
+  const avSt = a => { a = String(a || ''); if (!/^\d\d$/.test(a)) return ''; return `--fs:${AVS[+a[0]] || AVS[0]};--fc:${AVC[+a[1]] || AVC[0]};`; };
   /* ---------- feats: what each player did, for the commentary now and the titles at the end ---------- */
   const arN = (n, one, two, few, many) => n === 1 ? one : n === 2 ? two : `${n} ${n % 100 >= 3 && n % 100 <= 10 ? few : many}`;
   function feats(sc) {
     const x = G.quiz.qs[G.i] || {}, judged = !['poll', 'open', 'stage', 'game'].includes(x.type), ans = G.lastAns || {};
     G.aw = G.aw || {}; const W = u => G.aw[u] = G.aw[u] || {};
+    if (x.type !== 'stage') {   // the report's record of this question
+      const pl = Object.keys(G.players), A = pl.filter(u => ans[u]), gm = x.type === 'game' && window.MDGames ? MDGames.byId(x.g) : null;
+      const L = { q: gm ? (G.ar ? gm.ar : gm.en) : (x.q || ''), t: x.type, n: pl.length, a: A.length, c: pl.filter(u => sc[u] && sc[u].c).length, judged };
+      if (['mc', 'tf', 'poll'].includes(x.type)) { L.o = x.opts; L.ok = x.ok; L.k = (x.opts || []).map(() => 0); A.forEach(u => [].concat(ans[u].a == null ? [] : ans[u].a).forEach(j => { if (L.k[+j] != null) L.k[+j]++; })); }
+      else if (judged) { const f = {}; A.forEach(u => { if (sc[u] && sc[u].c) return; const w = String(ans[u].a == null ? '' : Array.isArray(ans[u].a) ? '' : ans[u].a).trim(); if (w) f[w] = (f[w] || 0) + 1; }); const top = Object.entries(f).sort((p, q) => q[1] - p[1])[0]; if (top && top[1] > 1) L.w = top[0]; }
+      const ts = A.filter(u => sc[u] && sc[u].c && ans[u].t && G.t0).map(u => Math.max(0, (ans[u].t - G.t0) / 1000)); if (ts.length && judged) L.tm = ts.reduce((p, q) => p + q, 0) / ts.length;
+      G.qlog = G.qlog || []; G.qlog.push(L);
+      if (judged) pl.forEach(u => { const w = W(u); w.jq = (w.jq || 0) + 1; if (sc[u] && sc[u].c) w.ok = (w.ok || 0) + 1; });
+      pl.forEach(u => { const w = W(u); w.it = (w.it || 0) + 1; if (ans[u]) w.an = (w.an || 0) + 1; });
+    }
     Object.keys(G.players).forEach(u => {
       const r = sc[u], w = W(u), a = ans[u]; if (!r) { if (judged) w.run = 0; return; }
       if (G.cap && G.cap[u]) r.cap = 1;
@@ -217,7 +230,7 @@ window.MDLive = (function () {
       const room = (await db.ref('rooms/' + s.pin).once('value')).val();
       if (!room || room.host !== uid) { forget(); el.innerHTML = `<div class="md-wait">${B('انتهت صلاحية هذه المسابقة ولم تعد موجودة.', 'This quiz is no longer available.')}<button type="button" class="btn ghost" data-x>${B('إغلاق', 'Close')}</button></div>`; el.querySelector('[data-x]').onclick = leave; return; }
       fresh(s.quiz, el, s.pin);
-      Object.assign(G, { score: s.score || {}, qp: s.qp || {}, out: s.out || {}, streak: s.streak || {}, team: s.team || {}, teams: s.teams || null, opts: s.opts || G.opts, gold: s.gold, players: s.players || {}, i: s.i, done: s.i, used: s.used || {}, jr: s.jr || [], jrAt: s.jrAt, lockJoin: !!s.lockJoin, shuffled: !!s.shuffled });
+      Object.assign(G, { score: s.score || {}, qp: s.qp || {}, out: s.out || {}, streak: s.streak || {}, team: s.team || {}, teams: s.teams || null, opts: s.opts || G.opts, gold: s.gold, players: s.players || {}, i: s.i, done: s.i, used: s.used || {}, jr: s.jr || [], jrAt: s.jrAt, qlog: s.qlog || [], aw: s.aw || {}, av: s.av || {}, sid: s.sid || {}, league: s.league || null, lockJoin: !!s.lockJoin, shuffled: !!s.shuffled });
       if (s.phones) { phonesMode(true); if (G.i >= 0) G.el.classList.add('started'); }
       keepPlayers();
       if (G.i < 0) return lobby();
@@ -291,6 +304,8 @@ window.MDLive = (function () {
       if (now() - (v.t || 0) > 8000) return;
       if (v.e === '🎤') { stat({ 'x/mic': 1 }); return micVote(s.key); }
       if (v.e.charAt(0) === '@') return remote(s.key, v.e);
+      if (/^#[01]\d{1,6}$/.test(v.e)) { if (G) { G.sid = G.sid || {}; const o = G.sid[s.key] = G.sid[s.key] || ['', '']; o[+v.e[1]] = v.e.slice(2); } return; }
+      if (v.e.charAt(0) === '%') { if (G) { G.av = G.av || {}; G.av[s.key] = v.e.slice(1, 3); } return; }
       if (G) { G.aw = G.aw || {}; const w = G.aw[s.key] = G.aw[s.key] || {}; w.rx = (w.rx || 0) + 1; }
       if (G) G.rxc = (G.rxc || 0) + 1;
       const fx = G && G.el.querySelector('.md-fx'); if (!fx) return;
@@ -408,6 +423,8 @@ window.MDLive = (function () {
       <div class="md-count"><b id="mdN">0</b> ${B('مشارك', 'players')} <small id="mdFans"></small></div><div class="md-names" id="mdNames"></div>
       <div class="md-set" id="mdSet" hidden>
         <h3>${B('إعدادات المسابقة', 'Quiz settings')}</h3>
+        <label class="md-ck"><input type="checkbox" data-o="sid"${O.sid ? ' checked' : ''}> ${B('مسابقة بدرجات: يكتب كل طالب رقمه الأكاديمي، وفي النهاية ملف درجات لبلاك بورد', 'A graded quiz: each student types their ID, and at the end a grades file for Blackboard')}</label>
+        ${window.MDX ? `<label>${B('ضمن دوري', 'Part of a league')}<select data-lgs><option value="">${T('بلا دوري', 'No league')}</option>${MDX.all().map(l => `<option value="${l.id}"${G.league === l.id ? ' selected' : ''}>${esc(l.name)}</option>`).join('')}<option value="+">${T('دوري جديد…', 'A new league…')}</option></select></label>` : ''}
         <label>${B('عرض الترتيب', 'Show the ranking')}<select data-o="every">${[[1, T('بعد كل سؤال', 'After every question')], [3, T('كل ٣ أسئلة', 'Every 3 questions')], [5, T('كل ٥ أسئلة', 'Every 5 questions')], [0, T('في النهاية فقط', 'Only at the end')]].map(([v, l]) => `<option value="${v}"${O.every === v ? ' selected' : ''}>${l}</option>`).join('')}</select></label>
         <label class="md-ck"><input type="checkbox" data-o="speed"${O.speed ? ' checked' : ''}> ${B('السرعة تزيد النقاط', 'Speed adds points')}</label>
         <label class="md-ck"><input type="checkbox" data-o="gold"${O.gold ? ' checked' : ''}> ${B('سؤال ذهبي مفاجئ بنقاط مضاعفة', 'A surprise golden question with double points')}</label>
@@ -486,10 +503,12 @@ window.MDLive = (function () {
       if (k === 'teams') { const n = +i.value, d = TEAMS(n), was = G.teams || []; G.teams = n ? d.map((x, j) => was[j] && was[j] !== TEAMS(was.length)[j] ? was[j] : x) : null; G.ref.update({ teams: G.teams, tmode: G.teams ? O.tmode || 'pick' : null }); teamNames(); draw(); }
       else if (k === 'tmode') { O.tmode = i.value; G.ref.child('tmode').set(i.value); teamNames(); }
       else if (k === 'every') O.every = +i.value; else O[k] = i.checked;
+      if (k === 'sid') G.ref.child('sidreq').set(O.sid ? 1 : null).catch(() => {});
       keep();
     }));
     teamNames(); draw();
     q('[data-set]').onclick = () => { tp.hidden = true; set.hidden = !set.hidden; };
+    const lgs = q('[data-lgs]'); if (lgs) lgs.onchange = () => { let v = lgs.value; if (v === '+') { const n = (prompt(T('اسم الدوري (مثل: الصف الثالث - أ)', 'League name (e.g. Class 3A)')) || '').trim(); v = n ? MDX.create(n) : ''; } G.league = v || null; keep(); lobby(); setTimeout(() => { const s2 = G.el.querySelector('#mdSet'); if (s2) s2.hidden = false; }, 0); };
     G.el.querySelectorAll('[data-mode]').forEach(b => b.onclick = () => { phonesMode(b.dataset.mode === 'phones'); lobby(); });
     q('[data-teams]').onclick = () => { set.hidden = true; tp.hidden = !tp.hidden; };
     tp.querySelector('[data-tdone]').onclick = () => { tp.hidden = true; };
@@ -630,9 +649,9 @@ window.MDLive = (function () {
     const pos = u => fin[u] != null ? 100 : Math.min(92, Math.round(92 * (pr[u] || 0) / best));
     box.innerHTML = groups.map(gr => { const avg = gr.us.length ? Math.round(gr.us.reduce((a, u) => a + pos(u), 0) / gr.us.length) : 0;
       return `<div class="md-alane" style="--c:var(--qz${gr.k % 6})"><span class="md-aln" dir="auto">${esc(gr.n)}</span>${groups.length > 1 ? `<em class="md-alavg" style="--w:${avg}%"></em>` : ''}<b class="md-afin"></b>
-        ${gr.us.slice(0, 24).map((u, j) => `<i class="md-fig${fin[u] != null ? ' done' : ''}" style="--x:${pos(u)}%;--y:${(j % 4) * 22 + 8}%"><span>${esc((G.players[u] || '?').charAt(0))}</span><small dir="auto">${esc((G.players[u] || '').slice(0, 10))}</small></i>`).join('')}</div>`; }).join('');
+        ${gr.us.slice(0, 24).map((u, j) => `<i class="md-fig${fin[u] != null ? ' done' : ''}" style="${avSt((G.av || {})[u])}--x:${pos(u)}%;--y:${(j % 4) * 22 + 8}%"><span>${esc((G.players[u] || '?').charAt(0))}</span><small dir="auto">${esc((G.players[u] || '').slice(0, 10))}</small></i>`).join('')}</div>`; }).join('');
     // the same picture, small, for the fans on their phones
-    if (!arena.t || Date.now() - arena.t > 900) { arena.t = Date.now(); G.ref.child('top/ar').set({ i: G.i, g: groups.map(gr => ({ k: gr.k, n: gr.n, p: gr.us.slice(0, 20).map(u => ({ n: G.players[u] || '', p: pos(u), d: fin[u] != null ? 1 : 0 })) })) }).catch(() => {}); }
+    if (!arena.t || Date.now() - arena.t > 900) { arena.t = Date.now(); G.ref.child('top/ar').set({ i: G.i, g: groups.map(gr => ({ k: gr.k, n: gr.n, p: gr.us.slice(0, 20).map(u => ({ n: G.players[u] || '', p: pos(u), d: fin[u] != null ? 1 : 0, a: (G.av || {})[u] || '' })) })) }).catch(() => {}); }
   }
   function raceAvg(x, taps) { const n = x._tug.names.length, sum = new Array(n).fill(0), cnt = new Array(n).fill(0); Object.keys(x._tug.sides).forEach(u => { const k = x._tug.sides[u]; cnt[k]++; sum[k] += taps[u] || 0; }); return sum.map((v, k) => cnt[k] ? v / cnt[k] : 0); }
   function raceDraw(x, taps) {
@@ -880,7 +899,7 @@ window.MDLive = (function () {
     const J = G.jr || []; if (J.length < 2) return;
     const us = order.slice(0, 10), max = Math.max(1, ...us.map(u => J[J.length - 1][u] || 0), ...J.flatMap(o => us.map(u => o[u] || 0)));
     const d = document.createElement('div'); d.className = 'md-rpbig';
-    d.innerHTML = `<div class="md-rphead"><b id="mdRpQ"></b><button type="button" class="md-cb" data-x>${B('إغلاق', 'Close')}</button></div><div class="md-rptrack">${us.map((u, k) => `<div class="md-rplane"><span class="md-rpn" dir="auto">${esc(G.players[u] || '')}</span><div class="md-rprun"><em class="md-rpf" style="--c:var(--qz${k % 6})" data-u="${u}"><span>${esc((G.players[u] || '?').trim().charAt(0))}</span><small></small></em></div></div>`).join('')}</div>`;
+    d.innerHTML = `<div class="md-rphead"><b id="mdRpQ"></b><button type="button" class="md-cb" data-x>${B('إغلاق', 'Close')}</button></div><div class="md-rptrack">${us.map((u, k) => `<div class="md-rplane"><span class="md-rpn" dir="auto">${esc(G.players[u] || '')}</span><div class="md-rprun"><em class="md-rpf" style="--c:var(--qz${k % 6});${avSt((G.av || {})[u])}" data-u="${u}"><span>${esc((G.players[u] || '?').trim().charAt(0))}</span><small></small></em></div></div>`).join('')}</div>`;
     G.el.appendChild(d);
     const F = [...d.querySelectorAll('.md-rpf')], hd = d.querySelector('#mdRpQ'); let t = -1, tm = null;
     const at = t => {
@@ -905,12 +924,19 @@ window.MDLive = (function () {
         ${tt.length ? `<p class="md-wteam" style="--c:var(--qz${(tt[0].k) % 6})">${B(`الفريق الفائز: ${esc(tt[0].name)}`, `Winning team: ${esc(tt[0].name)}`)} <em>${tt[0].avg}</em></p>` : ''}
         <div class="md-podium">${p(1)}${p(0)}${p(2)}</div>
         <ol class="md-rest" start="4">${order.slice(3, 10).map(u => `<li><span dir="auto">${esc(G.players[u] || '')}</span><em>${G.score[u]}</em></li>`).join('')}</ol>${aw.length ? `<div class="md-titles">${aw.map((a, k) => `<div class="md-title" style="--d:${k * .35 + 4}s"><b>${B(TITLE[a.k][0], TITLE[a.k][1])}</b><span dir="auto">${esc(a.n)}</span><small>${B(a.ar, a.en)}</small></div>`).join('')}</div>` : ''}</div>`,
-      `${(G.jr || []).length > 1 ? `<button type="button" class="btn ghost" data-replay>${B('إعادة السباق', 'Replay the race')}</button>` : ''}<button type="button" class="btn ghost" data-csv>${B('تحميل النتائج', 'Download results')}</button>
+      `${window.MDX ? `<button type="button" class="btn ghost" data-rep>${B('تقرير المسابقة', 'Quiz report')}</button><button type="button" class="btn ghost" data-cert>${B('شهادات', 'Certificates')}</button>${G.opts.sid || Object.keys(G.sid || {}).length || Object.values(G.players).some(n => /^\s*[\d٠-٩]{5,12}\s*$/.test(n || '')) ? `<button type="button" class="btn solid" data-bb>${B('درجات بلاك بورد', 'Blackboard grades')}</button>` : ''}` : ''}${(G.jr || []).length > 1 ? `<button type="button" class="btn ghost" data-replay>${B('إعادة السباق', 'Replay the race')}</button>` : ''}<button type="button" class="btn ghost" data-csv>${B('تحميل النتائج', 'Download results')}</button>
        <label class="md-opt md-grade" title="${T('اختياري: تُحسب الدرجة من نقاط ميدان، والأول يأخذ الدرجة كاملة', 'Optional: the grade follows Maydan points; the top player gets full marks')}">${B('مع درجة من', 'with a grade out of')} <input type="number" min="1" max="100" step="1" inputmode="numeric" data-gr placeholder="—"></label>
        ${G.quiz.qs.some(x => x.type === 'game') ? `<label class="md-opt md-grade"><input type="checkbox" data-gq> ${B('من الأسئلة فقط (دون التحديات)', 'from the questions only (no challenges)')}</label>` : ''}`);
     reactions(); SND.drum();
     [3, 2, 1].forEach((k, n) => setTimeout(() => { const e = q(`.md-p${k}`); if (e) e.classList.add('in'); if (k === 1) SND.win(); }, 900 + n * 1300));
     if (q('[data-replay]')) q('[data-replay]').onclick = () => replayBig(order);
+    if (window.MDX) {
+      const D = { title: G.quiz.title || '', teams: !!G.teams, qs: G.qlog || [], players: order.map((u, k) => ({ n: G.players[u] || '', s: G.score[u] || 0, r: k + 1, team: G.teams ? G.teams[G.team[u]] || '' : '', ok: (G.aw && G.aw[u] || {}).ok || 0, jq: (G.aw && G.aw[u] || {}).jq || 0, an: (G.aw && G.aw[u] || {}).an || 0, it: (G.aw && G.aw[u] || {}).it || 0, qp: G.qp[u] || 0, sid: ((G.sid || {})[u] || []).join('') || (/^\s*[\d٠-٩]{5,12}\s*$/.test(G.players[u] || '') ? (G.players[u] || '').trim().replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d)) : '') })) };
+      q('[data-rep]').onclick = () => MDX.report(G.el, D);
+      q('[data-cert]').onclick = () => MDX.certs(G.el, D);
+      if (q('[data-bb]')) q('[data-bb]').onclick = () => MDX.blackboard(G.el, D);
+      if (G.league && !G.leagueSaved) { G.leagueSaved = true; const lg = MDX.record(G.league, D); if (lg) { const n = document.createElement('p'); n.className = 'md-lgsaved'; n.innerHTML = B(`أُضيفت النتيجة إلى دوري «${esc(lg.name)}»`, `Added to the league “${esc(lg.name)}”`); const e2 = G.el.querySelector('.md-end'); if (e2) e2.appendChild(n); } }
+    }
     q('[data-csv]').onclick = () => {
       // an optional grade: in proportion to the points, so speed still counts and the top player gets full marks
       // with "questions only", the points from challenges are left out of the grade (but kept in the ranking)

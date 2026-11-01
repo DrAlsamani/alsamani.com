@@ -2375,7 +2375,8 @@ if (typeof module !== 'undefined') module.exports = QZParse;
       <div class="qz-lib">${RLIB().map((z, k) => `<div class="qz-lc"${k >= 5 ? ' data-more hidden' : ''}><span class="qz-li">${z.icon}</span><b>${esc(z.title)}</b><small>${esc(z.desc)}</small><em>${esc(z.who)} · ${z.qs.length} ${z.qs.every(x => x.type === 'game') ? B('تحديات', 'challenges') : B('فقرة', 'items')}</em><span class="qz-lb"><button type="button" class="btn solid" data-lgo="${z.id}">${B('ابدأ الآن ▶', 'Start now ▶')}</button><button type="button" class="btn ghost" data-led="${z.id}">${B('افتحها وعدّلها', 'Open and edit')}</button></span></div>`).join('')}</div>${RLIB().length > 5 ? `<button type="button" class="btn ghost qz-libmore" id="qzLibMore">${B(`عرض كل المسابقات (${RLIB().length})`, `Show all quizzes (${RLIB().length})`)}</button>` : ''}` : ''}
       ${list.length ? `<h2 class="qz-h">${B('مسابقاتك', 'Your quizzes')}</h2><ul class="qz-list">${list.map(x => `<li><button type="button" data-open="${x.id}"><b>${esc(x.title || T('بلا عنوان', 'Untitled'))}</b><small>${T('الأسئلة: ', 'Questions: ')}${x.qs.length}</small></button></li>`).join('')}</ul>` : ''}
       <label class="qz-imp btn ghost">${B('فتح نسخة محفوظة', 'Open a saved copy')}<input type="file" accept=".json,application/json" hidden id="qzImp"></label>
-      <p class="pt-fine">${B('تُحفظ المسابقات في هذا المتصفح.', 'Quizzes are kept in this browser.')}</p></div>${introMore()}`;
+      <p class="pt-fine">${B('تُحفظ المسابقات في هذا المتصفح.', 'Quizzes are kept in this browser.')}</p></div>${window.MDX ? `<div class="sn-card" id="qzLg">${MDX.listHtml()}</div>` : ''}${introMore()}`;
+    if (window.MDX) MDX.bindList(root.querySelector('#qzLg'), home);
     if (P) { root.querySelector('#qzRes').onclick = () => MDLive.resume(); root.querySelector('#qzDrop2').onclick = async () => { await MDLive.discard(); home(); }; }
     const lm = root.querySelector('#qzLibMore'); if (lm) lm.onclick = () => { root.querySelectorAll('[data-more]').forEach(e => { e.hidden = false; }); lm.remove(); };
     { const h = root.querySelector('#qzHow'); if (h) h.querySelector('.qi-vframe').onclick = () => { const f = h.querySelector('.qi-vframe'); if (f.querySelector('video')) return; const L = isAr() ? 'ar' : 'en'; f.innerHTML = `<video controls autoplay playsinline poster="/img/video/maydan-howto-${L}.jpg" src="/img/video/maydan-howto-${L}.mp4"></video>`; h.classList.add('on'); }; }
@@ -3008,7 +3009,10 @@ ${exEn}`;
   // after a live game closes or pauses, the list shows whether one is waiting
   document.addEventListener('md:closed', () => { if (!Q) home(); else editor(); });
   // the live part loads after this file, so the list waits for it to know about a paused game
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', home); else setTimeout(home, 0);
+  // a league's standings from a shared link
+  const LG = new URLSearchParams(location.search).get('lg');
+  const first = () => LG && window.MDX ? MDX.viewShared(root, LG.replace(/[^a-z0-9]/gi, '').slice(0, 12)) : home();
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', first); else setTimeout(first, 0);
 })();
 </script>
 <style>/* Maydan live: the host's big screen and the player's phone */
@@ -3549,6 +3553,32 @@ html.mp-embed body{padding-top:0!important}
 .mp-rcb button.go{background:#23336F;color:#fff;font-size:1.4rem;padding:28px}.mp-rcb button.sent{outline:3px solid #e0a458}
 .md-end:has(.md-titles) .md-podium{height:34vh}.md-end:has(.md-titles) h2{margin-bottom:1.5vh}.md-end:has(.md-titles) .md-wteam{margin-bottom:1vh}
 .md-titles{margin-top:1.4vh}.md-title{padding:.8vh 1.2vw}
+/* report, certificates, leagues */
+.md-xbox{max-width:980px;text-align:start}.md-xbox h3{text-align:center}
+.md-xrep{max-height:58vh;overflow:auto;border:1px solid #e2e4ec;border-radius:12px;padding:14px;font-size:14px}
+.md-xact{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.md-xform{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}.md-xform label{display:grid;gap:4px;font-weight:600;font-size:.9rem}
+.md-xform input,.md-xform select{font:inherit;padding:8px 10px;border:1px solid #cfd3e0;border-radius:10px}
+.md-xprev{width:100%;height:auto;border:1px solid #e2e4ec;border-radius:10px}
+.md-xnote{font-size:.85rem;color:#666;margin:4px 0}
+.md-lgt{width:100%;border-collapse:collapse;font-size:.95rem}.md-lgt th,.md-lgt td{padding:7px 8px;border-bottom:1px solid var(--line,#e2e4ec);text-align:start}.md-lgt th{font-size:.8rem;opacity:.7}.md-lgt tr.top td{font-weight:700}.md-lgt tr.top td:first-child{color:#C9822B}
+.md-lgl{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin:8px 0 12px}
+.md-lgc{display:grid;gap:2px;text-align:start;border:1px solid var(--line,#e2e4ec);background:var(--bg,#fff);color:inherit;border-radius:14px;padding:12px 14px;font:inherit;cursor:pointer}.md-lgc b{color:#23336F}.md-lgc small{opacity:.7}
+.md-lgview{max-width:760px;margin:0 auto;text-align:center}.md-lgview .md-lgt{margin:12px 0}
+.md-lgsaved{text-align:center;color:#e0a458;font-weight:700;margin-top:1vh}
+.md-xrounds{font-size:.9rem}.md-xrounds li{margin:3px 0}
+.mp-tops li.far{margin-top:10px;position:relative}.mp-tops li.far::before{content:"⋯";position:absolute;top:-14px;left:50%;opacity:.5}
+/* each player's own figure */
+.md-fig[style*="--fs"] span,.mp-al i[style*="--fs"],.mp-rpr[style*="--fs"] span,.md-rpf[style*="--fs"] span{clip-path:var(--fs)!important;background:var(--fc)!important;color:#fff}
+.mp-rpr.me[style*="--fs"] span{color:#fff}
+.mp-av{display:grid;gap:8px;margin:4px 0 8px}.mp-av .mp-l{margin:0}
+.mp-avrow{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}.mp-avrow button{border:2px solid transparent;border-radius:12px;background:var(--surface,#f3f4f8);padding:6px;display:grid;place-items:center;cursor:pointer}
+.mp-avrow button span{width:34px;height:34px;display:grid;place-items:center;clip-path:var(--fs);background:var(--fc);color:#fff;font-weight:800;font-size:.85rem}
+.mp-avrow button[aria-pressed=true]{border-color:#23336F}
+.mp-avcol{display:grid;grid-template-columns:repeat(8,1fr);gap:6px}.mp-avcol button{aspect-ratio:1;border-radius:50%;border:3px solid transparent;cursor:pointer}.mp-avcol button[aria-pressed=true]{border-color:#16204a;box-shadow:0 0 0 2px #fff inset}
+body>.md-xov{position:fixed}
+.md-xwide{grid-column:1/-1}.md-bbt{max-height:40vh}.md-bbt tr.miss td{background:#fff4ef}.md-bbmiss{color:#b0533a;font-weight:700;margin:0 0 8px}
+.md-titles{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;padding-bottom:4px}.md-title{flex:none}
 </style><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script>window.MD_CFG={"apiKey": "AIzaSyA50i75DT1Is1a6Yn6snW1_JVObc8S3F0Y", "authDomain": "maydan-705ae.firebaseapp.com", "databaseURL": "https://maydan-705ae-default-rtdb.europe-west1.firebasedatabase.app", "projectId": "maydan-705ae", "appId": "1:342187013133:web:d5c2396f0db413f3c51144"};window.MD_MARK="<svg class=\"md-mark\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><rect x=\"4\" y=\"4\" width=\"40\" height=\"40\" rx=\"12\" fill=\"#23336F\"/><path d=\"M24 9l4.2 6.8 7.8-1.8-1.8 7.8L41 24l-6.8 4.2 1.8 7.8-7.8-1.8L24 39l-4.2-6.8-7.8 1.8 1.8-7.8L7 24l6.8-4.2-1.8-7.8 7.8 1.8z\" fill=\"#C9822B\"/><circle cx=\"24\" cy=\"24\" r=\"6.5\" fill=\"#23336F\"/><circle cx=\"24\" cy=\"24\" r=\"3\" fill=\"#F3E3C7\"/></svg>";</script><script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script><script>/* Maydan challenges: short games played on every phone at once. Every phone gets the same level (same seed),
    so the race is fair. Each game reports a score; higher is better. */
 window.MDGames = (function () {
@@ -4253,6 +4283,214 @@ window.MDGames = (function () {
   }
   return { LIST, byId, run };
 })();
+</script><script>/* Maydan extras for the host: the teacher's report, certificates for the winners, and leagues that gather
+   the results of several quizzes for one class or group. Leagues live in this browser; a copy is published
+   (read-only) so the group can follow the standings from a link. */
+window.MDX = (function () {
+  const isAr = () => document.documentElement.lang !== 'en';
+  const T = (a, e) => isAr() ? a : e;
+  const B = (a, e) => '<span class="ar">' + a + '</span><span class="en">' + e + '</span>';
+  const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const pct = (a, b) => b ? Math.round(100 * a / b) : 0;
+  const today = () => new Date().toLocaleDateString(isAr() ? 'ar-SA-u-ca-gregory-nu-latn' : 'en-GB', { year: 'numeric', month: 'long', day: 'numeric' });
+  const MARK = () => window.MD_MARK || '';
+
+  /* ---------- a page that prints (or saves as PDF) on its own ---------- */
+  function printPage(title, body, css) {
+    const w = window.open('', '_blank'); if (!w) return;
+    w.document.write(`<!doctype html><html lang="${isAr() ? 'ar' : 'en'}" dir="${isAr() ? 'rtl' : 'ltr'}"><head><meta charset="utf-8"><title>${esc(title)}</title>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap">
+      <style>body{font-family:"IBM Plex Sans Arabic",system-ui,sans-serif;color:#16201f;margin:24px}${css || ''}@media print{.np{display:none}}</style></head><body>${body}
+      <p class="np" style="text-align:center;margin-top:24px"><button onclick="print()" style="font:inherit;padding:10px 22px;border-radius:10px;border:0;background:#23336F;color:#fff">${T('طباعة أو حفظ PDF', 'Print or save as PDF')}</button></p></body></html>`);
+    w.document.close();
+  }
+  function overlay(host, html) {
+    const d = document.createElement('div'); d.className = 'md-asks md-xov';
+    d.innerHTML = `<div class="md-asksb md-xbox">${html}<button type="button" class="md-cb" data-x>${B('إغلاق', 'Close')}</button></div>`;
+    host.appendChild(d); d.querySelector('[data-x]').onclick = () => d.remove(); return d;
+  }
+  const csvOf = rows => '﻿' + rows.map(r => r.map(c => `"${String(c == null ? '' : c).replace(/"/g, '""')}"`).join(',')).join('\n');
+  function download(name, text, type) { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([text], { type: type || 'text/csv;charset=utf-8' })); a.download = name; a.click(); }
+
+  /* ---------- the teacher's report: which questions were hard, which wrong option drew people, how each player did ---------- */
+  function reportHtml(D) {
+    const Q = D.qs.filter(q => q.judged), avg = Q.length ? Math.round(Q.reduce((s, q) => s + pct(q.c, q.n), 0) / Q.length) : 0;
+    const hard = Q.filter(q => pct(q.c, q.n) < 50);
+    const trap = q => { if (!q.k || !q.o) return q.w ? `«${esc(q.w)}»` : ''; let j = -1, m = 0; q.k.forEach((v, i) => { if (!(q.ok || []).includes(i) && v > m) { m = v; j = i; } }); return j >= 0 && m ? `«${esc(q.o[j])}» (${m})` : ''; };
+    const rows = D.qs.map((q, i) => `<tr class="${q.judged && pct(q.c, q.n) < 50 ? 'hard' : ''}"><td>${i + 1}</td><td dir="auto">${esc(q.q)}</td><td>${q.judged ? `<span class="bar"><i style="width:${pct(q.c, q.n)}%"></i></span> ${pct(q.c, q.n)}٪` : '<small>' + T('بلا إجابة صحيحة', 'no right answer') + '</small>'}</td><td dir="auto">${q.judged ? trap(q) : ''}</td><td>${q.tm ? q.tm.toFixed(1) + T(' ث', 's') : ''}</td></tr>`).join('');
+    const prow = D.players.map(p => `<tr><td>${p.r}</td><td dir="auto">${esc(p.n)}</td>${D.teams ? `<td dir="auto">${esc(p.team || '')}</td>` : ''}<td>${p.s}</td><td>${p.jq ? `${p.ok} / ${p.jq} (${pct(p.ok, p.jq)}٪)` : ''}</td></tr>`).join('');
+    return `<div class="rp"><header><div class="mk">${MARK()}</div><div><h1 dir="auto">${esc(D.title || T('مسابقة ميدان', 'A Maydan quiz'))}</h1><p>${T('تقرير المسابقة', 'Quiz report')} · ${today()}</p></div></header>
+      <div class="kp"><div><b>${D.players.length}</b><span>${T('مشارك', 'players')}</span></div><div><b>${D.qs.length}</b><span>${T('فقرة', 'items')}</span></div><div><b>${avg}٪</b><span>${T('متوسط الإجابات الصحيحة', 'average right')}</span></div><div><b>${hard.length}</b><span>${T('أسئلة تحتاج مراجعة', 'questions to revisit')}</span></div></div>
+      ${hard.length ? `<h2>${T('تحتاج مراجعة (أقل من ٥٠٪ أصابوها)', 'To revisit (under 50% right)')}</h2><ul class="hl">${hard.map(q => `<li dir="auto">${esc(q.q)} <small>${pct(q.c, q.n)}٪${trap(q) ? ' · ' + T('الخيار الأكثر جذبًا: ', 'the most chosen wrong answer: ') + trap(q) : ''}</small></li>`).join('')}</ul>` : ''}
+      <h2>${T('الأسئلة', 'The questions')}</h2><table><thead><tr><th>#</th><th>${T('السؤال', 'Question')}</th><th>${T('أصابوا', 'Right')}</th><th>${T('أكثر خطأ تكرر', 'Most common wrong answer')}</th><th>${T('متوسط الوقت', 'Avg time')}</th></tr></thead><tbody>${rows}</tbody></table>
+      <h2>${T('المشاركون', 'The players')}</h2><table><thead><tr><th>${T('المركز', 'Rank')}</th><th>${T('الاسم', 'Name')}</th>${D.teams ? `<th>${T('الفريق', 'Team')}</th>` : ''}<th>${T('النقاط', 'Points')}</th><th>${T('الإجابات الصحيحة', 'Right answers')}</th></tr></thead><tbody>${prow}</tbody></table></div>`;
+  }
+  const RCSS = `.rp header{display:flex;gap:14px;align-items:center;border-bottom:3px solid #C9822B;padding-bottom:10px}.rp .mk svg{width:54px;height:54px}.rp h1{margin:0;color:#23336F;font-size:24px}.rp header p{margin:2px 0 0;color:#666}
+    .rp .kp{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:16px 0}.rp .kp div{background:#f3f4f8;border-radius:12px;padding:10px;text-align:center}.rp .kp b{display:block;font-size:24px;color:#23336F}.rp .kp span{font-size:12px;color:#555}
+    .rp h2{font-size:17px;color:#23336F;margin:18px 0 8px}.rp table{width:100%;border-collapse:collapse;font-size:13px}.rp th,.rp td{border-bottom:1px solid #e3e5ee;padding:6px 8px;text-align:start;vertical-align:top}.rp th{background:#f3f4f8}
+    .rp tr.hard td{background:#fff4ef}.rp .bar{display:inline-block;width:70px;height:8px;background:#e6e8f0;border-radius:4px;vertical-align:middle;overflow:hidden}.rp .bar i{display:block;height:100%;background:#2e8b57}
+    .rp .hl{margin:0;padding-inline-start:20px}.rp .hl li{margin:4px 0}.rp small{color:#777}`;
+  function report(host, D) {
+    const d = overlay(host, `<h3>${B('تقرير المسابقة', 'Quiz report')}</h3><div class="md-xrep">${reportHtml(D)}</div>
+      <div class="md-xact"><button type="button" class="btn solid" data-pr>${B('طباعة أو حفظ PDF', 'Print or save as PDF')}</button><button type="button" class="btn ghost" data-xl>${B('تحميل Excel', 'Download Excel')}</button></div>`);
+    d.querySelector('.md-xrep').insertAdjacentHTML('afterbegin', `<style>${RCSS.replace(/\.rp/g, '.md-xrep .rp')}</style>`);
+    d.querySelector('[data-pr]').onclick = () => printPage(T('تقرير المسابقة', 'Quiz report'), reportHtml(D), RCSS);
+    d.querySelector('[data-xl]').onclick = () => {
+      const rows = [[T('#', '#'), T('السؤال', 'Question'), T('النوع', 'Kind'), T('عدد المشاركين', 'Players'), T('أجابوا', 'Answered'), T('أصابوا', 'Right'), T('النسبة', 'Percent'), T('متوسط الوقت (ث)', 'Avg time (s)')]]
+        .concat(D.qs.map((q, i) => [i + 1, q.q, q.t, q.n, q.a, q.judged ? q.c : '', q.judged ? pct(q.c, q.n) : '', q.tm ? q.tm.toFixed(1) : '']))
+        .concat([[], [T('المركز', 'Rank'), T('الاسم', 'Name'), T('الفريق', 'Team'), T('النقاط', 'Points'), T('الإجابات الصحيحة', 'Right'), T('من', 'Of')]])
+        .concat(D.players.map(p => [p.r, p.n, p.team || '', p.s, p.ok, p.jq]));
+      download('maydan-report.csv', csvOf(rows));
+    };
+  }
+
+  /* ---------- certificates: drawn here in Maydan's colours, one page per name ---------- */
+  const PLACE = ['الأول', 'الثاني', 'الثالث', 'الرابع', 'الخامس'], PLACE_EN = ['first', 'second', 'third', 'fourth', 'fifth'];
+  function certCanvas(o) {
+    const W = 1754, H = 1240, cv = document.createElement('canvas'); cv.width = W; cv.height = H; const x = cv.getContext('2d'), ar = o.ar;
+    const F = (w, s) => `${w} ${s}px "IBM Plex Sans Arabic", system-ui, sans-serif`;
+    x.fillStyle = '#fbf8f2'; x.fillRect(0, 0, W, H);
+    x.strokeStyle = '#23336F'; x.lineWidth = 26; x.strokeRect(40, 40, W - 80, H - 80); x.strokeStyle = '#C9822B'; x.lineWidth = 5; x.strokeRect(84, 84, W - 168, H - 168);
+    // the Maydan star in the top corner
+    const star = (cx, cy, R) => { x.beginPath(); for (let k = 0; k < 16; k++) { const a = Math.PI / 8 * k - Math.PI / 2, r = k % 2 ? R * .62 : R; x.lineTo(cx + r * Math.cos(a), cy + r * Math.sin(a)); } x.closePath(); };
+    x.fillStyle = '#23336F'; x.beginPath(); x.roundRect(W / 2 - 62, 130, 124, 124, 30); x.fill(); x.fillStyle = '#C9822B'; star(W / 2, 192, 50); x.fill(); x.fillStyle = '#23336F'; x.beginPath(); x.arc(W / 2, 192, 17, 0, 7); x.fill(); x.fillStyle = '#F3E3C7'; x.beginPath(); x.arc(W / 2, 192, 8, 0, 7); x.fill();
+    x.textAlign = 'center'; x.direction = ar ? 'rtl' : 'ltr';
+    if (o.org) { x.fillStyle = '#555'; x.font = F(600, 34); x.fillText(o.org, W / 2, 312); }
+    x.fillStyle = '#23336F'; x.font = F(700, 92); x.fillText(o.place ? (ar ? 'شهادة تفوّق' : 'Certificate of Excellence') : (ar ? 'شهادة مشاركة' : 'Certificate of Participation'), W / 2, 430);
+    x.fillStyle = '#444'; x.font = F(400, 40); x.fillText(ar ? 'تُمنح هذه الشهادة إلى' : 'This certificate is awarded to', W / 2, 520);
+    let fs = 110; x.font = F(700, fs); while (x.measureText(o.name).width > W - 420 && fs > 50) { fs -= 6; x.font = F(700, fs); }
+    x.fillStyle = '#C9822B'; x.fillText(o.name, W / 2, 660);
+    x.fillStyle = '#333'; x.font = F(400, 40);
+    const line = o.place ? (ar ? `تقديرًا لتحقيق المركز ${PLACE[o.place - 1] || o.place} في مسابقة «${o.title}»` : `for winning ${PLACE_EN[o.place - 1] || o.place} place in “${o.title}”`) : (ar ? `تقديرًا للمشاركة في مسابقة «${o.title}»` : `for taking part in “${o.title}”`);
+    x.fillText(line, W / 2, 770);
+    if (o.points != null) { x.fillStyle = '#666'; x.font = F(400, 32); x.fillText(ar ? `بمجموع ${o.points} نقطة` : `with ${o.points} points`, W / 2, 830); }
+    x.fillStyle = '#555'; x.font = F(400, 30); x.fillText(o.date, ar ? W - 300 : 300, 1050);
+    if (o.sign) { x.fillText(o.sign, ar ? 300 : W - 300, 1050); x.strokeStyle = '#999'; x.lineWidth = 2; x.beginPath(); x.moveTo((ar ? 300 : W - 300) - 170, 1000); x.lineTo((ar ? 300 : W - 300) + 170, 1000); x.stroke(); }
+    x.fillStyle = '#9aa0b8'; x.font = F(400, 24); x.fillText('alsamani.com/play/maydan', W / 2, 1130);
+    return cv;
+  }
+  function certs(host, D) {
+    const d = overlay(host, `<h3>${B('شهادات', 'Certificates')}</h3>
+      <div class="md-xform"><label>${B('لمن؟', 'For whom?')}<select data-c="who"><option value="3">${T('الثلاثة الأوائل', 'The top three')}</option><option value="1">${T('الأول فقط', 'The winner only')}</option><option value="all">${T('الأوائل الثلاثة، ومشاركة للبقية', 'Top three, and participation for the rest')}</option></select></label>
+      <label>${B('الجهة (اختياري)', 'Organisation (optional)')}<input data-c="org" maxlength="60" dir="auto"></label>
+      <label>${B('التوقيع (اختياري)', 'Signed by (optional)')}<input data-c="sign" maxlength="40" dir="auto"></label></div>
+      <canvas class="md-xprev"></canvas>
+      <div class="md-xact"><button type="button" class="btn solid" data-pr>${B('طباعة أو حفظ PDF', 'Print or save as PDF')}</button><button type="button" class="btn ghost" data-dl>${B('تحميل الصور', 'Download the pictures')}</button></div>`);
+    const v = k => d.querySelector(`[data-c="${k}"]`).value.trim();
+    const list = () => { const w = v('who'), top = D.players.slice(0, w === '1' ? 1 : 3).map(p => ({ name: p.n, place: p.r <= 3 ? p.r : 0, points: p.s })); return w === 'all' ? top.concat(D.players.slice(3).map(p => ({ name: p.n, place: 0, points: null }))) : top; };
+    const make = c => certCanvas(Object.assign({ ar: isAr(), title: D.title || T('ميدان', 'Maydan'), date: today(), org: v('org'), sign: v('sign') }, c));
+    const prev = () => { const L = list(); if (!L.length) return; const src = make(L[0]), cv = d.querySelector('.md-xprev'); cv.width = src.width / 2; cv.height = src.height / 2; cv.getContext('2d').drawImage(src, 0, 0, cv.width, cv.height); };
+    d.querySelectorAll('[data-c]').forEach(i => i.oninput = i.onchange = prev);
+    (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(prev);
+    d.querySelector('[data-pr]').onclick = () => printPage(T('الشهادات', 'Certificates'), list().map(c => `<img src="${make(c).toDataURL('image/jpeg', .92)}">`).join(''), '@page{size:A4 landscape;margin:0}body{margin:0}img{width:100%;display:block;page-break-after:always}');
+    d.querySelector('[data-dl]').onclick = () => list().forEach((c, k) => setTimeout(() => { const a = document.createElement('a'); a.href = make(c).toDataURL('image/png'); a.download = `certificate-${k + 1}.png`; a.click(); }, k * 400));
+  }
+
+
+  /* ---------- grades for Blackboard: a file matched by the student ID (the Username), ready for "Upload gradebook" ---------- */
+  function blackboard(host, D) {
+    const saved = (() => { try { return JSON.parse(localStorage.getItem('md-bb') || '{}'); } catch (e) { return {}; } })();
+    const d = overlay(host, `<h3>${B('درجات بلاك بورد', 'Blackboard grades')}</h3>
+      <div class="md-xform"><label>${B('اسم العمود في بلاك بورد', 'Column name in Blackboard')}<input data-b="col" maxlength="60" dir="auto" value="${esc(D.title || T('مسابقة ميدان', 'Maydan quiz'))}"></label>
+      <label>${B('درجة المشاركة من', 'Participation out of')}<input data-b="p1" type="number" min="0" max="100" step="0.5" value="${saved.p1 != null ? saved.p1 : 2}"></label>
+      <label>${B('درجة الأداء من', 'Performance out of')}<input data-b="p2" type="number" min="0" max="100" step="0.5" value="${saved.p2 != null ? saved.p2 : 8}"></label>
+      <label>${B('الأداء يُحسب من', 'Performance is based on')}<select data-b="base"><option value="qp">${T('نقاط الأسئلة فقط (دون الألعاب)', 'Question points only (no games)')}</option><option value="all">${T('كل النقاط مع الألعاب', 'All points, games included')}</option><option value="ok">${T('نسبة الإجابات الصحيحة', 'Share of right answers')}</option></select></label>
+      <label class="md-xwide">${B('رابط صفحة الدرجات في المقرر (اختياري، يُحفظ لهذا المتصفح)', 'Link to the course gradebook (optional, kept in this browser)')}<input data-b="url" dir="ltr" placeholder="https://lms.uoh.edu.sa/ultra/courses/…/grades" value="${esc(saved.url || '')}"></label></div>
+      <p class="md-xnote">${B('المشاركة: نسبة ما أجاب عنه الطالب من فقرات المسابقة. الأداء: بالنسبة إلى الأعلى (الأول يأخذ الدرجة كاملة)، أو نسبة الإجابات الصحيحة.', 'Participation: the share of items the student answered. Performance: relative to the top student (who gets full marks), or the share of right answers.')}</p>
+      <div class="md-xrep md-bbt"></div>
+      <div class="md-xact"><button type="button" class="btn solid" data-dl>${B('تحميل الملف وفتح المقرر', 'Download the file and open the course')}</button></div>
+      <p class="md-xnote">${B('في بلاك بورد: الدرجات ← الإعدادات ← رفع الدرجات (Upload gradebook)، ثم اختر الملف. يُطابَق الطالب بعمود Username، وهو الرقم الأكاديمي.', 'In Blackboard: Gradebook → Settings → Upload gradebook, then choose the file. Students are matched by the Username column, their ID.')}</p>`);
+    const v = k => d.querySelector(`[data-b="${k}"]`).value.trim();
+    const r2 = n => Math.round(n * 100) / 100;
+    const calc = () => {
+      const p1 = Math.max(0, +v('p1') || 0), p2 = Math.max(0, +v('p2') || 0), base = v('base');
+      const pts = p => base === 'qp' ? p.qp : base === 'all' ? p.s : 0, best = Math.max(1, ...D.players.map(pts));
+      return D.players.map(p => { const part = p.it ? r2(p1 * p.an / p.it) : 0, perf = r2(base === 'ok' ? (p.jq ? p2 * p.ok / p.jq : 0) : p2 * Math.max(0, pts(p)) / best); return { p, part, perf, sum: r2(part + perf) }; });
+    };
+    const draw = () => { const R = calc(), miss = R.filter(x => !x.p.sid).length;
+      d.querySelector('.md-bbt').innerHTML = `${miss ? `<p class="md-bbmiss">${T(`${miss} بلا رقم أكاديمي، فلن يُرفعوا: أضف أرقامهم في الملف قبل رفعه.`, `${miss} without an ID will not upload: add their IDs in the file first.`)}</p>` : ''}<table class="md-lgt"><thead><tr><th>Username</th><th>${T('الاسم', 'Name')}</th><th>${T('المشاركة', 'Participation')}</th><th>${T('الأداء', 'Performance')}</th><th>${T('المجموع', 'Total')}</th></tr></thead><tbody>${R.map(x => `<tr class="${x.p.sid ? '' : 'miss'}"><td dir="ltr">${esc(x.p.sid || '—')}</td><td dir="auto">${esc(x.p.n)}</td><td>${x.part}</td><td>${x.perf}</td><td><b>${x.sum}</b></td></tr>`).join('')}</tbody></table>`; };
+    d.querySelectorAll('[data-b]').forEach(i => i.oninput = i.onchange = draw); draw();
+    d.querySelector('[data-dl]').onclick = () => {
+      const col = v('col') || 'Maydan', p1 = +v('p1') || 0, p2 = +v('p2') || 0, url = v('url');
+      try { localStorage.setItem('md-bb', JSON.stringify({ p1, p2, url })); } catch (e) {}
+      const R = calc(), head = ['Username', 'Last Name', 'First Name'].concat(p1 ? [`${col} - ${T('مشاركة', 'Participation')}`] : []).concat(p2 ? [`${col} - ${T('أداء', 'Performance')}`] : []).concat(p1 && p2 ? [col] : []);
+      const rows = [head].concat(R.map(x => [x.p.sid || '', '', x.p.n].concat(p1 ? [x.part] : []).concat(p2 ? [x.perf] : []).concat(p1 && p2 ? [x.sum] : [])));
+      download(`${col.replace(/[\\/:*?"<>|]/g, '').slice(0, 40) || 'maydan'}-grades.csv`, csvOf(rows));
+      if (/^https?:\/\//.test(url)) setTimeout(() => window.open(url, '_blank', 'noopener'), 600);
+    };
+  }
+
+  /* ---------- leagues: the results of several quizzes for one group, kept in this browser ---------- */
+  const LK = 'md-leagues';
+  const all = () => { try { return JSON.parse(localStorage.getItem(LK) || '[]'); } catch (e) { return []; } };
+  const save = L => { try { localStorage.setItem(LK, JSON.stringify(L)); } catch (e) {} };
+  const nameKey = n => String(n || '').trim().replace(/\s+/g, ' ').replace(/[أإآ]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي').toLowerCase();
+  const PTS = r => [10, 8, 6, 5, 4, 3, 2][r - 1] || 1;
+  function create(name) { const L = all(), id = Math.random().toString(36).slice(2, 10); L.push({ id, name: name.slice(0, 60), made: Date.now(), rounds: [] }); save(L); return id; }
+  function addRound(id, round) { const L = all(), lg = L.find(z => z.id === id); if (!lg) return null; lg.rounds.push(round); save(L); return lg; }
+  function standings(lg) {
+    const S = {};
+    (lg.rounds || []).forEach(rd => rd.res.forEach(p => { const k = nameKey(p.n); const s = S[k] = S[k] || { n: p.n, lp: 0, pts: 0, played: 0, wins: 0, best: 99 }; s.n = p.n; s.lp += PTS(p.r); s.pts += p.s || 0; s.played++; if (p.r === 1) s.wins++; s.best = Math.min(s.best, p.r); }));
+    return Object.values(S).sort((a, b) => b.lp - a.lp || b.pts - a.pts);
+  }
+  function tableHtml(lg) {
+    const S = standings(lg);
+    return `<table class="md-lgt"><thead><tr><th>#</th><th>${T('الاسم', 'Name')}</th><th>${T('نقاط الدوري', 'League points')}</th><th>${T('المسابقات', 'Quizzes')}</th><th>${T('المركز الأول', 'Wins')}</th><th>${T('مجموع النقاط', 'Total points')}</th></tr></thead><tbody>${S.map((s, k) => `<tr class="${k < 3 ? 'top' : ''}"><td>${k + 1}</td><td dir="auto">${esc(s.n)}</td><td><b>${s.lp}</b></td><td>${s.played}</td><td>${s.wins}</td><td>${s.pts}</td></tr>`).join('')}</tbody></table>`;
+  }
+  const RULE = () => T('نقاط الدوري في كل مسابقة: الأول ١٠، الثاني ٨، الثالث ٦، ثم ٥ و٤ و٣ و٢، ولكل مشارك آخر نقطة. يُعرف اللاعب باسمه، فليدخل بالاسم نفسه كل مرة.', 'League points in each quiz: 1st 10, 2nd 8, 3rd 6, then 5, 4, 3, 2, and 1 for everyone else. Players are known by name, so they should use the same name each time.');
+  // a read-only copy for the group, published under a room of its own
+  let fdb = null, fuid = null;
+  async function fb() { if (fdb) return fdb; if (!window.firebase || !window.MD_CFG) throw new Error('nofb'); if (!firebase.apps.length) firebase.initializeApp(MD_CFG); fuid = (firebase.auth().currentUser || (await firebase.auth().signInAnonymously()).user).uid; fdb = firebase.database(); return fdb; }
+  async function publish(lg) {
+    try { const db = await fb(), r = db.ref('rooms/lg' + lg.id); const h = (await r.child('host').once('value')).val();
+      if (!h) await r.set({ host: fuid, at: firebase.database.ServerValue.TIMESTAMP, title: lg.name, n: 0, st: { ph: 'end', i: -1, lock: true } });
+      else if (h !== fuid) return false;
+      await r.child('lg').set({ name: lg.name, rounds: lg.rounds.slice(-60) }); return true; } catch (e) { return false; }
+  }
+  const shareUrl = id => `${location.origin}/play/maydan/?lg=${id}`;
+  function leagueBox(host, id, onChange) {
+    const lg = all().find(z => z.id === id); if (!lg) return;
+    const d = overlay(host, `<h3 dir="auto">${esc(lg.name)}</h3><p class="md-xnote">${lg.rounds.length ? T(`${lg.rounds.length} مسابقة`, `${lg.rounds.length} quizzes`) : T('لم تُلعب فيه مسابقة بعد. اختره في إعدادات المسابقة قبل أن تبدأ.', 'No quiz yet. Choose it in the quiz settings before you start.')}</p>${tableHtml(lg)}
+      ${lg.rounds.length ? `<details class="md-xrounds"><summary>${B('المسابقات', 'The quizzes')}</summary><ol>${lg.rounds.map(r => `<li dir="auto">${esc(r.title)} <small>${new Date(r.at).toLocaleDateString()}${r.res[0] ? ' · ' + esc(r.res[0].n) : ''}</small></li>`).join('')}</ol></details>` : ''}
+      <p class="md-xnote">${RULE()}</p>
+      <div class="md-xact"><button type="button" class="btn solid" data-sh>${B('رابط الترتيب للمجموعة', 'Standings link for the group')}</button><button type="button" class="btn ghost" data-ex>${B('نسخة احتياطية', 'Back up')}</button><button type="button" class="btn ghost" data-del>${B('حذف الدوري', 'Delete the league')}</button></div><p class="md-xnote" data-msg></p>`);
+    const msg = t => { d.querySelector('[data-msg]').textContent = t; };
+    d.querySelector('[data-sh]').onclick = async () => { msg(T('جارٍ النشر…', 'Publishing…')); const ok = await publish(lg); if (!ok) return msg(T('تعذّر النشر من هذا الجهاز.', 'Could not publish from this device.')); const u = shareUrl(lg.id); try { await navigator.clipboard.writeText(u); } catch (e) {} msg(T('نُسخ الرابط: ', 'Link copied: ') + u); };
+    d.querySelector('[data-ex]').onclick = () => download(`league-${lg.name}.json`, JSON.stringify(lg), 'application/json');
+    d.querySelector('[data-del]').onclick = () => { if (!confirm(T(`حذف دوري «${lg.name}» من هذا المتصفح؟`, `Delete the league “${lg.name}” from this browser?`))) return; save(all().filter(z => z.id !== id)); d.remove(); if (onChange) onChange(); };
+  }
+  function importFile(file, onChange) {
+    const r = new FileReader(); r.onload = () => { try { const lg = JSON.parse(r.result); if (!lg.id || !Array.isArray(lg.rounds)) throw 0; const L = all().filter(z => z.id !== lg.id); L.push(lg); save(L); if (onChange) onChange(); } catch (e) { alert(T('هذا الملف ليس نسخة دوري.', 'This file is not a league backup.')); } }; r.readAsText(file);
+  }
+  // the list on Maydan's page, for the host
+  function listHtml() {
+    const L = all();
+    return `<div class="md-lgs"><h2 class="qz-h">${B('دورياتي', 'My leagues')}</h2><p class="pt-fine">${B('اجمع نتائج عدة مسابقات لفصل أو مجموعة في ترتيب واحد. أنشئ دوريًا هنا، ثم اختره في إعدادات المسابقة قبل أن تبدأ، فتُضاف نتيجتها إليه تلقائيًا.', 'Gather the results of several quizzes for a class or group in one table. Make a league here, then choose it in the quiz settings before you start, and its results are added on their own.')}</p>
+      <div class="md-lgl">${L.map(lg => { const s = standings(lg)[0]; return `<button type="button" class="md-lgc" data-lg="${lg.id}"><b dir="auto">${esc(lg.name)}</b><small>${T(`${lg.rounds.length} مسابقة`, `${lg.rounds.length} quizzes`)}${s ? ' · ' + T('المتصدر: ', 'Leader: ') + esc(s.n) : ''}</small></button>`; }).join('')}</div>
+      <div class="sn-two"><button type="button" class="btn ghost" data-lgnew>${B('دوري جديد', 'New league')}</button><label class="btn ghost">${B('استعادة نسخة', 'Restore a backup')}<input type="file" accept=".json,application/json" hidden data-lgimp></label></div></div>`;
+  }
+  function bindList(box, onChange) {
+    box.querySelectorAll('[data-lg]').forEach(b => b.onclick = () => leagueBox(document.body, b.dataset.lg, onChange));
+    const n = box.querySelector('[data-lgnew]'); if (n) n.onclick = () => { const name = (prompt(T('اسم الدوري (مثل: الصف الثالث - أ)', 'League name (e.g. Class 3A)')) || '').trim(); if (name) { create(name); onChange(); } };
+    const im = box.querySelector('[data-lgimp]'); if (im) im.onchange = e => { if (e.target.files[0]) importFile(e.target.files[0], onChange); };
+  }
+  // the standings from a shared link, read-only
+  async function viewShared(root, id) {
+    root.innerHTML = `<div class="sn-card md-lgview"><p>${B('جارٍ تحميل الترتيب…', 'Loading the standings…')}</p></div>`;
+    try { const db = await fb(), v = (await db.ref('rooms/lg' + id + '/lg').once('value')).val(); if (!v) throw 0;
+      const lg = { name: v.name, rounds: v.rounds || [] };
+      root.innerHTML = `<div class="sn-card md-lgview"><p class="qi-eye">${B('دوري ميدان', 'A Maydan league')}</p><h2 dir="auto">${esc(lg.name)}</h2><p class="md-xnote">${T(`${lg.rounds.length} مسابقة حتى الآن`, `${lg.rounds.length} quizzes so far`)}</p>${tableHtml(lg)}<p class="md-xnote">${RULE()}</p><a class="btn ghost" href="/play/maydan/">${B('جرّب وأنشئ مسابقتك', 'Make your own quiz')}</a></div>`;
+    } catch (e) { root.innerHTML = `<div class="sn-card md-lgview"><p>${B('لم نجد هذا الدوري.', 'This league was not found.')}</p><a class="btn ghost" href="/play/maydan/">${B('ميدان', 'Maydan')}</a></div>`; }
+  }
+  // after a quiz: add its results to the chosen league and refresh the shared copy
+  function record(id, D) {
+    const lg = addRound(id, { at: Date.now(), title: D.title || '', res: D.players.map(p => ({ n: p.n, s: p.s, r: p.r })) });
+    if (lg) publish(lg);
+    return lg;
+  }
+
+  return { report, certs, blackboard, all, create, record, leagueBox, listHtml, bindList, viewShared, standings };
+})();
 </script><script>/* alsamani.com/play/maydan — running a quiz live: the big screen of the host.
    Players join at alsamani.com/m with a six-digit code; the room lives in Firebase and the host alone keeps the answers and the scores.
    A game can be paused and picked up later from the same browser. */
@@ -4292,7 +4530,7 @@ window.MDLive = (function () {
   };
 
   /* ---------- keeping a game so it can be resumed ---------- */
-  const keep = () => { if (!G) return; try { localStorage.setItem(SAVE, JSON.stringify({ pin: G.pin, quiz: G.quiz, i: G.done, score: G.score, qp: G.qp, out: G.out, streak: G.streak, team: G.team, teams: G.teams, opts: G.opts, gold: G.gold, players: G.players, phones: !!G.phones, used: G.used || {}, jr: G.jr || [], jrAt: G.jrAt, lockJoin: !!G.lockJoin, shuffled: !!G.shuffled, at: Date.now() })); } catch (e) {} };
+  const keep = () => { if (!G) return; try { localStorage.setItem(SAVE, JSON.stringify({ pin: G.pin, quiz: G.quiz, i: G.done, score: G.score, qp: G.qp, out: G.out, streak: G.streak, team: G.team, teams: G.teams, opts: G.opts, gold: G.gold, players: G.players, phones: !!G.phones, used: G.used || {}, jr: G.jr || [], jrAt: G.jrAt, qlog: G.qlog || [], aw: G.aw || {}, av: G.av || {}, sid: G.sid || {}, league: G.league || null, lockJoin: !!G.lockJoin, shuffled: !!G.shuffled, at: Date.now() })); } catch (e) {} };
   const forget = () => { try { localStorage.removeItem(SAVE); } catch (e) {} };
   function pending() { try { const s = JSON.parse(localStorage.getItem(SAVE) || 'null'); return s && Date.now() - s.at < 7 * 864e5 ? s : null; } catch (e) { return null; } }
 
@@ -4330,15 +4568,28 @@ window.MDLive = (function () {
   }
   function journeyOut(order) {
     const us = order.slice(0, 30), J = G.jr || [];
-    return { k: us.map(u => u.slice(0, 8)), n: us.map(u => G.players[u] || ''), s: us.map(u => J.map(o => o[u] || 0)) };
+    return { k: us.map(u => u.slice(0, 8)), n: us.map(u => G.players[u] || ''), a: us.map(u => (G.av || {})[u] || ''), s: us.map(u => J.map(o => o[u] || 0)) };
   }
 
 
+  // each player's figure: a shape and a colour they chose ('%' + shape digit + colour digit, sent once on joining)
+  const AVS = ['polygon(50% 0,61% 22%,85% 15%,78% 39%,100% 50%,78% 61%,85% 85%,61% 78%,50% 100%,39% 78%,15% 85%,22% 61%,0 50%,22% 39%,15% 15%,39% 22%)', 'polygon(50% 0,63% 27%,93% 25%,76% 50%,93% 75%,63% 73%,50% 100%,37% 73%,7% 75%,24% 50%,7% 25%,37% 27%)', 'circle(50%)', 'polygon(50% 0,100% 50%,50% 100%,0 50%)', 'polygon(25% 4%,75% 4%,100% 50%,75% 96%,25% 96%,0 50%)', 'polygon(50% 0,100% 22%,88% 72%,50% 100%,12% 72%,0 22%)'], AVC = ['#C9822B', '#2a7fa8', '#2e8b57', '#b0533a', '#7a4fb5', '#d14d8b', '#23336F', '#1f8f8a'];
+  const avSt = a => { a = String(a || ''); if (!/^\d\d$/.test(a)) return ''; return `--fs:${AVS[+a[0]] || AVS[0]};--fc:${AVC[+a[1]] || AVC[0]};`; };
   /* ---------- feats: what each player did, for the commentary now and the titles at the end ---------- */
   const arN = (n, one, two, few, many) => n === 1 ? one : n === 2 ? two : `${n} ${n % 100 >= 3 && n % 100 <= 10 ? few : many}`;
   function feats(sc) {
     const x = G.quiz.qs[G.i] || {}, judged = !['poll', 'open', 'stage', 'game'].includes(x.type), ans = G.lastAns || {};
     G.aw = G.aw || {}; const W = u => G.aw[u] = G.aw[u] || {};
+    if (x.type !== 'stage') {   // the report's record of this question
+      const pl = Object.keys(G.players), A = pl.filter(u => ans[u]), gm = x.type === 'game' && window.MDGames ? MDGames.byId(x.g) : null;
+      const L = { q: gm ? (G.ar ? gm.ar : gm.en) : (x.q || ''), t: x.type, n: pl.length, a: A.length, c: pl.filter(u => sc[u] && sc[u].c).length, judged };
+      if (['mc', 'tf', 'poll'].includes(x.type)) { L.o = x.opts; L.ok = x.ok; L.k = (x.opts || []).map(() => 0); A.forEach(u => [].concat(ans[u].a == null ? [] : ans[u].a).forEach(j => { if (L.k[+j] != null) L.k[+j]++; })); }
+      else if (judged) { const f = {}; A.forEach(u => { if (sc[u] && sc[u].c) return; const w = String(ans[u].a == null ? '' : Array.isArray(ans[u].a) ? '' : ans[u].a).trim(); if (w) f[w] = (f[w] || 0) + 1; }); const top = Object.entries(f).sort((p, q) => q[1] - p[1])[0]; if (top && top[1] > 1) L.w = top[0]; }
+      const ts = A.filter(u => sc[u] && sc[u].c && ans[u].t && G.t0).map(u => Math.max(0, (ans[u].t - G.t0) / 1000)); if (ts.length && judged) L.tm = ts.reduce((p, q) => p + q, 0) / ts.length;
+      G.qlog = G.qlog || []; G.qlog.push(L);
+      if (judged) pl.forEach(u => { const w = W(u); w.jq = (w.jq || 0) + 1; if (sc[u] && sc[u].c) w.ok = (w.ok || 0) + 1; });
+      pl.forEach(u => { const w = W(u); w.it = (w.it || 0) + 1; if (ans[u]) w.an = (w.an || 0) + 1; });
+    }
     Object.keys(G.players).forEach(u => {
       const r = sc[u], w = W(u), a = ans[u]; if (!r) { if (judged) w.run = 0; return; }
       if (G.cap && G.cap[u]) r.cap = 1;
@@ -4472,7 +4723,7 @@ window.MDLive = (function () {
       const room = (await db.ref('rooms/' + s.pin).once('value')).val();
       if (!room || room.host !== uid) { forget(); el.innerHTML = `<div class="md-wait">${B('انتهت صلاحية هذه المسابقة ولم تعد موجودة.', 'This quiz is no longer available.')}<button type="button" class="btn ghost" data-x>${B('إغلاق', 'Close')}</button></div>`; el.querySelector('[data-x]').onclick = leave; return; }
       fresh(s.quiz, el, s.pin);
-      Object.assign(G, { score: s.score || {}, qp: s.qp || {}, out: s.out || {}, streak: s.streak || {}, team: s.team || {}, teams: s.teams || null, opts: s.opts || G.opts, gold: s.gold, players: s.players || {}, i: s.i, done: s.i, used: s.used || {}, jr: s.jr || [], jrAt: s.jrAt, lockJoin: !!s.lockJoin, shuffled: !!s.shuffled });
+      Object.assign(G, { score: s.score || {}, qp: s.qp || {}, out: s.out || {}, streak: s.streak || {}, team: s.team || {}, teams: s.teams || null, opts: s.opts || G.opts, gold: s.gold, players: s.players || {}, i: s.i, done: s.i, used: s.used || {}, jr: s.jr || [], jrAt: s.jrAt, qlog: s.qlog || [], aw: s.aw || {}, av: s.av || {}, sid: s.sid || {}, league: s.league || null, lockJoin: !!s.lockJoin, shuffled: !!s.shuffled });
       if (s.phones) { phonesMode(true); if (G.i >= 0) G.el.classList.add('started'); }
       keepPlayers();
       if (G.i < 0) return lobby();
@@ -4546,6 +4797,8 @@ window.MDLive = (function () {
       if (now() - (v.t || 0) > 8000) return;
       if (v.e === '🎤') { stat({ 'x/mic': 1 }); return micVote(s.key); }
       if (v.e.charAt(0) === '@') return remote(s.key, v.e);
+      if (/^#[01]\d{1,6}$/.test(v.e)) { if (G) { G.sid = G.sid || {}; const o = G.sid[s.key] = G.sid[s.key] || ['', '']; o[+v.e[1]] = v.e.slice(2); } return; }
+      if (v.e.charAt(0) === '%') { if (G) { G.av = G.av || {}; G.av[s.key] = v.e.slice(1, 3); } return; }
       if (G) { G.aw = G.aw || {}; const w = G.aw[s.key] = G.aw[s.key] || {}; w.rx = (w.rx || 0) + 1; }
       if (G) G.rxc = (G.rxc || 0) + 1;
       const fx = G && G.el.querySelector('.md-fx'); if (!fx) return;
@@ -4663,6 +4916,8 @@ window.MDLive = (function () {
       <div class="md-count"><b id="mdN">0</b> ${B('مشارك', 'players')} <small id="mdFans"></small></div><div class="md-names" id="mdNames"></div>
       <div class="md-set" id="mdSet" hidden>
         <h3>${B('إعدادات المسابقة', 'Quiz settings')}</h3>
+        <label class="md-ck"><input type="checkbox" data-o="sid"${O.sid ? ' checked' : ''}> ${B('مسابقة بدرجات: يكتب كل طالب رقمه الأكاديمي، وفي النهاية ملف درجات لبلاك بورد', 'A graded quiz: each student types their ID, and at the end a grades file for Blackboard')}</label>
+        ${window.MDX ? `<label>${B('ضمن دوري', 'Part of a league')}<select data-lgs><option value="">${T('بلا دوري', 'No league')}</option>${MDX.all().map(l => `<option value="${l.id}"${G.league === l.id ? ' selected' : ''}>${esc(l.name)}</option>`).join('')}<option value="+">${T('دوري جديد…', 'A new league…')}</option></select></label>` : ''}
         <label>${B('عرض الترتيب', 'Show the ranking')}<select data-o="every">${[[1, T('بعد كل سؤال', 'After every question')], [3, T('كل ٣ أسئلة', 'Every 3 questions')], [5, T('كل ٥ أسئلة', 'Every 5 questions')], [0, T('في النهاية فقط', 'Only at the end')]].map(([v, l]) => `<option value="${v}"${O.every === v ? ' selected' : ''}>${l}</option>`).join('')}</select></label>
         <label class="md-ck"><input type="checkbox" data-o="speed"${O.speed ? ' checked' : ''}> ${B('السرعة تزيد النقاط', 'Speed adds points')}</label>
         <label class="md-ck"><input type="checkbox" data-o="gold"${O.gold ? ' checked' : ''}> ${B('سؤال ذهبي مفاجئ بنقاط مضاعفة', 'A surprise golden question with double points')}</label>
@@ -4741,10 +4996,12 @@ window.MDLive = (function () {
       if (k === 'teams') { const n = +i.value, d = TEAMS(n), was = G.teams || []; G.teams = n ? d.map((x, j) => was[j] && was[j] !== TEAMS(was.length)[j] ? was[j] : x) : null; G.ref.update({ teams: G.teams, tmode: G.teams ? O.tmode || 'pick' : null }); teamNames(); draw(); }
       else if (k === 'tmode') { O.tmode = i.value; G.ref.child('tmode').set(i.value); teamNames(); }
       else if (k === 'every') O.every = +i.value; else O[k] = i.checked;
+      if (k === 'sid') G.ref.child('sidreq').set(O.sid ? 1 : null).catch(() => {});
       keep();
     }));
     teamNames(); draw();
     q('[data-set]').onclick = () => { tp.hidden = true; set.hidden = !set.hidden; };
+    const lgs = q('[data-lgs]'); if (lgs) lgs.onchange = () => { let v = lgs.value; if (v === '+') { const n = (prompt(T('اسم الدوري (مثل: الصف الثالث - أ)', 'League name (e.g. Class 3A)')) || '').trim(); v = n ? MDX.create(n) : ''; } G.league = v || null; keep(); lobby(); setTimeout(() => { const s2 = G.el.querySelector('#mdSet'); if (s2) s2.hidden = false; }, 0); };
     G.el.querySelectorAll('[data-mode]').forEach(b => b.onclick = () => { phonesMode(b.dataset.mode === 'phones'); lobby(); });
     q('[data-teams]').onclick = () => { set.hidden = true; tp.hidden = !tp.hidden; };
     tp.querySelector('[data-tdone]').onclick = () => { tp.hidden = true; };
@@ -4885,9 +5142,9 @@ window.MDLive = (function () {
     const pos = u => fin[u] != null ? 100 : Math.min(92, Math.round(92 * (pr[u] || 0) / best));
     box.innerHTML = groups.map(gr => { const avg = gr.us.length ? Math.round(gr.us.reduce((a, u) => a + pos(u), 0) / gr.us.length) : 0;
       return `<div class="md-alane" style="--c:var(--qz${gr.k % 6})"><span class="md-aln" dir="auto">${esc(gr.n)}</span>${groups.length > 1 ? `<em class="md-alavg" style="--w:${avg}%"></em>` : ''}<b class="md-afin"></b>
-        ${gr.us.slice(0, 24).map((u, j) => `<i class="md-fig${fin[u] != null ? ' done' : ''}" style="--x:${pos(u)}%;--y:${(j % 4) * 22 + 8}%"><span>${esc((G.players[u] || '?').charAt(0))}</span><small dir="auto">${esc((G.players[u] || '').slice(0, 10))}</small></i>`).join('')}</div>`; }).join('');
+        ${gr.us.slice(0, 24).map((u, j) => `<i class="md-fig${fin[u] != null ? ' done' : ''}" style="${avSt((G.av || {})[u])}--x:${pos(u)}%;--y:${(j % 4) * 22 + 8}%"><span>${esc((G.players[u] || '?').charAt(0))}</span><small dir="auto">${esc((G.players[u] || '').slice(0, 10))}</small></i>`).join('')}</div>`; }).join('');
     // the same picture, small, for the fans on their phones
-    if (!arena.t || Date.now() - arena.t > 900) { arena.t = Date.now(); G.ref.child('top/ar').set({ i: G.i, g: groups.map(gr => ({ k: gr.k, n: gr.n, p: gr.us.slice(0, 20).map(u => ({ n: G.players[u] || '', p: pos(u), d: fin[u] != null ? 1 : 0 })) })) }).catch(() => {}); }
+    if (!arena.t || Date.now() - arena.t > 900) { arena.t = Date.now(); G.ref.child('top/ar').set({ i: G.i, g: groups.map(gr => ({ k: gr.k, n: gr.n, p: gr.us.slice(0, 20).map(u => ({ n: G.players[u] || '', p: pos(u), d: fin[u] != null ? 1 : 0, a: (G.av || {})[u] || '' })) })) }).catch(() => {}); }
   }
   function raceAvg(x, taps) { const n = x._tug.names.length, sum = new Array(n).fill(0), cnt = new Array(n).fill(0); Object.keys(x._tug.sides).forEach(u => { const k = x._tug.sides[u]; cnt[k]++; sum[k] += taps[u] || 0; }); return sum.map((v, k) => cnt[k] ? v / cnt[k] : 0); }
   function raceDraw(x, taps) {
@@ -5135,7 +5392,7 @@ window.MDLive = (function () {
     const J = G.jr || []; if (J.length < 2) return;
     const us = order.slice(0, 10), max = Math.max(1, ...us.map(u => J[J.length - 1][u] || 0), ...J.flatMap(o => us.map(u => o[u] || 0)));
     const d = document.createElement('div'); d.className = 'md-rpbig';
-    d.innerHTML = `<div class="md-rphead"><b id="mdRpQ"></b><button type="button" class="md-cb" data-x>${B('إغلاق', 'Close')}</button></div><div class="md-rptrack">${us.map((u, k) => `<div class="md-rplane"><span class="md-rpn" dir="auto">${esc(G.players[u] || '')}</span><div class="md-rprun"><em class="md-rpf" style="--c:var(--qz${k % 6})" data-u="${u}"><span>${esc((G.players[u] || '?').trim().charAt(0))}</span><small></small></em></div></div>`).join('')}</div>`;
+    d.innerHTML = `<div class="md-rphead"><b id="mdRpQ"></b><button type="button" class="md-cb" data-x>${B('إغلاق', 'Close')}</button></div><div class="md-rptrack">${us.map((u, k) => `<div class="md-rplane"><span class="md-rpn" dir="auto">${esc(G.players[u] || '')}</span><div class="md-rprun"><em class="md-rpf" style="--c:var(--qz${k % 6});${avSt((G.av || {})[u])}" data-u="${u}"><span>${esc((G.players[u] || '?').trim().charAt(0))}</span><small></small></em></div></div>`).join('')}</div>`;
     G.el.appendChild(d);
     const F = [...d.querySelectorAll('.md-rpf')], hd = d.querySelector('#mdRpQ'); let t = -1, tm = null;
     const at = t => {
@@ -5160,12 +5417,19 @@ window.MDLive = (function () {
         ${tt.length ? `<p class="md-wteam" style="--c:var(--qz${(tt[0].k) % 6})">${B(`الفريق الفائز: ${esc(tt[0].name)}`, `Winning team: ${esc(tt[0].name)}`)} <em>${tt[0].avg}</em></p>` : ''}
         <div class="md-podium">${p(1)}${p(0)}${p(2)}</div>
         <ol class="md-rest" start="4">${order.slice(3, 10).map(u => `<li><span dir="auto">${esc(G.players[u] || '')}</span><em>${G.score[u]}</em></li>`).join('')}</ol>${aw.length ? `<div class="md-titles">${aw.map((a, k) => `<div class="md-title" style="--d:${k * .35 + 4}s"><b>${B(TITLE[a.k][0], TITLE[a.k][1])}</b><span dir="auto">${esc(a.n)}</span><small>${B(a.ar, a.en)}</small></div>`).join('')}</div>` : ''}</div>`,
-      `${(G.jr || []).length > 1 ? `<button type="button" class="btn ghost" data-replay>${B('إعادة السباق', 'Replay the race')}</button>` : ''}<button type="button" class="btn ghost" data-csv>${B('تحميل النتائج', 'Download results')}</button>
+      `${window.MDX ? `<button type="button" class="btn ghost" data-rep>${B('تقرير المسابقة', 'Quiz report')}</button><button type="button" class="btn ghost" data-cert>${B('شهادات', 'Certificates')}</button>${G.opts.sid || Object.keys(G.sid || {}).length || Object.values(G.players).some(n => /^\s*[\d٠-٩]{5,12}\s*$/.test(n || '')) ? `<button type="button" class="btn solid" data-bb>${B('درجات بلاك بورد', 'Blackboard grades')}</button>` : ''}` : ''}${(G.jr || []).length > 1 ? `<button type="button" class="btn ghost" data-replay>${B('إعادة السباق', 'Replay the race')}</button>` : ''}<button type="button" class="btn ghost" data-csv>${B('تحميل النتائج', 'Download results')}</button>
        <label class="md-opt md-grade" title="${T('اختياري: تُحسب الدرجة من نقاط ميدان، والأول يأخذ الدرجة كاملة', 'Optional: the grade follows Maydan points; the top player gets full marks')}">${B('مع درجة من', 'with a grade out of')} <input type="number" min="1" max="100" step="1" inputmode="numeric" data-gr placeholder="—"></label>
        ${G.quiz.qs.some(x => x.type === 'game') ? `<label class="md-opt md-grade"><input type="checkbox" data-gq> ${B('من الأسئلة فقط (دون التحديات)', 'from the questions only (no challenges)')}</label>` : ''}`);
     reactions(); SND.drum();
     [3, 2, 1].forEach((k, n) => setTimeout(() => { const e = q(`.md-p${k}`); if (e) e.classList.add('in'); if (k === 1) SND.win(); }, 900 + n * 1300));
     if (q('[data-replay]')) q('[data-replay]').onclick = () => replayBig(order);
+    if (window.MDX) {
+      const D = { title: G.quiz.title || '', teams: !!G.teams, qs: G.qlog || [], players: order.map((u, k) => ({ n: G.players[u] || '', s: G.score[u] || 0, r: k + 1, team: G.teams ? G.teams[G.team[u]] || '' : '', ok: (G.aw && G.aw[u] || {}).ok || 0, jq: (G.aw && G.aw[u] || {}).jq || 0, an: (G.aw && G.aw[u] || {}).an || 0, it: (G.aw && G.aw[u] || {}).it || 0, qp: G.qp[u] || 0, sid: ((G.sid || {})[u] || []).join('') || (/^\s*[\d٠-٩]{5,12}\s*$/.test(G.players[u] || '') ? (G.players[u] || '').trim().replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d)) : '') })) };
+      q('[data-rep]').onclick = () => MDX.report(G.el, D);
+      q('[data-cert]').onclick = () => MDX.certs(G.el, D);
+      if (q('[data-bb]')) q('[data-bb]').onclick = () => MDX.blackboard(G.el, D);
+      if (G.league && !G.leagueSaved) { G.leagueSaved = true; const lg = MDX.record(G.league, D); if (lg) { const n = document.createElement('p'); n.className = 'md-lgsaved'; n.innerHTML = B(`أُضيفت النتيجة إلى دوري «${esc(lg.name)}»`, `Added to the league “${esc(lg.name)}”`); const e2 = G.el.querySelector('.md-end'); if (e2) e2.appendChild(n); } }
+    }
     q('[data-csv]').onclick = () => {
       // an optional grade: in proportion to the points, so speed still counts and the top player gets full marks
       // with "questions only", the points from challenges are left out of the grade (but kept in the ranking)

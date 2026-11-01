@@ -278,7 +278,7 @@ def maydan_body():
 <style>{src('sign.css')}{src('pdftool.css')}{src('quiz.css')}</style>
 <div id="qz" class="sn qz"><noscript>{bi("تعمل هذه الأداة مع تفعيل JavaScript.", "This tool needs JavaScript.")}</noscript></div>
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script><script>{src('maydan_lib.js')}</script><script>{src('quiz_parse.js')}</script><script>{src('quiz.js')}</script>
-<style>{src('maydan.css')}</style>{MD_SCRIPTS()}<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script><script>{src('maydan_games.js')}</script><script>{src('maydan_live.js')}</script>
+<style>{src('maydan.css')}</style>{MD_SCRIPTS()}<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script><script>{src('maydan_games.js')}</script><script>{src('maydan_extra.js')}</script><script>{src('maydan_live.js')}</script>
 </section>'''
 
 KH_MARK = '<svg class="kh-mark" viewBox="0 0 48 48" aria-hidden="true"><rect x="4" y="4" width="40" height="40" rx="12" fill="#0f4d3a"/><g fill="#e0a458"><circle cx="12" cy="36" r="4"/><circle cx="18" cy="30" r="4"/><circle cx="24" cy="24" r="4"/><circle cx="30" cy="18" r="4"/><circle cx="36" cy="12" r="4"/></g><circle cx="36" cy="36" r="3" fill="#fbf6ea" opacity=".5"/><circle cx="12" cy="12" r="3" fill="#fbf6ea" opacity=".5"/></svg>'
