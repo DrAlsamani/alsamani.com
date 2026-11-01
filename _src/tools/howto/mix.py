@@ -18,7 +18,7 @@ def tone(f, d, r=0.3, a=0.005, h=(1, .3, .1)):
 rng = np.random.default_rng(3)
 def click():
     n = int(.035 * SR); x = np.arange(n) / SR
-    s = rng.normal(0, 1, n) * np.exp(-x / .004) * .5 + np.sin(2 * np.pi * 1800 * x) * np.exp(-x / .01) * .6
+    s = rng.normal(0, 1, n) * np.exp(-x / .0015) * .25 + np.sin(2 * np.pi * 1100 * x) * np.exp(-x / .006) * .6
     return s
 def key():
     n = int(.03 * SR); x = np.arange(n) / SR
@@ -40,18 +40,18 @@ while at < dur:
     i = int(at * SR); j = min(N, i + n); mus[i:j] += seg[:j - i]
     k += 1; at += bar
 fade = np.minimum(1, t / 1.5) * np.minimum(1, (dur - t) / 2.0)
-out += mus * fade
+out += mus * fade * 0   # no music: only quiet clicks
 for e in ev:
-    if e['k'] == 'cap': add(tone(mf(81), .6, .25) + tone(mf(88), .6, .3) * .7, e['t'], .22); add(tone(mf(93), .8, .35), e['t'] + .09, .12)
+    if e['k'] == 'cap' and False: add(tone(mf(81), .6, .25) + tone(mf(88), .6, .3) * .7, e['t'], .22); add(tone(mf(93), .8, .35), e['t'] + .09, .12)
     elif e['k'] == 'click': add(click(), e['t'] + .02, .5)
-    elif e['k'] == 'type':
+    elif e['k'] == 'type' and False:
         for c in range(e['n']): add(key(), e['t'] + .05 + c * .047 + rng.uniform(-.008, .008), .35)
-    elif e['k'] == 'lobby': [add(tone(mf(m), 1.6, .6), e['t'] + d, .15) for m, d in [(74, 0), (78, .12), (81, .24), (86, .36)]]
+    elif e['k'] == 'lobby' and False: [add(tone(mf(m), 1.6, .6), e['t'] + d, .15) for m, d in [(74, 0), (78, .12), (81, .24), (86, .36)]]
 st = [x for x in ev if x['k'] in ('stream', 'streamEnd')]
-if len(st) == 2:   # a light ticking while the reply is written
+if False and len(st) == 2:   # a light ticking while the reply is written
     a = st[0]['t']; b2 = st[1]['t']; s = a
     while s < b2: add(key(), s, .12); s += .07
-out = out / max(1e-9, np.abs(out).max()) * .85
+out = out / max(1e-9, np.abs(out).max()) * .35
 pcm = (out * 32767).astype(np.int16); st2 = np.stack([pcm, pcm], 1)
 w = wave.open(f'snd_{L}.wav', 'wb'); w.setnchannels(2); w.setsampwidth(2); w.setframerate(SR); w.writeframes(st2.tobytes()); w.close()
 print('ok', round(dur, 1))
