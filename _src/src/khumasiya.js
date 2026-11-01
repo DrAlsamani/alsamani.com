@@ -15,6 +15,8 @@
   const tone = (f, d, type, v, at) => { if (store.get('snd', true) === false) return; try { ac = ac || new (window.AudioContext || window.webkitAudioContext)(); if (ac.state === 'suspended') ac.resume(); const o = ac.createOscillator(), g = ac.createGain(), t = ac.currentTime + (at || 0); o.type = type || 'sine'; o.frequency.setValueAtTime(f, t); g.gain.setValueAtTime(v || .07, t); g.gain.exponentialRampToValueAtTime(.0001, t + d); o.connect(g).connect(ac.destination); o.start(t); o.stop(t + d + .02); } catch (e) {} };
   const SND = { turn: () => { tone(660, .15, 'triangle', .09); tone(880, .15, 'triangle', .09, .14); tone(1175, .25, 'triangle', .09, .28); }, chip: () => tone(320, .09, 'square', .05), tick: () => tone(1300, .05, 'square', .04),
     seq: () => [523, 659, 784, 1047].forEach((f, k) => tone(f, .3, 'triangle', .08, k * .1)), win: () => [523, 659, 784, 1047, 1319].forEach((f, k) => tone(f, .4, 'triangle', .09, k * .14)) };
+  const SVG = d => `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+  const SVOL = SVG('<path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16 9a4 4 0 0 1 0 6M19 6a8 8 0 0 1 0 12"/>'), SMUTE = SVG('<path d="M4 9v6h4l5 4V5L8 9z"/><path d="m17 9 5 6M22 9l-5 6"/>');
   const buzz = p => { try { navigator.vibrate && navigator.vibrate(p); } catch (e) {} };
   const COL = ['#2a6fdb', '#d64545', '#2f9e5b'];
   const TN = k => [T('الأزرق', 'Blue'), T('الأحمر', 'Red'), T('الأخضر', 'Green')][k];
@@ -378,7 +380,7 @@
       : mine ? `<b>${B('دورك!', 'Your turn!')}</b> ${sel ? (KH.oneEyed(sel) ? B('ولد أبو عين: اختر قطعة خصم لإزالتها', 'One-eyed jack: pick a rival chip to remove') : KH.twoEyed(sel) ? B('ولد أبو عينين: ضع قطعتك في أي خانة فارغة', 'Two-eyed jack: put your chip on any empty space') : dead ? B('خانتا هذه الورقة ممتلئتان؛ استبدلها', 'both its spaces are taken; swap it') : B('اختر إحدى الخانتين المضيئتين', 'pick one of the lit spaces')) : B('اختر ورقة من يدك', 'pick a card')}`
       : `${B('دور', 'Turn:')} <b dir="auto" style="color:${COL[team[turn]]}">${esc(names[turn] || '')}</b> (${TN(team[turn])})${untilMe ? ` · <span class="kh-soon${untilMe === 1 ? ' next' : ''}">${untilMe === 1 ? B('أنت التالي!', 'You are next!') : B(`دورك بعد ${untilMe}`, `You play in ${untilMe}`)}</span>` : ''}`;
     root.innerHTML = `<div class="kh-game${screen ? ' kh-screen' : ''} kh-real">
-      <div class="kh-bar">${teamsBar}</div>${rulesLine}
+      <div class="kh-bar">${teamsBar}</div><div class="kh-cfgr">${rulesLine}<button type="button" class="kh-snd" data-snd aria-label="${T('الصوت', 'Sound')}" aria-pressed="${store.get('snd', true) !== false}">${store.get('snd', true) !== false ? SVOL : SMUTE}</button></div>
       ${G && G.mode !== 'local' ? stands() : ''}
       <p class="kh-status">${P.dl && P.win === -1 ? `<span class="kh-clock${mine ? ' me' : ''}" id="khClk"></span> ` : ''}${watch ? `<span class="kh-eye">${B('مشاهدة', 'Watching')}</span> ` : ''}${status}</p>
       <div class="kh-board${can.length ? ' picking' : ''}">${lay.map((c, i) => { const b = board[i], inq = b >= 0 && sq[b] && sq[b].has(i);
@@ -393,6 +395,7 @@
     root.querySelectorAll('.kh-cell.can').forEach(c => c.onclick = () => { const s = sel; sel = null; buzz(20); act('p', s, +c.dataset.i); });
     const sw = root.querySelector('#khSwap'); if (sw) sw.onclick = () => { const s = sel; sel = null; act('s', s); };
     const ps = root.querySelector('#khPass'); if (ps) ps.onclick = () => act('n');
+    const sn = root.querySelector('[data-snd]'); if (sn) sn.onclick = () => { const on = store.get('snd', true) === false; store.set('snd', on); sn.innerHTML = on ? SVOL : SMUTE; sn.setAttribute('aria-pressed', on); if (on) SND.chip(); };
     const ag = root.querySelector('#khAgain'); if (ag) ag.onclick = again;
     const sr = root.querySelector('#khShareR'); if (sr) sr.onclick = () => shareResult(P, names);
     const es = root.querySelector('#khEndS'); if (es) es.onclick = () => { if (confirm(T('تنهي الجلسة لكل اللاعبين؟', 'End the session for everyone?'))) end(); };

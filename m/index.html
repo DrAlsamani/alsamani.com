@@ -1822,6 +1822,13 @@ html.mp-embed body{padding-top:0!important}
 .mp-al i.done{box-shadow:0 0 0 2px #e0a458}
 .mp-arena{width:100%;min-width:300px}
 .md-fig{left:calc(var(--x) * .8 + 9%)}
+/* our own runner: the eight-point star of the Maydan mark, in the team's colour */
+.md-fig span,.mp-al i{clip-path:polygon(50% 0,61% 22%,85% 15%,78% 39%,100% 50%,78% 61%,85% 85%,61% 78%,50% 100%,39% 78%,15% 85%,22% 61%,0 50%,22% 39%,15% 15%,39% 22%);border-radius:0!important;box-shadow:none!important}
+.md-fig span{width:clamp(34px,4.6vh,52px);height:clamp(34px,4.6vh,52px);filter:drop-shadow(0 0 1.5px #fff) drop-shadow(0 3px 4px rgba(0,0,0,.35))}
+.md-fig.done span{filter:drop-shadow(0 0 2px #e0a458) drop-shadow(0 0 10px #e0a458)}
+.mp-al i{width:26px;height:26px;margin-left:-13px}.mp-al i.done{filter:drop-shadow(0 0 3px #e0a458)}.mp-al i.me{width:32px;height:32px;margin-left:-16px;filter:drop-shadow(0 0 2px #111)}
+/* a slim strip of the arena above a challenge on the phone */
+.mp-strip:empty{display:none}.mp-strip .mp-arena{margin:4px 0;gap:4px}.mp-strip .mp-al{height:34px}.mp-strip .mp-al i{bottom:4px;width:20px;height:20px;margin-left:-10px;font-size:.5625rem}.mp-strip .mp-al i.me{width:26px;height:26px}
 </style>
 <div id="mp" class="sn mp"><noscript><span class="ar">تعمل هذه الصفحة مع تفعيل JavaScript.</span><span class="en">This page needs JavaScript.</span></noscript></div>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script>window.MD_CFG={"apiKey": "AIzaSyA50i75DT1Is1a6Yn6snW1_JVObc8S3F0Y", "authDomain": "maydan-705ae.firebaseapp.com", "databaseURL": "https://maydan-705ae-default-rtdb.europe-west1.firebasedatabase.app", "projectId": "maydan-705ae", "appId": "1:342187013133:web:d5c2396f0db413f3c51144"};window.MD_MARK="<svg class=\"md-mark\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><rect x=\"4\" y=\"4\" width=\"40\" height=\"40\" rx=\"12\" fill=\"#23336F\"/><path d=\"M24 9l4.2 6.8 7.8-1.8-1.8 7.8L41 24l-6.8 4.2 1.8 7.8-7.8-1.8L24 39l-4.2-6.8-7.8 1.8 1.8-7.8L7 24l6.8-4.2-1.8-7.8 7.8 1.8z\" fill=\"#C9822B\"/><circle cx=\"24\" cy=\"24\" r=\"6.5\" fill=\"#23336F\"/><circle cx=\"24\" cy=\"24\" r=\"3\" fill=\"#F3E3C7\"/></svg>";</script><script>/* Maydan challenges: short games played on every phone at once. Every phone gets the same level (same seed),
@@ -2631,7 +2638,8 @@ window.MDGames = (function () {
     R.child('asg/' + uid).on('value', t => { if (t.val() != null) { myTeam = +t.val(); shown = ''; draw(); } });
     R.child('ok').on('value', s => { OK = s.val(); draw(); });
     R.child('wr').on('value', s => { const e = root.querySelector('#mpW'); if (e && s.val()) e.textContent = s.val(); });
-    R.child('top').on('value', s => { TOP = s.val(); if (FAN && st.ph === 'q') { shown = ''; draw(); return; } if (TOP && TOP.mic && !TOP.mic.n && !TOP.mic.on) micOn = false; if (['lb', 'end', 'rev'].includes(st.ph)) { shown = ''; draw(); } });
+    R.child('top').on('value', s => { TOP = s.val(); if (FAN && st.ph === 'q') { shown = ''; draw(); return; }
+      if (st.ph === 'q' && Q && Q.type === 'game') { const sp = root.querySelector('#mpStrip'); if (sp) sp.innerHTML = arenaFan(true); if (sent === st.i) { shown = ''; draw(); } return; } if (TOP && TOP.mic && !TOP.mic.n && !TOP.mic.on) micOn = false; if (['lb', 'end', 'rev'].includes(st.ph)) { shown = ''; draw(); } });
     R.child('sc/' + uid).on('value', s => { SC = s.val(); draw(); });
     R.child('pl/' + uid).on('value', s => { if (!s.exists() && me) kicked(); });
   }
@@ -2692,8 +2700,8 @@ window.MDGames = (function () {
   function tone(f, d, v) { try { acx = acx || new (window.AudioContext || window.webkitAudioContext)(); if (acx.state === 'suspended') acx.resume(); const o = acx.createOscillator(), g = acx.createGain(), t = acx.currentTime; o.type = 'triangle'; o.frequency.value = f; g.gain.setValueAtTime(v || .06, t); g.gain.exponentialRampToValueAtTime(.0001, t + d); o.connect(g).connect(acx.destination); o.start(t); o.stop(t + d + .02); } catch (e) {} }
   /* ---------- a fan: follows the questions and the ranking, and cheers ---------- */
   let FAN = false;
-  const arenaFan = () => { const A = TOP && TOP.ar; if (!A || A.i !== st.i) return `<p>${B('التحدي جارٍ…', 'The challenge is on…')}</p>`;
-    return `<div class="mp-arena">${A.g.map(gr => `<div class="mp-al" style="--c:var(--qz${gr.k % 6})"><b dir="auto">${esc(gr.n)}</b>${gr.p.map(x => `<i style="left:${x.p}%" class="${x.d ? 'done' : ''}" title="${esc(x.n)}">${esc(x.n.charAt(0))}</i>`).join('')}</div>`).join('')}</div>`; };
+  const arenaFan = quiet => { const A = TOP && TOP.ar; if (!A || A.i !== st.i) return quiet ? '' : `<p>${B('التحدي جارٍ…', 'The challenge is on…')}</p>`;
+    return `<div class="mp-arena">${A.g.map(gr => `<div class="mp-al" style="--c:var(--qz${gr.k % 6})"><b dir="auto">${esc(gr.n)}</b>${gr.p.map(x => `<i style="left:${x.p}%" class="${x.d ? 'done' : ''}${x.n === me ? ' me' : ''}" title="${esc(x.n)}">${esc(x.n.charAt(0))}</i>`).join('')}</div>`).join('')}</div>`; };
   function fanHtml(html) {
     if (st.ph === 'q' && Q && Q.i === st.i && Q.type === 'game') return `<div class="mp-wait"><p class="mp-qt" dir="auto">${esc(Q.q)}</p>${arenaFan()}</div>` + rxBar();
     if (st.ph === 'q' && Q && Q.i === st.i) return `<div class="mp-wait"><p class="mp-qt" dir="auto">${esc(Q.q)}</p>${(Q.opts || []).length ? `<ol class="mp-fo">${Q.opts.map((o, j) => `<li style="--c:var(--qz${j})"><i>${LET()[j]}</i> <span dir="auto">${esc(o)}</span></li>`).join('')}</ol>` : ''}<p>${B('أنت متفرج: شجّع من هنا', 'You are watching: cheer from here')}</p></div>` + rxBar();
@@ -2703,8 +2711,8 @@ window.MDGames = (function () {
   }
   let game = null;
   function playGame() {
-    if (sent === st.i) return screen(`<div class="mp-wait"><p class="mp-big">${B('أنهيت التحدي!', 'Challenge done!')}</p><p>${B('بانتظار البقية…', 'Waiting for the others…')}</p></div>`);
-    screen(`<div class="mp-q mp-gq"><div class="mp-bar"><i id="mpBar"></i></div><div class="mp-gbox" id="mpG"></div></div>`, 'q');
+    if (sent === st.i) return screen(`<div class="mp-wait"><p class="mp-big">${B('أنهيت التحدي!', 'Challenge done!')}</p><p>${B('بانتظار البقية…', 'Waiting for the others…')}</p>${arenaFan()}</div>`);
+    screen(`<div class="mp-q mp-gq"><div class="mp-bar"><i id="mpBar"></i></div><div class="mp-strip" id="mpStrip">${arenaFan(true)}</div><div class="mp-gbox" id="mpG"></div></div>`, 'q');
     let send = async score => {
       if (sent === st.i) return; sent = st.i; buzz(30); if (game) { game.stop(); game = null; }
       try { await R.child('an/' + st.i + '/' + uid).set(Object.assign({ a: Math.round(score), t: TS }, pwx())); } catch (e) {}

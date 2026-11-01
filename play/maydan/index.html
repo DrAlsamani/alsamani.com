@@ -1841,6 +1841,11 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
 .qz-insm{display:flex;gap:6px;position:relative}.qz-insm[hidden]{display:none}.qz-insm button{border-style:solid}
 .qz-svg{width:20px;height:20px;display:block}.qz-ib .qz-svg{margin:0 auto}
 .qz-ib{padding:5px 8px 4px;gap:2px}.qz-ib small{line-height:1}
+.qz-gpick .qz-gh{grid-column:1/-1;margin:10px 0 0;font-weight:800;font-size:.875rem;color:var(--muted);border-bottom:1px solid var(--line);padding-bottom:4px}.qz-gpick .qz-gh:first-child{margin-top:0}
+.qz-tabs button{white-space:nowrap;font-size:.875rem;padding:8px 4px}
+#qzPaste,#qzTopic{text-align:start}
+.qz-gpick{grid-template-columns:repeat(auto-fill,minmax(96px,1fr))!important;gap:6px!important}
+.qz-gpick button{padding:6px 4px!important;gap:2px!important;border-radius:12px!important}.qz-gpick button b{font-size:1.25rem!important}.qz-gpick button span{font-size:.8125rem!important;line-height:1.25}.qz-gpick button small{display:none}
 </style>
 <div id="qz" class="sn qz"><noscript><span class="ar">تعمل هذه الأداة مع تفعيل JavaScript.</span><span class="en">This tool needs JavaScript.</span></noscript></div>
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script><script>/* Maydan library: ready quizzes to start at once or open and edit. Written in the editor's own format. */
@@ -2392,7 +2397,7 @@ if (typeof module !== 'undefined') module.exports = QZParse;
       <div class="sn-card"><label class="sn-lbl">${B('عنوان المسابقة', 'Quiz title')}<input type="text" id="qzTitle" maxlength="120" value="${esc(Q.title)}" placeholder="${T('مثال: مراجعة الوحدة الأولى', 'e.g. Unit 1 review')}"></label></div>
       <div class="sn-card qz-add"><h2 class="qz-h">${B('أضف الأسئلة', 'Add questions')}</h2>
         <div class="qz-tabs" role="tablist"><button type="button" role="tab" data-tab="paste" aria-selected="true">${B('لصق', 'Paste')}</button><button type="button" role="tab" data-tab="file" aria-selected="false">${B('رفع ملف', 'Upload a file')}</button><button type="button" role="tab" data-tab="ai" aria-selected="false">${B('بالذكاء الاصطناعي', 'With AI')}</button></div>
-        <div data-pane="paste"><textarea id="qzPaste" rows="8" dir="auto" placeholder="${T('الصق الأسئلة هنا كما هي من Word أو واتساب أو أي مكان…', 'Paste the questions here as they are, from Word, WhatsApp or anywhere…')}"></textarea>
+        <div data-pane="paste"><textarea id="qzPaste" rows="8" dir="${isAr() ? 'rtl' : 'ltr'}" placeholder="${T('الصق الأسئلة هنا كما هي من Word أو واتساب أو أي مكان…', 'Paste the questions here as they are, from Word, WhatsApp or anywhere…')}"></textarea>
           <p class="qz-found" id="qzFound"></p>
           <div class="sn-two"><button type="button" class="btn solid" id="qzPasteOk" disabled>${B('أضف إلى المسابقة', 'Add to the quiz')}</button></div>
           <details class="qz-how"><summary>${B('كيف أكتبها؟', 'How should I write them?')}</summary>
@@ -2402,7 +2407,7 @@ if (typeof module !== 'undefined') module.exports = QZParse;
           <p class="pt-fine">${B('في Word: إن كانت الإجابة الصحيحة بخط عريض أو ملوّنة أو مظللة أو تحتها خط، تُعرف تلقائيًا. ويُقبل قالب الاستيراد نفسه الذي يستعمله Kahoot.', 'In Word, a right answer in bold, colour, highlight or underline is recognised. Kahoot’s import template is accepted as it is.')}</p>
           <div class="sn-two"><button type="button" class="btn ghost" id="qzTpl">${B('تنزيل قالب Excel', 'Download an Excel template')}</button></div></div>
         <div data-pane="ai" hidden><p class="qz-aih">${B('ابنِ الأسئلة بمساعدة الذكاء الاصطناعي: اكتب الموضوع وتوجيهاتك، ثم انسخ التعليمات إلى ChatGPT أو Claude والصق ردّه هنا.', 'Build the questions with AI: write the topic and your guidance, copy the instructions into ChatGPT or Claude, then paste its reply here.')}</p>
-          <label class="sn-lbl">${B('الموضوع أو المحتوى، ومعه توجيهاتك', 'The topic or the content, with your guidance')}<textarea id="qzTopic" rows="5" dir="auto" placeholder="${T('اكتب الموضوع أو الصق النص، وأضف ما تريد، مثال: أسئلة عن الصحابة، ركّز على المواقف لا التواريخ، وخلّها فيها مرح.', 'Write the topic or paste the text, and add what you want, e.g. focus on…, keep it light.')}"></textarea></label>
+          <label class="sn-lbl">${B('الموضوع أو المحتوى، ومعه توجيهاتك', 'The topic or the content, with your guidance')}<textarea id="qzTopic" rows="5" dir="${isAr() ? 'rtl' : 'ltr'}" placeholder="${T('اكتب الموضوع أو الصق النص، وأضف ما تريد، مثال: أسئلة عن الصحابة، ركّز على المواقف لا التواريخ، وخلّها فيها مرح.', 'Write the topic or paste the text, and add what you want, e.g. focus on…, keep it light.')}"></textarea></label>
           <div class="qz-row"><label class="sn-lbl">${B('الفئة', 'Audience')}<select id="qzAud"><option value="">${T('عام', 'General')}</option><option value="kids">${T('أطفال', 'Children')}</option><option value="prim">${T('المرحلة الابتدائية', 'Primary school')}</option><option value="mid">${T('المرحلة المتوسطة', 'Middle school')}</option><option value="sec">${T('المرحلة الثانوية', 'Secondary school')}</option><option value="uni">${T('طلاب الجامعة', 'University students')}</option><option value="pro">${T('موظفون أو مختصون', 'Staff or specialists')}</option><option value="fam">${T('العائلة', 'Family')}</option></select></label>
             <label class="sn-lbl">${B('الطابع', 'Tone')}<select id="qzTone"><option value="">${T('معتدل', 'Balanced')}</option><option value="fun">${T('مرح وخفيف', 'Fun and light')}</option><option value="serious">${T('جاد وعلمي', 'Serious')}</option><option value="challenge">${T('تحدٍّ قوي', 'Hard challenge')}</option></select></label></div>
           <div class="qz-row"><label class="sn-lbl">${B('عدد الأسئلة', 'Questions')}<select id="qzN">${[5, 10, 15, 20, 30, 40, 50, 75, 100].map(n => `<option${n === 20 ? ' selected' : ''}>${n}</option>`).join('')}</select></label>
@@ -2515,6 +2520,8 @@ if (typeof module !== 'undefined') module.exports = QZParse;
     if (window.Sortable && !box._s) box._s = Sortable.create(box, { handle: '.qz-grip', animation: 150, onEnd: e => { const [m] = Q.qs.splice(e.oldIndex, 1); Q.qs.splice(e.newIndex, 0, m); draw(); later(); } });
   }
   const RLIB = () => window.MDLib || [];
+  // the challenges in a few families, so the list is easy to scan
+  const GGROUPS = () => [['جماعية', 'Team games', ['جماعي']], ['سرعة وانتباه', 'Speed and attention', ['سرعة', 'تركيز', 'انتباه']], ['ذكاء وذاكرة', 'Mind and memory', ['ذكاء', 'ذاكرة', 'لغز', 'لغة']], ['مهارة', 'Skill', ['مهارة']]];
   const GAMES = () => window.MDGames ? MDGames.LIST : [];
   const KINDS = () => [['mc', T('اختيار من متعدد', 'Multiple choice')], ['tf', T('صح أو خطأ', 'True or false')], ['poll', T('تصويت (بلا إجابة صحيحة)', 'Poll (no right answer)')], ['num', T('الأقرب للرقم', 'Closest number')], ['word', T('خمّن الكلمة', 'Guess the word')], ['order', T('رتّب بالترتيب الصحيح', 'Put in order')], ['match', T('وصّل (مطابقة)', 'Match the pairs')], ['rapid', T('الجولة الخاطفة (صح أو خطأ متتالية)', 'Rapid round (true/false in a row)')], ['open', T('كتابة حرة (سحابة كلمات)', 'Free text (word cloud)')], ['game', T('تحدٍّ تفاعلي ', 'Challenge ')]];
   const typeSel = t => `<select data-k="type" aria-label="type">${KINDS().map(([v, l]) => `<option value="${v}"${v === t ? ' selected' : ''}>${l}</option>`).join('')}</select>`;
@@ -2569,7 +2576,7 @@ if (typeof module !== 'undefined') module.exports = QZParse;
         <select data-k="gtime" aria-label="time">${GTIMES.map(s => `<option value="${s}"${s === t ? ' selected' : ''}>${s} ${T('ث', 's')}</option>`).join('')}</select>
         <select data-k="pts" aria-label="points"><option value="1"${x.pts === 1 ? ' selected' : ''}>${T('نقاط عادية', 'Standard points')}</option><option value="2"${x.pts === 2 ? ' selected' : ''}>${T('نقاط مضاعفة', 'Double points')}</option><option value="0"${x.pts === 0 ? ' selected' : ''}>${T('بلا نقاط', 'No points')}</option></select>
         <span class="qz-act"><button type="button" class="qz-ib" data-a="swap" title="${T('لعبة أخرى', 'Another game')}">${IC.shuffle}</button><button type="button" class="qz-ib" data-a="dup" title="${T('تكرار', 'Duplicate')}">⧉</button><button type="button" class="qz-ib" data-a="del" title="${T('حذف', 'Delete')}">✕</button></span></div>
-      <div class="qz-gpick">${GAMES().map(z => `<button type="button" data-g="${z.id}" aria-pressed="${z.id === x.g}"><b>${z.icon}</b><span>${isAr() ? z.ar : z.en}</span><small>${isAr() ? z.kind[0] : z.kind[1]}</small></button>`).join('')}</div>
+      <div class="qz-gpick">${GGROUPS().map(([a, e, ks]) => { const gs = GAMES().filter(z => ks.includes(z.kind[0])); return gs.length ? `<p class="qz-gh">${B(a, e)}</p>${gs.map(z => `<button type="button" data-g="${z.id}" aria-pressed="${z.id === x.g}"><b>${z.icon}</b><span>${isAr() ? z.ar : z.en}</span><small>${isAr() ? z.kind[0] : z.kind[1]}</small></button>`).join('')}` : ''; }).join('')}</div>
       <p class="qz-ghow"><b>${g.icon} ${isAr() ? g.ar : g.en}:</b> ${isAr() ? g.howAr : g.howEn}</p>
       <p class="qz-warn" hidden></p></div>`;
     }
@@ -3418,6 +3425,13 @@ html.mp-embed body{padding-top:0!important}
 .mp-al i.done{box-shadow:0 0 0 2px #e0a458}
 .mp-arena{width:100%;min-width:300px}
 .md-fig{left:calc(var(--x) * .8 + 9%)}
+/* our own runner: the eight-point star of the Maydan mark, in the team's colour */
+.md-fig span,.mp-al i{clip-path:polygon(50% 0,61% 22%,85% 15%,78% 39%,100% 50%,78% 61%,85% 85%,61% 78%,50% 100%,39% 78%,15% 85%,22% 61%,0 50%,22% 39%,15% 15%,39% 22%);border-radius:0!important;box-shadow:none!important}
+.md-fig span{width:clamp(34px,4.6vh,52px);height:clamp(34px,4.6vh,52px);filter:drop-shadow(0 0 1.5px #fff) drop-shadow(0 3px 4px rgba(0,0,0,.35))}
+.md-fig.done span{filter:drop-shadow(0 0 2px #e0a458) drop-shadow(0 0 10px #e0a458)}
+.mp-al i{width:26px;height:26px;margin-left:-13px}.mp-al i.done{filter:drop-shadow(0 0 3px #e0a458)}.mp-al i.me{width:32px;height:32px;margin-left:-16px;filter:drop-shadow(0 0 2px #111)}
+/* a slim strip of the arena above a challenge on the phone */
+.mp-strip:empty{display:none}.mp-strip .mp-arena{margin:4px 0;gap:4px}.mp-strip .mp-al{height:34px}.mp-strip .mp-al i{bottom:4px;width:20px;height:20px;margin-left:-10px;font-size:.5625rem}.mp-strip .mp-al i.me{width:26px;height:26px}
 </style><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script>window.MD_CFG={"apiKey": "AIzaSyA50i75DT1Is1a6Yn6snW1_JVObc8S3F0Y", "authDomain": "maydan-705ae.firebaseapp.com", "databaseURL": "https://maydan-705ae-default-rtdb.europe-west1.firebasedatabase.app", "projectId": "maydan-705ae", "appId": "1:342187013133:web:d5c2396f0db413f3c51144"};window.MD_MARK="<svg class=\"md-mark\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><rect x=\"4\" y=\"4\" width=\"40\" height=\"40\" rx=\"12\" fill=\"#23336F\"/><path d=\"M24 9l4.2 6.8 7.8-1.8-1.8 7.8L41 24l-6.8 4.2 1.8 7.8-7.8-1.8L24 39l-4.2-6.8-7.8 1.8 1.8-7.8L7 24l6.8-4.2-1.8-7.8 7.8 1.8z\" fill=\"#C9822B\"/><circle cx=\"24\" cy=\"24\" r=\"6.5\" fill=\"#23336F\"/><circle cx=\"24\" cy=\"24\" r=\"3\" fill=\"#F3E3C7\"/></svg>";</script><script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script><script>/* Maydan challenges: short games played on every phone at once. Every phone gets the same level (same seed),
    so the race is fair. Each game reports a score; higher is better. */
 window.MDGames = (function () {

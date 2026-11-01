@@ -107,7 +107,8 @@
     R.child('asg/' + uid).on('value', t => { if (t.val() != null) { myTeam = +t.val(); shown = ''; draw(); } });
     R.child('ok').on('value', s => { OK = s.val(); draw(); });
     R.child('wr').on('value', s => { const e = root.querySelector('#mpW'); if (e && s.val()) e.textContent = s.val(); });
-    R.child('top').on('value', s => { TOP = s.val(); if (FAN && st.ph === 'q') { shown = ''; draw(); return; } if (TOP && TOP.mic && !TOP.mic.n && !TOP.mic.on) micOn = false; if (['lb', 'end', 'rev'].includes(st.ph)) { shown = ''; draw(); } });
+    R.child('top').on('value', s => { TOP = s.val(); if (FAN && st.ph === 'q') { shown = ''; draw(); return; }
+      if (st.ph === 'q' && Q && Q.type === 'game') { const sp = root.querySelector('#mpStrip'); if (sp) sp.innerHTML = arenaFan(true); if (sent === st.i) { shown = ''; draw(); } return; } if (TOP && TOP.mic && !TOP.mic.n && !TOP.mic.on) micOn = false; if (['lb', 'end', 'rev'].includes(st.ph)) { shown = ''; draw(); } });
     R.child('sc/' + uid).on('value', s => { SC = s.val(); draw(); });
     R.child('pl/' + uid).on('value', s => { if (!s.exists() && me) kicked(); });
   }
@@ -168,8 +169,8 @@
   function tone(f, d, v) { try { acx = acx || new (window.AudioContext || window.webkitAudioContext)(); if (acx.state === 'suspended') acx.resume(); const o = acx.createOscillator(), g = acx.createGain(), t = acx.currentTime; o.type = 'triangle'; o.frequency.value = f; g.gain.setValueAtTime(v || .06, t); g.gain.exponentialRampToValueAtTime(.0001, t + d); o.connect(g).connect(acx.destination); o.start(t); o.stop(t + d + .02); } catch (e) {} }
   /* ---------- a fan: follows the questions and the ranking, and cheers ---------- */
   let FAN = false;
-  const arenaFan = () => { const A = TOP && TOP.ar; if (!A || A.i !== st.i) return `<p>${B('التحدي جارٍ…', 'The challenge is on…')}</p>`;
-    return `<div class="mp-arena">${A.g.map(gr => `<div class="mp-al" style="--c:var(--qz${gr.k % 6})"><b dir="auto">${esc(gr.n)}</b>${gr.p.map(x => `<i style="left:${x.p}%" class="${x.d ? 'done' : ''}" title="${esc(x.n)}">${esc(x.n.charAt(0))}</i>`).join('')}</div>`).join('')}</div>`; };
+  const arenaFan = quiet => { const A = TOP && TOP.ar; if (!A || A.i !== st.i) return quiet ? '' : `<p>${B('التحدي جارٍ…', 'The challenge is on…')}</p>`;
+    return `<div class="mp-arena">${A.g.map(gr => `<div class="mp-al" style="--c:var(--qz${gr.k % 6})"><b dir="auto">${esc(gr.n)}</b>${gr.p.map(x => `<i style="left:${x.p}%" class="${x.d ? 'done' : ''}${x.n === me ? ' me' : ''}" title="${esc(x.n)}">${esc(x.n.charAt(0))}</i>`).join('')}</div>`).join('')}</div>`; };
   function fanHtml(html) {
     if (st.ph === 'q' && Q && Q.i === st.i && Q.type === 'game') return `<div class="mp-wait"><p class="mp-qt" dir="auto">${esc(Q.q)}</p>${arenaFan()}</div>` + rxBar();
     if (st.ph === 'q' && Q && Q.i === st.i) return `<div class="mp-wait"><p class="mp-qt" dir="auto">${esc(Q.q)}</p>${(Q.opts || []).length ? `<ol class="mp-fo">${Q.opts.map((o, j) => `<li style="--c:var(--qz${j})"><i>${LET()[j]}</i> <span dir="auto">${esc(o)}</span></li>`).join('')}</ol>` : ''}<p>${B('أنت متفرج: شجّع من هنا', 'You are watching: cheer from here')}</p></div>` + rxBar();
@@ -179,8 +180,8 @@
   }
   let game = null;
   function playGame() {
-    if (sent === st.i) return screen(`<div class="mp-wait"><p class="mp-big">${B('أنهيت التحدي!', 'Challenge done!')}</p><p>${B('بانتظار البقية…', 'Waiting for the others…')}</p></div>`);
-    screen(`<div class="mp-q mp-gq"><div class="mp-bar"><i id="mpBar"></i></div><div class="mp-gbox" id="mpG"></div></div>`, 'q');
+    if (sent === st.i) return screen(`<div class="mp-wait"><p class="mp-big">${B('أنهيت التحدي!', 'Challenge done!')}</p><p>${B('بانتظار البقية…', 'Waiting for the others…')}</p>${arenaFan()}</div>`);
+    screen(`<div class="mp-q mp-gq"><div class="mp-bar"><i id="mpBar"></i></div><div class="mp-strip" id="mpStrip">${arenaFan(true)}</div><div class="mp-gbox" id="mpG"></div></div>`, 'q');
     let send = async score => {
       if (sent === st.i) return; sent = st.i; buzz(30); if (game) { game.stop(); game = null; }
       try { await R.child('an/' + st.i + '/' + uid).set(Object.assign({ a: Math.round(score), t: TS }, pwx())); } catch (e) {}

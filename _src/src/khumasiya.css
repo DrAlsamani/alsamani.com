@@ -150,3 +150,5 @@
 @keyframes khTw{50%{box-shadow:0 0 0 3px rgba(255,210,122,.15),0 0 6px 1px rgba(255,210,122,.4)}}
 .kh-hc.on{box-shadow:0 0 0 3px #ffd27a,0 10px 20px rgba(0,0,0,.45)!important;transform:translateY(-12px)!important}
 .kh-cfgbox{background:rgba(224,164,88,.18);border:1px solid rgba(224,164,88,.6);border-radius:12px;padding:8px 12px;font-weight:600}
+.kh-cfgr{display:flex;align-items:center;justify-content:center;gap:8px}.kh-cfgr .kh-cfg{margin:0}
+.kh-snd{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.08);color:#fff;cursor:pointer}.kh-snd[aria-pressed="false"]{opacity:.6}
