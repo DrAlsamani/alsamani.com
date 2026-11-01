@@ -594,14 +594,14 @@
   // Gemini, loaded only when asked for: Firebase's modular SDK, with App Check (reCAPTCHA Enterprise) in front of it
   const AI_V = '11.10.0', AI_KEY = '6Le4gQsuAAAAAE3jS1mLgG9B2XT8AucvEecF6Kp4';
   let aiModel = null, aiMk = null;
-  const AI_MODELS = ['gemini-2.5-flash', 'gemini-flash-latest', 'gemini-2.0-flash'];
+  const AI_MODELS = ['gemini-2.5-flash', 'gemini-2.5-flash-lite', 'gemini-2.0-flash'];
   async function geminiWrite(p) {
     if (!aiMk) {
       const u = n => `https://www.gstatic.com/firebasejs/${AI_V}/firebase-${n}.js`;
-      const [{ initializeApp, getApps }, { initializeAppCheck, ReCaptchaEnterpriseProvider }, { getAI, getGenerativeModel, GoogleAIBackend }] = await Promise.all([import(u('app')), import(u('app-check')), import(u('ai'))]);
+      const [{ initializeApp, getApps }, { initializeAppCheck, ReCaptchaEnterpriseProvider }, { getAI, getGenerativeModel, VertexAIBackend }] = await Promise.all([import(u('app')), import(u('app-check')), import(u('ai'))]);
       const app = getApps().find(a => a.name === 'mdai') || initializeApp(window.MD_CFG, 'mdai');
       try { initializeAppCheck(app, { provider: new ReCaptchaEnterpriseProvider(AI_KEY), isTokenAutoRefreshEnabled: false }); } catch (e) {}
-      const ai = getAI(app, { backend: new GoogleAIBackend() });
+      const ai = getAI(app, { backend: new VertexAIBackend('global') });
       aiMk = m => getGenerativeModel(ai, { model: m, generationConfig: { temperature: 0.7 } });
     }
     // a retired model name moves on to the next one
