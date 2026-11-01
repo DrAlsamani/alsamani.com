@@ -16,7 +16,7 @@ window.MDLive = (function () {
   async function ready() {
     if (db) return;
     if (!firebase.apps.length) firebase.initializeApp(CFG);
-    const cred = firebase.auth().currentUser || (await firebase.auth().signInAnonymously()).user;
+    const cred = (await new Promise(r => { const off = firebase.auth().onAuthStateChanged(u => { off(); r(u); }); })) || (await firebase.auth().signInAnonymously()).user;
     uid = cred.uid; db = firebase.database();
     db.ref('.info/serverTimeOffset').on('value', s => { off = s.val() || 0; });
   }
@@ -202,7 +202,7 @@ window.MDLive = (function () {
   }
   const fail = (el, again) => { el.innerHTML = `<div class="md-wait">${B('تعذّر الاتصال بالميدان. تأكد من الإنترنت ثم حاول مرة أخرى.', 'Could not reach the room. Check the connection and try again.')}<div class="md-row">${again ? `<button type="button" class="btn solid" data-again>${B('حاول مرة أخرى', 'Try again')}</button>` : ''}<button type="button" class="btn ghost" data-x>${B('إغلاق', 'Close')}</button></div></div>`; el.querySelector('[data-x]').onclick = () => { G = null; leave(); }; if (again) el.querySelector('[data-again]').onclick = () => { G = null; leave(); again(); }; };
   // a slow or blocked connection should not leave the screen waiting for ever
-  const within = (p, ms) => Promise.race([p, new Promise((_, r) => setTimeout(() => r(new Error('timeout')), ms || 12000))]);
+  const within = (p, ms) => Promise.race([p, new Promise((_, r) => setTimeout(() => r(new Error('timeout')), ms || 25000))]);
   function fresh(quiz, el, pin) {
     const n = quiz.qs.length;
     const txt = quiz.qs.map(x => (x.q || '') + (x.opts || []).join('')).join('');

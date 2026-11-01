@@ -208,7 +208,7 @@ window.MDX = (function () {
   const RULE = () => T('نقاط الدوري في كل مسابقة: الأول ١٠، الثاني ٨، الثالث ٦، ثم ٥ و٤ و٣ و٢، ولكل مشارك آخر نقطة. يُعرف اللاعب باسمه، فليدخل بالاسم نفسه كل مرة.', 'League points in each quiz: 1st 10, 2nd 8, 3rd 6, then 5, 4, 3, 2, and 1 for everyone else. Players are known by name, so they should use the same name each time.');
   // a read-only copy for the group, published under a room of its own
   let fdb = null, fuid = null;
-  async function fb() { if (fdb) return fdb; if (!window.firebase || !window.MD_CFG) throw new Error('nofb'); if (!firebase.apps.length) firebase.initializeApp(MD_CFG); fuid = (firebase.auth().currentUser || (await firebase.auth().signInAnonymously()).user).uid; fdb = firebase.database(); return fdb; }
+  async function fb() { if (fdb) return fdb; if (!window.firebase || !window.MD_CFG) throw new Error('nofb'); if (!firebase.apps.length) firebase.initializeApp(MD_CFG); fuid = ((await new Promise(r => { const off = firebase.auth().onAuthStateChanged(u => { off(); r(u); }); })) || (await firebase.auth().signInAnonymously()).user).uid; fdb = firebase.database(); return fdb; }
   async function publish(lg) {
     try { const db = await fb(), r = db.ref('rooms/lg' + lg.id); const h = (await r.child('host').once('value')).val();
       if (!h) await r.set({ host: fuid, at: firebase.database.ServerValue.TIMESTAMP, title: lg.name, n: 0, st: { ph: 'end', i: -1, lock: true } });

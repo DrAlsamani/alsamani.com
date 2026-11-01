@@ -19,11 +19,11 @@
   const now = () => Date.now() + off;
   const buzz = ms => { try { navigator.vibrate && navigator.vibrate(ms); } catch (e) {} };
 
-  const within = (p, ms) => Promise.race([p, new Promise((_, no) => setTimeout(() => no(new Error('slow')), ms || 12000))]);
+  const within = (p, ms) => Promise.race([p, new Promise((_, no) => setTimeout(() => no(new Error('slow')), ms || 25000))]);
   async function ready() {
     if (db) return;
     firebase.initializeApp(CFG);
-    uid = (firebase.auth().currentUser || (await firebase.auth().signInAnonymously()).user).uid;
+    uid = ((await new Promise(r => { const off = firebase.auth().onAuthStateChanged(u => { off(); r(u); }); })) || (await firebase.auth().signInAnonymously()).user).uid;
     db = firebase.database();
     db.ref('.info/serverTimeOffset').on('value', s => { off = s.val() || 0; });
   }

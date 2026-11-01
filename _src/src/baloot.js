@@ -73,7 +73,7 @@
     if (db) return;
     if (!window.firebase || !window.MD_CFG) throw new Error('nofb');
     if (!firebase.apps.length) firebase.initializeApp(MD_CFG);
-    const u = firebase.auth().currentUser || (await firebase.auth().signInAnonymously()).user;
+    const u = (await new Promise(r => { const off = firebase.auth().onAuthStateChanged(u => { off(); r(u); }); })) || (await firebase.auth().signInAnonymously()).user;
     uid = u.uid; db = firebase.database(); db.ref('.info/serverTimeOffset').on('value', s => { off = s.val() || 0; });
   }
   const TS = () => firebase.database.ServerValue.TIMESTAMP;

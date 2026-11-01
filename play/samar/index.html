@@ -1647,11 +1647,11 @@ html.sm-in .tl-crumb,html.sm-in .sm-head,html.sm-in .sm-lead{display:none}
   async function fb() {
     if (db) return; if (!window.firebase || !window.MD_CFG) throw new Error('nofb');
     if (!firebase.apps.length) firebase.initializeApp(MD_CFG);
-    uid = (firebase.auth().currentUser || (await firebase.auth().signInAnonymously()).user).uid; db = firebase.database();
+    uid = ((await new Promise(r => { const off = firebase.auth().onAuthStateChanged(u => { off(); r(u); }); })) || (await firebase.auth().signInAnonymously()).user).uid; db = firebase.database();
     db.ref('.info/serverTimeOffset').on('value', s => { off = s.val() || 0; });
   }
   const TS = () => firebase.database.ServerValue.TIMESTAMP;
-  const within = (p, ms) => Promise.race([p, new Promise((_, r) => setTimeout(() => r(new Error('slow')), ms || 12000))]);
+  const within = (p, ms) => Promise.race([p, new Promise((_, r) => setTimeout(() => r(new Error('slow')), ms || 25000))]);
   let S = null;   // this device's session (host or player)
   const subs = [];
   const on = (ref, ev, fn) => { ref.on(ev, fn); subs.push(() => ref.off(ev, fn)); };
