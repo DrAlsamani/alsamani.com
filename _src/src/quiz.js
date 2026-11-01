@@ -51,6 +51,8 @@
         <p>${B('سؤال أو تحدٍّ على الشاشة، وكل مشارك يجيب من جواله دون تطبيق ولا تسجيل. الأسرع والأدق يتصدّر، والفرق تتنافس، والنتائج تظهر فورًا.', 'A question or a challenge on the screen, and everyone answers from their phone with no app and no sign-up. The quickest right answers lead, teams compete, and results show at once.')}</p>
         <div class="qi-act"><button type="button" class="btn solid" data-newq>${B('ابنِ مسابقتك', 'Build a quiz')}</button><a class="btn ghost" href="#lib">${B('جرّب مسابقة جاهزة', 'Try a ready quiz')}</a></div>
         <div class="qi-stats"><span><b>10</b>${B('أنواع أسئلة', 'question kinds')}</span><span><b>25</b>${B('تحديًا تفاعليًا', 'game challenges')}</span><span><b>30</b>${B('فريقًا كحدٍّ أعلى', 'teams at most')}</span><span><b>100</b>${B('سؤال في المسابقة', 'questions a quiz')}</span></div></section>
+      <section class="qi-vid" id="qzHow"><div class="qi-vframe"><img src="/img/video/maydan-howto-${isAr() ? 'ar' : 'en'}.jpg" alt="" loading="lazy"><button type="button" class="qi-play" aria-label="${T('شغّل الفيديو', 'Play the film')}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg></button></div>
+        <div class="qi-vtx"><b>${B('ابنِ مسابقتك بالذكاء الاصطناعي في دقيقة', 'Build a quiz with AI in a minute')}</b><small>${B('من كتابة الموضوع إلى بدء المسابقة، خطوة بخطوة', 'From the topic to the start, step by step')}</small></div></section>
 
       </div>`;
   }
@@ -101,7 +103,6 @@
     root.innerHTML = intro() + `${P ? `<div class="sn-card qz-resume"><p>${B('مسابقة متوقفة', 'A paused quiz')}: <b>${esc(P.quiz.title || T('بلا عنوان', 'Untitled'))}</b> · ${B('أُنهي', 'done')} ${P.i + 1} ${T('من', 'of')} ${P.quiz.qs.length} · ${B('الرمز', 'code')} <span dir="ltr">${P.pin}</span></p>
         <div class="sn-two"><button type="button" class="btn solid" id="qzRes">${B('متابعة المسابقة ▶', 'Resume ▶')}</button><button type="button" class="btn ghost" id="qzDrop2">${B('إنهاؤها وحذفها', 'End and remove it')}</button></div></div>` : ''}<div class="sn-card qz-home" id="build">
       <h2 class="qz-h">${B('ابنِ مسابقتك', 'Build your quiz')}</h2>
-      <button type="button" class="sn-lnk qz-howto" id="qzHow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M10 8.5v7l6-3.5z"/></svg>${B('شاهد طريقة بناء مسابقة بالذكاء الاصطناعي', 'Watch how to build a quiz with AI')}</button>
       <div class="qz-starts"><button type="button" class="btn solid" id="qzNew">${B('مسابقة أسئلة جديدة', 'New question quiz')}</button>
         <div class="qz-gstart"><button type="button" class="btn ghost" id="qzNewG">${B('مسابقة ألعاب وتحديات', 'A games-only quiz')}</button><label>${B('عدد التحديات', 'Challenges')} <select id="qzGn">${[5, 8, 10, 12, 15, 20, 24].map(n => `<option${n === 10 ? ' selected' : ''}>${n}</option>`).join('')}</select></label></div>
         <p class="pt-fine">${B('في مسابقة الألعاب نختار لك تحديات متنوعة، وتقدر تغيّر أي واحد منها بزر أو تختار غيره بنفسك.', 'We pick a varied set for you; swap any of them with or choose another yourself.')}</p></div>
@@ -112,13 +113,7 @@
       <p class="pt-fine">${B('تُحفظ المسابقات في هذا المتصفح.', 'Quizzes are kept in this browser.')}</p></div>${introMore()}`;
     if (P) { root.querySelector('#qzRes').onclick = () => MDLive.resume(); root.querySelector('#qzDrop2').onclick = async () => { await MDLive.discard(); home(); }; }
     const lm = root.querySelector('#qzLibMore'); if (lm) lm.onclick = () => { root.querySelectorAll('[data-more]').forEach(e => { e.hidden = false; }); lm.remove(); };
-    root.querySelector('#qzHow').onclick = () => {
-      const d = document.createElement('div'); d.className = 'qz-vid'; d.setAttribute('role', 'dialog');
-      d.innerHTML = `<div class="qz-vbox"><button type="button" class="qz-vx" aria-label="${T('إغلاق', 'Close')}">×</button><video controls autoplay playsinline preload="auto" poster="/img/video/maydan-howto-${isAr() ? 'ar' : 'en'}.jpg" src="/img/video/maydan-howto-${isAr() ? 'ar' : 'en'}.mp4"></video></div>`;
-      const shut = () => d.remove(); d.onclick = e => { if (e.target === d || e.target.classList.contains('qz-vx')) shut(); };
-      document.addEventListener('keydown', function esc(e) { if (e.key === 'Escape') { shut(); document.removeEventListener('keydown', esc); } });
-      document.body.appendChild(d);
-    };
+    { const h = root.querySelector('#qzHow'); if (h) h.querySelector('.qi-vframe').onclick = () => { const f = h.querySelector('.qi-vframe'); if (f.querySelector('video')) return; const L = isAr() ? 'ar' : 'en'; f.innerHTML = `<video controls autoplay playsinline poster="/img/video/maydan-howto-${L}.jpg" src="/img/video/maydan-howto-${L}.mp4"></video>`; h.classList.add('on'); }; }
     root.querySelector('#qzNew').onclick = () => { Q = { id: uid(), title: '', qs: [] }; editor(); };
     root.querySelectorAll('[data-newq]').forEach(b => b.onclick = () => root.querySelector('#qzNew').click());
     const fromLib = id => { const z = RLIB().find(v => v.id === id); return { id: uid(), title: z.title, lib: z.id, qs: z.qs.map(x => norm(JSON.parse(JSON.stringify(x)))) }; };

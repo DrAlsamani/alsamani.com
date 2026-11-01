@@ -9,6 +9,7 @@ const reply = fs.readFileSync(path.join(__dirname, `reply_${L}.txt`), 'utf8');
   const c = await b.newContext({ viewport: { width: 1280, height: 720 }, recordVideo: { dir: path.join(__dirname, 'raw_' + L), size: { width: 1280, height: 720 } }, permissions: ['clipboard-read', 'clipboard-write'] });
   await c.addInitScript(l => { try { localStorage.setItem('siteLang', l); } catch (e) {} Element.prototype.requestFullscreen = function () { return Promise.resolve(); }; }, L);
   const p = await c.newPage();
+  const t0 = Date.now(), EV = []; const ev = (k, n) => EV.push({ t: (Date.now() - t0) / 1000, k, n: n || 1 });
   await p.goto('http://localhost:8000/play/maydan/');
   const W = ms => p.waitForTimeout(ms);
   // the overlay: a caption bar and a visible pointer
@@ -43,7 +44,7 @@ const reply = fs.readFileSync(path.join(__dirname, `reply_${L}.txt`), 'utf8');
     window.hvHide = () => cap.classList.add('off');
   });
   // the overlay lives on the page; when the quiz opens its full-screen room, keep them above it
-  const say = async (n, t, ms = 2600) => { await p.evaluate(([n, t]) => { const fs = document.fullscreenElement; ['hvCap', 'hvCur'].forEach(id => (fs || document.body).appendChild(document.getElementById(id))); hvSay(n, t); }, [n, t]); await W(ms); };
+  const say = async (n, t, ms = 2600) => { ev('cap'); await p.evaluate(([n, t]) => { const fs = document.fullscreenElement; ['hvCap', 'hvCur'].forEach(id => (fs || document.body).appendChild(document.getElementById(id))); hvSay(n, t); }, [n, t]); await W(ms); };
   let mx = 640, my = 360; await p.mouse.move(mx, my);
   const go = async (sel, opts = {}) => {
     const el = p.locator(sel).first(); await el.evaluate(e => e.scrollIntoView({ block: 'center', behavior: 'smooth' })); await W(700);
@@ -51,12 +52,12 @@ const reply = fs.readFileSync(path.join(__dirname, `reply_${L}.txt`), 'utf8');
     await p.mouse.move(x, y, { steps: 28 }); mx = x; my = y; await W(250);
     if (!opts.hover) {
       const hit = await el.evaluate((e, [x, y]) => { const h = document.elementFromPoint(x, y); return !!h && (e === h || e.contains(h)); }, [x, y]);
-      if (hit) { await p.mouse.down(); await W(90); await p.mouse.up(); }
-      else await el.evaluate((e, [x, y]) => { const r = document.createElement('div'); r.className = 'hvRip'; r.style.left = x + 'px'; r.style.top = y + 'px'; (document.fullscreenElement || document.body).appendChild(r); setTimeout(() => r.remove(), 700); e.click(); }, [x, y]);
+      if (hit) { ev('click'); await p.mouse.down(); await W(90); await p.mouse.up(); }
+      else { ev('click'); } if (!hit) await el.evaluate((e, [x, y]) => { const r = document.createElement('div'); r.className = 'hvRip'; r.style.left = x + 'px'; r.style.top = y + 'px'; (document.fullscreenElement || document.body).appendChild(r); setTimeout(() => r.remove(), 700); e.click(); }, [x, y]);
     }
     await W(opts.after || 600);
   };
-  const type = async (sel, text, delay = 45) => { await go(sel); await p.locator(sel).first().pressSequentially(text, { delay }); await W(500); };
+  const type = async (sel, text, delay = 45) => { await go(sel); ev('type', text.length); await p.locator(sel).first().pressSequentially(text, { delay }); await W(500); };
   const smooth = async y => { await p.evaluate(y => window.scrollTo({ top: y, behavior: 'smooth' }), y); await W(900); };
   const N = AR ? ['١', '٢', '٣', '٤', '٥', '٦', '٧', '٨'] : ['1', '2', '3', '4', '5', '6', '7', '8'];
 
@@ -70,11 +71,11 @@ const reply = fs.readFileSync(path.join(__dirname, `reply_${L}.txt`), 'utf8');
   await go('[data-tab=ai]', { after: 700 });
   await type('#qzTopic', T('مسابقة ترفيهية للعائلة عن الفضاء والكواكب', 'A fun family quiz about space and the planets'), 40);
   await say(N[3], T('حدّد الطابع والعدد والمستوى ونوع الأسئلة', 'Set the tone, the number, the level and the kind of questions'), 700);
-  await go('#qzTone', { hover: true }); await p.selectOption('#qzTone', 'fun'); await W(700);
-  await go('#qzN', { hover: true }); await p.selectOption('#qzN', '10'); await W(700);
-  await go('#qzLv', { hover: true }); await p.selectOption('#qzLv', 'mid'); await W(700);
+  await go('#qzTone', { hover: true }); ev('click'), await p.selectOption('#qzTone', 'fun'); await W(700);
+  await go('#qzN', { hover: true }); ev('click'), await p.selectOption('#qzN', '10'); await W(700);
+  await go('#qzLv', { hover: true }); ev('click'), await p.selectOption('#qzLv', 'mid'); await W(700);
   await go('#qzTy', { hover: true }); await W(700);
-  if (!AR) { await go('#qzLg', { hover: true }); await p.selectOption('#qzLg', 'en'); await W(700); }
+  if (!AR) { await go('#qzLg', { hover: true }); ev('click'), await p.selectOption('#qzLg', 'en'); await W(700); }
   await say(N[4], T('انسخ التعليمات، والصقها في برنامج الذكاء الاصطناعي الذي تستخدمه', 'Copy the instructions and paste them into the AI app you use'), 600);
   await go('#qzCopy', { after: 1400 });
   const prompt = await p.evaluate(() => navigator.clipboard.readText());
@@ -87,13 +88,13 @@ const reply = fs.readFileSync(path.join(__dirname, `reply_${L}.txt`), 'utf8');
   }, [AR, prompt]);
   await W(800);
   const inp = await p.locator('#hvIn').boundingBox();
-  await p.mouse.move(inp.x + inp.width / 2, inp.y + inp.height / 2, { steps: 25 }); await p.mouse.down(); await W(80); await p.mouse.up();
+  await p.mouse.move(inp.x + inp.width / 2, inp.y + inp.height / 2, { steps: 25 }); ev('click'); await p.mouse.down(); await W(80); await p.mouse.up();
   await p.evaluate(() => { const i = document.getElementById('hvIn'); i.style.color = '#222'; i.textContent = hvPr.slice(0, 90) + '…'; });
   await W(1100);
   await p.evaluate(() => { const i = document.getElementById('hvIn'); i.textContent = ''; i.style.color = '#999'; const m = document.createElement('div'); m.className = 'me'; m.textContent = hvPr; document.getElementById('hvM').appendChild(m); });
   await say(N[5], T('يكتب لك الأسئلة جاهزة: انسخ رده كاملًا', 'It writes the questions for you: copy its whole reply'), 600);
-  await p.evaluate(r => { const m = document.createElement('div'); m.className = 'bot'; m.id = 'hvBot'; document.getElementById('hvM').appendChild(m); let k = 0; const t = setInterval(() => { k += 9; m.textContent = r.slice(0, k); m.scrollTop = m.scrollHeight; if (k >= r.length) { clearInterval(t); const c = document.createElement('button'); c.className = 'cp'; c.id = 'hvCp'; c.textContent = document.getElementById('hvAI').dir === 'rtl' ? 'نسخ' : 'Copy'; document.getElementById('hvM').appendChild(c); } }, 30); }, reply);
-  await p.waitForSelector('#hvCp', { timeout: 30000 }); await W(500);
+  ev('stream'); await p.evaluate(r => { const m = document.createElement('div'); m.className = 'bot'; m.id = 'hvBot'; document.getElementById('hvM').appendChild(m); let k = 0; const t = setInterval(() => { k += 9; m.textContent = r.slice(0, k); m.scrollTop = m.scrollHeight; if (k >= r.length) { clearInterval(t); const c = document.createElement('button'); c.className = 'cp'; c.id = 'hvCp'; c.textContent = document.getElementById('hvAI').dir === 'rtl' ? 'نسخ' : 'Copy'; document.getElementById('hvM').appendChild(c); } }, 30); }, reply);
+  await p.waitForSelector('#hvCp', { timeout: 30000 }); ev('streamEnd'); await W(500);
   await p.evaluate(r => navigator.clipboard.writeText(r), reply);
   await go('#hvCp', { after: 900 });
   await p.evaluate(() => document.getElementById('hvAI').remove());
@@ -107,8 +108,9 @@ const reply = fs.readFileSync(path.join(__dirname, `reply_${L}.txt`), 'utf8');
   await smooth(top); await smooth(top + 450); await smooth(top + 900); await W(500);
   await say('', T('ابدأ المسابقة، وشارك الرمز مع اللاعبين', 'Start the quiz and share the code with the players'), 500);
   await go('#qzGo', { after: 500 });
-  await p.waitForSelector('.md-pin', { timeout: 20000 }); await W(800); await p.evaluate(() => document.getElementById('hvCap').classList.add('low'));
+  await p.waitForSelector('.md-pin', { timeout: 20000 }); ev('lobby'); await W(800); await p.evaluate(() => document.getElementById('hvCap').classList.add('low'));
   await say('', T('يدخلون من جوالاتهم بالرمز، وتبدأ المسابقة', 'They join from their phones with the code, and the quiz begins'), 4200);
+  ev('end'); fs.writeFileSync(path.join(__dirname, `ev_${L}.json`), JSON.stringify(EV));
   const v = p.video(); await c.close(); await b.close();
   fs.renameSync(await v.path(), path.join(__dirname, `raw_${L}.webm`));
 })();

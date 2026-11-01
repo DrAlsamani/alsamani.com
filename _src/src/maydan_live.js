@@ -151,7 +151,7 @@ window.MDLive = (function () {
   const IC = { vol: SV('<path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16 9a4 4 0 0 1 0 6M19 6a8 8 0 0 1 0 12"/>'), mute: SV('<path d="M4 9v6h4l5 4V5L8 9z"/><path d="m17 9 5 6M22 9l-5 6"/>'), fs: SV('<path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>') };
   function frame(inner, bar, canPause) {
     if (G.note) { inner = inner.replace(/<\/div>\s*$/, `<p class="md-surv">${G.note}</p></div>`); G.note = null; }
-    (G.box || G.el).innerHTML = `<div class="md-scr">${inner}</div><div class="md-fx" aria-hidden="true"></div><div class="md-ctl">${bar || ''}<span class="md-sp"></span>${canPause && G.i >= 0 && !G.ended ? `<button type="button" class="md-cb md-micb${G.stageNext ? ' on' : ''}" data-mic>${G.stageNext ? B('المنصة بعد هذه الجولة ✓', 'Stage next ✓') : B('افتح المنصة', 'Open the stage')}<small>${micTxt()}</small></button>` : ''}${canPause ? `<button type="button" class="md-cb" data-pause>${B('إيقاف مؤقت', 'Pause')}</button>` : ''}<button type="button" class="md-cb" data-mute title="${T('الصوت', 'Sound')}">${mute ? IC.mute : IC.vol}</button><button type="button" class="md-cb" data-fs title="${T('ملء الشاشة', 'Full screen')}">${IC.fs}</button><button type="button" class="md-cb" data-end>${B('إنهاء', 'End')}</button></div>`;
+    (G.box || G.el).innerHTML = `<div class="md-scr">${inner}</div><div class="md-fx" aria-hidden="true"></div><div class="md-ctl">${bar || ''}<span class="md-sp"></span>${canPause && G.i >= 0 && !G.ended ? `<button type="button" class="md-cb md-micb${G.stageNext ? ' on' : ''}" data-mic>${G.stageNext ? B('منصة التصريحات بعد هذه الجولة ✓', 'Stage next ✓') : B('افتح منصة التصريحات', 'Open the stage')}<small>${micTxt()}</small></button>` : ''}${canPause ? `<button type="button" class="md-cb" data-pause>${B('إيقاف مؤقت', 'Pause')}</button>` : ''}<button type="button" class="md-cb" data-mute title="${T('الصوت', 'Sound')}">${mute ? IC.mute : IC.vol}</button><button type="button" class="md-cb" data-fs title="${T('ملء الشاشة', 'Full screen')}">${IC.fs}</button><button type="button" class="md-cb" data-end>${B('إنهاء', 'End')}</button></div>`;
     clearTimeout(G.autoT);
     const q = s => G.el.querySelector(s);
     if (G.opts.auto && !G.ended) { const nb = G.el.querySelector('[data-next]'); if (nb) G.autoT = setTimeout(() => { if (nb.isConnected) nb.click(); }, G.el.querySelector('.md-lb') ? 6500 : 4500); }
@@ -205,18 +205,18 @@ window.MDLive = (function () {
   function micVote(u) {
     if (!G.opts.mic || !(u in G.players) || G.stageNext || micCool() || G.i < 0) return;
     G.mic = G.mic || new Set(); G.mic.add(u);
-    if (G.mic.size >= micNeed()) { G.stageNext = true; SND.gold(); const fx = G.el.querySelector('.md-fx'); if (fx) { const e = document.createElement('span'); e.className = 'md-micfx'; e.textContent = T('تُفتح المنصة بعد هذه الجولة!', 'The stage opens after this round!'); fx.appendChild(e); setTimeout(() => e.remove(), 3500); } }
+    if (G.mic.size >= micNeed()) { G.stageNext = true; SND.gold(); const fx = G.el.querySelector('.md-fx'); if (fx) { const e = document.createElement('span'); e.className = 'md-micfx'; e.textContent = T('تُفتح منصة التصريحات بعد هذه الجولة!', 'The stage opens after this round!'); fx.appendChild(e); setTimeout(() => e.remove(), 3500); } }
     micSync();
   }
   function micSync() {
     G.micInfo = { n: G.mic ? G.mic.size : 0, need: micNeed(), on: !!G.stageNext, cool: micCool(), off: !G.opts.mic };
     G.ref.child('top/mic').set(G.micInfo).catch(() => {});
-    const b = G.el.querySelector('[data-mic]'); if (b) { b.classList.toggle('on', !!G.stageNext); b.innerHTML = `${G.stageNext ? B('المنصة بعد هذه الجولة ✓', 'Stage next ✓') : B('افتح المنصة', 'Open the stage')}<small>${micTxt()}</small>`; }
+    const b = G.el.querySelector('[data-mic]'); if (b) { b.classList.toggle('on', !!G.stageNext); b.innerHTML = `${G.stageNext ? B('منصة التصريحات بعد هذه الجولة ✓', 'Stage next ✓') : B('افتح منصة التصريحات', 'Open the stage')}<small>${micTxt()}</small>`; }
   }
   // put a stage in before the next question
   function stageNow() {
     const at = G.done + 1;
-    G.quiz.qs.splice(at, 0, { type: 'stage', q: T('المنصة لكم: قل كلمتك', 'The stage is yours: say your word'), opts: [], ok: [], pts: 0, time: 45 });
+    G.quiz.qs.splice(at, 0, { type: 'stage', q: T('منصة التصريحات لكم: قل كلمتك', 'The stage is yours: say your word'), opts: [], ok: [], pts: 0, time: 45 });
     if (G.gold >= at) G.gold++;
     G.stageNext = false; G.mic = new Set(); G.micAt = at; micSync(); keep();
   }
@@ -294,7 +294,7 @@ window.MDLive = (function () {
         <label class="md-ck"><input type="checkbox" data-o="final"${O.final ? ' checked' : ''}> ${B('لحظة الحسم: السؤال الأخير بنقاط مضاعفة', 'The final question with double points')}</label>
         <label class="md-ck"><input type="checkbox" data-o="surv"${O.surv ? ' checked' : ''}> ${B('الناجي الأخير: من يخطئ يخرج من المنافسة ويتابع متفرجًا، ويفوز من يصمد حتى النهاية', 'Last survivor: a wrong answer takes you out to watch; whoever lasts wins')} <small>${B('(للأفراد فقط؛ لا يعمل مع الفرق)', '(individuals only; off with teams)')}</small></label>
         <label class="md-ck"><input type="checkbox" data-o="pw"${O.pw ? ' checked' : ''}> ${B('أدوات التحدي لكل متسابق مرة واحدة: مضاعفة السؤال ×٢، وخطف النقاط من جارك في الترتيب، والانسحاب من سؤال بمتوسط نقاطك', 'Challenge tools, once each: double a question, steal from a neighbour in the ranking, skip a question for your average')}</label>
-        <label class="md-ck"><input type="checkbox" data-o="mic"${O.mic ? ' checked' : ''}> ${B('منصة التصريحات: زر «اطلب المنصة» عند المشاركين، وتُفتح بعد الجولة إذا طلبها ٢٥٪ منهم (وتقدر تفتحها أنت متى شئت)', 'The stage: players can ask for it, and it opens after the round when 25% ask (you can open it any time)')}</label>
+        <label class="md-ck"><input type="checkbox" data-o="mic"${O.mic ? ' checked' : ''}> ${B('منصة التصريحات: زر «اطلب منصة التصريحات» عند المشاركين، وتُفتح بعد الجولة إذا طلبها ٢٥٪ منهم (وتقدر تفتحها أنت متى شئت)', 'The stage: players can ask for it, and it opens after the round when 25% ask (you can open it any time)')}</label>
         <label class="md-ck"><input type="checkbox" data-o="shuf"${O.shuf ? ' checked' : ''}> ${B('ترتيب عشوائي للأسئلة والخيارات في كل مرة', 'Shuffle the questions and options each time')}</label>
         <label class="md-ck"><input type="checkbox" data-o="auto"${O.auto ? ' checked' : ''}> ${B('▶ تقدّم تلقائي (المشرف يلعب من جواله أيضًا: ادخل بالرمز نفسه)', '▶ Move on automatically (so the host can play on a phone too, with the same code)')}</label>
         <label class="md-ck"><input type="checkbox" data-o="bet"${O.bet ? ' checked' : ''}> ${B('الثقة: يراهن المشارك على إجابته فيكسب أو يخسر نقاطًا إضافية', 'Confidence: players can bet on their answer to win or lose extra points')}</label>
@@ -403,7 +403,7 @@ window.MDLive = (function () {
     const tag = gold ? `<span class="md-gold">${B('السؤال الذهبي — نقاط مضاعفة', 'The golden question — double points')}</span>` : last ? `<span class="md-x2">${B('السؤال الأخير — نقاط مضاعفة', 'The last question — double points')}</span>` : m === 2 ? `<span class="md-x2">${B('نقاط مضاعفة ×٢', 'Double points ×2')}</span>` : '';
     if (x.type === 'game') return nextGame(x, n, m, gold, last, tag);
     const q = frame(`<div class="md-q md-pre${gold ? ' is-gold' : ''}">
-        <div class="md-qtop"><span class="md-qn">${x.type === 'stage' ? '' + B('المنصة', 'The stage') : `${B('السؤال', 'Question')} ${qNo(G.i)} ${T('من', 'of')} ${qTot()}`}</span>${tag}</div>
+        <div class="md-qtop"><span class="md-qn">${x.type === 'stage' ? '' + B('منصة التصريحات', 'The stage') : `${B('السؤال', 'Question')} ${qNo(G.i)} ${T('من', 'of')} ${qTot()}`}</span>${tag}</div>
         <h2 class="md-qt" dir="auto">${esc(x.q)}</h2>
         <div class="md-mid"><div class="md-clock"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" class="md-ring0"/><circle cx="50" cy="50" r="44" class="md-ring" id="mdRing"/></svg><b id="mdT">${x.time}</b></div>
           ${x.img ? (x.reveal ? `<div class="md-pic"><img src="${x.img}" alt=""><div class="md-veil">${veil(x.time)}</div></div>` : `<img class="md-img" src="${x.img}" alt="">`) : '<span></span>'}
