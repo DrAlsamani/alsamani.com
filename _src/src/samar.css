@@ -292,7 +292,7 @@ html.sm-homeview,html.sm-homeview body{overflow-x:clip}
 /* on stage */
 .sm-scene{margin:10px auto;max-width:640px;padding:18px 22px;border-radius:20px;background:rgba(242,184,75,.1);border:1px solid rgba(242,184,75,.45);text-align:center}
 .sm-scene p{margin:0;font-size:1.7rem;font-weight:700;line-height:1.5}
-.sm-scene span{display:inline-block;margin-top:10px;padding:5px 14px;border-radius:999px;background:#2bb3a3;color:#08221f;font-weight:700}
+.sm-scene .sm-style{display:inline-block;margin-top:10px;padding:5px 14px;border-radius:999px;background:#2bb3a3;color:#08221f;font-weight:700}
 .sm-phone .sm-scene{background:rgba(23,21,58,.06);border-color:rgba(23,21,58,.18)}
 .sm-phone .sm-scene p{font-size:1.2rem}
 .sm-twist{margin:10px auto;display:table;padding:9px 20px;border-radius:14px;background:#f0a0b4;color:#17153a;font-weight:800;font-size:1.35rem;animation:smTw .6s ease-out}
@@ -313,3 +313,28 @@ html.sm-homeview,html.sm-homeview body{overflow-x:clip}
 @keyframes smWin{50%{transform:scale(1.3)}}
 .sm-called{font-size:3.4rem!important;animation:smTw .7s ease-out}
 .sm-quitb{margin-top:6px;opacity:.75}
+/* duo scenes, the room's twist, the wheel, the moments */
+.sm-parts{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin:12px 0 4px}
+.sm-parts span{display:flex;flex-direction:column;padding:8px 14px;border-radius:14px;background:rgba(255,255,255,.07);border-inline-start:4px solid var(--c,#f2b84b)}
+.sm-parts b{font-size:1.05rem}.sm-parts i{font-style:normal;opacity:.8}
+.sm-mypart{margin:10px 0 0!important;font-size:1rem!important;font-weight:500!important}.sm-mypart b{color:#c2410c}
+.sm-tvote{animation:smPulse 1.6s ease-in-out infinite}
+@keyframes smPulse{50%{opacity:.5}}
+.sm-tw3{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.sm-tw3 button{padding:12px;border-radius:14px;border:1px solid rgba(23,21,58,.18);background:#fff;font:inherit;font-weight:700;cursor:pointer}
+.sm-tw3 button[aria-pressed="true"]{background:#f0a0b4;border-color:#e0607e}
+.sm-wheelg{text-align:center}
+.sm-wheel{position:relative;width:min(46vh,420px);aspect-ratio:1;margin:8px auto}
+.sm-wheel svg{width:100%;height:100%;filter:drop-shadow(0 12px 30px rgba(0,0,0,.45))}
+.sm-wheel text{fill:#17153a;font:800 15px 'IBM Plex Sans Arabic',system-ui,sans-serif;text-anchor:middle;dominant-baseline:middle}
+.sm-wptr{position:absolute;top:-6px;left:50%;margin-left:-14px;width:0;height:0;border:14px solid transparent;border-top:26px solid #f4eedf;z-index:2;filter:drop-shadow(0 2px 4px rgba(0,0,0,.5))}
+.sm-x2{position:absolute;top:14px;inset-inline-start:14px;padding:6px 14px;border-radius:999px;background:#f2b84b;color:#17153a;font-style:normal;font-weight:800;z-index:3}
+.sm-stage{position:relative}
+.sm-hls{margin:18px auto 0;max-width:720px;opacity:0;animation:smIn .6s ease-out forwards;animation-delay:var(--d,2s)}
+.sm-hls h3{color:#2bb3a3;margin:0 0 8px}
+.sm-hls p{display:flex;flex-direction:column;gap:2px;margin:0 0 8px;padding:10px 16px;border-radius:14px;background:rgba(255,255,255,.06)}
+.sm-hls b{color:#f2b84b;font-size:.9rem}
+@keyframes smIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.sm-parts b{color:#f4eedf}.sm-parts i{color:#d9d3ff}
+.sm-phone .sm-parts span{background:rgba(255,255,255,.08)}
+.sm-mypart b{color:#f2b84b!important}
