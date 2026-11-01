@@ -275,3 +275,16 @@ html.sm-homeview,html.sm-homeview body{overflow-x:clip}
 .sm-wc{color:#2bb3a3;font-weight:700}.sm-steal{display:inline-block;background:#e0607e;color:#fff;font-weight:800;border-radius:999px;padding:.5vh 1.4vw}
 .sm-prov{font-size:clamp(28px,5vh,56px)!important;line-height:1.4}.sm-phone .sm-prov{font-size:1.6rem!important}
 .sm-sil-me{text-align:center;margin:0 0 10px;font-weight:600}.sm-sil-me b{color:var(--c)}
+/* the ball's beacon, the traps and the acting twists */
+.sm-blight{display:flex;align-items:center;justify-content:center;gap:8px;margin:6px 0 0;color:#f2b84b;font-weight:700}
+.sm-blight svg{width:20px;height:20px}
+.sm-blight em{font-style:normal;color:#f0a0b4;margin-inline-start:10px;font-weight:600}
+.sm-throwmsg.flash{color:#fff;font-size:1.5rem;text-shadow:0 0 18px #f2b84b}
+.sm-bflash,.sm-trap{display:flex;align-items:center;justify-content:center;gap:8px;width:100%}
+.sm-bflash svg{width:20px;height:20px}
+.sm-beacon{position:fixed;inset:0;z-index:2147483600;display:flex;align-items:center;justify-content:center;animation:smBeacon .32s steps(1) 10;pointer-events:none}
+.sm-beacon svg{width:46vmin;height:46vmin}
+@keyframes smBeacon{0%{background:#fff}50%{background:#f2b84b}}
+.sm-curb{display:inline-flex;align-items:center;gap:10px;margin:6px auto;padding:7px 16px;border-radius:999px;background:#f0a0b4;color:#17153a;font-weight:700}
+.sm-curb em{font-style:normal;font-size:.85em;opacity:.75}
+.sm-phone .sm-curb{display:flex;justify-content:center;flex-wrap:wrap}
