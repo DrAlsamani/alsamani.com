@@ -304,7 +304,7 @@ window.MDLive = (function () {
       if (now() - (v.t || 0) > 8000) return;
       if (v.e === '🎤') { stat({ 'x/mic': 1 }); return micVote(s.key); }
       if (v.e.charAt(0) === '@') return remote(s.key, v.e);
-      if (/^#[01]\d{1,6}$/.test(v.e)) { if (G) { G.sid = G.sid || {}; const o = G.sid[s.key] = G.sid[s.key] || ['', '']; o[+v.e[1]] = v.e.slice(2); } return; }
+      if (/^#[01][A-Za-z0-9]{1,6}$/.test(v.e)) { if (G) { G.sid = G.sid || {}; const o = G.sid[s.key] = G.sid[s.key] || ['', '']; o[+v.e[1]] = v.e.slice(2); } return; }
       if (v.e.charAt(0) === '%') { if (G) { G.av = G.av || {}; G.av[s.key] = v.e.slice(1, 3); } return; }
       if (G) { G.aw = G.aw || {}; const w = G.aw[s.key] = G.aw[s.key] || {}; w.rx = (w.rx || 0) + 1; }
       if (G) G.rxc = (G.rxc || 0) + 1;
@@ -423,7 +423,7 @@ window.MDLive = (function () {
       <div class="md-count"><b id="mdN">0</b> ${B('مشارك', 'players')} <small id="mdFans"></small></div><div class="md-names" id="mdNames"></div>
       <div class="md-set" id="mdSet" hidden>
         <h3>${B('إعدادات المسابقة', 'Quiz settings')}</h3>
-        <label class="md-ck"><input type="checkbox" data-o="sid"${O.sid ? ' checked' : ''}> ${B('مسابقة بدرجات: يكتب كل طالب رقمه الأكاديمي، وفي النهاية ملف درجات لبلاك بورد', 'A graded quiz: each student types their ID, and at the end a grades file for Blackboard')}</label>
+        <label class="md-ck"><input type="checkbox" data-o="sid"${O.sid ? ' checked' : ''}> ${B('مسابقة بدرجات: يكتب كل طالب رقمه الجامعي، وفي النهاية ملف درجات لنظام التعلم (بلاك بورد أو مودل أو كانفس)', 'A graded quiz: each student types their ID, and at the end a grades file for the LMS (Blackboard, Moodle or Canvas)')}</label>
         ${window.MDX ? `<label>${B('ضمن دوري', 'Part of a league')}<select data-lgs><option value="">${T('بلا دوري', 'No league')}</option>${MDX.all().map(l => `<option value="${l.id}"${G.league === l.id ? ' selected' : ''}>${esc(l.name)}</option>`).join('')}<option value="+">${T('دوري جديد…', 'A new league…')}</option></select></label>` : ''}
         <label>${B('عرض الترتيب', 'Show the ranking')}<select data-o="every">${[[1, T('بعد كل سؤال', 'After every question')], [3, T('كل ٣ أسئلة', 'Every 3 questions')], [5, T('كل ٥ أسئلة', 'Every 5 questions')], [0, T('في النهاية فقط', 'Only at the end')]].map(([v, l]) => `<option value="${v}"${O.every === v ? ' selected' : ''}>${l}</option>`).join('')}</select></label>
         <label class="md-ck"><input type="checkbox" data-o="speed"${O.speed ? ' checked' : ''}> ${B('السرعة تزيد النقاط', 'Speed adds points')}</label>
@@ -924,14 +924,14 @@ window.MDLive = (function () {
         ${tt.length ? `<p class="md-wteam" style="--c:var(--qz${(tt[0].k) % 6})">${B(`الفريق الفائز: ${esc(tt[0].name)}`, `Winning team: ${esc(tt[0].name)}`)} <em>${tt[0].avg}</em></p>` : ''}
         <div class="md-podium">${p(1)}${p(0)}${p(2)}</div>
         <ol class="md-rest" start="4">${order.slice(3, 10).map(u => `<li><span dir="auto">${esc(G.players[u] || '')}</span><em>${G.score[u]}</em></li>`).join('')}</ol>${aw.length ? `<div class="md-titles">${aw.map((a, k) => `<div class="md-title" style="--d:${k * .35 + 4}s"><b>${B(TITLE[a.k][0], TITLE[a.k][1])}</b><span dir="auto">${esc(a.n)}</span><small>${B(a.ar, a.en)}</small></div>`).join('')}</div>` : ''}</div>`,
-      `${window.MDX ? `<button type="button" class="btn ghost" data-rep>${B('تقرير المسابقة', 'Quiz report')}</button><button type="button" class="btn ghost" data-cert>${B('شهادات', 'Certificates')}</button>${G.opts.sid || Object.keys(G.sid || {}).length || Object.values(G.players).some(n => /^\s*[\d٠-٩]{5,12}\s*$/.test(n || '')) ? `<button type="button" class="btn solid" data-bb>${B('درجات بلاك بورد', 'Blackboard grades')}</button>` : ''}` : ''}${(G.jr || []).length > 1 ? `<button type="button" class="btn ghost" data-replay>${B('إعادة السباق', 'Replay the race')}</button>` : ''}<button type="button" class="btn ghost" data-csv>${B('تحميل النتائج', 'Download results')}</button>
+      `${window.MDX ? `<button type="button" class="btn ghost" data-rep>${B('تقرير المسابقة', 'Quiz report')}</button><button type="button" class="btn ghost" data-cert>${B('شهادات', 'Certificates')}</button>${G.opts.sid || Object.keys(G.sid || {}).length || Object.values(G.players).some(n => /^\s*[\d٠-٩]{5,12}\s*$/.test(n || '')) ? `<button type="button" class="btn solid" data-bb>${B('ملف الدرجات', 'Grades file')}</button>` : ''}` : ''}${(G.jr || []).length > 1 ? `<button type="button" class="btn ghost" data-replay>${B('إعادة السباق', 'Replay the race')}</button>` : ''}<button type="button" class="btn ghost" data-csv>${B('تحميل النتائج', 'Download results')}</button>
        <label class="md-opt md-grade" title="${T('اختياري: تُحسب الدرجة من نقاط ميدان، والأول يأخذ الدرجة كاملة', 'Optional: the grade follows Maydan points; the top player gets full marks')}">${B('مع درجة من', 'with a grade out of')} <input type="number" min="1" max="100" step="1" inputmode="numeric" data-gr placeholder="—"></label>
        ${G.quiz.qs.some(x => x.type === 'game') ? `<label class="md-opt md-grade"><input type="checkbox" data-gq> ${B('من الأسئلة فقط (دون التحديات)', 'from the questions only (no challenges)')}</label>` : ''}`);
     reactions(); SND.drum();
     [3, 2, 1].forEach((k, n) => setTimeout(() => { const e = q(`.md-p${k}`); if (e) e.classList.add('in'); if (k === 1) SND.win(); }, 900 + n * 1300));
     if (q('[data-replay]')) q('[data-replay]').onclick = () => replayBig(order);
     if (window.MDX) {
-      const D = { title: G.quiz.title || '', teams: !!G.teams, qs: G.qlog || [], players: order.map((u, k) => ({ n: G.players[u] || '', s: G.score[u] || 0, r: k + 1, team: G.teams ? G.teams[G.team[u]] || '' : '', ok: (G.aw && G.aw[u] || {}).ok || 0, jq: (G.aw && G.aw[u] || {}).jq || 0, an: (G.aw && G.aw[u] || {}).an || 0, it: (G.aw && G.aw[u] || {}).it || 0, qp: G.qp[u] || 0, sid: ((G.sid || {})[u] || []).join('') || (/^\s*[\d٠-٩]{5,12}\s*$/.test(G.players[u] || '') ? (G.players[u] || '').trim().replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d)) : '') })) };
+      const D = { title: G.quiz.title || '', teams: !!G.teams, qs: G.qlog || [], players: order.map((u, k) => ({ n: G.players[u] || '', s: G.score[u] || 0, r: k + 1, team: G.teams ? G.teams[G.team[u]] || '' : '', ok: (G.aw && G.aw[u] || {}).ok || 0, jq: (G.aw && G.aw[u] || {}).jq || 0, an: (G.aw && G.aw[u] || {}).an || 0, it: (G.aw && G.aw[u] || {}).it || 0, qp: G.qp[u] || 0, sid: ((G.sid || {})[u] || []).join('') || (/^\s*[A-Za-z]{0,3}[\d٠-٩]{5,12}\s*$/.test(G.players[u] || '') ? (G.players[u] || '').trim().replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d)) : '') })) };
       q('[data-rep]').onclick = () => MDX.report(G.el, D);
       q('[data-cert]').onclick = () => MDX.certs(G.el, D);
       if (q('[data-bb]')) q('[data-bb]').onclick = () => MDX.blackboard(G.el, D);

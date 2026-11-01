@@ -105,64 +105,85 @@ window.MDX = (function () {
   /* ---------- grades for Blackboard: a file matched by the student ID (the Username), ready for "Upload gradebook" ---------- */
   function blackboard(host, D) {
     const saved = (() => { try { return JSON.parse(localStorage.getItem('md-bb') || '{}'); } catch (e) { return {}; } })();
-    let roster = null;   // the course's own gradebook file, when the host adds it: students and columns
-    const d = overlay(host, `<h3>${B('درجات بلاك بورد', 'Blackboard grades')}</h3>
-      <label class="md-xfile">${B('ملف الدرجات من المقرر (اختياري، وهو الأدق): من مركز التقديرات ← العمل دون اتصال ← تنزيل', 'The course grades file (optional, the surest way): Grade Center → Work Offline → Download')}<input type="file" accept=".xls,.csv,.txt,.tsv" data-f></label>
-      <div class="md-xform"><label data-colw hidden>${B('العمود في المقرر', 'The column in the course')}<select data-b="tcol"></select></label>
-      <label data-neww>${B('اسم العمود الجديد', 'New column name')}<input data-b="col" maxlength="60" dir="auto" value="${esc(D.title || T('مسابقة ميدان', 'Maydan quiz'))}"></label>
+    let roster = null;   // the course's own grades file, when the host adds it: its rows, its id columns and its grade columns
+    const d = overlay(host, `<h3>${B('ملف الدرجات لنظام التعلم', 'Grades file for the LMS')}</h3>
+      <label class="md-xfile">${B('ملف الدرجات المنزّل من المقرر (اختياري، وهو الأدق): من بلاك بورد أو مودل أو كانفس، فيعود بالصيغة نفسها وفي العمود الذي تختاره', 'The grades file downloaded from the course (optional, the surest way): from Blackboard, Moodle or Canvas; it comes back in the same layout, into the column you choose')}<input type="file" accept=".xls,.csv,.txt,.tsv" data-f></label>
+      <div class="md-xform"><label data-fmtw>${B('النظام', 'System')}<select data-b="fmt"><option value="bb">Blackboard</option><option value="moodle">Moodle</option><option value="gen">${T('ملف عام (Excel)', 'General (Excel)')}</option></select></label>
+      <label data-colw hidden>${B('العمود في المقرر', 'The column in the course')}<select data-b="tcol"></select></label>
+      <label data-neww>${B('اسم العمود', 'Column name')}<input data-b="col" maxlength="60" dir="auto" value="${esc(D.title || T('مسابقة ميدان', 'Maydan quiz'))}"></label>
       <label>${B('درجة المشاركة من', 'Participation out of')}<input data-b="p1" type="number" min="0" max="100" step="0.5" value="${saved.p1 != null ? saved.p1 : 1}"></label>
       <label>${B('درجة الأداء من', 'Performance out of')}<input data-b="p2" type="number" min="0" max="100" step="0.5" value="${saved.p2 != null ? saved.p2 : 4}"></label>
       <label>${B('الأداء يُحسب من', 'Performance is based on')}<select data-b="base"><option value="qp">${T('نقاط الأسئلة فقط (دون الألعاب)', 'Question points only (no games)')}</option><option value="all">${T('كل النقاط مع الألعاب', 'All points, games included')}</option><option value="ok">${T('نسبة الإجابات الصحيحة', 'Share of right answers')}</option></select></label>
-      <label data-prew>${B('بادئة اسم المستخدم', 'Username prefix')}<input data-b="pre" dir="ltr" maxlength="4" value="${esc(saved.pre != null ? saved.pre : 's')}"></label>
-      <label class="md-xwide">${B('رابط صفحة المقرر (اختياري، يُحفظ)', 'Link to the course page (optional, kept)')}<input data-b="url" dir="ltr" placeholder="https://lms.uoh.edu.sa/…" value="${esc(saved.url || '')}"></label></div>
+      <label data-prew>${B('بادئة تُضاف إلى الرقم (اختياري)', 'Prefix added to the number (optional)')}<input data-b="pre" dir="ltr" maxlength="6" placeholder="${T('مثل s', 'e.g. s')}" value="${esc(saved.pre || '')}"></label>
+      <label class="md-xwide">${B('رابط صفحة المقرر (اختياري، يُحفظ)', 'Link to the course page (optional, kept)')}<input data-b="url" dir="ltr" placeholder="https://…" value="${esc(saved.url || '')}"></label></div>
       <div class="md-xrep md-bbt"></div>
       <div class="md-xact"><button type="button" class="btn solid" data-dl>${B('تحميل الملف وفتح المقرر', 'Download the file and open the course')}</button></div>
-      <p class="md-xnote">${B('ثم في بلاك بورد: مركز التقديرات ← العمل دون اتصال ← رفع، واختر الملف. يُطابَق الطالب باسم المستخدم (s ثم رقمه).', 'Then in Blackboard: Grade Center → Work Offline → Upload, and choose the file. Students are matched by username (s and their number).')}</p>`);
+      <p class="md-xnote" data-how></p>`);
     const q = s => d.querySelector(s), v = k => q(`[data-b="${k}"]`).value.trim();
-    const r2 = n => Math.round(n * 100) / 100, digits = s => String(s || '').replace(/[٠-٩]/g, c => '٠١٢٣٤٥٦٧٨٩'.indexOf(c)).replace(/\D/g, '');
-    // read Blackboard's file: tab or comma separated, quoted fields
-    const parse = text => { const lines = text.replace(/^﻿/, '').split(/\r?\n/).filter(l => l.trim()); const sep = (lines[0].match(/\t/g) || []).length >= (lines[0].match(/,/g) || []).length ? '\t' : ',';
+    const r2 = n => Math.round(n * 100) / 100, norm = s => String(s || '').replace(/[٠-٩]/g, c => '٠١٢٣٤٥٦٧٨٩'.indexOf(c)).trim().toLowerCase(), digits = s => norm(s).replace(/\D/g, '');
+    const HOW = { bb: T('في بلاك بورد: مركز التقديرات ← العمل دون اتصال ← رفع (وفي Ultra: الإعدادات ← رفع الدرجات). يُطابَق الطالب باسم المستخدم.', 'In Blackboard: Grade Center → Work Offline → Upload (in Ultra: Settings → Upload gradebook). Students are matched by username.'),
+      moodle: T('في مودل: الدرجات ← استيراد ← ملف CSV، ثم اربط عمود Username أو ID number بالطالب، وعمود الدرجة ببند التقدير.', 'In Moodle: Grades → Import → CSV file, map Username or ID number to the student, and the grade column to a grade item.'),
+      canvas: T('في كانفس: الدرجات ← استيراد، واختر الملف. يُطابَق الطالب بالأعمدة الأولى كما نزّلتها.', 'In Canvas: Grades → Import, then choose the file. Students are matched by the first columns, as you downloaded them.'),
+      gen: T('ملف عام بالاسم والرقم والدرجات، يُفتح في Excel ويُنسخ إلى أي نظام.', 'A plain file with the name, number and grades; open it in Excel and copy it into any system.') };
+    // a downloaded grades file: tab or comma separated, quoted fields; its id columns and grade columns found by their names
+    const parse = text => { const lines = text.replace(/^﻿/, '').split(/\r?\n/).filter(l => l.trim()); if (lines.length < 2) return null;
+      const sep = (lines[0].match(/\t/g) || []).length >= (lines[0].match(/,/g) || []).length ? '\t' : ',';
       const cells = l => { const out = []; let cur = '', inq = false; for (let i = 0; i < l.length; i++) { const ch = l[i]; if (inq) { if (ch === '"' && l[i + 1] === '"') { cur += '"'; i++; } else if (ch === '"') inq = false; else cur += ch; } else if (ch === '"') inq = true; else if (ch === sep) { out.push(cur); cur = ''; } else cur += ch; } out.push(cur); return out; };
-      const head = cells(lines[0]), ix = n => head.findIndex(h => h.trim().toLowerCase() === n);
-      const iu = ix('username'), ii = ix('student id'), il = ix('last name'), iff = ix('first name'); if (iu < 0) return null;
-      const cols = head.map((h, k) => ({ h, k, pts: +((h.match(/Total Pts:\s*([\d.]+)/) || [])[1] || 0) })).filter(c => /\|\s*\d+\s*$/.test(c.h) || /\[Total Pts/.test(c.h));
-      const st = lines.slice(1).map(l => { const c = cells(l); return { last: c[il] || '', first: c[iff] || '', user: c[iu] || '', id: digits(ii >= 0 ? c[ii] : c[iu]) }; }).filter(s => s.user);
-      return { st, cols, sep }; };
+      const head = cells(lines[0]), low = head.map(h => h.trim().toLowerCase());
+      const kind = low.includes('sis user id') || low.includes('sis login id') ? 'canvas' : low.includes('id number') || low.some(h => /^(assignment|quiz|forum|workshop|course total):/.test(h)) ? 'moodle' : low.includes('username') ? 'bb' : 'gen';
+      const idc = low.map((h, k) => /^(username|student id|id number|sis user id|sis login id|login id|user id|id|email address|email|الرقم الجامعي|الرقم الأكاديمي|اسم المستخدم)$/.test(h) ? k : -1).filter(k => k >= 0);
+      if (!idc.length) return null;
+      const grade = (h, k) => /\|\s*\d+\s*$/.test(h) || /\[Total Pts/i.test(h) || (kind === 'canvas' && /\(\d+\)\s*$/.test(h)) || (kind === 'moodle' && /^(assignment|quiz|forum|workshop|lesson|manual item)\s*:/i.test(h.trim()));
+      const cols = head.map((h, k) => ({ h, k, pts: +((h.match(/Total Pts:\s*([\d.]+)/i) || [])[1] || 0) })).filter(c => grade(c.h, c.k));
+      const keep = head.map((h, k) => k).filter(k => !cols.some(c => c.k === k) && !/^(last access|availability|child course id|current score|unposted current score|final score|unposted final score|course total)/.test(low[k]));
+      const nameOf = c => { const f = low.indexOf('first name'), l = low.indexOf('last name'), st = low.indexOf('student'); return st >= 0 ? c[st] : [c[f] || '', c[l] || ''].join(' ').trim(); };
+      const rows = lines.slice(1).map(l => { const c = cells(l); return { c, ids: idc.map(k => norm(c[k])).filter(Boolean), name: nameOf(c), extra: /points possible/i.test(c[0] || '') }; }).filter(r => r.ids.length || r.extra);
+      return { head, sep, kind, cols, keep, rows }; };
     q('[data-f]').onchange = e => { const f = e.target.files[0]; if (!f) return; const r = new FileReader();
-      r.onload = () => { let t = r.result; if (/\u0000/.test(t.slice(0, 40))) { const r2b = new FileReader(); r2b.onload = () => { roster = parse(r2b.result); setRoster(); }; r2b.readAsText(f, 'utf-16le'); return; } roster = parse(t); setRoster(); };
+      r.onload = () => { const t = r.result; if (/\u0000/.test(t.slice(0, 40))) { const r2b = new FileReader(); r2b.onload = () => { roster = parse(r2b.result); setRoster(); }; r2b.readAsText(f, 'utf-16le'); return; } roster = parse(t); setRoster(); };
       r.readAsText(f, 'utf-8'); };
     const setRoster = () => {
-      if (!roster) { alert(T('لم أجد عمود Username في الملف. نزّله من مركز التقديرات ← العمل دون اتصال ← تنزيل.', 'No Username column found. Download it from Grade Center → Work Offline → Download.')); return; }
-      q('[data-colw]').hidden = false; q('[data-prew]').hidden = true;
+      if (!roster) { alert(T('لم أجد في الملف عمودًا يعرّف الطالب (مثل Username أو Student ID أو ID number). نزّل ملف الدرجات من المقرر كما هو.', 'No column that identifies the student (such as Username, Student ID or ID number). Download the grades file from the course as it is.')); return; }
+      q('[data-colw]').hidden = false; q('[data-prew]').hidden = true; q('[data-fmtw]').hidden = true;
       q('[data-b="tcol"]').innerHTML = roster.cols.map((c, k) => `<option value="${k}">${esc(c.h.replace(/\s*\|\s*\d+\s*$/, ''))}</option>`).join('') + `<option value="new">${T('عمود جديد', 'A new column')}</option>`;
       pickCol(); };
-    const pickCol = () => { const t = v('tcol'), c = roster && roster.cols[+t]; q('[data-neww]').hidden = !!c; if (c && c.pts) { const p1 = Math.min(+v('p1') || 0, c.pts); q('[data-b="p1"]').value = p1; q('[data-b="p2"]').value = r2(c.pts - p1); } draw(); };
+    const pickCol = () => { const c = roster && roster.cols[+v('tcol')]; q('[data-neww]').hidden = !!c; if (c && c.pts) { const p1 = Math.min(+v('p1') || 0, c.pts); q('[data-b="p1"]').value = p1; q('[data-b="p2"]').value = r2(c.pts - p1); } draw(); };
     q('[data-b="tcol"]').onchange = pickCol;
     const calc = () => {
       const p1 = Math.max(0, +v('p1') || 0), p2 = Math.max(0, +v('p2') || 0), base = v('base');
       const pts = p => base === 'qp' ? p.qp : base === 'all' ? p.s : 0, best = Math.max(1, ...D.players.map(pts));
-      return D.players.map(p => { const part = p.it ? r2(p1 * p.an / p.it) : 0, perf = r2(base === 'ok' ? (p.jq ? p2 * p.ok / p.jq : 0) : p2 * Math.max(0, pts(p)) / best); return { p, id: digits(p.sid), part, perf, sum: r2(part + perf) }; });
+      return D.players.map(p => { const part = p.it ? r2(p1 * p.an / p.it) : 0, perf = r2(base === 'ok' ? (p.jq ? p2 * p.ok / p.jq : 0) : p2 * Math.max(0, pts(p)) / best); return { p, id: norm(p.sid), part, perf, sum: r2(part + perf) }; });
     };
-    // with the course file: every student of the course, matched by number; without it, our players with the prefix
+    // a player matches a row when the number they typed is one of its ids, with or without letters around the digits
+    const same = (typed, ids) => !!typed && ids.some(i => i === typed || (digits(i).length >= 4 && digits(i) === digits(typed)));
     const rows = () => { const R = calc();
-      if (!roster) return R.map(x => ({ x, user: x.id ? v('pre') + x.id : '', last: '', first: x.p.n, id: x.id }));
-      const by = {}; R.forEach(x => { if (x.id) by[x.id] = x; });
-      const out = roster.st.map(s => ({ x: by[s.id] || null, user: s.user, last: s.last, first: s.first, id: s.id }));
-      R.filter(x => !x.id || !roster.st.some(s => s.id === x.id)).forEach(x => out.push({ x, user: '', last: '', first: x.p.n, id: x.id, stray: true }));
+      if (!roster) return R.map(x => ({ x, user: x.id ? v('pre') + x.id : '', name: x.p.n, id: x.id }));
+      const used = new Set(), out = roster.rows.filter(r => !r.extra).map(r => { const x = R.find(y => !used.has(y) && same(y.id, r.ids)); if (x) used.add(x); return { x, user: r.ids[0], name: r.name, row: r }; });
+      R.filter(x => !used.has(x)).forEach(x => out.push({ x, user: '', name: x.p.n, id: x.id, stray: true }));
       return out; };
     const draw = () => { const L = rows(), stray = L.filter(r => r.stray || !r.user).length, absent = L.filter(r => !r.x).length;
-      q('.md-bbt').innerHTML = `${stray ? `<p class="md-bbmiss">${T(`${stray} من اللاعبين لم يُطابَقوا (رقم ناقص أو غير موجود في المقرر)، فلن تُرفع درجاتهم.`, `${stray} players were not matched (missing number, or not in the course) and will not upload.`)}</p>` : ''}${roster && absent ? `<p class="md-xnote">${T(`${absent} من طلاب المقرر لم يشاركوا: تبقى خاناتهم كما هي في بلاك بورد.`, `${absent} students of the course did not take part: their cells stay as they are.`)}</p>` : ''}
-        <table class="md-lgt"><thead><tr><th>Username</th><th>${T('الاسم', 'Name')}</th><th>${T('المشاركة', 'Participation')}</th><th>${T('الأداء', 'Performance')}</th><th>${T('المجموع', 'Total')}</th></tr></thead><tbody>${L.map(r => `<tr class="${r.stray || !r.user ? 'miss' : !r.x ? 'abs' : ''}"><td dir="ltr">${esc(r.user || '—')}</td><td dir="auto">${esc((r.x ? r.x.p.n : '') || [r.first, r.last].join(' '))}</td><td>${r.x ? r.x.part : ''}</td><td>${r.x ? r.x.perf : ''}</td><td><b>${r.x ? r.x.sum : ''}</b></td></tr>`).join('')}</tbody></table>`; };
+      q('[data-how]').textContent = HOW[roster ? roster.kind : v('fmt')] || HOW.gen;
+      q('.md-bbt').innerHTML = `${stray ? `<p class="md-bbmiss">${T(`${stray} من اللاعبين لم يُطابَقوا (رقم ناقص أو غير موجود في المقرر)، فلن تُرفع درجاتهم.`, `${stray} players were not matched (missing number, or not in the course) and will not upload.`)}</p>` : ''}${roster && absent ? `<p class="md-xnote">${T(`${absent} من طلاب المقرر لم يشاركوا: تبقى خاناتهم كما هي.`, `${absent} students of the course did not take part: their cells stay as they are.`)}</p>` : ''}
+        <table class="md-lgt"><thead><tr><th>${T('المعرّف', 'ID')}</th><th>${T('الاسم', 'Name')}</th><th>${T('المشاركة', 'Participation')}</th><th>${T('الأداء', 'Performance')}</th><th>${T('المجموع', 'Total')}</th></tr></thead><tbody>${L.map(r => `<tr class="${r.stray || !r.user ? 'miss' : !r.x ? 'abs' : ''}"><td dir="ltr">${esc(r.user || (r.x && r.x.id) || '—')}</td><td dir="auto">${esc((r.x ? r.x.p.n : '') || r.name)}</td><td>${r.x ? r.x.part : ''}</td><td>${r.x ? r.x.perf : ''}</td><td><b>${r.x ? r.x.sum : ''}</b></td></tr>`).join('')}</tbody></table>`; };
     d.querySelectorAll('[data-b]').forEach(i => { if (i.dataset.b !== 'tcol') i.oninput = i.onchange = draw; }); draw();
     q('[data-dl]').onclick = () => {
-      const p1 = +v('p1') || 0, p2 = +v('p2') || 0, url = v('url'), col = v('col') || 'Maydan';
+      const p1 = +v('p1') || 0, p2 = +v('p2') || 0, url = v('url'), col = v('col') || 'Maydan', fmt = v('fmt');
       try { localStorage.setItem('md-bb', JSON.stringify({ p1, p2, url, pre: v('pre') })); } catch (e) {}
-      const target = roster && roster.cols[+v('tcol')];
-      // into an existing column: one grade, the total, under the column's own header (its id ties it to the column)
-      const heads = target ? [target.h] : [col];
-      const L = rows().filter(r => r.user && r.x);
-      const out = [['Last Name', 'First Name', 'Username', 'Student ID'].concat(heads)].concat(L.map(r => [r.last, r.first, r.user, r.id, r.x.sum]));
-      download(`${(target ? target.h.replace(/\s*\[.*$/, '') : col).replace(/[\\/:*?"<>|]/g, '').slice(0, 40) || 'maydan'}-blackboard.csv`, csvOf(out));
+      let out, name;
+      if (roster) {
+        // the course's own layout: its identifying columns as they were, then the one grade column
+        const target = roster.cols[+v('tcol')], head = roster.keep.map(k => roster.head[k]).concat([target ? target.h : col]);
+        const pp = roster.rows.filter(r => r.extra).map(r => roster.keep.map(k => r.c[k]).concat([target ? r.c[target.k] : r2(p1 + p2)]));
+        out = [head].concat(pp).concat(rows().filter(r => r.row && r.x).map(r => roster.keep.map(k => r.row.c[k]).concat([r.x.sum])));
+        name = (target ? target.h.replace(/\s*[\[(|].*$/, '') : col);
+      } else {
+        const L = rows().filter(r => r.user);
+        out = fmt === 'bb' ? [['Last Name', 'First Name', 'Username', 'Student ID', col]].concat(L.map(r => ['', r.name, r.user, r.id, r.x.sum]))
+          : fmt === 'moodle' ? [['Username', 'ID number', 'Full name', col]].concat(L.map(r => [r.user, r.id, r.name, r.x.sum]))
+          : [[T('الاسم', 'Name'), T('الرقم', 'ID'), T('المشاركة', 'Participation'), T('الأداء', 'Performance'), T('المجموع', 'Total')]].concat(rows().map(r => [r.name, r.user || '', r.x.part, r.x.perf, r.x.sum]));
+        name = col;
+      }
+      download(`${String(name).replace(/[\\/:*?"<>|]/g, '').trim().slice(0, 40) || 'maydan'}-grades.csv`, csvOf(out));
       if (/^https?:\/\//.test(url)) setTimeout(() => window.open(url, '_blank', 'noopener'), 600);
     };
   }

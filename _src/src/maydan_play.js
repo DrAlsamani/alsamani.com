@@ -71,7 +71,7 @@
   function nameScreen(err) {
     root.innerHTML = `<div class="mp-card"><a class="mp-logo" href="/play/maydan/">${window.MD_MARK || ''}<b>${B('ميدان', 'Maydan')}</b></a>
       <label class="mp-l">${B('اسمك أو لقبك', 'Your name or nickname')}<input id="mpName" maxlength="24" autocomplete="nickname" dir="auto" value="${esc(store.get('name', ''))}"></label>
-      ${SIDREQ ? `<label class="mp-l">${B('الرقم الأكاديمي', 'Student ID')}<input id="mpSid" inputmode="numeric" maxlength="12" dir="ltr" autocomplete="off" value="${esc(store.get('sid', ''))}"></label>` : ''}
+      ${SIDREQ ? `<label class="mp-l">${B('الرقم الجامعي (أو اسم المستخدم)', 'Student ID (or username)')}<input id="mpSid" maxlength="12" dir="ltr" autocomplete="off" value="${esc(store.get('sid', ''))}"></label>` : ''}
       <div class="mp-av" id="mpAv"></div>
       <div id="mpTeams" class="mp-teams"></div>
       <p class="mp-err" ${err ? '' : 'hidden'}>${err || ''}</p>
@@ -84,7 +84,7 @@
     go.onclick = async () => {
       const n = inp.value.trim().replace(/\s+/g, ' ').slice(0, 24);
       if (!n) return nameScreen(T('اكتب اسمًا يظهر على الشاشة.', 'Type a name to show on the screen.'));
-      if (SIDREQ) { const v = (root.querySelector('#mpSid').value || '').replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/\D/g, ''); if (v.length < 5) { const e = root.querySelector('.mp-err'); e.hidden = false; e.textContent = T('اكتب رقمك الأكاديمي.', 'Type your student ID.'); return; } store.set('sid', v); }
+      if (SIDREQ) { const v = (root.querySelector('#mpSid').value || '').replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[^A-Za-z0-9]/g, '').slice(0, 12); if (v.length < 3) { const e = root.querySelector('.mp-err'); e.hidden = false; e.textContent = T('اكتب رقمك الجامعي.', 'Type your student ID.'); return; } store.set('sid', v); }
       if (TEAMS && TMODE === 'pick' && myTeam == null) { const e = root.querySelector('.mp-err'); e.hidden = false; e.textContent = T('اختر فريقك.', 'Choose your team.'); return; }
       go.disabled = true;
       go.textContent = T('لحظة…', 'One moment…');
