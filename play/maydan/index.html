@@ -2472,7 +2472,7 @@ if (typeof module !== 'undefined') module.exports = QZParse;
       qs.forEach((z, j) => { out.push(z); if ((j + 1) % every === 0 && j < qs.length - 1 && k < gs.length) out.push(newGame(gs[k++])); });
       if (!k && gs.length) out.push(newGame(gs[0]));
       Q.qs = out; draw(); later();
-      toast(B(`وُزّع ${Math.max(k, 1)} تحديًا بين الأسئلة. غيّر أيًّا منها بزر .`, `${Math.max(k, 1)} challenges spread. Swap any with .`));
+      toast(B(`التحديات الموزّعة بين الأسئلة: ${Math.max(k, 1)}. وتقدر تغيّر أيًّا منها من بطاقته.`, `Challenges spread between the questions: ${Math.max(k, 1)}. Swap any of them from its card.`));
     };
     q('#qzAddTF').onclick = () => { Q.qs.push(norm({ type: 'tf', opts: [T('صح', 'True'), T('خطأ', 'False')] })); draw(); focusLast(); later(); };
     q('#qzPv').onclick = () => preview(0);
@@ -2961,7 +2961,7 @@ ${exEn}`;
       if (game) { game.stop(); game = null; }
       if (Q.qs[i].type === 'game' && window.MDGames) {
         const x = Q.qs[i], g = MDGames.byId(x.g);
-        v.innerHTML = `<div class="qz-pvb"><div class="qz-pvh"><b>${B('معاينة', 'Preview')} · ${i + 1} / ${Q.qs.length}</b><span><button type="button" data-g="-1" aria-label="previous">${isAr() ? '›' : '‹'}</button><button type="button" data-g="1" aria-label="next">${isAr() ? '‹' : '›'}</button><button type="button" data-x aria-label="close">✕</button></span></div>
+        v.innerHTML = `<div class="qz-pvb"><div class="qz-pvh"><b>${B('معاينة', 'Preview')} <span dir="ltr">${i + 1} / ${Q.qs.length}</span></b><span><button type="button" data-g="-1" aria-label="previous">${isAr() ? '›' : '‹'}</button><button type="button" data-g="1" aria-label="next">${isAr() ? '‹' : '›'}</button><button type="button" data-x aria-label="close">✕</button></span></div>
           <div class="qz-stage"><div class="qz-screen qz-gscreen"><p class="qz-sq">${g.icon} ${isAr() ? g.ar : g.en}</p><p class="qz-ghow2">${isAr() ? g.howAr : g.howEn}</p><div class="qz-timer">${x.time || 30}</div></div>
           <div class="qz-phone qz-gphone"><div class="qz-ph-top">${B('جرّبها هنا', 'Try it here')}</div><div class="qz-gbox"></div></div></div></div>`;
         v.querySelectorAll('[data-g]').forEach(b => b.onclick = () => go(+b.dataset.g));
@@ -2971,7 +2971,7 @@ ${exEn}`;
       }
       if (TEXTY.includes(Q.qs[i].type)) {
         const x = Q.qs[i], ph = x.type === 'num' ? `<input class="qz-pin" placeholder="${T('اكتب رقمًا', 'Type a number')}" disabled><p class="qz-pans">${B('الجواب', 'Answer')}: ${esc(x.ans)} ${esc(x.unit || '')}</p>` : x.type === 'word' ? `<p class="qz-pw">${[...(x.ans || '')].map(c => c === ' ' ? ' ' : '_').join(' ')}</p><input class="qz-pin" placeholder="${T('اكتب الكلمة', 'Type the word')}" disabled>` : x.type === 'order' ? (x.items || []).slice().sort(() => Math.random() - .5).map(v => `<div class="qz-pb" style="--c:var(--qz1)"><span dir="auto">${esc(v)}</span></div>`).join('') : x.type === 'match' ? (x.pairs || []).map((p, j) => `<div class="qz-pmatch"><span dir="auto">${esc(p[0])}</span><i>↔</i><span dir="auto">${esc(((x.pairs || [])[(j + 1) % x.pairs.length] || [])[1] || '')}</span></div>`).join('') : x.type === 'rapid' ? `<p class="qz-pw" dir="auto">${esc((x.items || [])[0] || '')}</p><div class="qz-row2"><div class="qz-pb" style="--c:var(--qz2)"><span>${T('صح', 'True')}</span></div><div class="qz-pb" style="--c:var(--qz1)"><span>${T('خطأ', 'False')}</span></div></div><p class="qz-pans">1 / ${(x.items || []).length}</p>` : `<input class="qz-pin" placeholder="${T('اكتب إجابتك', 'Type your answer')}" disabled>`;
-        v.innerHTML = `<div class="qz-pvb"><div class="qz-pvh"><b>${B('معاينة', 'Preview')} · ${i + 1} / ${Q.qs.length}</b><span><button type="button" data-g="-1" aria-label="previous">${isAr() ? '›' : '‹'}</button><button type="button" data-g="1" aria-label="next">${isAr() ? '‹' : '›'}</button><button type="button" data-x aria-label="close">✕</button></span></div>
+        v.innerHTML = `<div class="qz-pvb"><div class="qz-pvh"><b>${B('معاينة', 'Preview')} <span dir="ltr">${i + 1} / ${Q.qs.length}</span></b><span><button type="button" data-g="-1" aria-label="previous">${isAr() ? '›' : '‹'}</button><button type="button" data-g="1" aria-label="next">${isAr() ? '‹' : '›'}</button><button type="button" data-x aria-label="close">✕</button></span></div>
           <div class="qz-stage"><div class="qz-screen"><p class="qz-sq" dir="auto">${esc(x.q) || '…'}</p>${x.img ? `<img src="${x.img}" alt="">` : ''}<div class="qz-timer">${x.timeSet ? x.time : suggest(x)}</div></div>
           <div class="qz-phone"><div class="qz-ph-top">${KINDS().find(k => k[0] === x.type)[1]}</div><div class="qz-tx">${ph}</div></div></div></div>`;
         v.querySelectorAll('[data-g]').forEach(b => b.onclick = () => go(+b.dataset.g));
@@ -2980,7 +2980,7 @@ ${exEn}`;
       }
       const x = Q.qs[i], t = x.timeSet ? x.time : suggest(x), opts = x.opts.map((o, j) => ({ o, j })).filter(z => z.o.trim());
       v.innerHTML = `<div class="qz-pvb">
-        <div class="qz-pvh"><b>${B('معاينة', 'Preview')} · ${i + 1} / ${Q.qs.length}</b><span><button type="button" data-g="-1" aria-label="previous">${isAr() ? '›' : '‹'}</button><button type="button" data-g="1" aria-label="next">${isAr() ? '‹' : '›'}</button><button type="button" class="qz-show" aria-pressed="${show}">${B('إظهار الإجابة', 'Show answer')}</button><button type="button" data-x aria-label="close">✕</button></span></div>
+        <div class="qz-pvh"><b>${B('معاينة', 'Preview')} <span dir="ltr">${i + 1} / ${Q.qs.length}</span></b><span><button type="button" data-g="-1" aria-label="previous">${isAr() ? '›' : '‹'}</button><button type="button" data-g="1" aria-label="next">${isAr() ? '‹' : '›'}</button><button type="button" class="qz-show" aria-pressed="${show}">${B('إظهار الإجابة', 'Show answer')}</button><button type="button" data-x aria-label="close">✕</button></span></div>
         <div class="qz-stage">
           <div class="qz-screen"><p class="qz-sq" dir="auto">${esc(x.q) || '…'}</p>${x.img ? `<img src="${x.img}" alt="">` : ''}<div class="qz-timer">${t}</div>${x.pts === 2 ? `<span class="qz-x2">×2</span>` : ''}
             <div class="qz-tiles">${opts.map(z => `<div class="qz-tile${show ? (x.ok.includes(z.j) ? ' right' : ' wrong') : ''}" style="--c:var(--qz${z.j})"><i>${LET()[z.j]}</i><span dir="auto">${esc(z.o)}</span>${show && x.ok.includes(z.j) ? '<b>✓</b>' : ''}</div>`).join('')}</div></div>
@@ -3485,7 +3485,7 @@ html.mp-embed body{padding-top:0!important}
 .md-rpf.lead span{background:#e0a458;color:#16204a;filter:drop-shadow(0 0 10px #e0a458)}
 /* the camel race on the phone: every team's lane */
 .mg-track{width:100%;display:flex;flex-direction:column;gap:6px;direction:ltr;flex:none}
-.mg-tl{position:relative;height:44px;border-radius:10px;background:color-mix(in srgb,var(--c) 14%,transparent);border:1px solid color-mix(in srgb,var(--c) 40%,transparent)}
+.mg-tl{position:relative;height:40px;border-radius:10px;background:color-mix(in srgb,var(--c) 14%,transparent);border:1px solid color-mix(in srgb,var(--c) 40%,transparent)}
 .mg-tl.me{background:color-mix(in srgb,var(--c) 26%,transparent);border-width:2px}
 .mg-tl span{position:absolute;left:8px;top:50%;transform:translateY(-50%);font-size:.7rem;font-weight:700;color:var(--c);opacity:.85;max-width:40%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 .mg-tl b{position:absolute;right:4px;top:50%;transform:translateY(-50%);font-size:.9rem}
@@ -3509,6 +3509,7 @@ html.mp-embed body{padding-top:0!important}
 .mp-fx span{position:absolute;bottom:-40px;left:var(--x);animation:mpFly 2.6s ease-out forwards;transform:rotate(var(--r))}
 .mp-fx .emo{font-size:2rem}.mp-fx .txt{font-size:.95rem;font-weight:700;background:#fff;color:#23336F;border-radius:999px;padding:3px 10px;box-shadow:0 3px 10px rgba(0,0,0,.15)}
 @keyframes mpFly{0%{transform:translateY(0) rotate(var(--r));opacity:0}10%{opacity:1}100%{transform:translateY(-75vh) rotate(var(--r));opacity:0}}
+.mg-track~.mg-big{max-width:190px;max-height:190px;font-size:4rem;margin-top:12px}
 </style><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script>window.MD_CFG={"apiKey": "AIzaSyA50i75DT1Is1a6Yn6snW1_JVObc8S3F0Y", "authDomain": "maydan-705ae.firebaseapp.com", "databaseURL": "https://maydan-705ae-default-rtdb.europe-west1.firebasedatabase.app", "projectId": "maydan-705ae", "appId": "1:342187013133:web:d5c2396f0db413f3c51144"};window.MD_MARK="<svg class=\"md-mark\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><rect x=\"4\" y=\"4\" width=\"40\" height=\"40\" rx=\"12\" fill=\"#23336F\"/><path d=\"M24 9l4.2 6.8 7.8-1.8-1.8 7.8L41 24l-6.8 4.2 1.8 7.8-7.8-1.8L24 39l-4.2-6.8-7.8 1.8 1.8-7.8L7 24l6.8-4.2-1.8-7.8 7.8 1.8z\" fill=\"#C9822B\"/><circle cx=\"24\" cy=\"24\" r=\"6.5\" fill=\"#23336F\"/><circle cx=\"24\" cy=\"24\" r=\"3\" fill=\"#F3E3C7\"/></svg>";</script><script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script><script>/* Maydan challenges: short games played on every phone at once. Every phone gets the same level (same seed),
    so the race is fair. Each game reports a score; higher is better. */
 window.MDGames = (function () {

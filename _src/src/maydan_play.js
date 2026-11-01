@@ -129,7 +129,7 @@
     // last survivor: once out, a player watches the rest
     if (st.ph === 'q' && SC && SC.out && SC.q != null && SC.q < st.i) return screen(`<div class="mp-wait"><p class="mp-sym"></p><p class="mp-big">${B('أنت الآن متفرج', 'You are watching now')}</p><p>${B('خرجت من المنافسة؛ تابع الأسئلة على الشاشة وشجّع الناجين.', 'You are out of the race; follow along on the screen and cheer for those still in.')}</p><p class="mp-rank">${B(`الناجون: ${SC.left}`, `Still in: ${SC.left}`)}</p></div>` + rxBar());
     if (FAN && ['q', 'rev', 'lb', 'ready'].includes(st.ph)) return screen('');
-    if (st.ph === 'rev' && Q && Q.i === st.i && SC && !FAN) note();
+    if (st.ph === 'rev' && Q && Q.i === st.i && SC && SC.q === st.i && !FAN) note();
     if (st.ph === 'q' && !FAN) tone(880, .15);
     if (st.ph === 'q') return question();
     if (st.ph === 'rev' || st.ph === 'lb') return result();
@@ -417,17 +417,19 @@
     let g = '';
     for (let p = 0; p < D.n; p++) if (p !== D.me && p < show) g += `<polyline points="${pts(p)}" fill="none" stroke="var(--qz${p % 6})" stroke-opacity=".8" stroke-width="2.5" stroke-linejoin="round"/>`;
     if (D.me >= 0) { const L = D.line(D.me); g += `<polyline points="${pts(D.me)}" fill="none" stroke="#e0a458" stroke-width="4.5" stroke-linejoin="round" stroke-linecap="round"/>` + L.map((r, t) => `<circle cx="${X(t)}" cy="${Y(r)}" r="${t === L.length - 1 ? 6 : 3.5}" fill="#e0a458"/>`).join(''); }
-    const ax = [...Array(D.steps).keys()].filter(t => D.steps <= 12 || t % Math.ceil(D.steps / 10) === 0 || t === D.steps - 1).map(t => `<text x="${X(t)}" y="${H - 6}" text-anchor="middle">${t + 1}</text>`).join('');
+    const stp = Math.ceil(D.steps / 10), ax = [...Array(D.steps).keys()].filter(t => D.steps <= 12 || t === D.steps - 1 || (t % stp === 0 && D.steps - 1 - t >= stp / 2 + .5)).map(t => `<text x="${X(t)}" y="${H - 6}" text-anchor="middle">${t + 1}</text>`).join('');
     const ay = [1, Math.ceil(N / 2), N].filter((v, k, a) => a.indexOf(v) === k).map(r => `<text x="${pl - 8}" y="${Y(r) + 4}" text-anchor="end">${r}</text>`).join('');
     return `<svg class="mp-jsvg" viewBox="0 0 ${W} ${H}" dir="ltr" role="img" aria-label="${T('مسار مركزك بعد كل سؤال', 'Your place after each question')}">${g}<g class="mp-jax">${ax}${ay}</g></svg>`;
   }
+  // Arabic counting: one, two, three to ten, eleven and more
+  const arN = (n, one, two, few, many, pre) => n === 1 ? one : n === 2 ? two : `${pre ? pre + ' ' : ''}${n} ${n % 100 >= 3 && n % 100 <= 10 ? few : many}`;
   function journeyHtml() {
     const D = jData(); if (!D || D.me < 0 || D.n < 2) return '';
     const S = D.st, q = t => T(`السؤال ${t + 1}`, `question ${t + 1}`), lines = [];
-    if (S.lead) lines.push(B(`تصدّرت الترتيب في ${S.lead} ${S.lead === 1 ? 'سؤال' : 'أسئلة'}`, `You led after ${S.lead} question${S.lead > 1 ? 's' : ''}`));
+    if (S.lead) lines.push(B(`تصدّرت الترتيب ${arN(S.lead, 'في سؤال واحد', 'في سؤالين', 'أسئلة', 'سؤالًا', 'في')}`, `You led after ${S.lead} question${S.lead > 1 ? 's' : ''}`));
     else lines.push(B(`أفضل مركز وصلته: ${S.best} بعد ${q(S.bestAt)}`, `Best place: ${S.best}, after ${q(S.bestAt)}`));
-    if (S.up) lines.push(B(`أكبر صعود: ${S.up} ${S.up === 1 ? 'مركز' : 'مراكز'} في ${q(S.upAt)}`, `Biggest climb: ${S.up} place${S.up > 1 ? 's' : ''} at ${q(S.upAt)}`));
-    if (S.dn) lines.push(B(`أكبر تراجع: ${S.dn} ${S.dn === 1 ? 'مركز' : 'مراكز'} في ${q(S.dnAt)}`, `Biggest drop: ${S.dn} place${S.dn > 1 ? 's' : ''} at ${q(S.dnAt)}`));
+    if (S.up) lines.push(B(`أكبر صعود: ${arN(S.up, 'مركز واحد', 'مركزان', 'مراكز', 'مركزًا')} في ${q(S.upAt)}`, `Biggest climb: ${S.up} place${S.up > 1 ? 's' : ''} at ${q(S.upAt)}`));
+    if (S.dn) lines.push(B(`أكبر تراجع: ${arN(S.dn, 'مركز واحد', 'مركزان', 'مراكز', 'مركزًا')} في ${q(S.dnAt)}`, `Biggest drop: ${S.dn} place${S.dn > 1 ? 's' : ''} at ${q(S.dnAt)}`));
     return `<div class="mp-journey"><p class="mp-jt">${B('رحلتك في المسابقة', 'Your journey')}</p>${jSvg(D, 340, 190)}<ul>${lines.map(l => `<li>${l}</li>`).join('')}</ul></div>`;
   }
 

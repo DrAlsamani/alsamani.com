@@ -1880,7 +1880,7 @@ html.mp-embed body{padding-top:0!important}
 .md-rpf.lead span{background:#e0a458;color:#16204a;filter:drop-shadow(0 0 10px #e0a458)}
 /* the camel race on the phone: every team's lane */
 .mg-track{width:100%;display:flex;flex-direction:column;gap:6px;direction:ltr;flex:none}
-.mg-tl{position:relative;height:44px;border-radius:10px;background:color-mix(in srgb,var(--c) 14%,transparent);border:1px solid color-mix(in srgb,var(--c) 40%,transparent)}
+.mg-tl{position:relative;height:40px;border-radius:10px;background:color-mix(in srgb,var(--c) 14%,transparent);border:1px solid color-mix(in srgb,var(--c) 40%,transparent)}
 .mg-tl.me{background:color-mix(in srgb,var(--c) 26%,transparent);border-width:2px}
 .mg-tl span{position:absolute;left:8px;top:50%;transform:translateY(-50%);font-size:.7rem;font-weight:700;color:var(--c);opacity:.85;max-width:40%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 .mg-tl b{position:absolute;right:4px;top:50%;transform:translateY(-50%);font-size:.9rem}
@@ -1904,6 +1904,7 @@ html.mp-embed body{padding-top:0!important}
 .mp-fx span{position:absolute;bottom:-40px;left:var(--x);animation:mpFly 2.6s ease-out forwards;transform:rotate(var(--r))}
 .mp-fx .emo{font-size:2rem}.mp-fx .txt{font-size:.95rem;font-weight:700;background:#fff;color:#23336F;border-radius:999px;padding:3px 10px;box-shadow:0 3px 10px rgba(0,0,0,.15)}
 @keyframes mpFly{0%{transform:translateY(0) rotate(var(--r));opacity:0}10%{opacity:1}100%{transform:translateY(-75vh) rotate(var(--r));opacity:0}}
+.mg-track~.mg-big{max-width:190px;max-height:190px;font-size:4rem;margin-top:12px}
 </style>
 <div id="mp" class="sn mp"><noscript><span class="ar">تعمل هذه الصفحة مع تفعيل JavaScript.</span><span class="en">This page needs JavaScript.</span></noscript></div>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script>window.MD_CFG={"apiKey": "AIzaSyA50i75DT1Is1a6Yn6snW1_JVObc8S3F0Y", "authDomain": "maydan-705ae.firebaseapp.com", "databaseURL": "https://maydan-705ae-default-rtdb.europe-west1.firebasedatabase.app", "projectId": "maydan-705ae", "appId": "1:342187013133:web:d5c2396f0db413f3c51144"};window.MD_MARK="<svg class=\"md-mark\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><rect x=\"4\" y=\"4\" width=\"40\" height=\"40\" rx=\"12\" fill=\"#23336F\"/><path d=\"M24 9l4.2 6.8 7.8-1.8-1.8 7.8L41 24l-6.8 4.2 1.8 7.8-7.8-1.8L24 39l-4.2-6.8-7.8 1.8 1.8-7.8L7 24l6.8-4.2-1.8-7.8 7.8 1.8z\" fill=\"#C9822B\"/><circle cx=\"24\" cy=\"24\" r=\"6.5\" fill=\"#23336F\"/><circle cx=\"24\" cy=\"24\" r=\"3\" fill=\"#F3E3C7\"/></svg>";</script><script>/* Maydan challenges: short games played on every phone at once. Every phone gets the same level (same seed),
@@ -2741,7 +2742,7 @@ window.MDGames = (function () {
     // last survivor: once out, a player watches the rest
     if (st.ph === 'q' && SC && SC.out && SC.q != null && SC.q < st.i) return screen(`<div class="mp-wait"><p class="mp-sym"></p><p class="mp-big">${B('أنت الآن متفرج', 'You are watching now')}</p><p>${B('خرجت من المنافسة؛ تابع الأسئلة على الشاشة وشجّع الناجين.', 'You are out of the race; follow along on the screen and cheer for those still in.')}</p><p class="mp-rank">${B(`الناجون: ${SC.left}`, `Still in: ${SC.left}`)}</p></div>` + rxBar());
     if (FAN && ['q', 'rev', 'lb', 'ready'].includes(st.ph)) return screen('');
-    if (st.ph === 'rev' && Q && Q.i === st.i && SC && !FAN) note();
+    if (st.ph === 'rev' && Q && Q.i === st.i && SC && SC.q === st.i && !FAN) note();
     if (st.ph === 'q' && !FAN) tone(880, .15);
     if (st.ph === 'q') return question();
     if (st.ph === 'rev' || st.ph === 'lb') return result();
@@ -3029,17 +3030,19 @@ window.MDGames = (function () {
     let g = '';
     for (let p = 0; p < D.n; p++) if (p !== D.me && p < show) g += `<polyline points="${pts(p)}" fill="none" stroke="var(--qz${p % 6})" stroke-opacity=".8" stroke-width="2.5" stroke-linejoin="round"/>`;
     if (D.me >= 0) { const L = D.line(D.me); g += `<polyline points="${pts(D.me)}" fill="none" stroke="#e0a458" stroke-width="4.5" stroke-linejoin="round" stroke-linecap="round"/>` + L.map((r, t) => `<circle cx="${X(t)}" cy="${Y(r)}" r="${t === L.length - 1 ? 6 : 3.5}" fill="#e0a458"/>`).join(''); }
-    const ax = [...Array(D.steps).keys()].filter(t => D.steps <= 12 || t % Math.ceil(D.steps / 10) === 0 || t === D.steps - 1).map(t => `<text x="${X(t)}" y="${H - 6}" text-anchor="middle">${t + 1}</text>`).join('');
+    const stp = Math.ceil(D.steps / 10), ax = [...Array(D.steps).keys()].filter(t => D.steps <= 12 || t === D.steps - 1 || (t % stp === 0 && D.steps - 1 - t >= stp / 2 + .5)).map(t => `<text x="${X(t)}" y="${H - 6}" text-anchor="middle">${t + 1}</text>`).join('');
     const ay = [1, Math.ceil(N / 2), N].filter((v, k, a) => a.indexOf(v) === k).map(r => `<text x="${pl - 8}" y="${Y(r) + 4}" text-anchor="end">${r}</text>`).join('');
     return `<svg class="mp-jsvg" viewBox="0 0 ${W} ${H}" dir="ltr" role="img" aria-label="${T('مسار مركزك بعد كل سؤال', 'Your place after each question')}">${g}<g class="mp-jax">${ax}${ay}</g></svg>`;
   }
+  // Arabic counting: one, two, three to ten, eleven and more
+  const arN = (n, one, two, few, many, pre) => n === 1 ? one : n === 2 ? two : `${pre ? pre + ' ' : ''}${n} ${n % 100 >= 3 && n % 100 <= 10 ? few : many}`;
   function journeyHtml() {
     const D = jData(); if (!D || D.me < 0 || D.n < 2) return '';
     const S = D.st, q = t => T(`السؤال ${t + 1}`, `question ${t + 1}`), lines = [];
-    if (S.lead) lines.push(B(`تصدّرت الترتيب في ${S.lead} ${S.lead === 1 ? 'سؤال' : 'أسئلة'}`, `You led after ${S.lead} question${S.lead > 1 ? 's' : ''}`));
+    if (S.lead) lines.push(B(`تصدّرت الترتيب ${arN(S.lead, 'في سؤال واحد', 'في سؤالين', 'أسئلة', 'سؤالًا', 'في')}`, `You led after ${S.lead} question${S.lead > 1 ? 's' : ''}`));
     else lines.push(B(`أفضل مركز وصلته: ${S.best} بعد ${q(S.bestAt)}`, `Best place: ${S.best}, after ${q(S.bestAt)}`));
-    if (S.up) lines.push(B(`أكبر صعود: ${S.up} ${S.up === 1 ? 'مركز' : 'مراكز'} في ${q(S.upAt)}`, `Biggest climb: ${S.up} place${S.up > 1 ? 's' : ''} at ${q(S.upAt)}`));
-    if (S.dn) lines.push(B(`أكبر تراجع: ${S.dn} ${S.dn === 1 ? 'مركز' : 'مراكز'} في ${q(S.dnAt)}`, `Biggest drop: ${S.dn} place${S.dn > 1 ? 's' : ''} at ${q(S.dnAt)}`));
+    if (S.up) lines.push(B(`أكبر صعود: ${arN(S.up, 'مركز واحد', 'مركزان', 'مراكز', 'مركزًا')} في ${q(S.upAt)}`, `Biggest climb: ${S.up} place${S.up > 1 ? 's' : ''} at ${q(S.upAt)}`));
+    if (S.dn) lines.push(B(`أكبر تراجع: ${arN(S.dn, 'مركز واحد', 'مركزان', 'مراكز', 'مركزًا')} في ${q(S.dnAt)}`, `Biggest drop: ${S.dn} place${S.dn > 1 ? 's' : ''} at ${q(S.dnAt)}`));
     return `<div class="mp-journey"><p class="mp-jt">${B('رحلتك في المسابقة', 'Your journey')}</p>${jSvg(D, 340, 190)}<ul>${lines.map(l => `<li>${l}</li>`).join('')}</ul></div>`;
   }
 

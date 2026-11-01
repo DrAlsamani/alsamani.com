@@ -482,7 +482,7 @@ html.mp-embed body{padding-top:0!important}
 .md-rpf.lead span{background:#e0a458;color:#16204a;filter:drop-shadow(0 0 10px #e0a458)}
 /* the camel race on the phone: every team's lane */
 .mg-track{width:100%;display:flex;flex-direction:column;gap:6px;direction:ltr;flex:none}
-.mg-tl{position:relative;height:44px;border-radius:10px;background:color-mix(in srgb,var(--c) 14%,transparent);border:1px solid color-mix(in srgb,var(--c) 40%,transparent)}
+.mg-tl{position:relative;height:40px;border-radius:10px;background:color-mix(in srgb,var(--c) 14%,transparent);border:1px solid color-mix(in srgb,var(--c) 40%,transparent)}
 .mg-tl.me{background:color-mix(in srgb,var(--c) 26%,transparent);border-width:2px}
 .mg-tl span{position:absolute;left:8px;top:50%;transform:translateY(-50%);font-size:.7rem;font-weight:700;color:var(--c);opacity:.85;max-width:40%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 .mg-tl b{position:absolute;right:4px;top:50%;transform:translateY(-50%);font-size:.9rem}
@@ -506,3 +506,4 @@ html.mp-embed body{padding-top:0!important}
 .mp-fx span{position:absolute;bottom:-40px;left:var(--x);animation:mpFly 2.6s ease-out forwards;transform:rotate(var(--r))}
 .mp-fx .emo{font-size:2rem}.mp-fx .txt{font-size:.95rem;font-weight:700;background:#fff;color:#23336F;border-radius:999px;padding:3px 10px;box-shadow:0 3px 10px rgba(0,0,0,.15)}
 @keyframes mpFly{0%{transform:translateY(0) rotate(var(--r));opacity:0}10%{opacity:1}100%{transform:translateY(-75vh) rotate(var(--r));opacity:0}}
+.mg-track~.mg-big{max-width:190px;max-height:190px;font-size:4rem;margin-top:12px}
