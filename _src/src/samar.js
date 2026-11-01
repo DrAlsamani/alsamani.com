@@ -217,12 +217,13 @@
       <h3>${B('أسئلة «مين قالها؟»', 'Questions for “Who said it?”')}</h3><p>${B('سؤال في كل سطر، تُطرح بالترتيب. اتركها فارغة للأسئلة الجاهزة.', 'One question a line, asked in order. Leave it empty for the ready questions.')}</p>
       <textarea data-asks rows="4" dir="auto">${esc(store.get('asks', ''))}</textarea>
       <p>${B('عدد الإجابات المعروضة في كل سؤال (تُختار عشوائيًا):', 'Answers shown for each question (picked at random):')} <select data-wcap>${[5, 8, 12, 0].map(v => `<option value="${v}"${+store.get('wcap', 8) === v ? ' selected' : ''}>${v || T('كلها', 'All')}</option>`).join('')}</select></p>
+      <p>${B('وقت التصويت على كل إجابة:', 'Time to vote on each answer:')} <select data-wsec>${[10, 15, 20, 30].map(v => `<option value="${v}"${+store.get('wsec', 10) === v ? ' selected' : ''}>${v} ${T('ثانية', 's')}</option>`).join('')}</select></p>
       <h3>${B('فريقان', 'Two teams')}</h3><label class="sm-chk"><input type="checkbox" data-tm${S.teams ? ' checked' : ''}> ${B('قسّم اللاعبين إلى الصقور والنجوم، ونقاط كل لاعب تُضاف لفريقه', 'Split the players into Falcons and Stars; each player’s points count for their team')}</label>
       <h3>${B('تحكّم من جوالك', 'Control from your phone')}</h3><p>${S.remote ? B('جوال التحكم متصل.', 'A phone remote is connected.') : B(`ادخل الجلسة من جوالك، واضغط «أنا المضيف» واكتب الرمز <b dir="ltr">${S.rc}</b>. يصير جوالك ريموت ولا يُحسب لاعبًا.`, `Join from your phone, tap “I am the host” and type <b dir="ltr">${S.rc}</b>. Your phone becomes a remote and is not counted as a player.`)}</p>
       <div class="sm-row"><button type="button" class="btn solid" data-ok>${B('احفظ', 'Save')}</button><button type="button" class="btn ghost" data-x>${B('إغلاق', 'Close')}</button></div></div>`;
     HE().appendChild(d);
     d.querySelector('[data-x]').onclick = () => d.remove();
-    d.querySelector('[data-ok]').onclick = () => { const on2 = d.querySelector('[data-tm]').checked; if (on2 !== S.teams) { S.teams = on2; S.tm = {}; if (on2) shuffle(players()).forEach((u, k) => { S.tm[u] = k % 2; }); pushTeams(); } store.set('mine', d.querySelector('[data-w]').value); store.set('asks', d.querySelector('[data-asks]').value); store.set('wcap', +d.querySelector('[data-wcap]').value); store.set('lcats', d.querySelector('[data-lc]').value); if (mineWords().length >= 6) { S.cat = 'mine'; store.set('cat', 'mine'); } d.remove(); picker(); };
+    d.querySelector('[data-ok]').onclick = () => { const on2 = d.querySelector('[data-tm]').checked; if (on2 !== S.teams) { S.teams = on2; S.tm = {}; if (on2) shuffle(players()).forEach((u, k) => { S.tm[u] = k % 2; }); pushTeams(); } store.set('mine', d.querySelector('[data-w]').value); store.set('asks', d.querySelector('[data-asks]').value); store.set('wcap', +d.querySelector('[data-wcap]').value); store.set('wsec', +d.querySelector('[data-wsec]').value); store.set('lcats', d.querySelector('[data-lc]').value); if (mineWords().length >= 6) { S.cat = 'mine'; store.set('cat', 'mine'); } d.remove(); picker(); };
   }
   // the end of the session: the podium, and a title for what each one did best
   function finale() {
@@ -457,14 +458,14 @@
       next() {
         st.k++; if (st.k >= st.q.length) return gameOver(st.gained, B(`«${esc(st.ask)}»`, `“${esc(st.ask)}”`));
         st.au = st.q[st.k]; st.votes = {};
-        phase('guess', 25, { ask: st.ask, a: st.ans[st.au], au: st.au.slice(0, 8), k: st.k + 1, of: st.q.length, n: 0, list: inGame().map(u => ({ u, n: nameOf(u) })) }); G.view();
+        phase('guess', +store.get('wsec', 10) || 10, { ask: st.ask, a: st.ans[st.au], au: st.au.slice(0, 8), k: st.k + 1, of: st.q.length, n: 0, list: inGame().map(u => ({ u, n: nameOf(u) })) }); G.view();
       },
       reveal() {
         const g = (u, n) => { add(u, n); st.gained[u] = (st.gained[u] || 0) + n; };
         const right = Object.keys(st.votes).filter(u => st.votes[u] === st.au), fooled = Object.keys(st.votes).length - right.length;
         right.forEach(u => { g(u, 100); tally(u, 'det'); }); if (fooled) { g(st.au, 50 * fooled); tally(st.au, 'myst', fooled); }
         st.right = right; pushScores();
-        phase('reveal', 7, { ask: st.ask, a: st.ans[st.au], who: nameOf(st.au), au: st.au.slice(0, 8), right: right.map(nameOf), k: st.k + 1, of: st.q.length }); G.view();
+        phase('reveal', 5, { ask: st.ask, a: st.ans[st.au], who: nameOf(st.au), au: st.au.slice(0, 8), right: right.map(nameOf), k: st.k + 1, of: st.q.length }); G.view();
       },
       tick() { if (!S.end || left() > 0) return; if (S.ph === 'write') G.order(); else if (S.ph === 'guess') G.reveal(); else if (S.ph === 'reveal') G.next(); },
       view() {
