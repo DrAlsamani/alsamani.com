@@ -185,8 +185,11 @@
       <div class="sm-card sm-host"><h2>${B('افتح جلسة', 'Open a session')}</h2><p>${B('من اللابتوب أو التلفزيون أو حتى جوالك: يظهر رمز يدخل به الجميع من جوالاتهم، ثم تختارون اللعبة. الشاشة الكبيرة تحلّي الجو، لكن اللعبة تمشي بدونها.', 'From a laptop, a TV or even your phone: a code appears for everyone to join from their phones, then you choose the game. A big screen makes it livelier, but the game runs without one.')}</p>
         <button type="button" class="btn ghost" id="smHost">${B('افتح جلسة جديدة', 'Open a new session')}</button></div>
       </div>
-      <h2 class="sm-glt">${B('ألعاب السهرة', 'The games of the evening')}</h2><div class="sm-gl">${GAMES.map(g => `<div class="sm-gi"><i>${g.icon}</i><b>${B(g.ar, g.en)}</b><small>${B(g.dAr, g.dEn)}</small></div>`).join('')}</div></div>`;
+      <h2 class="sm-glt">${B('ألعاب السهرة', 'The games of the evening')}</h2><div class="sm-gl">${GAMES.map(g => `<div class="sm-gi"><i>${g.icon}</i><b>${B(g.ar, g.en)}</b><small>${B(g.dAr, g.dEn)}</small></div>`).join('')}</div>
+      <h2 class="sm-glt">${B('شاهد سهرة كاملة في خمس دقائق', 'Watch a whole evening in five minutes')}</h2>
+      <div class="sm-vid" id="smVid"><img src="/img/video/samar-demo-ar.jpg" alt="" loading="lazy"><button type="button" aria-label="${T('شغّل الفيديو', 'Play the film')}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" fill="currentColor"/></svg></button></div></div>`;
     const pin = root.querySelector('#smPin'), nm = root.querySelector('#smName');
+    const vd = root.querySelector('#smVid'); if (vd) vd.onclick = () => { if (vd.querySelector('video')) return; vd.innerHTML = '<video controls autoplay playsinline preload="auto" poster="/img/video/samar-demo-ar.jpg"><source src="/img/video/samar-demo-ar.mp4" type="video/mp4"></video>'; };
     pin.oninput = () => { pin.value = pin.value.replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[^\d ]/g, ''); };
     root.querySelector('#smGo').onclick = () => join(pin.value.replace(/\D/g, ''), nm.value.trim().replace(/\s+/g, ' ').slice(0, 20));
     root.querySelector('#smHost').onclick = () => host();

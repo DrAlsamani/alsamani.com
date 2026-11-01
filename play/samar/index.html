@@ -1659,6 +1659,11 @@ html.sm-homeview #sm .sm-card .btn.ghost{background:transparent!important;color:
 .sm-shp{display:flex;align-items:center;justify-content:center;gap:6px;color:#2bb3a3;font-weight:700;margin:8px 0 0}.sm-shp svg{width:1.3em;height:1.3em}
 .sm-flyball{top:64%}
 .sm-bnames{display:grid!important;grid-template-columns:1fr 1fr;gap:8px}.sm-bnames p{grid-column:1/-1}.sm-bnames button{margin:0!important;min-height:48px}
+/* the film on the home page */
+.sm-vid{position:relative;border-radius:22px;overflow:hidden;aspect-ratio:16/9;background:#0e0c29;cursor:pointer;border:1px solid rgba(255,255,255,.12);box-shadow:0 24px 60px -24px rgba(0,0,0,.7)}
+.sm-vid img,.sm-vid video{display:block;width:100%;height:100%;object-fit:cover}
+.sm-vid button{position:absolute;inset:0;margin:auto;width:86px;height:86px;border-radius:50%;border:0;background:#f2b84b;color:#17153a;display:grid;place-items:center;cursor:pointer;box-shadow:0 0 0 10px rgba(242,184,75,.25);transition:transform .2s}
+.sm-vid:hover button{transform:scale(1.07)}.sm-vid button svg{width:40px;height:40px;margin-inline-start:6px}
 </style>
 <div id="sm" class="sm"><noscript><span class="ar">تعمل هذه اللعبة مع تفعيل JavaScript.</span><span class="en">This game needs JavaScript.</span></noscript></div>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script>window.MD_CFG={"apiKey": "AIzaSyA50i75DT1Is1a6Yn6snW1_JVObc8S3F0Y", "authDomain": "maydan-705ae.firebaseapp.com", "databaseURL": "https://maydan-705ae-default-rtdb.europe-west1.firebasedatabase.app", "projectId": "maydan-705ae", "appId": "1:342187013133:web:d5c2396f0db413f3c51144"};window.MD_MARK="<svg class=\"md-mark\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><rect x=\"4\" y=\"4\" width=\"40\" height=\"40\" rx=\"12\" fill=\"#23336F\"/><path d=\"M24 9l4.2 6.8 7.8-1.8-1.8 7.8L41 24l-6.8 4.2 1.8 7.8-7.8-1.8L24 39l-4.2-6.8-7.8 1.8 1.8-7.8L7 24l6.8-4.2-1.8-7.8 7.8 1.8z\" fill=\"#C9822B\"/><circle cx=\"24\" cy=\"24\" r=\"6.5\" fill=\"#23336F\"/><circle cx=\"24\" cy=\"24\" r=\"3\" fill=\"#F3E3C7\"/></svg>";</script><script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script><script>/* Samar (alsamani.com/play/samar): games for a gathering, on one code — the screen shows the play and each phone
@@ -1848,8 +1853,11 @@ html.sm-homeview #sm .sm-card .btn.ghost{background:transparent!important;color:
       <div class="sm-card sm-host"><h2>${B('افتح جلسة', 'Open a session')}</h2><p>${B('من اللابتوب أو التلفزيون أو حتى جوالك: يظهر رمز يدخل به الجميع من جوالاتهم، ثم تختارون اللعبة. الشاشة الكبيرة تحلّي الجو، لكن اللعبة تمشي بدونها.', 'From a laptop, a TV or even your phone: a code appears for everyone to join from their phones, then you choose the game. A big screen makes it livelier, but the game runs without one.')}</p>
         <button type="button" class="btn ghost" id="smHost">${B('افتح جلسة جديدة', 'Open a new session')}</button></div>
       </div>
-      <h2 class="sm-glt">${B('ألعاب السهرة', 'The games of the evening')}</h2><div class="sm-gl">${GAMES.map(g => `<div class="sm-gi"><i>${g.icon}</i><b>${B(g.ar, g.en)}</b><small>${B(g.dAr, g.dEn)}</small></div>`).join('')}</div></div>`;
+      <h2 class="sm-glt">${B('ألعاب السهرة', 'The games of the evening')}</h2><div class="sm-gl">${GAMES.map(g => `<div class="sm-gi"><i>${g.icon}</i><b>${B(g.ar, g.en)}</b><small>${B(g.dAr, g.dEn)}</small></div>`).join('')}</div>
+      <h2 class="sm-glt">${B('شاهد سهرة كاملة في خمس دقائق', 'Watch a whole evening in five minutes')}</h2>
+      <div class="sm-vid" id="smVid"><img src="/img/video/samar-demo-ar.jpg" alt="" loading="lazy"><button type="button" aria-label="${T('شغّل الفيديو', 'Play the film')}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" fill="currentColor"/></svg></button></div></div>`;
     const pin = root.querySelector('#smPin'), nm = root.querySelector('#smName');
+    const vd = root.querySelector('#smVid'); if (vd) vd.onclick = () => { if (vd.querySelector('video')) return; vd.innerHTML = '<video controls autoplay playsinline preload="auto" poster="/img/video/samar-demo-ar.jpg"><source src="/img/video/samar-demo-ar.mp4" type="video/mp4"></video>'; };
     pin.oninput = () => { pin.value = pin.value.replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[^\d ]/g, ''); };
     root.querySelector('#smGo').onclick = () => join(pin.value.replace(/\D/g, ''), nm.value.trim().replace(/\s+/g, ' ').slice(0, 20));
     root.querySelector('#smHost').onclick = () => host();
