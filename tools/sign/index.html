@@ -1536,6 +1536,10 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
 .sn-nbh button{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:10px;min-width:40px;height:36px;font:inherit;font-size:1.25rem;cursor:pointer}
 .sn-nbh .sn-nbok{background:var(--accent);color:#fff;border-color:var(--accent);font-size:.9375rem;padding:0 16px}
 .sn-nbar input{font:inherit;font-size:18px;font-weight:500;width:100%;box-sizing:border-box;border:1.5px solid var(--accent);border-radius:12px;padding:12px 14px;background:var(--bg);color:var(--ink)}
+.sn-drv{display:flex;gap:10px;align-items:flex-start;margin:12px 0;padding:12px 14px;border:1px solid var(--line);border-radius:12px;font-size:.95rem;line-height:1.6;cursor:pointer}
+.sn-drv input{margin-top:5px;flex:none;width:18px;height:18px}
+.sn-drvbar{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin:10px 0 0;padding:10px 14px;border-radius:12px;background:var(--soft,rgba(37,99,235,.06));font-size:.95rem}
+.sn-drvbar svg{flex:none;color:var(--accent,#2563eb)}
 </style>
 <div id="sn" class="sn" data-api="https://script.google.com/macros/s/AKfycbx8-M5oOYDU-TaWyLaySlqZHvBffRiDI6QH85_hBh5y_9uYrvUdxwD3hKNzGoJ4K7UOXQ/exec"><noscript><span class="ar">تعمل هذه الأداة مع تفعيل JavaScript.</span><span class="en">This tool needs JavaScript.</span></noscript></div>
 <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
@@ -1682,6 +1686,39 @@ async function snDetectPage(page,pi,OPS){
     }
     return j;
   }
+  /* ---------- the coordinator's own Google Drive: the minutes and the signed copy are kept there.
+     Access is limited to the files this tool creates (drive.file); nothing else in the Drive is visible to it. ---------- */
+  const GCID = '342187013133-ainojvc448dolkv6ipk2l2l7di0rkfhf.apps.googleusercontent.com', DSCOPE = 'https://www.googleapis.com/auth/drive.file';
+  const Drv = {
+    tc: null, wait: null,
+    load() { if (window.google && google.accounts && google.accounts.oauth2) return Promise.resolve(); return Drv.p = Drv.p || new Promise((ok, no) => { const sc = document.createElement('script'); sc.src = 'https://accounts.google.com/gsi/client'; sc.async = true; sc.onload = ok; sc.onerror = no; document.head.appendChild(sc); }); },
+    cached() { try { const t = JSON.parse(sessionStorage.getItem('sn.dt') || 'null'); return t && t.exp > Date.now() + 60000 ? t.t : null; } catch (e) { return null; } },
+    // must be called straight from a tap: the browser only opens Google's window for a user's own action
+    token() {
+      const c = Drv.cached(); if (c) return Promise.resolve(c);
+      if (!(window.google && google.accounts && google.accounts.oauth2)) return Promise.reject({ code: 'gis' });
+      return new Promise((ok, no) => {
+        Drv.tc = google.accounts.oauth2.initTokenClient({ client_id: GCID, scope: DSCOPE, callback: r => { if (r.error || !r.access_token) return no({ code: r.error || 'denied' }); try { sessionStorage.setItem('sn.dt', JSON.stringify({ t: r.access_token, exp: Date.now() + (r.expires_in || 3000) * 1000 })); } catch (e) {} ok(r.access_token); }, error_callback: e => no({ code: e && e.type || 'closed' }) });
+        Drv.tc.requestAccessToken({ prompt: '' });
+      });
+    },
+    async api(t, url, opt) { const r = await fetch(url, Object.assign({}, opt, { headers: Object.assign({ Authorization: 'Bearer ' + t }, (opt || {}).headers) })); if (r.status === 401) { try { sessionStorage.removeItem('sn.dt'); } catch (e) {} } if (!r.ok) throw { code: 'drive_' + r.status }; return r.json(); },
+    async folder(t) {
+      const id = store.get('dfolder', null);
+      if (id) { try { const f = await Drv.api(t, `https://www.googleapis.com/drive/v3/files/${id}?fields=id,trashed`); if (!f.trashed) return id; } catch (e) {} }
+      const f = await Drv.api(t, 'https://www.googleapis.com/drive/v3/files?fields=id', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: isAr() ? 'محاضر التوقيع' : 'Signed minutes', mimeType: 'application/vnd.google-apps.folder', description: 'alsamani.com/tools/sign' }) });
+      store.set('dfolder', f.id); return f.id;
+    },
+    // a new file, or a new version of the same file, so the copy in the Drive is always the latest
+    async put(t, name, bytes, fileId) {
+      const meta = fileId ? { name } : { name, parents: [await Drv.folder(t)], mimeType: 'application/pdf' }, bd = 'sn' + Math.random().toString(36).slice(2);
+      const body = new Blob([`--${bd}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${JSON.stringify(meta)}\r\n--${bd}\r\nContent-Type: application/pdf\r\n\r\n`, bytes, `\r\n--${bd}--`]);
+      const f = await Drv.api(t, `https://www.googleapis.com/upload/drive/v3/files${fileId ? '/' + fileId : ''}?uploadType=multipart&fields=id`, { method: fileId ? 'PATCH' : 'POST', headers: { 'Content-Type': 'multipart/related; boundary=' + bd }, body });
+      return f.id;
+    }
+  };
+  const IC_DRV = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 18h10a4 4 0 0 0 .5-7.97A6 6 0 0 0 6 9.5 4.25 4.25 0 0 0 7 18z"/></svg>';
+  const drvOf = id => (store.get('drv', {}))[id] || null, drvSet = (id, v) => { const m = store.get('drv', {}); if (v) m[id] = v; else delete m[id]; store.set('drv', m); };
   async function call(body, tries) {
     if (!tries) { const raw = body; body = await sealBody(body); body._raw = raw; }
     const res = await send(body, tries); return openReply(body, res);
@@ -1874,6 +1911,7 @@ async function snDetectPage(page,pi,OPS){
         <label class="sn-lbl">${B('عنوان المحضر', 'Title')}<input type="text" id="snTitle" maxlength="200" value="${esc(title)}"></label>
         ${T.length ? `<label class="sn-lbl">${B('خانات محفوظة من محاضر سابقة', 'Boxes saved from earlier minutes')}<select id="snTpl"><option value="">${isAr() ? 'تحديد تلقائي من هذا الملف' : 'Detect from this file'}</option>${T.map((t, k) => `<option value="${k}"${used === t ? ' selected' : ''}>${esc(t.title)} · ${t.slots.length} ${isAr() ? 'خانة' : 'boxes'}</option>`).join('')}</select></label>` : ''}
         <p class="sn-found">${used ? B(`استُخدمت خانات «${esc(used.title)}» وأسماؤها. راجعها إن تغيّر شكل المحضر.`, `Boxes and names from “${esc(used.title)}” were applied. Review them if the layout changed.`) : found ? B(`حددت الأداة ${found} خانة توقيع أمام الأسماء، وستظهر للأعضاء جاهزة. ويستطيع أي عضو أيضًا التوقيع في الموضع الذي يختاره.`, `The tool marked ${found} signature boxes next to the names; members will see them ready. Any member can also sign wherever they choose.`) : B('لم تُحدَّد خانات توقيع تلقائيًا، ولا بأس: يضع كل عضو توقيعه في الموضع الذي يختاره من المحضر.', 'No signature boxes were detected, which is fine: each member places their signature wherever they choose.')}</p>
+        <label class="sn-chk sn-drv"><input type="checkbox" id="snDrive"${store.get('drive', 0) ? ' checked' : ''}> <span>${B('احفظ المحضر في Google Drive الخاص بك، وتُحدَّث نسخته الموقّعة هناك أولًا بأول. يطلب الدخول بحسابك مرة، ولا يرى الموقع إلا الملفات التي ينشئها هو.', 'Keep the minutes in your own Google Drive, with the signed copy updated there as signatures come in. It asks you to sign in once, and this tool sees only the files it creates.')}</span></label>
         <div class="sn-two"><button type="button" class="btn solid" id="snCreate">${B('إنشاء الرابط الآن', 'Create the link now')}</button>
         <button type="button" class="btn ghost" id="snRevBtn" aria-expanded="false">${found ? B('مراجعة بيانات التوقيع الأولية', 'Review the signing details') : B('إضافة بيانات التوقيع مسبقًا', 'Add the signing details first')} <small class="sn-opt">${B('اختياري', 'optional')}</small></button></div>
         <details class="sn-why"><summary>${B('ما فائدتها؟', 'Why add them?')}</summary><p>${B('تحدد لكل عضو مربعًا باسمه في موضع توقيعه، فيصير التوقيع أسهل وأدق: يفتح العضو الرابط ويختار اسمه، فينتقل إلى مربعه مباشرة، ثم يرسم توقيعه أو يختار توقيعه المحفوظ، فيوضع في مكانه بالحجم المناسب ويُحفظ تلقائيًا. وتتابع أنت من وقّع ومن لم يوقّع بعد. وإن تركتها، يضع كل عضو توقيعه في الموضع الذي يختاره.', 'Each member gets a box with their name where they sign, so signing is easier and neater: the member opens the link and picks their name, goes straight to their box, draws or picks a saved signature, and it is placed at the right size and saved automatically. You can follow who has signed and who has not. Without them, each member signs wherever they choose.')}</p></details>
@@ -1968,11 +2006,17 @@ async function snDetectPage(page,pi,OPS){
     const jb = ed.querySelector('#snJump'); if (jb) jb.onclick = () => { const x = host.querySelector('.sn-box'); if (x) x.scrollIntoView({ behavior: 'smooth', block: 'center' }); };
     let rw = document.documentElement.clientWidth, rt; window.addEventListener('resize', () => { const w = document.documentElement.clientWidth; if (!shown || Math.abs(w - rw) < 40) return; rw = w; clearTimeout(rt); rt = setTimeout(show, 250); });
     ed.querySelector('#snCreate2').onclick = () => ed.querySelector('#snCreate').click();
+    const dck = ed.querySelector('#snDrive'); Drv.load().catch(() => {}); dck.onchange = () => store.set('drive', dck.checked ? 1 : 0);
     ed.querySelector('#snCreate').onclick = async ev => {
-      const btn = ev.currentTarget; btn.disabled = true; btn.classList.add('busy');
+      const btn = ev.currentTarget;
+      // Google's window opens first, straight from the tap
+      let dt = null;
+      if (dck.checked) { try { dt = await Drv.token(); } catch (e) { if (!confirm(T('لم يكتمل الدخول إلى Google Drive. أكمل بدون حفظ في Drive؟', 'Google Drive sign-in did not finish. Carry on without Drive?'))) return; } }
+      btn.disabled = true; btn.classList.add('busy');
       try {
         const j = await call({ a: 'create', title: ed.querySelector('#snTitle').value.trim() || title, pdf: b64(buf), slots: slots.map(s => ({ p: s.p, n: s.n.trim(), r: s.r || '', x: s.x, y: s.y, w: s.w, h: s.h })) });
         const keys = store.get('keys', {}); keys[j.id] = j.k; store.set('keys', keys); ekSet(j.id, j.e);
+        if (dt) { try { const nm = (ed.querySelector('#snTitle').value.trim() || title || 'minutes').replace(/[\\/:*?"<>|]+/g, ' ').slice(0, 120) + '.pdf'; drvSet(j.id, { f: await Drv.put(dt, nm, new Uint8Array(buf)), n: 0 }); } catch (e) { console.error(e); toast(B('أُنشئ الرابط، لكن تعذّر الحفظ في Drive الآن.', 'The link is ready, but saving to Drive failed for now.'), 1); } }
         if (slots.length) {
           const t = { title: ed.querySelector('#snTitle').value.trim() || title, pages: doc.numPages, slots: slots.map(s => ({ pe: doc.numPages - 1 - s.p, n: s.n.trim(), r: s.r || '', x: s.x, y: s.y, w: s.w, h: s.h })) };
           const key = JSON.stringify(t.slots.map(s => [s.pe, Math.round(s.x), Math.round(s.y)]));
@@ -2013,6 +2057,7 @@ async function snDetectPage(page,pi,OPS){
         <div class="sn-me" id="snMe" hidden></div>
         <p class="sn-tip" id="snTip">${B('للتوقيع: اضغط على خانتك أمام اسمك، أو على أي موضع في المحضر.', 'To sign, tap your box next to your name, or any spot in the minutes.')}</p>
         <div class="sn-names" id="snNames"></div>
+        <p class="sn-drvbar" id="snDrv" hidden></p>
         <div class="sn-acts">
           <button type="button" class="btn solid" id="snDl">${B('تحميل المحضر', 'Download the minutes')}</button>
 
@@ -2069,7 +2114,7 @@ async function snDetectPage(page,pi,OPS){
       if (S.locked) return toast(ERR.locked, 1);
       sheetSign(i);
     }
-    async function refresh() { try { const g = await call({ a: 'get', id, k: key }); S = g; draw(); } catch (e) {} }
+    async function refresh() { try { const g = await call({ a: 'get', id, k: key }); S = g; draw(); driveSync(false); } catch (e) {} }
     function getSig(title, onPng) {
       // several saved signatures per device (e.g. full signature and initials), newest first
       let saved = store.get('sigs', null); if (!saved) { const one = store.get('sig', null); saved = one ? [one] : []; store.set('sigs', saved); }
@@ -2201,9 +2246,8 @@ async function snDetectPage(page,pi,OPS){
         S = await call(Object.assign({ a: 'move', id, i, k: key, tok: mine[i] }, r)); endMode(); draw(); toast(B('حُفظ الموضع.', 'Position saved.'));
       });
     }
-    root.querySelector('#snDl').onclick = async ev => {
-      const btn = ev.currentTarget; btn.disabled = true;
-      try {
+    // the minutes with every signature in place
+    async function build() {
         const pdf = await PDFLib.PDFDocument.load(bytes, { ignoreEncryption: true });
         const pg = pdf.getPages();
         for (const s of S.slots) {
@@ -2214,6 +2258,26 @@ async function snDetectPage(page,pi,OPS){
         }
         const out = await pdf.save();
         const name = (S.title || 'minutes').replace(/[\\/:*?"<>|]+/g, ' ').trim() + (S.slots.every(s => s.sig || s.free || s.gone) ? (isAr() ? ' - موقّع' : ' - signed') : '') + '.pdf';
+        return { out, name };
+    }
+    // the coordinator's copy in Google Drive follows the signatures
+    const signedN = () => S.slots.filter(x => x.sig && !x.gone).length;
+    async function driveSync(interactive) {
+      const d = drvOf(id); if (!admin || !d) return;
+      const n = signedN(), bar = root.querySelector('#snDrv'); if (!bar) return;
+      const show = (txt, btn) => { bar.hidden = false; bar.innerHTML = `${IC_DRV}<span>${txt}</span>${btn ? `<button type="button" class="sn-lnk" id="snDrvGo">${btn}</button>` : ''}<a class="sn-lnk" href="https://drive.google.com/file/d/${d.f}/view" target="_blank" rel="noopener">${B('افتحها في Drive', 'Open in Drive')}</a>`; const g = bar.querySelector('#snDrvGo'); if (g) g.onclick = () => driveSync(true); };
+      if (d.n === n) return show(B('نسختك في Google Drive محدّثة.', 'Your copy in Google Drive is up to date.'));
+      let t = Drv.cached();
+      if (!t && !interactive) return show(B(`${n - d.n > 0 ? 'وصلت تواقيع جديدة' : 'تغيّرت التواقيع'}، ونسختك في Drive تحتاج تحديثًا.`, 'New signatures are in; your Drive copy needs an update.'), B('حدّثها الآن', 'Update it now'));
+      try { if (!t) t = await Drv.token(); show(B('جارٍ تحديث نسختك في Drive…', 'Updating your Drive copy…')); const { out, name } = await build(); await Drv.put(t, name, out, d.f); d.n = n; drvSet(id, d); show(B('نسختك في Google Drive محدّثة.', 'Your copy in Google Drive is up to date.'));
+        // all signed and safe in the coordinator's Drive: nothing needs to stay on the service
+        if (n && S.slots.every(x => x.sig || x.free || x.gone) && !document.querySelector('.sn-sheet')) { const del = root.querySelector('#snDelete'); if (del) setTimeout(() => del.click(), 1200); } }
+      catch (e) { console.error(e); if (e && e.code === 'drive_404') { drvSet(id, null); bar.hidden = true; toast(B('لم يعد ملف المحضر موجودًا في Drive.', 'The minutes file is no longer in Drive.'), 1); return; } show(B('تعذّر تحديث نسختك في Drive الآن.', 'Could not update your Drive copy right now.'), B('حاول مرة أخرى', 'Try again')); }
+    }
+    root.querySelector('#snDl').onclick = async ev => {
+      const btn = ev.currentTarget; btn.disabled = true;
+      try {
+        const { out, name } = await build();
         const file = new File([out], name, { type: 'application/pdf' });
         const save = () => { const a = document.createElement('a'); a.href = URL.createObjectURL(file); a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 4000); };
         // phones: the system share sheet (WhatsApp, Files, Mail…) with a real PDF file
@@ -2239,11 +2303,12 @@ async function snDetectPage(page,pi,OPS){
         const sh = sheet(`<h3>${B('حذف المحضر نهائيًا؟', 'Delete these minutes for good?')}</h3><p>${B('تأكد أنك حمّلت نسختك الموقّعة. بعد الحذف لا يبقى من المحضر شيء على الخادم، ولن يعمل الرابط لأحد.', 'Make sure you have your signed copy. After deletion nothing of the minutes stays on the server, and the link stops working for everyone.')}</p>
           <div class="sn-sb"><button type="button" class="btn sn-danger" data-act="del">${B('حذف', 'Delete')}</button><button type="button" class="btn ghost" data-act="x">${B('إلغاء', 'Cancel')}</button></div>`);
         sh.querySelector('[data-act=x]').onclick = close;
-        sh.querySelector('[data-act=del]').onclick = async () => { try { await call({ a: 'delete', id, k: key }); delete keys[id]; store.set('keys', keys); store.del('mine.' + id); location.href = './'; } catch (e) { toast(errMsg(e), 1); } };
+        sh.querySelector('[data-act=del]').onclick = async () => { try { await call({ a: 'delete', id, k: key }); drvSet(id, null); delete keys[id]; store.set('keys', keys); store.del('mine.' + id); location.href = './'; } catch (e) { toast(errMsg(e), 1); } };
       };
     }
     views = await renderPages(doc, host, S.slots, { mine });
     draw();
+    if (admin && drvOf(id)) { Drv.load().catch(() => {}); driveSync(false); }
     let rw = document.documentElement.clientWidth, rt; window.addEventListener('resize', () => { const w = document.documentElement.clientWidth; if (Math.abs(w - rw) < 40) return; rw = w; clearTimeout(rt); rt = setTimeout(rerender, 250); });
     setInterval(() => { if (!document.hidden && !document.querySelector('.sn-sheet,.sn-mode')) refresh(); }, 15000);
   }
