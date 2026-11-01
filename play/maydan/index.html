@@ -4626,7 +4626,7 @@ window.MDLive = (function () {
   const qNo = i => G.quiz.qs.slice(0, i + 1).filter(z => z.type !== 'stage').length, qTot = () => G.quiz.qs.filter(z => z.type !== 'stage').length;
   async function next() {
     if (G.stageNext && !G.ended && G.done + 1 <= G.quiz.qs.length) stageNow();
-    statFlush(); G.rxc = 0; journey(); if (G.phones && G.sb && G.sb.length) { G.sb = []; G.ref.child('sb').remove().catch(() => {}); }
+    statFlush(); G.rxc = 0; journey(); if (G.sb && G.sb.length) { G.sb = []; G.ref.child('sb').remove().catch(() => {}); }
     G.i = G.done + 1;
     if (G.i === 0) stat({ [srcOf(G.quiz) + '/go']: 1, [srcOf(G.quiz) + '/p']: Object.keys(G.players).length, [G.phones ? 'x/phones' : 'x/screen']: 1, [G.teams ? 'x/teams' : 'x/solo']: 1 });
     // last survivor: alone it ends with one player left; with teams, when only one team still has someone in
@@ -4770,7 +4770,7 @@ window.MDLive = (function () {
     let got = 0, last = -1;
     sub(G.ref.child('an/' + G.i), 'child_added', () => { got++; const a = q('#mdA'); if (a) a.textContent = got; if (got >= (G.opts.surv && !G.teams ? alive() : Object.keys(G.players)).length) reveal(); });
     q('[data-skip]').onclick = () => reveal();
-    if (x.type === 'stage') { let k = 0; sub(G.ref.child('an/' + G.i), 'child_added', s => { const v = s.val() || {}, box = q('#mdStage'); if (!box || typeof v.a !== 'string' || !v.a.trim()) return; const p = box.querySelector('.md-prompt'); if (p) p.remove(); box.insertAdjacentHTML('afterbegin', bubble(G.players[s.key], v.a, k++)); SND.join(); if (G.phones) { G.sb = [{ n: G.players[s.key] || '', t: String(v.a).slice(0, 140) }].concat(G.sb || []).slice(0, 12); G.ref.child('sb').set(G.sb).catch(() => {}); } while (box.children.length > 12) box.lastElementChild.remove(); }); }
+    if (x.type === 'stage') { let k = 0; sub(G.ref.child('an/' + G.i), 'child_added', s => { const v = s.val() || {}, box = q('#mdStage'); if (!box || typeof v.a !== 'string' || !v.a.trim()) return; const p = box.querySelector('.md-prompt'); if (p) p.remove(); box.insertAdjacentHTML('afterbegin', bubble(G.players[s.key], v.a, k++)); SND.join(); { G.sb = [{ n: G.players[s.key] || '', t: String(v.a).slice(0, 140) }].concat(G.sb || []).slice(0, 12); G.ref.child('sb').set(G.sb).catch(() => {}); } while (box.children.length > 12) box.lastElementChild.remove(); }); }
     if (x.type === 'game' && !['tug', 'race'].includes(x.g)) { const fin = {}; let pr = {};
       sub(G.ref.child('an/' + G.i), 'child_added', a => { fin[a.key] = +(a.val() || {}).a || 0; arena(x, pr, fin); });
       sub(G.ref.child('tg'), 'value', v => { pr = {}; Object.entries(v.val() || {}).forEach(([u, o]) => { pr[u] = +o.c || 0; }); arena(x, pr, fin); }); arena(x, pr, fin); }

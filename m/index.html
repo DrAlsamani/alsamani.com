@@ -2758,10 +2758,10 @@ window.MDGames = (function () {
      everyone's answers after each question, the stage's statements, and the reactions flying past */
   function feed() {
     const f = root.querySelector('#mpFeed'); if (!f) return;
-    if (!PM || FAN && !['rev', 'q'].includes(st.ph)) { f.innerHTML = ''; return; }
     let h = '';
-    if (Q && Q.type === 'stage' && Q.i === st.i && SB.length) h = `<div class="mp-sb">${SB.map((b, k) => `<div class="md-bub" style="--c:var(--qz${k % 6})"><b dir="auto">${esc(b.n)}</b><p dir="auto">${esc(b.t)}</p></div>`).join('')}</div>`;
-    else if (st.ph === 'rev' && RV && RV.i === st.i && Q && Q.i === st.i) {
+    // the stage's statements show on every phone, with or without a big screen
+    if (Q && Q.type === 'stage' && Q.i === st.i && ['q', 'rev'].includes(st.ph) && SB.length) h = `<div class="mp-sb">${SB.map((b, k) => `<div class="md-bub" style="--c:var(--qz${k % 6})"><b dir="auto">${esc(b.n)}</b><p dir="auto">${esc(b.t)}</p></div>`).join('')}</div>`;
+    else if (PM && st.ph === 'rev' && RV && RV.i === st.i && Q && Q.i === st.i) {
       const okSet = new Set([].concat(OK == null ? [] : OK).map(Number));
       if (RV.c) { const mx = Math.max(1, ...RV.c); h = `<div class="mp-dist"><p>${B(`إجابات الجميع (${RV.n})`, `Everyone’s answers (${RV.n})`)}</p>${RV.c.map((c, j) => `<div class="mp-dbar${Q.type !== 'poll' && okSet.has(j) ? ' ok' : ''}"><span dir="auto">${esc((Q.opts || [])[j] || '')}</span><i style="--w:${(100 * c / mx).toFixed(0)}%"></i><b>${c}</b></div>`).join('')}</div>`; }
       else if (RV.w && RV.w.length) { const mx = Math.max(1, ...RV.w.map(w => w[1])); h = `<div class="mp-cloud"><p>${B(`ماذا كتب الجميع (${RV.n})`, `What everyone wrote (${RV.n})`)}</p><div>${RV.w.map(([w, c], k) => `<span dir="auto" style="--s:${(0.85 + 0.9 * c / mx).toFixed(2)};--c:var(--qz${k % 6})">${esc(w)}${c > 1 ? `<small>${c}</small>` : ''}</span>`).join('')}</div></div>`; }
