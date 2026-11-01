@@ -37,7 +37,7 @@ window.MDLive = (function () {
   };
 
   /* ---------- keeping a game so it can be resumed ---------- */
-  const keep = () => { if (!G) return; try { localStorage.setItem(SAVE, JSON.stringify({ pin: G.pin, quiz: G.quiz, i: G.done, score: G.score, qp: G.qp, out: G.out, streak: G.streak, team: G.team, teams: G.teams, opts: G.opts, gold: G.gold, players: G.players, phones: !!G.phones, used: G.used || {}, lockJoin: !!G.lockJoin, shuffled: !!G.shuffled, at: Date.now() })); } catch (e) {} };
+  const keep = () => { if (!G) return; try { localStorage.setItem(SAVE, JSON.stringify({ pin: G.pin, quiz: G.quiz, i: G.done, score: G.score, qp: G.qp, out: G.out, streak: G.streak, team: G.team, teams: G.teams, opts: G.opts, gold: G.gold, players: G.players, phones: !!G.phones, used: G.used || {}, jr: G.jr || [], jrAt: G.jrAt, lockJoin: !!G.lockJoin, shuffled: !!G.shuffled, at: Date.now() })); } catch (e) {} };
   const forget = () => { try { localStorage.removeItem(SAVE); } catch (e) {} };
   function pending() { try { const s = JSON.parse(localStorage.getItem(SAVE) || 'null'); return s && Date.now() - s.at < 7 * 864e5 ? s : null; } catch (e) { return null; } }
 
@@ -65,6 +65,17 @@ window.MDLive = (function () {
     if (!G || !G.sp) return;
     const z = G.sp; G.sp = null;
     stat({ [`i/${z.k}/n`]: 1, [`i/${z.k}/p`]: z.p, [`i/${z.k}/a`]: z.a, [`i/${z.k}/rx`]: G.rxc || 0 });
+  }
+
+  /* ---------- the journey: everyone's points after each question, for the phones' summary at the end ---------- */
+  function journey() {
+    if (!G || G.done < 0 || G.jrAt === G.done) return;
+    const x = G.quiz.qs[G.done]; G.jrAt = G.done; if (!x || x.type === 'stage') return;
+    G.jr = G.jr || []; const o = {}; Object.keys(G.players).forEach(u => { o[u] = G.score[u] || 0; }); G.jr.push(o);
+  }
+  function journeyOut(order) {
+    const us = order.slice(0, 30), J = G.jr || [];
+    return { k: us.map(u => u.slice(0, 8)), n: us.map(u => G.players[u] || ''), s: us.map(u => J.map(o => o[u] || 0)) };
   }
 
   /* ---------- the room ---------- */
@@ -106,7 +117,7 @@ window.MDLive = (function () {
       const room = (await db.ref('rooms/' + s.pin).once('value')).val();
       if (!room || room.host !== uid) { forget(); el.innerHTML = `<div class="md-wait">${B('انتهت صلاحية هذه المسابقة ولم تعد موجودة.', 'This quiz is no longer available.')}<button type="button" class="btn ghost" data-x>${B('إغلاق', 'Close')}</button></div>`; el.querySelector('[data-x]').onclick = leave; return; }
       fresh(s.quiz, el, s.pin);
-      Object.assign(G, { score: s.score || {}, qp: s.qp || {}, out: s.out || {}, streak: s.streak || {}, team: s.team || {}, teams: s.teams || null, opts: s.opts || G.opts, gold: s.gold, players: s.players || {}, i: s.i, done: s.i, used: s.used || {}, lockJoin: !!s.lockJoin, shuffled: !!s.shuffled });
+      Object.assign(G, { score: s.score || {}, qp: s.qp || {}, out: s.out || {}, streak: s.streak || {}, team: s.team || {}, teams: s.teams || null, opts: s.opts || G.opts, gold: s.gold, players: s.players || {}, i: s.i, done: s.i, used: s.used || {}, jr: s.jr || [], jrAt: s.jrAt, lockJoin: !!s.lockJoin, shuffled: !!s.shuffled });
       if (s.phones) { phonesMode(true); if (G.i >= 0) G.el.classList.add('started'); }
       keepPlayers();
       if (G.i < 0) return lobby();
@@ -391,7 +402,7 @@ window.MDLive = (function () {
   const qNo = i => G.quiz.qs.slice(0, i + 1).filter(z => z.type !== 'stage').length, qTot = () => G.quiz.qs.filter(z => z.type !== 'stage').length;
   async function next() {
     if (G.stageNext && !G.ended && G.done + 1 <= G.quiz.qs.length) stageNow();
-    statFlush(); G.rxc = 0;
+    statFlush(); G.rxc = 0; journey();
     G.i = G.done + 1;
     if (G.i === 0) stat({ [srcOf(G.quiz) + '/go']: 1, [srcOf(G.quiz) + '/p']: Object.keys(G.players).length, [G.phones ? 'x/phones' : 'x/screen']: 1, [G.teams ? 'x/teams' : 'x/solo']: 1 });
     // last survivor: alone it ends with one player left; with teams, when only one team still has someone in
@@ -748,23 +759,43 @@ window.MDLive = (function () {
     setTimeout(() => G.el.querySelectorAll('[data-mv]').forEach(li => li.classList.add('go')), 900);
   }
 
+
+  /* ---------- the race replay on the big screen: the top ten, each in a lane, the gaps as the gaps in points ---------- */
+  function replayBig(order) {
+    const J = G.jr || []; if (J.length < 2) return;
+    const us = order.slice(0, 10), max = Math.max(1, ...us.map(u => J[J.length - 1][u] || 0), ...J.flatMap(o => us.map(u => o[u] || 0)));
+    const d = document.createElement('div'); d.className = 'md-rpbig';
+    d.innerHTML = `<div class="md-rphead"><b id="mdRpQ"></b><button type="button" class="md-cb" data-x>${B('إغلاق', 'Close')}</button></div><div class="md-rptrack">${us.map((u, k) => `<div class="md-rplane"><span class="md-rpn" dir="auto">${esc(G.players[u] || '')}</span><div class="md-rprun"><em class="md-rpf" style="--c:var(--qz${k % 6})" data-u="${u}"><span>${esc((G.players[u] || '?').trim().charAt(0))}</span><small></small></em></div></div>`).join('')}</div>`;
+    G.el.appendChild(d);
+    const F = [...d.querySelectorAll('.md-rpf')], hd = d.querySelector('#mdRpQ'); let t = -1, tm = null;
+    const at = t => {
+      const sc = u => t < 0 ? 0 : (J[t][u] || 0), rk = [...us].sort((a, b) => sc(b) - sc(a));
+      F.forEach(f => { const u = f.dataset.u, r = rk.indexOf(u) + 1; f.style.left = (100 * sc(u) / max) + '%'; f.querySelector('small').textContent = t < 0 ? '' : r; f.classList.toggle('lead', t >= 0 && r === 1); });
+      hd.textContent = t < 0 ? T('انطلق السباق', 'And they are off') : t === J.length - 1 ? T('خط النهاية', 'The finish') : T(`بعد السؤال ${t + 1}`, `After question ${t + 1}`);
+    };
+    const go = () => { t++; if (t >= J.length) return; at(t); if (t === J.length - 1) SND.drum(); else SND.join(); tm = setTimeout(go, 1500); };
+    at(-1); tm = setTimeout(go, 1200);
+    d.querySelector('[data-x]').onclick = () => { clearTimeout(tm); d.remove(); };
+  }
   /* ---------- the end: the winning team, then the podium from third to first ---------- */
   async function finish() {
     G.ended = true; clearInterval(G.timer); forget();
     statFlush(); stat({ [srcOf(G.quiz) + '/f']: 1 });
     const order = Object.keys(G.score).filter(u => u in G.players).sort(byRank), tt = teamTable();
-    await G.ref.child('top').set({ p: order.slice(0, 5).map(u => ({ n: G.players[u] || '', s: G.score[u] })), t: tt.slice(0, 5).map(t => ({ n: t.name, s: t.avg, k: t.k })) });
+    journey(); const jr = journeyOut(order);
+    await G.ref.child('top').set({ jr, p: order.slice(0, 5).map(u => ({ n: G.players[u] || '', s: G.score[u] })), t: tt.slice(0, 5).map(t => ({ n: t.name, s: t.avg, k: t.k })) });
     await G.ref.child('st').set({ ph: 'end', i: G.i, lock: true });
     const p = k => order[k] ? `<div class="md-pod md-p${k + 1}"><span class="md-pn" dir="auto">${esc(G.players[order[k]] || '')}</span><b>${G.score[order[k]]}</b><div class="md-step">${k + 1}</div></div>` : '<div class="md-pod md-empty"></div>';
     const q = frame(`<div class="md-end"><h2>${esc(G.quiz.title || T('ميدان', 'Maydan'))}</h2>
         ${tt.length ? `<p class="md-wteam" style="--c:var(--qz${(tt[0].k) % 6})">${B(`الفريق الفائز: ${esc(tt[0].name)}`, `Winning team: ${esc(tt[0].name)}`)} <em>${tt[0].avg}</em></p>` : ''}
         <div class="md-podium">${p(1)}${p(0)}${p(2)}</div>
         <ol class="md-rest" start="4">${order.slice(3, 10).map(u => `<li><span dir="auto">${esc(G.players[u] || '')}</span><em>${G.score[u]}</em></li>`).join('')}</ol></div>`,
-      `<button type="button" class="btn ghost" data-csv>${B('تحميل النتائج', 'Download results')}</button>
+      `${(G.jr || []).length > 1 ? `<button type="button" class="btn ghost" data-replay>${B('إعادة السباق', 'Replay the race')}</button>` : ''}<button type="button" class="btn ghost" data-csv>${B('تحميل النتائج', 'Download results')}</button>
        <label class="md-opt md-grade" title="${T('اختياري: تُحسب الدرجة من نقاط ميدان، والأول يأخذ الدرجة كاملة', 'Optional: the grade follows Maydan points; the top player gets full marks')}">${B('مع درجة من', 'with a grade out of')} <input type="number" min="1" max="100" step="1" inputmode="numeric" data-gr placeholder="—"></label>
        ${G.quiz.qs.some(x => x.type === 'game') ? `<label class="md-opt md-grade"><input type="checkbox" data-gq> ${B('من الأسئلة فقط (دون التحديات)', 'from the questions only (no challenges)')}</label>` : ''}`);
     reactions(); SND.drum();
     [3, 2, 1].forEach((k, n) => setTimeout(() => { const e = q(`.md-p${k}`); if (e) e.classList.add('in'); if (k === 1) SND.win(); }, 900 + n * 1300));
+    if (q('[data-replay]')) q('[data-replay]').onclick = () => replayBig(order);
     q('[data-csv]').onclick = () => {
       // an optional grade: in proportion to the points, so speed still counts and the top player gets full marks
       // with "questions only", the points from challenges are left out of the grade (but kept in the ranking)
