@@ -126,3 +126,4 @@
 .sm-author{color:var(--c)}
 .sm-phone .sm-quote{font-size:1.15rem;background:rgba(23,21,58,.06);padding:16px 18px;border-radius:16px;margin:0 0 12px}
 .sm-form textarea{font:inherit;font-size:1.1rem;padding:12px 14px;border:1.5px solid var(--line,#d6d6e2);border-radius:12px;background:var(--bg,#fff);color:inherit;width:100%;box-sizing:border-box;resize:vertical}
+.sm-ovb select{font:inherit;border-radius:10px;padding:4px 10px;background:rgba(0,0,0,.25);color:inherit;border:1.5px solid rgba(255,255,255,.2)}

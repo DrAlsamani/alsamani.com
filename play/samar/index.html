@@ -1526,6 +1526,7 @@ html[dir=ltr] .jr-dch.fd .jr-fold::before{transform:rotate(-45deg)}
 .sm-author{color:var(--c)}
 .sm-phone .sm-quote{font-size:1.15rem;background:rgba(23,21,58,.06);padding:16px 18px;border-radius:16px;margin:0 0 12px}
 .sm-form textarea{font:inherit;font-size:1.1rem;padding:12px 14px;border:1.5px solid var(--line,#d6d6e2);border-radius:12px;background:var(--bg,#fff);color:inherit;width:100%;box-sizing:border-box;resize:vertical}
+.sm-ovb select{font:inherit;border-radius:10px;padding:4px 10px;background:rgba(0,0,0,.25);color:inherit;border:1.5px solid rgba(255,255,255,.2)}
 </style>
 <div id="sm" class="sm"><noscript><span class="ar">تعمل هذه اللعبة مع تفعيل JavaScript.</span><span class="en">This game needs JavaScript.</span></noscript></div>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script>window.MD_CFG={"apiKey": "AIzaSyA50i75DT1Is1a6Yn6snW1_JVObc8S3F0Y", "authDomain": "maydan-705ae.firebaseapp.com", "databaseURL": "https://maydan-705ae-default-rtdb.europe-west1.firebasedatabase.app", "projectId": "maydan-705ae", "appId": "1:342187013133:web:d5c2396f0db413f3c51144"};window.MD_MARK="<svg class=\"md-mark\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><rect x=\"4\" y=\"4\" width=\"40\" height=\"40\" rx=\"12\" fill=\"#23336F\"/><path d=\"M24 9l4.2 6.8 7.8-1.8-1.8 7.8L41 24l-6.8 4.2 1.8 7.8-7.8-1.8L24 39l-4.2-6.8-7.8 1.8 1.8-7.8L7 24l6.8-4.2-1.8-7.8 7.8 1.8z\" fill=\"#C9822B\"/><circle cx=\"24\" cy=\"24\" r=\"6.5\" fill=\"#23336F\"/><circle cx=\"24\" cy=\"24\" r=\"3\" fill=\"#F3E3C7\"/></svg>";</script><script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script><script>/* Samar (alsamani.com/play/samar): games for a gathering, on one code — the screen shows the play and each phone
@@ -1744,12 +1745,15 @@ html[dir=ltr] .jr-dch.fd .jr-fold::before{transform:rotate(-45deg)}
       <textarea data-w rows="7" dir="auto">${esc(store.get('mine', ''))}</textarea>
       <h3>${B('خانات لعبة الحروف', 'The letter game’s boxes')}</h3><p>${B('من ٣ إلى ٦، مفصولة بفواصل. اتركها فارغة لـ«إنسان، حيوان، نبات، جماد، بلاد».', 'From 3 to 6, separated by commas. Leave it empty for the usual five.')}</p>
       <input data-lc dir="auto" value="${esc(store.get('lcats', ''))}" placeholder="${T('إنسان، حيوان، نبات، جماد، بلاد', 'Name, Animal, Plant, Thing, Country')}">
+      <h3>${B('أسئلة «مين قالها؟»', 'Questions for “Who said it?”')}</h3><p>${B('سؤال في كل سطر، تُطرح بالترتيب. اتركها فارغة للأسئلة الجاهزة.', 'One question a line, asked in order. Leave it empty for the ready questions.')}</p>
+      <textarea data-asks rows="4" dir="auto">${esc(store.get('asks', ''))}</textarea>
+      <p>${B('عدد الإجابات المعروضة في كل سؤال (تُختار عشوائيًا):', 'Answers shown for each question (picked at random):')} <select data-wcap>${[5, 8, 12, 0].map(v => `<option value="${v}"${+store.get('wcap', 8) === v ? ' selected' : ''}>${v || T('كلها', 'All')}</option>`).join('')}</select></p>
       <h3>${B('فريقان', 'Two teams')}</h3><label class="sm-chk"><input type="checkbox" data-tm${S.teams ? ' checked' : ''}> ${B('قسّم اللاعبين إلى الصقور والنجوم، ونقاط كل لاعب تُضاف لفريقه', 'Split the players into Falcons and Stars; each player’s points count for their team')}</label>
       <h3>${B('تحكّم من جوالك', 'Control from your phone')}</h3><p>${S.remote ? B('جوال التحكم متصل.', 'A phone remote is connected.') : B(`ادخل الجلسة من جوالك، واضغط «أنا المضيف» واكتب الرمز <b dir="ltr">${S.rc}</b>. يصير جوالك ريموت ولا يُحسب لاعبًا.`, `Join from your phone, tap “I am the host” and type <b dir="ltr">${S.rc}</b>. Your phone becomes a remote and is not counted as a player.`)}</p>
       <div class="sm-row"><button type="button" class="btn solid" data-ok>${B('احفظ', 'Save')}</button><button type="button" class="btn ghost" data-x>${B('إغلاق', 'Close')}</button></div></div>`;
     HE().appendChild(d);
     d.querySelector('[data-x]').onclick = () => d.remove();
-    d.querySelector('[data-ok]').onclick = () => { const on2 = d.querySelector('[data-tm]').checked; if (on2 !== S.teams) { S.teams = on2; S.tm = {}; if (on2) shuffle(players()).forEach((u, k) => { S.tm[u] = k % 2; }); pushTeams(); } store.set('mine', d.querySelector('[data-w]').value); store.set('lcats', d.querySelector('[data-lc]').value); if (mineWords().length >= 6) { S.cat = 'mine'; store.set('cat', 'mine'); } d.remove(); picker(); };
+    d.querySelector('[data-ok]').onclick = () => { const on2 = d.querySelector('[data-tm]').checked; if (on2 !== S.teams) { S.teams = on2; S.tm = {}; if (on2) shuffle(players()).forEach((u, k) => { S.tm[u] = k % 2; }); pushTeams(); } store.set('mine', d.querySelector('[data-w]').value); store.set('asks', d.querySelector('[data-asks]').value); store.set('wcap', +d.querySelector('[data-wcap]').value); store.set('lcats', d.querySelector('[data-lc]').value); if (mineWords().length >= 6) { S.cat = 'mine'; store.set('cat', 'mine'); } d.remove(); picker(); };
   }
   // the end of the session: the podium, and a title for what each one did best
   function finale() {
@@ -1965,11 +1969,13 @@ html[dir=ltr] .jr-dch.fd .jr-fold::before{transform:rotate(-45deg)}
     ar: ['أغرب أكلة جربتها في حياتك', 'لو صار عندك قوة خارقة ليوم واحد، وش تكون؟', 'أول شيء تسويه لو ربحت مليون', 'عادة عندك ما يعرفها أحد', 'وظيفة كنت تحلم فيها وأنت صغير', 'أكثر كلمة تقولها في يومك', 'لو تعيش في أي زمن، أي زمن تختار؟', 'شيء تخاف منه وتستحي تقوله', 'أغرب هدية جتك', 'وش تسوي أول ما تصحى؟', 'لو تقدر تتكلم لغة حيوان، أي حيوان؟', 'أكلة تقدر تاكلها كل يوم', 'مكان تتمنى تزوره', 'أطرف موقف صار لك في المدرسة', 'لو كتبت كتاب، وش عنوانه؟', 'شيء تعلمته متأخر', 'أسوأ نصيحة سمعتها', 'لو صرت مسؤول عن مدينتك يوم واحد، وش أول قرار؟', 'مهارة تتمنى تتقنها', 'لو حياتك فلم، وش اسمه؟', 'أكثر شيء يضحكك', 'شيء تحتفظ فيه من سنين', 'لو رجع فيك الزمن عشر سنين، وش تقول لنفسك؟', 'أغرب حلم تذكره', 'برنامج أو مسلسل ما تمل منه', 'لو تختار اسم ثاني لنفسك', 'شيء ما تقدر تعيش بدونه', 'أكثر موقف إحراج صار لك', 'رياضة تتمنى تلعبها باحتراف', 'وش أول شيء تشتريه لو سافرت؟'],
     en: ['The strangest food you have ever tried', 'A superpower for one day: which one?', 'The first thing you would do with a million', 'A habit nobody knows you have', 'The job you dreamed of as a child', 'The word you say most in a day', 'If you could live in any age, which one?', 'Something you fear but would not admit', 'The strangest gift you have received', 'The first thing you do when you wake up', 'If you could speak to one animal, which?', 'A food you could eat every day', 'A place you wish to visit', 'The funniest thing that happened to you at school', 'If you wrote a book, its title', 'Something you learned late', 'The worst advice you have heard', 'Your first decision as mayor for a day', 'A skill you wish you had', 'If your life were a film, its title', 'What makes you laugh most', 'Something you have kept for years', 'What you would tell yourself ten years ago', 'The strangest dream you remember', 'A show you never get tired of', 'Another name you would choose for yourself', 'Something you cannot live without', 'Your most embarrassing moment', 'A sport you wish you played well', 'The first thing you buy when you travel']
   };
+  const myAsks = () => (store.get('asks', '') || '').split(/\n+/).map(w => w.trim()).filter(w => w && w.length <= 120);
   function Whose() {
     const st = { ans: {}, q: [], k: -1, votes: {}, gained: {} };
     const G = {
       start() {
-        S.lastGame = 'whose'; st.used = st.used || []; const pool = ASKS[S.L].filter(a => !st.used.includes(a)); st.ask = pick(pool.length ? pool : ASKS[S.L]); st.used.push(st.ask);
+        S.lastGame = 'whose'; const own = myAsks(), bank = own.length ? own : ASKS[S.L]; S.asked = S.asked || [];
+        const pool = bank.filter(a => !S.asked.includes(a)); st.ask = pool.length ? (own.length ? pool[0] : pick(pool)) : pick(bank); S.asked.push(st.ask);
         st.ans = {}; st.gained = {}; st.k = -1; inGame().forEach(u => priv(u, { g: 'whose' }));
         phase('write', 75, { ask: st.ask, n: 0 }); G.view();
       },
@@ -1977,7 +1983,8 @@ html[dir=ltr] .jr-dch.fd .jr-fold::before{transform:rotate(-45deg)}
         if (S.ph === 'write' && k.startsWith('a:') && !st.ans[u]) { const a = k.slice(2, 90).trim(); if (!a) return; st.ans[u] = a; SND.join(); pub(Object.assign({}, S.g, { n: Object.keys(st.ans).length })); G.view(); if (Object.keys(st.ans).length >= inGame().length) G.order(); }
         else if (S.ph === 'guess' && k.startsWith('v:') && u !== st.au && !st.votes[u] && k.slice(2) in S.pl) { st.votes[u] = k.slice(2); pub(Object.assign({}, S.g, { n: Object.keys(st.votes).length })); G.view(); if (Object.keys(st.votes).length >= inGame().length - 1) G.reveal(); }
       },
-      order() { st.q = shuffle(Object.keys(st.ans)); st.k = -1; if (st.q.length < 2) return gameOver({}, B('إجابات قليلة، جرّبوها مرة أخرى', 'Too few answers; try it again')); G.next(); },
+      // a few answers, chosen at random, keep the game short in a big room
+      order() { const cap = +store.get('wcap', 8) || 0; st.q = shuffle(Object.keys(st.ans)); if (cap) st.q = st.q.slice(0, cap); st.k = -1; if (st.q.length < 2) return gameOver({}, B('إجابات قليلة، جرّبوها مرة أخرى', 'Too few answers; try it again')); G.next(); },
       next() {
         st.k++; if (st.k >= st.q.length) return gameOver(st.gained, B(`«${esc(st.ask)}»`, `“${esc(st.ask)}”`));
         st.au = st.q[st.k]; st.votes = {};
@@ -1993,7 +2000,7 @@ html[dir=ltr] .jr-dch.fd .jr-fold::before{transform:rotate(-45deg)}
       tick() { if (!S.end || left() > 0) return; if (S.ph === 'write') G.order(); else if (S.ph === 'guess') G.reveal(); else if (S.ph === 'reveal') G.next(); },
       view() {
         const ph = S.ph; let body = '', foot = '';
-        if (ph === 'write') { body = `<p class="sm-sub">${B('أجيبوا من جوالاتكم، بدون ما أحد يشوف', 'Answer on your phones, where nobody can see')}</p><h2 dir="auto">${esc(st.ask)}</h2><p class="sm-count" dir="ltr">${Object.keys(st.ans).length} / ${inGame().length}</p>`; foot = `<button type="button" class="btn ghost" data-skip>${B('اعرض الإجابات', 'Show the answers')}</button>`; }
+        if (ph === 'write') { body = `<p class="sm-sub">${B('أجيبوا من جوالاتكم، بدون ما أحد يشوف', 'Answer on your phones, where nobody can see')}</p><h2 dir="auto">${esc(st.ask)}</h2><p class="sm-count" dir="ltr">${Object.keys(st.ans).length} / ${inGame().length}</p>${+store.get('wcap', 8) && inGame().length > +store.get('wcap', 8) ? `<p class="sm-sub">${B(`تظهر ${store.get('wcap', 8)} إجابات مختارة عشوائيًا`, `${store.get('wcap', 8)} answers will be picked at random`)}</p>` : ''}`; foot = `<button type="button" class="btn ghost" data-skip>${B('اعرض الإجابات', 'Show the answers')}</button>`; }
         else if (ph === 'guess' || ph === 'reveal') {
           body = `<p class="sm-sub" dir="auto">${esc(st.ask)} · ${st.k + 1}/${st.q.length}</p><blockquote class="sm-quote" dir="auto">${esc(st.ans[st.au])}</blockquote>`
             + (ph === 'guess' ? `<h2>${B('مين قالها؟', 'Who said it?')}</h2><p class="sm-count" dir="ltr">${Object.keys(st.votes).length} / ${inGame().length - 1}</p>`
