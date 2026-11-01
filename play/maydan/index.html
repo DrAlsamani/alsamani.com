@@ -2863,7 +2863,7 @@ if (typeof module !== 'undefined') module.exports = QZParse;
   // Gemini, loaded only when asked for: Firebase's modular SDK, with App Check (reCAPTCHA Enterprise) in front of it
   const AI_V = '11.10.0', AI_KEY = '6Le4gQsuAAAAAE3jS1mLgG9B2XT8AucvEecF6Kp4';
   let aiModel = null, aiMk = null;
-  const AI_MODELS = ['gemini-2.5-flash', 'gemini-2.5-flash-lite', 'gemini-2.0-flash'];
+  const AI_MODELS = ['gemini-3-flash-preview', 'gemini-3-flash', 'gemini-flash-latest', 'gemini-2.5-flash'];
   async function geminiWrite(p) {
     if (!aiMk) {
       const u = n => `https://www.gstatic.com/firebasejs/${AI_V}/firebase-${n}.js`;
