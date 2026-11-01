@@ -1775,7 +1775,7 @@ html.sm-homeview #sm .sm-card .btn.ghost{background:transparent!important;color:
       const app = getApps().find(a => a.name === 'smai') || initializeApp(window.MD_CFG, 'smai');
       try { initializeAppCheck(app, { provider: new ReCaptchaEnterpriseProvider('6Le4gQsuAAAAAE3jS1mLgG9B2XT8AucvEecF6Kp4'), isTokenAutoRefreshEnabled: false }); } catch (e) {}
       const ai = getAI(app, { backend: new VertexAIBackend('global') });
-      gm = ['gemini-3-flash-preview', 'gemini-3-flash', 'gemini-flash-latest', 'gemini-2.5-flash'].map(m => getGenerativeModel(ai, { model: m, generationConfig: { temperature: 0.9, thinkingConfig: { thinkingBudget: 512 } } }));
+      gm = ['gemini-3.6-flash', 'gemini-3.8-flash', 'gemini-3-flash-preview', 'gemini-flash-latest'].map(m => getGenerativeModel(ai, { model: m, generationConfig: { temperature: 0.9, thinkingConfig: { thinkingBudget: 512 } } }));
     }
     for (const m of gm) { try { return (await m.generateContent(p)).response.text(); } catch (e) { if (!/not.?found|404/i.test(String(e && e.message))) throw e; } }
     throw new Error('no model');
