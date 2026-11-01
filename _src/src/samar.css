@@ -155,3 +155,7 @@
 .sm-opts.res b{font-size:1.2em}.sm-opts.res small{opacity:.75}.sm-opts.res em{display:flex;flex-wrap:wrap;gap:.4vw;justify-content:center;font-style:normal}
 .sm-opts.res em i{font-style:normal;font-size:.8em;background:var(--c);color:#17153a;border-radius:999px;padding:.2vh .7vw}
 .sm-votes button[disabled]{opacity:.45}
+/* a phone in a session: only the game */
+html.sm-in .tl-crumb,html.sm-in .sm-head,html.sm-in .sm-lead{display:none}
+.sm-final h2{font-size:clamp(24px,4.4vh,52px);text-align:center;margin:0 0 1vh}
+.sm-plus,.sm-gain b,.sm-whoc em{direction:ltr;unicode-bidi:isolate}

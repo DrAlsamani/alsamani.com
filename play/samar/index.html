@@ -1556,6 +1556,10 @@ html[dir=ltr] .jr-dch.fd .jr-fold::before{transform:rotate(-45deg)}
 .sm-opts.res b{font-size:1.2em}.sm-opts.res small{opacity:.75}.sm-opts.res em{display:flex;flex-wrap:wrap;gap:.4vw;justify-content:center;font-style:normal}
 .sm-opts.res em i{font-style:normal;font-size:.8em;background:var(--c);color:#17153a;border-radius:999px;padding:.2vh .7vw}
 .sm-votes button[disabled]{opacity:.45}
+/* a phone in a session: only the game */
+html.sm-in .tl-crumb,html.sm-in .sm-head,html.sm-in .sm-lead{display:none}
+.sm-final h2{font-size:clamp(24px,4.4vh,52px);text-align:center;margin:0 0 1vh}
+.sm-plus,.sm-gain b,.sm-whoc em{direction:ltr;unicode-bidi:isolate}
 </style>
 <div id="sm" class="sm"><noscript><span class="ar">تعمل هذه اللعبة مع تفعيل JavaScript.</span><span class="en">This game needs JavaScript.</span></noscript></div>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script>window.MD_CFG={"apiKey": "AIzaSyA50i75DT1Is1a6Yn6snW1_JVObc8S3F0Y", "authDomain": "maydan-705ae.firebaseapp.com", "databaseURL": "https://maydan-705ae-default-rtdb.europe-west1.firebasedatabase.app", "projectId": "maydan-705ae", "appId": "1:342187013133:web:d5c2396f0db413f3c51144"};window.MD_MARK="<svg class=\"md-mark\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><rect x=\"4\" y=\"4\" width=\"40\" height=\"40\" rx=\"12\" fill=\"#23336F\"/><path d=\"M24 9l4.2 6.8 7.8-1.8-1.8 7.8L41 24l-6.8 4.2 1.8 7.8-7.8-1.8L24 39l-4.2-6.8-7.8 1.8 1.8-7.8L7 24l6.8-4.2-1.8-7.8 7.8 1.8z\" fill=\"#C9822B\"/><circle cx=\"24\" cy=\"24\" r=\"6.5\" fill=\"#23336F\"/><circle cx=\"24\" cy=\"24\" r=\"3\" fill=\"#F3E3C7\"/></svg>";</script><script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script><script>/* Samar (alsamani.com/play/samar): games for a gathering, on one code — the screen shows the play and each phone
@@ -1650,7 +1654,7 @@ html[dir=ltr] .jr-dch.fd .jr-fold::before{transform:rotate(-45deg)}
   let S = null;   // this device's session (host or player)
   const subs = [];
   const on = (ref, ev, fn) => { ref.on(ev, fn); subs.push(() => ref.off(ev, fn)); };
-  const stopAll = () => { subs.splice(0).forEach(f => f()); if (S && S.tm) clearInterval(S.tm); S = null; };
+  const stopAll = () => { document.documentElement.classList.remove('sm-in'); subs.splice(0).forEach(f => f()); if (S && S.tm) clearInterval(S.tm); S = null; };
 
   /* ---------- the evening's card: a picture to keep or send to the group ---------- */
   function cardCanvas(rank, titles, tw) {
@@ -1668,7 +1672,7 @@ html[dir=ltr] .jr-dch.fd .jr-fold::before{transform:rotate(-45deg)}
     const P = [[1, W / 2 - 300, 230], [0, W / 2, 330], [2, W / 2 + 300, 170]], base = 820, cols = ['#f2b84b', '#2bb3a3', '#e0607e'];
     (ar ? P.map(p => [p[0], W - p[1], p[2]]) : P).forEach(([k, cx, h]) => { const r = rank[k]; if (!r) return;
       x.fillStyle = cols[k]; x.globalAlpha = .9; x.beginPath(); x.roundRect(cx - 130, base - h, 260, h, [22, 22, 0, 0]); x.fill(); x.globalAlpha = 1;
-      x.fillStyle = '#17153a'; x.font = `800 96px ${F}`; x.fillText(String(k + 1), cx, base - h / 2);
+      x.fillStyle = '#17153a'; x.font = `800 96px ${F}`; x.fillText(String(r.p || k + 1), cx, base - h / 2);
       x.fillStyle = '#f4eedf'; x.font = `700 42px ${F}`; x.fillText(r.n.slice(0, 14), cx, base - h - 90); x.fillStyle = '#f2b84b'; x.font = `700 36px ${F}`; x.fillText(String(r.s), cx, base - h - 40); });
     // the titles, then the rest of the ranking
     let y = 900;
@@ -1850,14 +1854,15 @@ html[dir=ltr] .jr-dch.fd .jr-fold::before{transform:rotate(-45deg)}
     const best = (k, min) => { let w = null, v = 0; players().forEach(u => { const x = St(u)[k] || 0; if (x >= (min || 1) && x > v) { v = x; w = u; } }); return w ? { u: w, v } : null; };
     const TT = [['spy', 'الجاسوس الأخطر', 'The sneakiest spy'], ['art', 'الرسام', 'The artist'], ['quick', 'سريع البديهة', 'The quickest mind'], ['self', 'يعرف نفسه', 'Knows themselves'], ['let', 'سيد الحروف', 'Master of letters'], ['myst', 'الغامض', 'The mystery'], ['det', 'المحقق', 'The detective']];
     const titles = TT.map(([k, ar, en]) => { const r = best(k); return r ? { k, ar, en, u: r.u, n: nameOf(r.u) } : null; }).filter(Boolean);
-    const pod = k => order[k] ? `<div class="sm-pod p${k + 1}" style="--c:${colOf(order[k])}"><span dir="auto">${esc(nameOf(order[k]))}</span><b>${S.sc[order[k]] || 0}</b><i>${k + 1}</i></div>` : '<div class="sm-pod"></div>';
+    const place = u => 1 + players().filter(o => (S.sc[o] || 0) > (S.sc[u] || 0)).length;
+    const pod = k => order[k] ? `<div class="sm-pod p${k + 1}" style="--c:${colOf(order[k])}"><span dir="auto">${esc(nameOf(order[k]))}</span><b>${S.sc[order[k]] || 0}</b><i>${place(order[k])}</i></div>` : '<div class="sm-pod"></div>';
     const tw = S.teams ? (teamSum(0) === teamSum(1) ? -1 : teamSum(0) > teamSum(1) ? 0 : 1) : null;
     const teamLine = tw == null ? '' : `<p class="sm-tw">${tw < 0 ? B('تعادل الفريقان!', 'The teams are level!') : B(`فاز فريق ${TEAMS[tw][0]}`, `The ${TEAMS[tw][1]} win`)} <span dir="ltr">${teamSum(0)} : ${teamSum(1)}</span></p>`;
     S.gs = { id: null, view: () => { const q = frame(`<div class="sm-final"><h2>${B('ختام الجلسة', 'The end of the session')}</h2>${teamLine}<div class="sm-podium">${pod(1)}${pod(0)}${pod(2)}</div>
         ${titles.length ? `<div class="sm-titles">${titles.map((t, k) => `<div style="--d:${k * .3 + 1}s"><b>${B(t.ar, t.en)}</b><span dir="auto">${esc(t.n)}</span></div>`).join('')}</div>` : ''}</div>`,
         `<button type="button" class="btn solid" data-card>${IC.save}${B('احفظ بطاقة السهرة', 'Save the evening’s card')}</button><button type="button" class="btn ghost" data-pick>${B('نكمل اللعب', 'Keep playing')}</button>`); q('[data-pick]').onclick = () => { S.gs = null; pub({ ph: 'pick' }); picker(); };
-        q('[data-card]').onclick = () => saveCard(order.map(u => ({ n: nameOf(u), s: S.sc[u] || 0 })), titles, tw == null ? null : tw); } };
-    S.roster = null; pub({ ph: 'final', rank: order.map(u => ({ u: u.slice(0, 8), n: nameOf(u), s: S.sc[u] || 0 })), titles: titles.map(t => ({ ar: t.ar, en: t.en, n: t.n, u: t.u.slice(0, 8) })), tw: tw == null ? -2 : tw }); SND.win(); hostDraw();
+        q('[data-card]').onclick = () => saveCard(order.map(u => ({ n: nameOf(u), s: S.sc[u] || 0, p: place(u) })), titles, tw == null ? null : tw); } };
+    S.roster = null; pub({ ph: 'final', rank: order.map(u => ({ u: u.slice(0, 8), n: nameOf(u), s: S.sc[u] || 0, p: place(u) })), titles: titles.map(t => ({ ar: t.ar, en: t.en, n: t.n, u: t.u.slice(0, 8) })), tw: tw == null ? -2 : tw }); SND.win(); hostDraw();
   }
   function hostDraw() { if (!S || S.mode !== 'host') return; if (S.gs && S.gs.view) S.gs.view(); else picker(); }
   function startGame(id) {
@@ -2269,8 +2274,8 @@ html[dir=ltr] .jr-dch.fd .jr-fold::before{transform:rotate(-45deg)}
       if (!s.exists()) return home(T('لا توجد جلسة بهذا الرمز.', 'No session with this code.'));
       await within(db.ref('kh/' + pin + '/pl/' + uid).set({ n: name, at: TS() }));
       store.set('name', name);
-      S = { mode: 'player', pin, ref: db.ref('kh/' + pin), me: name, g: null, p: null, sc: {}, x: 0 };
-      on(S.ref.child('g'), 'value', v => { const was = S.g; S.g = v.val(); if (!was || !S.g || was.ph !== S.g.ph || was.id !== S.g.id || was.r !== S.g.r || was.turn !== S.g.turn) { S.sent = null; buzz(30); if (S.g && was && S.g.turn !== was.turn) S.inkData = ''; if (S.g && (!was || was.id !== S.g.id)) S.lt = []; } phone(); });
+      S = { mode: 'player', pin, ref: db.ref('kh/' + pin), me: name, g: null, p: null, sc: {}, x: 0 }; document.documentElement.classList.add('sm-in'); scrollTo(0, 0);
+      on(S.ref.child('g'), 'value', v => { const was = S.g; S.g = v.val(); if (!was || !S.g || was.ph !== S.g.ph || was.id !== S.g.id || was.r !== S.g.r || was.turn !== S.g.turn) { S.sent = null; S.top = true; buzz(30); if (S.g && was && S.g.turn !== was.turn) S.inkData = ''; if (S.g && (!was || was.id !== S.g.id)) S.lt = []; } phone(); });
       on(db.ref('khh/' + pin + '/' + uid), 'value', v => { const o = S.p; S.p = v.val(); if (S.p && o && S.p.no && S.p.no !== o.no) { buzz(120); flash(T('لا، جرّب غيرها', 'No, try another'), 'no'); } if (S.p && o && S.p.truth && S.p.truth !== o.truth) { buzz([30, 40, 30]); flash(T('هذه هي الحقيقة! اكتب كذبة', 'That is the truth! Write a lie'), 'near'); } if (S.p && o && S.p.near && S.p.near !== o.near) { buzz([30, 40, 30]); flash(T('قريب جدًا!', 'So close!'), 'near'); } if (S.p && S.p.ok && (!o || o.ok !== S.p.ok)) { buzz([40, 60, 40]); flash(T('صح! خمّنتها', 'Right! You got it'), 'ok'); } phone(); });
       on(S.ref.child('sc'), 'value', v => { S.sc = v.val() || {}; phone(); });
       on(S.ref.child('tm'), 'value', v => { S.tm = v.val() || null; phone(); });
@@ -2318,6 +2323,7 @@ html[dir=ltr] .jr-dch.fd .jr-fold::before{transform:rotate(-45deg)}
     if (html === S.html && root.querySelector('.sm-phone')) return; S.html = html;
     const keep = [...root.querySelectorAll('input[data-keep], textarea[data-keep]')].map(i => [i.dataset.keep, i.value]), fk = document.activeElement && document.activeElement.dataset ? document.activeElement.dataset.keep : null;
     root.innerHTML = html;
+    if (S.top) { S.top = false; const t = root.getBoundingClientRect().top + scrollY - 70; if (scrollY > t) scrollTo({ top: Math.max(0, t), behavior: 'smooth' }); }
     keep.forEach(([k, v]) => { const i = root.querySelector(`[data-keep="${k}"]`); if (i && !i.value) i.value = v; });
     if (fk) { const i = root.querySelector(`[data-keep="${fk}"]`); if (i) { i.focus(); try { i.setSelectionRange(i.value.length, i.value.length); } catch (e) {} } }
     root.querySelectorAll('[data-rx]').forEach(b => b.onclick = () => { S.ref.child('rx/' + uid).set({ e: b.dataset.rx, t: TS() }).catch(() => {}); buzz(15); });
@@ -2336,7 +2342,7 @@ html[dir=ltr] .jr-dch.fd .jr-fold::before{transform:rotate(-45deg)}
   function phoneFinal(g) {
     const r = g.rank || [], k = r.findIndex(x => x.u === uid.slice(0, 8)), t = (g.titles || []).filter(x => x.u === uid.slice(0, 8));
     const myT = S.tm && S.tm[uid] != null ? S.tm[uid] : null, tl = g.tw >= -1 && myT != null ? `<p class="sm-ttl">${g.tw === -1 ? B('تعادل الفريقان', 'The teams are level') : g.tw === myT ? B('فاز فريقك!', 'Your team won!') : B('فاز الفريق الآخر', 'The other team won')}</p>` : '';
-    return `<div class="sm-pw sm-pfinal"><p class="sm-sub">${B('ختام الجلسة', 'The end of the session')}</p>${tl}${k >= 0 ? `<p class="sm-rank">${k + 1}</p><p class="sm-big">${B(`مركزك من ${r.length}`, `Your place of ${r.length}`)}</p><p class="sm-plus">${r[k].s}</p>` : ''}${t.map(x => `<p class="sm-ttl">${B(x.ar, x.en)}</p>`).join('')}
+    return `<div class="sm-pw sm-pfinal"><p class="sm-sub">${B('ختام الجلسة', 'The end of the session')}</p>${tl}${k >= 0 ? `<p class="sm-rank">${r[k].p || k + 1}</p><p class="sm-big">${B(`مركزك من ${r.length}`, `Your place of ${r.length}`)}</p><p class="sm-plus">${r[k].s}</p>` : ''}${t.map(x => `<p class="sm-ttl">${B(x.ar, x.en)}</p>`).join('')}
       <ol class="sm-mini">${r.slice(0, 3).map(x => `<li><span dir="auto">${esc(x.n)}</span><b>${x.s}</b></li>`).join('')}</ol><button type="button" class="btn solid sm-cardb" data-card>${IC.save}${B('احفظ بطاقة السهرة', 'Save the evening’s card')}</button></div>`;
   }
   const phoneHints = g => (g.hints || []).length ? `<div class="sm-phints">${g.hints[g.hints.length - 1].map(h => `<span><i dir="auto">${esc(h.n)}</i><b dir="auto">${esc(h.h)}</b></span>`).join('')}</div>` : '';
@@ -2358,11 +2364,11 @@ html[dir=ltr] .jr-dch.fd .jr-fold::before{transform:rotate(-45deg)}
     return `<canvas id="smView" class="sm-view" width="600" height="600"></canvas><div class="sm-form"><p>${B(`يرسم «${esc(g.drawer)}»: ${g.len} حروف`, `${esc(g.drawer)} is drawing: ${g.len} letters`)}</p><input id="smIn" data-keep="g" maxlength="30" dir="auto" autocomplete="off" placeholder="${T('ما هذه؟', 'What is it?')}"><button type="button" class="btn solid" data-send="g" data-stay>${B('خمّن', 'Guess')}</button></div>`;
   }
   function phoneLie(g, p) {
-    const qh = `<p class="sm-sub">${B(`السؤال ${g.r} من ${g.of}`, `Question ${g.r} of ${g.of}`)}</p><p class="sm-big sm-fact" dir="auto">${esc(g.q || '')}</p>`;
+    const qh = `<p class="sm-sub">${B(`السؤال ${g.r} من ${g.of}`, `Question ${g.r} of ${g.of}`)}</p><p class="sm-big sm-fact" dir="auto">${esc(g.q || '').replace('____', '<i>____</i>')}</p>`;
     if (g.ph === 'lie') return S.sent === 'l' ? qh + `<div class="sm-pw"><p class="sm-big">${B('وصلت كذبتك', 'Your lie is in')}</p></div>` : qh + `<div class="sm-form"><input id="smIn" data-keep="l${g.r}" maxlength="40" dir="auto" autocomplete="off" placeholder="${T('كذبة مقنعة', 'A convincing lie')}"><button type="button" class="btn solid" data-send="l">${B('أرسل', 'Send')}</button></div>`;
     if (g.ph === 'opts') return S.sent === 'v' ? qh + `<div class="sm-pw"><p class="sm-big">${B('وصل اختيارك', 'Your choice is in')}</p></div>` : qh + `<div class="sm-votes"><p>${B('أين الحقيقة؟', 'Which one is true?')}</p>${(g.opts || []).map((t, i) => i === p.own ? `<button type="button" disabled dir="auto">${esc(t)} · ${B('كذبتك', 'yours')}</button>` : `<button type="button" data-pick="${i}" dir="auto">${esc(t)}</button>`).join('')}</div>`;
     if (g.ph === 'reveal') { const R = (g.res || []).map(r => ({ truth: !!r.truth, by: r.by || [], got: r.got || [] })), mine = R.find(r => r.got.includes(S.me)), fooled = R.filter(r => !r.truth && r.by.includes(S.me)).reduce((a, r) => a + r.got.length, 0);
-      return qh + `<div class="sm-pw"><p>${B('الحقيقة', 'The truth')}</p><p class="sm-word" dir="auto">${esc(g.truth)}</p><p class="sm-big">${mine && mine.truth ? B('عرفتها! +١٠٠', 'You found it! +100') : mine ? B('صدّقت كذبة', 'You fell for a lie') : ''}</p>${fooled ? `<p class="sm-plus">${B(`صدّق كذبتك ${fooled}`, `${fooled} fell for your lie`)} · +${fooled * 50}</p>` : ''}</div>`; }
+      return qh + `<div class="sm-pw"><p>${B('الحقيقة', 'The truth')}</p><p class="sm-word" dir="auto">${esc(g.truth)}</p><p class="sm-big">${mine && mine.truth ? B('عرفتها!', 'You found it!') + '</p><p class="sm-plus">+100' : mine ? B('صدّقت كذبة', 'You fell for a lie') : ''}</p>${fooled ? `<p class="sm-sub">${B(`صدّق كذبتك ${fooled}`, `${fooled} fell for your lie`)}</p><p class="sm-plus">+${fooled * 50}</p>` : ''}</div>`; }
     return qh;
   }
   function phoneWhose(g) {
