@@ -1689,6 +1689,31 @@ html.sm-homeview,html.sm-homeview body{overflow-x:clip}
 .sm-curb{display:inline-flex;align-items:center;gap:10px;margin:6px auto;padding:7px 16px;border-radius:999px;background:#f0a0b4;color:#17153a;font-weight:700}
 .sm-curb em{font-style:normal;font-size:.85em;opacity:.75}
 .sm-phone .sm-curb{display:flex;justify-content:center;flex-wrap:wrap}
+.sm-trap svg{width:20px;height:20px}
+/* on stage */
+.sm-scene{margin:10px auto;max-width:640px;padding:18px 22px;border-radius:20px;background:rgba(242,184,75,.1);border:1px solid rgba(242,184,75,.45);text-align:center}
+.sm-scene p{margin:0;font-size:1.7rem;font-weight:700;line-height:1.5}
+.sm-scene span{display:inline-block;margin-top:10px;padding:5px 14px;border-radius:999px;background:#2bb3a3;color:#08221f;font-weight:700}
+.sm-phone .sm-scene{background:rgba(23,21,58,.06);border-color:rgba(23,21,58,.18)}
+.sm-phone .sm-scene p{font-size:1.2rem}
+.sm-twist{margin:10px auto;display:table;padding:9px 20px;border-radius:14px;background:#f0a0b4;color:#17153a;font-weight:800;font-size:1.35rem;animation:smTw .6s ease-out}
+@keyframes smTw{0%{transform:scale(.4) rotate(-6deg);opacity:0}70%{transform:scale(1.12) rotate(2deg)}100%{transform:none;opacity:1}}
+.sm-stars{display:inline-flex;gap:4px;color:rgba(255,255,255,.18)}
+.sm-phone .sm-stars{color:rgba(23,21,58,.15)}
+.sm-stars i{width:30px;height:30px;display:block}.sm-stars.big i{width:58px;height:58px}
+.sm-stars i.on{color:#f2b84b}.sm-stars i.half{color:#f2b84b;opacity:.55}
+.sm-stars svg{width:100%;height:100%}
+.sm-rate{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:10px 0}
+.sm-rate button{display:flex;flex-direction:column;align-items:center;gap:2px;padding:10px 0;border-radius:14px;border:1px solid rgba(23,21,58,.15);background:#fff;color:#f2b84b;cursor:pointer}
+.sm-rate button svg{width:34px;height:34px}.sm-rate button b{color:#17153a}
+.sm-stageg{text-align:center}
+.sm-lot{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;max-width:760px;margin:16px auto}
+.sm-lot span{padding:10px 18px;border-radius:14px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);font-weight:700;font-size:1.15rem;transition:background .08s,transform .08s}
+.sm-lot span.on{background:var(--c);color:#17153a;transform:scale(1.12)}
+.sm-lot span.win{animation:smWin .5s ease-in-out 3;box-shadow:0 0 0 4px #f2b84b,0 0 40px var(--c)}
+@keyframes smWin{50%{transform:scale(1.3)}}
+.sm-called{font-size:3.4rem!important;animation:smTw .7s ease-out}
+.sm-quitb{margin-top:6px;opacity:.75}
 </style>
 <div id="sm" class="sm"><noscript><span class="ar">تعمل هذه اللعبة مع تفعيل JavaScript.</span><span class="en">This game needs JavaScript.</span></noscript></div>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script>window.MD_CFG={"apiKey": "AIzaSyA50i75DT1Is1a6Yn6snW1_JVObc8S3F0Y", "authDomain": "maydan-705ae.firebaseapp.com", "databaseURL": "https://maydan-705ae-default-rtdb.europe-west1.firebasedatabase.app", "projectId": "maydan-705ae", "appId": "1:342187013133:web:d5c2396f0db413f3c51144"};window.MD_MARK="<svg class=\"md-mark\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><rect x=\"4\" y=\"4\" width=\"40\" height=\"40\" rx=\"12\" fill=\"#23336F\"/><path d=\"M24 9l4.2 6.8 7.8-1.8-1.8 7.8L41 24l-6.8 4.2 1.8 7.8-7.8-1.8L24 39l-4.2-6.8-7.8 1.8 1.8-7.8L7 24l6.8-4.2-1.8-7.8 7.8 1.8z\" fill=\"#C9822B\"/><circle cx=\"24\" cy=\"24\" r=\"6.5\" fill=\"#23336F\"/><circle cx=\"24\" cy=\"24\" r=\"3\" fill=\"#F3E3C7\"/></svg>";</script><script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script><script>/* Samar (alsamani.com/play/samar): games for a gathering, on one code — the screen shows the play and each phone
@@ -1716,6 +1741,7 @@ html.sm-homeview,html.sm-homeview body{overflow-x:clip}
     beacon: SV('<path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.7.7 1 1.5 1 2.5h6c0-1 .3-1.8 1-2.5A6 6 0 0 0 12 3z"/>'),
     shield: SV('<path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/>'),
     herd: SV('<circle cx="7" cy="9" r="2.5"/><circle cx="17" cy="9" r="2.5"/><circle cx="12" cy="7" r="2.5"/><path d="M3 19a4 4 0 0 1 8 0M13 19a4 4 0 0 1 8 0M8 17a4 4 0 0 1 8 0"/>'),
+    stage: SV('<path d="M3 4h18M4 4c0 5 2 7 5 8M20 4c0 5-2 7-5 8"/><path d="M3 20h18M7 20l1.5-5h7L17 20"/><circle cx="12" cy="10" r="2"/>'),
     mime: SV('<circle cx="12" cy="5" r="2.5"/><path d="M12 8v6M12 14l-4 6M12 14l4 6M5 9l7 2 7-4"/>'),
     lie: SV('<path d="M12 3a6 6 0 0 0-6 6v3l-2 4h16l-2-4V9a6 6 0 0 0-6-6z"/><path d="M9 20h6M12 7v3M12 13v.1"/>'),
     save: SV('<path d="M12 4v11M7 10l5 5 5-5M5 19h14"/>'),
@@ -1774,6 +1800,7 @@ html.sm-homeview,html.sm-homeview body{overflow-x:clip}
     { id: 'silent', icon: IC.silent, ar: 'التمثيل الصامت', en: 'Silent acting', min: 4, dAr: 'فريقان، وممثل من كل فريق يمثّل مثلًا بلا كلام، واثنان من فريقه يكتبان الإجابة. فشلوا؟ الفريق الآخر يسرق.', dEn: 'Two teams; an actor mimes a proverb without a word while two teammates type the answer. If they fail, the other team steals.' },
     { id: 'ball', icon: IC.ball, ar: 'من عنده الكورة؟', en: 'Who has the ball?', min: 4, dAr: 'الكورة تنزل سرًا في جوال واحد، والباحث يسأل ويقرأ الوجوه. ارمِها مرة، أو موّه برمية وهمية، أو استفزه بعبارة.', dEn: 'The ball lands secretly on one phone; the seeker asks and reads faces. Throw it once, fake a throw, or tease.' },
     { id: 'herd', icon: IC.herd, ar: 'ذوق الجماعة', en: 'Think alike', min: 3, dAr: 'سؤال بسيط، وكل واحد يكتب الإجابة اللي يتوقع أن الأغلبية بتكتبها. النقاط لمن وافق الجماعة.', dEn: 'A simple question; write the answer you expect most will write. Points for matching the crowd.' },
+    { id: 'stage', icon: IC.stage, ar: 'على المسرح', en: 'On stage', min: 3, dAr: 'قرعة تختار الممثل فيقوم، ثم يظهر للجميع موقف وأسلوب يمثّله بالكلام والحركة، وفي نصه مفاجأة. الجمهور يقيّم بالنجوم، والانسحاب له عقوبة.', dEn: 'A draw picks the actor; then a scene and a style appear for all, and they play it out, with a twist halfway. The room rates it in stars; backing out has a forfeit.' },
     { id: 'mime', icon: IC.mime, ar: 'مثّلها', en: 'Act it out', min: 3, dAr: 'تظهر كلمة في جوال واحد فقط، فيمثّلها بلا كلام، والبقية يخمّنون من جوالاتهم.', dEn: 'A word appears on one phone only; they act it out without words while the others guess on their phones.' },
     { id: 'whose', icon: IC.whose, ar: 'مين قالها؟', en: 'Who said it?', min: 3, dAr: 'سؤال للجميع وكل واحد يجيب سرًا، ثم تظهر الإجابات واحدة واحدة: خمّنوا صاحبها.', dEn: 'One question for all, each answers in secret; then the answers appear one by one: guess whose it is.' },
   ];
@@ -2034,8 +2061,8 @@ html.sm-homeview,html.sm-homeview body{overflow-x:clip}
     d.querySelector('[data-ok]').onclick = () => { const on2 = d.querySelector('[data-tm]').checked; if (on2 !== S.teams) { S.teams = on2; S.tm = {}; if (on2) shuffle(players()).forEach((u, k) => { S.tm[u] = k % 2; }); pushTeams(); } store.set('mine', d.querySelector('[data-w]').value); store.set('asks', d.querySelector('[data-asks]').value); store.set('wcap', +d.querySelector('[data-wcap]').value); store.set('wsec', +d.querySelector('[data-wsec]').value); store.set('lcats', d.querySelector('[data-lc]').value); if (mineWords().length >= 6) { S.cat = 'mine'; store.set('cat', 'mine'); } d.remove(); picker(); };
   }
   // a whole evening: a length, a lineup that fits it, and the host's own changes before it starts
-  const MINS = { silent: 8, ball: 6, herd: 3, whose: 4, who: 5, draw: 6, spy: 5, lie: 5, mime: 6, letters: 7 };
-  const ORDER = ['herd', 'silent', 'ball', 'whose', 'who', 'draw', 'spy', 'lie', 'mime', 'letters'];
+  const MINS = { silent: 8, ball: 6, herd: 3, whose: 4, who: 5, draw: 6, spy: 5, lie: 5, mime: 6, letters: 7, stage: 7 };
+  const ORDER = ['herd', 'silent', 'ball', 'whose', 'who', 'draw', 'spy', 'lie', 'stage', 'mime', 'letters'];
   function lineup(len) { const n = players().length, ok = ORDER.filter(id => n >= gameOf(id).min), L = []; let t = 0; for (const id of ok) { if (t + MINS[id] > len + 2) continue; L.push(id); t += MINS[id]; } return L.length ? L : ok.slice(0, 1); }
   function evening(len, L) {
     len = len || store.get('eveLen', 30); L = L || lineup(len);
@@ -2064,7 +2091,7 @@ html.sm-homeview,html.sm-homeview body{overflow-x:clip}
     S.auto = null; S.end = 0;
     const order = players().sort((a, b) => (S.sc[b] || 0) - (S.sc[a] || 0)), St = u => S.stt[u] || {};
     const best = (k, min) => { let w = null, v = 0; players().forEach(u => { const x = St(u)[k] || 0; if (x >= (min || 1) && x > v) { v = x; w = u; } }); return w ? { u: w, v } : null; };
-    const TT = [['spy', 'الجاسوس الأخطر', 'The sneakiest spy'], ['art', 'الرسام', 'The artist'], ['quick', 'سريع البديهة', 'The quickest mind'], ['self', 'يعرف نفسه', 'Knows themselves'], ['let', 'سيد الحروف', 'Master of letters'], ['myst', 'الغامض', 'The mystery'], ['herd', 'قلب الجماعة', 'In tune with the crowd'], ['mime', 'الممثل', 'The actor'], ['nerve', 'أعصاب حديد', 'Nerves of steel'], ['act', 'نجم التمثيل', 'Star of the stage'], ['det', 'المحقق', 'The detective']];
+    const TT = [['spy', 'الجاسوس الأخطر', 'The sneakiest spy'], ['art', 'الرسام', 'The artist'], ['quick', 'سريع البديهة', 'The quickest mind'], ['self', 'يعرف نفسه', 'Knows themselves'], ['let', 'سيد الحروف', 'Master of letters'], ['myst', 'الغامض', 'The mystery'], ['herd', 'قلب الجماعة', 'In tune with the crowd'], ['mime', 'الممثل', 'The actor'], ['nerve', 'أعصاب حديد', 'Nerves of steel'], ['act', 'نجم التمثيل', 'Star of the stage'], ['det', 'المحقق', 'The detective'], ['stage', 'نجم المسرح', 'The showstopper'], ['critic', 'الناقد الفني', 'The critic']];
     const titles = TT.map(([k, ar, en]) => { const r = best(k); return r ? { k, ar, en, u: r.u, n: nameOf(r.u) } : null; }).filter(Boolean);
     const place = u => 1 + players().filter(o => (S.sc[o] || 0) > (S.sc[u] || 0)).length;
     const pod = k => order[k] ? `<div class="sm-pod p${k + 1}" style="--c:${colOf(order[k])}"><span dir="auto">${esc(nameOf(order[k]))}</span><b>${S.sc[order[k]] || 0}</b><i>${place(order[k])}</i></div>` : '<div class="sm-pod"></div>';
@@ -2078,7 +2105,7 @@ html.sm-homeview,html.sm-homeview body{overflow-x:clip}
   }
   function hostDraw() { if (!S || S.mode !== 'host') return; if (S.gs && S.gs.view) S.gs.view(); else picker(); }
   function startGame(id) {
-    const mk = { spy: Spy, who: Who, draw: Draw, letters: Letters, whose: Whose, lie: Lie, herd: Herd, mime: Mime, ball: Ball, silent: Silent }[id]; if (!mk) return;
+    const mk = { spy: Spy, who: Who, draw: Draw, letters: Letters, whose: Whose, lie: Lie, herd: Herd, mime: Mime, ball: Ball, silent: Silent, stage: Stage }[id]; if (!mk) return;
     S.gn++; S.roster = {}; players().forEach(u => { S.roster[u] = 1; }); S.gs = mk(); S.gs.id = id; S.played = true; SND.go(); S.gs.start(); stat({ ['samar/' + id + '/n']: 1, ['samar/' + id + '/p']: players().length });
   }
   // after a game: the points it gave, then back to the choice of games
@@ -2471,19 +2498,95 @@ html.sm-homeview,html.sm-homeview body{overflow-x:clip}
     return G;
   }
 
+  /* ---------- on stage: improv a scene in a set style, survive the twist, and the room rates it ---------- */
+  const STAGE = {
+    ar: { scene: ['تقنع أمك إنك ما أكلت الكيكة', 'موظف يطلب إجازة من مدير عصبي', 'أول يوم لك طبّاخ في مطعم فخم', 'تبيع قلمًا عاديًا على أنه اختراع القرن', 'تتصل على خدمة العملاء وتنتظر ساعة', 'تقدّم نشرة الطقس والجو عاصفة', 'معلم يحاول يهدّي فصلًا مشاغبًا', 'تعتذر لصديقك لأنك نسيت عزيمته', 'معلّق رياضي على مباراة بلوت', 'تعلّم جدتك تستخدم الجوال', 'وصل الضيوف وأنت بملابس النوم', 'سائق أجرة يحكي قصة حياته للراكب', 'تفاوض بائعًا في سوق شعبي على خصم', 'تحاول تنام وبعوضة ما تخليك', 'تقابل شخصًا مشهورًا في المطار', 'تقدّم وصفة طبخ في برنامج تلفزيوني', 'تشرح لأبوك ليش في السيارة خدش', 'رائد فضاء يشوف الأرض أول مرة', 'مرشد سياحي يشرح بيتك للزوار', 'متسابق في برنامج مسابقات ما يعرف ولا جواب', 'تحاول تفتح علبة مستحيلة قدام الضيوف', 'حارس مرمى قبل ضربة الجزاء الحاسمة', 'تلقي خطاب فوز بجائزة ما تستاهلها', 'تقنع قطوة تنزل من الشجرة'],
+      style: ['كأنك في فيلم رعب', 'بصوت مذيع أخبار', 'وأنت تبكي من التأثر', 'بحماس مبالغ فيه', 'كأنك في مسلسل بدوي', 'وأنت تهمس', 'كأنك روبوت', 'بسرعة شديدة', 'وأنت ما تقدر توقف ضحك', 'بأسلوب شاعر', 'كأنك في أوبرا', 'بلا أي تعابير على وجهك'],
+      twist: ['يدخل عليك أبوك فجأة!', 'انقطعت الكهرباء!', 'اكتشفت أن كل هذا كاميرا خفية!', 'صار عمرك ثمانين سنة!', 'الكل صار يسمع أفكارك!', 'تذكّرت أن الفرن شغّال!', 'وصلتك رسالة: ربحت مليون!', 'صرت تتكلم بالفصحى فقط!', 'دخل الغرفة أسد!', 'نسيت اسمك!'] },
+    en: { scene: ['Convince your mum you did not eat the cake', 'Ask an angry boss for a day off', 'Your first day as a chef in a fancy restaurant', 'Sell an ordinary pen as the invention of the century', 'Call customer service and wait an hour', 'Present the weather during a storm', 'A teacher calming a rowdy class', 'Apologise to a friend for missing their dinner', 'Commentate a card game like a football final', 'Teach your grandma to use a smartphone', 'The guests arrive and you are in pyjamas', 'A taxi driver telling the passenger his life story', 'Haggle for a discount at a market stall', 'Try to sleep with a mosquito in the room', 'Meet a celebrity at the airport', 'Present a recipe on a TV cooking show', 'Explain the scratch on the car to your dad', 'An astronaut seeing Earth for the first time', 'A tour guide showing visitors around your house', 'A quiz show contestant who knows no answers', 'Try to open an impossible jar in front of guests', 'A goalkeeper before the deciding penalty', 'An acceptance speech for an award you do not deserve', 'Talk a cat down from a tree'],
+      style: ['Like a horror film', 'In a newsreader voice', 'While crying with emotion', 'With way too much excitement', 'Like a period drama', 'In a whisper', 'Like a robot', 'Very, very fast', 'While unable to stop laughing', 'Like a poet', 'Like an opera', 'With a completely blank face'],
+      twist: ['Your dad walks in!', 'The power goes out!', 'It was all a hidden camera!', 'You are suddenly eighty!', 'Everyone can hear your thoughts!', 'You left the oven on!', 'A text: you won a million!', 'You can only speak in rhyme!', 'A lion walks in!', 'You forgot your own name!'] }
+  };
+  const FORFEIT = [['يمشي مثل البطريق إلى الباب ويرجع', 'Waddles like a penguin to the door and back'], ['يمدح كل واحد في المجلس بجملة', 'Pays everyone in the room a compliment'], ['يقول نكتة، والضحك إجباري عليه هو', 'Tells a joke, and has to laugh at it'], ['يقدّم نفسه كأنه ضيف برنامج حواري', 'Introduces themselves like a chat-show guest'], ['يقلّد صوت حيوان يختاره الجمهور', 'Does an animal sound the room picks'], ['يصب القهوة للجميع في الجولة الجاية', 'Serves everyone the coffee next round'], ['يتكلم بالفصحى حتى المشهد التالي', 'Speaks only formally until the next scene'], ['يقرأ آخر رسالة في جواله بصوت مذيع', 'Reads their last text aloud in a newsreader voice']];
+  const STAR = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8l2.8 5.9 6.4.8-4.7 4.4 1.2 6.4L12 17.2l-5.7 3.1 1.2-6.4-4.7-4.4 6.4-.8z" fill="currentColor"/></svg>';
+  const starsHtml = (v, cls) => `<span class="sm-stars ${cls || ''}">${[1, 2, 3, 4, 5].map(k => `<i class="${v >= k - .25 ? 'on' : v >= k - .75 ? 'half' : ''}">${STAR}</i>`).join('')}</span>`;
+  function Stage() {
+    const st = { turn: -1, gained: {} }, L = () => STAGE[S.L] || STAGE.ar;
+    const G = {
+      // a lottery each turn: not everyone gets called up, so it is you and your luck
+      start() { S.lastGame = 'stage'; st.turns = Math.min(S.auto ? 4 : 6, Math.max(3, inGame().length)); st.done = []; st.turn = -1; st.gained = {}; S.stUsed = S.stUsed || []; G.next(); },
+      join(u) { priv(u, G.mine(u)); },
+      mine(u) { const lit = S.ph !== 'draw' && S.ph !== 'up'; return { g: 'stage', t: st.turn, role: u === st.actor ? 'actor' : 'crowd', scene: lit ? st.scene : '', style: lit ? st.style : '', tw: st.tw ? st.twist : '', skip: st.skipped ? 0 : 1, my: st.rate[u] || 0 }; },
+      deal() { const pool = L().scene.filter(x => !S.stUsed.includes(x)); st.scene = pick(pool.length ? pool : L().scene); S.stUsed.push(st.scene); st.style = pick(L().style); st.twist = pick(L().twist); },
+      pushAll() { inGame().forEach(u => priv(u, G.mine(u))); },
+      next() {
+        st.turn++; if (st.turn >= st.turns) return gameOver(st.gained, B('أُسدل الستار', 'The curtain falls'));
+        const us = inGame(); if (us.length < 2) return gameOver(st.gained, B('أُسدل الستار', 'The curtain falls'));
+        const fresh = us.filter(u => !st.done.includes(u)); st.actor = pick(fresh.length ? fresh : us); st.done.push(st.actor);
+        st.rate = {}; st.tw = false; st.skipped = false; st.quit = null; G.deal();
+        S.ph = 'draw'; G.pushAll(); phase('draw', 6, { turn: st.turn + 1, of: st.turns, actor: '' }); G.view();
+      },
+      // the name is out: stand up and come to the stage
+      up() { G.pushAll(); phase('up', 15, { turn: st.turn + 1, of: st.turns, actor: nameOf(st.actor) }); G.pushAll(); G.view(); SND.win(); },
+      prep() { phase('prep', 12, { turn: st.turn + 1, of: st.turns, actor: nameOf(st.actor), scene: st.scene, style: st.style }); G.pushAll(); G.view(); SND.go(); },
+      // backing out costs points and a forfeit the room enjoys
+      quit() { st.quit = pick(FORFEIT); add(st.actor, -50); st.gained[st.actor] = (st.gained[st.actor] || 0) - 50; pushScores();
+        phase('quit', 12, { turn: st.turn + 1, of: st.turns, actor: nameOf(st.actor), fo: B(st.quit[0], st.quit[1]) }); G.pushAll(); G.view(); SND.ok(); },
+      show() { phase('show', 60, { turn: st.turn + 1, of: st.turns, actor: nameOf(st.actor), scene: st.scene, style: st.style }); G.pushAll(); G.view(); SND.go(); },
+      twist() { st.tw = true; G.pushAll(); pub(Object.assign({}, S.g, { tw: st.twist })); G.view(); SND.win(); fly('!'); },
+      rateNow() { phase('rate', 15, { turn: st.turn + 1, of: st.turns, actor: nameOf(st.actor), n: 0 }); G.pushAll(); G.view(); SND.ok(); },
+      move(u, k) {
+        if (u === st.actor && k === 'p:ready' && S.ph === 'up') return G.prep();
+        if (u === st.actor && k === 'p:quit' && ['up', 'prep', 'show'].includes(S.ph)) return G.quit();
+        if (S.ph === 'prep' && u === st.actor && k === 'p:skip' && !st.skipped) { st.skipped = true; G.deal(); G.pushAll(); pub(Object.assign({}, S.g, { scene: st.scene, style: st.style })); G.view(); return; }
+        if (S.ph !== 'rate' || u === st.actor || st.rate[u] || !k.startsWith('r:')) return;
+        const v = parseInt(k.slice(2), 10); if (!(v >= 1 && v <= 5)) return; st.rate[u] = v; priv(u, G.mine(u)); SND.join();
+        const n = Object.keys(st.rate).length; pub(Object.assign({}, S.g, { n })); G.view(); if (n >= inGame().filter(x => x !== st.actor).length) G.res();
+      },
+      res() {
+        const vs = Object.values(st.rate), avg = vs.length ? vs.reduce((a, b) => a + b, 0) / vs.length : 0, g = (x, n) => { if (!n) return; add(x, n); st.gained[x] = (st.gained[x] || 0) + n; };
+        st.avg = Math.round(avg * 10) / 10; const pts = Math.round(avg * 60) + (avg >= 4.5 ? 50 : 0); g(st.actor, pts); tally(st.actor, 'stage', pts);
+        // a good critic rates close to the room
+        st.critics = Object.keys(st.rate).filter(u => vs.length > 1 && Math.abs(st.rate[u] - avg) <= .5); st.critics.forEach(u => { g(u, 30); tally(u, 'critic'); });
+        pushScores(); phase('res', 8, { turn: st.turn + 1, of: st.turns, actor: nameOf(st.actor), avg: st.avg, n: vs.length, crit: st.critics.map(nameOf) }); G.pushAll(); G.view();
+        if (avg >= 4.5) { SND.win(); fly('★'); } else SND.ok();
+      },
+      tick() { if (S.ph === 'show' && !st.tw && S.end && left() <= 30) G.twist(); if (!S.end || left() > 0) return; if (S.ph === 'draw') G.up(); else if (S.ph === 'up') G.prep(); else if (S.ph === 'prep') G.show(); else if (S.ph === 'show') G.rateNow(); else if (S.ph === 'rate') G.res(); else if (S.ph === 'res' || S.ph === 'quit') G.next(); },
+      // the lottery wheel: the names flash one by one, slowing down, and stop on the actor
+      spin() { const el = [...HE().querySelectorAll('.sm-lot span')]; if (!el.length) return; const end = el.findIndex(x => x.dataset.u === st.actor), steps = el.length * 2 + ((end - 0 + el.length) % el.length); let k = 0;
+        const go = () => { el.forEach(x => x.classList.remove('on')); el[k % el.length].classList.add('on'); SND.tick(); if (k >= steps) { el[k % el.length].classList.add('win'); return; } k++; setTimeout(go, 70 + 380 * Math.pow(k / steps, 3)); }; go(); },
+      view() {
+        const ph = S.ph, who = `<p class="sm-sub">${B(`المشهد ${st.turn + 1} من ${st.turns}`, `Scene ${st.turn + 1} of ${st.turns}`)}</p><h2>${B(`«${esc(nameOf(st.actor))}» على المسرح`, `${esc(nameOf(st.actor))} is on stage`)}</h2>`;
+        const card = `<div class="sm-scene"><p dir="auto">${esc(st.scene)}</p><span dir="auto">${esc(st.style)}</span></div>`;
+        let mid = '', foot = '';
+        if (ph === 'draw') { mid = `<p class="sm-sub">${B(`المشهد ${st.turn + 1} من ${st.turns}`, `Scene ${st.turn + 1} of ${st.turns}`)}</p><h2>${B('القرعة… من يطلع على المسرح؟', 'The draw… who takes the stage?')}</h2><div class="sm-lot">${inGame().map(u => `<span data-u="${u}" style="--c:${colOf(u)}" dir="auto">${esc(nameOf(u))}</span>`).join('')}</div>`; }
+        else if (ph === 'up') { mid = `<p class="sm-sub">${B('طلعت القرعة على', 'The draw picked')}</p><p class="sm-word sm-called" dir="auto">${esc(nameOf(st.actor))}</p><h2>${B('قم إلى المسرح!', 'Up on stage!')}</h2><p class="sm-sub">${B('إذا وقف واستعد، يضغط «أنا جاهز» فيظهر المشهد للجميع. والانسحاب له عقوبة.', 'Once on their feet, they tap «Ready» and the scene appears for all. Backing out has a forfeit.')}</p>`; foot = `<button type="button" class="btn ghost" data-skip>${B('اعرض المشهد', 'Show the scene')}</button>`; }
+        else if (ph === 'quit') { mid = `<p class="sm-steal">${B('انسحاب!', 'Backed out!')}</p><h2>${B(`«${esc(nameOf(st.actor))}» انسحب: −٥٠`, `${esc(nameOf(st.actor))} backed out: −50`)}</h2><p class="sm-sub">${B('والعقوبة:', 'And the forfeit:')}</p><p class="sm-twist" dir="auto">${B(st.quit[0], st.quit[1])}</p>`; foot = `<button type="button" class="btn ghost" data-next>${st.turn + 1 >= st.turns ? B('النتيجة', 'The result') : B('المشهد التالي', 'Next scene')}</button>`; }
+        else if (ph === 'prep') { mid = who + card + `<p class="sm-sub">${B('استعد… بالكلام والحركة، وانتبه: في نص المشهد مفاجأة', 'Get ready… words and moves allowed, and watch out for a twist halfway')}</p>`; foot = `<button type="button" class="btn ghost" data-skip>${B('ابدأ المشهد', 'Start the scene')}</button>`; }
+        else if (ph === 'show') { mid = who + card + (st.tw ? `<p class="sm-twist" dir="auto">${B('مفاجأة: ', 'Twist: ')}${esc(st.twist)}</p>` : ''); foot = `<button type="button" class="btn ghost" data-skip>${B('خلص المشهد', 'End the scene')}</button>`; }
+        else if (ph === 'rate') { mid = who + `<p class="sm-big">${B('قيّموا الأداء من جوالاتكم', 'Rate the performance on your phones')}</p>${starsHtml(0, 'big')}<p class="sm-sub">${B(`وصل ${Object.keys(st.rate).length} من ${inGame().length - 1}`, `${Object.keys(st.rate).length} of ${inGame().length - 1} in`)}</p>`; foot = `<button type="button" class="btn ghost" data-skip>${B('اعرض التقييم', 'Show the rating')}</button>`; }
+        else { mid = who + `${starsHtml(st.avg, 'big')}<p class="sm-word" dir="ltr">${st.avg} / 5</p>${st.avg >= 4.5 ? `<p class="sm-gold">${B('تصفيق حار! +٥٠', 'Standing ovation! +50')}</p>` : ''}${st.critics.length ? `<p class="sm-sub">${B('نقّاد قرأوا الجمهور (+٣٠): ', 'Critics in tune with the room (+30): ')}${st.critics.map(u => esc(nameOf(u))).join('، ')}</p>` : ''}`; foot = `<button type="button" class="btn ghost" data-next>${st.turn + 1 >= st.order.length ? B('النتيجة', 'The result') : B('المشهد التالي', 'Next scene')}</button>`; }
+        const q = frame(`<div class="sm-g sm-stageg">${mid}</div>`, foot);
+        if (q('[data-skip]')) q('[data-skip]').onclick = () => ph === 'up' ? G.prep() : ph === 'prep' ? G.show() : ph === 'show' ? G.rateNow() : G.res(); if (q('[data-next]')) q('[data-next]').onclick = () => G.next();
+        if (ph === 'draw') G.spin();
+      }
+    };
+    return G;
+  }
+
   /* ---------- who has the ball? a hidden ball, a seeker who reads faces, throws real and fake ---------- */
   const BALL = '<svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="20" fill="#f2b84b"/><path d="M8 18c8 4 24 4 32 0M8 30c8-4 24-4 32 0M24 4c-6 8-6 32 0 40M24 4c6 8 6 32 0 40" fill="none" stroke="#17153a" stroke-width="2" stroke-opacity=".55"/><circle cx="17" cy="15" r="4" fill="#fff" opacity=".35"/></svg>';
   const TAUNTS = [['أتحداك!', 'I dare you!'], ['مو عندي والله', 'Not me, honest'], ['شوف عيونه!', 'Look at his eyes!'], ['حار… حار', 'Warm… warm'], ['بعيد عنك', 'Way off'], ['اسألني إذا تجرؤ', 'Ask me if you dare']];
   function Ball() {
-    const st = { r: 0, gained: {}, shield: {}, queue: [], qi: 0, trapUsed: {}, flT: {}, trap: {}, thrown: {} };
+    const st = { r: 0, gained: {}, shield: {}, queue: [], qi: 0, flT: {}, mf: {}, thrown: {} };
     const G = {
-      start() { S.lastGame = 'ball'; st.r = 0; st.gained = {}; st.shield = {}; st.trapUsed = {}; st.queue = shuffle(inGame()); st.qi = 0; st.next = null; G.round(); },
+      start() { S.lastGame = 'ball'; st.r = 0; st.gained = {}; st.shield = {}; st.queue = shuffle(inGame()); st.qi = 0; st.next = null; G.round(); },
       rounds() { return Math.min(6, Math.max(3, inGame().length)); },
-      mine(u) { const o = { g: 'ball', r: st.r, role: u === st.seeker ? 'seeker' : 'player', ball: u === st.holder, thrown: !!st.thrown[u], shield: st.shield[u] || 0, fl: st.flT[u] || 0, trap: st.trap[u] ? 2 : st.trapUsed[u] ? 0 : 1 }; if (u === st.seeker) o.fls = st.fl; if (u === st.seeker) o.names = inGame().filter(x => x !== u).map(x => ({ u: x, n: nameOf(x) })); return o; },
+      mine(u) { const o = { g: 'ball', r: st.r, role: u === st.seeker ? 'seeker' : 'player', ball: u === st.holder, thrown: !!st.thrown[u], shield: st.shield[u] || 0, fl: st.flT[u] || 0, mf: 2 - (st.mf[u] || 0) }; if (u === st.seeker) o.fls = st.fl; if (u === st.seeker) o.names = inGame().filter(x => x !== u).map(x => ({ u: x, n: nameOf(x) })); return o; },
       round() {
         st.r++; const us = inGame();
         st.seeker = st.next && us.includes(st.next) ? st.next : (() => { for (let k = 0; k < st.queue.length; k++) { const c = st.queue[st.qi++ % st.queue.length]; if (us.includes(c)) return c; } return us[0]; })();
-        st.next = null; st.holder = pick(us.filter(u => u !== st.seeker)); st.thrown = {}; st.throws = 0; st.pick = null; st.fl = 2; st.flashed = false; st.flT = {}; st.trap = {};
+        st.next = null; st.holder = pick(us.filter(u => u !== st.seeker)); st.thrown = {}; st.throws = 0; st.pick = null; st.fl = 2; st.flashed = false; st.flT = {}; st.mf = {};
         us.forEach(u => priv(u, G.mine(u)));
         phase('hunt', 60, { r: st.r, of: G.rounds(), seeker: nameOf(st.seeker), su: st.seeker.slice(0, 8) }); G.view(); SND.go();
       },
@@ -2491,13 +2594,9 @@ html.sm-homeview,html.sm-homeview body{overflow-x:clip}
       move(u, k) {
         if (S.ph !== 'hunt') return;
         if (k.startsWith('t:')) { const t = TAUNTS[parseInt(k.slice(2), 10)]; if (t && u !== st.seeker) G.bubble(u, T(t[0], t[1])); return; }
-        // the beacon: the holder's phone lights up and buzzes, and so do the phones of anyone who set a trap
-        if (k === 'f' && u === st.seeker && st.fl > 0) {
-          st.fl--; st.flashed = true; const at = Date.now(), hit = [st.holder].concat(Object.keys(st.trap).filter(x => x !== st.holder && x in S.pl));
-          st.trap = {}; hit.forEach(x => { st.flT[x] = at; }); inGame().forEach(x => priv(x, G.mine(x)));
-          G.view(); G.say(T('الكشّاف! راقبوا الجوالات…', 'The beacon! Watch the phones…'), 'flash'); SND.go(); return;
-        }
-        if (k === 'trap' && u !== st.seeker && !st.trapUsed[u]) { st.trapUsed[u] = true; st.trap[u] = true; priv(u, G.mine(u)); G.view(); SND.tick(); return; }
+        // the beacon, without a word on the screen: the holder's phone lights up; the others guess the moment and light theirs too
+        if (k === 'f' && u === st.seeker && st.fl > 0) { st.fl--; st.flashed = true; st.flT[st.holder] = Date.now(); priv(st.holder, G.mine(st.holder)); priv(u, G.mine(u)); return; }
+        if (k === 'm' && u !== st.seeker && (st.mf[u] || 0) < 2) { st.mf[u] = (st.mf[u] || 0) + 1; priv(u, G.mine(u)); return; }
         if (k === 'x' && u !== st.seeker && !st.thrown[u]) {
           st.thrown[u] = true; st.throws++;
           if (u === st.holder) { const old = st.holder; st.holder = pick(inGame().filter(x => x !== st.seeker && x !== old)) || old; priv(old, G.mine(old)); priv(st.holder, G.mine(st.holder)); }
@@ -2527,7 +2626,7 @@ html.sm-homeview,html.sm-homeview body{overflow-x:clip}
         const ph = S.ph, sp = G.spots(), shieldI = u => st.shield[u] ? `<em class="sm-sh" title="${T('درع', 'Shield')}">${IC.shield}</em>` : '';
         const ring = Object.keys(sp).map(u => { const cls = ph === 'reveal' ? (u === st.holder ? ' hold' : '') + (u === st.pick ? ' picked' : '') : ''; return `<div class="sm-pl${cls}" data-pu="${u}" style="left:${sp[u][0]}%;top:${sp[u][1]}%;--c:${colOf(u)}"><b>${esc([...nameOf(u)][0] || '؟')}</b><span dir="auto">${esc(nameOf(u))}</span>${shieldI(u)}${ph === 'reveal' && u === st.holder ? `<i class="sm-hb">${BALL}</i>` : ''}</div>`; }).join('');
         let mid = '';
-        if (ph === 'hunt') mid = `<div class="sm-seek"><small>${B(`الجولة ${st.r} من ${G.rounds()}`, `Round ${st.r} of ${G.rounds()}`)}</small><b dir="auto">${esc(nameOf(st.seeker))}</b><span>${B('يبحث عن الكورة', 'is hunting for the ball')}</span><i class="sm-qb">${BALL}<em>؟</em></i><p class="sm-blight">${IC.beacon}${B(`الكشّاف: ${st.fl}`, `Beacon: ${st.fl}`)}${Object.keys(st.trap).length ? `<em>${B(`فخاخ في الملعب: ${Object.keys(st.trap).length}`, `Traps set: ${Object.keys(st.trap).length}`)}</em>` : ''}</p><p class="sm-throwmsg"></p><small class="sm-sub">${B('الجوالات على الطاولة ووجهها لفوق', 'Phones on the table, screens up')}</small></div>`;
+        if (ph === 'hunt') mid = `<div class="sm-seek"><small>${B(`الجولة ${st.r} من ${G.rounds()}`, `Round ${st.r} of ${G.rounds()}`)}</small><b dir="auto">${esc(nameOf(st.seeker))}</b><span>${B('يبحث عن الكورة', 'is hunting for the ball')}</span><i class="sm-qb">${BALL}<em>؟</em></i><p class="sm-throwmsg"></p><p class="sm-blight">${IC.beacon}${B('في يد الباحث كشّاف يومض جوال صاحب الكورة… متى؟ محد يدري', 'The seeker holds a beacon that lights up the holder\'s phone… when? Nobody knows')}</p></div>`;
         else { const R = { caught: B(`صادها! الكورة كانت عند «${esc(nameOf(st.holder))}»`, `Caught! ${esc(nameOf(st.holder))} had it`), blocked: B(`«${esc(nameOf(st.holder))}» صدّها بالدرع!`, `${esc(nameOf(st.holder))} blocked it with a shield!`), missed: B(`أخطأ! اختار «${esc(nameOf(st.pick || ''))}» والكورة عند «${esc(nameOf(st.holder))}»`, `Missed! Picked ${esc(nameOf(st.pick || ''))}; ${esc(nameOf(st.holder))} had it`), time: B(`انتهى الوقت! الكورة عند «${esc(nameOf(st.holder))}»`, `Time is up! ${esc(nameOf(st.holder))} had it`) }[st.res];
           mid = `<div class="sm-seek res ${st.res}"><b>${R}</b><span>${st.res === 'caught' ? (st.flashed ? B('والباحث يكسب درعًا', 'and the seeker wins a shield') : B('صيد بلا كشّاف: +٢٥٠ ودرع', 'Caught without the beacon: +250 and a shield')) : st.res === 'blocked' ? B('انكسر الدرع ونجا', 'the shield broke, and they escaped') : B('أعصاب حديد: +١٥٠', 'Nerves of steel: +150')}</span></div>`; }
         const q = frame(`<div class="sm-g sm-ballg"><div class="sm-field">${ring}${mid}</div></div>`, ph === 'hunt' ? `<button type="button" class="btn ghost" data-skip>${B('انتهى الوقت', 'Time is up')}</button>` : `<button type="button" class="btn ghost" data-next>${st.r >= G.rounds() ? B('النتيجة', 'The result') : B('الجولة التالية', 'Next round')}</button>`);
@@ -2780,6 +2879,7 @@ html.sm-homeview,html.sm-homeview body{overflow-x:clip}
     else if (g.id === 'lie') body = phoneLie(g, p);
     else if (g.id === 'herd') body = phoneHerd(g, p);
     else if (g.id === 'mime') body = phoneMime(g, p);
+    else if (g.id === 'stage') body = phoneStage(g, p);
     else if (g.id === 'ball') body = phoneBall(g, p);
     else if (g.id === 'silent') body = phoneSilent(g, p);
     // the drawer's pad stays as it is; only the list of who got it and the points change
@@ -2849,7 +2949,7 @@ html.sm-homeview,html.sm-homeview body{overflow-x:clip}
     // every player sees the same layout, so a glance at a phone gives nothing away
     return `<div class="sm-ballc">${p.ball ? `<i class="sm-qb on">${BALL}</i><p class="sm-big">${B('الكورة عندك!', 'You have the ball!')}</p><small>${B('لا تفضح نفسك. تقدر ترميها مرة وحدة.', 'Keep a straight face. You may throw it once.')}</small>` : `<i class="sm-qb">${BALL}<em>؟</em></i><p class="sm-big">${B('ما عندك الكورة… أو هذا اللي تقوله', 'You do not have the ball… or so you say')}</p><small>${B('موّه برمية وهمية، واستفز الباحث.', 'Fake a throw, and tease the seeker.')}</small>`}</div>${sh}
       <button type="button" class="btn solid sm-throw" data-throw${p.thrown ? ' disabled' : ''}>${p.thrown ? B('رميت هالجولة', 'Thrown this round') : p.ball ? B('ارمِ الكورة لغيرك', 'Throw the ball away') : B('رمية وهمية', 'Fake a throw')}</button>
-      ${p.trap === 1 ? `<button type="button" class="btn ghost sm-trap" data-trap>${B('ازرع فخ: يومض جوالك مع الكشّاف (مرة في اللعبة)', 'Set a trap: your phone lights up with the beacon (once a game)')}</button>` : p.trap === 2 ? `<p class="sm-shp">${B('فخّك جاهز… إذا ضغط الباحث الكشّاف، جوالك يومض معه', 'Your trap is set… your phone lights up with the beacon')}</p>` : ''}
+      <button type="button" class="btn ghost sm-trap" data-mflash${p.mf > 0 ? '' : ' disabled'}>${IC.beacon}${p.mf > 0 ? B(`ومّض جوالي (${p.mf}): توقّع متى يشغّل الباحث الكشّاف`, `Light up my phone (${p.mf}): guess when the beacon goes`) : B('خلصت ومضاتك', 'No flashes left')}</button>
       <div class="sm-taunts">${TAUNTS.map((t, i) => `<button type="button" data-taunt="${i}">${B(t[0], t[1])}</button>`).join('')}</div>`;
   }
   function phoneHerd(g) {
@@ -2857,6 +2957,19 @@ html.sm-homeview,html.sm-homeview body{overflow-x:clip}
     if (g.ph === 'write') return S.sent === 'a' ? qh + `<div class="sm-pw"><p class="sm-big">${B('وصلت إجابتك', 'Your answer is in')}</p></div>` : qh + `<div class="sm-form"><small>${B('اكتب ما تتوقع أن الأغلبية بتكتبه', 'Write what you think most will write')}</small><input id="smIn" data-keep="a${g.r}" maxlength="30" dir="auto" autocomplete="off"><button type="button" class="btn solid" data-send="a">${B('أرسل', 'Send')}</button></div>`;
     const gs = g.groups || [], mine = gs.find(x => (x.us || []).includes(S.me));
     return qh + `<div class="sm-pw">${mine ? `<p class="sm-big">${mine.n === g.top && g.top > 1 ? B('وافقت الجماعة!', 'You matched the crowd!') : mine.n > 1 ? B('وافقك بعضهم', 'Some agreed with you') : B('كنت وحدك هالمرة', 'You stood alone this time')}</p><p class="sm-sub">${B(`كتب مثلك ${mine.n - 1}`, `${mine.n - 1} wrote the same`)}</p>` : ''}${gs[0] ? `<p class="sm-sub">${B('الأكثر:', 'Most wrote:')} <b dir="auto">${esc(gs[0].t)}</b></p>` : ''}</div>`;
+  }
+  function phoneStage(g, p) {
+    const card = `<div class="sm-scene"><p dir="auto">${esc(p.scene || g.scene || '')}</p><span dir="auto">${esc(p.style || g.style || '')}</span></div>`, tw = p.tw ? `<p class="sm-twist" dir="auto">${B('مفاجأة: ', 'Twist: ')}${esc(p.tw)}</p>` : '';
+    if (g.ph === 'draw') return `<div class="sm-pw"><p class="sm-big">${B('القرعة تدور… ادعِ ألا تطلع عليك', 'The draw is spinning… fingers crossed')}</p></div>`;
+    if (g.ph === 'quit') return `<div class="sm-pw"><p class="sm-big">${p.role === 'actor' ? B('انسحبت: −٥٠، وعليك العقوبة:', 'You backed out: −50, and your forfeit:') : B(`«${esc(g.actor)}» انسحب، والعقوبة:`, `${esc(g.actor)} backed out; the forfeit:`)}</p><p class="sm-twist" dir="auto">${esc(g.fo || '')}</p></div>`;
+    if (g.ph === 'up') return p.role === 'actor' ? `<div class="sm-pw sm-actor"><p class="sm-big">${B('طلعت عليك القرعة!', 'The draw picked you!')}</p><p>${B('قم إلى المسرح، وإذا صرت جاهز اضغط، فيظهر مشهدك للجميع.', 'Get up on stage; when you are ready, tap and your scene appears for all.')}</p><button type="button" class="btn solid" data-sready>${B('أنا جاهز', 'I am ready')}</button><button type="button" class="btn ghost" data-squit>${B('أنسحب (−٥٠ وعقوبة)', 'Back out (−50 and a forfeit)')}</button></div>` : `<div class="sm-pw"><p class="sm-big">${B(`طلعت على «${esc(g.actor)}»!`, `It is ${esc(g.actor)}!`)}</p><p class="sm-sub">${B('صفّقوا له وهو يقوم…', 'Cheer as they get up…')}</p></div>`;
+    if (g.ph === 'res') return `<div class="sm-pw"><p class="sm-big">${B(`تقييم «${esc(g.actor)}»`, `${esc(g.actor)}'s rating`)}</p>${starsHtml(g.avg || 0)}<p class="sm-word" dir="ltr">${g.avg || 0} / 5</p>${p.my ? `<p class="sm-sub">${B(`أعطيته ${p.my}`, `You gave ${p.my}`)}</p>` : ''}</div>`;
+    if (p.role === 'actor') {
+      if (g.ph === 'rate') return `<div class="sm-pw"><p class="sm-big">${B('الجمهور يقيّمك الآن…', 'The audience is rating you…')}</p></div>`;
+      return `<div class="sm-pw sm-actor"><p>${g.ph === 'prep' ? B('مشهدك، استعد:', 'Your scene, get ready:') : B('أنت على المسرح!', 'You are on stage!')}</p>${card}${tw}${g.ph === 'prep' && p.skip ? `<button type="button" class="btn ghost" data-mskip>${B('مشهد آخر (مرة وحدة)', 'Another scene (once)')}</button>` : ''}<button type="button" class="btn ghost sm-quitb" data-squit>${B('أنسحب (−٥٠ وعقوبة)', 'Back out (−50 and a forfeit)')}</button></div>`;
+    }
+    if (g.ph === 'rate') return S.sent === 'r' || p.my ? `<div class="sm-pw"><p class="sm-big">${B('وصل تقييمك', 'Your rating is in')}</p></div>` : `<div class="sm-pw"><p class="sm-big">${B(`كم تعطي «${esc(g.actor)}»؟`, `How many stars for ${esc(g.actor)}?`)}</p><div class="sm-rate">${[1, 2, 3, 4, 5].map(k => `<button type="button" data-star="${k}" aria-label="${k}">${STAR}<b>${k}</b></button>`).join('')}</div><small class="sm-sub">${B('قرّب من رأي الجمهور وتكسب +٣٠', 'Rate close to the room for +30')}</small></div>`;
+    return `<div class="sm-pw"><p class="sm-big">${B(`«${esc(g.actor)}» على المسرح`, `${esc(g.actor)} is on stage`)}</p>${card}${tw}<p class="sm-sub">${B('استمتع، وبعد المشهد تقيّم', 'Enjoy it; you rate after the scene')}</p></div>`;
   }
   function phoneMime(g, p) {
     if (g.ph === 'reveal') return `<div class="sm-pw"><p>${B('الكلمة كانت', 'The word was')}</p><p class="sm-word" dir="auto">${esc(g.word)}</p></div>`;
@@ -2899,7 +3012,10 @@ html.sm-homeview,html.sm-homeview body{overflow-x:clip}
     root.querySelectorAll('[data-bpick]').forEach(b => b.onclick = () => { S.bpick = b.dataset.bpick; buzz(15); S.html = ''; phone(); });
     const bg = q('[data-bgo]'); if (bg) bg.onclick = () => { send('g:' + S.bpick); S.bpick = null; buzz([40, 60, 40]); };
     const bf = q('[data-bflash]'); if (bf) bf.onclick = () => { send('f'); buzz(30); bf.disabled = true; };
-    const tp = q('[data-trap]'); if (tp) tp.onclick = () => { send('trap'); buzz([20, 40, 20]); tp.disabled = true; };
+    const sr = q('[data-sready]'); if (sr) sr.onclick = () => { send('p:ready'); buzz([30, 50, 30]); sr.disabled = true; };
+    const sq = q('[data-squit]'); if (sq) sq.onclick = () => { send('p:quit'); buzz(80); sq.disabled = true; };
+    root.querySelectorAll('[data-star]').forEach(b => b.onclick = () => { send('r:' + b.dataset.star); S.sent = 'r'; buzz(20); phone(); });
+    const mf = q('[data-mflash]'); if (mf) mf.onclick = () => { beacon(); send('m'); mf.disabled = true; };
     const th = q('[data-throw]'); if (th) th.onclick = () => { send('x'); buzz([20, 40, 80]); th.disabled = true; };
     root.querySelectorAll('[data-taunt]').forEach(b => b.onclick = () => { send('t:' + b.dataset.taunt); buzz(15); b.disabled = true; setTimeout(() => { b.disabled = false; }, 2500); });
     const ms = q('[data-mskip]'); if (ms) ms.onclick = () => { send('p:skip'); buzz(20); };
