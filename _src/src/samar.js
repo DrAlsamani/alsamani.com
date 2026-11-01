@@ -23,6 +23,7 @@
     beacon: SV('<path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.7.7 1 1.5 1 2.5h6c0-1 .3-1.8 1-2.5A6 6 0 0 0 12 3z"/>'),
     shield: SV('<path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/>'),
     herd: SV('<circle cx="7" cy="9" r="2.5"/><circle cx="17" cy="9" r="2.5"/><circle cx="12" cy="7" r="2.5"/><path d="M3 19a4 4 0 0 1 8 0M13 19a4 4 0 0 1 8 0M8 17a4 4 0 0 1 8 0"/>'),
+    court: SV('<path d="M14 4l6 6M11 7l6 6M12.5 5.5l-4 4M18.5 11.5l-4 4M10 11L4 17l3 3 6-6"/><path d="M14 21h7"/>'),
     stage: SV('<path d="M3 4h18M4 4c0 5 2 7 5 8M20 4c0 5-2 7-5 8"/><path d="M3 20h18M7 20l1.5-5h7L17 20"/><circle cx="12" cy="10" r="2"/>'),
     mime: SV('<circle cx="12" cy="5" r="2.5"/><path d="M12 8v6M12 14l-4 6M12 14l4 6M5 9l7 2 7-4"/>'),
     lie: SV('<path d="M12 3a6 6 0 0 0-6 6v3l-2 4h16l-2-4V9a6 6 0 0 0-6-6z"/><path d="M9 20h6M12 7v3M12 13v.1"/>'),
@@ -74,17 +75,18 @@
   const LCATS = () => { const c = (store.get('lcats', '') || '').split(/[\n,،]+/).map(x => x.trim()).filter(Boolean).slice(0, 6); return c.length >= 3 ? c : isAr() ? ['إنسان', 'حيوان', 'نبات', 'جماد', 'بلاد'] : ['Name', 'Animal', 'Plant', 'Thing', 'Country']; };
 
   const GAMES = [
-    { id: 'spy', icon: IC.spy, ar: 'الكلمة السرية', en: 'The secret word', min: 3, dAr: 'الكل يعرف الكلمة إلا واحدًا. تلميحات ثم تصويت: اكشفوا من لا يعرفها.', dEn: 'Everyone knows the word but one. Clues, then a vote: find who does not know it.' },
-    { id: 'who', icon: IC.who, ar: 'من أنا؟', en: 'Who am I?', min: 2, dAr: 'لكل لاعب شخصية يراها الجميع إلا هو. يسأل بنعم أو لا حتى يعرف من هو.', dEn: 'Each player has an identity everyone sees but them. Ask yes-or-no questions to find it.' },
-    { id: 'draw', icon: IC.draw, ar: 'ارسم وخمّن', en: 'Draw and guess', min: 2, dAr: 'واحد يرسم في جواله والرسمة تظهر على الشاشة، والبقية يخمّنون بأسرع ما يمكن.', dEn: 'One draws on their phone, the drawing shows on the screen, the others guess as fast as they can.' },
-    { id: 'letters', icon: IC.letters, ar: 'إنسان حيوان نبات جماد بلاد', en: 'Name, animal, plant, thing, country', min: 2, dAr: 'حرف واحد للجميع: املأ الخانات الخمس قبل أن يقول أحدهم «ستوب».', dEn: 'One letter for all: fill the five boxes before someone calls stop.' },
-    { id: 'lie', icon: IC.lie, ar: 'الكذبة', en: 'The bluff', min: 3, dAr: 'معلومة غريبة ناقصة: كل واحد يكتب كذبة مقنعة، ثم ابحثوا عن الحقيقة بين الأكاذيب.', dEn: 'A strange fact with a blank: each writes a convincing lie, then find the truth among the lies.' },
-    { id: 'silent', icon: IC.silent, ar: 'التمثيل الصامت', en: 'Silent acting', min: 4, dAr: 'فريقان، وممثل من كل فريق يمثّل مثلًا بلا كلام، واثنان من فريقه يكتبان الإجابة. فشلوا؟ الفريق الآخر يسرق.', dEn: 'Two teams; an actor mimes a proverb without a word while two teammates type the answer. If they fail, the other team steals.' },
-    { id: 'ball', icon: IC.ball, ar: 'من عنده الكورة؟', en: 'Who has the ball?', min: 4, dAr: 'الكورة تنزل سرًا في جوال واحد، والباحث يسأل ويقرأ الوجوه. ارمِها مرة، أو موّه برمية وهمية، أو استفزه بعبارة.', dEn: 'The ball lands secretly on one phone; the seeker asks and reads faces. Throw it once, fake a throw, or tease.' },
-    { id: 'herd', icon: IC.herd, ar: 'ذوق الجماعة', en: 'Think alike', min: 3, dAr: 'سؤال بسيط، وكل واحد يكتب الإجابة اللي يتوقع أن الأغلبية بتكتبها. النقاط لمن وافق الجماعة.', dEn: 'A simple question; write the answer you expect most will write. Points for matching the crowd.' },
-    { id: 'stage', icon: IC.stage, ar: 'على المسرح', en: 'On stage', min: 3, dAr: 'قرعة تختار الممثل فيقوم، ثم يظهر للجميع موقف وأسلوب يمثّله بالكلام والحركة، وفي نصه مفاجأة. الجمهور يقيّم بالنجوم، والانسحاب له عقوبة.', dEn: 'A draw picks the actor; then a scene and a style appear for all, and they play it out, with a twist halfway. The room rates it in stars; backing out has a forfeit.' },
-    { id: 'mime', icon: IC.mime, ar: 'مثّلها', en: 'Act it out', min: 3, dAr: 'تظهر كلمة في جوال واحد فقط، فيمثّلها بلا كلام، والبقية يخمّنون من جوالاتهم.', dEn: 'A word appears on one phone only; they act it out without words while the others guess on their phones.' },
-    { id: 'whose', icon: IC.whose, ar: 'مين قالها؟', en: 'Who said it?', min: 3, dAr: 'سؤال للجميع وكل واحد يجيب سرًا، ثم تظهر الإجابات واحدة واحدة: خمّنوا صاحبها.', dEn: 'One question for all, each answers in secret; then the answers appear one by one: guess whose it is.' },
+    { id: 'spy', rAr: ["الكل يشوف كلمة سرية في جواله إلا واحد: الجاسوس.", "كل واحد يقول تلميح قصير عن الكلمة، والجاسوس يحاول يتظاهر إنه يعرفها.", "بعدها تصوّتون: من الجاسوس؟ ولو نجا أو خمّن الكلمة، يكسب."], rEn: ["Everyone sees a secret word on their phone except one: the spy.", "Each gives a short clue; the spy pretends to know the word.", "Then vote: who is the spy? If they escape or guess the word, they win."], icon: IC.spy, ar: 'الكلمة السرية', en: 'The secret word', min: 3, dAr: 'الكل يعرف الكلمة إلا واحدًا. تلميحات ثم تصويت: اكشفوا من لا يعرفها.', dEn: 'Everyone knows the word but one. Clues, then a vote: find who does not know it.' },
+    { id: 'who', rAr: ["كل لاعب عنده شخصية يشوفها الكل إلا هو.", "اسأل الجماعة أسئلة جوابها نعم أو لا.", "أول من يعرف شخصيته ويكتبها في جواله يكسب أكثر."], rEn: ["Everyone has an identity the others can see, but not them.", "Ask the room yes-or-no questions.", "The first to work it out and type it wins the most."], icon: IC.who, ar: 'من أنا؟', en: 'Who am I?', min: 2, dAr: 'لكل لاعب شخصية يراها الجميع إلا هو. يسأل بنعم أو لا حتى يعرف من هو.', dEn: 'Each player has an identity everyone sees but them. Ask yes-or-no questions to find it.' },
+    { id: 'draw', rAr: ["واحد يرسم في جواله كلمة ما يشوفها غيره.", "الرسمة تظهر على الشاشة لحظة بلحظة.", "الباقي يكتبون تخمينهم، والأسرع ياخذ نقاط أكثر."], rEn: ["One player draws a secret word on their phone.", "The drawing appears on the screen as it is made.", "The others type guesses; the quickest score the most."], icon: IC.draw, ar: 'ارسم وخمّن', en: 'Draw and guess', min: 2, dAr: 'واحد يرسم في جواله والرسمة تظهر على الشاشة، والبقية يخمّنون بأسرع ما يمكن.', dEn: 'One draws on their phone, the drawing shows on the screen, the others guess as fast as they can.' },
+    { id: 'letters', rAr: ["يطلع حرف واحد للكل.", "املأ الخانات في جوالك: إنسان، حيوان، نبات، جماد، بلاد.", "أول من يخلّص يضغط «ستوب»، والإجابة اللي ما كتبها غيرك نقاطها أعلى."], rEn: ["One letter for everyone.", "Fill the boxes on your phone: name, animal, plant, thing, country.", "The first to finish hits Stop; unique answers score more."], icon: IC.letters, ar: 'إنسان حيوان نبات جماد بلاد', en: 'Name, animal, plant, thing, country', min: 2, dAr: 'حرف واحد للجميع: املأ الخانات الخمس قبل أن يقول أحدهم «ستوب».', dEn: 'One letter for all: fill the five boxes before someone calls stop.' },
+    { id: 'lie', rAr: ["تطلع معلومة غريبة ناقصها كلمة.", "كل واحد يكتب كذبة مقنعة تكمّلها.", "بعدها تظهر الحقيقة بين الكذبات: اخترها. ولو أحد صدّق كذبتك، تكسب."], rEn: ["A strange fact appears with a word missing.", "Everyone writes a convincing fake answer.", "Then pick the truth among the lies. Anyone fooled by your lie earns you points."], icon: IC.lie, ar: 'الكذبة', en: 'The bluff', min: 3, dAr: 'معلومة غريبة ناقصة: كل واحد يكتب كذبة مقنعة، ثم ابحثوا عن الحقيقة بين الأكاذيب.', dEn: 'A strange fact with a blank: each writes a convincing lie, then find the truth among the lies.' },
+    { id: 'silent', rAr: ["فريقان، وممثل من كل فريق بدوره.", "المثل يظهر في جوال الممثل فقط، ويمثّله بلا كلام.", "اثنان من فريقه يكتبون الجواب بمحاولتين. فشلوا؟ الفريق الثاني يسرق."], rEn: ["Two teams, one actor at a time.", "The proverb shows only on the actor’s phone; they act it silently.", "Two teammates type the answer, two tries. If they fail, the other team steals."], icon: IC.silent, ar: 'التمثيل الصامت', en: 'Silent acting', min: 4, dAr: 'فريقان، وممثل من كل فريق يمثّل مثلًا بلا كلام، واثنان من فريقه يكتبان الإجابة. فشلوا؟ الفريق الآخر يسرق.', dEn: 'Two teams; an actor mimes a proverb without a word while two teammates type the answer. If they fail, the other team steals.' },
+    { id: 'ball', rAr: ["الكورة تنزل سرًا في جوال واحد، وواحد هو الباحث.", "الباحث يسأل ويقرأ الوجوه، وعنده كشّاف يومض جوال صاحب الكورة.", "الباقي يموّهون: رمية وهمية، أو ومضة في نفس اللحظة."], rEn: ["The ball lands secretly on one phone; one player is the seeker.", "The seeker asks, reads faces, and has a beacon that lights up the holder’s phone.", "Everyone else bluffs: fake throws, or a flash at the same moment."], icon: IC.ball, ar: 'من عنده الكورة؟', en: 'Who has the ball?', min: 4, dAr: 'الكورة تنزل سرًا في جوال واحد، والباحث يسأل ويقرأ الوجوه. ارمِها مرة، أو موّه برمية وهمية، أو استفزه بعبارة.', dEn: 'The ball lands secretly on one phone; the seeker asks and reads faces. Throw it once, fake a throw, or tease.' },
+    { id: 'herd', rAr: ["يطلع سؤال بسيط للكل.", "اكتب الإجابة اللي تتوقع إن أغلب الجماعة بتكتبها.", "كل ما وافقت الأغلبية أكثر، كسبت أكثر."], rEn: ["A simple question for everyone.", "Write the answer you think most people will write.", "Match the crowd to score."], icon: IC.herd, ar: 'ذوق الجماعة', en: 'Think alike', min: 3, dAr: 'سؤال بسيط، وكل واحد يكتب الإجابة اللي يتوقع أن الأغلبية بتكتبها. النقاط لمن وافق الجماعة.', dEn: 'A simple question; write the answer you expect most will write. Points for matching the crowd.' },
+    { id: 'stage', rAr: ["قرعة تختار الممثل، وأحيانًا اثنين، فيقومون للمسرح.", "يظهر للكل موقف وأسلوب، ويمثّلونه بالكلام والحركة، وفي نصه مفاجأة يختارها الجمهور.", "الجمهور يقيّم بالنجوم من جواله. والانسحاب له عقوبة."], rEn: ["A draw picks the actor, sometimes two, who take the stage.", "Everyone sees a scene and a style; they play it out loud, with a twist the room picks.", "The room rates it in stars. Backing out has a forfeit."], icon: IC.stage, ar: 'على المسرح', en: 'On stage', min: 3, dAr: 'قرعة تختار الممثل فيقوم، ثم يظهر للجميع موقف وأسلوب يمثّله بالكلام والحركة، وفي نصه مفاجأة. الجمهور يقيّم بالنجوم، والانسحاب له عقوبة.', dEn: 'A draw picks the actor; then a scene and a style appear for all, and they play it out, with a twist halfway. The room rates it in stars; backing out has a forfeit.' },
+    { id: 'court', rAr: ["قرعة تختار المتهم والمدّعي، ومحاميًا إذا كنتم ستة أو أكثر. الباقي محلّفون.", "التهمة على الشاشة: المدّعي يتكلم ٣٠ ثانية، ثم المتهم يدافع ٤٥ ثانية.", "المحلّفون يصوّتون من جوالاتهم: مذنب أو بريء. والمذنب عليه حكم طريف."], rEn: ["A draw picks the accused and the prosecutor, plus a lawyer with six or more. The rest are the jury.", "The charge is on screen: the prosecutor speaks 30 s, then the accused defends 45 s.", "The jury votes on their phones: guilty or not. The guilty get a funny sentence."], icon: IC.court, ar: 'المحكمة', en: 'The court', min: 4, dAr: 'تهمة طريفة، ومتهم يدافع عن نفسه، ومدّعٍ يحاول يدينه، والمحلّفون يحكمون من جوالاتهم: مذنب أو بريء.', dEn: 'A funny charge: the accused defends, the prosecutor attacks, and the jury decides on their phones.' },
+    { id: 'mime', rAr: ["كلمة تظهر في جوال واحد فقط.", "يمثّلها بلا كلام ولا أصوات.", "الباقي يكتبون تخمينهم، والأسرع يكسب أكثر."], rEn: ["A word appears on one phone only.", "They act it out, no words, no sounds.", "The others type guesses; the fastest score most."], icon: IC.mime, ar: 'مثّلها', en: 'Act it out', min: 3, dAr: 'تظهر كلمة في جوال واحد فقط، فيمثّلها بلا كلام، والبقية يخمّنون من جوالاتهم.', dEn: 'A word appears on one phone only; they act it out without words while the others guess on their phones.' },
+    { id: 'whose', rAr: ["سؤال للكل، وكل واحد يجاوب سرًا من جواله.", "تظهر الإجابات على الشاشة وحدة وحدة.", "خمّنوا صاحب كل إجابة."], rEn: ["One question; everyone answers in secret.", "The answers appear on the screen one by one.", "Guess who wrote each one."], icon: IC.whose, ar: 'مين قالها؟', en: 'Who said it?', min: 3, dAr: 'سؤال للجميع وكل واحد يجيب سرًا، ثم تظهر الإجابات واحدة واحدة: خمّنوا صاحبها.', dEn: 'One question for all, each answers in secret; then the answers appear one by one: guess whose it is.' },
   ];
   const gameOf = id => GAMES.find(g => g.id === id);
 
@@ -235,7 +237,10 @@
         if (s.key === S.remote) { if (k.startsWith('c:')) { const b = ctlButtons()[+k.slice(2)]; if (b) b.click(); } return; }
         if (S.roster && !S.roster[s.key]) return; if (S.g && S.gs && v.k) { try { S.gs.move(s.key, String(v.k)); } catch (e) { console.error(e); } } };
       on(S.ref.child('mv'), 'child_added', mv); on(S.ref.child('mv'), 'child_changed', mv);
-      const seen = {}; const rx = s => { const v = s.val() || {}; if (!v.e || seen[s.key] === v.t || now() - (v.t || 0) > 8000) return; seen[s.key] = v.t; fly(v.e); };
+      const seen = {}, wave = {}; const rx = s => { const v = s.val() || {}; if (!v.e || seen[s.key] === v.t || now() - (v.t || 0) > 8000) return; seen[s.key] = v.t; fly(v.e);
+        // three or more people sending the same reaction within a moment: the room is in it together
+        const old = wave[v.e] || { l: [], fired: 0 }; old.l = old.l.filter(x => now() - x.t < 2500 && x.u !== s.key); old.l.push({ u: s.key, t: now() }); wave[v.e] = old;
+        if (old.l.length >= 3 && now() - old.fired > 6000) { old.fired = now(); burst(v.e); } };
       on(S.ref.child('rx'), 'child_added', rx); on(S.ref.child('rx'), 'child_changed', rx);
       S.tm = setInterval(() => { if (S && S.gs && S.gs.tick) S.gs.tick(); paintClock(); }, 250);
       hostDraw();
@@ -252,12 +257,18 @@
   const tally = (u, k, n) => { if (!(u in S.pl)) return; const t = S.stt[u] = S.stt[u] || {}; t[k] = (t[k] || 0) + (n == null ? 1 : n); };
   const add = (u, n) => { if (!(u in S.pl)) return; S.sc[u] = (S.sc[u] || 0) + Math.round(n > 0 && S.mult ? n * S.mult : n); };
   // the moments of the night, kept for the finale and the card: the best of each kind
+  // the evening's own content, made by the AI from the occasion the host typed: used first while it lasts
+  const packList = k => { const P = store.get('pack', null); if (!P || !P.on || !Array.isArray(P[k])) return null; const l = P[k].filter(x => typeof x === 'string' && x.trim()); return l.length ? l : null; };
+  const fromPack = (k, used, base) => { const P = packList(k); if (P) { const f = P.filter(x => !used.includes(x)); if (f.length) return pick(f); } const f = base.filter(x => !used.includes(x)); return pick(f.length ? f : base); };
   const hl = (k, v, ar, en) => { S.hl = S.hl || {}; const c = S.hl[k]; if (!c || v > c.v) S.hl[k] = { v, ar, en }; };
   const HLN = [['stage', 'أقوى مشهد', 'The best scene'], ['lie', 'أنجح كذبة', 'The best bluff'], ['herd', 'أكبر إجماع', 'The biggest match'], ['quick', 'أسرع تخمين', 'The fastest guess'], ['ball', 'أجرأ صيد', 'The boldest catch']];
   const pushScores = () => { saveHost(); return S.ref.child('sc').set(S.sc).catch(() => {}); };
   const phase = (ph, dur, extra) => { S.ph = ph; S.end = dur ? now() + dur * 1000 : 0; return pub(Object.assign({ ph, t0: now(), dur: dur || 0 }, extra || {})); };
   const left = () => S.end ? Math.max(0, (S.end - now()) / 1000) : 0;
   function paintClock() { const c = HE().querySelector('#smClock'); if (!c) return; const l = left(); c.textContent = S.end ? Math.ceil(l) : ''; c.classList.toggle('low', S.end && l <= 10); }
+  const BURST = { '😂': ['المجلس انفجر ضحك!', 'The room is in stitches!'], '👏': ['تصفيق حار!', 'A round of applause!'], '🔥': ['ناااار!', 'On fire!'], '😮': ['صدمة!', 'Shock!'], '❤️': ['المجلس كله حب!', 'All the love!'], '🤔': ['الكل يفكّر…', 'Everyone is thinking…'] };
+  function burst(e) { const fx = HE().querySelector('.sm-fx'); if (!fx) return; for (let k = 0; k < 14; k++) setTimeout(() => fly(e), k * 70);
+    const t = BURST[e]; if (!t) return; const d = document.createElement('div'); d.className = 'sm-burst'; d.textContent = T(t[0], t[1]); fx.appendChild(d); SND.win(); setTimeout(() => d.remove(), 2600); }
   function fly(e) { const fx = HE().querySelector('.sm-fx'); if (!fx) return; const s = document.createElement('span'); s.textContent = e; s.style.setProperty('--x', (6 + Math.random() * 86) + '%'); fx.appendChild(s); setTimeout(() => s.remove(), 2600); }
 
   const TEAMS = [['الصقور', 'Falcons', '#f2b84b'], ['النجوم', 'Stars', '#2bb3a3']];
@@ -312,7 +323,11 @@
   // the host's own words (a lesson's terms, a class's names…) and the letter game's boxes
   function settings() {
     const d = document.createElement('div'); d.className = 'sm-ov';
-    d.innerHTML = `<div class="sm-ovb"><h3>${B('كلماتك', 'Your words')}</h3><p>${B('كلمة في كل سطر، أو افصل بينها بفواصل. تُستعمل في الكلمة السرية ومن أنا؟ وارسم وخمّن حين تختار «كلماتك». مناسبة لمصطلحات درس أو مقرر.', 'One word a line, or separated by commas. Used in the secret word, who am I and draw and guess when you choose “Your words”. Good for the terms of a lesson or a course.')}</p>
+    const P0 = store.get('pack', null);
+    d.innerHTML = `<div class="sm-ovb"><h3>${B('مناسبة السهرة', 'The occasion')}</h3><p>${B('اكتب المناسبة أو المجموعة، مثل «عيد ميلاد سارة» أو «فريق التسويق» أو «طلاب الصف الثالث». يجهّز الذكاء الاصطناعي عنها مشاهد «على المسرح» وتهم «المحكمة» وأسئلة «ذوق الجماعة».', 'Type the occasion or the group, like «Sara’s birthday» or «the marketing team». The AI writes scenes for «On stage», charges for «The court» and questions for «Think alike» about it.')}</p>
+      <div class="sm-aiw"><input data-occ dir="auto" maxlength="140" value="${esc(P0 && P0.topic || '')}" placeholder="${T('مثل: عيد ميلاد سارة، وتحب القهوة والسفر', 'e.g. Sara’s birthday; she loves coffee and travel')}"><button type="button" class="btn ghost" data-occgo>${B('جهّز محتوى السهرة', 'Make the evening’s content')}</button></div>
+      ${P0 && P0.scene ? `<p class="sm-occst">${B(`جاهز لـ«${esc(P0.topic)}»: ${P0.scene.length} مشاهد، ${(P0.charge || []).length} تهم، ${(P0.herd || []).length} أسئلة.`, `Ready for «${esc(P0.topic)}»: ${P0.scene.length} scenes, ${(P0.charge || []).length} charges, ${(P0.herd || []).length} questions.`)}</p><label class="sm-chk"><input type="checkbox" data-occon${P0.on ? ' checked' : ''}> ${B('استعمله في الألعاب الثلاث', 'Use it in the three games')}</label>` : ''}
+      <h3>${B('كلماتك', 'Your words')}</h3><p>${B('كلمة في كل سطر، أو افصل بينها بفواصل. تُستعمل في الكلمة السرية ومن أنا؟ وارسم وخمّن حين تختار «كلماتك». مناسبة لمصطلحات درس أو مقرر.', 'One word a line, or separated by commas. Used in the secret word, who am I and draw and guess when you choose “Your words”. Good for the terms of a lesson or a course.')}</p>
       <div class="sm-aiw"><input data-aitopic dir="auto" maxlength="120" placeholder="${T('موضوع، مثل: الجهاز الهضمي، أو مطبخ الحجاز', 'A topic, e.g. the digestive system')}"><button type="button" class="btn ghost" data-aiw>${B('اقترحها بالذكاء الاصطناعي', 'Suggest them with AI')}</button></div>
       <textarea data-w rows="7" dir="auto">${esc(store.get('mine', ''))}</textarea>
       <div class="sm-lists">${Object.keys(lists()).length ? `<select data-lsel><option value="">${T('قوائمك المحفوظة…', 'Your saved lists…')}</option>${Object.keys(lists()).map(k => `<option>${esc(k)}</option>`).join('')}</select><button type="button" class="btn ghost" data-ldel hidden>${B('احذفها', 'Delete')}</button>` : ''}
@@ -330,6 +345,17 @@
       <div class="sm-row"><button type="button" class="btn solid" data-ok>${B('احفظ', 'Save')}</button><button type="button" class="btn ghost" data-x>${B('إغلاق', 'Close')}</button></div></div>`;
     HE().appendChild(d);
     d.querySelector('[data-x]').onclick = () => d.remove();
+    d.querySelector('[data-occgo]').onclick = async e => {
+      const btn = e.currentTarget, inp = d.querySelector('[data-occ]'), t = inp.value.trim(); if (!t) { inp.focus(); return; }
+      const was = btn.innerHTML; btn.disabled = true; btn.innerHTML = B('لحظة… يكتب المحتوى', 'One moment… writing');
+      const ask = isAr() ? `المناسبة: ${t}\nاكتب محتوى لسهرة ألعاب جماعية مرحة ومحترمة عن هذه المناسبة، بلهجة سعودية خفيفة، وبعبارات قصيرة واضحة. أعد JSON فقط بهذا الشكل:\n{"scene":[10 مواقف يمثّلها شخص واحد، كل موقف جملة قصيرة تبدأ بفعل مثل «تقنع…» أو «تشرح…»],"charge":[8 تهم طريفة بريئة في جملة قصيرة مثل «أكل آخر قطعة من الكيكة وأنكر»],"herd":[8 أسئلة بسيطة جوابها كلمة أو كلمتان ويتوقع الناس جوابًا مشتركًا]}\nبلا أي شرح خارج JSON.`
+        : `The occasion: ${t}\nWrite content for a fun, kind party game evening about this occasion, in short clear phrases. Return JSON only:\n{"scene":[10 scenes one person can act, each a short sentence starting with a verb like «Convince…» or «Explain…»],"charge":[8 harmless funny charges, short, like «Ate the last slice of cake and denied it»],"herd":[8 simple questions with a one- or two-word answer most people would share]}\nNo text outside the JSON.`;
+      try {
+        const raw = await gemini(ask), j = JSON.parse(raw.slice(raw.indexOf('{'), raw.lastIndexOf('}') + 1)), cl = a => (Array.isArray(a) ? a : []).map(x => String(x).replace(/\*\*/g, '').trim()).filter(x => x && x.length <= 140);
+        const P = { topic: t, on: true, scene: cl(j.scene), charge: cl(j.charge), herd: cl(j.herd) }; if (!P.scene.length && !P.charge.length && !P.herd.length) throw new Error('empty');
+        store.set('pack', P); d.remove(); settings();
+      } catch (er) { console.error(er); btn.innerHTML = B('تعذّر الآن، جرّب بعد قليل', 'Not now; try again shortly'); setTimeout(() => { btn.innerHTML = was; btn.disabled = false; }, 2500); }
+    };
     // the AI fills a list from a topic; the host reads it and edits before saving
     const aiFill = async (btn, sel, ask) => {
       const t = d.querySelector('[data-aitopic]').value.trim(); if (!t) { d.querySelector('[data-aitopic]').focus(); return; }
@@ -349,11 +375,11 @@
     if (ls) { ls.onchange = () => { if (!ls.value) { ld.hidden = true; return; } d.querySelector('[data-w]').value = lists()[ls.value] || ''; d.querySelector('[data-lname]').value = ls.value; ld.hidden = false; };
       ld.onclick = () => { const L = lists(); delete L[ls.value]; store.set('lists', L); d.remove(); settings(); }; }
     d.querySelector('[data-lsave]').onclick = () => { const nm = d.querySelector('[data-lname]').value.trim(), w = d.querySelector('[data-w]').value.trim(); if (!nm || !w) return; const L = lists(); L[nm] = w; store.set('lists', L); store.set('mine', w); if (mineWords().length >= 6) { S.cat = 'mine'; store.set('cat', 'mine'); } d.remove(); settings(); };
-    d.querySelector('[data-ok]').onclick = () => { const on2 = d.querySelector('[data-tm]').checked; if (on2 !== S.teams) { S.teams = on2; S.tm = {}; if (on2) shuffle(players()).forEach((u, k) => { S.tm[u] = k % 2; }); pushTeams(); } store.set('wheel', d.querySelector('[data-wh]').checked ? 1 : 0); store.set('mine', d.querySelector('[data-w]').value); store.set('asks', d.querySelector('[data-asks]').value); store.set('wcap', +d.querySelector('[data-wcap]').value); store.set('wsec', +d.querySelector('[data-wsec]').value); store.set('lcats', d.querySelector('[data-lc]').value); if (mineWords().length >= 6) { S.cat = 'mine'; store.set('cat', 'mine'); } d.remove(); picker(); };
+    d.querySelector('[data-ok]').onclick = () => { const on2 = d.querySelector('[data-tm]').checked; if (on2 !== S.teams) { S.teams = on2; S.tm = {}; if (on2) shuffle(players()).forEach((u, k) => { S.tm[u] = k % 2; }); pushTeams(); } store.set('wheel', d.querySelector('[data-wh]').checked ? 1 : 0); { const P = store.get('pack', null), c = d.querySelector('[data-occon]'); if (P && c) { P.on = c.checked; store.set('pack', P); } } store.set('mine', d.querySelector('[data-w]').value); store.set('asks', d.querySelector('[data-asks]').value); store.set('wcap', +d.querySelector('[data-wcap]').value); store.set('wsec', +d.querySelector('[data-wsec]').value); store.set('lcats', d.querySelector('[data-lc]').value); if (mineWords().length >= 6) { S.cat = 'mine'; store.set('cat', 'mine'); } d.remove(); picker(); };
   }
   // a whole evening: a length, a lineup that fits it, and the host's own changes before it starts
-  const MINS = { silent: 8, ball: 6, herd: 3, whose: 4, who: 5, draw: 6, spy: 5, lie: 5, mime: 6, letters: 7, stage: 7 };
-  const ORDER = ['herd', 'silent', 'ball', 'whose', 'who', 'draw', 'spy', 'lie', 'stage', 'mime', 'letters'];
+  const MINS = { silent: 8, ball: 6, herd: 3, whose: 4, who: 5, draw: 6, spy: 5, lie: 5, mime: 6, letters: 7, stage: 7, court: 6 };
+  const ORDER = ['herd', 'silent', 'ball', 'whose', 'who', 'draw', 'spy', 'lie', 'stage', 'court', 'mime', 'letters'];
   function lineup(len) { const n = players().length, ok = ORDER.filter(id => n >= gameOf(id).min), L = []; let t = 0; for (const id of ok) { if (t + MINS[id] > len + 2) continue; L.push(id); t += MINS[id]; } return L.length ? L : ok.slice(0, 1); }
   function evening(len, L) {
     len = len || store.get('eveLen', 30); L = L || lineup(len);
@@ -382,7 +408,7 @@
     S.auto = null; S.end = 0;
     const order = players().sort((a, b) => (S.sc[b] || 0) - (S.sc[a] || 0)), St = u => S.stt[u] || {};
     const best = (k, min) => { let w = null, v = 0; players().forEach(u => { const x = St(u)[k] || 0; if (x >= (min || 1) && x > v) { v = x; w = u; } }); return w ? { u: w, v } : null; };
-    const TT = [['spy', 'الجاسوس الأخطر', 'The sneakiest spy'], ['art', 'الرسام', 'The artist'], ['quick', 'سريع البديهة', 'The quickest mind'], ['self', 'يعرف نفسه', 'Knows themselves'], ['let', 'سيد الحروف', 'Master of letters'], ['myst', 'الغامض', 'The mystery'], ['herd', 'قلب الجماعة', 'In tune with the crowd'], ['mime', 'الممثل', 'The actor'], ['nerve', 'أعصاب حديد', 'Nerves of steel'], ['act', 'نجم التمثيل', 'Star of the stage'], ['det', 'المحقق', 'The detective'], ['stage', 'نجم المسرح', 'The showstopper'], ['critic', 'الناقد الفني', 'The critic']];
+    const TT = [['spy', 'الجاسوس الأخطر', 'The sneakiest spy'], ['art', 'الرسام', 'The artist'], ['quick', 'سريع البديهة', 'The quickest mind'], ['self', 'يعرف نفسه', 'Knows themselves'], ['let', 'سيد الحروف', 'Master of letters'], ['myst', 'الغامض', 'The mystery'], ['herd', 'قلب الجماعة', 'In tune with the crowd'], ['mime', 'الممثل', 'The actor'], ['nerve', 'أعصاب حديد', 'Nerves of steel'], ['act', 'نجم التمثيل', 'Star of the stage'], ['det', 'المحقق', 'The detective'], ['stage', 'نجم المسرح', 'The showstopper'], ['critic', 'الناقد الفني', 'The critic'], ['law', 'أبلغ لسان', 'The silver tongue']];
     const titles = TT.map(([k, ar, en]) => { const r = best(k); return r ? { k, ar, en, u: r.u, n: nameOf(r.u) } : null; }).filter(Boolean);
     const hls = HLN.filter(([k]) => S.hl && S.hl[k]).map(([k, ar, en]) => ({ l: T(ar, en), t: T(S.hl[k].ar, S.hl[k].en) }));
     const place = u => 1 + players().filter(o => (S.sc[o] || 0) > (S.sc[u] || 0)).length;
@@ -407,7 +433,7 @@
       else if (k === 3 && top) S.sc[top] = (S.sc[top] || 0) - 50; else if (k === 4) o.slice(-3).forEach(u => add(u, 75));
       pushScores(); pub({ ph: 'wheel', res: T(w[1], w[3]) }); SND.win(); fly('★'); S.gs.view();
     };
-    const go = () => { S.end = 0; if (!done) apply(); startGame(id, true); };
+    const go = () => { S.end = 0; if (!done) apply(); startGame(id, 1); };
     S.end = now() + 11000;
     S.gs = { id: null, tick() { if (!done && S.end && S.end - now() < 4500) apply(); if (S.end && left() <= 0) go(); }, view() {
       const seg = WHEEL.map((x, i) => { const a0 = (i * 60 - 90) * Math.PI / 180, a1 = ((i + 1) * 60 - 90) * Math.PI / 180, am = ((i + .5) * 60 - 90) * Math.PI / 180;
@@ -416,34 +442,64 @@
         <div class="sm-wheel"><i class="sm-wptr"></i><svg viewBox="0 0 200 200" style="transform:rotate(${spun ? rot : 0}deg)">${seg}<circle cx="100" cy="100" r="16" fill="#17153a" stroke="#f2b84b" stroke-width="3"/></svg></div>
         ${done ? `<p class="sm-twist">${B(w[1], w[3])}</p>` : `<p class="sm-sub">${B('تدور…', 'Spinning…')}</p>`}</div>`,
         `<button type="button" class="btn ghost" data-wgo>${done ? B('ابدأ اللعبة', 'Start the game') : B('تخطَّ العجلة', 'Skip the wheel')}</button>`);
-      q('[data-wgo]').onclick = () => { if (!done) { done = true; } go(); };
+      q('[data-wgo]').onclick = () => { if (!done) { done = true; } S.end = 0; startGame(id, 1); };
       if (!spun) { spun = true; requestAnimationFrame(() => requestAnimationFrame(() => { const sv = HE().querySelector('.sm-wheel svg'); if (sv) { sv.style.transition = 'transform 6.5s cubic-bezier(.12,.6,.15,1)'; sv.style.transform = `rotate(${rot}deg)`; } })); }
     } };
     pub({ ph: 'wheel', res: '' }); SND.go(); hostDraw();
   }
-  function startGame(id, spun) {
-    // from the second game on, a spin of the wheel first
-    if (!spun && S.played && store.get('wheel', 1) && players().length >= 2) { S.mult = 0; return wheel(id); }
-    if (!spun) S.mult = 0;
-    const mk = { spy: Spy, who: Who, draw: Draw, letters: Letters, whose: Whose, lie: Lie, herd: Herd, mime: Mime, ball: Ball, silent: Silent, stage: Stage }[id]; if (!mk) return;
+  /* ---------- the bet: back yourself for the next game ---------- */
+  function bet(id) {
+    S.bets = {}; S.end = now() + 20000;
+    const go = () => { S.end = 0; S.betNext = false; startGame(id, 2); };
+    S.gs = { id: null, tick() { if (S.end && left() <= 0) go(); },
+      move(u, k) { if (!k.startsWith('b:')) return; const v = parseInt(k.slice(2), 10); if (![0, 50, 100, 200].includes(v) || v > Math.max(0, S.sc[u] || 0)) return; S.bets[u] = v; pub(Object.assign({}, S.g, { n: Object.keys(S.bets).length })); S.gs.view(); if (Object.keys(S.bets).length >= players().length) go(); },
+      view() { const q = frame(`<div class="sm-g sm-betg"><p class="sm-sub">${B(`قبل «${gameOf(id).ar}»`, `Before ${gameOf(id).en}`)}</p><h2>${B('الرهان!', 'Place your bets!')}</h2>
+        <div class="sm-rules"><p>${B('راهن على نفسك من جوالك: ٥٠ أو ١٠٠ أو ٢٠٠ من نقاطك.', 'Back yourself on your phone: 50, 100 or 200 of your points.')}</p><p>${B('إذا جبت في هذي اللعبة نقاطًا أكثر من نص اللاعبين، يرجع لك رهانك ومثله.', 'Score more than half the players in this game and you win your bet.')}</p><p>${B('وإذا لا، تخسره.', 'If not, you lose it.')}</p></div>
+        <p class="sm-sub">${B(`راهن ${Object.keys(S.bets).length} من ${players().length}`, `${Object.keys(S.bets).length} of ${players().length} in`)}</p></div>`, `<button type="button" class="btn ghost" data-bgo>${B('ابدأ اللعبة', 'Start the game')}</button>`);
+        q('[data-bgo]').onclick = go; } };
+    pub({ ph: 'bet', n: 0 }); SND.go(); hostDraw();
+  }
+  // settle the bets when the game is over: beat at least half the room and win
+  function settleBets(gained) {
+    if (!S.bets) return ''; const us = players(), n = us.length, out = [];
+    Object.keys(S.bets).forEach(u => { const v = S.bets[u]; if (!v || !(u in S.pl)) return; const better = us.filter(o => (gained[o] || 0) > (gained[u] || 0)).length, win = better < n / 2;
+      add(u, win ? v : -v); out.push({ u, v: win ? v : -v }); });
+    S.bets = null; if (!out.length) return '';
+    return `<div class="sm-betres"><b>${B('الرهانات:', 'The bets:')}</b>${out.map(x => `<span class="${x.v > 0 ? 'up' : 'dn'}" dir="auto">${esc(nameOf(x.u))} <i dir="ltr">${x.v > 0 ? '+' : '−'}${Math.abs(x.v)}</i></span>`).join('')}</div>`;
+  }
+  /* ---------- before each game: what it is and how to play, in three short lines ---------- */
+  function intro(id) {
+    const g = gameOf(id); S.end = now() + 12000; const go = () => { S.end = 0; startGame(id, 3); };
+    S.gs = { id: null, tick() { if (S.end && left() <= 0) go(); }, view() {
+      const q = frame(`<div class="sm-g sm-introg"><i class="sm-introi">${g.icon}</i><h2>${B(g.ar, g.en)}</h2><div class="sm-rules">${(isAr() ? g.rAr : g.rEn).map(l => `<p>${l}</p>`).join('')}</div></div>`, `<button type="button" class="btn solid" data-igo>${B('يلا نبدأ', 'Let’s go')}</button>`);
+      q('[data-igo]').onclick = go; } };
+    pub({ ph: 'intro', gid: id, name: T(g.ar, g.en), rules: isAr() ? g.rAr : g.rEn }); hostDraw();
+  }
+  function startGame(id, step) {
+    step = step || 0;
+    // from the second game on, a spin of the wheel first; then a bet if one is due; then the rules
+    if (step < 1) { S.mult = 0; if (S.played && store.get('wheel', 1) && players().length >= 2) return wheel(id); }
+    if (step < 2 && S.betNext && S.played) return bet(id);
+    if (step < 3 && id !== S.lastId) return intro(id);
+    const mk = { spy: Spy, who: Who, draw: Draw, letters: Letters, whose: Whose, lie: Lie, herd: Herd, mime: Mime, ball: Ball, silent: Silent, stage: Stage, court: Court }[id]; if (!mk) return;
     S.gn++; S.roster = {}; players().forEach(u => { S.roster[u] = 1; }); S.gs = mk(); S.gs.id = id; S.played = true; SND.go(); S.gs.start(); stat({ ['samar/' + id + '/n']: 1, ['samar/' + id + '/p']: players().length });
   }
   // after a game: the points it gave, then back to the choice of games
   function gameOver(gained, note) {
-    S.mult = 0; pushScores();
+    S.mult = 0; const betLine = settleBets(gained); pushScores();
     const order = Object.keys(gained).filter(u => gained[u] > 0).sort((a, b) => gained[b] - gained[a]);
     S.gs = { id: null, view: () => { const q = frame(`<div class="sm-over"><h2>${note || B('انتهت اللعبة', 'The game is over')}</h2>
-        <ol class="sm-gain">${order.map(u => `<li style="--c:${colOf(u)}"><span dir="auto">${esc(nameOf(u))}</span><b>+${gained[u]}</b></li>`).join('') || `<li>${B('لا نقاط هذه المرة', 'No points this time')}</li>`}</ol></div>`,
-        `<button type="button" class="btn solid" data-again>${B('العب مرة أخرى', 'Play it again')}</button><button type="button" class="btn ghost" data-pick>${B('لعبة أخرى', 'Another game')}</button><button type="button" class="btn ghost" data-final>${B('ختام الجلسة', 'End with the podium')}</button>`);
-      q('[data-again]').onclick = () => startGame(S.lastId); q('[data-pick]').onclick = () => { S.auto = null; S.gs = null; pub({ ph: 'pick' }); picker(); }; q('[data-final]').onclick = finale; } };
+        <ol class="sm-gain">${order.map(u => `<li style="--c:${colOf(u)}"><span dir="auto">${esc(nameOf(u))}</span><b>+${gained[u]}</b></li>`).join('') || `<li>${B('لا نقاط هذه المرة', 'No points this time')}</li>`}</ol>${betLine}</div>`,
+        `<button type="button" class="btn solid" data-again>${B('العب مرة أخرى', 'Play it again')}</button><button type="button" class="btn ghost" data-pick>${B('لعبة أخرى', 'Another game')}</button><button type="button" class="btn ghost" data-bnext>${B('اللعبة الجاية برهان', 'Bet on the next game')}</button><button type="button" class="btn ghost" data-final>${B('ختام الجلسة', 'End with the podium')}</button>`);
+      q('[data-again]').onclick = () => startGame(S.lastId); q('[data-bnext]').onclick = e => { S.betNext = true; e.currentTarget.disabled = true; e.currentTarget.textContent = T('الرهان جاهز: اختر اللعبة', 'Bet on: choose the game'); }; q('[data-pick]').onclick = () => { S.auto = null; S.gs = null; pub({ ph: 'pick' }); picker(); }; q('[data-final]').onclick = finale; } };
     // in a whole evening, the next game starts by itself after a short pause
     if (S.auto) {
       const nx = () => { while (S.auto.length && players().length < gameOf(S.auto[0]).min) S.auto.shift(); return S.auto[0]; };
-      const go = () => { const id = nx(); if (id) startGame(S.auto.shift()); else finale(); };
+      const go = () => { const id = nx(); if (id) { if (S.auto.length === 1) S.betNext = true; startGame(S.auto.shift()); } else finale(); };
       S.end = now() + 20000;
       S.gs = { id: null, tick() { if (S.end && left() <= 0) { S.end = 0; go(); } }, view: () => { const id = nx(), g = id && gameOf(id);
         const q = frame(`<div class="sm-over"><h2>${note || B('انتهت اللعبة', 'The game is over')}</h2>
-          <ol class="sm-gain">${order.map(u => `<li style="--c:${colOf(u)}"><span dir="auto">${esc(nameOf(u))}</span><b>+${gained[u]}</b></li>`).join('') || `<li>${B('لا نقاط هذه المرة', 'No points this time')}</li>`}</ol>
+          <ol class="sm-gain">${order.map(u => `<li style="--c:${colOf(u)}"><span dir="auto">${esc(nameOf(u))}</span><b>+${gained[u]}</b></li>`).join('') || `<li>${B('لا نقاط هذه المرة', 'No points this time')}</li>`}</ol>${betLine}
           <p class="sm-next">${g ? B(`التالية: «${g.ar}»`, `Next: ${g.en}`) : B('التالي: ختام السهرة', 'Next: the end of the evening')}</p></div>`,
           `<button type="button" class="btn solid" data-go>${g ? B('ابدأها الآن', 'Start it now') : B('إلى الختام', 'To the end')}</button><button type="button" class="btn ghost" data-re>${B('أعدها مرة ثانية', 'Play this one again')}</button><button type="button" class="btn ghost" data-stop>${B('أوقف السهرة', 'Stop the evening')}</button>`);
         q('[data-re]').onclick = () => { S.end = 0; startGame(S.lastId); };
@@ -853,7 +909,7 @@
       },
       deal() {
         if (st.duo) { const d = pick(DUO[S.L] || DUO.ar); st.scene = d[0]; st.roles = shuffle([d[1], d[2]]); }
-        else { const pool = L().scene.filter(x => !S.stUsed.includes(x)); st.scene = pick(pool.length ? pool : L().scene); S.stUsed.push(st.scene); }
+        else { st.scene = fromPack('scene', S.stUsed, L().scene); S.stUsed.push(st.scene); }
         st.style = pick(L().style); st.opts = shuffle(L().twist.slice()).slice(0, 3);
       },
       pushAll() { inGame().forEach(u => priv(u, G.mine(u))); },
@@ -922,6 +978,71 @@
         else { mid = who + `${starsHtml(st.avg, 'big')}<p class="sm-word" dir="ltr">${st.avg} / 5</p>${st.avg >= 4.5 ? `<p class="sm-gold">${B('تصفيق حار! +٥٠', 'Standing ovation! +50')}</p>` : ''}${st.critics.length ? `<p class="sm-sub">${B('نقّاد قرأوا الجمهور (+٣٠): ', 'Critics in tune with the room (+30): ')}${st.critics.map(u => esc(nameOf(u))).join('، ')}</p>` : ''}`; foot = nextB; }
         const q = frame(`<div class="sm-g sm-stageg">${mid}</div>`, foot);
         if (q('[data-skip]')) q('[data-skip]').onclick = () => ph === 'up' ? G.prep() : ph === 'prep' ? G.show() : ph === 'show' ? G.rateNow() : G.res(); if (q('[data-next]')) q('[data-next]').onclick = () => G.next();
+        if (ph === 'draw') G.spin();
+      }
+    };
+    return G;
+  }
+
+  /* ---------- the court: a funny charge, a prosecutor, a defence, and the jury decides ---------- */
+  const CHARGES = {
+    ar: ['أكل آخر قطعة من الكيكة وأنكر', 'طلع من قروب العائلة بدون استئذان', 'رد بـ«تمام» على رسالة طويلة', 'نام في نص الاجتماع', 'تأخر ساعة وقال: أنا في الطريق', 'صوّر الأكل قبل ما ياكل أحد', 'أخذ الشاحن وما رجّعه', 'خلّص باقة الإنترنت على المقاطع', 'رفع صوت التلفزيون والناس نايمين', 'حجز أحسن مكان في المجلس من الصبح', 'نسي عيد ميلاد أعز صديق', 'كتب «هههه» وهو ما ضحك', 'دخل المطبخ وطلع بدون ما يساعد', 'قال «دقيقة» وغاب نص ساعة', 'فتح الثلاجة عشر مرات وما أخذ شيء', 'حط الكأس الفاضي في الثلاجة'],
+    en: ['Ate the last slice of cake and denied it', 'Left the family group without a word', 'Replied «ok» to a very long message', 'Fell asleep in the middle of a meeting', 'An hour late, saying «on my way»', 'Photographed the food before anyone could eat', 'Borrowed the charger and never returned it', 'Used up the data on videos', 'Turned the TV up while everyone slept', 'Took the best seat from the morning', 'Forgot a best friend’s birthday', 'Typed «haha» without laughing', 'Walked into the kitchen and left without helping', 'Said «one minute» and vanished for half an hour', 'Opened the fridge ten times and took nothing', 'Put the empty carton back in the fridge']
+  };
+  function Court() {
+    const st = { turn: -1, gained: {}, votes: {}, cast: [] }, ROLE = { acc: ['المتهم', 'The accused'], pro: ['المدّعي العام', 'The prosecutor'], law: ['المحامي', 'The lawyer'], jury: ['محلّف', 'Juror'] };
+    const roleOf = u => u === st.acc ? 'acc' : u === st.pro ? 'pro' : u === st.law ? 'law' : 'jury';
+    const STEPS = [['case', 'التهمة', 'The charge'], ['pros', 'الادعاء', 'Prosecution'], ['def', 'الدفاع', 'Defence'], ['vote', 'التصويت', 'The vote'], ['verdict', 'الحكم', 'The verdict']];
+    const G = {
+      start() { S.lastGame = 'court'; st.turns = Math.min(S.auto ? 2 : 3, Math.max(1, Math.floor(inGame().length / 2))); st.done = []; st.turn = -1; st.gained = {}; S.chUsed = S.chUsed || []; G.next(); },
+      join(u) { priv(u, G.mine(u)); },
+      mine(u) { return { g: 'court', t: st.turn, role: roleOf(u), vote: st.votes[u] || '' }; },
+      pushAll() { inGame().forEach(u => priv(u, G.mine(u))); },
+      info(x) { return Object.assign({ turn: st.turn + 1, of: st.turns, charge: st.charge, acc: nameOf(st.acc), pro: nameOf(st.pro), law: st.law ? nameOf(st.law) : '' }, x || {}); },
+      next() {
+        st.turn++; const us = inGame(); if (st.turn >= st.turns || us.length < 3) return gameOver(st.gained, B('رُفعت الجلسة', 'Court is adjourned'));
+        const fresh = () => us.filter(u => !st.done.includes(u) && !st.cast.includes(u)), take = () => { const f = fresh(), c = pick(f.length ? f : us.filter(u => !st.cast.includes(u))); st.cast.push(c); st.done.push(c); return c; };
+        st.cast = []; st.acc = take(); st.pro = take(); st.law = us.length >= 6 ? take() : null; st.votes = {}; st.res = null;
+        st.charge = fromPack('charge', S.chUsed, CHARGES[S.L] || CHARGES.ar); S.chUsed.push(st.charge);
+        S.ph = 'draw'; G.pushAll(); phase('draw', st.law ? 10 : 8, G.info({ charge: '' })); G.view();
+      },
+      step(ph, dur) { phase(ph, dur, G.info({ n: 0 })); G.pushAll(); G.view(); SND.go(); },
+      move(u, k) {
+        if (S.ph !== 'vote' || roleOf(u) !== 'jury' || !(k === 'v:g' || k === 'v:i')) return;
+        st.votes[u] = k.slice(2); priv(u, G.mine(u)); SND.join(); const n = Object.keys(st.votes).length; pub(Object.assign({}, S.g, { n })); G.view();
+        if (n >= inGame().filter(x => roleOf(x) === 'jury').length) G.verdict();
+      },
+      verdict() {
+        const v = Object.values(st.votes), gu = v.filter(x => x === 'g').length, inn = v.length - gu, g = (x, n) => { if (!x || !n) return; add(x, n); st.gained[x] = (st.gained[x] || 0) + n; };
+        // a tie goes to the accused: innocent until proven guilty
+        st.res = gu > inn ? 'g' : 'i'; st.gu = gu; st.inn = inn; st.sent = st.res === 'g' ? pick(FORFEIT) : null;
+        if (st.res === 'g') { g(st.pro, 150); tally(st.pro, 'law'); } else { g(st.acc, 150); g(st.law, 100); tally(st.acc, 'law'); }
+        Object.keys(st.votes).forEach(u => { if (st.votes[u] === st.res) g(u, 30); });
+        pushScores(); phase('verdict', 12, G.info({ res: st.res, gu, inn, sent: st.sent ? B(st.sent[0], st.sent[1]) : '' })); G.pushAll(); G.view(); st.res === 'g' ? SND.ok() : SND.win();
+      },
+      tick() { if (!S.end || left() > 0) return; const nx = { draw: () => G.step('case', 10), case: () => G.step('pros', 30), pros: () => G.step('def', 45), def: () => G.step('vote', 20), vote: () => G.verdict(), verdict: () => G.next() }[S.ph]; if (nx) nx(); },
+      spin() {
+        const el = [...HE().querySelectorAll('.sm-lot span')]; if (!el.length) return; const seq = [st.acc, st.pro, st.law].filter(Boolean), lab = ['acc', 'pro', 'law'];
+        const run = (i, from) => { if (i >= seq.length) return; const end = el.findIndex(x => x.dataset.u === seq[i]), steps = el.length * (i ? 1 : 2) + ((end - from + el.length) % el.length); let k = 0;
+          const go = () => { el.forEach(x => x.classList.remove('on')); const c = el[(from + k) % el.length]; c.classList.add('on'); SND.tick(); if (k >= steps) { c.classList.add('win'); c.dataset.r = B(ROLE[lab[i]][0], ROLE[lab[i]][1]); setTimeout(() => run(i + 1, end + 1), 450); return; } k++; setTimeout(go, 55 + 260 * Math.pow(k / steps, 3)); }; go(); };
+        run(0, 0);
+      },
+      view() {
+        const ph = S.ph, line = `<ol class="sm-steps">${STEPS.map(x => `<li class="${x[0] === ph ? 'on' : STEPS.findIndex(y => y[0] === ph) > STEPS.findIndex(y => y[0] === x[0]) ? 'done' : ''}">${B(x[1], x[2])}</li>`).join('')}</ol>`;
+        const cast = `<div class="sm-cast">${[['acc', st.acc], ['pro', st.pro], ['law', st.law]].filter(x => x[1]).map(([r, u]) => `<span class="${(ph === 'pros' && r === 'pro') || (ph === 'def' && r !== 'pro') ? 'talk' : ''}" style="--c:${colOf(u)}"><i>${B(ROLE[r][0], ROLE[r][1])}</i><b dir="auto">${esc(nameOf(u))}</b></span>`).join('')}<span class="jury"><i>${B('المحلّفون', 'The jury')}</i><b>${B(`الباقي (${inGame().length - st.cast.length})`, `The rest (${inGame().length - st.cast.length})`)}</b></span></div>`;
+        const charge = `<div class="sm-charge"><small>${B('التهمة', 'The charge')}</small><p dir="auto">${esc(st.charge)}</p></div>`;
+        const now_ = (a, e) => `<p class="sm-now">${B(a, e)}</p>`;
+        let mid = '', foot = `<button type="button" class="btn ghost" data-skip>${B('التالي', 'Next')}</button>`;
+        if (ph === 'draw') { mid = `<p class="sm-sub">${B(`القضية ${st.turn + 1} من ${st.turns}`, `Case ${st.turn + 1} of ${st.turns}`)}</p><h2>${B('القرعة: من المتهم؟ ومن المدّعي؟', 'The draw: who is accused? who prosecutes?')}</h2><div class="sm-lot sm-lotc">${inGame().map(u => `<span data-u="${u}" style="--c:${colOf(u)}" dir="auto">${esc(nameOf(u))}</span>`).join('')}</div>`; foot = ''; }
+        else if (ph === 'case') mid = line + charge + cast + now_('اقرؤوا التهمة… المدّعي يستعد', 'Read the charge… the prosecutor gets ready');
+        else if (ph === 'pros') mid = line + charge + cast + now_(`يتكلم الآن: المدّعي «${esc(nameOf(st.pro))}». ليش هو مذنب؟`, `Now: the prosecutor, ${esc(nameOf(st.pro))}. Why guilty?`);
+        else if (ph === 'def') mid = line + charge + cast + now_(st.law ? `يتكلم الآن: المتهم «${esc(nameOf(st.acc))}» ومحاميه «${esc(nameOf(st.law))}»` : `يتكلم الآن: المتهم «${esc(nameOf(st.acc))}» يدافع عن نفسه`, st.law ? `Now: ${esc(nameOf(st.acc))} and their lawyer ${esc(nameOf(st.law))}` : `Now: ${esc(nameOf(st.acc))} defends themselves`);
+        else if (ph === 'vote') { const m = inGame().filter(x => roleOf(x) === 'jury').length; mid = line + charge + now_('المحلّفون يصوّتون من جوالاتهم: مذنب أو بريء؟', 'The jury votes on their phones: guilty or not?') + `<p class="sm-sub">${B(`صوّت ${Object.keys(st.votes).length} من ${m}`, `${Object.keys(st.votes).length} of ${m} voted`)}</p>`; }
+        else { mid = line + charge + `<p class="sm-verdict ${st.res}">${st.res === 'g' ? B('مذنب!', 'Guilty!') : B('بريء!', 'Not guilty!')}</p><p class="sm-sub">${B(`مذنب ${st.gu} · بريء ${st.inn}${st.gu === st.inn ? ' · التعادل لصالح المتهم' : ''}`, `Guilty ${st.gu} · Not guilty ${st.inn}${st.gu === st.inn ? ' · a tie favours the accused' : ''}`)}</p>
+            ${st.res === 'g' ? `<p class="sm-sub">${B(`الحكم على «${esc(nameOf(st.acc))}»:`, `The sentence for ${esc(nameOf(st.acc))}:`)}</p><p class="sm-twist" dir="auto">${B(st.sent[0], st.sent[1])}</p><p class="sm-sub">${B(`المدّعي +١٥٠، والمحلّفون مع الأغلبية +٣٠`, 'Prosecutor +150; jurors with the majority +30')}</p>` : `<p class="sm-sub">${B(`المتهم +١٥٠${st.law ? '، والمحامي +١٠٠' : ''}، والمحلّفون مع الأغلبية +٣٠`, `The accused +150${st.law ? ', the lawyer +100' : ''}; jurors with the majority +30`)}</p>`}`;
+          foot = `<button type="button" class="btn ghost" data-next>${st.turn + 1 >= st.turns ? B('النتيجة', 'The result') : B('القضية التالية', 'Next case')}</button>`; }
+        const q = frame(`<div class="sm-g sm-courtg">${mid}</div>`, foot);
+        if (q('[data-skip]')) q('[data-skip]').onclick = () => { S.end = now(); G.tick(); }; if (q('[data-next]')) q('[data-next]').onclick = () => G.next();
         if (ph === 'draw') G.spin();
       }
     };
@@ -1001,7 +1122,7 @@
       start() { S.lastGame = 'herd'; st.r = 0; st.gained = {}; S.herdUsed = S.herdUsed || []; inGame().forEach(u => priv(u, { g: 'herd' })); G.round(); },
       join(u) { priv(u, { g: 'herd' }); },
       round() {
-        st.r++; const pool = HERD[S.L].filter(q => !S.herdUsed.includes(q)); st.q = pick(pool.length ? pool : HERD[S.L]); S.herdUsed.push(st.q); st.ans = {};
+        st.r++; st.q = fromPack('herd', S.herdUsed, HERD[S.L]); S.herdUsed.push(st.q); st.ans = {};
         phase('write', 30, { q: st.q, r: st.r, of: ROUNDS, n: 0 }); G.view();
       },
       move(u, k) {
@@ -1221,6 +1342,8 @@
     }
     if (p.fl && p.fl !== S.flSeen) { S.flSeen = p.fl; if (Math.abs(now() - p.fl) < 9000) beacon(); }
     if (g && g.ph === 'final') body = phoneFinal(g);
+    else if (g && g.ph === 'intro') body = `<div class="sm-pw"><p class="sm-sub">${B('اللعبة الجاية', 'Next game')}</p><p class="sm-word">${esc(g.name || '')}</p><div class="sm-rules">${(g.rules || []).map(l => `<p>${l}</p>`).join('')}</div></div>`;
+    else if (g && g.ph === 'bet') { const mx = Math.max(0, my); body = S.sent === 'b' ? `<div class="sm-pw"><p class="sm-big">${B('وصل رهانك', 'Your bet is in')}</p></div>` : `<div class="sm-pw"><p class="sm-big">${B('كم تراهن على نفسك؟', 'How much will you bet on yourself?')}</p><p class="sm-sub">${B('تكسبه إذا جبت في اللعبة الجاية نقاطًا أكثر من نص اللاعبين، وتخسره إذا لا.', 'Win it if you beat half the players in the next game; lose it if not.')}</p><div class="sm-bets">${[0, 50, 100, 200].map(v => `<button type="button" data-bet="${v}"${v > mx ? ' disabled' : ''}>${v ? v : B('بلا رهان', 'No bet')}</button>`).join('')}</div></div>`; }
     else if (g && g.ph === 'wheel') body = `<div class="sm-pw"><p class="sm-big">${B('عجلة الحظ تدور على الشاشة…', 'The wheel of luck is spinning on the screen…')}</p>${g.res ? `<p class="sm-twist" dir="auto">${esc(g.res)}</p>` : ''}</div>`;
     else if (!g || !g.id || g.ph === 'pick') body = wait('أنت في الجلسة! تُختار اللعبة على الشاشة.', 'You are in! The game is chosen on the screen.') + `<div class="sm-form sm-hostme">${S.hm ? '' : `<button type="button" class="btn ghost" data-hostme>${B('أنا المضيف: أتحكّم من جوالي', 'I am the host: control from my phone')}</button>`}<div ${S.hm ? '' : 'hidden '}data-hm><input id="smRc" data-keep="rc" inputmode="numeric" maxlength="4" dir="ltr" placeholder="${T('رمز التحكم من الإعدادات', 'The code from the settings')}"><button type="button" class="btn solid" data-rcgo>${B('اربط', 'Connect')}</button></div></div>`;
     else if (g.ph === 'over') body = `<div class="sm-pw"><p class="sm-big">${esc(g.note || T('انتهت اللعبة', 'The game is over'))}</p>${g.gained && g.gained[uid] ? `<p class="sm-plus">+${g.gained[uid]}</p>` : ''}${mineL()}</div>`;
@@ -1236,6 +1359,7 @@
     else if (g.id === 'herd') body = phoneHerd(g, p);
     else if (g.id === 'mime') body = phoneMime(g, p);
     else if (g.id === 'stage') body = phoneStage(g, p);
+    else if (g.id === 'court') body = phoneCourt(g, p);
     else if (g.id === 'ball') body = phoneBall(g, p);
     else if (g.id === 'silent') body = phoneSilent(g, p);
     // the drawer's pad stays as it is; only the list of who got it and the points change
@@ -1314,6 +1438,20 @@
     const gs = g.groups || [], mine = gs.find(x => (x.us || []).includes(S.me));
     return qh + `<div class="sm-pw">${mine ? `<p class="sm-big">${mine.n === g.top && g.top > 1 ? B('وافقت الجماعة!', 'You matched the crowd!') : mine.n > 1 ? B('وافقك بعضهم', 'Some agreed with you') : B('كنت وحدك هالمرة', 'You stood alone this time')}</p><p class="sm-sub">${B(`كتب مثلك ${mine.n - 1}`, `${mine.n - 1} wrote the same`)}</p>` : ''}${gs[0] ? `<p class="sm-sub">${B('الأكثر:', 'Most wrote:')} <b dir="auto">${esc(gs[0].t)}</b></p>` : ''}</div>`;
   }
+  function phoneCourt(g, p) {
+    const RN = { acc: B('أنت المتهم', 'You are the accused'), pro: B('أنت المدّعي العام', 'You are the prosecutor'), law: B('أنت المحامي', 'You are the lawyer'), jury: B('أنت من المحلّفين', 'You are on the jury') }[p.role] || '';
+    if (g.ph === 'draw') return `<div class="sm-pw"><p class="sm-big">${B('القرعة تدور… من المتهم؟', 'The draw is spinning… who is accused?')}</p></div>`;
+    const charge = `<div class="sm-charge"><small>${B('التهمة', 'The charge')}</small><p dir="auto">${esc(g.charge || '')}</p></div>`;
+    const todo = {
+      case: { acc: B('اقرأ التهمة وجهّز دفاعك. دورك بعد المدّعي.', 'Read the charge and prepare your defence. You speak after the prosecutor.'), pro: B('جهّز كلامك: بعد لحظات تتكلم ٣٠ ثانية تثبت إنه مذنب.', 'Get ready: soon you speak for 30 s to prove guilt.'), law: B('جهّز دفاعك مع المتهم.', 'Prepare the defence with the accused.'), jury: B('اسمع الطرفين، وبعدها تصوّت.', 'Listen to both sides, then vote.') },
+      pros: { pro: B('تكلّم الآن! ٣٠ ثانية: ليش هو مذنب؟', 'Speak now! 30 s: why guilty?'), acc: B('اسكت واسمع… دورك بعده.', 'Stay quiet… your turn is next.'), law: B('اسمع وجهّز الرد.', 'Listen and prepare the reply.'), jury: B('اسمع الادعاء.', 'Hear the prosecution.') },
+      def: { acc: B('دافع عن نفسك الآن! ٤٥ ثانية.', 'Defend yourself now! 45 s.'), law: B('دافع عن موكّلك الآن!', 'Defend your client now!'), pro: B('ممنوع المقاطعة… خلّه يدافع.', 'No interrupting… let them defend.'), jury: B('اسمع الدفاع.', 'Hear the defence.') }
+    };
+    if (g.ph === 'vote') return p.role === 'jury' ? (p.vote || S.sent === 'v' ? `<div class="sm-pw"><p class="sm-big">${B('وصل صوتك', 'Your vote is in')}</p></div>` : `<div class="sm-pw">${charge}<p class="sm-big">${B(`«${esc(g.acc)}»: مذنب أو بريء؟`, `${esc(g.acc)}: guilty or not?`)}</p><div class="sm-vg"><button type="button" class="g" data-cv="g">${B('مذنب', 'Guilty')}</button><button type="button" class="i" data-cv="i">${B('بريء', 'Not guilty')}</button></div><small class="sm-sub">${B('صوّت مع الأغلبية وتكسب +٣٠', 'Vote with the majority for +30')}</small></div>`) : `<div class="sm-pw"><p class="sm-big">${B('المحلّفون يصوّتون الآن…', 'The jury is voting…')}</p></div>`;
+    if (g.ph === 'verdict') return `<div class="sm-pw">${charge}<p class="sm-verdict ${g.res}">${g.res === 'g' ? B('مذنب!', 'Guilty!') : B('بريء!', 'Not guilty!')}</p>${g.sent ? `<p class="sm-sub">${B('الحكم:', 'The sentence:')}</p><p class="sm-twist" dir="auto">${esc(g.sent)}</p>` : ''}</div>`;
+    const t = (todo[g.ph] || {})[p.role] || '';
+    return `<div class="sm-pw ${p.role !== 'jury' ? 'sm-actor' : ''}"><p class="sm-role">${RN}</p>${charge}${t ? `<p class="sm-big">${t}</p>` : ''}</div>`;
+  }
   function phoneStage(g, p) {
     const parts = p.parts ? `<div class="sm-parts">${p.parts.map(x => `<span><b dir="auto">${esc(x.n)}</b><i dir="auto">${esc(x.r)}</i></span>`).join('')}</div>` : '';
     const card = `<div class="sm-scene"><p dir="auto">${esc(p.scene || g.scene || '')}</p>${p.part ? `<p class="sm-mypart">${B('دورك: ', 'Your part: ')}<b dir="auto">${esc(p.part)}</b></p>` : parts}<span class="sm-style" dir="auto">${esc(p.style || g.style || '')}</span></div>`, tw = p.tw ? `<p class="sm-twist" dir="auto">${B('مفاجأة: ', 'Twist: ')}${esc(p.tw)}</p>` : '';
@@ -1372,6 +1510,8 @@
     const bf = q('[data-bflash]'); if (bf) bf.onclick = () => { send('f'); buzz(30); bf.disabled = true; };
     const sr = q('[data-sready]'); if (sr) sr.onclick = () => { send('p:ready'); buzz([30, 50, 30]); sr.disabled = true; };
     const sq = q('[data-squit]'); if (sq) sq.onclick = () => { send('p:quit'); buzz(80); sq.disabled = true; };
+    root.querySelectorAll('[data-cv]').forEach(b => b.onclick = () => { send('v:' + b.dataset.cv); S.sent = 'v'; buzz(20); phone(); });
+    root.querySelectorAll('[data-bet]').forEach(b => b.onclick = () => { send('b:' + b.dataset.bet); S.sent = 'b'; buzz(20); phone(); });
     root.querySelectorAll('[data-tw]').forEach(b => b.onclick = () => { send('w:' + b.dataset.tw); buzz(20); root.querySelectorAll('[data-tw]').forEach(x => x.setAttribute('aria-pressed', x === b)); });
     root.querySelectorAll('[data-star]').forEach(b => b.onclick = () => { send('r:' + b.dataset.star); S.sent = 'r'; buzz(20); phone(); });
     const mf = q('[data-mflash]'); if (mf) mf.onclick = () => { beacon(); send('m'); mf.disabled = true; };

@@ -338,3 +338,45 @@ html.sm-homeview,html.sm-homeview body{overflow-x:clip}
 .sm-parts b{color:#f4eedf}.sm-parts i{color:#d9d3ff}
 .sm-phone .sm-parts span{background:rgba(255,255,255,.08)}
 .sm-mypart b{color:#f2b84b!important}
+/* rules before each game */
+.sm-introg,.sm-betg,.sm-courtg{text-align:center}
+.sm-introi{display:inline-flex;width:84px;height:84px;align-items:center;justify-content:center;border-radius:24px;background:rgba(242,184,75,.12);color:#f2b84b}
+.sm-introi svg{width:46px;height:46px}
+.sm-rules{max-width:760px;margin:14px auto;display:flex;flex-direction:column;gap:10px;counter-reset:r}
+.sm-rules p{margin:0;padding:12px 18px;border-radius:16px;background:rgba(255,255,255,.06);font-size:1.25rem;line-height:1.6;text-align:start;display:flex;gap:12px;align-items:baseline}
+.sm-rules p:before{counter-increment:r;content:counter(r);flex:none;width:30px;height:30px;border-radius:50%;background:#f2b84b;color:#17153a;font-weight:800;display:inline-flex;align-items:center;justify-content:center;font-size:1rem}
+.sm-phone .sm-rules p{font-size:1rem;background:rgba(255,255,255,.08)}
+/* the bet */
+.sm-bets{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.sm-bets button{padding:14px;border-radius:14px;border:1px solid rgba(23,21,58,.15);background:#fff;font:inherit;font-weight:800;font-size:1.1rem;cursor:pointer}
+.sm-bets button:disabled{opacity:.35}
+.sm-betres{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:10px 0}
+.sm-betres span{padding:5px 12px;border-radius:999px;background:rgba(255,255,255,.07)}
+.sm-betres .up i{color:#2bb3a3;font-style:normal;font-weight:800}.sm-betres .dn i{color:#e0607e;font-style:normal;font-weight:800}
+/* the court */
+.sm-steps{display:flex;justify-content:center;gap:6px;list-style:none;padding:0;margin:0 0 12px;flex-wrap:wrap}
+.sm-steps li{padding:5px 12px;border-radius:999px;background:rgba(255,255,255,.06);font-size:.9rem;opacity:.6}
+.sm-steps li.done{opacity:.85;color:#2bb3a3}
+.sm-steps li.on{opacity:1;background:#f2b84b;color:#17153a;font-weight:800}
+.sm-charge{max-width:720px;margin:6px auto 12px;padding:14px 20px;border-radius:18px;border:1px solid rgba(242,184,75,.45);background:rgba(242,184,75,.08)}
+.sm-charge small{color:#f2b84b;font-weight:700}.sm-charge p{margin:4px 0 0;font-size:1.6rem;font-weight:800}
+.sm-phone .sm-charge p{font-size:1.15rem}
+.sm-cast{display:flex;justify-content:center;flex-wrap:wrap;gap:10px}
+.sm-cast span{display:flex;flex-direction:column;padding:8px 16px;border-radius:14px;background:rgba(255,255,255,.06);border-bottom:3px solid var(--c,#5d5a80);transition:transform .3s}
+.sm-cast span.talk{transform:scale(1.12);background:rgba(242,184,75,.18);box-shadow:0 0 0 2px #f2b84b}
+.sm-cast i{font-style:normal;font-size:.85rem;opacity:.75}.sm-cast b{font-size:1.15rem}
+.sm-now{margin:16px auto 0;font-size:1.5rem;font-weight:800;color:#f4eedf}
+.sm-verdict{font-size:4rem;font-weight:900;margin:8px 0;animation:smTw .7s ease-out}
+.sm-verdict.g{color:#e0607e}.sm-verdict.i{color:#2bb3a3}
+.sm-phone .sm-verdict{font-size:2.4rem}
+.sm-vg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}
+.sm-vg button{padding:20px 0;border-radius:16px;border:0;font:inherit;font-weight:900;font-size:1.3rem;color:#fff;cursor:pointer}
+.sm-vg .g{background:#e0607e}.sm-vg .i{background:#2bb3a3}
+.sm-role{display:inline-block;margin:0 auto 8px;padding:5px 14px;border-radius:999px;background:#f2b84b;color:#17153a;font-weight:800}
+.sm-lot span[data-r]{position:relative}
+.sm-lot span[data-r]:after{content:attr(data-r);position:absolute;top:-22px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:.8rem;color:#f2b84b}
+.sm-lotc{margin-top:34px;row-gap:34px}
+/* a wave of reactions */
+.sm-burst{position:absolute;left:50%;top:40%;transform:translate(-50%,-50%);font-size:3.2rem;font-weight:900;color:#fff;text-shadow:0 4px 30px rgba(242,184,75,.9);white-space:nowrap;animation:smBurst 2.6s ease-out forwards;z-index:5}
+@keyframes smBurst{0%{opacity:0;transform:translate(-50%,-50%) scale(.3)}15%{opacity:1;transform:translate(-50%,-50%) scale(1.15)}70%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-70%) scale(1)}}
+.sm-occst{color:#2bb3a3;font-weight:700}
