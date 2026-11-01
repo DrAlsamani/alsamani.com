@@ -246,7 +246,7 @@
     // between two questions: add one right here
     box.querySelectorAll('.qz-q').forEach((el, i) => { if (i === Q.qs.length - 1) return;
       const d = document.createElement('div'); d.className = 'qz-ins';
-      d.innerHTML = `<button type="button" class="qz-insb">＋ ${B('أضف هنا', 'Add here')}</button><span class="qz-insm" hidden><button type="button" data-ins="mc">${B('سؤال', 'Question')}</button><button type="button" data-ins="tf">${B('صح أو خطأ', 'True/false')}</button><button type="button" data-ins="game">${B('تحدٍّ', 'Challenge')}</button></span>`;
+      d.innerHTML = `<button type="button" class="qz-insb">＋ ${B('أضف هنا', 'Add here')}</button><span class="qz-insm" hidden><button type="button" data-ins="mc">${B('سؤال', 'Question')}</button><button type="button" data-ins="game">${B('تحدٍّ', 'Challenge')}</button></span>`;
       el.appendChild(d);
       d.querySelector('.qz-insb').onclick = () => { d.querySelector('.qz-insm').hidden = false; d.querySelector('.qz-insb').hidden = true; };
       d.querySelectorAll('[data-ins]').forEach(b => b.onclick = () => {
