@@ -147,16 +147,18 @@
         <div data-pane="file" hidden><label class="qz-drop" id="qzDrop"><input type="file" id="qzFile" accept=".docx,.xlsx,.xls,.csv,.txt,.pdf" hidden><b>${B('اختر ملف الأسئلة', 'Choose the questions file')}</b><small>${B('Word أو Excel أو CSV أو PDF أو نص', 'Word, Excel, CSV, PDF or text')}</small></label>
           <p class="pt-fine">${B('في Word: إن كانت الإجابة الصحيحة بخط عريض أو ملوّنة أو مظللة أو تحتها خط، تُعرف تلقائيًا. ويُقبل قالب الاستيراد نفسه الذي يستعمله Kahoot.', 'In Word, a right answer in bold, colour, highlight or underline is recognised. Kahoot’s import template is accepted as it is.')}</p>
           <div class="sn-two"><button type="button" class="btn ghost" id="qzTpl">${B('تنزيل قالب Excel', 'Download an Excel template')}</button></div></div>
-        <div data-pane="ai" hidden><p class="qz-aih">${B('ابنِ الأسئلة بمساعدة الذكاء الاصطناعي: اكتب الموضوع وتوجيهاتك، ثم انسخ التعليمات إلى ChatGPT أو Claude والصق ردّه هنا.', 'Build the questions with AI: write the topic and your guidance, copy the instructions into ChatGPT or Claude, then paste its reply here.')}</p>
-          <label class="sn-lbl">${B('الموضوع أو المحتوى، ومعه توجيهاتك', 'The topic or the content, with your guidance')}<textarea id="qzTopic" rows="5" dir="${isAr() ? 'rtl' : 'ltr'}" placeholder="${T('اكتب الموضوع أو الصق النص، وأضف ما تريد، مثال: أسئلة عن الصحابة، ركّز على المواقف لا التواريخ، وخلّها فيها مرح.', 'Write the topic or paste the text, and add what you want, e.g. focus on…, keep it light.')}"></textarea></label>
+        <div data-pane="ai" hidden><p class="qz-aih">${B('ضع المحتوى واكتب تعليماتك، ثم انسخ الطلب إلى ChatGPT أو Claude والصق ردّه هنا.', 'Put in the content and your instructions, copy the request into ChatGPT or Claude, then paste its reply here.')}</p>
+          <label class="sn-lbl qz-ail"><span><i>${B('١', '1')}</i>${B('ماذا تريد؟', 'What do you want?')}</span><textarea id="qzGuide" rows="3" dir="${isAr() ? 'rtl' : 'ltr'}" placeholder="${T('مثال: مسابقة ترفيهية للعائلة عن الفضاء، ركّز على المعلومات الطريفة. أو: مراجعة للوحدة الثالثة، نصفها أسئلة تطبيقية.', 'e.g. a fun family quiz about space, focus on surprising facts. Or: a review of unit three, half of it applied questions.')}"></textarea></label>
+          <label class="sn-lbl qz-ail"><span><i>${B('٢', '2')}</i>${B('المحتوى (اختياري)', 'The content (optional)')}</span><textarea id="qzTopic" rows="5" dir="${isAr() ? 'rtl' : 'ltr'}" placeholder="${T('الصق هنا درسًا أو وحدة أو فصلًا من مقرر أو كتاب أو مقالًا، لتُبنى الأسئلة منه وحده.', 'Paste a lesson, a unit, a chapter of a course or a book, or an article here, and the questions will come from it alone.')}"></textarea><small class="qz-len" id="qzLen"></small></label>
           <div class="qz-row"><label class="sn-lbl">${B('الفئة', 'Audience')}<select id="qzAud"><option value="">${T('عام', 'General')}</option><option value="kids">${T('أطفال', 'Children')}</option><option value="prim">${T('المرحلة الابتدائية', 'Primary school')}</option><option value="mid">${T('المرحلة المتوسطة', 'Middle school')}</option><option value="sec">${T('المرحلة الثانوية', 'Secondary school')}</option><option value="uni">${T('طلاب الجامعة', 'University students')}</option><option value="pro">${T('موظفون أو مختصون', 'Staff or specialists')}</option><option value="fam">${T('العائلة', 'Family')}</option></select></label>
             <label class="sn-lbl">${B('الطابع', 'Tone')}<select id="qzTone"><option value="">${T('معتدل', 'Balanced')}</option><option value="fun">${T('مرح وخفيف', 'Fun and light')}</option><option value="serious">${T('جاد وعلمي', 'Serious')}</option><option value="challenge">${T('تحدٍّ قوي', 'Hard challenge')}</option></select></label></div>
           <div class="qz-row"><label class="sn-lbl">${B('عدد الأسئلة', 'Questions')}<select id="qzN">${[5, 10, 15, 20, 30, 40, 50, 75, 100].map(n => `<option${n === 20 ? ' selected' : ''}>${n}</option>`).join('')}</select></label>
             <label class="sn-lbl">${B('المستوى', 'Level')}<select id="qzLv"><option value="mixed">${T('متنوع', 'Mixed')}</option><option value="easy">${T('سهل', 'Easy')}</option><option value="mid">${T('متوسط', 'Medium')}</option><option value="hard">${T('صعب', 'Hard')}</option></select></label>
             <label class="sn-lbl">${B('النوع', 'Type')}<select id="qzTy"><option value="mc">${T('اختيار من متعدد', 'Multiple choice')}</option><option value="all" selected>${T('منوّعة: كل أنواع الأسئلة', 'Varied: every question kind')}</option><option value="mix">${T('مزيج مع صح وخطأ', 'Mixed with true/false')}</option><option value="tf">${T('صح وخطأ', 'True/false')}</option></select></label>
             <label class="sn-lbl">${B('اللغة', 'Language')}<select id="qzLg"><option value="ar">العربية</option><option value="en">English</option></select></label></div>
-          <div class="sn-two"><button type="button" class="btn solid" id="qzCopy">${B('نسخ التعليمات', 'Copy the instructions')}</button><a class="btn ghost" id="qzGpt" target="_blank" rel="noopener">${B('افتح في ChatGPT', 'Open in ChatGPT')}</a><a class="btn ghost" id="qzCl" target="_blank" rel="noopener">${B('افتح في Claude', 'Open in Claude')}</a></div>
-          <div class="qz-step2"><b>${B('٢', '2')}</b><p>${B('حين يكتب الأسئلة، انسخ رده كاملًا ثم اضغط:', 'When it has written them, copy its whole reply, then tap:')}</p><button type="button" class="btn solid" id="qzBack2">${B('لصق رد الذكاء الاصطناعي', 'Paste the AI’s reply')}</button></div></div>
+          <p class="qz-ais"><i>${B('٣', '3')}</i>${B('انسخ الطلب والصقه في الذكاء الاصطناعي', 'Copy the request into the AI')}</p>
+          <div class="sn-two"><button type="button" class="btn solid" id="qzCopy">${B('نسخ الطلب', 'Copy the request')}</button><a class="btn ghost" id="qzGpt" target="_blank" rel="noopener">${B('افتح في ChatGPT', 'Open in ChatGPT')}</a><a class="btn ghost" id="qzCl" target="_blank" rel="noopener">${B('افتح في Claude', 'Open in Claude')}</a></div>
+          <div class="qz-step2"><b>${B('٤', '4')}</b><p>${B('حين يكتب الأسئلة، انسخ رده كاملًا ثم اضغط:', 'When it has written them, copy its whole reply, then tap:')}</p><button type="button" class="btn solid" id="qzBack2">${B('لصق رد الذكاء الاصطناعي', 'Paste the AI’s reply')}</button></div></div>
       </div>
       <div class="qz-spr"><span>${B('وزّع تحديات بين الأسئلة: تحدٍّ بعد كل', 'Spread challenges between the questions: one after every')}</span><select id="qzEvery">${[1, 2, 3, 5, 10].map(n => `<option value="${n}"${n === 3 ? ' selected' : ''}>${n === 1 ? T('سؤال واحد', '1 question') : n === 2 ? T('سؤالين', '2 questions') : n + ' ' + T('أسئلة', 'questions')}</option>`).join('')}</select><button type="button" class="btn ghost" id="qzSpr">${B('وزّع', 'Spread')}</button></div>
       <div id="qzQs" class="qz-qs"></div>
@@ -189,9 +191,13 @@
     dz.addEventListener('drop', e => { e.preventDefault(); dz.classList.remove('on'); const f = e.dataTransfer.files[0]; if (f) fromFile(f); });
     q('#qzTpl').onclick = template;
     // AI
-    const prompt = () => aiPrompt(q('#qzTopic').value.trim(), +q('#qzN').value, q('#qzLv').value, q('#qzTy').value, q('#qzLg').value, { aud: q('#qzAud').value, tone: q('#qzTone').value });
-    const links = () => { const p = encodeURIComponent(prompt()); q('#qzGpt').href = 'https://chatgpt.com/?q=' + p; q('#qzCl').href = 'https://claude.ai/new?q=' + p; };
-    ['#qzTopic', '#qzAud', '#qzTone', '#qzN', '#qzLv', '#qzTy', '#qzLg'].forEach(s => { q(s).oninput = q(s).onchange = links; }); links();
+    // what the author wants is the request; pasted content, when there is any, becomes the only source
+    const prompt = () => { const c = q('#qzTopic').value.trim(), g = q('#qzGuide').value.trim(); return aiPrompt(c || g, +q('#qzN').value, q('#qzLv').value, q('#qzTy').value, q('#qzLg').value, { aud: q('#qzAud').value, tone: q('#qzTone').value, guide: c ? g : '' }); };
+    // a long text cannot travel in a link; then the links open the AI empty and the request is copied on the way
+    const links = () => { const raw = prompt(), p = encodeURIComponent(raw), long = p.length > 6000; q('#qzGpt').href = 'https://chatgpt.com/' + (long ? '' : '?q=' + p); q('#qzCl').href = 'https://claude.ai/new' + (long ? '' : '?q=' + p); q('#qzGpt').dataset.long = q('#qzCl').dataset.long = long ? 1 : '';
+      const t = q('#qzTopic').value.trim(), w = t ? t.split(/\s+/).length : 0; q('#qzLen').textContent = w > 60 ? T(`نص من ${w} كلمة: تُبنى الأسئلة منه وحده.`, `A text of ${w} words: the questions come from it alone.`) : ''; };
+    ['#qzGpt', '#qzCl'].forEach(s2 => q(s2).addEventListener('click', () => { if (q(s2).dataset.long) { try { navigator.clipboard.writeText(prompt()); toast(B('النص طويل، فنسخنا الطلب: الصقه في المحادثة الجديدة.', 'The text is long, so the request was copied: paste it into the new chat.')); } catch (e) {} } }));
+    ['#qzTopic', '#qzGuide', '#qzAud', '#qzTone', '#qzN', '#qzLv', '#qzTy', '#qzLg'].forEach(s => { q(s).oninput = q(s).onchange = links; }); links();
     // step 2: bring the AI's reply into the paste box (straight from the clipboard where the browser allows it)
     q('#qzBack2').onclick = async () => {
       root.querySelector('[data-tab=paste]').click();
@@ -658,7 +664,7 @@ c) option
 - a true statement (true)
 - a false statement (false)
 - a true statement (true)` : '');
-    if (ar) return `اكتب ${n} سؤالًا لمسابقة تفاعلية حيّة، ${LV}، ${TY}${topic ? `، بحسب ما يلي (موضوع أو محتوى، وقد يتضمن توجيهات فالتزم بها):\n\n${topic}\n` : '.'}
+    if (ar) return `اكتب ${n} سؤالًا لمسابقة تفاعلية حيّة، ${LV}، ${TY}${topic ? (topic.length > 300 ? `، من المحتوى التالي وحده (لا تضف معلومات من خارجه):\n\n«${topic}»\n` : `، بحسب هذا الطلب: ${topic}\n`) : '.'}
 
 الشروط:
 - السؤال لا يتجاوز ١٢٠ حرفًا، والخيار لا يتجاوز ٧٥ حرفًا، لأنها تُعرض على شاشة.
@@ -671,7 +677,7 @@ c) option
 اكتبها بهذه الصيغة بالضبط، داخل صندوق نص واحد، دون أي شرح قبلها أو بعدها، وضع * بعد الإجابة الصحيحة${all ? '، واكتب نوع السؤال بين معقوفين في آخره كما في الأمثلة' : ''}:
 
 ${exAr}`;
-    return `Write ${n} questions for a live interactive quiz, ${LV}, ${TY}${topic ? `, based on the following (a topic or content; it may include guidance, follow it):\n\n${topic}\n` : '.'}
+    return `Write ${n} questions for a live interactive quiz, ${LV}, ${TY}${topic ? (topic.length > 300 ? `, from the following content alone (add nothing from outside it):\n\n“${topic}”\n` : `, following this request: ${topic}\n`) : '.'}
 
 Rules:
 - Each question at most 120 characters and each option at most 75 characters, as they are shown on a screen.

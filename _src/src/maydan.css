@@ -507,3 +507,32 @@ html.mp-embed body{padding-top:0!important}
 .mp-fx .emo{font-size:2rem}.mp-fx .txt{font-size:.95rem;font-weight:700;background:#fff;color:#23336F;border-radius:999px;padding:3px 10px;box-shadow:0 3px 10px rgba(0,0,0,.15)}
 @keyframes mpFly{0%{transform:translateY(0) rotate(var(--r));opacity:0}10%{opacity:1}100%{transform:translateY(-75vh) rotate(var(--r));opacity:0}}
 .mg-track~.mg-big{max-width:190px;max-height:190px;font-size:4rem;margin-top:12px}
+/* commentator, titles, audience questions, remote */
+.md-cmt{position:absolute;top:1.6vh;left:50%;transform:translateX(-50%);z-index:6;background:#e0a458;color:#16204a;font-weight:800;font-size:clamp(16px,2.6vh,30px);padding:.6vh 2vw;border-radius:999px;white-space:nowrap;max-width:90%;overflow:hidden;text-overflow:ellipsis;box-shadow:0 6px 18px rgba(0,0,0,.25);animation:mdCmt .5s ease-out}
+@keyframes mdCmt{from{transform:translate(-50%,-140%);opacity:0}}
+.md-titles{display:flex;flex-wrap:wrap;justify-content:center;gap:1.2vh 1.2vw;margin-top:2vh}
+.md-title{background:rgba(255,255,255,.1);border:1px solid rgba(224,164,88,.6);border-radius:16px;padding:1vh 1.4vw;display:grid;justify-items:center;gap:2px;min-width:12vw;opacity:0;animation:mdTitle .6s ease-out forwards;animation-delay:var(--d)}
+.md-title b{color:#e0a458;font-size:clamp(14px,2.2vh,24px)}.md-title span{font-weight:800;font-size:clamp(16px,2.6vh,28px);color:#fff}.md-title small{color:#c9cde0;font-size:clamp(11px,1.5vh,16px)}
+@keyframes mdTitle{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.md-asks{position:absolute;inset:0;z-index:60;background:rgba(10,14,30,.7);display:flex;align-items:center;justify-content:center;padding:3vh}
+.md-asksb{background:#fff;color:#16201f;border-radius:20px;padding:24px;max-width:640px;width:100%;max-height:90%;overflow:auto;display:flex;flex-direction:column;gap:12px;text-align:center}
+.md-asksb h3{margin:0;color:#23336F}.md-ask{border:1px solid #e2e4ec;border-radius:14px;padding:12px;display:grid;gap:6px;text-align:start}.md-ask p{margin:0;font-weight:700}.md-ask small{opacity:.7}
+.md-asksb .md-cb{align-self:center;color:#23336F;border-color:#c9cde0}
+.md-rcqr{width:220px;margin:0 auto}.md-rcqr svg{width:100%;height:auto}
+.mp-cmt{margin:0 0 10px;background:#e0a458;color:#16204a;font-weight:800;border-radius:12px;padding:8px 12px;text-align:center}
+.mp-titles{margin:16px 0 4px;display:flex;flex-direction:column;gap:6px}
+.mp-ttl{display:grid;grid-template-columns:auto 1fr;gap:0 10px;align-items:center;background:rgba(255,255,255,.08);border-radius:12px;padding:8px 12px;text-align:start}
+.mp-ttl b{color:#e0a458;grid-row:span 2}.mp-ttl span{font-weight:700}.mp-ttl small{opacity:.75;font-size:.75rem}
+.mp-ttl.me{background:#e0a458;color:#16204a}.mp-ttl.me b{color:#16204a}
+.mp-tb button.cap{background:#23336F;color:#fff;border-color:#23336F}
+.mp-askb{position:fixed;bottom:16px;inset-inline-start:16px;z-index:40;border:0;border-radius:999px;background:#23336F;color:#fff;font:inherit;font-weight:700;padding:10px 16px;box-shadow:0 6px 16px rgba(0,0,0,.2)}
+.mp-askb:disabled{opacity:.75}
+.mp-askm{position:fixed;inset:0;z-index:70;background:rgba(10,14,30,.6);display:flex;align-items:flex-end;justify-content:center}
+.mp-askc{background:var(--bg,#fff);width:100%;max-width:520px;border-radius:20px 20px 0 0;padding:18px;display:flex;flex-direction:column;gap:10px}
+.mp-askc textarea{width:100%;border:1px solid var(--line,#ccc);border-radius:12px;padding:10px;font:inherit;background:var(--bg,#fff);color:inherit}
+.mp-asktf{display:grid;grid-template-columns:1fr 1fr;gap:10px}.mp-asktf button{border:0;border-radius:12px;padding:14px;font:inherit;font-weight:700;color:#fff;background:#2e8b57}.mp-asktf button+button{background:#b0533a}
+.mp-remote{text-align:center}.mp-rcst{font-size:.85rem;color:#b0533a}.mp-rcst.on{color:#2e8b57}
+.mp-rcb{display:flex;flex-direction:column;gap:12px;margin-top:16px}.mp-rcb button{border:0;border-radius:16px;padding:18px;font:inherit;font-weight:700;font-size:1.05rem;background:#e9ebf3;color:#23336F}
+.mp-rcb button.go{background:#23336F;color:#fff;font-size:1.4rem;padding:28px}.mp-rcb button.sent{outline:3px solid #e0a458}
+.md-end:has(.md-titles) .md-podium{height:34vh}.md-end:has(.md-titles) h2{margin-bottom:1.5vh}.md-end:has(.md-titles) .md-wteam{margin-bottom:1vh}
+.md-titles{margin-top:1.4vh}.md-title{padding:.8vh 1.2vw}

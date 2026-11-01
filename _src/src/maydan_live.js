@@ -78,6 +78,97 @@ window.MDLive = (function () {
     return { k: us.map(u => u.slice(0, 8)), n: us.map(u => G.players[u] || ''), s: us.map(u => J.map(o => o[u] || 0)) };
   }
 
+
+  /* ---------- feats: what each player did, for the commentary now and the titles at the end ---------- */
+  const arN = (n, one, two, few, many) => n === 1 ? one : n === 2 ? two : `${n} ${n % 100 >= 3 && n % 100 <= 10 ? few : many}`;
+  function feats(sc) {
+    const x = G.quiz.qs[G.i] || {}, judged = !['poll', 'open', 'stage', 'game'].includes(x.type), ans = G.lastAns || {};
+    G.aw = G.aw || {}; const W = u => G.aw[u] = G.aw[u] || {};
+    Object.keys(G.players).forEach(u => {
+      const r = sc[u], w = W(u), a = ans[u]; if (!r) { if (judged) w.run = 0; return; }
+      if (G.cap && G.cap[u]) r.cap = 1;
+      if (x.type === 'game') w.g = (w.g || 0) + Math.max(0, r.d || 0);
+      if (!judged) return;
+      if (r.c) { w.run = (w.run || 0) + 1; w.best = Math.max(w.best || 0, w.run); if (a && a.t && G.t0) { w.t = (w.t || 0) + Math.max(0, (a.t - G.t0) / 1000); w.tn = (w.tn || 0) + 1; } if (a && a.b) w.bet = (w.bet || 0) + 1; }
+      else w.run = 0;
+    });
+    // the commentator: the most telling thing that just happened
+    const order = Object.keys(G.players).filter(u => u in G.score || sc[u]).sort(byRank), was = G.rk || {}, now2 = {}; order.forEach((u, k) => { now2[u] = k + 1; });
+    const nm = u => `«${esc(G.players[u] || '')}»`, lines = [];
+    if (G.capNote) { lines.push(G.capNote); G.capNote = null; }
+    const lead = order[0], wasLead = Object.keys(was).find(u => was[u] === 1);
+    if (lead && wasLead && lead !== wasLead && (G.score[lead] || 0) > 0) lines.push(B(`${nm(lead)} ينتزع الصدارة!`, `${nm(lead)} takes the lead!`));
+    if (G.teams) { const tt = teamTable(); if (tt.length > 1) { const tl = tt[0].k; if (G.tlead != null && tl !== G.tlead && tt[0].avg > tt[1].avg) lines.push(B(`فريق «${esc(tt[0].name)}» يتقدّم إلى الصدارة!`, `Team ${esc(tt[0].name)} goes top!`)); G.tlead = tl; } }
+    const hot = Object.keys(G.players).filter(u => judged && [3, 5, 7, 10].includes((G.aw[u] || {}).run)).sort((p, q) => G.aw[q].run - G.aw[p].run)[0];
+    if (hot) lines.push(B(`${nm(hot)}: ${arN(G.aw[hot].run, '', '', 'إجابات صحيحة متتالية', 'إجابة صحيحة متتالية')}!`, `${nm(hot)}: ${G.aw[hot].run} right in a row!`));
+    let jump = null, jv = 1; order.forEach(u => { const d = (was[u] || 0) - now2[u]; if (was[u] && d > jv) { jv = d; jump = u; } });
+    if (jump && jv >= 2) lines.push(B(`${nm(jump)} يقفز ${arN(jv, '', 'مركزين', 'مراكز', 'مركزًا')} إلى المركز ${now2[jump]}!`, `${nm(jump)} jumps ${jv} places to ${now2[jump]}!`));
+    const players = Object.keys(G.players).length, right = Object.keys(sc).filter(u => u in G.players && sc[u].c).length;
+    if (judged && players >= 2 && right === players) lines.push(B('أصاب الجميع! هل كان سهلًا؟', 'Everyone got it! Too easy?'));
+    if (judged && players >= 2 && right === 0) lines.push(B('ولا أحد أصاب! هذا كان صعبًا.', 'Nobody got it! That was a hard one.'));
+    if (order.length > 2 && G.i > 0) { const gap = (G.score[order[0]] || 0) - (G.score[order[1]] || 0); if (gap > 0 && gap < 120) lines.push(B(`الصدارة على المحك: الفرق بين الأول والثاني ${gap} نقطة فقط`, `Neck and neck at the top: only ${gap} points apart`)); }
+    G.rk = now2;
+    const t = lines[0] || '';
+    G.cmt = t || null;
+    G.ref.child('cm').set(t ? { i: G.i, t: t.replace(/<span class="en">.*?<\/span>/g, '').replace(/<[^>]+>/g, ''), e: t.replace(/<span class="ar">.*?<\/span>/g, '').replace(/<[^>]+>/g, '') } : null).catch(() => {});
+  }
+  // titles at the end: one winner each, only when it was really earned
+  function titles(order) {
+    const A = G.aw || {}, us = Object.keys(G.players), out = [];
+    const best = (f, ok) => { let w = null, v = null; us.forEach(u => { const x = f(A[u] || {}, u); if (x == null || !ok(x)) return; if (v == null || x > v) { v = x; w = u; } }); return w ? { u: w, v } : null; };
+    const add = (k, r, ar, en) => { if (r) out.push({ k, u: r.u.slice(0, 8), n: G.players[r.u] || '', v: r.v, ar: ar(r.v), en: en(r.v) }); };
+    add('fast', best(w => w.tn >= 2 ? -(w.t / w.tn) : null, () => true), v => `أسرع إجابة صحيحة: ${(-v).toFixed(1)} ث في المتوسط`, v => `Fastest right answers: ${(-v).toFixed(1)}s on average`);
+    add('run', best(w => w.best || 0, v => v >= 3), v => `أطول سلسلة: ${arN(v, '', '', 'إجابات صحيحة متتالية', 'إجابة صحيحة متتالية')}`, v => `Longest run: ${v} right in a row`);
+    // the biggest climb, from everyone's points after each question
+    const J = G.jr || []; if (J.length > 2) { const rank = o => { const r = {}; Object.keys(o).sort((a, b) => o[b] - o[a]).forEach((u, k) => { r[u] = k + 1; }); return r; }; const R = J.map(rank);
+      add('back', best((w, u) => { let m = 0; for (let t = 1; t < R.length; t++) for (let t0 = 0; t0 < t; t0++) if (R[t0][u] && R[t][u]) m = Math.max(m, R[t0][u] - R[t][u]); return m; }, v => v >= 2), v => `أكبر عودة: صعد ${arN(v, '', 'مركزين', 'مراكز', 'مركزًا')}`, v => `Biggest comeback: up ${v} places`); }
+    add('spirit', best(w => w.rx || 0, v => v >= 3), v => `روح الميدان: ${arN(v, '', 'تفاعلان', 'تفاعلات', 'تفاعلًا')}`, v => `Spirit of the game: ${v} reactions`);
+    add('bold', best(w => w.bet || 0, v => v >= 1), v => `المغامر: ربح ${arN(v, 'رهانًا واحدًا', 'رهانين', 'رهانات', 'رهانًا')}`, v => `The daring one: won ${v} bet${v > 1 ? 's' : ''}`);
+    add('games', best(w => w.g || 0, v => v > 0), v => `بطل التحديات: ${v} نقطة من التحديات`, v => `Challenge champion: ${v} points from challenges`);
+    return out;
+  }
+  const TITLE = { fast: ['الأسرع', 'The fastest'], run: ['القنّاص', 'The sniper'], back: ['العائد', 'The comeback'], spirit: ['روح الميدان', 'Spirit of the game'], bold: ['المغامر', 'The daring one'], games: ['بطل التحديات', 'Challenge champion'] };
+  /* ---------- team captains: one per team, chosen at the start; once a game the captain's points go to every teammate ---------- */
+  function captains() {
+    G.cap = null; if (!G.teams || G.opts.cap === false || !G.opts.pw) return;
+    G.cap = {}; const by = {}; Object.keys(G.players).forEach(u => { const t = G.team[u]; if (t == null) return; (by[t] = by[t] || []).push(u); });
+    Object.values(by).forEach(m => { G.cap[m[Math.floor(Math.random() * m.length)]] = 1; });
+    G.cmt = B(`قادة الفرق: ${Object.keys(G.cap).map(u => `«${esc(G.players[u] || '')}»`).join('، ')}`, `Team captains: ${Object.keys(G.cap).map(u => esc(G.players[u] || '')).join(', ')}`);
+  }
+  /* ---------- the audience asks: a fan sends a true-or-false statement during a question; the host may put it in ---------- */
+  function fanAsks(ans) {
+    Object.keys(ans).forEach(u => { const a = ans[u]; if (!a || u in G.players || typeof a.a !== 'string' || a.a.slice(0, 2) !== 'Q:') return;
+      const m = a.a.match(/^Q:([01]):([\s\S]{3,140})$/); if (!m) return; G.asks = G.asks || []; if (G.asks.some(z => z.u === u && z.q === m[2])) return;
+      G.asks.push({ u, n: (G.fans || {})[u] || T('مشجّع', 'A fan'), q: m[2].trim(), ok: m[1] === '1' }); });
+  }
+  function asksBox() {
+    const L = (G.asks || []).filter(z => !z.used); if (!L.length) return;
+    const d = document.createElement('div'); d.className = 'md-asks';
+    d.innerHTML = `<div class="md-asksb"><h3>${B('أسئلة من الجمهور', 'Questions from the audience')}</h3>${L.map((z, k) => `<div class="md-ask"><p dir="auto">${esc(z.q)}</p><small>${esc(z.n)} · ${z.ok ? B('صح', 'True') : B('خطأ', 'False')}</small><button type="button" class="btn solid" data-ask="${k}">${B('أضفه سؤالًا تاليًا', 'Ask it next')}</button></div>`).join('')}<button type="button" class="md-cb" data-x>${B('إغلاق', 'Close')}</button></div>`;
+    G.el.appendChild(d);
+    d.querySelector('[data-x]').onclick = () => d.remove();
+    d.querySelectorAll('[data-ask]').forEach(b => b.onclick = () => { const z = L[+b.dataset.ask]; z.used = true;
+      G.quiz.qs.splice(G.done + 1, 0, { type: 'tf', q: z.q, opts: [T('صح', 'True'), T('خطأ', 'False')], ok: [z.ok ? 0 : 1], pts: 1, time: 20, by: z.n });
+      if (G.gold > G.done) G.gold++; keep(); d.remove(); const nb = G.el.querySelector('[data-asks]'); if (nb) nb.remove(); });
+  }
+  /* ---------- the host's phone as a remote: paired with a code shown on the screen, it sends short commands ---------- */
+  function remote(u, e) {
+    if (!G) return;
+    if (e === '@' + G.rc) { G.remote = u; G.ref.child('rc').set(u.slice(0, 8)).catch(() => {}); if (G.fans) delete G.fans[u]; const p = G.el.querySelector('.md-rcbox'); if (p) p.remove(); return; }
+    if (u !== G.remote) return;
+    const click = s => { const b = G.el.querySelector(s); if (b && !b.disabled) b.click(); };
+    if (e === '@n') { click('[data-next]'); click('[data-go]'); }
+    else if (e === '@s') click('[data-skip]');
+    else if (e === '@m') click('[data-mic]');
+    else if (e === '@r') click('[data-replay]');
+  }
+  function remoteBox() {
+    const url = `${location.origin}/m/?p=${G.pin}&rc=${G.rc}`;
+    let svg = ''; try { const qr = qrcode(0, 'M'); qr.addData(url); qr.make(); svg = qr.createSvgTag({ cellSize: 5, margin: 1, scalable: true }); } catch (e) {}
+    const d = document.createElement('div'); d.className = 'md-asks md-rcbox'; d.dataset.url = url;
+    d.innerHTML = `<div class="md-asksb"><h3>${B('تحكّم من جوالك', 'Control from your phone')}</h3><div class="md-rcqr">${svg}</div><p>${B('امسح الرمز بجوالك، فتنتقل بين الأسئلة وتكشف الإجابة وتفتح منصة التصريحات منه.', 'Scan it with your phone to move on, reveal the answer and open the stage from it.')}</p><button type="button" class="md-cb" data-x>${B('إغلاق', 'Close')}</button></div>`;
+    G.el.appendChild(d); d.querySelector('[data-x]').onclick = () => d.remove();
+  }
   /* ---------- phones only: what the big screen would show goes to the phones as data ---------- */
   function phonesResult(x, ans) {
     const A = Object.keys(ans).filter(u => u in G.players).map(u => ans[u] && ans[u].a);
@@ -102,7 +193,7 @@ window.MDLive = (function () {
     const txt = quiz.qs.map(x => (x.q || '') + (x.opts || []).join('')).join('');
     // the screen's language: the questions' own, or the page's when there is no text (a games-only quiz)
     G = { ar: /[؀-ۿ]/.test(txt) || (!/[a-z]/i.test(txt) && document.documentElement.lang !== 'en'), pin, quiz, el, ref: db.ref('rooms/' + pin), players: {}, score: {}, qp: {}, out: {}, streak: {}, team: {}, teams: null, i: -1, done: -1,
-      opts: { every: 1, speed: true, gold: true, final: true, bet: false, pw: true, shuf: true, auto: false, mic: true }, fans: {}, gold: -1, timer: null, subs: [] };
+      opts: { every: 1, speed: true, gold: true, final: true, bet: false, pw: true, shuf: true, auto: false, mic: true, cap: true }, rc: String(1000 + Math.floor(Math.random() * 9000)), fans: {}, gold: -1, timer: null, subs: [] };
   }
   async function start(quiz) {
     const el = shell();
@@ -168,10 +259,11 @@ window.MDLive = (function () {
       : `${B(`خرج ${lose.length} · بقي ${left.length}`, `${lose.length} out · ${left.length} still in`)}${lose.length && lose.length <= 6 ? ` <small dir="auto">${lose.map(u => esc(G.players[u] || '')).join('، ')}</small>` : ''}`;
   }
   const SV = d => `<svg class="md-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
-  const IC = { vol: SV('<path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16 9a4 4 0 0 1 0 6M19 6a8 8 0 0 1 0 12"/>'), mute: SV('<path d="M4 9v6h4l5 4V5L8 9z"/><path d="m17 9 5 6M22 9l-5 6"/>'), fs: SV('<path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>') };
+  const IC = { rc: SV('<rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/>'), vol: SV('<path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16 9a4 4 0 0 1 0 6M19 6a8 8 0 0 1 0 12"/>'), mute: SV('<path d="M4 9v6h4l5 4V5L8 9z"/><path d="m17 9 5 6M22 9l-5 6"/>'), fs: SV('<path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>') };
   function frame(inner, bar, canPause) {
     if (G.note) { inner = inner.replace(/<\/div>\s*$/, `<p class="md-surv">${G.note}</p></div>`); G.note = null; }
-    (G.box || G.el).innerHTML = `<div class="md-scr">${inner}</div><div class="md-fx" aria-hidden="true"></div><div class="md-ctl">${bar || ''}<span class="md-sp"></span>${canPause && G.i >= 0 && !G.ended ? `<button type="button" class="md-cb md-micb${G.stageNext ? ' on' : ''}" data-mic>${G.stageNext ? B('منصة التصريحات بعد هذه الجولة ✓', 'Stage next ✓') : B('افتح منصة التصريحات', 'Open the stage')}<small>${micTxt()}</small></button>` : ''}${canPause ? `<button type="button" class="md-cb" data-pause>${B('إيقاف مؤقت', 'Pause')}</button>` : ''}<button type="button" class="md-cb" data-mute title="${T('الصوت', 'Sound')}">${mute ? IC.mute : IC.vol}</button><button type="button" class="md-cb" data-fs title="${T('ملء الشاشة', 'Full screen')}">${IC.fs}</button><button type="button" class="md-cb" data-end>${B('إنهاء', 'End')}</button></div>`;
+    if (G.cmt) { inner = `<p class="md-cmt" dir="auto">${G.cmt}</p>` + inner; G.cmt = null; }
+    (G.box || G.el).innerHTML = `<div class="md-scr">${inner}</div><div class="md-fx" aria-hidden="true"></div><div class="md-ctl">${bar || ''}<span class="md-sp"></span>${canPause && G.i >= 0 && !G.ended ? `<button type="button" class="md-cb md-micb${G.stageNext ? ' on' : ''}" data-mic>${G.stageNext ? B('منصة التصريحات بعد هذه الجولة ✓', 'Stage next ✓') : B('افتح منصة التصريحات', 'Open the stage')}<small>${micTxt()}</small></button>` : ''}${canPause ? `<button type="button" class="md-cb" data-pause>${B('إيقاف مؤقت', 'Pause')}</button>` : ''}${G.i >= 0 && !G.ended && (G.asks || []).some(z => !z.used) ? `<button type="button" class="md-cb md-micb on" data-asks>${B(`أسئلة الجمهور (${G.asks.filter(z => !z.used).length})`, `Audience questions (${G.asks.filter(z => !z.used).length})`)}</button>` : ''}${G.remote ? '' : `<button type="button" class="md-cb" data-rc title="${T('تحكّم من جوالك', 'Control from your phone')}">${IC.rc}</button>`}<button type="button" class="md-cb" data-mute title="${T('الصوت', 'Sound')}">${mute ? IC.mute : IC.vol}</button><button type="button" class="md-cb" data-fs title="${T('ملء الشاشة', 'Full screen')}">${IC.fs}</button><button type="button" class="md-cb" data-end>${B('إنهاء', 'End')}</button></div>`;
     clearTimeout(G.autoT);
     const q = s => G.el.querySelector(s);
     if (G.opts.auto && !G.ended) { const nb = G.el.querySelector('[data-next]'); if (nb) G.autoT = setTimeout(() => { if (nb.isConnected) nb.click(); }, G.el.querySelector('.md-lb') ? 6500 : 4500); }
@@ -180,6 +272,8 @@ window.MDLive = (function () {
     q('[data-end]').onclick = () => { if (G.i < 0 || G.ended || confirmEnd()) close(); };
     if (q('[data-pause]')) q('[data-pause]').onclick = pause;
     if (q('[data-mic]')) q('[data-mic]').onclick = () => { G.stageNext = !G.stageNext; micSync(); };
+    if (q('[data-asks]')) q('[data-asks]').onclick = asksBox;
+    if (q('[data-rc]')) q('[data-rc]').onclick = remoteBox;
     return q;
   }
   function confirmEnd() {
@@ -196,6 +290,8 @@ window.MDLive = (function () {
       const v = s.val() || {}; if (!v.e || seen[s.key] === v.t) return; seen[s.key] = v.t;
       if (now() - (v.t || 0) > 8000) return;
       if (v.e === '🎤') { stat({ 'x/mic': 1 }); return micVote(s.key); }
+      if (v.e.charAt(0) === '@') return remote(s.key, v.e);
+      if (G) { G.aw = G.aw || {}; const w = G.aw[s.key] = G.aw[s.key] || {}; w.rx = (w.rx || 0) + 1; }
       if (G) G.rxc = (G.rxc || 0) + 1;
       const fx = G && G.el.querySelector('.md-fx'); if (!fx) return;
       const e = document.createElement('span'); e.textContent = v.e; e.style.setProperty('--x', (8 + Math.random() * 84) + '%'); e.style.setProperty('--r', (Math.random() * 40 - 20) + 'deg');
@@ -254,12 +350,16 @@ window.MDLive = (function () {
       if (!judged) return;
       if (want.includes('sk') && !used.sk) { used.sk = 1; const before = (G.score[u] || 0) - (r.d || 0), avg = G.i > 0 ? Math.round(before / G.i) : 300; G.score[u] = before + avg; G.qp[u] = (G.qp[u] || 0) - (r.d || 0) + avg; r.d = avg; r.c = true; r.s = G.score[u]; r.pw.push('sk'); return; }
       if (want.includes('x2') && !used.x2) { used.x2 = 1; const add = Math.max(0, r.d || 0); r.d = (r.d || 0) + add; G.score[u] = (G.score[u] || 0) + add; G.qp[u] = (G.qp[u] || 0) + add; r.s = G.score[u]; r.pw.push('x2'); }
+      if (want.includes('cp') && !used.cp && G.cap && G.cap[u] && G.teams && G.team[u] != null) { used.cp = 1; const add = Math.max(0, r.d || 0), mates = Object.keys(G.players).filter(m => m !== u && G.team[m] === G.team[u]); r.pw.push('cp'); r.cg = add; r.cn = mates.length;
+        if (add) mates.forEach(m => { G.score[m] = (G.score[m] || 0) + add; G.qp[m] = (G.qp[m] || 0) + add; const t = sc[m] = sc[m] || { s: 0, d: 0, c: false, a: false }; t.d = (t.d || 0) + add; t.s = G.score[m]; t.capby = G.players[u] || ''; });
+        if (add) G.capNote = B(`الكابتن «${esc(G.players[u] || '')}» يهدي فريقه ${add} نقطة لكل عضو!`, `Captain ${esc(G.players[u] || '')} gives each teammate ${add} points!`); }
       if (want.includes('st') && !used.st && a.g && a.g in G.players && a.g !== u) { used.st = 1; const take = Math.max(0, r.d || 0), g = a.g; r.pw.push('st'); r.tg = G.players[g] || '';
         if (take) { G.score[g] = Math.max(0, (G.score[g] || 0) - take); const t = sc[g] = sc[g] || { s: 0, d: 0, c: false, a: false }; t.d = (t.d || 0) - take; t.s = G.score[g]; t.hit = (t.hit ? t.hit + '، ' : '') + (G.players[u] || ''); } }
     });
   }
   // each player's neighbours in the ranking, so a phone can offer whom to steal from
   function nbrs(sc) {
+    feats(sc);
     const order = Object.keys(sc).filter(u => u in G.players).sort(byRank), one = u => u ? { u, n: G.players[u] || '', s: G.score[u] || 0 } : null;
     G.lastD = {}; Object.keys(sc).forEach(u => { G.lastD[u] = sc[u].d || 0; });
     order.forEach((u, k) => { sc[u].up = one(order[k - 1]); sc[u].dn = one(order[k + 1]); sc[u].used = Object.keys((G.used || {})[u] || {}).join(','); });
@@ -323,6 +423,7 @@ window.MDLive = (function () {
       <div class="md-set md-teamp" id="mdTeamP" hidden>
         <h3>${B('الفرق', 'Teams')}</h3>
         <label>${B('عدد الفرق', 'Number of teams')}<select data-o="teams"><option value="0">${T('بلا فرق (كل مشارك وحده)', 'No teams (everyone on their own)')}</option>${[2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 15, 20, 25, 30].map(n => `<option value="${n}"${G.teams && G.teams.length === n ? ' selected' : ''}>${n} ${n <= 10 ? T('فرق', 'teams') : T('فريقًا', 'teams')}</option>`).join('')}</select></label>
+        <label class="md-ck" data-capw hidden><input type="checkbox" data-o="cap"${O.cap !== false ? ' checked' : ''}> ${B('كابتن لكل فريق: مرة واحدة تذهب نقاطه لكل أعضاء فريقه', 'A captain for each team: once a game, their points go to every teammate')}</label>
         <label data-tmode hidden>${B('كيف يُوزَّع المشاركون؟', 'How are players placed?')}<select data-o="tmode">
           <option value="pick"${!['auto', 'host'].includes(G.opts.tmode) ? ' selected' : ''}>${T('يختار كل مشارك فريقه من جواله', 'Each player picks a team on their phone')}</option>
           <option value="host"${G.opts.tmode === 'host' ? ' selected' : ''}>${T('المشرف يوزّعهم بنفسه هنا', 'The host places them here')}</option>
@@ -371,7 +472,7 @@ window.MDLive = (function () {
     sub(G.ref.child('pl'), 'child_removed', s => { delete G.players[s.key]; delete G.score[s.key]; draw(); count(); });
     reactions();
     const teamNames = () => {
-      const box = q('#mdTn'); tp.querySelector('[data-tmode]').hidden = !G.teams; tp.querySelector('[data-tnw]').hidden = !G.teams;
+      const box = q('#mdTn'); tp.querySelector('[data-tmode]').hidden = !G.teams; tp.querySelector('[data-capw]').hidden = !G.teams; tp.querySelector('[data-tnw]').hidden = !G.teams;
       const tip = tp.querySelector('[data-tip]'), md = O.tmode || 'pick'; tip.hidden = !G.teams;
       tip.textContent = md === 'host' ? T('يدخل المشاركون بأسمائهم فقط، ثم تنقر اسم كل واحد في القائمة وتختار فريقه. من لا تختار له فريقًا يُوضع في أصغر فريق عند البدء.', 'Players join with just their names; tap each name in the list and choose a team. Anyone left over goes to the smallest team at the start.')
         : md === 'auto' ? T('يُوزَّع الجميع عشوائيًا وبالتساوي لحظة البدء.', 'Everyone is placed at random, evenly, at the start.')
@@ -413,6 +514,7 @@ window.MDLive = (function () {
     if (G.stageNext && !G.ended && G.done + 1 <= G.quiz.qs.length) stageNow();
     statFlush(); G.rxc = 0; journey(); if (G.sb && G.sb.length) { G.sb = []; G.ref.child('sb').remove().catch(() => {}); }
     G.i = G.done + 1;
+    if (G.i === 0) captains();
     if (G.i === 0) stat({ [srcOf(G.quiz) + '/go']: 1, [srcOf(G.quiz) + '/p']: Object.keys(G.players).length, [G.phones ? 'x/phones' : 'x/screen']: 1, [G.teams ? 'x/teams' : 'x/solo']: 1 });
     // last survivor: alone it ends with one player left; with teams, when only one team still has someone in
     if (G.opts.surv && !G.teams && G.i > 0 && alive().length <= 1) return finish();
@@ -590,6 +692,7 @@ window.MDLive = (function () {
     G.subs.forEach(f => f()); G.subs = [];
     keepPlayers(); reactions();
     const ans = (await G.ref.child('an/' + G.i).once('value')).val() || {};
+    G.lastAns = ans; fanAsks(ans);
     G.sp = { k: x.type === 'game' ? 'g_' + KEY(x.g) : 't_' + KEY(x.type), p: Object.keys(G.players).length, a: Object.keys(ans).filter(u => u in G.players).length };
     if (G.phones) phonesResult(x, ans);
     G.pws = {}; Object.keys(ans).forEach(u => { const a = ans[u]; if (a && a.p && G.opts.pw && u in G.players) { G.pws[u] = a; if (/sk/.test(a.p)) delete ans[u]; } });
@@ -794,14 +897,14 @@ window.MDLive = (function () {
     G.ended = true; clearInterval(G.timer); forget();
     statFlush(); stat({ [srcOf(G.quiz) + '/f']: 1 });
     const order = Object.keys(G.score).filter(u => u in G.players).sort(byRank), tt = teamTable();
-    journey(); const jr = journeyOut(order);
-    await G.ref.child('top').set({ jr, p: order.slice(0, 5).map(u => ({ n: G.players[u] || '', s: G.score[u] })), t: tt.slice(0, 5).map(t => ({ n: t.name, s: t.avg, k: t.k })) });
+    journey(); const jr = journeyOut(order), aw = titles(order);
+    await G.ref.child('top').set({ jr, aw, p: order.slice(0, 5).map(u => ({ n: G.players[u] || '', s: G.score[u] })), t: tt.slice(0, 5).map(t => ({ n: t.name, s: t.avg, k: t.k })) });
     await G.ref.child('st').set({ ph: 'end', i: G.i, lock: true });
     const p = k => order[k] ? `<div class="md-pod md-p${k + 1}"><span class="md-pn" dir="auto">${esc(G.players[order[k]] || '')}</span><b>${G.score[order[k]]}</b><div class="md-step">${k + 1}</div></div>` : '<div class="md-pod md-empty"></div>';
     const q = frame(`<div class="md-end"><h2>${esc(G.quiz.title || T('ميدان', 'Maydan'))}</h2>
         ${tt.length ? `<p class="md-wteam" style="--c:var(--qz${(tt[0].k) % 6})">${B(`الفريق الفائز: ${esc(tt[0].name)}`, `Winning team: ${esc(tt[0].name)}`)} <em>${tt[0].avg}</em></p>` : ''}
         <div class="md-podium">${p(1)}${p(0)}${p(2)}</div>
-        <ol class="md-rest" start="4">${order.slice(3, 10).map(u => `<li><span dir="auto">${esc(G.players[u] || '')}</span><em>${G.score[u]}</em></li>`).join('')}</ol></div>`,
+        <ol class="md-rest" start="4">${order.slice(3, 10).map(u => `<li><span dir="auto">${esc(G.players[u] || '')}</span><em>${G.score[u]}</em></li>`).join('')}</ol>${aw.length ? `<div class="md-titles">${aw.map((a, k) => `<div class="md-title" style="--d:${k * .35 + 4}s"><b>${B(TITLE[a.k][0], TITLE[a.k][1])}</b><span dir="auto">${esc(a.n)}</span><small>${B(a.ar, a.en)}</small></div>`).join('')}</div>` : ''}</div>`,
       `${(G.jr || []).length > 1 ? `<button type="button" class="btn ghost" data-replay>${B('إعادة السباق', 'Replay the race')}</button>` : ''}<button type="button" class="btn ghost" data-csv>${B('تحميل النتائج', 'Download results')}</button>
        <label class="md-opt md-grade" title="${T('اختياري: تُحسب الدرجة من نقاط ميدان، والأول يأخذ الدرجة كاملة', 'Optional: the grade follows Maydan points; the top player gets full marks')}">${B('مع درجة من', 'with a grade out of')} <input type="number" min="1" max="100" step="1" inputmode="numeric" data-gr placeholder="—"></label>
        ${G.quiz.qs.some(x => x.type === 'game') ? `<label class="md-opt md-grade"><input type="checkbox" data-gq> ${B('من الأسئلة فقط (دون التحديات)', 'from the questions only (no challenges)')}</label>` : ''}`);

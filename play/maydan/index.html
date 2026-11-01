@@ -1857,6 +1857,10 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
 .qi-play svg{width:34px;height:34px;margin-inline-start:4px}[dir=rtl] .qi-play svg{margin-inline-start:0;margin-inline-end:-4px}
 .qi-vframe:hover .qi-play{transform:translate(-50%,-50%) scale(1.07)}
 .qi-vtx{display:flex;flex-direction:column;gap:2px;padding:14px 20px 16px;text-align:center}.qi-vtx b{color:#fff;font-size:1.05rem}.qi-vtx small{color:#c9cde0}
+
+.qz-ail>span{display:flex;align-items:center;gap:8px}.qz-ail>span i,.qz-ais i{font-style:normal;width:22px;height:22px;border-radius:50%;background:#23336F;color:#fff;display:grid;place-items:center;font-size:.75rem;flex:none}
+.qz-ais{display:flex;align-items:center;gap:8px;font-weight:600;margin:14px 0 8px}
+.qz-len{color:#2e8b57;font-weight:600}.qz-len:empty{display:none}
 </style>
 <div id="qz" class="sn qz"><noscript><span class="ar">تعمل هذه الأداة مع تفعيل JavaScript.</span><span class="en">This tool needs JavaScript.</span></noscript></div>
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script><script>/* Maydan library: ready quizzes to start at once or open and edit. Written in the editor's own format. */
@@ -2408,16 +2412,18 @@ if (typeof module !== 'undefined') module.exports = QZParse;
         <div data-pane="file" hidden><label class="qz-drop" id="qzDrop"><input type="file" id="qzFile" accept=".docx,.xlsx,.xls,.csv,.txt,.pdf" hidden><b>${B('اختر ملف الأسئلة', 'Choose the questions file')}</b><small>${B('Word أو Excel أو CSV أو PDF أو نص', 'Word, Excel, CSV, PDF or text')}</small></label>
           <p class="pt-fine">${B('في Word: إن كانت الإجابة الصحيحة بخط عريض أو ملوّنة أو مظللة أو تحتها خط، تُعرف تلقائيًا. ويُقبل قالب الاستيراد نفسه الذي يستعمله Kahoot.', 'In Word, a right answer in bold, colour, highlight or underline is recognised. Kahoot’s import template is accepted as it is.')}</p>
           <div class="sn-two"><button type="button" class="btn ghost" id="qzTpl">${B('تنزيل قالب Excel', 'Download an Excel template')}</button></div></div>
-        <div data-pane="ai" hidden><p class="qz-aih">${B('ابنِ الأسئلة بمساعدة الذكاء الاصطناعي: اكتب الموضوع وتوجيهاتك، ثم انسخ التعليمات إلى ChatGPT أو Claude والصق ردّه هنا.', 'Build the questions with AI: write the topic and your guidance, copy the instructions into ChatGPT or Claude, then paste its reply here.')}</p>
-          <label class="sn-lbl">${B('الموضوع أو المحتوى، ومعه توجيهاتك', 'The topic or the content, with your guidance')}<textarea id="qzTopic" rows="5" dir="${isAr() ? 'rtl' : 'ltr'}" placeholder="${T('اكتب الموضوع أو الصق النص، وأضف ما تريد، مثال: أسئلة عن الصحابة، ركّز على المواقف لا التواريخ، وخلّها فيها مرح.', 'Write the topic or paste the text, and add what you want, e.g. focus on…, keep it light.')}"></textarea></label>
+        <div data-pane="ai" hidden><p class="qz-aih">${B('ضع المحتوى واكتب تعليماتك، ثم انسخ الطلب إلى ChatGPT أو Claude والصق ردّه هنا.', 'Put in the content and your instructions, copy the request into ChatGPT or Claude, then paste its reply here.')}</p>
+          <label class="sn-lbl qz-ail"><span><i>${B('١', '1')}</i>${B('ماذا تريد؟', 'What do you want?')}</span><textarea id="qzGuide" rows="3" dir="${isAr() ? 'rtl' : 'ltr'}" placeholder="${T('مثال: مسابقة ترفيهية للعائلة عن الفضاء، ركّز على المعلومات الطريفة. أو: مراجعة للوحدة الثالثة، نصفها أسئلة تطبيقية.', 'e.g. a fun family quiz about space, focus on surprising facts. Or: a review of unit three, half of it applied questions.')}"></textarea></label>
+          <label class="sn-lbl qz-ail"><span><i>${B('٢', '2')}</i>${B('المحتوى (اختياري)', 'The content (optional)')}</span><textarea id="qzTopic" rows="5" dir="${isAr() ? 'rtl' : 'ltr'}" placeholder="${T('الصق هنا درسًا أو وحدة أو فصلًا من مقرر أو كتاب أو مقالًا، لتُبنى الأسئلة منه وحده.', 'Paste a lesson, a unit, a chapter of a course or a book, or an article here, and the questions will come from it alone.')}"></textarea><small class="qz-len" id="qzLen"></small></label>
           <div class="qz-row"><label class="sn-lbl">${B('الفئة', 'Audience')}<select id="qzAud"><option value="">${T('عام', 'General')}</option><option value="kids">${T('أطفال', 'Children')}</option><option value="prim">${T('المرحلة الابتدائية', 'Primary school')}</option><option value="mid">${T('المرحلة المتوسطة', 'Middle school')}</option><option value="sec">${T('المرحلة الثانوية', 'Secondary school')}</option><option value="uni">${T('طلاب الجامعة', 'University students')}</option><option value="pro">${T('موظفون أو مختصون', 'Staff or specialists')}</option><option value="fam">${T('العائلة', 'Family')}</option></select></label>
             <label class="sn-lbl">${B('الطابع', 'Tone')}<select id="qzTone"><option value="">${T('معتدل', 'Balanced')}</option><option value="fun">${T('مرح وخفيف', 'Fun and light')}</option><option value="serious">${T('جاد وعلمي', 'Serious')}</option><option value="challenge">${T('تحدٍّ قوي', 'Hard challenge')}</option></select></label></div>
           <div class="qz-row"><label class="sn-lbl">${B('عدد الأسئلة', 'Questions')}<select id="qzN">${[5, 10, 15, 20, 30, 40, 50, 75, 100].map(n => `<option${n === 20 ? ' selected' : ''}>${n}</option>`).join('')}</select></label>
             <label class="sn-lbl">${B('المستوى', 'Level')}<select id="qzLv"><option value="mixed">${T('متنوع', 'Mixed')}</option><option value="easy">${T('سهل', 'Easy')}</option><option value="mid">${T('متوسط', 'Medium')}</option><option value="hard">${T('صعب', 'Hard')}</option></select></label>
             <label class="sn-lbl">${B('النوع', 'Type')}<select id="qzTy"><option value="mc">${T('اختيار من متعدد', 'Multiple choice')}</option><option value="all" selected>${T('منوّعة: كل أنواع الأسئلة', 'Varied: every question kind')}</option><option value="mix">${T('مزيج مع صح وخطأ', 'Mixed with true/false')}</option><option value="tf">${T('صح وخطأ', 'True/false')}</option></select></label>
             <label class="sn-lbl">${B('اللغة', 'Language')}<select id="qzLg"><option value="ar">العربية</option><option value="en">English</option></select></label></div>
-          <div class="sn-two"><button type="button" class="btn solid" id="qzCopy">${B('نسخ التعليمات', 'Copy the instructions')}</button><a class="btn ghost" id="qzGpt" target="_blank" rel="noopener">${B('افتح في ChatGPT', 'Open in ChatGPT')}</a><a class="btn ghost" id="qzCl" target="_blank" rel="noopener">${B('افتح في Claude', 'Open in Claude')}</a></div>
-          <div class="qz-step2"><b>${B('٢', '2')}</b><p>${B('حين يكتب الأسئلة، انسخ رده كاملًا ثم اضغط:', 'When it has written them, copy its whole reply, then tap:')}</p><button type="button" class="btn solid" id="qzBack2">${B('لصق رد الذكاء الاصطناعي', 'Paste the AI’s reply')}</button></div></div>
+          <p class="qz-ais"><i>${B('٣', '3')}</i>${B('انسخ الطلب والصقه في الذكاء الاصطناعي', 'Copy the request into the AI')}</p>
+          <div class="sn-two"><button type="button" class="btn solid" id="qzCopy">${B('نسخ الطلب', 'Copy the request')}</button><a class="btn ghost" id="qzGpt" target="_blank" rel="noopener">${B('افتح في ChatGPT', 'Open in ChatGPT')}</a><a class="btn ghost" id="qzCl" target="_blank" rel="noopener">${B('افتح في Claude', 'Open in Claude')}</a></div>
+          <div class="qz-step2"><b>${B('٤', '4')}</b><p>${B('حين يكتب الأسئلة، انسخ رده كاملًا ثم اضغط:', 'When it has written them, copy its whole reply, then tap:')}</p><button type="button" class="btn solid" id="qzBack2">${B('لصق رد الذكاء الاصطناعي', 'Paste the AI’s reply')}</button></div></div>
       </div>
       <div class="qz-spr"><span>${B('وزّع تحديات بين الأسئلة: تحدٍّ بعد كل', 'Spread challenges between the questions: one after every')}</span><select id="qzEvery">${[1, 2, 3, 5, 10].map(n => `<option value="${n}"${n === 3 ? ' selected' : ''}>${n === 1 ? T('سؤال واحد', '1 question') : n === 2 ? T('سؤالين', '2 questions') : n + ' ' + T('أسئلة', 'questions')}</option>`).join('')}</select><button type="button" class="btn ghost" id="qzSpr">${B('وزّع', 'Spread')}</button></div>
       <div id="qzQs" class="qz-qs"></div>
@@ -2450,9 +2456,13 @@ if (typeof module !== 'undefined') module.exports = QZParse;
     dz.addEventListener('drop', e => { e.preventDefault(); dz.classList.remove('on'); const f = e.dataTransfer.files[0]; if (f) fromFile(f); });
     q('#qzTpl').onclick = template;
     // AI
-    const prompt = () => aiPrompt(q('#qzTopic').value.trim(), +q('#qzN').value, q('#qzLv').value, q('#qzTy').value, q('#qzLg').value, { aud: q('#qzAud').value, tone: q('#qzTone').value });
-    const links = () => { const p = encodeURIComponent(prompt()); q('#qzGpt').href = 'https://chatgpt.com/?q=' + p; q('#qzCl').href = 'https://claude.ai/new?q=' + p; };
-    ['#qzTopic', '#qzAud', '#qzTone', '#qzN', '#qzLv', '#qzTy', '#qzLg'].forEach(s => { q(s).oninput = q(s).onchange = links; }); links();
+    // what the author wants is the request; pasted content, when there is any, becomes the only source
+    const prompt = () => { const c = q('#qzTopic').value.trim(), g = q('#qzGuide').value.trim(); return aiPrompt(c || g, +q('#qzN').value, q('#qzLv').value, q('#qzTy').value, q('#qzLg').value, { aud: q('#qzAud').value, tone: q('#qzTone').value, guide: c ? g : '' }); };
+    // a long text cannot travel in a link; then the links open the AI empty and the request is copied on the way
+    const links = () => { const raw = prompt(), p = encodeURIComponent(raw), long = p.length > 6000; q('#qzGpt').href = 'https://chatgpt.com/' + (long ? '' : '?q=' + p); q('#qzCl').href = 'https://claude.ai/new' + (long ? '' : '?q=' + p); q('#qzGpt').dataset.long = q('#qzCl').dataset.long = long ? 1 : '';
+      const t = q('#qzTopic').value.trim(), w = t ? t.split(/\s+/).length : 0; q('#qzLen').textContent = w > 60 ? T(`نص من ${w} كلمة: تُبنى الأسئلة منه وحده.`, `A text of ${w} words: the questions come from it alone.`) : ''; };
+    ['#qzGpt', '#qzCl'].forEach(s2 => q(s2).addEventListener('click', () => { if (q(s2).dataset.long) { try { navigator.clipboard.writeText(prompt()); toast(B('النص طويل، فنسخنا الطلب: الصقه في المحادثة الجديدة.', 'The text is long, so the request was copied: paste it into the new chat.')); } catch (e) {} } }));
+    ['#qzTopic', '#qzGuide', '#qzAud', '#qzTone', '#qzN', '#qzLv', '#qzTy', '#qzLg'].forEach(s => { q(s).oninput = q(s).onchange = links; }); links();
     // step 2: bring the AI's reply into the paste box (straight from the clipboard where the browser allows it)
     q('#qzBack2').onclick = async () => {
       root.querySelector('[data-tab=paste]').click();
@@ -2919,7 +2929,7 @@ c) option
 - a true statement (true)
 - a false statement (false)
 - a true statement (true)` : '');
-    if (ar) return `اكتب ${n} سؤالًا لمسابقة تفاعلية حيّة، ${LV}، ${TY}${topic ? `، بحسب ما يلي (موضوع أو محتوى، وقد يتضمن توجيهات فالتزم بها):\n\n${topic}\n` : '.'}
+    if (ar) return `اكتب ${n} سؤالًا لمسابقة تفاعلية حيّة، ${LV}، ${TY}${topic ? (topic.length > 300 ? `، من المحتوى التالي وحده (لا تضف معلومات من خارجه):\n\n«${topic}»\n` : `، بحسب هذا الطلب: ${topic}\n`) : '.'}
 
 الشروط:
 - السؤال لا يتجاوز ١٢٠ حرفًا، والخيار لا يتجاوز ٧٥ حرفًا، لأنها تُعرض على شاشة.
@@ -2932,7 +2942,7 @@ c) option
 اكتبها بهذه الصيغة بالضبط، داخل صندوق نص واحد، دون أي شرح قبلها أو بعدها، وضع * بعد الإجابة الصحيحة${all ? '، واكتب نوع السؤال بين معقوفين في آخره كما في الأمثلة' : ''}:
 
 ${exAr}`;
-    return `Write ${n} questions for a live interactive quiz, ${LV}, ${TY}${topic ? `, based on the following (a topic or content; it may include guidance, follow it):\n\n${topic}\n` : '.'}
+    return `Write ${n} questions for a live interactive quiz, ${LV}, ${TY}${topic ? (topic.length > 300 ? `, from the following content alone (add nothing from outside it):\n\n“${topic}”\n` : `, following this request: ${topic}\n`) : '.'}
 
 Rules:
 - Each question at most 120 characters and each option at most 75 characters, as they are shown on a screen.
@@ -3510,6 +3520,35 @@ html.mp-embed body{padding-top:0!important}
 .mp-fx .emo{font-size:2rem}.mp-fx .txt{font-size:.95rem;font-weight:700;background:#fff;color:#23336F;border-radius:999px;padding:3px 10px;box-shadow:0 3px 10px rgba(0,0,0,.15)}
 @keyframes mpFly{0%{transform:translateY(0) rotate(var(--r));opacity:0}10%{opacity:1}100%{transform:translateY(-75vh) rotate(var(--r));opacity:0}}
 .mg-track~.mg-big{max-width:190px;max-height:190px;font-size:4rem;margin-top:12px}
+/* commentator, titles, audience questions, remote */
+.md-cmt{position:absolute;top:1.6vh;left:50%;transform:translateX(-50%);z-index:6;background:#e0a458;color:#16204a;font-weight:800;font-size:clamp(16px,2.6vh,30px);padding:.6vh 2vw;border-radius:999px;white-space:nowrap;max-width:90%;overflow:hidden;text-overflow:ellipsis;box-shadow:0 6px 18px rgba(0,0,0,.25);animation:mdCmt .5s ease-out}
+@keyframes mdCmt{from{transform:translate(-50%,-140%);opacity:0}}
+.md-titles{display:flex;flex-wrap:wrap;justify-content:center;gap:1.2vh 1.2vw;margin-top:2vh}
+.md-title{background:rgba(255,255,255,.1);border:1px solid rgba(224,164,88,.6);border-radius:16px;padding:1vh 1.4vw;display:grid;justify-items:center;gap:2px;min-width:12vw;opacity:0;animation:mdTitle .6s ease-out forwards;animation-delay:var(--d)}
+.md-title b{color:#e0a458;font-size:clamp(14px,2.2vh,24px)}.md-title span{font-weight:800;font-size:clamp(16px,2.6vh,28px);color:#fff}.md-title small{color:#c9cde0;font-size:clamp(11px,1.5vh,16px)}
+@keyframes mdTitle{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.md-asks{position:absolute;inset:0;z-index:60;background:rgba(10,14,30,.7);display:flex;align-items:center;justify-content:center;padding:3vh}
+.md-asksb{background:#fff;color:#16201f;border-radius:20px;padding:24px;max-width:640px;width:100%;max-height:90%;overflow:auto;display:flex;flex-direction:column;gap:12px;text-align:center}
+.md-asksb h3{margin:0;color:#23336F}.md-ask{border:1px solid #e2e4ec;border-radius:14px;padding:12px;display:grid;gap:6px;text-align:start}.md-ask p{margin:0;font-weight:700}.md-ask small{opacity:.7}
+.md-asksb .md-cb{align-self:center;color:#23336F;border-color:#c9cde0}
+.md-rcqr{width:220px;margin:0 auto}.md-rcqr svg{width:100%;height:auto}
+.mp-cmt{margin:0 0 10px;background:#e0a458;color:#16204a;font-weight:800;border-radius:12px;padding:8px 12px;text-align:center}
+.mp-titles{margin:16px 0 4px;display:flex;flex-direction:column;gap:6px}
+.mp-ttl{display:grid;grid-template-columns:auto 1fr;gap:0 10px;align-items:center;background:rgba(255,255,255,.08);border-radius:12px;padding:8px 12px;text-align:start}
+.mp-ttl b{color:#e0a458;grid-row:span 2}.mp-ttl span{font-weight:700}.mp-ttl small{opacity:.75;font-size:.75rem}
+.mp-ttl.me{background:#e0a458;color:#16204a}.mp-ttl.me b{color:#16204a}
+.mp-tb button.cap{background:#23336F;color:#fff;border-color:#23336F}
+.mp-askb{position:fixed;bottom:16px;inset-inline-start:16px;z-index:40;border:0;border-radius:999px;background:#23336F;color:#fff;font:inherit;font-weight:700;padding:10px 16px;box-shadow:0 6px 16px rgba(0,0,0,.2)}
+.mp-askb:disabled{opacity:.75}
+.mp-askm{position:fixed;inset:0;z-index:70;background:rgba(10,14,30,.6);display:flex;align-items:flex-end;justify-content:center}
+.mp-askc{background:var(--bg,#fff);width:100%;max-width:520px;border-radius:20px 20px 0 0;padding:18px;display:flex;flex-direction:column;gap:10px}
+.mp-askc textarea{width:100%;border:1px solid var(--line,#ccc);border-radius:12px;padding:10px;font:inherit;background:var(--bg,#fff);color:inherit}
+.mp-asktf{display:grid;grid-template-columns:1fr 1fr;gap:10px}.mp-asktf button{border:0;border-radius:12px;padding:14px;font:inherit;font-weight:700;color:#fff;background:#2e8b57}.mp-asktf button+button{background:#b0533a}
+.mp-remote{text-align:center}.mp-rcst{font-size:.85rem;color:#b0533a}.mp-rcst.on{color:#2e8b57}
+.mp-rcb{display:flex;flex-direction:column;gap:12px;margin-top:16px}.mp-rcb button{border:0;border-radius:16px;padding:18px;font:inherit;font-weight:700;font-size:1.05rem;background:#e9ebf3;color:#23336F}
+.mp-rcb button.go{background:#23336F;color:#fff;font-size:1.4rem;padding:28px}.mp-rcb button.sent{outline:3px solid #e0a458}
+.md-end:has(.md-titles) .md-podium{height:34vh}.md-end:has(.md-titles) h2{margin-bottom:1.5vh}.md-end:has(.md-titles) .md-wteam{margin-bottom:1vh}
+.md-titles{margin-top:1.4vh}.md-title{padding:.8vh 1.2vw}
 </style><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script>window.MD_CFG={"apiKey": "AIzaSyA50i75DT1Is1a6Yn6snW1_JVObc8S3F0Y", "authDomain": "maydan-705ae.firebaseapp.com", "databaseURL": "https://maydan-705ae-default-rtdb.europe-west1.firebasedatabase.app", "projectId": "maydan-705ae", "appId": "1:342187013133:web:d5c2396f0db413f3c51144"};window.MD_MARK="<svg class=\"md-mark\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><rect x=\"4\" y=\"4\" width=\"40\" height=\"40\" rx=\"12\" fill=\"#23336F\"/><path d=\"M24 9l4.2 6.8 7.8-1.8-1.8 7.8L41 24l-6.8 4.2 1.8 7.8-7.8-1.8L24 39l-4.2-6.8-7.8 1.8 1.8-7.8L7 24l6.8-4.2-1.8-7.8 7.8 1.8z\" fill=\"#C9822B\"/><circle cx=\"24\" cy=\"24\" r=\"6.5\" fill=\"#23336F\"/><circle cx=\"24\" cy=\"24\" r=\"3\" fill=\"#F3E3C7\"/></svg>";</script><script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script><script>/* Maydan challenges: short games played on every phone at once. Every phone gets the same level (same seed),
    so the race is fair. Each game reports a score; higher is better. */
 window.MDGames = (function () {
@@ -4294,6 +4333,97 @@ window.MDLive = (function () {
     return { k: us.map(u => u.slice(0, 8)), n: us.map(u => G.players[u] || ''), s: us.map(u => J.map(o => o[u] || 0)) };
   }
 
+
+  /* ---------- feats: what each player did, for the commentary now and the titles at the end ---------- */
+  const arN = (n, one, two, few, many) => n === 1 ? one : n === 2 ? two : `${n} ${n % 100 >= 3 && n % 100 <= 10 ? few : many}`;
+  function feats(sc) {
+    const x = G.quiz.qs[G.i] || {}, judged = !['poll', 'open', 'stage', 'game'].includes(x.type), ans = G.lastAns || {};
+    G.aw = G.aw || {}; const W = u => G.aw[u] = G.aw[u] || {};
+    Object.keys(G.players).forEach(u => {
+      const r = sc[u], w = W(u), a = ans[u]; if (!r) { if (judged) w.run = 0; return; }
+      if (G.cap && G.cap[u]) r.cap = 1;
+      if (x.type === 'game') w.g = (w.g || 0) + Math.max(0, r.d || 0);
+      if (!judged) return;
+      if (r.c) { w.run = (w.run || 0) + 1; w.best = Math.max(w.best || 0, w.run); if (a && a.t && G.t0) { w.t = (w.t || 0) + Math.max(0, (a.t - G.t0) / 1000); w.tn = (w.tn || 0) + 1; } if (a && a.b) w.bet = (w.bet || 0) + 1; }
+      else w.run = 0;
+    });
+    // the commentator: the most telling thing that just happened
+    const order = Object.keys(G.players).filter(u => u in G.score || sc[u]).sort(byRank), was = G.rk || {}, now2 = {}; order.forEach((u, k) => { now2[u] = k + 1; });
+    const nm = u => `«${esc(G.players[u] || '')}»`, lines = [];
+    if (G.capNote) { lines.push(G.capNote); G.capNote = null; }
+    const lead = order[0], wasLead = Object.keys(was).find(u => was[u] === 1);
+    if (lead && wasLead && lead !== wasLead && (G.score[lead] || 0) > 0) lines.push(B(`${nm(lead)} ينتزع الصدارة!`, `${nm(lead)} takes the lead!`));
+    if (G.teams) { const tt = teamTable(); if (tt.length > 1) { const tl = tt[0].k; if (G.tlead != null && tl !== G.tlead && tt[0].avg > tt[1].avg) lines.push(B(`فريق «${esc(tt[0].name)}» يتقدّم إلى الصدارة!`, `Team ${esc(tt[0].name)} goes top!`)); G.tlead = tl; } }
+    const hot = Object.keys(G.players).filter(u => judged && [3, 5, 7, 10].includes((G.aw[u] || {}).run)).sort((p, q) => G.aw[q].run - G.aw[p].run)[0];
+    if (hot) lines.push(B(`${nm(hot)}: ${arN(G.aw[hot].run, '', '', 'إجابات صحيحة متتالية', 'إجابة صحيحة متتالية')}!`, `${nm(hot)}: ${G.aw[hot].run} right in a row!`));
+    let jump = null, jv = 1; order.forEach(u => { const d = (was[u] || 0) - now2[u]; if (was[u] && d > jv) { jv = d; jump = u; } });
+    if (jump && jv >= 2) lines.push(B(`${nm(jump)} يقفز ${arN(jv, '', 'مركزين', 'مراكز', 'مركزًا')} إلى المركز ${now2[jump]}!`, `${nm(jump)} jumps ${jv} places to ${now2[jump]}!`));
+    const players = Object.keys(G.players).length, right = Object.keys(sc).filter(u => u in G.players && sc[u].c).length;
+    if (judged && players >= 2 && right === players) lines.push(B('أصاب الجميع! هل كان سهلًا؟', 'Everyone got it! Too easy?'));
+    if (judged && players >= 2 && right === 0) lines.push(B('ولا أحد أصاب! هذا كان صعبًا.', 'Nobody got it! That was a hard one.'));
+    if (order.length > 2 && G.i > 0) { const gap = (G.score[order[0]] || 0) - (G.score[order[1]] || 0); if (gap > 0 && gap < 120) lines.push(B(`الصدارة على المحك: الفرق بين الأول والثاني ${gap} نقطة فقط`, `Neck and neck at the top: only ${gap} points apart`)); }
+    G.rk = now2;
+    const t = lines[0] || '';
+    G.cmt = t || null;
+    G.ref.child('cm').set(t ? { i: G.i, t: t.replace(/<span class="en">.*?<\/span>/g, '').replace(/<[^>]+>/g, ''), e: t.replace(/<span class="ar">.*?<\/span>/g, '').replace(/<[^>]+>/g, '') } : null).catch(() => {});
+  }
+  // titles at the end: one winner each, only when it was really earned
+  function titles(order) {
+    const A = G.aw || {}, us = Object.keys(G.players), out = [];
+    const best = (f, ok) => { let w = null, v = null; us.forEach(u => { const x = f(A[u] || {}, u); if (x == null || !ok(x)) return; if (v == null || x > v) { v = x; w = u; } }); return w ? { u: w, v } : null; };
+    const add = (k, r, ar, en) => { if (r) out.push({ k, u: r.u.slice(0, 8), n: G.players[r.u] || '', v: r.v, ar: ar(r.v), en: en(r.v) }); };
+    add('fast', best(w => w.tn >= 2 ? -(w.t / w.tn) : null, () => true), v => `أسرع إجابة صحيحة: ${(-v).toFixed(1)} ث في المتوسط`, v => `Fastest right answers: ${(-v).toFixed(1)}s on average`);
+    add('run', best(w => w.best || 0, v => v >= 3), v => `أطول سلسلة: ${arN(v, '', '', 'إجابات صحيحة متتالية', 'إجابة صحيحة متتالية')}`, v => `Longest run: ${v} right in a row`);
+    // the biggest climb, from everyone's points after each question
+    const J = G.jr || []; if (J.length > 2) { const rank = o => { const r = {}; Object.keys(o).sort((a, b) => o[b] - o[a]).forEach((u, k) => { r[u] = k + 1; }); return r; }; const R = J.map(rank);
+      add('back', best((w, u) => { let m = 0; for (let t = 1; t < R.length; t++) for (let t0 = 0; t0 < t; t0++) if (R[t0][u] && R[t][u]) m = Math.max(m, R[t0][u] - R[t][u]); return m; }, v => v >= 2), v => `أكبر عودة: صعد ${arN(v, '', 'مركزين', 'مراكز', 'مركزًا')}`, v => `Biggest comeback: up ${v} places`); }
+    add('spirit', best(w => w.rx || 0, v => v >= 3), v => `روح الميدان: ${arN(v, '', 'تفاعلان', 'تفاعلات', 'تفاعلًا')}`, v => `Spirit of the game: ${v} reactions`);
+    add('bold', best(w => w.bet || 0, v => v >= 1), v => `المغامر: ربح ${arN(v, 'رهانًا واحدًا', 'رهانين', 'رهانات', 'رهانًا')}`, v => `The daring one: won ${v} bet${v > 1 ? 's' : ''}`);
+    add('games', best(w => w.g || 0, v => v > 0), v => `بطل التحديات: ${v} نقطة من التحديات`, v => `Challenge champion: ${v} points from challenges`);
+    return out;
+  }
+  const TITLE = { fast: ['الأسرع', 'The fastest'], run: ['القنّاص', 'The sniper'], back: ['العائد', 'The comeback'], spirit: ['روح الميدان', 'Spirit of the game'], bold: ['المغامر', 'The daring one'], games: ['بطل التحديات', 'Challenge champion'] };
+  /* ---------- team captains: one per team, chosen at the start; once a game the captain's points go to every teammate ---------- */
+  function captains() {
+    G.cap = null; if (!G.teams || G.opts.cap === false || !G.opts.pw) return;
+    G.cap = {}; const by = {}; Object.keys(G.players).forEach(u => { const t = G.team[u]; if (t == null) return; (by[t] = by[t] || []).push(u); });
+    Object.values(by).forEach(m => { G.cap[m[Math.floor(Math.random() * m.length)]] = 1; });
+    G.cmt = B(`قادة الفرق: ${Object.keys(G.cap).map(u => `«${esc(G.players[u] || '')}»`).join('، ')}`, `Team captains: ${Object.keys(G.cap).map(u => esc(G.players[u] || '')).join(', ')}`);
+  }
+  /* ---------- the audience asks: a fan sends a true-or-false statement during a question; the host may put it in ---------- */
+  function fanAsks(ans) {
+    Object.keys(ans).forEach(u => { const a = ans[u]; if (!a || u in G.players || typeof a.a !== 'string' || a.a.slice(0, 2) !== 'Q:') return;
+      const m = a.a.match(/^Q:([01]):([\s\S]{3,140})$/); if (!m) return; G.asks = G.asks || []; if (G.asks.some(z => z.u === u && z.q === m[2])) return;
+      G.asks.push({ u, n: (G.fans || {})[u] || T('مشجّع', 'A fan'), q: m[2].trim(), ok: m[1] === '1' }); });
+  }
+  function asksBox() {
+    const L = (G.asks || []).filter(z => !z.used); if (!L.length) return;
+    const d = document.createElement('div'); d.className = 'md-asks';
+    d.innerHTML = `<div class="md-asksb"><h3>${B('أسئلة من الجمهور', 'Questions from the audience')}</h3>${L.map((z, k) => `<div class="md-ask"><p dir="auto">${esc(z.q)}</p><small>${esc(z.n)} · ${z.ok ? B('صح', 'True') : B('خطأ', 'False')}</small><button type="button" class="btn solid" data-ask="${k}">${B('أضفه سؤالًا تاليًا', 'Ask it next')}</button></div>`).join('')}<button type="button" class="md-cb" data-x>${B('إغلاق', 'Close')}</button></div>`;
+    G.el.appendChild(d);
+    d.querySelector('[data-x]').onclick = () => d.remove();
+    d.querySelectorAll('[data-ask]').forEach(b => b.onclick = () => { const z = L[+b.dataset.ask]; z.used = true;
+      G.quiz.qs.splice(G.done + 1, 0, { type: 'tf', q: z.q, opts: [T('صح', 'True'), T('خطأ', 'False')], ok: [z.ok ? 0 : 1], pts: 1, time: 20, by: z.n });
+      if (G.gold > G.done) G.gold++; keep(); d.remove(); const nb = G.el.querySelector('[data-asks]'); if (nb) nb.remove(); });
+  }
+  /* ---------- the host's phone as a remote: paired with a code shown on the screen, it sends short commands ---------- */
+  function remote(u, e) {
+    if (!G) return;
+    if (e === '@' + G.rc) { G.remote = u; G.ref.child('rc').set(u.slice(0, 8)).catch(() => {}); if (G.fans) delete G.fans[u]; const p = G.el.querySelector('.md-rcbox'); if (p) p.remove(); return; }
+    if (u !== G.remote) return;
+    const click = s => { const b = G.el.querySelector(s); if (b && !b.disabled) b.click(); };
+    if (e === '@n') { click('[data-next]'); click('[data-go]'); }
+    else if (e === '@s') click('[data-skip]');
+    else if (e === '@m') click('[data-mic]');
+    else if (e === '@r') click('[data-replay]');
+  }
+  function remoteBox() {
+    const url = `${location.origin}/m/?p=${G.pin}&rc=${G.rc}`;
+    let svg = ''; try { const qr = qrcode(0, 'M'); qr.addData(url); qr.make(); svg = qr.createSvgTag({ cellSize: 5, margin: 1, scalable: true }); } catch (e) {}
+    const d = document.createElement('div'); d.className = 'md-asks md-rcbox'; d.dataset.url = url;
+    d.innerHTML = `<div class="md-asksb"><h3>${B('تحكّم من جوالك', 'Control from your phone')}</h3><div class="md-rcqr">${svg}</div><p>${B('امسح الرمز بجوالك، فتنتقل بين الأسئلة وتكشف الإجابة وتفتح منصة التصريحات منه.', 'Scan it with your phone to move on, reveal the answer and open the stage from it.')}</p><button type="button" class="md-cb" data-x>${B('إغلاق', 'Close')}</button></div>`;
+    G.el.appendChild(d); d.querySelector('[data-x]').onclick = () => d.remove();
+  }
   /* ---------- phones only: what the big screen would show goes to the phones as data ---------- */
   function phonesResult(x, ans) {
     const A = Object.keys(ans).filter(u => u in G.players).map(u => ans[u] && ans[u].a);
@@ -4318,7 +4448,7 @@ window.MDLive = (function () {
     const txt = quiz.qs.map(x => (x.q || '') + (x.opts || []).join('')).join('');
     // the screen's language: the questions' own, or the page's when there is no text (a games-only quiz)
     G = { ar: /[؀-ۿ]/.test(txt) || (!/[a-z]/i.test(txt) && document.documentElement.lang !== 'en'), pin, quiz, el, ref: db.ref('rooms/' + pin), players: {}, score: {}, qp: {}, out: {}, streak: {}, team: {}, teams: null, i: -1, done: -1,
-      opts: { every: 1, speed: true, gold: true, final: true, bet: false, pw: true, shuf: true, auto: false, mic: true }, fans: {}, gold: -1, timer: null, subs: [] };
+      opts: { every: 1, speed: true, gold: true, final: true, bet: false, pw: true, shuf: true, auto: false, mic: true, cap: true }, rc: String(1000 + Math.floor(Math.random() * 9000)), fans: {}, gold: -1, timer: null, subs: [] };
   }
   async function start(quiz) {
     const el = shell();
@@ -4384,10 +4514,11 @@ window.MDLive = (function () {
       : `${B(`خرج ${lose.length} · بقي ${left.length}`, `${lose.length} out · ${left.length} still in`)}${lose.length && lose.length <= 6 ? ` <small dir="auto">${lose.map(u => esc(G.players[u] || '')).join('، ')}</small>` : ''}`;
   }
   const SV = d => `<svg class="md-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
-  const IC = { vol: SV('<path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16 9a4 4 0 0 1 0 6M19 6a8 8 0 0 1 0 12"/>'), mute: SV('<path d="M4 9v6h4l5 4V5L8 9z"/><path d="m17 9 5 6M22 9l-5 6"/>'), fs: SV('<path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>') };
+  const IC = { rc: SV('<rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/>'), vol: SV('<path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16 9a4 4 0 0 1 0 6M19 6a8 8 0 0 1 0 12"/>'), mute: SV('<path d="M4 9v6h4l5 4V5L8 9z"/><path d="m17 9 5 6M22 9l-5 6"/>'), fs: SV('<path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>') };
   function frame(inner, bar, canPause) {
     if (G.note) { inner = inner.replace(/<\/div>\s*$/, `<p class="md-surv">${G.note}</p></div>`); G.note = null; }
-    (G.box || G.el).innerHTML = `<div class="md-scr">${inner}</div><div class="md-fx" aria-hidden="true"></div><div class="md-ctl">${bar || ''}<span class="md-sp"></span>${canPause && G.i >= 0 && !G.ended ? `<button type="button" class="md-cb md-micb${G.stageNext ? ' on' : ''}" data-mic>${G.stageNext ? B('منصة التصريحات بعد هذه الجولة ✓', 'Stage next ✓') : B('افتح منصة التصريحات', 'Open the stage')}<small>${micTxt()}</small></button>` : ''}${canPause ? `<button type="button" class="md-cb" data-pause>${B('إيقاف مؤقت', 'Pause')}</button>` : ''}<button type="button" class="md-cb" data-mute title="${T('الصوت', 'Sound')}">${mute ? IC.mute : IC.vol}</button><button type="button" class="md-cb" data-fs title="${T('ملء الشاشة', 'Full screen')}">${IC.fs}</button><button type="button" class="md-cb" data-end>${B('إنهاء', 'End')}</button></div>`;
+    if (G.cmt) { inner = `<p class="md-cmt" dir="auto">${G.cmt}</p>` + inner; G.cmt = null; }
+    (G.box || G.el).innerHTML = `<div class="md-scr">${inner}</div><div class="md-fx" aria-hidden="true"></div><div class="md-ctl">${bar || ''}<span class="md-sp"></span>${canPause && G.i >= 0 && !G.ended ? `<button type="button" class="md-cb md-micb${G.stageNext ? ' on' : ''}" data-mic>${G.stageNext ? B('منصة التصريحات بعد هذه الجولة ✓', 'Stage next ✓') : B('افتح منصة التصريحات', 'Open the stage')}<small>${micTxt()}</small></button>` : ''}${canPause ? `<button type="button" class="md-cb" data-pause>${B('إيقاف مؤقت', 'Pause')}</button>` : ''}${G.i >= 0 && !G.ended && (G.asks || []).some(z => !z.used) ? `<button type="button" class="md-cb md-micb on" data-asks>${B(`أسئلة الجمهور (${G.asks.filter(z => !z.used).length})`, `Audience questions (${G.asks.filter(z => !z.used).length})`)}</button>` : ''}${G.remote ? '' : `<button type="button" class="md-cb" data-rc title="${T('تحكّم من جوالك', 'Control from your phone')}">${IC.rc}</button>`}<button type="button" class="md-cb" data-mute title="${T('الصوت', 'Sound')}">${mute ? IC.mute : IC.vol}</button><button type="button" class="md-cb" data-fs title="${T('ملء الشاشة', 'Full screen')}">${IC.fs}</button><button type="button" class="md-cb" data-end>${B('إنهاء', 'End')}</button></div>`;
     clearTimeout(G.autoT);
     const q = s => G.el.querySelector(s);
     if (G.opts.auto && !G.ended) { const nb = G.el.querySelector('[data-next]'); if (nb) G.autoT = setTimeout(() => { if (nb.isConnected) nb.click(); }, G.el.querySelector('.md-lb') ? 6500 : 4500); }
@@ -4396,6 +4527,8 @@ window.MDLive = (function () {
     q('[data-end]').onclick = () => { if (G.i < 0 || G.ended || confirmEnd()) close(); };
     if (q('[data-pause]')) q('[data-pause]').onclick = pause;
     if (q('[data-mic]')) q('[data-mic]').onclick = () => { G.stageNext = !G.stageNext; micSync(); };
+    if (q('[data-asks]')) q('[data-asks]').onclick = asksBox;
+    if (q('[data-rc]')) q('[data-rc]').onclick = remoteBox;
     return q;
   }
   function confirmEnd() {
@@ -4412,6 +4545,8 @@ window.MDLive = (function () {
       const v = s.val() || {}; if (!v.e || seen[s.key] === v.t) return; seen[s.key] = v.t;
       if (now() - (v.t || 0) > 8000) return;
       if (v.e === '🎤') { stat({ 'x/mic': 1 }); return micVote(s.key); }
+      if (v.e.charAt(0) === '@') return remote(s.key, v.e);
+      if (G) { G.aw = G.aw || {}; const w = G.aw[s.key] = G.aw[s.key] || {}; w.rx = (w.rx || 0) + 1; }
       if (G) G.rxc = (G.rxc || 0) + 1;
       const fx = G && G.el.querySelector('.md-fx'); if (!fx) return;
       const e = document.createElement('span'); e.textContent = v.e; e.style.setProperty('--x', (8 + Math.random() * 84) + '%'); e.style.setProperty('--r', (Math.random() * 40 - 20) + 'deg');
@@ -4470,12 +4605,16 @@ window.MDLive = (function () {
       if (!judged) return;
       if (want.includes('sk') && !used.sk) { used.sk = 1; const before = (G.score[u] || 0) - (r.d || 0), avg = G.i > 0 ? Math.round(before / G.i) : 300; G.score[u] = before + avg; G.qp[u] = (G.qp[u] || 0) - (r.d || 0) + avg; r.d = avg; r.c = true; r.s = G.score[u]; r.pw.push('sk'); return; }
       if (want.includes('x2') && !used.x2) { used.x2 = 1; const add = Math.max(0, r.d || 0); r.d = (r.d || 0) + add; G.score[u] = (G.score[u] || 0) + add; G.qp[u] = (G.qp[u] || 0) + add; r.s = G.score[u]; r.pw.push('x2'); }
+      if (want.includes('cp') && !used.cp && G.cap && G.cap[u] && G.teams && G.team[u] != null) { used.cp = 1; const add = Math.max(0, r.d || 0), mates = Object.keys(G.players).filter(m => m !== u && G.team[m] === G.team[u]); r.pw.push('cp'); r.cg = add; r.cn = mates.length;
+        if (add) mates.forEach(m => { G.score[m] = (G.score[m] || 0) + add; G.qp[m] = (G.qp[m] || 0) + add; const t = sc[m] = sc[m] || { s: 0, d: 0, c: false, a: false }; t.d = (t.d || 0) + add; t.s = G.score[m]; t.capby = G.players[u] || ''; });
+        if (add) G.capNote = B(`الكابتن «${esc(G.players[u] || '')}» يهدي فريقه ${add} نقطة لكل عضو!`, `Captain ${esc(G.players[u] || '')} gives each teammate ${add} points!`); }
       if (want.includes('st') && !used.st && a.g && a.g in G.players && a.g !== u) { used.st = 1; const take = Math.max(0, r.d || 0), g = a.g; r.pw.push('st'); r.tg = G.players[g] || '';
         if (take) { G.score[g] = Math.max(0, (G.score[g] || 0) - take); const t = sc[g] = sc[g] || { s: 0, d: 0, c: false, a: false }; t.d = (t.d || 0) - take; t.s = G.score[g]; t.hit = (t.hit ? t.hit + '، ' : '') + (G.players[u] || ''); } }
     });
   }
   // each player's neighbours in the ranking, so a phone can offer whom to steal from
   function nbrs(sc) {
+    feats(sc);
     const order = Object.keys(sc).filter(u => u in G.players).sort(byRank), one = u => u ? { u, n: G.players[u] || '', s: G.score[u] || 0 } : null;
     G.lastD = {}; Object.keys(sc).forEach(u => { G.lastD[u] = sc[u].d || 0; });
     order.forEach((u, k) => { sc[u].up = one(order[k - 1]); sc[u].dn = one(order[k + 1]); sc[u].used = Object.keys((G.used || {})[u] || {}).join(','); });
@@ -4539,6 +4678,7 @@ window.MDLive = (function () {
       <div class="md-set md-teamp" id="mdTeamP" hidden>
         <h3>${B('الفرق', 'Teams')}</h3>
         <label>${B('عدد الفرق', 'Number of teams')}<select data-o="teams"><option value="0">${T('بلا فرق (كل مشارك وحده)', 'No teams (everyone on their own)')}</option>${[2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 15, 20, 25, 30].map(n => `<option value="${n}"${G.teams && G.teams.length === n ? ' selected' : ''}>${n} ${n <= 10 ? T('فرق', 'teams') : T('فريقًا', 'teams')}</option>`).join('')}</select></label>
+        <label class="md-ck" data-capw hidden><input type="checkbox" data-o="cap"${O.cap !== false ? ' checked' : ''}> ${B('كابتن لكل فريق: مرة واحدة تذهب نقاطه لكل أعضاء فريقه', 'A captain for each team: once a game, their points go to every teammate')}</label>
         <label data-tmode hidden>${B('كيف يُوزَّع المشاركون؟', 'How are players placed?')}<select data-o="tmode">
           <option value="pick"${!['auto', 'host'].includes(G.opts.tmode) ? ' selected' : ''}>${T('يختار كل مشارك فريقه من جواله', 'Each player picks a team on their phone')}</option>
           <option value="host"${G.opts.tmode === 'host' ? ' selected' : ''}>${T('المشرف يوزّعهم بنفسه هنا', 'The host places them here')}</option>
@@ -4587,7 +4727,7 @@ window.MDLive = (function () {
     sub(G.ref.child('pl'), 'child_removed', s => { delete G.players[s.key]; delete G.score[s.key]; draw(); count(); });
     reactions();
     const teamNames = () => {
-      const box = q('#mdTn'); tp.querySelector('[data-tmode]').hidden = !G.teams; tp.querySelector('[data-tnw]').hidden = !G.teams;
+      const box = q('#mdTn'); tp.querySelector('[data-tmode]').hidden = !G.teams; tp.querySelector('[data-capw]').hidden = !G.teams; tp.querySelector('[data-tnw]').hidden = !G.teams;
       const tip = tp.querySelector('[data-tip]'), md = O.tmode || 'pick'; tip.hidden = !G.teams;
       tip.textContent = md === 'host' ? T('يدخل المشاركون بأسمائهم فقط، ثم تنقر اسم كل واحد في القائمة وتختار فريقه. من لا تختار له فريقًا يُوضع في أصغر فريق عند البدء.', 'Players join with just their names; tap each name in the list and choose a team. Anyone left over goes to the smallest team at the start.')
         : md === 'auto' ? T('يُوزَّع الجميع عشوائيًا وبالتساوي لحظة البدء.', 'Everyone is placed at random, evenly, at the start.')
@@ -4629,6 +4769,7 @@ window.MDLive = (function () {
     if (G.stageNext && !G.ended && G.done + 1 <= G.quiz.qs.length) stageNow();
     statFlush(); G.rxc = 0; journey(); if (G.sb && G.sb.length) { G.sb = []; G.ref.child('sb').remove().catch(() => {}); }
     G.i = G.done + 1;
+    if (G.i === 0) captains();
     if (G.i === 0) stat({ [srcOf(G.quiz) + '/go']: 1, [srcOf(G.quiz) + '/p']: Object.keys(G.players).length, [G.phones ? 'x/phones' : 'x/screen']: 1, [G.teams ? 'x/teams' : 'x/solo']: 1 });
     // last survivor: alone it ends with one player left; with teams, when only one team still has someone in
     if (G.opts.surv && !G.teams && G.i > 0 && alive().length <= 1) return finish();
@@ -4806,6 +4947,7 @@ window.MDLive = (function () {
     G.subs.forEach(f => f()); G.subs = [];
     keepPlayers(); reactions();
     const ans = (await G.ref.child('an/' + G.i).once('value')).val() || {};
+    G.lastAns = ans; fanAsks(ans);
     G.sp = { k: x.type === 'game' ? 'g_' + KEY(x.g) : 't_' + KEY(x.type), p: Object.keys(G.players).length, a: Object.keys(ans).filter(u => u in G.players).length };
     if (G.phones) phonesResult(x, ans);
     G.pws = {}; Object.keys(ans).forEach(u => { const a = ans[u]; if (a && a.p && G.opts.pw && u in G.players) { G.pws[u] = a; if (/sk/.test(a.p)) delete ans[u]; } });
@@ -5010,14 +5152,14 @@ window.MDLive = (function () {
     G.ended = true; clearInterval(G.timer); forget();
     statFlush(); stat({ [srcOf(G.quiz) + '/f']: 1 });
     const order = Object.keys(G.score).filter(u => u in G.players).sort(byRank), tt = teamTable();
-    journey(); const jr = journeyOut(order);
-    await G.ref.child('top').set({ jr, p: order.slice(0, 5).map(u => ({ n: G.players[u] || '', s: G.score[u] })), t: tt.slice(0, 5).map(t => ({ n: t.name, s: t.avg, k: t.k })) });
+    journey(); const jr = journeyOut(order), aw = titles(order);
+    await G.ref.child('top').set({ jr, aw, p: order.slice(0, 5).map(u => ({ n: G.players[u] || '', s: G.score[u] })), t: tt.slice(0, 5).map(t => ({ n: t.name, s: t.avg, k: t.k })) });
     await G.ref.child('st').set({ ph: 'end', i: G.i, lock: true });
     const p = k => order[k] ? `<div class="md-pod md-p${k + 1}"><span class="md-pn" dir="auto">${esc(G.players[order[k]] || '')}</span><b>${G.score[order[k]]}</b><div class="md-step">${k + 1}</div></div>` : '<div class="md-pod md-empty"></div>';
     const q = frame(`<div class="md-end"><h2>${esc(G.quiz.title || T('ميدان', 'Maydan'))}</h2>
         ${tt.length ? `<p class="md-wteam" style="--c:var(--qz${(tt[0].k) % 6})">${B(`الفريق الفائز: ${esc(tt[0].name)}`, `Winning team: ${esc(tt[0].name)}`)} <em>${tt[0].avg}</em></p>` : ''}
         <div class="md-podium">${p(1)}${p(0)}${p(2)}</div>
-        <ol class="md-rest" start="4">${order.slice(3, 10).map(u => `<li><span dir="auto">${esc(G.players[u] || '')}</span><em>${G.score[u]}</em></li>`).join('')}</ol></div>`,
+        <ol class="md-rest" start="4">${order.slice(3, 10).map(u => `<li><span dir="auto">${esc(G.players[u] || '')}</span><em>${G.score[u]}</em></li>`).join('')}</ol>${aw.length ? `<div class="md-titles">${aw.map((a, k) => `<div class="md-title" style="--d:${k * .35 + 4}s"><b>${B(TITLE[a.k][0], TITLE[a.k][1])}</b><span dir="auto">${esc(a.n)}</span><small>${B(a.ar, a.en)}</small></div>`).join('')}</div>` : ''}</div>`,
       `${(G.jr || []).length > 1 ? `<button type="button" class="btn ghost" data-replay>${B('إعادة السباق', 'Replay the race')}</button>` : ''}<button type="button" class="btn ghost" data-csv>${B('تحميل النتائج', 'Download results')}</button>
        <label class="md-opt md-grade" title="${T('اختياري: تُحسب الدرجة من نقاط ميدان، والأول يأخذ الدرجة كاملة', 'Optional: the grade follows Maydan points; the top player gets full marks')}">${B('مع درجة من', 'with a grade out of')} <input type="number" min="1" max="100" step="1" inputmode="numeric" data-gr placeholder="—"></label>
        ${G.quiz.qs.some(x => x.type === 'game') ? `<label class="md-opt md-grade"><input type="checkbox" data-gq> ${B('من الأسئلة فقط (دون التحديات)', 'from the questions only (no challenges)')}</label>` : ''}`);

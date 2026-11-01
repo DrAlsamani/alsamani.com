@@ -11,7 +11,8 @@
   const store = { get(k, d) { try { return localStorage.getItem('md.' + k) || d; } catch (e) { return d; } }, set(k, v) { try { localStorage.setItem('md.' + k, v); } catch (e) {} } };
   const TS = firebase.database.ServerValue.TIMESTAMP;
   let TOOLS = false;
-  let PM = false, RV = null, SB = [];   // phones only: the flag, everyone's answers, the stage's statements
+  let PM = false, RV = null, SB = [], CM = null, RCON = false, ASKQ = null;
+  const REMOTE = new URLSearchParams(location.search).get('rc') || '';   // phones only: the flag, everyone's answers, the stage's statements
   let TOP = null, TEAMS = null, TMODE = 'pick', myTeam = null, bet = false, lastRx = 0;
   let db, uid, off = 0, R = null, me = null, st = {}, Q = null, OK = null, SC = null, sent = null, tick = null;
   const now = () => Date.now() + off;
@@ -46,6 +47,7 @@
         if (!s.exists()) return codeScreen(T('لا توجد مسابقة بهذا الرمز. تأكد منه على الشاشة.', 'No quiz with this code. Check it on the screen.'));
         R = db.ref('rooms/' + pin); loadH();
         const mine = (await within(R.child('pl/' + uid).once('value'))).val();
+        if (REMOTE) { if (!mine) await within(R.child('pl/' + uid).set({ n: T('جوال المضيف', 'Host phone'), at: TS, w: 1 })); FAN = true; me = ''; R.child('rx/' + uid).set({ e: '@' + REMOTE, t: TS }).catch(() => {}); return play(); }
         if (mine) { me = mine.n; return play(); }
         if (s.val().lock) return codeScreen(T('أُقفل الدخول إلى هذه المسابقة.', 'This quiz is closed to new players.'));
         R.child('tmode').on('value', t => { TMODE = t.val() || 'pick'; const box = root.querySelector('#mpTeams'); if (box) teamPick(box); });
@@ -100,7 +102,7 @@
 
   /* ---------- the game: follow the room and draw what this phone should show ---------- */
   function play() {
-    R.child('st').on('value', s => { st = s.val() || {}; if (!s.exists()) return gone(); draw(); });
+    R.child('st').on('value', s => { st = s.val() || {}; if (!s.exists()) return gone(); draw(); tryAsk(); askBtn(); });
     R.child('q').on('value', s => { Q = s.val(); if (Q && Q.pw) TOOLS = true; });
     R.child('pl/' + uid + '/w').once('value', s => { FAN = !!s.val(); });
     R.child('teams').on('value', t => { TEAMS = t.val(); });
@@ -110,6 +112,8 @@
     R.child('wr').on('value', s => { const e = root.querySelector('#mpW'); if (e && s.val()) e.textContent = s.val(); });
     R.child('pm').on('value', s => { PM = !!s.val(); if (st.ph === 'lobby') { shown = ''; draw(); } else feed(); });
     R.child('rv').on('value', s => { RV = s.val(); feed(); });
+    R.child('cm').on('value', s => { CM = s.val(); feed(); });
+    R.child('rc').on('value', s => { RCON = s.val() === uid.slice(0, 8); if (REMOTE) { shown = ''; draw(); } });
     R.child('sb').on('value', s => { SB = s.val() || []; feed(); });
     { const seen = {}; const fx = s => { const v = s.val() || {}; if (!PM || !v.e || v.e === '🎤' || s.key === uid || seen[s.key] === v.t) return; seen[s.key] = v.t; if (now() - (v.t || 0) > 8000) return; floatRx(v.e); };
       R.child('rx').on('child_added', fx); R.child('rx').on('child_changed', fx); }
@@ -120,6 +124,7 @@
   }
   let shown = '';
   function draw() {
+    if (REMOTE) return remoteScreen();
     const key = st.ph + ':' + st.i + ':' + (st.ph === 'rev' || st.ph === 'lb' || st.ph === 'end' ? JSON.stringify(SC) + (OK ? 'k' : '') + (TOP ? JSON.stringify(TOP).length : '') : '');
     if (key === shown) return; shown = key;
     clearInterval(tick);
@@ -142,17 +147,54 @@
     const fx = SC && SC.q === st.i && st.ph === 'rev' ? pwNote() : '';
     root.innerHTML = `<div class="mp-play ${cls || ''}"><div class="mp-top"><span dir="auto">${FAN ? '' : ''}${esc(me)}${TEAMS && myTeam != null ? ` <i style="--c:var(--qz${(myTeam) % 6})">${esc(TEAMS[myTeam])}</i>` : ''}</span>${qn}<b>${FAN ? '' : SC ? SC.s : 0}</b></div>${fx}${/<div class="mp-(mic|rx)"/.test(html) ? html.replace(/<div class="mp-(mic|rx)"/, m => '<div class="mp-feed" id="mpFeed"></div>' + m) : html + '<div class="mp-feed" id="mpFeed"></div>'}${!FAN && ['rev', 'lb', 'ready'].includes(st.ph) ? toolsBar() : ''}${!FAN && st.ph === 'q' && cls === 'q' ? skipBtn() : ''}</div>`; if (R) { rxBind(); toolsBind(); } feed(); }
 
+
+  /* ---------- the host's remote: big buttons that send short commands to the screen ---------- */
+  function remoteScreen() {
+    const cmd = e => { R.child('rx/' + uid).set({ e, t: TS }).catch(() => {}); buzz(20); };
+    const ph = st.ph, where = st.i >= 0 && Q ? (Q.type === 'stage' ? T('منصة التصريحات', 'The stage') : T(`السؤال ${Q.qn || st.i + 1} من ${Q.qt || Q.n || ''}`, `Question ${Q.qn || st.i + 1} of ${Q.qt || Q.n || ''}`)) : T('قبل البدء', 'Before the start');
+    const state = { lobby: T('ينتظر اللاعبين', 'Waiting for players'), ready: T('يُعرض السؤال', 'Showing the question'), q: T('السؤال مفتوح للإجابة', 'Answers are open'), rev: T('النتيجة معروضة', 'The result is up'), lb: T('الترتيب معروض', 'The ranking is up'), pause: T('متوقفة مؤقتًا', 'Paused'), end: T('انتهت المسابقة', 'The quiz is over') }[ph] || '';
+    root.innerHTML = `<div class="mp-card mp-remote"><a class="mp-logo" href="/play/maydan/">${window.MD_MARK || ''}<b>${B('ميدان', 'Maydan')}</b></a>
+      <p class="mp-rcst${RCON ? ' on' : ''}">${RCON ? B('متصل بالشاشة', 'Connected to the screen') : B('جارٍ الاتصال بالشاشة…', 'Connecting to the screen…')}</p>
+      <p class="mp-big">${esc(where)}</p><p>${esc(state)}</p>
+      <div class="mp-rcb">${ph === 'end' ? `<button type="button" data-c="@r">${B('إعادة السباق', 'Replay the race')}</button>`
+        : `<button type="button" class="go" data-c="@n">${ph === 'lobby' ? B('ابدأ', 'Start') : B('التالي', 'Next')}</button>${ph === 'q' ? `<button type="button" data-c="@s">${B('أنهِ الوقت واكشف الإجابة', 'End the time, show the answer')}</button>` : ''}${['rev', 'lb', 'ready', 'q'].includes(ph) ? `<button type="button" data-c="@m">${B('منصة التصريحات بعد هذه الجولة', 'The stage after this round')}</button>` : ''}`}</div></div>`;
+    root.querySelectorAll('[data-c]').forEach(b => b.onclick = () => { cmd(b.dataset.c); b.classList.add('sent'); setTimeout(() => b.classList.remove('sent'), 600); });
+  }
+  /* ---------- the audience asks: a fan writes a true-or-false statement; it reaches the host with the next question ---------- */
+  function askBtn() {
+    let b = document.getElementById('mpAskB');
+    const want = FAN && !REMOTE && !['end'].includes(st.ph) && st.i >= -1 && R;
+    if (!want) { if (b) b.remove(); return; }
+    if (b) return;
+    b = document.createElement('button'); b.type = 'button'; b.id = 'mpAskB'; b.className = 'mp-askb'; b.innerHTML = B('اقترح سؤالًا', 'Suggest a question');
+    document.body.appendChild(b);
+    b.onclick = () => {
+      const d = document.createElement('div'); d.className = 'mp-askm';
+      d.innerHTML = `<div class="mp-askc"><p class="mp-big">${B('اقترح سؤالًا للمضيف', 'Suggest a question to the host')}</p><textarea id="mpAskT" maxlength="140" rows="3" dir="auto" placeholder="${T('اكتب عبارة يجيب عنها اللاعبون بصح أو خطأ', 'Write a statement the players answer true or false')}"></textarea>
+        <p>${B('العبارة:', 'The statement is:')}</p><div class="mp-asktf"><button type="button" data-v="1">${B('صحيحة', 'True')}</button><button type="button" data-v="0">${B('خاطئة', 'False')}</button></div>
+        <button type="button" class="btn ghost" data-x>${B('إلغاء', 'Cancel')}</button></div>`;
+      document.body.appendChild(d);
+      d.querySelector('[data-x]').onclick = () => d.remove();
+      d.querySelectorAll('[data-v]').forEach(v => v.onclick = () => { const t = d.querySelector('#mpAskT').value.trim().replace(/\s+/g, ' '); if (t.length < 3) return; ASKQ = { t, ok: v.dataset.v }; d.remove(); b.innerHTML = B('اقتراحك في الطريق…', 'Your question is on its way…'); b.disabled = true; tryAsk(); });
+    };
+  }
+  async function tryAsk() {
+    if (!ASKQ || !R || st.ph !== 'q' || st.i < 0) return;
+    const a = 'Q:' + ASKQ.ok + ':' + ASKQ.t, keep2 = ASKQ; ASKQ = null;
+    try { await R.child('an/' + st.i + '/' + uid).set({ a, t: TS }); const b = document.getElementById('mpAskB'); if (b) { b.innerHTML = B('وصل اقتراحك ✓ اقترح غيره', 'Sent ✓ suggest another'); b.disabled = false; } }
+    catch (e) { ASKQ = keep2; }
+  }
   /* ---------- phones only (no big screen): the screen's part comes to the phone ----------
      everyone's answers after each question, the stage's statements, and the reactions flying past */
   function feed() {
     const f = root.querySelector('#mpFeed'); if (!f) return;
-    let h = '';
+    let h = CM && CM.i === st.i && ['rev', 'lb'].includes(st.ph) ? `<p class="mp-cmt" dir="auto">${esc(isAr() ? CM.t : CM.e)}</p>` : '';
     // the stage's statements show on every phone, with or without a big screen
-    if (Q && Q.type === 'stage' && Q.i === st.i && ['q', 'rev'].includes(st.ph) && SB.length) h = `<div class="mp-sb">${SB.map((b, k) => `<div class="md-bub" style="--c:var(--qz${k % 6})"><b dir="auto">${esc(b.n)}</b><p dir="auto">${esc(b.t)}</p></div>`).join('')}</div>`;
+    if (Q && Q.type === 'stage' && Q.i === st.i && ['q', 'rev'].includes(st.ph) && SB.length) h += `<div class="mp-sb">${SB.map((b, k) => `<div class="md-bub" style="--c:var(--qz${k % 6})"><b dir="auto">${esc(b.n)}</b><p dir="auto">${esc(b.t)}</p></div>`).join('')}</div>`;
     else if (PM && st.ph === 'rev' && RV && RV.i === st.i && Q && Q.i === st.i) {
       const okSet = new Set([].concat(OK == null ? [] : OK).map(Number));
-      if (RV.c) { const mx = Math.max(1, ...RV.c); h = `<div class="mp-dist"><p>${B(`إجابات الجميع (${RV.n})`, `Everyone’s answers (${RV.n})`)}</p>${RV.c.map((c, j) => `<div class="mp-dbar${Q.type !== 'poll' && okSet.has(j) ? ' ok' : ''}"><span dir="auto">${esc((Q.opts || [])[j] || '')}</span><i style="--w:${(100 * c / mx).toFixed(0)}%"></i><b>${c}</b></div>`).join('')}</div>`; }
-      else if (RV.w && RV.w.length) { const mx = Math.max(1, ...RV.w.map(w => w[1])); h = `<div class="mp-cloud"><p>${B(`ماذا كتب الجميع (${RV.n})`, `What everyone wrote (${RV.n})`)}</p><div>${RV.w.map(([w, c], k) => `<span dir="auto" style="--s:${(0.85 + 0.9 * c / mx).toFixed(2)};--c:var(--qz${k % 6})">${esc(w)}${c > 1 ? `<small>${c}</small>` : ''}</span>`).join('')}</div></div>`; }
+      if (RV.c) { const mx = Math.max(1, ...RV.c); h += `<div class="mp-dist"><p>${B(`إجابات الجميع (${RV.n})`, `Everyone’s answers (${RV.n})`)}</p>${RV.c.map((c, j) => `<div class="mp-dbar${Q.type !== 'poll' && okSet.has(j) ? ' ok' : ''}"><span dir="auto">${esc((Q.opts || [])[j] || '')}</span><i style="--w:${(100 * c / mx).toFixed(0)}%"></i><b>${c}</b></div>`).join('')}</div>`; }
+      else if (RV.w && RV.w.length) { const mx = Math.max(1, ...RV.w.map(w => w[1])); h += `<div class="mp-cloud"><p>${B(`ماذا كتب الجميع (${RV.n})`, `What everyone wrote (${RV.n})`)}</p><div>${RV.w.map(([w, c], k) => `<span dir="auto" style="--s:${(0.85 + 0.9 * c / mx).toFixed(2)};--c:var(--qz${k % 6})">${esc(w)}${c > 1 ? `<small>${c}</small>` : ''}</span>`).join('')}</div></div>`; }
     }
     f.innerHTML = h;
   }
@@ -169,13 +211,14 @@
   const nextI = () => st.ph === 'ready' ? st.i : st.i + 1;
   function pwx() { if (!PEND || PEND.i !== st.i || FAN) return {}; const o = { p: PEND.p.join(',') }; if (PEND.g) o.g = PEND.g; PEND.p.forEach(k => usedL.add(k)); PEND = null; return o; }
   function toolsBar() {
-    if (TOOLS && usedAll().has('x2') && (usedAll().has('st') || !(SC && (SC.up || SC.dn)))) return '';
+    if (TOOLS && usedAll().has('x2') && (usedAll().has('st') || !(SC && (SC.up || SC.dn))) && !(SC && SC.cap && !usedAll().has('cp'))) return '';
     if (!TOOLS || (Q && Q.n && nextI() >= Q.n)) return '';
     const u = usedAll(), on = k => PEND && PEND.i === nextI() && PEND.p.includes(k), nb = SC ? [SC.up, SC.dn].filter(Boolean) : [];
 
     return `<div class="mp-tools"><p>${B('أدواتك للسؤال القادم (كل أداة مرة واحدة)', 'Your tools for the next question (once each)')}</p><div class="mp-tb">
       ${u.has('x2') ? '' : `<button type="button" data-tool="x2" aria-pressed="${on('x2')}">×٢ ${B('ضاعف نقاطه', 'Double it')}</button>`}
-      ${u.has('st') || !nb.length ? '' : `<button type="button" data-tool="st" aria-pressed="${on('st')}">${B('اخطف من جارك', 'Steal from a neighbour')}</button>`}</div>
+      ${u.has('st') || !nb.length ? '' : `<button type="button" data-tool="st" aria-pressed="${on('st')}">${B('اخطف من جارك', 'Steal from a neighbour')}</button>`}
+      ${SC && SC.cap && !u.has('cp') ? `<button type="button" class="cap" data-tool="cp" aria-pressed="${on('cp')}">${B('قرار الكابتن: نقاطك لكل فريقك', 'Captain’s call: your points to all your team')}</button>` : ''}</div>
       ${PEND && PEND.i === nextI() && PEND.p.includes('st') ? `<div class="mp-nb"><p>${B('ممن تخطف؟ ما تكسبه في السؤال القادم يُخصم منه', 'From whom? What you earn next is taken from them')}</p>${nb.map(x => `<button type="button" data-tg="${x.u}" aria-pressed="${PEND.g === x.u}"><span dir="auto">${x === SC.up ? '⬆' : '⬇'} ${esc(x.n)}</span><b>${x.s}</b></button>`).join('')}</div>` : ''}
       ${PEND && PEND.i === nextI() && PEND.p.length ? `<p class="mp-armed">${B('مفعّلة للسؤال القادم', 'Set for the next question')}</p>` : ''}</div>`;
   }
@@ -190,6 +233,8 @@
     if (p.includes('x2')) out.push(`×٢ ${B('ضاعفت نقاط السؤال', 'You doubled this one')}`);
     if (p.includes('st')) out.push(`${B(`خطفت ${Math.max(0, SC.d || 0)} من ${esc(SC.tg || '')}`, `You took ${Math.max(0, SC.d || 0)} from ${esc(SC.tg || '')}`)}`);
     if (p.includes('sk') && Q && Q.type === 'game') out.push(`${B(`انسحبت وأخذت متوسطك: ${SC.d}`, `Skipped for your average: ${SC.d}`)}`);
+    if (p.includes('cp')) out.push(B(`قرار الكابتن: أهديت ${SC.cn || 0} من زملائك ${SC.cg || 0} نقطة لكل واحد`, `Captain’s call: ${SC.cg || 0} points to each of ${SC.cn || 0} teammates`));
+    if (SC.capby) out.push(B(`أهداك الكابتن «${esc(SC.capby)}» نقاطه`, `Your captain ${esc(SC.capby)} shared their points with you`));
     if (SC.hit) out.push(`${B(`خطف منك: ${esc(SC.hit)}`, `${esc(SC.hit)} took points from you`)}`);
     return out.length ? `<div class="mp-pwn">${out.map(x => `<p>${x}</p>`).join('')}</div>` : '';
   }
@@ -423,6 +468,13 @@
   }
   // Arabic counting: one, two, three to ten, eleven and more
   const arN = (n, one, two, few, many, pre) => n === 1 ? one : n === 2 ? two : `${pre ? pre + ' ' : ''}${n} ${n % 100 >= 3 && n % 100 <= 10 ? few : many}`;
+
+  const TITLE = { fast: ['الأسرع', 'The fastest'], run: ['القنّاص', 'The sniper'], back: ['العائد', 'The comeback'], spirit: ['روح الميدان', 'Spirit of the game'], bold: ['المغامر', 'The daring one'], games: ['بطل التحديات', 'Challenge champion'] };
+  const myTitles = () => (TOP && TOP.aw || []).filter(a => a.u === uid.slice(0, 8));
+  function titlesHtml() {
+    const L = TOP && TOP.aw || []; if (!L.length) return '';
+    return `<div class="mp-titles"><p class="mp-jt">${B('ألقاب المسابقة', 'The titles')}</p>${L.map(a => `<div class="mp-ttl${a.u === uid.slice(0, 8) ? ' me' : ''}"><b>${B(TITLE[a.k][0], TITLE[a.k][1])}</b><span dir="auto">${a.u === uid.slice(0, 8) ? B('أنت!', 'You!') : esc(a.n)}</span><small>${esc(isAr() ? a.ar : a.en)}</small></div>`).join('')}</div>`;
+  }
   function journeyHtml() {
     const D = jData(); if (!D || D.me < 0 || D.n < 2) return '';
     const S = D.st, q = t => T(`السؤال ${t + 1}`, `question ${t + 1}`), lines = [];
@@ -474,7 +526,7 @@
     const wrap = (txt, font, max) => { x.font = font; const out = []; let line = ''; String(txt).split(/\s+/).forEach(w => { const t = line ? line + ' ' + w : w; if (x.measureText(t).width > max && line) { out.push(line); line = w; } else line = t; }); if (line) out.push(line); return out; };
     const rows = L.slice(0, 30).map(h => { const q = wrap(`${h.n}. ${h.q}`, F(600, 34), W - pad * 2 - 130); const sub = h.judged && !h.c && h.ok ? wrap((ar ? 'الصحيحة: ' : 'Right: ') + h.ok, F(400, 28), W - pad * 2 - 90) : []; return { h, q, sub, H: q.length * 46 + sub.length * 38 + 34 }; });
     const D = jData(), JH = D && D.me >= 0 && D.n > 1 ? 470 : 0;
-    const H = 560 + JH + rows.reduce((s, r) => s + r.H, 0) + 140; cv.width = W; cv.height = H;
+    const TH = myTitles().length ? 46 : 0; const H = 560 + TH + JH + rows.reduce((s, r) => s + r.H, 0) + 140; cv.width = W; cv.height = H;
     const g = x.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#26336b'); g.addColorStop(1, '#1a2350'); x.fillStyle = g; x.fillRect(0, 0, W, H);
     x.direction = ar ? 'rtl' : 'ltr'; x.textAlign = 'center';
     x.fillStyle = '#e0a458'; x.font = F(700, 64); x.fillText(ar ? 'ميدان' : 'Maydan', W / 2, 120);
@@ -483,8 +535,9 @@
     x.fillStyle = '#f4ead8'; x.font = F(600, 40); x.fillText(`${me || ''}`, W / 2, 330);
     x.fillStyle = '#e0a458'; x.font = F(700, 52); x.fillText(ar ? `المركز ${SC && SC.r || '-'} · ${SC ? SC.s : 0} نقطة` : `Place ${SC && SC.r || '-'} · ${SC ? SC.s : 0} points`, W / 2, 405);
     x.fillStyle = '#c9cde0'; x.font = F(400, 32); x.fillText(ar ? `الإجابات الصحيحة: ${right} من ${judged}` : `Right answers: ${right} of ${judged}`, W / 2, 460);
+    const MT = myTitles(); if (MT.length) { x.fillStyle = '#e0a458'; x.font = F(700, 34); x.fillText((ar ? 'لقبك: ' : 'Your title: ') + MT.map(a => TITLE[a.k][ar ? 0 : 1]).join(' · '), W / 2, 506); }
     if (JH) {   // the journey: my line over the others'
-      const X0 = pad + 40, X1 = W - pad, Y0 = 520, Y1 = 520 + JH - 120, N = Math.max(D.n, 2), show = Math.min(D.n, 12);
+      const X0 = pad + 40, X1 = W - pad, Y0 = 520 + TH, Y1 = 520 + TH + JH - 120, N = Math.max(D.n, 2), show = Math.min(D.n, 12);
       const X = t => X0 + (X1 - X0) * t / (D.steps - 1), Y = r => Y0 + (Y1 - Y0) * (Math.min(r, N) - 1) / (N - 1);
       const COLS = ['#5b8def', '#e0a458', '#4fbf8f', '#e7766b', '#a77fe0', '#4cc3d9'];
       const draw = (p, col, w, a) => { x.globalAlpha = a; x.strokeStyle = col; x.lineWidth = w; x.lineJoin = 'round'; x.beginPath(); D.line(p).forEach((r, t) => t ? x.lineTo(X(t), Y(r)) : x.moveTo(X(t), Y(r))); x.stroke(); x.globalAlpha = 1; };
@@ -494,7 +547,7 @@
       const S = D.st; x.fillStyle = '#fff'; x.font = F(600, 30);
       x.fillText(ar ? `أفضل مركز ${S.best}${S.up ? ` · أكبر صعود ${S.up}` : ''}${S.dn ? ` · أكبر تراجع ${S.dn}` : ''}` : `Best place ${S.best}${S.up ? ` · biggest climb ${S.up}` : ''}${S.dn ? ` · biggest drop ${S.dn}` : ''}`, W / 2, Y1 + 112);
     }
-    let y = 540 + JH + (JH ? 40 : 0); const sx = ar ? W - pad : pad, mx = ar ? pad + 30 : W - pad - 30;
+    let y = 540 + TH + JH + (JH ? 40 : 0); const sx = ar ? W - pad : pad, mx = ar ? pad + 30 : W - pad - 30;
     x.textAlign = ar ? 'right' : 'left';
     rows.forEach(r => {
       x.fillStyle = 'rgba(255,255,255,.07)'; x.beginPath(); x.roundRect(pad - 20, y - 40, W - (pad - 20) * 2, r.H - 12, 22); x.fill();
@@ -518,7 +571,7 @@
       <p class="mp-big">${r && r <= 3 ? B('على منصة التتويج!', 'On the podium!') : B('انتهت المسابقة', 'The quiz is over')}</p>
       ${r ? `<p class="mp-rank">${B(`مركزك النهائي: ${r}`, `Final place: ${r}`)}</p><p class="mp-plus">${SC.s} ${B('نقطة', 'points')}</p>` : ''}
       ${TOP && TOP.t && TOP.t.length ? `<p class="mp-tm" style="--c:var(--qz${TOP.t[0].k % 6})">${B('الفريق الفائز:', 'Winning team:')} ${esc(TOP.t[0].n)}</p>` : ''}${topList()}
-      ${replayHtml()}${journeyHtml()}<p>${B('شكرًا لمشاركتك.', 'Thanks for playing.')}</p>${hList().length || jData() ? `<button type="button" class="btn ghost mp-save" id="mpSave">${B('احفظ ملخصك صورة', 'Save your summary as a picture')}</button>` : ''}${MAKE()}</div>${review()}` + rxBar(), 'end');
+      ${titlesHtml()}${replayHtml()}${journeyHtml()}<p>${B('شكرًا لمشاركتك.', 'Thanks for playing.')}</p>${hList().length || jData() ? `<button type="button" class="btn ghost mp-save" id="mpSave">${B('احفظ ملخصك صورة', 'Save your summary as a picture')}</button>` : ''}${MAKE()}</div>${review()}` + rxBar(), 'end');
     if (root.querySelector('#mpRp') && !root.querySelector('#mpRp').dataset.on) { root.querySelector('#mpRp').dataset.on = 1; replayRun(); }
     const sv = root.querySelector('#mpSave'); if (sv) sv.onclick = async () => { sv.disabled = true; try { const t = (await R.child('title').once('value')).val(); await saveCard(t); } catch (e) {} sv.disabled = false; };
   }
