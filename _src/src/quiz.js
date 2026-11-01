@@ -46,7 +46,7 @@
   function intro() {
     const card = (i, a, e, da, de) => `<div class="qi-c"><span>${i}</span><b>${B(a, e)}</b><small>${B(da, de)}</small></div>`;
     return `<div class="qi">
-      <section class="qi-hero"><p class="qi-eye">${B('منصة الألعاب التفاعلية', 'Interactive games')}</p>
+      <section class="qi-hero"><p class="qi-eye">${B('الميدان يا حميدان', 'The field will tell')}</p>
         <h2>${B('اجعل كل لقاء ميدانًا للتفاعل', 'Turn any gathering into a lively contest')}</h2>
         <p>${B('سؤال أو تحدٍّ على الشاشة، وكل مشارك يجيب من جواله دون تطبيق ولا تسجيل. الأسرع والأدق يتصدّر، والفرق تتنافس، والنتائج تظهر فورًا.', 'A question or a challenge on the screen, and everyone answers from their phone with no app and no sign-up. The quickest right answers lead, teams compete, and results show at once.')}</p>
         <div class="qi-act"><button type="button" class="btn solid" data-newq>${B('ابنِ مسابقتك', 'Build a quiz')}</button><a class="btn ghost" href="#lib">${B('جرّب مسابقة جاهزة', 'Try a ready quiz')}</a></div>

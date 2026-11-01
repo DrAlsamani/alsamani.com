@@ -564,3 +564,4 @@ body>.md-xov{position:fixed}
 .md-titles{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;padding-bottom:4px}.md-title{flex:none}
 .md-xfile{display:grid;gap:6px;font-weight:600;font-size:.9rem;border:1px dashed #c9cde0;border-radius:12px;padding:10px 12px;background:#f7f8fb}
 .md-bbt tr.abs td{opacity:.55}
+.md-motto{text-align:center;color:#e0a458;font-weight:700;letter-spacing:.02em;font-size:clamp(14px,2.2vh,24px);margin:1vh 0 0}

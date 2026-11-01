@@ -419,6 +419,7 @@ window.MDLive = (function () {
     const q = frame(`<div class="md-lobby">
         <div class="md-join"><p class="md-how">${B('ادخل من جوالك على', 'On your phone, go to')}</p><p class="md-url" dir="ltr">${JOIN}</p><p class="md-how">${B('واكتب الرمز', 'and enter the code')}</p><p class="md-pin" dir="ltr">${G.pin.slice(0, 3)} ${G.pin.slice(3)}</p></div>
         <div class="md-qr">${svg}<small>${B('أو امسح الرمز', 'or scan')}</small></div></div>
+      <p class="md-motto">${B('الميدان يا حميدان', 'The field will tell')}</p>
       <h2 class="md-title">${esc(G.quiz.title || T('ميدان', 'Maydan'))}</h2>
       <div class="md-count"><b id="mdN">0</b> ${B('مشارك', 'players')} <small id="mdFans"></small></div><div class="md-names" id="mdNames"></div>
       <div class="md-set" id="mdSet" hidden>
