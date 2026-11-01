@@ -200,7 +200,9 @@ window.MDLive = (function () {
     try { el.requestFullscreen && el.requestFullscreen().catch(() => {}); } catch (e) {}
     return el;
   }
-  const fail = el => { el.innerHTML = `<div class="md-wait">${B('تعذّر الاتصال بالميدان. تأكد من الإنترنت ثم حاول مرة أخرى.', 'Could not reach the room. Check the connection and try again.')}<button type="button" class="btn ghost" data-x>${B('إغلاق', 'Close')}</button></div>`; el.querySelector('[data-x]').onclick = () => { G = null; leave(); }; };
+  const fail = (el, again) => { el.innerHTML = `<div class="md-wait">${B('تعذّر الاتصال بالميدان. تأكد من الإنترنت ثم حاول مرة أخرى.', 'Could not reach the room. Check the connection and try again.')}<div class="md-row">${again ? `<button type="button" class="btn solid" data-again>${B('حاول مرة أخرى', 'Try again')}</button>` : ''}<button type="button" class="btn ghost" data-x>${B('إغلاق', 'Close')}</button></div></div>`; el.querySelector('[data-x]').onclick = () => { G = null; leave(); }; if (again) el.querySelector('[data-again]').onclick = () => { G = null; leave(); again(); }; };
+  // a slow or blocked connection should not leave the screen waiting for ever
+  const within = (p, ms) => Promise.race([p, new Promise((_, r) => setTimeout(() => r(new Error('timeout')), ms || 12000))]);
   function fresh(quiz, el, pin) {
     const n = quiz.qs.length;
     const txt = quiz.qs.map(x => (x.q || '') + (x.opts || []).join('')).join('');
@@ -211,23 +213,23 @@ window.MDLive = (function () {
   async function start(quiz) {
     const el = shell();
     try {
-      await ready();
+      await within(ready());
       let pin = null;
       for (let k = 0; k < 8 && !pin; k++) {
         const p = String(Math.floor(100000 + Math.random() * 900000));
-        try { await db.ref('rooms/' + p).set({ host: uid, at: TS, title: quiz.title || '', n: quiz.qs.length, st: { ph: 'lobby', i: -1, lock: false } }); pin = p; } catch (e) { /* taken: try another */ }
+        try { await within(db.ref('rooms/' + p).set({ host: uid, at: TS, title: quiz.title || '', n: quiz.qs.length, st: { ph: 'lobby', i: -1, lock: false } }), 8000); pin = p; } catch (e) { if (e.message === 'timeout') throw e; /* taken: try another */ }
       }
       if (!pin) throw new Error('pin');
       fresh(quiz, el, pin); keep(); lobby();
-    } catch (e) { fail(el); }
+    } catch (e) { fail(el, () => start(quiz)); }
   }
   // pick up a paused game: the same room, the same players, the scores so far
   async function resume() {
     const s = pending(); if (!s) return;
     const el = shell();
     try {
-      await ready();
-      const room = (await db.ref('rooms/' + s.pin).once('value')).val();
+      await within(ready());
+      const room = (await within(db.ref('rooms/' + s.pin).once('value'))).val();
       if (!room || room.host !== uid) { forget(); el.innerHTML = `<div class="md-wait">${B('انتهت صلاحية هذه المسابقة ولم تعد موجودة.', 'This quiz is no longer available.')}<button type="button" class="btn ghost" data-x>${B('إغلاق', 'Close')}</button></div>`; el.querySelector('[data-x]').onclick = leave; return; }
       fresh(s.quiz, el, s.pin);
       Object.assign(G, { score: s.score || {}, qp: s.qp || {}, out: s.out || {}, streak: s.streak || {}, team: s.team || {}, teams: s.teams || null, opts: s.opts || G.opts, gold: s.gold, players: s.players || {}, i: s.i, done: s.i, used: s.used || {}, jr: s.jr || [], jrAt: s.jrAt, qlog: s.qlog || [], aw: s.aw || {}, av: s.av || {}, sid: s.sid || {}, league: s.league || null, lockJoin: !!s.lockJoin, shuffled: !!s.shuffled });
@@ -236,7 +238,7 @@ window.MDLive = (function () {
       if (G.i < 0) return lobby();
       await G.ref.child('st').set({ ph: 'lb', i: G.i, lock: !!G.lockJoin });
       board(T('نكمل من حيث توقفنا', 'Picking up where we left off'));
-    } catch (e) { fail(el); }
+    } catch (e) { fail(el, resume); }
   }
   function leave() { document.querySelectorAll('.md-live').forEach(x => x.remove()); document.documentElement.classList.remove('md-on'); if (document.fullscreenElement) document.exitFullscreen().catch(() => {}); document.dispatchEvent(new Event('md:closed')); }
   function close() {
@@ -251,6 +253,12 @@ window.MDLive = (function () {
     G.subs.forEach(f => f()); G = null; leave();
   }
   const sub = (ref, ev, fn) => { ref.on(ev, fn); G.subs.push(() => ref.off(ev, fn)); };
+  // the taps of a crowded room: each player's count arrives on its own, and the screen redraws once a frame at most
+  function taps(fn) {
+    const m = {}, ref = G.ref.child('tg'); let raf = 0;
+    const one = s => { m[s.key] = +(s.val() || {}).c || 0; if (!raf) raf = requestAnimationFrame(() => { raf = 0; fn(m); }); };
+    sub(ref, 'child_added', one); sub(ref, 'child_changed', one);
+  }
   /* ---------- last survivor: a wrong answer takes a player out of the race ---------- */
   const outv = u => G.out[u] == null ? 1e9 : G.out[u];
   const byRank = (a, b) => (G.opts.surv ? outv(b) - outv(a) : 0) || (G.score[b] || 0) - (G.score[a] || 0);
@@ -680,14 +688,13 @@ window.MDLive = (function () {
     if (x.type === 'stage') { let k = 0; sub(G.ref.child('an/' + G.i), 'child_added', s => { const v = s.val() || {}, box = q('#mdStage'); if (!box || typeof v.a !== 'string' || !v.a.trim()) return; const p = box.querySelector('.md-prompt'); if (p) p.remove(); box.insertAdjacentHTML('afterbegin', bubble(G.players[s.key], v.a, k++)); SND.join(); { G.sb = [{ n: G.players[s.key] || '', t: String(v.a).slice(0, 140) }].concat(G.sb || []).slice(0, 12); G.ref.child('sb').set(G.sb).catch(() => {}); } while (box.children.length > 12) box.lastElementChild.remove(); }); }
     if (x.type === 'game' && !['tug', 'race'].includes(x.g)) { const fin = {}; let pr = {};
       sub(G.ref.child('an/' + G.i), 'child_added', a => { fin[a.key] = +(a.val() || {}).a || 0; arena(x, pr, fin); });
-      sub(G.ref.child('tg'), 'value', v => { pr = {}; Object.entries(v.val() || {}).forEach(([u, o]) => { pr[u] = +o.c || 0; }); arena(x, pr, fin); }); arena(x, pr, fin); }
+      taps(m => { pr = m; arena(x, pr, fin); }); arena(x, pr, fin); }
     // the camel and number races: the screen draws the lanes, and the phones get each lane's progress to draw their own
-    if (x.g === 'race' || x.g === 'sum') { let sentAt = 0; sub(G.ref.child('tg'), 'value', v => { const taps = {}; Object.entries(v.val() || {}).forEach(([u, o]) => { taps[u] = +o.c || 0; }); raceDraw(x, taps);
+    if (x.g === 'race' || x.g === 'sum') { let sentAt = 0; taps(taps => { raceDraw(x, taps);
       if (Date.now() - sentAt > 300) { sentAt = Date.now(); G.ref.child('tgp').set(raceAvg(x, taps).map(a => Math.round(Math.min(100, 100 * a / (x.g === 'sum' ? 22 : RACE_END))))); } }); }
     if (x.g === 'tug') {
-      let taps = {}, sentAt = 0;
-      sub(G.ref.child('tg'), 'value', v => {
-        taps = {}; Object.entries(v.val() || {}).forEach(([u, o]) => { taps[u] = +o.c || 0; });
+      let sentAt = 0;
+      taps(taps => {
         const { p } = tugPos(x, taps), k = q('#mdKnot'); if (k) k.style.left = (50 + 42 * p) + '%'; crew(x, taps);
         if (Date.now() - sentAt > 300) { sentAt = Date.now(); G.ref.child('tgp').set(Math.round(p * 100) / 100); }
       });
