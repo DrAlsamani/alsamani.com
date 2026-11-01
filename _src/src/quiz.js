@@ -32,6 +32,8 @@
   const norm = q => Object.assign({ id: uid(), type: 'mc', q: '', opts: ['', ''], ok: [], pts: 1, img: null, timeSet: false }, q, { opts: (q.opts && q.opts.length ? q.opts : ['', '']).slice(0, 6) }, q.time ? { time: q.time, timeSet: true } : {});
 
   let list = store.get('list', []), Q = null;
+  // ask the browser to keep this site's storage, so saved quizzes are not cleared to free space
+  try { if (list.length && navigator.storage && navigator.storage.persist) navigator.storage.persisted().then(p => { if (!p) navigator.storage.persist(); }); } catch (e) {}
   const persist = () => { if (!Q) return; Q.at = Date.now(); const i = list.findIndex(x => x.id === Q.id); if (i >= 0) list[i] = Q; else list.unshift(Q); if (!store.set('list', list)) toast(B('امتلأت مساحة الحفظ في المتصفح، فاحفظ نسخة في جهازك أو صغّر الصور.', 'Browser storage is full; save a copy to your device or use smaller images.'), 1); };
   let tSave; const later = () => { clearTimeout(tSave); tSave = setTimeout(() => { persist(); checks(); }, 400); };
 
@@ -42,7 +44,7 @@
 
   // the landing: what Maydan is, where it fits, and how it works
   const SV = d => `<svg class="qz-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
-  const IC = { eye: SV('<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>'), save: SV('<path d="M5 3h11l3 3v15H5z"/><path d="M8 3v5h7V3M8 21v-7h8v7"/>'), up: SV('<path d="M12 15V3M7 8l5-5 5 5"/><path d="M4 15v5h16v-5"/>'), shuffle: SV('<path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/>') };
+  const IC = { trash: SV('<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/>'), eye: SV('<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>'), save: SV('<path d="M5 3h11l3 3v15H5z"/><path d="M8 3v5h7V3M8 21v-7h8v7"/>'), up: SV('<path d="M12 15V3M7 8l5-5 5 5"/><path d="M4 15v5h16v-5"/>'), shuffle: SV('<path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/>') };
   function intro() {
     const card = (i, a, e, da, de) => `<div class="qi-c"><span>${i}</span><b>${B(a, e)}</b><small>${B(da, de)}</small></div>`;
     return `<div class="qi">
@@ -108,9 +110,9 @@
         <p class="pt-fine">${B('في مسابقة الألعاب نختار لك تحديات متنوعة، وتقدر تغيّر أي واحد منها بزر أو تختار غيره بنفسك.', 'We pick a varied set for you; swap any of them with or choose another yourself.')}</p></div>
       ${RLIB().length ? `<h2 class="qz-h" id="lib">${B('مكتبة ميدان: مسابقات جاهزة', 'The Maydan library: ready quizzes')}</h2><p class="pt-fine">${B('ابدأ أيًّا منها مباشرة، أو افتحها وعدّل عليها لتصير مسابقتك.', 'Start any of them now, or open one and make it your own.')}</p>
       <div class="qz-lib">${RLIB().map((z, k) => `<div class="qz-lc"${k >= 5 ? ' data-more hidden' : ''}><span class="qz-li">${z.icon}</span><b>${esc(z.title)}</b><small>${esc(z.desc)}</small><em>${esc(z.who)} · ${z.qs.length} ${z.qs.every(x => x.type === 'game') ? B('تحديات', 'challenges') : B('فقرة', 'items')}</em><span class="qz-lb"><button type="button" class="btn solid" data-lgo="${z.id}">${B('ابدأ الآن ▶', 'Start now ▶')}</button><button type="button" class="btn ghost" data-led="${z.id}">${B('افتحها وعدّلها', 'Open and edit')}</button></span></div>`).join('')}</div>${RLIB().length > 5 ? `<button type="button" class="btn ghost qz-libmore" id="qzLibMore">${B(`عرض كل المسابقات (${RLIB().length})`, `Show all quizzes (${RLIB().length})`)}</button>` : ''}` : ''}
-      ${list.length ? `<h2 class="qz-h">${B('مسابقاتك', 'Your quizzes')}</h2><ul class="qz-list">${list.map(x => `<li><button type="button" data-open="${x.id}"><b>${esc(x.title || T('بلا عنوان', 'Untitled'))}</b><small>${T('الأسئلة: ', 'Questions: ')}${x.qs.length}</small></button></li>`).join('')}</ul>` : ''}
-      <label class="qz-imp btn ghost">${B('فتح نسخة محفوظة', 'Open a saved copy')}<input type="file" accept=".json,application/json" hidden id="qzImp"></label>
-      <p class="pt-fine">${B('تُحفظ المسابقات في هذا المتصفح.', 'Quizzes are kept in this browser.')}</p></div>${window.MDX ? `<div class="sn-card" id="qzLg">${MDX.listHtml()}</div>` : ''}${introMore()}`;
+      ${list.length ? `<h2 class="qz-h">${B(`مسابقاتك (${list.length})`, `Your quizzes (${list.length})`)}</h2><ul class="qz-list">${list.map(x => `<li data-li="${x.id}"><button type="button" data-open="${x.id}"><b>${esc(x.title || T('بلا عنوان', 'Untitled'))}</b><small>${T('الأسئلة: ', 'Questions: ')}${x.qs.length}${x.at ? ' · ' + new Date(x.at).toLocaleDateString(isAr() ? 'ar-SA-u-ca-gregory-nu-arab' : 'en-GB', { day: 'numeric', month: 'short' }) : ''}</small></button><button type="button" class="qz-del" data-del="${x.id}" title="${T('احذف', 'Delete')}" aria-label="${T('احذف', 'Delete')}">${IC.trash}</button></li>`).join('')}</ul>` : ''}
+      <div class="qz-keep"><label class="qz-imp btn ghost">${B('فتح نسخة محفوظة', 'Open a saved copy')}<input type="file" accept=".json,application/json" hidden id="qzImp"></label>${list.length ? `<button type="button" class="btn ghost" id="qzAll">${IC.save}${B('احفظ نسخة من كل مسابقاتي', 'Save a copy of all my quizzes')}</button>` : ''}</div>
+      <p class="pt-fine">${B('تُحفظ المسابقات في هذا المتصفح وتبقى ما دام لم يُمسح سجله. وللاحتياط، احفظ نسخة منها كلها في ملف، وافتحها في أي متصفح أو جهاز.', 'Quizzes stay in this browser unless its data is cleared. To be safe, save a copy of them all in one file and open it on any browser or device.')}</p></div>${window.MDX ? `<div class="sn-card" id="qzLg">${MDX.listHtml()}</div>` : ''}${introMore()}`;
     if (window.MDX) MDX.bindList(root.querySelector('#qzLg'), home);
     if (P) { root.querySelector('#qzRes').onclick = () => MDLive.resume(); root.querySelector('#qzDrop2').onclick = async () => { await MDLive.discard(); home(); }; }
     const lm = root.querySelector('#qzLibMore'); if (lm) lm.onclick = () => { root.querySelectorAll('[data-more]').forEach(e => { e.hidden = false; }); lm.remove(); };
@@ -123,9 +125,20 @@
     if (location.hash === '#lib') setTimeout(() => { const h = root.querySelector('#lib'); if (h) h.scrollIntoView({ block: 'start' }); }, 300);
     root.querySelector('#qzNewG').onclick = () => { Q = { id: uid(), gen: 'games', title: T('مسابقة الألعاب والتحديات', 'Games and challenges'), qs: pickGames(+root.querySelector('#qzGn').value).map(newGame) }; persist(); editor(); };
     root.querySelectorAll('[data-open]').forEach(b => b.onclick = () => { Q = JSON.parse(JSON.stringify(list.find(x => x.id === b.dataset.open))); Q.qs = Q.qs.map(norm); editor(); });
+    // delete from the list, after a clear yes
+    root.querySelectorAll('[data-del]').forEach(b => b.onclick = () => {
+      const id = b.dataset.del, z = list.find(x => x.id === id), li = b.closest('li'); if (!z) return;
+      li.classList.add('qz-ask'); li.innerHTML = `<p>${B(`تحذف «${esc(z.title || T('بلا عنوان', 'Untitled'))}» نهائيًا؟`, `Delete «${esc(z.title || T('بلا عنوان', 'Untitled'))}» for good?`)}</p><span><button type="button" class="btn solid qz-yes">${B('احذف', 'Delete')}</button><button type="button" class="btn ghost qz-no">${B('تراجع', 'Keep it')}</button></span>`;
+      li.querySelector('.qz-no').onclick = home;
+      li.querySelector('.qz-yes').onclick = () => { list = list.filter(x => x.id !== id); store.set('list', list); home(); toast(B('حُذفت المسابقة.', 'Quiz deleted.')); };
+    });
+    const all = root.querySelector('#qzAll'); if (all) all.onclick = () => save(new Blob([JSON.stringify({ all: list.map(z => ({ title: z.title, qs: z.qs.map(({ id, timeSet, ...r }) => r) })) }, null, 1)], { type: 'application/json' }), T('مسابقاتي', 'my-quizzes') + '-' + new Date().toISOString().slice(0, 10) + '.json');
     root.querySelector('#qzImp').onchange = async e => {
       const f = e.target.files[0]; if (!f) return;
-      try { const j = JSON.parse(await f.text()); if (!Array.isArray(j.qs)) throw 0; Q = { id: uid(), title: j.title || '', qs: j.qs.map(norm) }; persist(); editor(); toast(B('فُتحت النسخة.', 'Copy opened.')); }
+      try { const j = JSON.parse(await f.text());
+        // a copy of all the quizzes: add the ones not here yet
+        if (Array.isArray(j.all)) { let n = 0; j.all.forEach(z => { if (!z || !Array.isArray(z.qs)) return; const k = JSON.stringify(z.qs); if (list.some(x => x.title === z.title && JSON.stringify(x.qs.map(({ id, timeSet, ...r }) => r)) === k)) return; list.push({ id: uid(), title: z.title || '', qs: z.qs.map(norm), at: Date.now() }); n++; }); store.set('list', list); home(); toast(B(`أُضيفت ${n} مسابقة.`, `${n} quizzes added.`)); return; }
+        if (!Array.isArray(j.qs)) throw 0; Q = { id: uid(), title: j.title || '', qs: j.qs.map(norm) }; persist(); editor(); toast(B('فُتحت النسخة.', 'Copy opened.')); }
       catch (er) { toast(B('هذا الملف ليس نسخة مسابقة.', 'That file is not a quiz copy.'), 1); }
     };
   }

@@ -2445,7 +2445,7 @@ html.sm-homeview,html.sm-homeview body{overflow-x:clip}
     const st = { turn: -1, order: [], got: {}, ink: '', gained: {} };
     const mine = () => { const o = { g: 'draw', role: 'drawer', t: st.turn, got: Object.keys(st.got).map(nameOf) }; if (S.ph === 'choose') o.opts = st.opts; else o.word = st.word; return o; };
     const G = {
-      start() { S.lastGame = 'draw'; st.order = shuffle(inGame()).slice(0, S.auto ? 4 : 8); st.turn = -1; st.gained = {}; G.next(); },
+      start() { S.lastGame = 'draw'; st.order = shuffle(inGame()).slice(0, S.auto ? 4 : 6); st.turn = -1; st.gained = {}; G.next(); },
       next() {
         st.turn++; if (st.turn >= st.order.length) return gameOver(st.gained); if (!(st.order[st.turn] in S.pl)) return G.next();
         st.drawer = st.order[st.turn]; st.got = {}; st.ink = ''; st.feed = []; st.cat = catFor(S.cat); st.opts = shuffle(words(st.cat, S.L)).slice(0, 3); st.word = st.opts[0];
