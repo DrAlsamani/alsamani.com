@@ -1560,6 +1560,7 @@ html[dir=ltr] .jr-dch.fd .jr-fold::before{transform:rotate(-45deg)}
 html.sm-in .tl-crumb,html.sm-in .sm-head,html.sm-in .sm-lead{display:none}
 .sm-final h2{font-size:clamp(24px,4.4vh,52px);text-align:center;margin:0 0 1vh}
 .sm-plus,.sm-gain b,.sm-whoc em{direction:ltr;unicode-bidi:isolate}
+.sm-aiw{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 10px}.sm-aiw input{flex:1 1 200px;margin:0!important}.sm-aiw .btn{color:var(--ink);border-color:rgba(255,255,255,.3)}
 </style>
 <div id="sm" class="sm"><noscript><span class="ar">تعمل هذه اللعبة مع تفعيل JavaScript.</span><span class="en">This game needs JavaScript.</span></noscript></div>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script>window.MD_CFG={"apiKey": "AIzaSyA50i75DT1Is1a6Yn6snW1_JVObc8S3F0Y", "authDomain": "maydan-705ae.firebaseapp.com", "databaseURL": "https://maydan-705ae-default-rtdb.europe-west1.firebasedatabase.app", "projectId": "maydan-705ae", "appId": "1:342187013133:web:d5c2396f0db413f3c51144"};window.MD_MARK="<svg class=\"md-mark\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><rect x=\"4\" y=\"4\" width=\"40\" height=\"40\" rx=\"12\" fill=\"#23336F\"/><path d=\"M24 9l4.2 6.8 7.8-1.8-1.8 7.8L41 24l-6.8 4.2 1.8 7.8-7.8-1.8L24 39l-4.2-6.8-7.8 1.8 1.8-7.8L7 24l6.8-4.2-1.8-7.8 7.8 1.8z\" fill=\"#C9822B\"/><circle cx=\"24\" cy=\"24\" r=\"6.5\" fill=\"#23336F\"/><circle cx=\"24\" cy=\"24\" r=\"3\" fill=\"#F3E3C7\"/></svg>";</script><script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script><script>/* Samar (alsamani.com/play/samar): games for a gathering, on one code — the screen shows the play and each phone
@@ -1703,6 +1704,21 @@ html.sm-in .tl-crumb,html.sm-in .sm-head,html.sm-in .sm-lead{display:none}
   }
   function remember(n, pin) { try { const L = sweep(pin).filter(r => r.pin !== pin); L.push({ n, pin, at: Date.now() }); localStorage.setItem('fbRooms', JSON.stringify(L.slice(-40))); } catch (e) {} }
 
+  /* ---------- Gemini through the project's Firebase AI Logic, with App Check (reCAPTCHA Enterprise) ---------- */
+  let gm = null;
+  async function gemini(p) {
+    if (!gm) {
+      const u = n => `https://www.gstatic.com/firebasejs/11.10.0/firebase-${n}.js`;
+      const [{ initializeApp, getApps }, { initializeAppCheck, ReCaptchaEnterpriseProvider }, { getAI, getGenerativeModel, VertexAIBackend }] = await Promise.all([import(u('app')), import(u('app-check')), import(u('ai'))]);
+      const app = getApps().find(a => a.name === 'smai') || initializeApp(window.MD_CFG, 'smai');
+      try { initializeAppCheck(app, { provider: new ReCaptchaEnterpriseProvider('6Le4gQsuAAAAAE3jS1mLgG9B2XT8AucvEecF6Kp4'), isTokenAutoRefreshEnabled: false }); } catch (e) {}
+      const ai = getAI(app, { backend: new VertexAIBackend('global') });
+      gm = ['gemini-3-flash-preview', 'gemini-3-flash', 'gemini-flash-latest', 'gemini-2.5-flash'].map(m => getGenerativeModel(ai, { model: m, generationConfig: { temperature: 0.9, thinkingConfig: { thinkingBudget: 512 } } }));
+    }
+    for (const m of gm) { try { return (await m.generateContent(p)).response.text(); } catch (e) { if (!/not.?found|404/i.test(String(e && e.message))) throw e; } }
+    throw new Error('no model');
+  }
+
   /* ---------- usage: anonymous counts (no names), added to the same record Maydan keeps ---------- */
   async function stat(add) {
     try { const k = 's' + uid, r = db.ref('rooms/' + k), INC = firebase.database.ServerValue.increment, up = {};
@@ -1836,12 +1852,14 @@ html.sm-in .tl-crumb,html.sm-in .sm-head,html.sm-in .sm-lead{display:none}
   function settings() {
     const d = document.createElement('div'); d.className = 'sm-ov';
     d.innerHTML = `<div class="sm-ovb"><h3>${B('كلماتك', 'Your words')}</h3><p>${B('كلمة في كل سطر، أو افصل بينها بفواصل. تُستعمل في الكلمة السرية ومن أنا؟ وارسم وخمّن حين تختار «كلماتك». مناسبة لمصطلحات درس أو مقرر.', 'One word a line, or separated by commas. Used in the secret word, who am I and draw and guess when you choose “Your words”. Good for the terms of a lesson or a course.')}</p>
+      <div class="sm-aiw"><input data-aitopic dir="auto" maxlength="120" placeholder="${T('موضوع، مثل: الجهاز الهضمي، أو مطبخ الحجاز', 'A topic, e.g. the digestive system')}"><button type="button" class="btn ghost" data-aiw>${B('اقترحها بالذكاء الاصطناعي', 'Suggest them with AI')}</button></div>
       <textarea data-w rows="7" dir="auto">${esc(store.get('mine', ''))}</textarea>
       <div class="sm-lists">${Object.keys(lists()).length ? `<select data-lsel><option value="">${T('قوائمك المحفوظة…', 'Your saved lists…')}</option>${Object.keys(lists()).map(k => `<option>${esc(k)}</option>`).join('')}</select><button type="button" class="btn ghost" data-ldel hidden>${B('احذفها', 'Delete')}</button>` : ''}
         <input data-lname dir="auto" maxlength="40" placeholder="${T('اسم القائمة، مثل: الفصل الثالث', 'A name for the list, e.g. Chapter 3')}"><button type="button" class="btn ghost" data-lsave>${B('احفظ القائمة', 'Save the list')}</button></div>
       <h3>${B('خانات لعبة الحروف', 'The letter game’s boxes')}</h3><p>${B('من ٣ إلى ٦، مفصولة بفواصل. اتركها فارغة لـ«إنسان، حيوان، نبات، جماد، بلاد».', 'From 3 to 6, separated by commas. Leave it empty for the usual five.')}</p>
       <input data-lc dir="auto" value="${esc(store.get('lcats', ''))}" placeholder="${T('إنسان، حيوان، نبات، جماد، بلاد', 'Name, Animal, Plant, Thing, Country')}">
       <h3>${B('أسئلة «مين قالها؟»', 'Questions for “Who said it?”')}</h3><p>${B('سؤال في كل سطر، تُطرح بالترتيب. اتركها فارغة للأسئلة الجاهزة.', 'One question a line, asked in order. Leave it empty for the ready questions.')}</p>
+      <div class="sm-aiw"><button type="button" class="btn ghost" data-aia>${B('اقترح أسئلة للموضوع أعلاه', 'Suggest questions for the topic above')}</button></div>
       <textarea data-asks rows="4" dir="auto">${esc(store.get('asks', ''))}</textarea>
       <p>${B('عدد الإجابات المعروضة في كل سؤال (تُختار عشوائيًا):', 'Answers shown for each question (picked at random):')} <select data-wcap>${[5, 8, 12, 0].map(v => `<option value="${v}"${+store.get('wcap', 8) === v ? ' selected' : ''}>${v || T('كلها', 'All')}</option>`).join('')}</select></p>
       <p>${B('وقت التصويت على كل إجابة:', 'Time to vote on each answer:')} <select data-wsec>${[10, 15, 20, 30].map(v => `<option value="${v}"${+store.get('wsec', 10) === v ? ' selected' : ''}>${v} ${T('ثانية', 's')}</option>`).join('')}</select></p>
@@ -1850,6 +1868,21 @@ html.sm-in .tl-crumb,html.sm-in .sm-head,html.sm-in .sm-lead{display:none}
       <div class="sm-row"><button type="button" class="btn solid" data-ok>${B('احفظ', 'Save')}</button><button type="button" class="btn ghost" data-x>${B('إغلاق', 'Close')}</button></div></div>`;
     HE().appendChild(d);
     d.querySelector('[data-x]').onclick = () => d.remove();
+    // the AI fills a list from a topic; the host reads it and edits before saving
+    const aiFill = async (btn, sel, ask) => {
+      const t = d.querySelector('[data-aitopic]').value.trim(); if (!t) { d.querySelector('[data-aitopic]').focus(); return; }
+      const was = btn.innerHTML; btn.disabled = true; btn.innerHTML = B('لحظة…', 'One moment…');
+      try { const out = (await gemini(ask(t))).split('\n').map(w => w.replace(/^[\s\-*•\d.)]+/, '').replace(/\*\*/g, '').trim()).filter(w => w && w.length <= 120);
+        if (!out.length) throw new Error('empty'); d.querySelector(sel).value = out.join('\n'); }
+      catch (e) { console.error(e); btn.innerHTML = B('تعذّر الآن، جرّب بعد قليل', 'Not now; try again shortly'); setTimeout(() => { btn.innerHTML = was; }, 2500); btn.disabled = false; return; }
+      btn.innerHTML = was; btn.disabled = false;
+    };
+    d.querySelector('[data-aiw]').onclick = e => aiFill(e.currentTarget, '[data-w]', t => isAr()
+      ? `اكتب 30 كلمة أو مصطلحًا قصيرًا (كلمة أو كلمتان) عن: ${t}. مناسبة للعبة تخمين ورسم وتمثيل بين أصدقاء أو طلاب، ومعروفة لمن درس الموضوع، بلا تكرار. كل كلمة في سطر، بلا ترقيم ولا شرح ولا مقدمة.`
+      : `Write 30 short words or terms (one or two words) about: ${t}. Good for guessing, drawing and miming among friends or students, known to anyone who studied the topic, no repeats. One per line, no numbers, no explanation, no intro.`);
+    d.querySelector('[data-aia]').onclick = e => aiFill(e.currentTarget, '[data-asks]', t => isAr()
+      ? `اكتب 8 أسئلة قصيرة مفتوحة عن: ${t}، يجيب عنها كل شخص بجملة قصيرة من رأيه أو تجربته، بحيث تكشف الإجابة شيئًا عن صاحبها ويصعب تخمين من كتبها، ومناسبة لجلسة محترمة. كل سؤال في سطر، بلا ترقيم ولا مقدمة.`
+      : `Write 8 short open questions about: ${t}, each answered with a short sentence from one's own view or experience, so the answer says something about its writer and is hard to attribute, suitable for a respectful gathering. One per line, no numbers, no intro.`);
     const ls = d.querySelector('[data-lsel]'), ld = d.querySelector('[data-ldel]');
     if (ls) { ls.onchange = () => { if (!ls.value) { ld.hidden = true; return; } d.querySelector('[data-w]').value = lists()[ls.value] || ''; d.querySelector('[data-lname]').value = ls.value; ld.hidden = false; };
       ld.onclick = () => { const L = lists(); delete L[ls.value]; store.set('lists', L); d.remove(); settings(); }; }

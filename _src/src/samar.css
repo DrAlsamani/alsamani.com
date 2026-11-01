@@ -159,3 +159,4 @@
 html.sm-in .tl-crumb,html.sm-in .sm-head,html.sm-in .sm-lead{display:none}
 .sm-final h2{font-size:clamp(24px,4.4vh,52px);text-align:center;margin:0 0 1vh}
 .sm-plus,.sm-gain b,.sm-whoc em{direction:ltr;unicode-bidi:isolate}
+.sm-aiw{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 10px}.sm-aiw input{flex:1 1 200px;margin:0!important}.sm-aiw .btn{color:var(--ink);border-color:rgba(255,255,255,.3)}
