@@ -207,13 +207,13 @@
       if (!q('#qzTopic').value.trim() && !q('#qzGuide').value.trim()) { toast(B('اكتب أولًا ماذا تريد، أو الصق المحتوى.', 'First say what you want, or paste the content.'), 1); q('#qzGuide').focus(); return; }
       const day = new Date().toISOString().slice(0, 10); let used = {}; try { used = JSON.parse(localStorage.getItem('qzGen') || '{}'); } catch (e) {}
       if (used.d === day && used.n >= 20) { st.textContent = T('وصلت حد اليوم من الإنشاء التلقائي. جرّب غدًا، أو استعمل نسخ الطلب أدناه.', 'You have reached today’s limit. Try tomorrow, or copy the request below.'); return; }
-      b.disabled = true; b.innerHTML = B('جارٍ كتابة الأسئلة…', 'Writing the questions…'); st.textContent = T('عادةً بين ١٠ و٤٠ ثانية حسب العدد.', 'Usually 10 to 40 seconds, depending on the number.');
+      b.disabled = true; b.innerHTML = B('جارٍ كتابة الأسئلة…', 'Writing the questions…'); st.textContent = T('عادةً أقل من دقيقة، حسب العدد.', 'Usually under a minute, depending on the number.');
       try {
         const text = await geminiWrite(prompt());
         const got = QZParse.fromText(text).filter(usable);
         if (!got.length) throw new Error('empty');
         add(got); try { localStorage.setItem('qzGen', JSON.stringify({ d: day, n: (used.d === day ? used.n : 0) + 1 })); } catch (e) {}
-        st.textContent = T(`أُضيف ${got.length} سؤالًا. راجعها وعدّل ما تريد.`, `${got.length} questions added. Review and edit as you like.`);
+        st.textContent = T(`أُضيفت الأسئلة (${got.length}). راجعها وعدّل ما تريد.`, `${got.length} questions added. Review and edit as you like.`);
       } catch (e) {
         console.error(e);
         st.textContent = T('تعذّر الإنشاء الآن. جرّب بعد قليل، أو استعمل نسخ الطلب أدناه.', 'Could not make them right now. Try again shortly, or copy the request below.');
@@ -602,7 +602,7 @@
       const app = getApps().find(a => a.name === 'mdai') || initializeApp(window.MD_CFG, 'mdai');
       try { initializeAppCheck(app, { provider: new ReCaptchaEnterpriseProvider(AI_KEY), isTokenAutoRefreshEnabled: false }); } catch (e) {}
       const ai = getAI(app, { backend: new VertexAIBackend('global') });
-      aiMk = m => getGenerativeModel(ai, { model: m, generationConfig: { temperature: 0.7 } });
+      aiMk = m => getGenerativeModel(ai, { model: m, generationConfig: { temperature: 0.7, thinkingConfig: { thinkingBudget: 1024 } } });
     }
     // a retired model name moves on to the next one
     for (let k = aiModel ? aiModel.k : 0; k < AI_MODELS.length; k++) {
