@@ -18,6 +18,7 @@
   const SND = { join: () => tone(880, .12, 'triangle', .06), go: () => [523, 659, 784].forEach((f, k) => tone(f, .2, 'triangle', .08, k * .1)), ok: () => { tone(784, .12, 'triangle', .08); tone(1175, .2, 'triangle', .08, .1); }, no: () => tone(220, .25, 'sawtooth', .05), tick: () => tone(1300, .04, 'square', .03), win: () => [523, 659, 784, 1047, 1319].forEach((f, k) => tone(f, .35, 'triangle', .09, k * .13)) };
   const SV = d => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
   const IC = {
+    whose: SV('<path d="M4 5h16v10H9l-5 4z"/><path d="M9 9h6M9 12h3"/><circle cx="18" cy="18" r="3"/>'),
     arrow: SV('<path d="M5 12h14M13 6l6 6-6 6"/>'), undo: SV('<path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/>'),
     spy: SV('<circle cx="8" cy="15" r="3"/><circle cx="16" cy="15" r="3"/><path d="M11 15h2M3 11h18M6 11l2-6h8l2 6"/>'),
     who: SV('<circle cx="12" cy="8" r="4"/><path d="M5 21a7 7 0 0 1 14 0"/><path d="M11 7.2a1.4 1.4 0 1 1 1.6 1.4c-.5.1-.6.4-.6.9M12 10.6v.1"/>'),
@@ -66,7 +67,8 @@
     { id: 'spy', icon: IC.spy, ar: 'الكلمة السرية', en: 'The secret word', min: 3, dAr: 'الكل يعرف الكلمة إلا واحدًا. تلميحات ثم تصويت: اكشفوا من لا يعرفها.', dEn: 'Everyone knows the word but one. Clues, then a vote: find who does not know it.' },
     { id: 'who', icon: IC.who, ar: 'من أنا؟', en: 'Who am I?', min: 2, dAr: 'لكل لاعب شخصية يراها الجميع إلا هو. يسأل بنعم أو لا حتى يعرف من هو.', dEn: 'Each player has an identity everyone sees but them. Ask yes-or-no questions to find it.' },
     { id: 'draw', icon: IC.draw, ar: 'ارسم وخمّن', en: 'Draw and guess', min: 2, dAr: 'واحد يرسم في جواله والرسمة تظهر على الشاشة، والبقية يخمّنون بأسرع ما يمكن.', dEn: 'One draws on their phone, the drawing shows on the screen, the others guess as fast as they can.' },
-    { id: 'letters', icon: IC.letters, ar: 'إنسان حيوان نبات جماد بلاد', en: 'Name, animal, plant, thing, country', min: 2, dAr: 'حرف واحد للجميع: املأ الخانات الخمس قبل أن يقول أحدهم «ستوب».', dEn: 'One letter for all: fill the five boxes before someone calls stop.' }
+    { id: 'letters', icon: IC.letters, ar: 'إنسان حيوان نبات جماد بلاد', en: 'Name, animal, plant, thing, country', min: 2, dAr: 'حرف واحد للجميع: املأ الخانات الخمس قبل أن يقول أحدهم «ستوب».', dEn: 'One letter for all: fill the five boxes before someone calls stop.' },
+    { id: 'whose', icon: IC.whose, ar: 'مين قالها؟', en: 'Who said it?', min: 3, dAr: 'سؤال للجميع وكل واحد يجيب سرًا، ثم تظهر الإجابات واحدة واحدة: خمّنوا صاحبها.', dEn: 'One question for all, each answers in secret; then the answers appear one by one: guess whose it is.' },
   ];
   const gameOf = id => GAMES.find(g => g.id === id);
 
@@ -223,7 +225,7 @@
   function finale() {
     const order = players().sort((a, b) => (S.sc[b] || 0) - (S.sc[a] || 0)), St = u => S.stt[u] || {};
     const best = (k, min) => { let w = null, v = 0; players().forEach(u => { const x = St(u)[k] || 0; if (x >= (min || 1) && x > v) { v = x; w = u; } }); return w ? { u: w, v } : null; };
-    const TT = [['spy', 'الجاسوس الأخطر', 'The sneakiest spy'], ['art', 'الرسام', 'The artist'], ['quick', 'سريع البديهة', 'The quickest mind'], ['self', 'يعرف نفسه', 'Knows themselves'], ['let', 'سيد الحروف', 'Master of letters'], ['det', 'المحقق', 'The detective']];
+    const TT = [['spy', 'الجاسوس الأخطر', 'The sneakiest spy'], ['art', 'الرسام', 'The artist'], ['quick', 'سريع البديهة', 'The quickest mind'], ['self', 'يعرف نفسه', 'Knows themselves'], ['let', 'سيد الحروف', 'Master of letters'], ['myst', 'الغامض', 'The mystery'], ['det', 'المحقق', 'The detective']];
     const titles = TT.map(([k, ar, en]) => { const r = best(k); return r ? { k, ar, en, u: r.u, n: nameOf(r.u) } : null; }).filter(Boolean);
     const pod = k => order[k] ? `<div class="sm-pod p${k + 1}" style="--c:${colOf(order[k])}"><span dir="auto">${esc(nameOf(order[k]))}</span><b>${S.sc[order[k]] || 0}</b><i>${k + 1}</i></div>` : '<div class="sm-pod"></div>';
     const tw = S.teams ? (teamSum(0) === teamSum(1) ? -1 : teamSum(0) > teamSum(1) ? 0 : 1) : null;
@@ -235,7 +237,7 @@
   }
   function hostDraw() { if (!S || S.mode !== 'host') return; if (S.gs && S.gs.view) S.gs.view(); else picker(); }
   function startGame(id) {
-    const mk = { spy: Spy, who: Who, draw: Draw, letters: Letters }[id]; if (!mk) return;
+    const mk = { spy: Spy, who: Who, draw: Draw, letters: Letters, whose: Whose }[id]; if (!mk) return;
     S.gn++; S.roster = {}; players().forEach(u => { S.roster[u] = 1; }); S.gs = mk(); S.gs.id = id; S.played = true; SND.go(); S.gs.start(); stat({ ['samar/' + id + '/n']: 1, ['samar/' + id + '/p']: players().length });
   }
   // after a game: the points it gave, then back to the choice of games
@@ -428,6 +430,53 @@
     return G;
   }
 
+  /* ---------- who said it: anonymous answers, then guess the author ---------- */
+  const ASKS = {
+    ar: ['أغرب أكلة جربتها في حياتك', 'لو صار عندك قوة خارقة ليوم واحد، وش تكون؟', 'أول شيء تسويه لو ربحت مليون', 'عادة عندك ما يعرفها أحد', 'وظيفة كنت تحلم فيها وأنت صغير', 'أكثر كلمة تقولها في يومك', 'لو تعيش في أي زمن، أي زمن تختار؟', 'شيء تخاف منه وتستحي تقوله', 'أغرب هدية جتك', 'وش تسوي أول ما تصحى؟', 'لو تقدر تتكلم لغة حيوان، أي حيوان؟', 'أكلة تقدر تاكلها كل يوم', 'مكان تتمنى تزوره', 'أطرف موقف صار لك في المدرسة', 'لو كتبت كتاب، وش عنوانه؟', 'شيء تعلمته متأخر', 'أسوأ نصيحة سمعتها', 'لو صرت مسؤول عن مدينتك يوم واحد، وش أول قرار؟', 'مهارة تتمنى تتقنها', 'لو حياتك فلم، وش اسمه؟', 'أكثر شيء يضحكك', 'شيء تحتفظ فيه من سنين', 'لو رجع فيك الزمن عشر سنين، وش تقول لنفسك؟', 'أغرب حلم تذكره', 'برنامج أو مسلسل ما تمل منه', 'لو تختار اسم ثاني لنفسك', 'شيء ما تقدر تعيش بدونه', 'أكثر موقف إحراج صار لك', 'رياضة تتمنى تلعبها باحتراف', 'وش أول شيء تشتريه لو سافرت؟'],
+    en: ['The strangest food you have ever tried', 'A superpower for one day: which one?', 'The first thing you would do with a million', 'A habit nobody knows you have', 'The job you dreamed of as a child', 'The word you say most in a day', 'If you could live in any age, which one?', 'Something you fear but would not admit', 'The strangest gift you have received', 'The first thing you do when you wake up', 'If you could speak to one animal, which?', 'A food you could eat every day', 'A place you wish to visit', 'The funniest thing that happened to you at school', 'If you wrote a book, its title', 'Something you learned late', 'The worst advice you have heard', 'Your first decision as mayor for a day', 'A skill you wish you had', 'If your life were a film, its title', 'What makes you laugh most', 'Something you have kept for years', 'What you would tell yourself ten years ago', 'The strangest dream you remember', 'A show you never get tired of', 'Another name you would choose for yourself', 'Something you cannot live without', 'Your most embarrassing moment', 'A sport you wish you played well', 'The first thing you buy when you travel']
+  };
+  function Whose() {
+    const st = { ans: {}, q: [], k: -1, votes: {}, gained: {} };
+    const G = {
+      start() {
+        S.lastGame = 'whose'; st.used = st.used || []; const pool = ASKS[S.L].filter(a => !st.used.includes(a)); st.ask = pick(pool.length ? pool : ASKS[S.L]); st.used.push(st.ask);
+        st.ans = {}; st.gained = {}; st.k = -1; inGame().forEach(u => priv(u, { g: 'whose' }));
+        phase('write', 75, { ask: st.ask, n: 0 }); G.view();
+      },
+      move(u, k) {
+        if (S.ph === 'write' && k.startsWith('a:') && !st.ans[u]) { const a = k.slice(2, 90).trim(); if (!a) return; st.ans[u] = a; SND.join(); pub(Object.assign({}, S.g, { n: Object.keys(st.ans).length })); G.view(); if (Object.keys(st.ans).length >= inGame().length) G.order(); }
+        else if (S.ph === 'guess' && k.startsWith('v:') && u !== st.au && !st.votes[u] && k.slice(2) in S.pl) { st.votes[u] = k.slice(2); pub(Object.assign({}, S.g, { n: Object.keys(st.votes).length })); G.view(); if (Object.keys(st.votes).length >= inGame().length - 1) G.reveal(); }
+      },
+      order() { st.q = shuffle(Object.keys(st.ans)); st.k = -1; if (st.q.length < 2) return gameOver({}, B('إجابات قليلة، جرّبوها مرة أخرى', 'Too few answers; try it again')); G.next(); },
+      next() {
+        st.k++; if (st.k >= st.q.length) return gameOver(st.gained, B(`«${esc(st.ask)}»`, `“${esc(st.ask)}”`));
+        st.au = st.q[st.k]; st.votes = {};
+        phase('guess', 25, { ask: st.ask, a: st.ans[st.au], au: st.au.slice(0, 8), k: st.k + 1, of: st.q.length, n: 0, list: inGame().map(u => ({ u, n: nameOf(u) })) }); G.view();
+      },
+      reveal() {
+        const g = (u, n) => { add(u, n); st.gained[u] = (st.gained[u] || 0) + n; };
+        const right = Object.keys(st.votes).filter(u => st.votes[u] === st.au), fooled = Object.keys(st.votes).length - right.length;
+        right.forEach(u => { g(u, 100); tally(u, 'det'); }); if (fooled) { g(st.au, 50 * fooled); tally(st.au, 'myst', fooled); }
+        st.right = right; pushScores();
+        phase('reveal', 7, { ask: st.ask, a: st.ans[st.au], who: nameOf(st.au), au: st.au.slice(0, 8), right: right.map(nameOf), k: st.k + 1, of: st.q.length }); G.view();
+      },
+      tick() { if (!S.end || left() > 0) return; if (S.ph === 'write') G.order(); else if (S.ph === 'guess') G.reveal(); else if (S.ph === 'reveal') G.next(); },
+      view() {
+        const ph = S.ph; let body = '', foot = '';
+        if (ph === 'write') { body = `<p class="sm-sub">${B('أجيبوا من جوالاتكم، بدون ما أحد يشوف', 'Answer on your phones, where nobody can see')}</p><h2 dir="auto">${esc(st.ask)}</h2><p class="sm-count" dir="ltr">${Object.keys(st.ans).length} / ${inGame().length}</p>`; foot = `<button type="button" class="btn ghost" data-skip>${B('اعرض الإجابات', 'Show the answers')}</button>`; }
+        else if (ph === 'guess' || ph === 'reveal') {
+          body = `<p class="sm-sub" dir="auto">${esc(st.ask)} · ${st.k + 1}/${st.q.length}</p><blockquote class="sm-quote" dir="auto">${esc(st.ans[st.au])}</blockquote>`
+            + (ph === 'guess' ? `<h2>${B('مين قالها؟', 'Who said it?')}</h2><p class="sm-count" dir="ltr">${Object.keys(st.votes).length} / ${inGame().length - 1}</p>`
+              : `<h2 class="sm-author" style="--c:${colOf(st.au)}">${B(`قالها «${esc(nameOf(st.au))}»`, `${esc(nameOf(st.au))} said it`)}</h2><p class="sm-sub">${st.right.length ? B(`عرفوها: ${st.right.map(u => esc(nameOf(u))).join('، ')}`, `Got it: ${st.right.map(u => esc(nameOf(u))).join(', ')}`) : B('ما عرفها أحد!', 'Nobody got it!')}</p>`);
+          foot = ph === 'guess' ? `<button type="button" class="btn ghost" data-skip>${B('اكشف صاحبها', 'Reveal')}</button>` : `<button type="button" class="btn ghost" data-skip>${B('التالية', 'Next')}</button>`;
+        }
+        const q = frame(`<div class="sm-g sm-whose">${body}</div>`, foot);
+        if (q('[data-skip]')) q('[data-skip]').onclick = () => ph === 'write' ? G.order() : ph === 'guess' ? G.reveal() : G.next();
+      }
+    };
+    return G;
+  }
+
   /* ---------- the letter game: three letters, points add up ---------- */
   function Letters() {
     const st = { ans: {}, bad: {}, used: [], r: 0, total: {} }, ROUNDS = 3;
@@ -528,16 +577,17 @@
     else if (g.id === 'who') body = phoneWho(g, p);
     else if (g.id === 'draw') body = phoneDraw(g, p);
     else if (g.id === 'letters') body = phoneLetters(g, p);
+    else if (g.id === 'whose') body = phoneWhose(g, p);
     // the drawer's pad stays as it is; only the list of who got it and the points change
     if (g && g.id === 'draw' && g.ph === 'draw' && p.role === 'drawer' && S.padT === g.turn && root.querySelector('#smPad')) {
       const gl = root.querySelector('#smGot'); if (gl) gl.innerHTML = gotHtml(p); const t = root.querySelector('.sm-top b'); if (t) t.textContent = my; return; }
     const tmi = S.tm && S.tm[uid] != null ? `<em class="sm-tmb" style="--c:${['#f2b84b', '#2bb3a3'][S.tm[uid]]}">${[B('الصقور', 'Falcons'), B('النجوم', 'Stars')][S.tm[uid]]}</em>` : '';
     const html = `<div class="sm-phone"><div class="sm-top"><span dir="auto">${esc(S.me)}${tmi}</span><b>${my}</b></div>${g && g.dur ? '<div class="sm-bar"><i id="smBar"></i></div>' : ''}${body}${rxBar()}</div>`;
     if (html === S.html && root.querySelector('.sm-phone')) return; S.html = html;
-    const keep = [...root.querySelectorAll('input[data-keep]')].map(i => [i.dataset.keep, i.value]), fk = document.activeElement && document.activeElement.dataset ? document.activeElement.dataset.keep : null;
+    const keep = [...root.querySelectorAll('input[data-keep], textarea[data-keep]')].map(i => [i.dataset.keep, i.value]), fk = document.activeElement && document.activeElement.dataset ? document.activeElement.dataset.keep : null;
     root.innerHTML = html;
-    keep.forEach(([k, v]) => { const i = root.querySelector(`input[data-keep="${k}"]`); if (i && !i.value) i.value = v; });
-    if (fk) { const i = root.querySelector(`input[data-keep="${fk}"]`); if (i) { i.focus(); try { i.setSelectionRange(i.value.length, i.value.length); } catch (e) {} } }
+    keep.forEach(([k, v]) => { const i = root.querySelector(`[data-keep="${k}"]`); if (i && !i.value) i.value = v; });
+    if (fk) { const i = root.querySelector(`[data-keep="${fk}"]`); if (i) { i.focus(); try { i.setSelectionRange(i.value.length, i.value.length); } catch (e) {} } }
     root.querySelectorAll('[data-rx]').forEach(b => b.onclick = () => { S.ref.child('rx/' + uid).set({ e: b.dataset.rx, t: TS() }).catch(() => {}); buzz(15); });
     bindPhone(g, p);
   }
@@ -574,6 +624,16 @@
       <div class="sm-tools">${SIZES.map((z, i) => `<button type="button" data-sz="${i}" class="sz" aria-pressed="${(S.sz || 0) === i}" aria-label="${T('سماكة', 'Size')} ${i + 1}"><i style="--s:${4 + i * 5}px"></i></button>`).join('')}<button type="button" data-undo aria-label="${T('تراجع', 'Undo')}">${IC.undo}</button><button type="button" data-clear>${B('امسح', 'Clear')}</button></div><p class="sm-got" id="smGot">${gotHtml(p)}</p></div>`;
     if (p.ok) return `<div class="sm-pw ok"><p class="sm-big">${B('خمّنتها!', 'You got it!')}</p><p class="sm-word" dir="auto">${esc(p.ok)}</p></div><canvas id="smView" class="sm-view" width="600" height="600"></canvas>`;
     return `<canvas id="smView" class="sm-view" width="600" height="600"></canvas><div class="sm-form"><p>${B(`يرسم «${esc(g.drawer)}»: ${g.len} حروف`, `${esc(g.drawer)} is drawing: ${g.len} letters`)}</p><input id="smIn" data-keep="g" maxlength="30" dir="auto" autocomplete="off" placeholder="${T('ما هذه؟', 'What is it?')}"><button type="button" class="btn solid" data-send="g" data-stay>${B('خمّن', 'Guess')}</button></div>`;
+  }
+  function phoneWhose(g) {
+    const mine = g.au === uid.slice(0, 8);
+    if (g.ph === 'write') return S.sent === 'a' ? `<div class="sm-pw"><p class="sm-big">${B('وصلت إجابتك. انتظر البقية…', 'Your answer is in. Waiting for the others…')}</p></div>`
+      : `<div class="sm-form"><p class="sm-big" dir="auto">${esc(g.ask)}</p><textarea id="smIn" data-keep="a" maxlength="90" rows="3" dir="auto" placeholder="${T('إجابتك، ولا تخلي أحد يشوفها', 'Your answer; keep it hidden')}"></textarea><button type="button" class="btn solid" data-send="a">${B('أرسل', 'Send')}</button></div>`;
+    const quote = `<blockquote class="sm-quote" dir="auto">${esc(g.a || '')}</blockquote>`;
+    if (g.ph === 'reveal') return `<div class="sm-pw">${quote}<p class="sm-big">${B(`قالها «${esc(g.who)}»`, `${esc(g.who)} said it`)}</p>${mine ? '' : (g.right || []).includes(S.me) ? `<p class="sm-plus">+100</p>` : ''}</div>`;
+    if (mine) return `<div class="sm-pw">${quote}<p class="sm-big">${B('هذه إجابتك! لا تفضح نفسك', 'This one is yours! Keep a straight face')}</p><p class="sm-sub">${B('كل من يخطئ فيها يعطيك ٥٠', 'Each wrong guess gives you 50')}</p></div>`;
+    if (S.sent === 'v') return `<div class="sm-pw">${quote}<p class="sm-big">${B('وصل تخمينك', 'Your guess is in')}</p></div>`;
+    return quote + `<div class="sm-votes"><p>${B('مين قالها؟', 'Who said it?')}</p>${(g.list || []).filter(x => x.u !== uid).map(x => `<button type="button" data-vote="${x.u}" dir="auto">${esc(x.n)}</button>`).join('')}</div>`;
   }
   function phoneLetters(g, p) {
     if (g.ph === 'review') return `<div class="sm-pw"><p class="sm-big">${B('المراجعة على الشاشة…', 'The answers are checked on the screen…')}</p></div>`;

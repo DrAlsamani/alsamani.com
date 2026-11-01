@@ -120,3 +120,9 @@
 .sm-tmb{font-style:normal;font-size:.75em;background:var(--c);color:#17153a;border-radius:999px;padding:2px 10px;margin-inline-start:8px}
 .sm-hostme{margin-top:18px}.sm-hostme [data-hm]:not([hidden]){display:grid;gap:8px}
 .sm-rbs{display:grid;gap:12px;margin-top:16px}.sm-rbs .btn{min-height:64px;font-size:1.15rem;justify-content:center;text-align:center}
+/* who said it */
+.sm-whose{text-align:center}.sm-quote{margin:2vh auto;max-width:900px;font-size:clamp(22px,4vh,46px);font-weight:700;line-height:1.5;background:rgba(255,255,255,.08);border-radius:22px;padding:3vh 2.4vw;position:relative}
+.sm-quote::before{content:'“';position:absolute;top:-.3em;inset-inline-start:.3em;font-size:2.4em;color:var(--sa);opacity:.6;line-height:1}
+.sm-author{color:var(--c)}
+.sm-phone .sm-quote{font-size:1.15rem;background:rgba(23,21,58,.06);padding:16px 18px;border-radius:16px;margin:0 0 12px}
+.sm-form textarea{font:inherit;font-size:1.1rem;padding:12px 14px;border:1.5px solid var(--line,#d6d6e2);border-radius:12px;background:var(--bg,#fff);color:inherit;width:100%;box-sizing:border-box;resize:vertical}
