@@ -266,9 +266,10 @@ def play_index():
     return f'''<section class="first tl-page">
 <header class="tl-head"><h1>{bi('منصة الألعاب التفاعلية', 'Interactive games')}</h1><p class="tl-lede">{bi('منصة تعليمية ترفيهية للتوظيف داخل بيئة التعلم والأنشطة والاجتماعات.', 'An educational and entertaining platform to use in learning, activities and meetings.')}</p></header>
 <div class="md-units"><a class="md-unit" href="maydan/index.html">{MAYDAN_MARK}<span><b>{bi('ميدان', 'Maydan')}</b><small>{bi('مسابقات تفاعلية حيّة: سؤال على الشاشة، وكل مشارك يجيب من جواله، والأسرع والأدق يتصدّر. ومعها مكتبة مسابقات جاهزة.', 'Live quizzes: a question on the screen, everyone answers from their phone, and the fastest right answers lead. With a library of ready quizzes.')}</small></span></a>
+<a class="md-unit" href="samar/index.html">{SM_MARK}<span><b>{bi('سمر', 'Samar')}</b><small>{bi('ألعاب الجلسة على رمز واحد: الكلمة السرية، من أنا؟، ارسم وخمّن، وإنسان حيوان نبات جماد بلاد. الشاشة للعرض والجوالات للعب، والنقاط تتجمع من لعبة إلى لعبة.', 'Games for a gathering on one code: the secret word, who am I, draw and guess, and the letter game. The screen shows the play, the phones play, and the points add up from game to game.')}</small></span></a>
 <a class="md-unit" href="tasalsul/index.html">{KH_MARK}<span><b>{bi('تسلسل', 'Tasalsul')}</b><small>{bi('على طريقة سيكوينس: كوّن صفوفك من أربع أو خمس قبل خصمك. اللوح على الشاشة والأوراق في الجوالات، أو عن بُعد، أو ضد الجهاز.', 'In the style of Sequence: make rows of four or five before the others. The board on a screen and the hands on phones, remote play, or against the computer.')}</small></span></a>
 </div>
-<style>.md-units{{display:grid;gap:14px;max-width:760px;margin:0 auto}}.md-unit{{display:flex;gap:16px;align-items:center;background:var(--surface);border-radius:18px;padding:18px;text-decoration:none;color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.04)}}.md-unit:hover{{box-shadow:0 6px 22px rgba(0,0,0,.08)}}.md-unit .md-mark,.md-unit .kh-mark{{width:64px;height:64px;flex:none}}.md-unit b{{display:block;font-size:1.25rem;margin-bottom:4px}}.md-unit small{{color:var(--muted);font-size:.9375rem;line-height:1.7}}.md-lib-ic{{width:64px;height:64px;flex:none;display:grid;place-items:center;font-size:2.4rem;background:#f4ead8;border-radius:16px}}</style>
+<style>.md-units{{display:grid;gap:14px;max-width:760px;margin:0 auto}}.md-unit{{display:flex;gap:16px;align-items:center;background:var(--surface);border-radius:18px;padding:18px;text-decoration:none;color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.04)}}.md-unit:hover{{box-shadow:0 6px 22px rgba(0,0,0,.08)}}.md-unit .md-mark,.md-unit .kh-mark,.md-unit .sm-mark{{width:64px;height:64px;flex:none}}.md-unit b{{display:block;font-size:1.25rem;margin-bottom:4px}}.md-unit small{{color:var(--muted);font-size:.9375rem;line-height:1.7}}.md-lib-ic{{width:64px;height:64px;flex:none;display:grid;place-items:center;font-size:2.4rem;background:#f4ead8;border-radius:16px}}</style>
 </section>'''
 def maydan_body():
     src = lambda f: open(os.path.join(ROOT, 'src', f)).read()
@@ -291,6 +292,16 @@ def baloot_body():
 <style>{src('khumasiya.css')}{src('baloot.css')}</style>
 <div id="bl" class="bl"><noscript>{bi("تعمل هذه اللعبة مع تفعيل JavaScript.", "This game needs JavaScript.")}</noscript></div>
 {MD_SCRIPTS()}<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script><script>{src('bl_engine.js')}</script><script>{src('bl_bot.js')}</script><script>{src('baloot.js')}</script>
+</section>'''
+SM_MARK = '<svg class="sm-mark" viewBox="0 0 48 48" aria-hidden="true"><rect x="4" y="4" width="40" height="40" rx="12" fill="#17153a"/><path d="M27 12a12 12 0 1 0 9 20a10 10 0 1 1-9-20z" fill="#f2b84b"/><path d="M33 13l1.2 2.6 2.8.4-2 2 .5 2.8-2.5-1.3-2.5 1.3.5-2.8-2-2 2.8-.4z" fill="#f4eedf"/><circle cx="14" cy="34" r="1.6" fill="#2bb3a3"/><circle cx="20" cy="37" r="1.2" fill="#e0607e"/></svg>'
+def samar_body():
+    src = lambda f: open(os.path.join(ROOT, 'src', f)).read()
+    return f'''<section class="first tl-page sn-page-wrap">
+<nav class="tl-crumb" aria-label="breadcrumb"><a href="../index.html">{bi('منصة الألعاب التفاعلية', 'Interactive games')}</a><i class="chev"></i><span>{bi('سمر', 'Samar')}</span></nav>
+<header class="sm-head">{SM_MARK}<div><h1>{bi('سمر', 'Samar')}</h1><p>{bi('ألعاب الجلسة: شاشة واحدة وجوالات الجميع', 'Games for a gathering: one screen and everyone’s phone')}</p></div></header>
+<style>{src('samar.css')}</style>
+<div id="sm" class="sm"><noscript>{bi("تعمل هذه اللعبة مع تفعيل JavaScript.", "This game needs JavaScript.")}</noscript></div>
+{MD_SCRIPTS()}<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script><script>{src('samar.js')}</script>
 </section>'''
 def khumasiya_body():
     src = lambda f: open(os.path.join(ROOT, 'src', f)).read()

@@ -696,6 +696,8 @@ PAGES.append(('play/baloot', 2, 'بلوت: الطاولة على الشاشة و
 DESCS['play/baloot'] = 'Baloot with the table on a screen and the hands on phones, the jack draw and Qaid as at the majlis, and a smart computer player in several styles. بلوت: الطاولة على الشاشة والأوراق في الجوالات، وطق الولد والقيد، وجهاز ذكي.'
 PAGES.append(('play/tasalsul', 2, 'تسلسل: على طريقة سيكوينس | Tasalsul: in the style of Sequence | Dr. Omar A. Alsamani', _tp.khumasiya_body))
 DESCS['play/tasalsul'] = 'Tasalsul, a game in the style of Sequence: make rows of four or five before the others, with friends on a big screen and phones, remotely, or against the computer. تسلسل: لعبة على طريقة سيكوينس، صفوف من أربع أو خمس قبل خصمك.'
+PAGES.append(('play/samar', 2, 'سمر: ألعاب الجلسة | Samar: games for a gathering | Dr. Omar A. Alsamani', _tp.samar_body))
+DESCS['play/samar'] = 'Samar: party games on one code — the secret word, who am I, draw and guess, and the letter game. سمر: ألعاب الجلسة.'
 PAGES.append(('play/maydan', 2, 'ميدان: مسابقات تفاعلية حيّة | Maydan: live quizzes | Dr. Omar A. Alsamani', _tp.maydan_body))
 DESCS['play/maydan'] = 'Maydan: live interactive quizzes. Write the questions by pasting them, uploading Word, Excel or PDF, or asking an AI. ميدان: مسابقات تفاعلية حيّة.'
 PAGES.append(('tools/qr', 2, 'رمز QR | QR code | Dr. Omar A. Alsamani', _tp.qr_body))
