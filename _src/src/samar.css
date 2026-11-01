@@ -392,3 +392,7 @@ html.sm-homeview,html.sm-homeview body{overflow-x:clip}
 .sm-pick{display:flex;flex-direction:column;gap:1.4vh}.sm-pick>*{margin-block:0!important}
 .sm-meta .need{color:#f0a0b4;opacity:1}
 @media (min-width:821px){.sm-kind .sm-games{grid-template-columns:repeat(4,1fr)!important}}
+/* the turn line on the phone */
+.sm-turn{margin:0;padding:8px 14px;border-radius:12px;background:rgba(23,21,58,.06);color:#5d5a80;font-size:.95rem;text-align:center}
+.sm-turn.on{background:#f2b84b;color:#17153a;font-weight:800;font-size:1.05rem;animation:smTurn .5s ease-out}
+@keyframes smTurn{0%{transform:scale(.92)}60%{transform:scale(1.04)}100%{transform:none}}

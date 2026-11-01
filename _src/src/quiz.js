@@ -173,7 +173,7 @@
     // delete from the list, after a clear yes
     root.querySelectorAll('[data-del]').forEach(b => b.onclick = () => {
       const id = b.dataset.del, z = list.find(x => x.id === id), li = b.closest('li'); if (!z) return;
-      li.classList.add('qz-ask'); li.innerHTML = `<p>${B(`تحذف «${esc(z.title || T('بلا عنوان', 'Untitled'))}» نهائيًا؟`, `Delete «${esc(z.title || T('بلا عنوان', 'Untitled'))}» for good?`)}</p><span><button type="button" class="btn solid qz-yes">${B('احذف', 'Delete')}</button><button type="button" class="btn ghost qz-no">${B('تراجع', 'Keep it')}</button></span>`;
+      li.classList.add('qz-ask'); li.innerHTML = `<p>${B(`تحذف «${esc(z.title || T('بلا عنوان', 'Untitled'))}» نهائيًا؟`, `Delete “${esc(z.title || T('بلا عنوان', 'Untitled'))}” for good?`)}</p><span><button type="button" class="btn solid qz-yes">${B('احذف', 'Delete')}</button><button type="button" class="btn ghost qz-no">${B('تراجع', 'Keep it')}</button></span>`;
       li.querySelector('.qz-no').onclick = home;
       li.querySelector('.qz-yes').onclick = () => { list = list.filter(x => x.id !== id); store.set('list', list); Cloud.del(id); home(); toast(B('حُذفت المسابقة.', 'Quiz deleted.')); };
     });
@@ -182,7 +182,7 @@
       const f = e.target.files[0]; if (!f) return;
       try { const j = JSON.parse(await f.text());
         // a copy of all the quizzes: add the ones not here yet
-        if (Array.isArray(j.all)) { let n = 0; j.all.forEach(z => { if (!z || !Array.isArray(z.qs)) return; const k = JSON.stringify(z.qs); if (list.some(x => x.title === z.title && JSON.stringify(x.qs.map(({ id, timeSet, ...r }) => r)) === k)) return; const nz = { id: uid(), title: z.title || '', qs: z.qs.map(norm), at: Date.now() }; list.push(nz); Cloud.put(nz); n++; }); store.set('list', list); home(); toast(B(`أُضيفت ${n} مسابقة.`, `${n} quizzes added.`)); return; }
+        if (Array.isArray(j.all)) { let n = 0; j.all.forEach(z => { if (!z || !Array.isArray(z.qs)) return; const k = JSON.stringify(z.qs); if (list.some(x => x.title === z.title && JSON.stringify(x.qs.map(({ id, timeSet, ...r }) => r)) === k)) return; const nz = { id: uid(), title: z.title || '', qs: z.qs.map(norm), at: Date.now() }; list.push(nz); Cloud.put(nz); n++; }); store.set('list', list); home(); toast(B(`أُضيفت ${n} مسابقة.`, n === 1 ? '1 quiz added.' : `${n} quizzes added.`)); return; }
         if (!Array.isArray(j.qs)) throw 0; Q = { id: uid(), title: j.title || '', qs: j.qs.map(norm) }; persist(); editor(); toast(B('فُتحت النسخة.', 'Copy opened.')); }
       catch (er) { toast(B('هذا الملف ليس نسخة مسابقة.', 'That file is not a quiz copy.'), 1); }
     };
