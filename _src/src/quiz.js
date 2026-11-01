@@ -38,10 +38,12 @@
   let onHome = false;
   const Cloud = {
     user: null,
+    // the Firebase scripts load after this one, so the account is looked up once the page is ready
     init() {
-      try { if (!window.firebase || !window.MD_CFG) return; if (!firebase.apps.length) firebase.initializeApp(window.MD_CFG);
+      try { if (Cloud.on || !window.firebase || !window.MD_CFG) return !!Cloud.on; if (!firebase.apps.length) firebase.initializeApp(window.MD_CFG); Cloud.on = true;
         firebase.auth().onAuthStateChanged(u => { const g = u && !u.isAnonymous && u.providerData.some(p => p.providerId === 'google.com') ? u : null; const was = Cloud.user; Cloud.user = g; if (g) Cloud.pull(); else if (was && onHome) home(); });
       } catch (e) { console.error(e); }
+      return !!Cloud.on;
     },
     ref() { return firebase.database().ref('mq/' + Cloud.user.uid); },
     // the device's and the account's quizzes become one list; the newer copy of each wins, and deletions stay deleted
@@ -60,6 +62,7 @@
     put(z) { if (!Cloud.user) return; Cloud.ref().child(z.id).set({ j: JSON.stringify(z), at: z.at || Date.now() }).catch(e => console.error(e)); },
     del(id) { if (Cloud.user) Cloud.ref().child(id).remove().catch(() => {}); else { const g = store.get('gone', []); g.push(id); store.set('gone', g.slice(-200)); } },
     async signIn() {
+      if (!Cloud.init()) throw { code: 'no-firebase' };
       const a = firebase.auth(), p = new firebase.auth.GoogleAuthProvider(); p.setCustomParameters({ prompt: 'select_account' });
       // an anonymous visitor keeps the same id when the account is linked; an account already used elsewhere simply signs in
       try { if (a.currentUser && a.currentUser.isAnonymous) await a.currentUser.linkWithPopup(p); else await a.signInWithPopup(p); }
@@ -67,7 +70,7 @@
       const u = a.currentUser; if (u) { Cloud.user = u; await Cloud.pull(); }
     }
   };
-  Cloud.init();
+  if (document.readyState === 'complete') Cloud.init(); else addEventListener('load', () => Cloud.init());
   const persist = () => { if (!Q) return; Q.at = Date.now(); const i = list.findIndex(x => x.id === Q.id); if (i >= 0) list[i] = Q; else list.unshift(Q); Cloud.put(Q); if (!store.set('list', list)) toast(B('امتلأت مساحة الحفظ في المتصفح، فاحفظ نسخة في جهازك أو صغّر الصور.', 'Browser storage is full; save a copy to your device or use smaller images.'), 1); };
   let tSave; const later = () => { clearTimeout(tSave); tSave = setTimeout(() => { persist(); checks(); }, 400); };
 
