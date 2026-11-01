@@ -28,7 +28,7 @@
   /* ---------- the code and the name ---------- */
   function codeScreen(err) {
     const p = new URLSearchParams(location.search).get('p') || '';
-    root.innerHTML = `<div class="mp-card"><div class="mp-logo">${window.MD_MARK || ''}<b>${B('ميدان', 'Maydan')}</b></div>
+    root.innerHTML = `<div class="mp-card"><a class="mp-logo" href="/play/maydan/">${window.MD_MARK || ''}<b>${B('ميدان', 'Maydan')}</b></a>
       <label class="mp-l">${B('رمز المسابقة', 'Quiz code')}<input id="mpPin" inputmode="numeric" autocomplete="off" maxlength="7" dir="ltr" placeholder="123 456" value="${esc(p)}"></label>
       <p class="mp-err" ${err ? '' : 'hidden'}>${err || ''}</p>
       <button type="button" class="btn solid mp-go" id="mpGo">${B('دخول', 'Enter')}</button></div>`;
@@ -55,7 +55,7 @@
     if (p.replace(/\D/g, '').length === 6 && !err) setTimeout(() => go.click(), 50);
   }
   function nameScreen(err) {
-    root.innerHTML = `<div class="mp-card"><div class="mp-logo">${window.MD_MARK || ''}<b>${B('ميدان', 'Maydan')}</b></div>
+    root.innerHTML = `<div class="mp-card"><a class="mp-logo" href="/play/maydan/">${window.MD_MARK || ''}<b>${B('ميدان', 'Maydan')}</b></a>
       <label class="mp-l">${B('اسمك أو لقبك', 'Your name or nickname')}<input id="mpName" maxlength="24" autocomplete="nickname" dir="auto" value="${esc(store.get('name', ''))}"></label>
       <div id="mpTeams" class="mp-teams"></div>
       <p class="mp-err" ${err ? '' : 'hidden'}>${err || ''}</p>
@@ -344,15 +344,17 @@
       ${SC.gap != null && SC.r > 1 ? `<p class="mp-gap">${B(`تحتاج ${SC.gap + 1} نقطة لتتجاوز ${esc(SC.above)}`, `You need ${SC.gap + 1} points to pass ${esc(SC.above)}`)}</p>` : SC.r === 1 ? `<p class="mp-gap">${B('أنت في الصدارة!', 'You are in the lead!')}</p>` : ''}
       ${SC.tr ? `<p class="mp-tm" style="--c:var(--qz${(SC.t) % 6})">${B(`فريقك ${esc(TEAMS ? TEAMS[SC.t] : '')} في المركز ${SC.tr}`, `Your team ${esc(TEAMS ? TEAMS[SC.t] : '')} is in place ${SC.tr}`)}</p>` : ''}</div>` + rxBar(), ok ? 'good' : 'bad');
   }
+  // after the game: an invitation to build one's own quiz (not inside the host's own panel)
+  const MAKE = () => document.documentElement.classList.contains('mp-embed') ? '' : `<a class="btn solid mp-make" href="/play/maydan/">${B('جرّب وأنشئ مسابقتك', 'Make your own quiz')}</a>`;
   function final() {
     const r = SC ? SC.r : null;
     screen(`<div class="mp-res end"><p class="mp-sym">${r === 1 ? '' : r === 2 ? '' : r === 3 ? '' : ''}</p>
       <p class="mp-big">${r && r <= 3 ? B('على منصة التتويج!', 'On the podium!') : B('انتهت المسابقة', 'The quiz is over')}</p>
       ${r ? `<p class="mp-rank">${B(`مركزك النهائي: ${r}`, `Final place: ${r}`)}</p><p class="mp-plus">${SC.s} ${B('نقطة', 'points')}</p>` : ''}
       ${TOP && TOP.t && TOP.t.length ? `<p class="mp-tm" style="--c:var(--qz${TOP.t[0].k % 6})">${B('الفريق الفائز:', 'Winning team:')} ${esc(TOP.t[0].n)}</p>` : ''}${topList()}
-      <p>${B('شكرًا لمشاركتك.', 'Thanks for playing.')}</p></div>` + rxBar(), 'end');
+      <p>${B('شكرًا لمشاركتك.', 'Thanks for playing.')}</p>${MAKE()}</div>` + rxBar(), 'end');
   }
-  function gone() { clearInterval(tick); R && R.off(); root.innerHTML = `<div class="mp-card"><p class="mp-big">${B('انتهت المسابقة', 'The quiz has ended')}</p><button type="button" class="btn ghost" id="mpAgain">${B('مسابقة أخرى', 'Another quiz')}</button></div>`; root.querySelector('#mpAgain').onclick = () => { history.replaceState(null, '', location.pathname); codeScreen(); }; }
+  function gone() { clearInterval(tick); R && R.off(); root.innerHTML = `<div class="mp-card"><p class="mp-big">${B('انتهت المسابقة', 'The quiz has ended')}</p><button type="button" class="btn ghost" id="mpAgain">${B('مسابقة أخرى', 'Another quiz')}</button>${MAKE()}</div>`; root.querySelector('#mpAgain').onclick = () => { history.replaceState(null, '', location.pathname); codeScreen(); }; }
   function kicked() { R.off(); me = null; root.innerHTML = `<div class="mp-card"><p>${B('أخرجك المضيف من المسابقة.', 'The host removed you from the quiz.')}</p></div>`; }
 
   // inside the host's own page (phones-only mode): just the game, no site around it

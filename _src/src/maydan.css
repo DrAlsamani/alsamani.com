@@ -83,7 +83,7 @@ html.md-on{overflow:hidden}
 /* ---------- the player's phone ---------- */
 .mp{max-width:520px;margin:0 auto}
 .mp-card{background:var(--surface);border-radius:22px;padding:28px 22px;display:grid;gap:14px;box-shadow:0 1px 2px rgba(0,0,0,.04);text-align:center}
-.mp-logo{display:flex;align-items:center;justify-content:center;gap:10px;font-size:1.5rem}.mp-logo svg{width:48px;height:48px}
+.mp-logo{color:inherit;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:10px;font-size:1.5rem}.mp-logo svg{width:48px;height:48px}
 .mp-l{display:grid;gap:8px;color:var(--muted);font-size:.9375rem;text-align:center}
 .mp-l input{font:inherit;font-size:28px;text-align:center;letter-spacing:.06em;border:2px solid var(--line);border-radius:14px;padding:12px;background:var(--bg);color:var(--ink);width:100%;box-sizing:border-box}
 .mp-l input:focus{border-color:#23336F;outline:0}
@@ -431,3 +431,6 @@ html.mp-embed body{padding-top:0!important}
 .mp-al i{width:26px;height:26px;margin-left:-13px}.mp-al i.done{filter:drop-shadow(0 0 3px #e0a458)}.mp-al i.me{width:32px;height:32px;margin-left:-16px;filter:drop-shadow(0 0 2px #111)}
 /* a slim strip of the arena above a challenge on the phone */
 .mp-strip:empty{display:none}.mp-strip .mp-arena{margin:4px 0;gap:4px}.mp-strip .mp-al{height:34px}.mp-strip .mp-al i{bottom:4px;width:20px;height:20px;margin-left:-10px;font-size:.5625rem}.mp-strip .mp-al i.me{width:26px;height:26px}
+
+.mp-make{display:block;margin:14px auto 0;width:max-content;max-width:100%}
+.mp-res .mp-make{background:#fff;color:#23336F;border-color:#fff}

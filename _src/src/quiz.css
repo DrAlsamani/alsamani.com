@@ -167,3 +167,8 @@
 #qzPaste,#qzTopic{text-align:start}
 .qz-gpick{grid-template-columns:repeat(auto-fill,minmax(96px,1fr))!important;gap:6px!important}
 .qz-gpick button{padding:6px 4px!important;gap:2px!important;border-radius:12px!important}.qz-gpick button b{font-size:1.25rem!important}.qz-gpick button span{font-size:.8125rem!important;line-height:1.25}.qz-gpick button small{display:none}
+
+.qz-howto{display:inline-flex;align-items:center;gap:6px;margin:-4px auto 10px;font-weight:600}.qz-howto svg{width:20px;height:20px}
+.qz-vid{position:fixed;inset:0;z-index:9999;background:rgba(10,14,30,.82);display:flex;align-items:center;justify-content:center;padding:16px}
+.qz-vbox{position:relative;width:min(1100px,100%)}.qz-vbox video{width:100%;border-radius:14px;background:#000;display:block}
+.qz-vx{position:absolute;top:-42px;inset-inline-end:0;background:none;border:0;color:#fff;font-size:34px;line-height:1;cursor:pointer}

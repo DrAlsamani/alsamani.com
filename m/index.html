@@ -1481,7 +1481,7 @@ html.md-on{overflow:hidden}
 /* ---------- the player's phone ---------- */
 .mp{max-width:520px;margin:0 auto}
 .mp-card{background:var(--surface);border-radius:22px;padding:28px 22px;display:grid;gap:14px;box-shadow:0 1px 2px rgba(0,0,0,.04);text-align:center}
-.mp-logo{display:flex;align-items:center;justify-content:center;gap:10px;font-size:1.5rem}.mp-logo svg{width:48px;height:48px}
+.mp-logo{color:inherit;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:10px;font-size:1.5rem}.mp-logo svg{width:48px;height:48px}
 .mp-l{display:grid;gap:8px;color:var(--muted);font-size:.9375rem;text-align:center}
 .mp-l input{font:inherit;font-size:28px;text-align:center;letter-spacing:.06em;border:2px solid var(--line);border-radius:14px;padding:12px;background:var(--bg);color:var(--ink);width:100%;box-sizing:border-box}
 .mp-l input:focus{border-color:#23336F;outline:0}
@@ -1829,6 +1829,9 @@ html.mp-embed body{padding-top:0!important}
 .mp-al i{width:26px;height:26px;margin-left:-13px}.mp-al i.done{filter:drop-shadow(0 0 3px #e0a458)}.mp-al i.me{width:32px;height:32px;margin-left:-16px;filter:drop-shadow(0 0 2px #111)}
 /* a slim strip of the arena above a challenge on the phone */
 .mp-strip:empty{display:none}.mp-strip .mp-arena{margin:4px 0;gap:4px}.mp-strip .mp-al{height:34px}.mp-strip .mp-al i{bottom:4px;width:20px;height:20px;margin-left:-10px;font-size:.5625rem}.mp-strip .mp-al i.me{width:26px;height:26px}
+
+.mp-make{display:block;margin:14px auto 0;width:max-content;max-width:100%}
+.mp-res .mp-make{background:#fff;color:#23336F;border-color:#fff}
 </style>
 <div id="mp" class="sn mp"><noscript><span class="ar">تعمل هذه الصفحة مع تفعيل JavaScript.</span><span class="en">This page needs JavaScript.</span></noscript></div>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script>window.MD_CFG={"apiKey": "AIzaSyA50i75DT1Is1a6Yn6snW1_JVObc8S3F0Y", "authDomain": "maydan-705ae.firebaseapp.com", "databaseURL": "https://maydan-705ae-default-rtdb.europe-west1.firebasedatabase.app", "projectId": "maydan-705ae", "appId": "1:342187013133:web:d5c2396f0db413f3c51144"};window.MD_MARK="<svg class=\"md-mark\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><rect x=\"4\" y=\"4\" width=\"40\" height=\"40\" rx=\"12\" fill=\"#23336F\"/><path d=\"M24 9l4.2 6.8 7.8-1.8-1.8 7.8L41 24l-6.8 4.2 1.8 7.8-7.8-1.8L24 39l-4.2-6.8-7.8 1.8 1.8-7.8L7 24l6.8-4.2-1.8-7.8 7.8 1.8z\" fill=\"#C9822B\"/><circle cx=\"24\" cy=\"24\" r=\"6.5\" fill=\"#23336F\"/><circle cx=\"24\" cy=\"24\" r=\"3\" fill=\"#F3E3C7\"/></svg>";</script><script>/* Maydan challenges: short games played on every phone at once. Every phone gets the same level (same seed),
@@ -2559,7 +2562,7 @@ window.MDGames = (function () {
   /* ---------- the code and the name ---------- */
   function codeScreen(err) {
     const p = new URLSearchParams(location.search).get('p') || '';
-    root.innerHTML = `<div class="mp-card"><div class="mp-logo">${window.MD_MARK || ''}<b>${B('ميدان', 'Maydan')}</b></div>
+    root.innerHTML = `<div class="mp-card"><a class="mp-logo" href="/play/maydan/">${window.MD_MARK || ''}<b>${B('ميدان', 'Maydan')}</b></a>
       <label class="mp-l">${B('رمز المسابقة', 'Quiz code')}<input id="mpPin" inputmode="numeric" autocomplete="off" maxlength="7" dir="ltr" placeholder="123 456" value="${esc(p)}"></label>
       <p class="mp-err" ${err ? '' : 'hidden'}>${err || ''}</p>
       <button type="button" class="btn solid mp-go" id="mpGo">${B('دخول', 'Enter')}</button></div>`;
@@ -2586,7 +2589,7 @@ window.MDGames = (function () {
     if (p.replace(/\D/g, '').length === 6 && !err) setTimeout(() => go.click(), 50);
   }
   function nameScreen(err) {
-    root.innerHTML = `<div class="mp-card"><div class="mp-logo">${window.MD_MARK || ''}<b>${B('ميدان', 'Maydan')}</b></div>
+    root.innerHTML = `<div class="mp-card"><a class="mp-logo" href="/play/maydan/">${window.MD_MARK || ''}<b>${B('ميدان', 'Maydan')}</b></a>
       <label class="mp-l">${B('اسمك أو لقبك', 'Your name or nickname')}<input id="mpName" maxlength="24" autocomplete="nickname" dir="auto" value="${esc(store.get('name', ''))}"></label>
       <div id="mpTeams" class="mp-teams"></div>
       <p class="mp-err" ${err ? '' : 'hidden'}>${err || ''}</p>
@@ -2875,15 +2878,17 @@ window.MDGames = (function () {
       ${SC.gap != null && SC.r > 1 ? `<p class="mp-gap">${B(`تحتاج ${SC.gap + 1} نقطة لتتجاوز ${esc(SC.above)}`, `You need ${SC.gap + 1} points to pass ${esc(SC.above)}`)}</p>` : SC.r === 1 ? `<p class="mp-gap">${B('أنت في الصدارة!', 'You are in the lead!')}</p>` : ''}
       ${SC.tr ? `<p class="mp-tm" style="--c:var(--qz${(SC.t) % 6})">${B(`فريقك ${esc(TEAMS ? TEAMS[SC.t] : '')} في المركز ${SC.tr}`, `Your team ${esc(TEAMS ? TEAMS[SC.t] : '')} is in place ${SC.tr}`)}</p>` : ''}</div>` + rxBar(), ok ? 'good' : 'bad');
   }
+  // after the game: an invitation to build one's own quiz (not inside the host's own panel)
+  const MAKE = () => document.documentElement.classList.contains('mp-embed') ? '' : `<a class="btn solid mp-make" href="/play/maydan/">${B('جرّب وأنشئ مسابقتك', 'Make your own quiz')}</a>`;
   function final() {
     const r = SC ? SC.r : null;
     screen(`<div class="mp-res end"><p class="mp-sym">${r === 1 ? '' : r === 2 ? '' : r === 3 ? '' : ''}</p>
       <p class="mp-big">${r && r <= 3 ? B('على منصة التتويج!', 'On the podium!') : B('انتهت المسابقة', 'The quiz is over')}</p>
       ${r ? `<p class="mp-rank">${B(`مركزك النهائي: ${r}`, `Final place: ${r}`)}</p><p class="mp-plus">${SC.s} ${B('نقطة', 'points')}</p>` : ''}
       ${TOP && TOP.t && TOP.t.length ? `<p class="mp-tm" style="--c:var(--qz${TOP.t[0].k % 6})">${B('الفريق الفائز:', 'Winning team:')} ${esc(TOP.t[0].n)}</p>` : ''}${topList()}
-      <p>${B('شكرًا لمشاركتك.', 'Thanks for playing.')}</p></div>` + rxBar(), 'end');
+      <p>${B('شكرًا لمشاركتك.', 'Thanks for playing.')}</p>${MAKE()}</div>` + rxBar(), 'end');
   }
-  function gone() { clearInterval(tick); R && R.off(); root.innerHTML = `<div class="mp-card"><p class="mp-big">${B('انتهت المسابقة', 'The quiz has ended')}</p><button type="button" class="btn ghost" id="mpAgain">${B('مسابقة أخرى', 'Another quiz')}</button></div>`; root.querySelector('#mpAgain').onclick = () => { history.replaceState(null, '', location.pathname); codeScreen(); }; }
+  function gone() { clearInterval(tick); R && R.off(); root.innerHTML = `<div class="mp-card"><p class="mp-big">${B('انتهت المسابقة', 'The quiz has ended')}</p><button type="button" class="btn ghost" id="mpAgain">${B('مسابقة أخرى', 'Another quiz')}</button>${MAKE()}</div>`; root.querySelector('#mpAgain').onclick = () => { history.replaceState(null, '', location.pathname); codeScreen(); }; }
   function kicked() { R.off(); me = null; root.innerHTML = `<div class="mp-card"><p>${B('أخرجك المضيف من المسابقة.', 'The host removed you from the quiz.')}</p></div>`; }
 
   // inside the host's own page (phones-only mode): just the game, no site around it

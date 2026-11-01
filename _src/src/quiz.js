@@ -101,6 +101,7 @@
     root.innerHTML = intro() + `${P ? `<div class="sn-card qz-resume"><p>${B('مسابقة متوقفة', 'A paused quiz')}: <b>${esc(P.quiz.title || T('بلا عنوان', 'Untitled'))}</b> · ${B('أُنهي', 'done')} ${P.i + 1} ${T('من', 'of')} ${P.quiz.qs.length} · ${B('الرمز', 'code')} <span dir="ltr">${P.pin}</span></p>
         <div class="sn-two"><button type="button" class="btn solid" id="qzRes">${B('متابعة المسابقة ▶', 'Resume ▶')}</button><button type="button" class="btn ghost" id="qzDrop2">${B('إنهاؤها وحذفها', 'End and remove it')}</button></div></div>` : ''}<div class="sn-card qz-home" id="build">
       <h2 class="qz-h">${B('ابنِ مسابقتك', 'Build your quiz')}</h2>
+      <button type="button" class="sn-lnk qz-howto" id="qzHow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M10 8.5v7l6-3.5z"/></svg>${B('شاهد طريقة بناء مسابقة بالذكاء الاصطناعي', 'Watch how to build a quiz with AI')}</button>
       <div class="qz-starts"><button type="button" class="btn solid" id="qzNew">${B('مسابقة أسئلة جديدة', 'New question quiz')}</button>
         <div class="qz-gstart"><button type="button" class="btn ghost" id="qzNewG">${B('مسابقة ألعاب وتحديات', 'A games-only quiz')}</button><label>${B('عدد التحديات', 'Challenges')} <select id="qzGn">${[5, 8, 10, 12, 15, 20, 24].map(n => `<option${n === 10 ? ' selected' : ''}>${n}</option>`).join('')}</select></label></div>
         <p class="pt-fine">${B('في مسابقة الألعاب نختار لك تحديات متنوعة، وتقدر تغيّر أي واحد منها بزر أو تختار غيره بنفسك.', 'We pick a varied set for you; swap any of them with or choose another yourself.')}</p></div>
@@ -111,6 +112,13 @@
       <p class="pt-fine">${B('تُحفظ المسابقات في هذا المتصفح.', 'Quizzes are kept in this browser.')}</p></div>${introMore()}`;
     if (P) { root.querySelector('#qzRes').onclick = () => MDLive.resume(); root.querySelector('#qzDrop2').onclick = async () => { await MDLive.discard(); home(); }; }
     const lm = root.querySelector('#qzLibMore'); if (lm) lm.onclick = () => { root.querySelectorAll('[data-more]').forEach(e => { e.hidden = false; }); lm.remove(); };
+    root.querySelector('#qzHow').onclick = () => {
+      const d = document.createElement('div'); d.className = 'qz-vid'; d.setAttribute('role', 'dialog');
+      d.innerHTML = `<div class="qz-vbox"><button type="button" class="qz-vx" aria-label="${T('إغلاق', 'Close')}">×</button><video controls autoplay playsinline preload="auto" poster="/img/video/maydan-howto-${isAr() ? 'ar' : 'en'}.jpg" src="/img/video/maydan-howto-${isAr() ? 'ar' : 'en'}.mp4"></video></div>`;
+      const shut = () => d.remove(); d.onclick = e => { if (e.target === d || e.target.classList.contains('qz-vx')) shut(); };
+      document.addEventListener('keydown', function esc(e) { if (e.key === 'Escape') { shut(); document.removeEventListener('keydown', esc); } });
+      document.body.appendChild(d);
+    };
     root.querySelector('#qzNew').onclick = () => { Q = { id: uid(), title: '', qs: [] }; editor(); };
     root.querySelectorAll('[data-newq]').forEach(b => b.onclick = () => root.querySelector('#qzNew').click());
     const fromLib = id => { const z = RLIB().find(v => v.id === id); return { id: uid(), title: z.title, lib: z.id, qs: z.qs.map(x => norm(JSON.parse(JSON.stringify(x)))) }; };
