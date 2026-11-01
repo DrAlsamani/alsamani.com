@@ -105,32 +105,64 @@ window.MDX = (function () {
   /* ---------- grades for Blackboard: a file matched by the student ID (the Username), ready for "Upload gradebook" ---------- */
   function blackboard(host, D) {
     const saved = (() => { try { return JSON.parse(localStorage.getItem('md-bb') || '{}'); } catch (e) { return {}; } })();
+    let roster = null;   // the course's own gradebook file, when the host adds it: students and columns
     const d = overlay(host, `<h3>${B('درجات بلاك بورد', 'Blackboard grades')}</h3>
-      <div class="md-xform"><label>${B('اسم العمود في بلاك بورد', 'Column name in Blackboard')}<input data-b="col" maxlength="60" dir="auto" value="${esc(D.title || T('مسابقة ميدان', 'Maydan quiz'))}"></label>
-      <label>${B('درجة المشاركة من', 'Participation out of')}<input data-b="p1" type="number" min="0" max="100" step="0.5" value="${saved.p1 != null ? saved.p1 : 2}"></label>
-      <label>${B('درجة الأداء من', 'Performance out of')}<input data-b="p2" type="number" min="0" max="100" step="0.5" value="${saved.p2 != null ? saved.p2 : 8}"></label>
+      <label class="md-xfile">${B('ملف الدرجات من المقرر (اختياري، وهو الأدق): من مركز التقديرات ← العمل دون اتصال ← تنزيل', 'The course grades file (optional, the surest way): Grade Center → Work Offline → Download')}<input type="file" accept=".xls,.csv,.txt,.tsv" data-f></label>
+      <div class="md-xform"><label data-colw hidden>${B('العمود في المقرر', 'The column in the course')}<select data-b="tcol"></select></label>
+      <label data-neww>${B('اسم العمود الجديد', 'New column name')}<input data-b="col" maxlength="60" dir="auto" value="${esc(D.title || T('مسابقة ميدان', 'Maydan quiz'))}"></label>
+      <label>${B('درجة المشاركة من', 'Participation out of')}<input data-b="p1" type="number" min="0" max="100" step="0.5" value="${saved.p1 != null ? saved.p1 : 1}"></label>
+      <label>${B('درجة الأداء من', 'Performance out of')}<input data-b="p2" type="number" min="0" max="100" step="0.5" value="${saved.p2 != null ? saved.p2 : 4}"></label>
       <label>${B('الأداء يُحسب من', 'Performance is based on')}<select data-b="base"><option value="qp">${T('نقاط الأسئلة فقط (دون الألعاب)', 'Question points only (no games)')}</option><option value="all">${T('كل النقاط مع الألعاب', 'All points, games included')}</option><option value="ok">${T('نسبة الإجابات الصحيحة', 'Share of right answers')}</option></select></label>
-      <label class="md-xwide">${B('رابط صفحة الدرجات في المقرر (اختياري، يُحفظ لهذا المتصفح)', 'Link to the course gradebook (optional, kept in this browser)')}<input data-b="url" dir="ltr" placeholder="https://lms.uoh.edu.sa/ultra/courses/…/grades" value="${esc(saved.url || '')}"></label></div>
-      <p class="md-xnote">${B('المشاركة: نسبة ما أجاب عنه الطالب من فقرات المسابقة. الأداء: بالنسبة إلى الأعلى (الأول يأخذ الدرجة كاملة)، أو نسبة الإجابات الصحيحة.', 'Participation: the share of items the student answered. Performance: relative to the top student (who gets full marks), or the share of right answers.')}</p>
+      <label data-prew>${B('بادئة اسم المستخدم', 'Username prefix')}<input data-b="pre" dir="ltr" maxlength="4" value="${esc(saved.pre != null ? saved.pre : 's')}"></label>
+      <label class="md-xwide">${B('رابط صفحة المقرر (اختياري، يُحفظ)', 'Link to the course page (optional, kept)')}<input data-b="url" dir="ltr" placeholder="https://lms.uoh.edu.sa/…" value="${esc(saved.url || '')}"></label></div>
       <div class="md-xrep md-bbt"></div>
       <div class="md-xact"><button type="button" class="btn solid" data-dl>${B('تحميل الملف وفتح المقرر', 'Download the file and open the course')}</button></div>
-      <p class="md-xnote">${B('في بلاك بورد: الدرجات ← الإعدادات ← رفع الدرجات (Upload gradebook)، ثم اختر الملف. يُطابَق الطالب بعمود Username، وهو الرقم الأكاديمي.', 'In Blackboard: Gradebook → Settings → Upload gradebook, then choose the file. Students are matched by the Username column, their ID.')}</p>`);
-    const v = k => d.querySelector(`[data-b="${k}"]`).value.trim();
-    const r2 = n => Math.round(n * 100) / 100;
+      <p class="md-xnote">${B('ثم في بلاك بورد: مركز التقديرات ← العمل دون اتصال ← رفع، واختر الملف. يُطابَق الطالب باسم المستخدم (s ثم رقمه).', 'Then in Blackboard: Grade Center → Work Offline → Upload, and choose the file. Students are matched by username (s and their number).')}</p>`);
+    const q = s => d.querySelector(s), v = k => q(`[data-b="${k}"]`).value.trim();
+    const r2 = n => Math.round(n * 100) / 100, digits = s => String(s || '').replace(/[٠-٩]/g, c => '٠١٢٣٤٥٦٧٨٩'.indexOf(c)).replace(/\D/g, '');
+    // read Blackboard's file: tab or comma separated, quoted fields
+    const parse = text => { const lines = text.replace(/^﻿/, '').split(/\r?\n/).filter(l => l.trim()); const sep = (lines[0].match(/\t/g) || []).length >= (lines[0].match(/,/g) || []).length ? '\t' : ',';
+      const cells = l => { const out = []; let cur = '', inq = false; for (let i = 0; i < l.length; i++) { const ch = l[i]; if (inq) { if (ch === '"' && l[i + 1] === '"') { cur += '"'; i++; } else if (ch === '"') inq = false; else cur += ch; } else if (ch === '"') inq = true; else if (ch === sep) { out.push(cur); cur = ''; } else cur += ch; } out.push(cur); return out; };
+      const head = cells(lines[0]), ix = n => head.findIndex(h => h.trim().toLowerCase() === n);
+      const iu = ix('username'), ii = ix('student id'), il = ix('last name'), iff = ix('first name'); if (iu < 0) return null;
+      const cols = head.map((h, k) => ({ h, k, pts: +((h.match(/Total Pts:\s*([\d.]+)/) || [])[1] || 0) })).filter(c => /\|\s*\d+\s*$/.test(c.h) || /\[Total Pts/.test(c.h));
+      const st = lines.slice(1).map(l => { const c = cells(l); return { last: c[il] || '', first: c[iff] || '', user: c[iu] || '', id: digits(ii >= 0 ? c[ii] : c[iu]) }; }).filter(s => s.user);
+      return { st, cols, sep }; };
+    q('[data-f]').onchange = e => { const f = e.target.files[0]; if (!f) return; const r = new FileReader();
+      r.onload = () => { let t = r.result; if (/\u0000/.test(t.slice(0, 40))) { const r2b = new FileReader(); r2b.onload = () => { roster = parse(r2b.result); setRoster(); }; r2b.readAsText(f, 'utf-16le'); return; } roster = parse(t); setRoster(); };
+      r.readAsText(f, 'utf-8'); };
+    const setRoster = () => {
+      if (!roster) { alert(T('لم أجد عمود Username في الملف. نزّله من مركز التقديرات ← العمل دون اتصال ← تنزيل.', 'No Username column found. Download it from Grade Center → Work Offline → Download.')); return; }
+      q('[data-colw]').hidden = false; q('[data-prew]').hidden = true;
+      q('[data-b="tcol"]').innerHTML = roster.cols.map((c, k) => `<option value="${k}">${esc(c.h.replace(/\s*\|\s*\d+\s*$/, ''))}</option>`).join('') + `<option value="new">${T('عمود جديد', 'A new column')}</option>`;
+      pickCol(); };
+    const pickCol = () => { const t = v('tcol'), c = roster && roster.cols[+t]; q('[data-neww]').hidden = !!c; if (c && c.pts) { const p1 = Math.min(+v('p1') || 0, c.pts); q('[data-b="p1"]').value = p1; q('[data-b="p2"]').value = r2(c.pts - p1); } draw(); };
+    q('[data-b="tcol"]').onchange = pickCol;
     const calc = () => {
       const p1 = Math.max(0, +v('p1') || 0), p2 = Math.max(0, +v('p2') || 0), base = v('base');
       const pts = p => base === 'qp' ? p.qp : base === 'all' ? p.s : 0, best = Math.max(1, ...D.players.map(pts));
-      return D.players.map(p => { const part = p.it ? r2(p1 * p.an / p.it) : 0, perf = r2(base === 'ok' ? (p.jq ? p2 * p.ok / p.jq : 0) : p2 * Math.max(0, pts(p)) / best); return { p, part, perf, sum: r2(part + perf) }; });
+      return D.players.map(p => { const part = p.it ? r2(p1 * p.an / p.it) : 0, perf = r2(base === 'ok' ? (p.jq ? p2 * p.ok / p.jq : 0) : p2 * Math.max(0, pts(p)) / best); return { p, id: digits(p.sid), part, perf, sum: r2(part + perf) }; });
     };
-    const draw = () => { const R = calc(), miss = R.filter(x => !x.p.sid).length;
-      d.querySelector('.md-bbt').innerHTML = `${miss ? `<p class="md-bbmiss">${T(`${miss} بلا رقم أكاديمي، فلن يُرفعوا: أضف أرقامهم في الملف قبل رفعه.`, `${miss} without an ID will not upload: add their IDs in the file first.`)}</p>` : ''}<table class="md-lgt"><thead><tr><th>Username</th><th>${T('الاسم', 'Name')}</th><th>${T('المشاركة', 'Participation')}</th><th>${T('الأداء', 'Performance')}</th><th>${T('المجموع', 'Total')}</th></tr></thead><tbody>${R.map(x => `<tr class="${x.p.sid ? '' : 'miss'}"><td dir="ltr">${esc(x.p.sid || '—')}</td><td dir="auto">${esc(x.p.n)}</td><td>${x.part}</td><td>${x.perf}</td><td><b>${x.sum}</b></td></tr>`).join('')}</tbody></table>`; };
-    d.querySelectorAll('[data-b]').forEach(i => i.oninput = i.onchange = draw); draw();
-    d.querySelector('[data-dl]').onclick = () => {
-      const col = v('col') || 'Maydan', p1 = +v('p1') || 0, p2 = +v('p2') || 0, url = v('url');
-      try { localStorage.setItem('md-bb', JSON.stringify({ p1, p2, url })); } catch (e) {}
-      const R = calc(), head = ['Username', 'Last Name', 'First Name'].concat(p1 ? [`${col} - ${T('مشاركة', 'Participation')}`] : []).concat(p2 ? [`${col} - ${T('أداء', 'Performance')}`] : []).concat(p1 && p2 ? [col] : []);
-      const rows = [head].concat(R.map(x => [x.p.sid || '', '', x.p.n].concat(p1 ? [x.part] : []).concat(p2 ? [x.perf] : []).concat(p1 && p2 ? [x.sum] : [])));
-      download(`${col.replace(/[\\/:*?"<>|]/g, '').slice(0, 40) || 'maydan'}-grades.csv`, csvOf(rows));
+    // with the course file: every student of the course, matched by number; without it, our players with the prefix
+    const rows = () => { const R = calc();
+      if (!roster) return R.map(x => ({ x, user: x.id ? v('pre') + x.id : '', last: '', first: x.p.n, id: x.id }));
+      const by = {}; R.forEach(x => { if (x.id) by[x.id] = x; });
+      const out = roster.st.map(s => ({ x: by[s.id] || null, user: s.user, last: s.last, first: s.first, id: s.id }));
+      R.filter(x => !x.id || !roster.st.some(s => s.id === x.id)).forEach(x => out.push({ x, user: '', last: '', first: x.p.n, id: x.id, stray: true }));
+      return out; };
+    const draw = () => { const L = rows(), stray = L.filter(r => r.stray || !r.user).length, absent = L.filter(r => !r.x).length;
+      q('.md-bbt').innerHTML = `${stray ? `<p class="md-bbmiss">${T(`${stray} من اللاعبين لم يُطابَقوا (رقم ناقص أو غير موجود في المقرر)، فلن تُرفع درجاتهم.`, `${stray} players were not matched (missing number, or not in the course) and will not upload.`)}</p>` : ''}${roster && absent ? `<p class="md-xnote">${T(`${absent} من طلاب المقرر لم يشاركوا: تبقى خاناتهم كما هي في بلاك بورد.`, `${absent} students of the course did not take part: their cells stay as they are.`)}</p>` : ''}
+        <table class="md-lgt"><thead><tr><th>Username</th><th>${T('الاسم', 'Name')}</th><th>${T('المشاركة', 'Participation')}</th><th>${T('الأداء', 'Performance')}</th><th>${T('المجموع', 'Total')}</th></tr></thead><tbody>${L.map(r => `<tr class="${r.stray || !r.user ? 'miss' : !r.x ? 'abs' : ''}"><td dir="ltr">${esc(r.user || '—')}</td><td dir="auto">${esc((r.x ? r.x.p.n : '') || [r.first, r.last].join(' '))}</td><td>${r.x ? r.x.part : ''}</td><td>${r.x ? r.x.perf : ''}</td><td><b>${r.x ? r.x.sum : ''}</b></td></tr>`).join('')}</tbody></table>`; };
+    d.querySelectorAll('[data-b]').forEach(i => { if (i.dataset.b !== 'tcol') i.oninput = i.onchange = draw; }); draw();
+    q('[data-dl]').onclick = () => {
+      const p1 = +v('p1') || 0, p2 = +v('p2') || 0, url = v('url'), col = v('col') || 'Maydan';
+      try { localStorage.setItem('md-bb', JSON.stringify({ p1, p2, url, pre: v('pre') })); } catch (e) {}
+      const target = roster && roster.cols[+v('tcol')];
+      // into an existing column: one grade, the total, under the column's own header (its id ties it to the column)
+      const heads = target ? [target.h] : [col];
+      const L = rows().filter(r => r.user && r.x);
+      const out = [['Last Name', 'First Name', 'Username', 'Student ID'].concat(heads)].concat(L.map(r => [r.last, r.first, r.user, r.id, r.x.sum]));
+      download(`${(target ? target.h.replace(/\s*\[.*$/, '') : col).replace(/[\\/:*?"<>|]/g, '').slice(0, 40) || 'maydan'}-blackboard.csv`, csvOf(out));
       if (/^https?:\/\//.test(url)) setTimeout(() => window.open(url, '_blank', 'noopener'), 600);
     };
   }

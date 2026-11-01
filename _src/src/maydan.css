@@ -562,3 +562,5 @@ html.mp-embed body{padding-top:0!important}
 body>.md-xov{position:fixed}
 .md-xwide{grid-column:1/-1}.md-bbt{max-height:40vh}.md-bbt tr.miss td{background:#fff4ef}.md-bbmiss{color:#b0533a;font-weight:700;margin:0 0 8px}
 .md-titles{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;padding-bottom:4px}.md-title{flex:none}
+.md-xfile{display:grid;gap:6px;font-weight:600;font-size:.9rem;border:1px dashed #c9cde0;border-radius:12px;padding:10px 12px;background:#f7f8fb}
+.md-bbt tr.abs td{opacity:.55}
