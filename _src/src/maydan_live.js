@@ -420,12 +420,12 @@ window.MDLive = (function () {
         <div class="md-mid"><div class="md-clock"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" class="md-ring0"/><circle cx="50" cy="50" r="44" class="md-ring" id="mdRing"/></svg><b id="mdT">${x.time}</b></div>
           <p class="md-how2">${esc(how)}</p>
           <div class="md-ans"><b id="mdA">0</b><small>${B('أنهوا', 'finished')}</small></div></div>
-        ${x.g === 'tug' ? tugView(x) : x.g === 'race' ? raceView(x) : '<div class="md-tiles"></div>'}</div>`,
+        ${x.g === 'tug' ? tugView(x) : x.g === 'race' ? raceView(x) : (x.g === 'sum' ? (raceView(x), '') : '') + '<div class="md-arena" id="mdArena"></div>'}</div>`,
       `<button type="button" class="btn ghost" data-skip disabled>${B('أنهِ الوقت', 'End time')}</button>`);
     if (gold) SND.gold();
     await G.ref.child('an/' + G.i).remove();
-    if (x.g === 'tug' || x.g === 'race') await G.ref.update({ tg: null, tgp: 0 });
-    await G.ref.update({ q: Object.assign({ type: 'game', g: x.g, seed: x.seed || 1, q: nm, opts: [], m, gold, last, i: G.i, n, qn: qNo(G.i), qt: qTot(), L: G.ar ? 'ar' : 'en' }, x.g === 'tug' || x.g === 'race' ? { ts: x._tug.sides, tn: x._tug.names } : {}), ok: null, st: { ph: 'ready', i: G.i, lock: !!G.lockJoin } });
+    await G.ref.update({ tg: null, tgp: 0 });
+    await G.ref.update({ q: Object.assign({ type: 'game', g: x.g, seed: x.seed || 1, q: nm, opts: [], m, gold, last, i: G.i, n, qn: qNo(G.i), qt: qTot(), L: G.ar ? 'ar' : 'en' }, x.g === 'tug' || x.g === 'race' || x.g === 'sum' ? { ts: x._tug.sides, tn: x._tug.names } : {}), ok: null, st: { ph: 'ready', i: G.i, lock: !!G.lockJoin } });
     setTimeout(() => open(x, q), 4500 + (gold || last ? 1200 : 0));
   }
   /* ---------- tug of war: two balanced sides; teams stay whole when there are teams ---------- */
@@ -462,18 +462,30 @@ window.MDLive = (function () {
     us.sort(() => Math.random() - .5).forEach((u, k) => { sides[u] = k % n; });
     return { sides, names, cols: names.map((_, k) => k) };
   }
+  const runner = x => x.g === 'sum' ? '<span class="md-sumc"></span>' : '🐪';
   function raceView(x) {
     x._tug = raceSides();
-    return `<div class="md-race">${x._tug.names.map((nm, j) => `<div class="md-lane" style="--c:var(--qz${x._tug.cols[j]})"><span class="md-ln" dir="auto">${esc(nm)}</span><i class="md-camel" id="mdCam${j}" style="--p:0%">🐪</i><b class="md-flag">🏁</b><small id="mdLead${j}"></small></div>`).join('')}</div>`;
+    return `<div class="md-race">${x._tug.names.map((nm, j) => `<div class="md-lane" style="--c:var(--qz${x._tug.cols[j]})"><span class="md-ln" dir="auto">${esc(nm)}</span><i class="md-camel" id="mdCam${j}" style="--p:0%">${runner(x)}</i><b class="md-flag">🏁</b><small id="mdLead${j}"></small></div>`).join('')}</div>`;
   }
   function raceView2(x, avg, raw) {
     const order = avg.map((v, j) => j).sort((a, b) => avg[b] - avg[a]);
     return `<div class="md-race done">${order.map((j, k) => { const mem = Object.keys(x._tug.sides).filter(u => x._tug.sides[u] === j).sort((p, q) => (raw[q] || 0) - (raw[p] || 0));
-      return `<div class="md-lane" style="--c:var(--qz${x._tug.cols[j]})"><span class="md-ln" dir="auto">${k + 1}. ${esc(x._tug.names[j])}</span><i class="md-camel" style="--p:${Math.min(100, 100 * avg[j] / RACE_END)}%">🐪</i><b class="md-flag">🏁</b><small>${mem.slice(0, 4).map(u => `${esc((G.players[u] || '').slice(0, 12))} ${raw[u] || 0}`).join(' · ')}</small></div>`; }).join('')}</div>`;
+      return `<div class="md-lane" style="--c:var(--qz${x._tug.cols[j]})"><span class="md-ln" dir="auto">${k + 1}. ${esc(x._tug.names[j])}</span><i class="md-camel" style="--p:${Math.min(100, 100 * avg[j] / (x.g === 'sum' ? 22 : RACE_END))}%">${runner(x)}</i><b class="md-flag">🏁</b><small>${mem.slice(0, 4).map(u => `${esc((G.players[u] || '').slice(0, 12))} ${raw[u] || 0}`).join(' · ')}</small></div>`; }).join('')}</div>`;
+  }
+  function arena(x, pr, fin) {
+    const box = G.el.querySelector('#mdArena'); if (!box) return;
+    const us = Object.keys(G.players), best = Math.max(1, ...us.map(u => fin[u] != null ? fin[u] : pr[u] || 0));
+    const groups = x.g === 'sum' && x._tug ? x._tug.names.map((n, j) => ({ k: x._tug.cols[j], n, us: us.filter(u => x._tug.sides[u] === j) })) : G.teams && teamTable().length >= 2 ? teamTable().map(t => ({ k: t.k, n: t.name, us: us.filter(u => G.team[u] === t.k) })) : [{ k: 0, n: T('المتسابقون', 'Players'), us }];
+    const pos = u => fin[u] != null ? 100 : Math.min(92, Math.round(92 * (pr[u] || 0) / best));
+    box.innerHTML = groups.map(gr => { const avg = gr.us.length ? Math.round(gr.us.reduce((a, u) => a + pos(u), 0) / gr.us.length) : 0;
+      return `<div class="md-alane" style="--c:var(--qz${gr.k % 6})"><span class="md-aln" dir="auto">${esc(gr.n)}</span>${groups.length > 1 ? `<em class="md-alavg" style="--w:${avg}%"></em>` : ''}<b class="md-afin"></b>
+        ${gr.us.slice(0, 24).map((u, j) => `<i class="md-fig${fin[u] != null ? ' done' : ''}" style="--x:${pos(u)}%;--y:${(j % 4) * 22 + 8}%"><span>${esc((G.players[u] || '?').charAt(0))}</span><small dir="auto">${esc((G.players[u] || '').slice(0, 10))}</small></i>`).join('')}</div>`; }).join('');
+    // the same picture, small, for the fans on their phones
+    if (!arena.t || Date.now() - arena.t > 900) { arena.t = Date.now(); G.ref.child('top/ar').set({ i: G.i, g: groups.map(gr => ({ k: gr.k, n: gr.n, p: gr.us.slice(0, 20).map(u => ({ n: G.players[u] || '', p: pos(u), d: fin[u] != null ? 1 : 0 })) })) }).catch(() => {}); }
   }
   function raceAvg(x, taps) { const n = x._tug.names.length, sum = new Array(n).fill(0), cnt = new Array(n).fill(0); Object.keys(x._tug.sides).forEach(u => { const k = x._tug.sides[u]; cnt[k]++; sum[k] += taps[u] || 0; }); return sum.map((v, k) => cnt[k] ? v / cnt[k] : 0); }
   function raceDraw(x, taps) {
-    raceAvg(x, taps).forEach((a, j) => { const c = G.el.querySelector('#mdCam' + j); if (c) c.style.setProperty('--p', Math.min(100, 100 * a / RACE_END) + '%');
+    raceAvg(x, taps).forEach((a, j) => { const c = G.el.querySelector('#mdCam' + j); if (c) c.style.setProperty('--p', Math.min(100, 100 * a / (x.g === 'sum' ? 22 : RACE_END)) + '%');
       const best = Object.keys(x._tug.sides).filter(u => x._tug.sides[u] === j).sort((p, q) => (taps[q] || 0) - (taps[p] || 0))[0], l = G.el.querySelector('#mdLead' + j); if (l) l.textContent = best && taps[best] ? `${(G.players[best] || '').slice(0, 14)} ${taps[best]}` : ''; });
   }
   // average pulls per player on each side; -1 means the first side has it all, 1 the second
@@ -484,7 +496,7 @@ window.MDLive = (function () {
     return { avg: a, p: Math.max(-1, Math.min(1, (a[1] - a[0]) / (a[0] + a[1] + 6))) };
   }
   async function open(x, q) {
-    if (!G) return;
+    if (!G || !q('[data-skip]')) return;   // the screen moved on before the question opened
     await G.ref.child('st').set({ ph: 'q', i: G.i, t0: TS, dur: x.time, lock: !!G.lockJoin });
     const t0 = (await G.ref.child('st/t0').once('value')).val();
     G.t0 = t0; SND.go();
@@ -495,6 +507,9 @@ window.MDLive = (function () {
     sub(G.ref.child('an/' + G.i), 'child_added', () => { got++; const a = q('#mdA'); if (a) a.textContent = got; if (got >= (G.opts.surv && !G.teams ? alive() : Object.keys(G.players)).length) reveal(); });
     q('[data-skip]').onclick = () => reveal();
     if (x.type === 'stage') { let k = 0; sub(G.ref.child('an/' + G.i), 'child_added', s => { const v = s.val() || {}, box = q('#mdStage'); if (!box || typeof v.a !== 'string' || !v.a.trim()) return; const p = box.querySelector('.md-prompt'); if (p) p.remove(); box.insertAdjacentHTML('afterbegin', bubble(G.players[s.key], v.a, k++)); SND.join(); while (box.children.length > 12) box.lastElementChild.remove(); }); }
+    if (x.type === 'game' && !['tug', 'race'].includes(x.g)) { const fin = {}; let pr = {};
+      sub(G.ref.child('an/' + G.i), 'child_added', a => { fin[a.key] = +(a.val() || {}).a || 0; arena(x, pr, fin); });
+      sub(G.ref.child('tg'), 'value', v => { pr = {}; Object.entries(v.val() || {}).forEach(([u, o]) => { pr[u] = +o.c || 0; }); arena(x, pr, fin); }); arena(x, pr, fin); }
     if (x.g === 'race') sub(G.ref.child('tg'), 'value', v => { const taps = {}; Object.entries(v.val() || {}).forEach(([u, o]) => { taps[u] = +o.c || 0; }); raceDraw(x, taps); });
     if (x.g === 'tug') {
       let taps = {}, sentAt = 0;
@@ -645,7 +660,7 @@ window.MDLive = (function () {
     // tug of war: the winning side scores most; the other side still earns a little for its effort
     const tug = x.g === 'tug' && x._tug ? tugPos(x, raw) : null, win = tug ? (tug.avg[0] >= tug.avg[1] ? 0 : 1) : 0;
     const bestOf = k => Math.max(1, ...Object.keys(raw).filter(u => x._tug.sides[u] === k).map(u => raw[u]));
-    const race = x.g === 'race' && x._tug ? raceAvg(x, raw) : null, place = race ? race.map(v => race.filter(w => w > v).length) : null;
+    const race = (x.g === 'race' || x.g === 'sum') && x._tug ? raceAvg(x, raw) : null, place = race ? race.map(v => race.filter(w => w > v).length) : null;
     Object.keys(G.players).forEach(u => {
       const sd = tug ? (x._tug.sides[u] != null ? x._tug.sides[u] : 0) : 0;
       const rp = race ? place[x._tug.sides[u] || 0] : 0, rs = race ? (x._tug.sides[u] || 0) : 0;

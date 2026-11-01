@@ -1797,6 +1797,31 @@ html.mp-embed body{padding-top:0!important}
 .mp-mic{margin:8px 0 2px}.mp-mic button{font-size:.875rem;padding:7px 14px;border-radius:99px}.mp-mic small{font-size:.6875rem}
 .mp-tb button:disabled{opacity:.55!important;background:#e3e6f0!important;border-color:#d5d9e6!important;color:#4a5272!important;font-weight:600;font-size:.8125rem}
 .md-svg{width:20px;height:20px;display:block}
+/* the arena: a lane per team, each player a small figure running as they progress */
+.md-arena{width:min(1100px,96vw);margin:1.5vh auto 0;display:grid;gap:1.2vh;direction:ltr}
+.md-alane{position:relative;height:clamp(90px,16vh,170px);border-radius:16px;background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.11));box-shadow:inset 0 0 0 3px var(--c);overflow:hidden}
+.md-alane::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 calc(10% - 1px),rgba(255,255,255,.07) calc(10% - 1px) 10%)}
+.md-aln{position:absolute;left:12px;top:6px;font-weight:800;color:#fff;font-size:clamp(13px,1.5vw,20px);z-index:2}
+.md-alavg{position:absolute;left:0;bottom:0;height:5px;width:var(--w);background:var(--c);transition:width .6s}
+.md-afin{position:absolute;right:4%;top:0;bottom:0;width:6px;background:repeating-linear-gradient(180deg,#fff 0 8px,#222 8px 16px);opacity:.6}
+.md-fig{position:absolute;left:calc(var(--x) * .88 + 2%);top:var(--y);display:grid;justify-items:center;font-style:normal;transition:left .8s cubic-bezier(.3,.8,.3,1);z-index:3}
+.md-fig span{width:clamp(26px,3.4vh,40px);height:clamp(26px,3.4vh,40px);border-radius:50% 50% 45% 45%;background:var(--c);color:#fff;font-weight:800;display:grid;place-items:center;font-size:clamp(12px,1.6vh,18px);box-shadow:0 0 0 2px #fff,0 3px 6px rgba(0,0,0,.35);animation:mdRun .5s ease-in-out infinite alternate}
+.md-fig small{margin-top:2px;font-size:clamp(10px,1.3vh,14px);color:#fff;background:rgba(0,0,0,.35);border-radius:6px;padding:0 5px;white-space:nowrap}
+.md-fig.done span{animation:none;box-shadow:0 0 0 3px #e0a458,0 0 14px #e0a458}
+@keyframes mdRun{to{transform:translateY(-4px) rotate(4deg)}}
+.md-sumc{display:block;width:clamp(26px,5vh,46px);height:clamp(26px,5vh,46px);border-radius:10px;background:var(--c);box-shadow:0 0 0 3px #fff}
+/* the number race on the phone */
+.mg-sum{font-size:clamp(34px,11vw,56px);font-weight:900;text-align:center;margin:10px 0;direction:ltr}
+.mg-sumo{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;max-width:360px;margin:0 auto}.mg-sumo.wait{opacity:.45}
+.mg-sumb{font:inherit;font-size:1.75rem;font-weight:800;border:0;border-radius:16px;padding:16px 0;background:#23336F;color:#fff;cursor:pointer}.mg-sumb.no{background:#b0533a}
+/* fans follow the arena */
+.mp-arena{display:grid;gap:8px;margin:10px 0;direction:ltr}
+.mp-al{position:relative;height:56px;border-radius:12px;box-shadow:inset 0 0 0 2px var(--c);background:rgba(0,0,0,.04)}
+.mp-al b{position:absolute;left:8px;top:2px;font-size:.6875rem}
+.mp-al i{position:absolute;bottom:6px;margin-left:-11px;left:0;width:22px;height:22px;border-radius:50%;background:var(--c);color:#fff;font-style:normal;font-size:.6875rem;font-weight:800;display:grid;place-items:center;transition:left .8s}
+.mp-al i.done{box-shadow:0 0 0 2px #e0a458}
+.mp-arena{width:100%;min-width:300px}
+.md-fig{left:calc(var(--x) * .8 + 9%)}
 </style>
 <div id="mp" class="sn mp"><noscript><span class="ar">تعمل هذه الصفحة مع تفعيل JavaScript.</span><span class="en">This page needs JavaScript.</span></noscript></div>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script>window.MD_CFG={"apiKey": "AIzaSyA50i75DT1Is1a6Yn6snW1_JVObc8S3F0Y", "authDomain": "maydan-705ae.firebaseapp.com", "databaseURL": "https://maydan-705ae-default-rtdb.europe-west1.firebasedatabase.app", "projectId": "maydan-705ae", "appId": "1:342187013133:web:d5c2396f0db413f3c51144"};window.MD_MARK="<svg class=\"md-mark\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><rect x=\"4\" y=\"4\" width=\"40\" height=\"40\" rx=\"12\" fill=\"#23336F\"/><path d=\"M24 9l4.2 6.8 7.8-1.8-1.8 7.8L41 24l-6.8 4.2 1.8 7.8-7.8-1.8L24 39l-4.2-6.8-7.8 1.8 1.8-7.8L7 24l6.8-4.2-1.8-7.8 7.8 1.8z\" fill=\"#C9822B\"/><circle cx=\"24\" cy=\"24\" r=\"6.5\" fill=\"#23336F\"/><circle cx=\"24\" cy=\"24\" r=\"3\" fill=\"#F3E3C7\"/></svg>";</script><script>/* Maydan challenges: short games played on every phone at once. Every phone gets the same level (same seed),
@@ -2453,7 +2478,40 @@ window.MDGames = (function () {
     }
   };
 
-  const LIST = [sort, shoot, pairs, stroop, seq, odd, count, math, whack, stack, fly, slide, letters, taps, react, spots, more, maze, pattern, lights, catcher, find, aim, tug, race];
+  /* ---------- the number race: a team game of quick sums; every right answer moves your team on ---------- */
+  const sum = {
+    id: 'sum', icon: '➕', ar: 'سباق الأرقام', en: 'Number race', kind: ['جماعي', 'Team'], team: true,
+    howAr: 'تظهر عملية حسابية سريعة؛ اختر الناتج الصحيح. كل إجابة صحيحة تقدّم فريقك، والخاطئة توقفك لحظة. يتقدّم الفريق بمعدل إجابات أعضائه.',
+    howEn: 'A quick sum appears; pick the right result. Each right answer moves your team on; a wrong one stops you a moment.',
+    play(el, ctx) {
+      const r = rngOf(ctx.seed + 17), side = ctx.side || { k: 0, name: ctx.ar ? 'فريقك' : 'Your team' };
+      const lab = h('p', 'mg-tside s' + (side.k % 2), (ctx.ar ? 'أنت في ' : 'You play for ') + '<b></b>'); lab.querySelector('b').textContent = side.name;
+      const q = h('p', 'mg-sum'), opts = h('div', 'mg-sumo'), info = h('p', 'mg-info'); el.append(lab, q, opts, info);
+      let n = 0, lock = 0, ans = 0;
+      const nd = v => ctx.ar ? String(v).replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d]) : String(v);
+      function next() {
+        const lv = n < 4 ? 0 : n < 9 ? 1 : 2, R = k => 1 + Math.floor(r() * k);
+        let a, b, op;
+        if (lv === 0) { a = R(9); b = R(9); op = '+'; ans = a + b; }
+        else if (lv === 1) { if (r() < .5) { a = R(20) + 5; b = R(a - 1); op = '−'; ans = a - b; } else { a = R(30); b = R(20); op = '+'; ans = a + b; } }
+        else { a = R(9) + 1; b = R(9) + 1; op = '×'; ans = a * b; }
+        q.textContent = ctx.ar ? `${nd(a)} ${op} ${nd(b)} = ؟` : `${a} ${op} ${b} = ?`;
+        const set = new Set([ans]); while (set.size < 4) { const d = ans + (Math.floor(r() * 7) - 3) * (lv === 2 ? a : 1); if (d >= 0 && d !== ans) set.add(d); else set.add(ans + set.size + 1); }
+        const list = [...set].sort(() => r() - .5); opts.innerHTML = '';
+        list.forEach(v => { const b2 = h('button', 'mg-sumb', nd(v)); b2.type = 'button'; b2.onclick = () => pick(v, b2); opts.appendChild(b2); });
+        info.textContent = (ctx.ar ? 'إجاباتك الصحيحة: ' : 'Right answers: ') + nd(n);
+      }
+      function pick(v, b2) {
+        if (Date.now() < lock) return;
+        if (v === ans) { n++; ctx.tick(); if (ctx.onTap) ctx.onTap(n); next(); }
+        else { ctx.bad(); b2.classList.add('no'); lock = Date.now() + 900; opts.classList.add('wait'); setTimeout(() => opts.classList.remove('wait'), 900); }
+      }
+      next();
+      return { score: () => n, stop: () => { lock = Infinity; } };
+    }
+  };
+
+  const LIST = [sort, shoot, pairs, stroop, seq, odd, count, math, whack, stack, fly, slide, letters, taps, react, spots, more, maze, pattern, lights, catcher, find, aim, tug, race, sum];
   const byId = id => LIST.find(g => g.id === id) || LIST[0];
   // run a game in a box: returns {score(), stop()}; ctx.finish is called when a game ends early by being completed
   function run(id, box, opts) {
@@ -2573,7 +2631,7 @@ window.MDGames = (function () {
     R.child('asg/' + uid).on('value', t => { if (t.val() != null) { myTeam = +t.val(); shown = ''; draw(); } });
     R.child('ok').on('value', s => { OK = s.val(); draw(); });
     R.child('wr').on('value', s => { const e = root.querySelector('#mpW'); if (e && s.val()) e.textContent = s.val(); });
-    R.child('top').on('value', s => { TOP = s.val(); if (TOP && TOP.mic && !TOP.mic.n && !TOP.mic.on) micOn = false; if (['lb', 'end', 'rev'].includes(st.ph)) { shown = ''; draw(); } });
+    R.child('top').on('value', s => { TOP = s.val(); if (FAN && st.ph === 'q') { shown = ''; draw(); return; } if (TOP && TOP.mic && !TOP.mic.n && !TOP.mic.on) micOn = false; if (['lb', 'end', 'rev'].includes(st.ph)) { shown = ''; draw(); } });
     R.child('sc/' + uid).on('value', s => { SC = s.val(); draw(); });
     R.child('pl/' + uid).on('value', s => { if (!s.exists() && me) kicked(); });
   }
@@ -2634,7 +2692,10 @@ window.MDGames = (function () {
   function tone(f, d, v) { try { acx = acx || new (window.AudioContext || window.webkitAudioContext)(); if (acx.state === 'suspended') acx.resume(); const o = acx.createOscillator(), g = acx.createGain(), t = acx.currentTime; o.type = 'triangle'; o.frequency.value = f; g.gain.setValueAtTime(v || .06, t); g.gain.exponentialRampToValueAtTime(.0001, t + d); o.connect(g).connect(acx.destination); o.start(t); o.stop(t + d + .02); } catch (e) {} }
   /* ---------- a fan: follows the questions and the ranking, and cheers ---------- */
   let FAN = false;
+  const arenaFan = () => { const A = TOP && TOP.ar; if (!A || A.i !== st.i) return `<p>${B('التحدي جارٍ…', 'The challenge is on…')}</p>`;
+    return `<div class="mp-arena">${A.g.map(gr => `<div class="mp-al" style="--c:var(--qz${gr.k % 6})"><b dir="auto">${esc(gr.n)}</b>${gr.p.map(x => `<i style="left:${x.p}%" class="${x.d ? 'done' : ''}" title="${esc(x.n)}">${esc(x.n.charAt(0))}</i>`).join('')}</div>`).join('')}</div>`; };
   function fanHtml(html) {
+    if (st.ph === 'q' && Q && Q.i === st.i && Q.type === 'game') return `<div class="mp-wait"><p class="mp-qt" dir="auto">${esc(Q.q)}</p>${arenaFan()}</div>` + rxBar();
     if (st.ph === 'q' && Q && Q.i === st.i) return `<div class="mp-wait"><p class="mp-qt" dir="auto">${esc(Q.q)}</p>${(Q.opts || []).length ? `<ol class="mp-fo">${Q.opts.map((o, j) => `<li style="--c:var(--qz${j})"><i>${LET()[j]}</i> <span dir="auto">${esc(o)}</span></li>`).join('')}</ol>` : ''}<p>${B('أنت متفرج: شجّع من هنا', 'You are watching: cheer from here')}</p></div>` + rxBar();
     if ((st.ph === 'rev' || st.ph === 'lb') && TOP) return `<div class="mp-res end"><p class="mp-big">${B('الترتيب', 'Ranking')}</p>${topList()}</div>` + rxBar();
     if (st.ph === 'end') return html;
@@ -2651,7 +2712,7 @@ window.MDGames = (function () {
     };
     // tug of war: pulls go up live (a few times a second) so the rope moves on every screen
     let tug = {};
-    if (Q.g === 'tug' || Q.g === 'race') {
+    if (Q.g === 'tug' || Q.g === 'race' || Q.g === 'sum') {
       const k = Q.ts && Q.ts[uid] != null ? Q.ts[uid] : 0; let pos = 0, pend = 0, lastW = 0, tm = null;
       const ref = R.child('tgp'), on = v => { pos = +v.val() || 0; }; ref.on('value', on);
       const push = () => { tm = null; lastW = Date.now(); R.child('tg/' + uid).set({ c: pend }).catch(() => {}); };
@@ -2660,7 +2721,9 @@ window.MDGames = (function () {
     }
     game = MDGames.run(Q.g, root.querySelector('#mpG'), Object.assign({ seed: Q.seed, ar: Q.L !== 'en', left: () => Math.max(0, 1 - (now() - st.t0) / 1000 / st.dur), finish: s2 => send(s2), tick: () => buzz(10), bad: () => buzz(60) }, tug));
     const bar = root.querySelector('#mpBar'), g = game;
+    let lastP = -1, lastW = 0;
     tick = setInterval(() => {
+      if (!['tug', 'race', 'sum'].includes(Q.g) && Date.now() - lastW > 900) { const v = Math.round(g.score() || 0); if (v !== lastP) { lastP = v; lastW = Date.now(); R.child('tg/' + uid).set({ c: v }).catch(() => {}); } }
       const left = Math.max(0, st.dur - (now() - st.t0) / 1000);
       if (bar) bar.style.width = (100 * left / st.dur) + '%';
       if (left <= 0) { clearInterval(tick); send(g.score()); }

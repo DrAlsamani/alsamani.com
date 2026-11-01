@@ -652,7 +652,40 @@ window.MDGames = (function () {
     }
   };
 
-  const LIST = [sort, shoot, pairs, stroop, seq, odd, count, math, whack, stack, fly, slide, letters, taps, react, spots, more, maze, pattern, lights, catcher, find, aim, tug, race];
+  /* ---------- the number race: a team game of quick sums; every right answer moves your team on ---------- */
+  const sum = {
+    id: 'sum', icon: '➕', ar: 'سباق الأرقام', en: 'Number race', kind: ['جماعي', 'Team'], team: true,
+    howAr: 'تظهر عملية حسابية سريعة؛ اختر الناتج الصحيح. كل إجابة صحيحة تقدّم فريقك، والخاطئة توقفك لحظة. يتقدّم الفريق بمعدل إجابات أعضائه.',
+    howEn: 'A quick sum appears; pick the right result. Each right answer moves your team on; a wrong one stops you a moment.',
+    play(el, ctx) {
+      const r = rngOf(ctx.seed + 17), side = ctx.side || { k: 0, name: ctx.ar ? 'فريقك' : 'Your team' };
+      const lab = h('p', 'mg-tside s' + (side.k % 2), (ctx.ar ? 'أنت في ' : 'You play for ') + '<b></b>'); lab.querySelector('b').textContent = side.name;
+      const q = h('p', 'mg-sum'), opts = h('div', 'mg-sumo'), info = h('p', 'mg-info'); el.append(lab, q, opts, info);
+      let n = 0, lock = 0, ans = 0;
+      const nd = v => ctx.ar ? String(v).replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d]) : String(v);
+      function next() {
+        const lv = n < 4 ? 0 : n < 9 ? 1 : 2, R = k => 1 + Math.floor(r() * k);
+        let a, b, op;
+        if (lv === 0) { a = R(9); b = R(9); op = '+'; ans = a + b; }
+        else if (lv === 1) { if (r() < .5) { a = R(20) + 5; b = R(a - 1); op = '−'; ans = a - b; } else { a = R(30); b = R(20); op = '+'; ans = a + b; } }
+        else { a = R(9) + 1; b = R(9) + 1; op = '×'; ans = a * b; }
+        q.textContent = ctx.ar ? `${nd(a)} ${op} ${nd(b)} = ؟` : `${a} ${op} ${b} = ?`;
+        const set = new Set([ans]); while (set.size < 4) { const d = ans + (Math.floor(r() * 7) - 3) * (lv === 2 ? a : 1); if (d >= 0 && d !== ans) set.add(d); else set.add(ans + set.size + 1); }
+        const list = [...set].sort(() => r() - .5); opts.innerHTML = '';
+        list.forEach(v => { const b2 = h('button', 'mg-sumb', nd(v)); b2.type = 'button'; b2.onclick = () => pick(v, b2); opts.appendChild(b2); });
+        info.textContent = (ctx.ar ? 'إجاباتك الصحيحة: ' : 'Right answers: ') + nd(n);
+      }
+      function pick(v, b2) {
+        if (Date.now() < lock) return;
+        if (v === ans) { n++; ctx.tick(); if (ctx.onTap) ctx.onTap(n); next(); }
+        else { ctx.bad(); b2.classList.add('no'); lock = Date.now() + 900; opts.classList.add('wait'); setTimeout(() => opts.classList.remove('wait'), 900); }
+      }
+      next();
+      return { score: () => n, stop: () => { lock = Infinity; } };
+    }
+  };
+
+  const LIST = [sort, shoot, pairs, stroop, seq, odd, count, math, whack, stack, fly, slide, letters, taps, react, spots, more, maze, pattern, lights, catcher, find, aim, tug, race, sum];
   const byId = id => LIST.find(g => g.id === id) || LIST[0];
   // run a game in a box: returns {score(), stop()}; ctx.finish is called when a game ends early by being completed
   function run(id, box, opts) {

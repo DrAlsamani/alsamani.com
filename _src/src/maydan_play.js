@@ -107,7 +107,7 @@
     R.child('asg/' + uid).on('value', t => { if (t.val() != null) { myTeam = +t.val(); shown = ''; draw(); } });
     R.child('ok').on('value', s => { OK = s.val(); draw(); });
     R.child('wr').on('value', s => { const e = root.querySelector('#mpW'); if (e && s.val()) e.textContent = s.val(); });
-    R.child('top').on('value', s => { TOP = s.val(); if (TOP && TOP.mic && !TOP.mic.n && !TOP.mic.on) micOn = false; if (['lb', 'end', 'rev'].includes(st.ph)) { shown = ''; draw(); } });
+    R.child('top').on('value', s => { TOP = s.val(); if (FAN && st.ph === 'q') { shown = ''; draw(); return; } if (TOP && TOP.mic && !TOP.mic.n && !TOP.mic.on) micOn = false; if (['lb', 'end', 'rev'].includes(st.ph)) { shown = ''; draw(); } });
     R.child('sc/' + uid).on('value', s => { SC = s.val(); draw(); });
     R.child('pl/' + uid).on('value', s => { if (!s.exists() && me) kicked(); });
   }
@@ -168,7 +168,10 @@
   function tone(f, d, v) { try { acx = acx || new (window.AudioContext || window.webkitAudioContext)(); if (acx.state === 'suspended') acx.resume(); const o = acx.createOscillator(), g = acx.createGain(), t = acx.currentTime; o.type = 'triangle'; o.frequency.value = f; g.gain.setValueAtTime(v || .06, t); g.gain.exponentialRampToValueAtTime(.0001, t + d); o.connect(g).connect(acx.destination); o.start(t); o.stop(t + d + .02); } catch (e) {} }
   /* ---------- a fan: follows the questions and the ranking, and cheers ---------- */
   let FAN = false;
+  const arenaFan = () => { const A = TOP && TOP.ar; if (!A || A.i !== st.i) return `<p>${B('التحدي جارٍ…', 'The challenge is on…')}</p>`;
+    return `<div class="mp-arena">${A.g.map(gr => `<div class="mp-al" style="--c:var(--qz${gr.k % 6})"><b dir="auto">${esc(gr.n)}</b>${gr.p.map(x => `<i style="left:${x.p}%" class="${x.d ? 'done' : ''}" title="${esc(x.n)}">${esc(x.n.charAt(0))}</i>`).join('')}</div>`).join('')}</div>`; };
   function fanHtml(html) {
+    if (st.ph === 'q' && Q && Q.i === st.i && Q.type === 'game') return `<div class="mp-wait"><p class="mp-qt" dir="auto">${esc(Q.q)}</p>${arenaFan()}</div>` + rxBar();
     if (st.ph === 'q' && Q && Q.i === st.i) return `<div class="mp-wait"><p class="mp-qt" dir="auto">${esc(Q.q)}</p>${(Q.opts || []).length ? `<ol class="mp-fo">${Q.opts.map((o, j) => `<li style="--c:var(--qz${j})"><i>${LET()[j]}</i> <span dir="auto">${esc(o)}</span></li>`).join('')}</ol>` : ''}<p>${B('أنت متفرج: شجّع من هنا', 'You are watching: cheer from here')}</p></div>` + rxBar();
     if ((st.ph === 'rev' || st.ph === 'lb') && TOP) return `<div class="mp-res end"><p class="mp-big">${B('الترتيب', 'Ranking')}</p>${topList()}</div>` + rxBar();
     if (st.ph === 'end') return html;
@@ -185,7 +188,7 @@
     };
     // tug of war: pulls go up live (a few times a second) so the rope moves on every screen
     let tug = {};
-    if (Q.g === 'tug' || Q.g === 'race') {
+    if (Q.g === 'tug' || Q.g === 'race' || Q.g === 'sum') {
       const k = Q.ts && Q.ts[uid] != null ? Q.ts[uid] : 0; let pos = 0, pend = 0, lastW = 0, tm = null;
       const ref = R.child('tgp'), on = v => { pos = +v.val() || 0; }; ref.on('value', on);
       const push = () => { tm = null; lastW = Date.now(); R.child('tg/' + uid).set({ c: pend }).catch(() => {}); };
@@ -194,7 +197,9 @@
     }
     game = MDGames.run(Q.g, root.querySelector('#mpG'), Object.assign({ seed: Q.seed, ar: Q.L !== 'en', left: () => Math.max(0, 1 - (now() - st.t0) / 1000 / st.dur), finish: s2 => send(s2), tick: () => buzz(10), bad: () => buzz(60) }, tug));
     const bar = root.querySelector('#mpBar'), g = game;
+    let lastP = -1, lastW = 0;
     tick = setInterval(() => {
+      if (!['tug', 'race', 'sum'].includes(Q.g) && Date.now() - lastW > 900) { const v = Math.round(g.score() || 0); if (v !== lastP) { lastP = v; lastW = Date.now(); R.child('tg/' + uid).set({ c: v }).catch(() => {}); } }
       const left = Math.max(0, st.dur - (now() - st.t0) / 1000);
       if (bar) bar.style.width = (100 * left / st.dur) + '%';
       if (left <= 0) { clearInterval(tick); send(g.score()); }

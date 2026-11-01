@@ -2064,7 +2064,7 @@ window.MDLib = (function () {
       poll('حالة ٤: فريق مشروع فيه طالب لا يعمل، والبقية يشتكون. ما الحل الأنسب؟', ['تقويم فردي داخل العمل الجماعي', 'أدوار محددة لكل عضو', 'تقويم الأقران', 'إعادة تشكيل الفرق']),
       open('ختام: اكتب درسًا واحدًا تأخذه من هذه الحالات')] },
     { id: 'lib-teams', icon: '🏁', title: 'تحديات الفرق', desc: 'ألعاب جماعية حماسية: سباق الهجن وشدّ الحبل وتحديات سرعة؛ الأفضل مع الفرق.', who: 'للمجموعات والفعاليات', qs: [
-      g('race', 20), g('react', 25), g('tug', 20), g('whack', 30), g('race', 20), g('aim', 25), g('tug', 25)] },
+      g('race', 20), g('sum', 30), g('tug', 20), g('whack', 30), g('sum', 30), g('race', 20), g('tug', 25)] },
     { id: 'lib-brain', icon: '🧠', title: 'تحدي الألغاز والذكاء', desc: 'ثمانية تحديات تفكير على الجوال: أنماط ومتاهات وحساب وترتيب.', who: 'ألعاب فقط', qs: [
       g('pattern', 40), g('sort', 60), g('math', 30), g('maze', 45), g('lights', 45), g('letters', 45), g('slide', 60), g('more', 30)] },
     { id: 'lib-speed', icon: '⚡', title: 'سباق السرعة والتركيز', desc: 'تحديات حماسية للسرعة والانتباه، تُختم بشدّ الحبل.', who: 'ألعاب فقط', qs: [
@@ -3393,6 +3393,31 @@ html.mp-embed body{padding-top:0!important}
 .mp-mic{margin:8px 0 2px}.mp-mic button{font-size:.875rem;padding:7px 14px;border-radius:99px}.mp-mic small{font-size:.6875rem}
 .mp-tb button:disabled{opacity:.55!important;background:#e3e6f0!important;border-color:#d5d9e6!important;color:#4a5272!important;font-weight:600;font-size:.8125rem}
 .md-svg{width:20px;height:20px;display:block}
+/* the arena: a lane per team, each player a small figure running as they progress */
+.md-arena{width:min(1100px,96vw);margin:1.5vh auto 0;display:grid;gap:1.2vh;direction:ltr}
+.md-alane{position:relative;height:clamp(90px,16vh,170px);border-radius:16px;background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.11));box-shadow:inset 0 0 0 3px var(--c);overflow:hidden}
+.md-alane::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 calc(10% - 1px),rgba(255,255,255,.07) calc(10% - 1px) 10%)}
+.md-aln{position:absolute;left:12px;top:6px;font-weight:800;color:#fff;font-size:clamp(13px,1.5vw,20px);z-index:2}
+.md-alavg{position:absolute;left:0;bottom:0;height:5px;width:var(--w);background:var(--c);transition:width .6s}
+.md-afin{position:absolute;right:4%;top:0;bottom:0;width:6px;background:repeating-linear-gradient(180deg,#fff 0 8px,#222 8px 16px);opacity:.6}
+.md-fig{position:absolute;left:calc(var(--x) * .88 + 2%);top:var(--y);display:grid;justify-items:center;font-style:normal;transition:left .8s cubic-bezier(.3,.8,.3,1);z-index:3}
+.md-fig span{width:clamp(26px,3.4vh,40px);height:clamp(26px,3.4vh,40px);border-radius:50% 50% 45% 45%;background:var(--c);color:#fff;font-weight:800;display:grid;place-items:center;font-size:clamp(12px,1.6vh,18px);box-shadow:0 0 0 2px #fff,0 3px 6px rgba(0,0,0,.35);animation:mdRun .5s ease-in-out infinite alternate}
+.md-fig small{margin-top:2px;font-size:clamp(10px,1.3vh,14px);color:#fff;background:rgba(0,0,0,.35);border-radius:6px;padding:0 5px;white-space:nowrap}
+.md-fig.done span{animation:none;box-shadow:0 0 0 3px #e0a458,0 0 14px #e0a458}
+@keyframes mdRun{to{transform:translateY(-4px) rotate(4deg)}}
+.md-sumc{display:block;width:clamp(26px,5vh,46px);height:clamp(26px,5vh,46px);border-radius:10px;background:var(--c);box-shadow:0 0 0 3px #fff}
+/* the number race on the phone */
+.mg-sum{font-size:clamp(34px,11vw,56px);font-weight:900;text-align:center;margin:10px 0;direction:ltr}
+.mg-sumo{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;max-width:360px;margin:0 auto}.mg-sumo.wait{opacity:.45}
+.mg-sumb{font:inherit;font-size:1.75rem;font-weight:800;border:0;border-radius:16px;padding:16px 0;background:#23336F;color:#fff;cursor:pointer}.mg-sumb.no{background:#b0533a}
+/* fans follow the arena */
+.mp-arena{display:grid;gap:8px;margin:10px 0;direction:ltr}
+.mp-al{position:relative;height:56px;border-radius:12px;box-shadow:inset 0 0 0 2px var(--c);background:rgba(0,0,0,.04)}
+.mp-al b{position:absolute;left:8px;top:2px;font-size:.6875rem}
+.mp-al i{position:absolute;bottom:6px;margin-left:-11px;left:0;width:22px;height:22px;border-radius:50%;background:var(--c);color:#fff;font-style:normal;font-size:.6875rem;font-weight:800;display:grid;place-items:center;transition:left .8s}
+.mp-al i.done{box-shadow:0 0 0 2px #e0a458}
+.mp-arena{width:100%;min-width:300px}
+.md-fig{left:calc(var(--x) * .8 + 9%)}
 </style><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script>window.MD_CFG={"apiKey": "AIzaSyA50i75DT1Is1a6Yn6snW1_JVObc8S3F0Y", "authDomain": "maydan-705ae.firebaseapp.com", "databaseURL": "https://maydan-705ae-default-rtdb.europe-west1.firebasedatabase.app", "projectId": "maydan-705ae", "appId": "1:342187013133:web:d5c2396f0db413f3c51144"};window.MD_MARK="<svg class=\"md-mark\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><rect x=\"4\" y=\"4\" width=\"40\" height=\"40\" rx=\"12\" fill=\"#23336F\"/><path d=\"M24 9l4.2 6.8 7.8-1.8-1.8 7.8L41 24l-6.8 4.2 1.8 7.8-7.8-1.8L24 39l-4.2-6.8-7.8 1.8 1.8-7.8L7 24l6.8-4.2-1.8-7.8 7.8 1.8z\" fill=\"#C9822B\"/><circle cx=\"24\" cy=\"24\" r=\"6.5\" fill=\"#23336F\"/><circle cx=\"24\" cy=\"24\" r=\"3\" fill=\"#F3E3C7\"/></svg>";</script><script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script><script>/* Maydan challenges: short games played on every phone at once. Every phone gets the same level (same seed),
    so the race is fair. Each game reports a score; higher is better. */
 window.MDGames = (function () {
@@ -4047,7 +4072,40 @@ window.MDGames = (function () {
     }
   };
 
-  const LIST = [sort, shoot, pairs, stroop, seq, odd, count, math, whack, stack, fly, slide, letters, taps, react, spots, more, maze, pattern, lights, catcher, find, aim, tug, race];
+  /* ---------- the number race: a team game of quick sums; every right answer moves your team on ---------- */
+  const sum = {
+    id: 'sum', icon: '➕', ar: 'سباق الأرقام', en: 'Number race', kind: ['جماعي', 'Team'], team: true,
+    howAr: 'تظهر عملية حسابية سريعة؛ اختر الناتج الصحيح. كل إجابة صحيحة تقدّم فريقك، والخاطئة توقفك لحظة. يتقدّم الفريق بمعدل إجابات أعضائه.',
+    howEn: 'A quick sum appears; pick the right result. Each right answer moves your team on; a wrong one stops you a moment.',
+    play(el, ctx) {
+      const r = rngOf(ctx.seed + 17), side = ctx.side || { k: 0, name: ctx.ar ? 'فريقك' : 'Your team' };
+      const lab = h('p', 'mg-tside s' + (side.k % 2), (ctx.ar ? 'أنت في ' : 'You play for ') + '<b></b>'); lab.querySelector('b').textContent = side.name;
+      const q = h('p', 'mg-sum'), opts = h('div', 'mg-sumo'), info = h('p', 'mg-info'); el.append(lab, q, opts, info);
+      let n = 0, lock = 0, ans = 0;
+      const nd = v => ctx.ar ? String(v).replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d]) : String(v);
+      function next() {
+        const lv = n < 4 ? 0 : n < 9 ? 1 : 2, R = k => 1 + Math.floor(r() * k);
+        let a, b, op;
+        if (lv === 0) { a = R(9); b = R(9); op = '+'; ans = a + b; }
+        else if (lv === 1) { if (r() < .5) { a = R(20) + 5; b = R(a - 1); op = '−'; ans = a - b; } else { a = R(30); b = R(20); op = '+'; ans = a + b; } }
+        else { a = R(9) + 1; b = R(9) + 1; op = '×'; ans = a * b; }
+        q.textContent = ctx.ar ? `${nd(a)} ${op} ${nd(b)} = ؟` : `${a} ${op} ${b} = ?`;
+        const set = new Set([ans]); while (set.size < 4) { const d = ans + (Math.floor(r() * 7) - 3) * (lv === 2 ? a : 1); if (d >= 0 && d !== ans) set.add(d); else set.add(ans + set.size + 1); }
+        const list = [...set].sort(() => r() - .5); opts.innerHTML = '';
+        list.forEach(v => { const b2 = h('button', 'mg-sumb', nd(v)); b2.type = 'button'; b2.onclick = () => pick(v, b2); opts.appendChild(b2); });
+        info.textContent = (ctx.ar ? 'إجاباتك الصحيحة: ' : 'Right answers: ') + nd(n);
+      }
+      function pick(v, b2) {
+        if (Date.now() < lock) return;
+        if (v === ans) { n++; ctx.tick(); if (ctx.onTap) ctx.onTap(n); next(); }
+        else { ctx.bad(); b2.classList.add('no'); lock = Date.now() + 900; opts.classList.add('wait'); setTimeout(() => opts.classList.remove('wait'), 900); }
+      }
+      next();
+      return { score: () => n, stop: () => { lock = Infinity; } };
+    }
+  };
+
+  const LIST = [sort, shoot, pairs, stroop, seq, odd, count, math, whack, stack, fly, slide, letters, taps, react, spots, more, maze, pattern, lights, catcher, find, aim, tug, race, sum];
   const byId = id => LIST.find(g => g.id === id) || LIST[0];
   // run a game in a box: returns {score(), stop()}; ctx.finish is called when a game ends early by being completed
   function run(id, box, opts) {
@@ -4480,12 +4538,12 @@ window.MDLive = (function () {
         <div class="md-mid"><div class="md-clock"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" class="md-ring0"/><circle cx="50" cy="50" r="44" class="md-ring" id="mdRing"/></svg><b id="mdT">${x.time}</b></div>
           <p class="md-how2">${esc(how)}</p>
           <div class="md-ans"><b id="mdA">0</b><small>${B('أنهوا', 'finished')}</small></div></div>
-        ${x.g === 'tug' ? tugView(x) : x.g === 'race' ? raceView(x) : '<div class="md-tiles"></div>'}</div>`,
+        ${x.g === 'tug' ? tugView(x) : x.g === 'race' ? raceView(x) : (x.g === 'sum' ? (raceView(x), '') : '') + '<div class="md-arena" id="mdArena"></div>'}</div>`,
       `<button type="button" class="btn ghost" data-skip disabled>${B('أنهِ الوقت', 'End time')}</button>`);
     if (gold) SND.gold();
     await G.ref.child('an/' + G.i).remove();
-    if (x.g === 'tug' || x.g === 'race') await G.ref.update({ tg: null, tgp: 0 });
-    await G.ref.update({ q: Object.assign({ type: 'game', g: x.g, seed: x.seed || 1, q: nm, opts: [], m, gold, last, i: G.i, n, qn: qNo(G.i), qt: qTot(), L: G.ar ? 'ar' : 'en' }, x.g === 'tug' || x.g === 'race' ? { ts: x._tug.sides, tn: x._tug.names } : {}), ok: null, st: { ph: 'ready', i: G.i, lock: !!G.lockJoin } });
+    await G.ref.update({ tg: null, tgp: 0 });
+    await G.ref.update({ q: Object.assign({ type: 'game', g: x.g, seed: x.seed || 1, q: nm, opts: [], m, gold, last, i: G.i, n, qn: qNo(G.i), qt: qTot(), L: G.ar ? 'ar' : 'en' }, x.g === 'tug' || x.g === 'race' || x.g === 'sum' ? { ts: x._tug.sides, tn: x._tug.names } : {}), ok: null, st: { ph: 'ready', i: G.i, lock: !!G.lockJoin } });
     setTimeout(() => open(x, q), 4500 + (gold || last ? 1200 : 0));
   }
   /* ---------- tug of war: two balanced sides; teams stay whole when there are teams ---------- */
@@ -4522,18 +4580,30 @@ window.MDLive = (function () {
     us.sort(() => Math.random() - .5).forEach((u, k) => { sides[u] = k % n; });
     return { sides, names, cols: names.map((_, k) => k) };
   }
+  const runner = x => x.g === 'sum' ? '<span class="md-sumc"></span>' : '🐪';
   function raceView(x) {
     x._tug = raceSides();
-    return `<div class="md-race">${x._tug.names.map((nm, j) => `<div class="md-lane" style="--c:var(--qz${x._tug.cols[j]})"><span class="md-ln" dir="auto">${esc(nm)}</span><i class="md-camel" id="mdCam${j}" style="--p:0%">🐪</i><b class="md-flag">🏁</b><small id="mdLead${j}"></small></div>`).join('')}</div>`;
+    return `<div class="md-race">${x._tug.names.map((nm, j) => `<div class="md-lane" style="--c:var(--qz${x._tug.cols[j]})"><span class="md-ln" dir="auto">${esc(nm)}</span><i class="md-camel" id="mdCam${j}" style="--p:0%">${runner(x)}</i><b class="md-flag">🏁</b><small id="mdLead${j}"></small></div>`).join('')}</div>`;
   }
   function raceView2(x, avg, raw) {
     const order = avg.map((v, j) => j).sort((a, b) => avg[b] - avg[a]);
     return `<div class="md-race done">${order.map((j, k) => { const mem = Object.keys(x._tug.sides).filter(u => x._tug.sides[u] === j).sort((p, q) => (raw[q] || 0) - (raw[p] || 0));
-      return `<div class="md-lane" style="--c:var(--qz${x._tug.cols[j]})"><span class="md-ln" dir="auto">${k + 1}. ${esc(x._tug.names[j])}</span><i class="md-camel" style="--p:${Math.min(100, 100 * avg[j] / RACE_END)}%">🐪</i><b class="md-flag">🏁</b><small>${mem.slice(0, 4).map(u => `${esc((G.players[u] || '').slice(0, 12))} ${raw[u] || 0}`).join(' · ')}</small></div>`; }).join('')}</div>`;
+      return `<div class="md-lane" style="--c:var(--qz${x._tug.cols[j]})"><span class="md-ln" dir="auto">${k + 1}. ${esc(x._tug.names[j])}</span><i class="md-camel" style="--p:${Math.min(100, 100 * avg[j] / (x.g === 'sum' ? 22 : RACE_END))}%">${runner(x)}</i><b class="md-flag">🏁</b><small>${mem.slice(0, 4).map(u => `${esc((G.players[u] || '').slice(0, 12))} ${raw[u] || 0}`).join(' · ')}</small></div>`; }).join('')}</div>`;
+  }
+  function arena(x, pr, fin) {
+    const box = G.el.querySelector('#mdArena'); if (!box) return;
+    const us = Object.keys(G.players), best = Math.max(1, ...us.map(u => fin[u] != null ? fin[u] : pr[u] || 0));
+    const groups = x.g === 'sum' && x._tug ? x._tug.names.map((n, j) => ({ k: x._tug.cols[j], n, us: us.filter(u => x._tug.sides[u] === j) })) : G.teams && teamTable().length >= 2 ? teamTable().map(t => ({ k: t.k, n: t.name, us: us.filter(u => G.team[u] === t.k) })) : [{ k: 0, n: T('المتسابقون', 'Players'), us }];
+    const pos = u => fin[u] != null ? 100 : Math.min(92, Math.round(92 * (pr[u] || 0) / best));
+    box.innerHTML = groups.map(gr => { const avg = gr.us.length ? Math.round(gr.us.reduce((a, u) => a + pos(u), 0) / gr.us.length) : 0;
+      return `<div class="md-alane" style="--c:var(--qz${gr.k % 6})"><span class="md-aln" dir="auto">${esc(gr.n)}</span>${groups.length > 1 ? `<em class="md-alavg" style="--w:${avg}%"></em>` : ''}<b class="md-afin"></b>
+        ${gr.us.slice(0, 24).map((u, j) => `<i class="md-fig${fin[u] != null ? ' done' : ''}" style="--x:${pos(u)}%;--y:${(j % 4) * 22 + 8}%"><span>${esc((G.players[u] || '?').charAt(0))}</span><small dir="auto">${esc((G.players[u] || '').slice(0, 10))}</small></i>`).join('')}</div>`; }).join('');
+    // the same picture, small, for the fans on their phones
+    if (!arena.t || Date.now() - arena.t > 900) { arena.t = Date.now(); G.ref.child('top/ar').set({ i: G.i, g: groups.map(gr => ({ k: gr.k, n: gr.n, p: gr.us.slice(0, 20).map(u => ({ n: G.players[u] || '', p: pos(u), d: fin[u] != null ? 1 : 0 })) })) }).catch(() => {}); }
   }
   function raceAvg(x, taps) { const n = x._tug.names.length, sum = new Array(n).fill(0), cnt = new Array(n).fill(0); Object.keys(x._tug.sides).forEach(u => { const k = x._tug.sides[u]; cnt[k]++; sum[k] += taps[u] || 0; }); return sum.map((v, k) => cnt[k] ? v / cnt[k] : 0); }
   function raceDraw(x, taps) {
-    raceAvg(x, taps).forEach((a, j) => { const c = G.el.querySelector('#mdCam' + j); if (c) c.style.setProperty('--p', Math.min(100, 100 * a / RACE_END) + '%');
+    raceAvg(x, taps).forEach((a, j) => { const c = G.el.querySelector('#mdCam' + j); if (c) c.style.setProperty('--p', Math.min(100, 100 * a / (x.g === 'sum' ? 22 : RACE_END)) + '%');
       const best = Object.keys(x._tug.sides).filter(u => x._tug.sides[u] === j).sort((p, q) => (taps[q] || 0) - (taps[p] || 0))[0], l = G.el.querySelector('#mdLead' + j); if (l) l.textContent = best && taps[best] ? `${(G.players[best] || '').slice(0, 14)} ${taps[best]}` : ''; });
   }
   // average pulls per player on each side; -1 means the first side has it all, 1 the second
@@ -4544,7 +4614,7 @@ window.MDLive = (function () {
     return { avg: a, p: Math.max(-1, Math.min(1, (a[1] - a[0]) / (a[0] + a[1] + 6))) };
   }
   async function open(x, q) {
-    if (!G) return;
+    if (!G || !q('[data-skip]')) return;   // the screen moved on before the question opened
     await G.ref.child('st').set({ ph: 'q', i: G.i, t0: TS, dur: x.time, lock: !!G.lockJoin });
     const t0 = (await G.ref.child('st/t0').once('value')).val();
     G.t0 = t0; SND.go();
@@ -4555,6 +4625,9 @@ window.MDLive = (function () {
     sub(G.ref.child('an/' + G.i), 'child_added', () => { got++; const a = q('#mdA'); if (a) a.textContent = got; if (got >= (G.opts.surv && !G.teams ? alive() : Object.keys(G.players)).length) reveal(); });
     q('[data-skip]').onclick = () => reveal();
     if (x.type === 'stage') { let k = 0; sub(G.ref.child('an/' + G.i), 'child_added', s => { const v = s.val() || {}, box = q('#mdStage'); if (!box || typeof v.a !== 'string' || !v.a.trim()) return; const p = box.querySelector('.md-prompt'); if (p) p.remove(); box.insertAdjacentHTML('afterbegin', bubble(G.players[s.key], v.a, k++)); SND.join(); while (box.children.length > 12) box.lastElementChild.remove(); }); }
+    if (x.type === 'game' && !['tug', 'race'].includes(x.g)) { const fin = {}; let pr = {};
+      sub(G.ref.child('an/' + G.i), 'child_added', a => { fin[a.key] = +(a.val() || {}).a || 0; arena(x, pr, fin); });
+      sub(G.ref.child('tg'), 'value', v => { pr = {}; Object.entries(v.val() || {}).forEach(([u, o]) => { pr[u] = +o.c || 0; }); arena(x, pr, fin); }); arena(x, pr, fin); }
     if (x.g === 'race') sub(G.ref.child('tg'), 'value', v => { const taps = {}; Object.entries(v.val() || {}).forEach(([u, o]) => { taps[u] = +o.c || 0; }); raceDraw(x, taps); });
     if (x.g === 'tug') {
       let taps = {}, sentAt = 0;
@@ -4705,7 +4778,7 @@ window.MDLive = (function () {
     // tug of war: the winning side scores most; the other side still earns a little for its effort
     const tug = x.g === 'tug' && x._tug ? tugPos(x, raw) : null, win = tug ? (tug.avg[0] >= tug.avg[1] ? 0 : 1) : 0;
     const bestOf = k => Math.max(1, ...Object.keys(raw).filter(u => x._tug.sides[u] === k).map(u => raw[u]));
-    const race = x.g === 'race' && x._tug ? raceAvg(x, raw) : null, place = race ? race.map(v => race.filter(w => w > v).length) : null;
+    const race = (x.g === 'race' || x.g === 'sum') && x._tug ? raceAvg(x, raw) : null, place = race ? race.map(v => race.filter(w => w > v).length) : null;
     Object.keys(G.players).forEach(u => {
       const sd = tug ? (x._tug.sides[u] != null ? x._tug.sides[u] : 0) : 0;
       const rp = race ? place[x._tug.sides[u] || 0] : 0, rs = race ? (x._tug.sides[u] || 0) : 0;

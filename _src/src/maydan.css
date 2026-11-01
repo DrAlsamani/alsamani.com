@@ -399,3 +399,28 @@ html.mp-embed body{padding-top:0!important}
 .mp-mic{margin:8px 0 2px}.mp-mic button{font-size:.875rem;padding:7px 14px;border-radius:99px}.mp-mic small{font-size:.6875rem}
 .mp-tb button:disabled{opacity:.55!important;background:#e3e6f0!important;border-color:#d5d9e6!important;color:#4a5272!important;font-weight:600;font-size:.8125rem}
 .md-svg{width:20px;height:20px;display:block}
+/* the arena: a lane per team, each player a small figure running as they progress */
+.md-arena{width:min(1100px,96vw);margin:1.5vh auto 0;display:grid;gap:1.2vh;direction:ltr}
+.md-alane{position:relative;height:clamp(90px,16vh,170px);border-radius:16px;background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.11));box-shadow:inset 0 0 0 3px var(--c);overflow:hidden}
+.md-alane::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 calc(10% - 1px),rgba(255,255,255,.07) calc(10% - 1px) 10%)}
+.md-aln{position:absolute;left:12px;top:6px;font-weight:800;color:#fff;font-size:clamp(13px,1.5vw,20px);z-index:2}
+.md-alavg{position:absolute;left:0;bottom:0;height:5px;width:var(--w);background:var(--c);transition:width .6s}
+.md-afin{position:absolute;right:4%;top:0;bottom:0;width:6px;background:repeating-linear-gradient(180deg,#fff 0 8px,#222 8px 16px);opacity:.6}
+.md-fig{position:absolute;left:calc(var(--x) * .88 + 2%);top:var(--y);display:grid;justify-items:center;font-style:normal;transition:left .8s cubic-bezier(.3,.8,.3,1);z-index:3}
+.md-fig span{width:clamp(26px,3.4vh,40px);height:clamp(26px,3.4vh,40px);border-radius:50% 50% 45% 45%;background:var(--c);color:#fff;font-weight:800;display:grid;place-items:center;font-size:clamp(12px,1.6vh,18px);box-shadow:0 0 0 2px #fff,0 3px 6px rgba(0,0,0,.35);animation:mdRun .5s ease-in-out infinite alternate}
+.md-fig small{margin-top:2px;font-size:clamp(10px,1.3vh,14px);color:#fff;background:rgba(0,0,0,.35);border-radius:6px;padding:0 5px;white-space:nowrap}
+.md-fig.done span{animation:none;box-shadow:0 0 0 3px #e0a458,0 0 14px #e0a458}
+@keyframes mdRun{to{transform:translateY(-4px) rotate(4deg)}}
+.md-sumc{display:block;width:clamp(26px,5vh,46px);height:clamp(26px,5vh,46px);border-radius:10px;background:var(--c);box-shadow:0 0 0 3px #fff}
+/* the number race on the phone */
+.mg-sum{font-size:clamp(34px,11vw,56px);font-weight:900;text-align:center;margin:10px 0;direction:ltr}
+.mg-sumo{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;max-width:360px;margin:0 auto}.mg-sumo.wait{opacity:.45}
+.mg-sumb{font:inherit;font-size:1.75rem;font-weight:800;border:0;border-radius:16px;padding:16px 0;background:#23336F;color:#fff;cursor:pointer}.mg-sumb.no{background:#b0533a}
+/* fans follow the arena */
+.mp-arena{display:grid;gap:8px;margin:10px 0;direction:ltr}
+.mp-al{position:relative;height:56px;border-radius:12px;box-shadow:inset 0 0 0 2px var(--c);background:rgba(0,0,0,.04)}
+.mp-al b{position:absolute;left:8px;top:2px;font-size:.6875rem}
+.mp-al i{position:absolute;bottom:6px;margin-left:-11px;left:0;width:22px;height:22px;border-radius:50%;background:var(--c);color:#fff;font-style:normal;font-size:.6875rem;font-weight:800;display:grid;place-items:center;transition:left .8s}
+.mp-al i.done{box-shadow:0 0 0 2px #e0a458}
+.mp-arena{width:100%;min-width:300px}
+.md-fig{left:calc(var(--x) * .8 + 9%)}
