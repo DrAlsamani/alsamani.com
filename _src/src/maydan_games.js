@@ -643,12 +643,18 @@ window.MDGames = (function () {
       const side = ctx.side || { k: 0, name: ctx.ar ? 'فريقك' : 'Your team' };
       const lab = h('p', 'mg-tside s' + (side.k % 2), (ctx.ar ? 'أنت في ' : 'You ride for ') + '<b></b>'); lab.querySelector('b').textContent = side.name;
       const info = h('p', 'mg-info'), b = h('button', 'mg-big mg-pull s' + (side.k % 2), '🐪'); b.type = 'button';
-      el.append(lab, info, b);
-      let n = 0, lastT = 0;
+      // the track: every team's camel, live from the screen; without a live feed (the try-out) only yours runs
+      const names = ctx.names && ctx.names.length ? ctx.names : [side.name], cols = ctx.cols || names.map((_, j) => j);
+      const track = h('div', 'mg-track', names.map((nm, j) => `<div class="mg-tl${j === side.k ? ' me' : ''}" style="--c:var(--qz${cols[j] % 6})"><span></span><i class="mg-tc">🐪</i><b>🏁</b></div>`).join(''));
+      track.querySelectorAll('.mg-tl span').forEach((sp, j) => { sp.textContent = names[j] || ''; });
+      el.append(lab, track, info, b);
+      let n = 0, lastT = 0, stop = false;
+      const cams = [...track.querySelectorAll('.mg-tc')];
+      (function frame() { if (stop) return; const L = ctx.lanes && ctx.lanes(); cams.forEach((c, j) => { const p = L ? (+L[j] || 0) : j === side.k || names.length === 1 ? Math.min(100, n * 100 / 70) : 0; c.style.setProperty('--p', p + '%'); }); requestAnimationFrame(frame); })();
       const show = () => { info.textContent = (ctx.ar ? 'نقراتك: ' : 'Your taps: ') + n; };
       b.addEventListener('pointerdown', e => { e.preventDefault(); const t = performance.now(); if (t - lastT < 55) return; lastT = t; n++; b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop'); show(); if (ctx.onTap) ctx.onTap(n); });
       show();
-      return { score: () => n, stop: () => {} };
+      return { score: () => n, stop: () => { stop = true; } };
     }
   };
 

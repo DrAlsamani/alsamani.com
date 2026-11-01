@@ -11,6 +11,7 @@
   const store = { get(k, d) { try { return localStorage.getItem('md.' + k) || d; } catch (e) { return d; } }, set(k, v) { try { localStorage.setItem('md.' + k, v); } catch (e) {} } };
   const TS = firebase.database.ServerValue.TIMESTAMP;
   let TOOLS = false;
+  let PM = false, RV = null, SB = [];   // phones only: the flag, everyone's answers, the stage's statements
   let TOP = null, TEAMS = null, TMODE = 'pick', myTeam = null, bet = false, lastRx = 0;
   let db, uid, off = 0, R = null, me = null, st = {}, Q = null, OK = null, SC = null, sent = null, tick = null;
   const now = () => Date.now() + off;
@@ -107,6 +108,11 @@
     R.child('asg/' + uid).on('value', t => { if (t.val() != null) { myTeam = +t.val(); shown = ''; draw(); } });
     R.child('ok').on('value', s => { OK = s.val(); draw(); });
     R.child('wr').on('value', s => { const e = root.querySelector('#mpW'); if (e && s.val()) e.textContent = s.val(); });
+    R.child('pm').on('value', s => { PM = !!s.val(); if (st.ph === 'lobby') { shown = ''; draw(); } else feed(); });
+    R.child('rv').on('value', s => { RV = s.val(); feed(); });
+    R.child('sb').on('value', s => { SB = s.val() || []; feed(); });
+    { const seen = {}; const fx = s => { const v = s.val() || {}; if (!PM || !v.e || v.e === '🎤' || s.key === uid || seen[s.key] === v.t) return; seen[s.key] = v.t; if (now() - (v.t || 0) > 8000) return; floatRx(v.e); };
+      R.child('rx').on('child_added', fx); R.child('rx').on('child_changed', fx); }
     R.child('top').on('value', s => { TOP = s.val(); if (FAN && st.ph === 'q') { shown = ''; draw(); return; }
       if (st.ph === 'q' && Q && Q.type === 'game') { const sp = root.querySelector('#mpStrip'); if (sp) sp.innerHTML = arenaFan(true); if (sent === st.i) { shown = ''; draw(); } return; } if (TOP && TOP.mic && !TOP.mic.n && !TOP.mic.on) micOn = false; if (['lb', 'end', 'rev'].includes(st.ph)) { shown = ''; draw(); } });
     R.child('sc/' + uid).on('value', s => { SC = s.val(); draw(); });
@@ -117,7 +123,7 @@
     const key = st.ph + ':' + st.i + ':' + (st.ph === 'rev' || st.ph === 'lb' || st.ph === 'end' ? JSON.stringify(SC) + (OK ? 'k' : '') + (TOP ? JSON.stringify(TOP).length : '') : '');
     if (key === shown) return; shown = key;
     clearInterval(tick);
-    if (st.ph === 'lobby') return screen(`<div class="mp-wait"><p class="mp-big">${B('أنت في الميدان!', 'You are in!')}</p><p class="mp-me" dir="auto">${esc(me)}</p>${TEAMS && myTeam != null ? `<p class="mp-tm" style="--c:var(--qz${(myTeam) % 6})">${esc(TEAMS[myTeam])}</p>` : ''}<p>${B('انظر إلى الشاشة؛ ستبدأ المسابقة قريبًا.', 'Watch the screen; the quiz will start soon.')}</p></div>` + rxBar());
+    if (st.ph === 'lobby') return screen(`<div class="mp-wait"><p class="mp-big">${B('أنت في الميدان!', 'You are in!')}</p><p class="mp-me" dir="auto">${esc(me)}</p>${TEAMS && myTeam != null ? `<p class="mp-tm" style="--c:var(--qz${(myTeam) % 6})">${esc(TEAMS[myTeam])}</p>` : ''}<p>${(PM ? B('ستبدأ المسابقة قريبًا، وتتابعها كاملة من جوالك.', 'The quiz will start soon; follow all of it on your phone.') : B('انظر إلى الشاشة؛ ستبدأ المسابقة قريبًا.', 'Watch the screen; the quiz will start soon.'))}</p></div>` + rxBar());
     if (st.ph === 'pause') return screen(`<div class="mp-wait"><p class="mp-big"></p><p class="mp-big">${B('توقفت المسابقة مؤقتًا', 'The quiz is paused')}</p><p>${B('ابقَ على هذه الصفحة؛ ستُستأنف من حيث توقفت.', 'Stay on this page; it will continue where it stopped.')}</p></div>`);
     if (st.ph === 'ready') { if (!Q || Q.i !== st.i) { shown = ''; setTimeout(draw, 200); return; } bet = false; const gm = Q.type === 'game' && window.MDGames ? MDGames.byId(Q.g) : null; return screen(`<div class="mp-wait${Q.gold ? ' gold' : ''}"><p>${B('استعد…', 'Get ready…')}</p><p class="mp-big">${gm ? `${gm.icon} ${Q.L === 'en' ? gm.en : gm.ar}` : B('السؤال', 'Question') + ' ' + ((st.i || 0) + 1)}</p>${gm ? `<p class="mp-how">${Q.L === 'en' ? gm.howEn : gm.howAr}</p>` : ''}${Q.gold ? `<p class="mp-gold">${B('السؤال الذهبي! نقاط مضاعفة', 'The golden question! Double points')}</p>` : Q.last ? `<p class="mp-gold">${B('السؤال الأخير — نقاط مضاعفة', 'The last question — double points')}</p>` : ''}</div>`); }
     // last survivor: once out, a player watches the rest
@@ -134,7 +140,29 @@
     if (FAN) html = fanHtml(html);
     const qn = Q && Q.n && st.i >= 0 && ['q', 'ready', 'rev'].includes(st.ph) ? `<span class="mp-qn">${Q.type === 'stage' ? '' + B('منصة التصريحات', 'The stage') : B(`السؤال ${Q.qn || st.i + 1} من ${Q.qt || Q.n}`, `Question ${Q.qn || st.i + 1} of ${Q.qt || Q.n}`)}</span>` : '';
     const fx = SC && SC.q === st.i && st.ph === 'rev' ? pwNote() : '';
-    root.innerHTML = `<div class="mp-play ${cls || ''}"><div class="mp-top"><span dir="auto">${FAN ? '' : ''}${esc(me)}${TEAMS && myTeam != null ? ` <i style="--c:var(--qz${(myTeam) % 6})">${esc(TEAMS[myTeam])}</i>` : ''}</span>${qn}<b>${FAN ? '' : SC ? SC.s : 0}</b></div>${fx}${html}${!FAN && ['rev', 'lb', 'ready'].includes(st.ph) ? toolsBar() : ''}${!FAN && st.ph === 'q' && cls === 'q' ? skipBtn() : ''}</div>`; if (R) { rxBind(); toolsBind(); } }
+    root.innerHTML = `<div class="mp-play ${cls || ''}"><div class="mp-top"><span dir="auto">${FAN ? '' : ''}${esc(me)}${TEAMS && myTeam != null ? ` <i style="--c:var(--qz${(myTeam) % 6})">${esc(TEAMS[myTeam])}</i>` : ''}</span>${qn}<b>${FAN ? '' : SC ? SC.s : 0}</b></div>${fx}${/<div class="mp-(mic|rx)"/.test(html) ? html.replace(/<div class="mp-(mic|rx)"/, m => '<div class="mp-feed" id="mpFeed"></div>' + m) : html + '<div class="mp-feed" id="mpFeed"></div>'}${!FAN && ['rev', 'lb', 'ready'].includes(st.ph) ? toolsBar() : ''}${!FAN && st.ph === 'q' && cls === 'q' ? skipBtn() : ''}</div>`; if (R) { rxBind(); toolsBind(); } feed(); }
+
+  /* ---------- phones only (no big screen): the screen's part comes to the phone ----------
+     everyone's answers after each question, the stage's statements, and the reactions flying past */
+  function feed() {
+    const f = root.querySelector('#mpFeed'); if (!f) return;
+    if (!PM || FAN && !['rev', 'q'].includes(st.ph)) { f.innerHTML = ''; return; }
+    let h = '';
+    if (Q && Q.type === 'stage' && Q.i === st.i && SB.length) h = `<div class="mp-sb">${SB.map((b, k) => `<div class="md-bub" style="--c:var(--qz${k % 6})"><b dir="auto">${esc(b.n)}</b><p dir="auto">${esc(b.t)}</p></div>`).join('')}</div>`;
+    else if (st.ph === 'rev' && RV && RV.i === st.i && Q && Q.i === st.i) {
+      const okSet = new Set([].concat(OK == null ? [] : OK).map(Number));
+      if (RV.c) { const mx = Math.max(1, ...RV.c); h = `<div class="mp-dist"><p>${B(`إجابات الجميع (${RV.n})`, `Everyone’s answers (${RV.n})`)}</p>${RV.c.map((c, j) => `<div class="mp-dbar${Q.type !== 'poll' && okSet.has(j) ? ' ok' : ''}"><span dir="auto">${esc((Q.opts || [])[j] || '')}</span><i style="--w:${(100 * c / mx).toFixed(0)}%"></i><b>${c}</b></div>`).join('')}</div>`; }
+      else if (RV.w && RV.w.length) { const mx = Math.max(1, ...RV.w.map(w => w[1])); h = `<div class="mp-cloud"><p>${B(`ماذا كتب الجميع (${RV.n})`, `What everyone wrote (${RV.n})`)}</p><div>${RV.w.map(([w, c], k) => `<span dir="auto" style="--s:${(0.85 + 0.9 * c / mx).toFixed(2)};--c:var(--qz${k % 6})">${esc(w)}${c > 1 ? `<small>${c}</small>` : ''}</span>`).join('')}</div></div>`; }
+    }
+    f.innerHTML = h;
+  }
+  function floatRx(e) {
+    let L = document.getElementById('mpFx'); if (!L) { L = document.createElement('div'); L.id = 'mpFx'; L.className = 'mp-fx'; document.body.appendChild(L); }
+    if (L.childElementCount > 14) return;
+    const s = document.createElement('span'); s.textContent = e; s.className = /\p{Extended_Pictographic}/u.test(e) && e.length <= 4 ? 'emo' : 'txt';
+    s.style.setProperty('--x', (6 + Math.random() * 80) + '%'); s.style.setProperty('--r', (Math.random() * 30 - 15) + 'deg');
+    L.appendChild(s); setTimeout(() => s.remove(), 2600);
+  }
   /* ---------- challenge tools: chosen between questions, sent with the next answer ---------- */
   let PEND = null; const usedL = new Set();
   const usedAll = () => new Set([...usedL, ...String((SC && SC.used) || '').split(',').filter(Boolean)]);
@@ -192,9 +220,9 @@
     let tug = {};
     if (Q.g === 'tug' || Q.g === 'race' || Q.g === 'sum') {
       const k = Q.ts && Q.ts[uid] != null ? Q.ts[uid] : 0; let pos = 0, pend = 0, lastW = 0, tm = null;
-      const ref = R.child('tgp'), on = v => { pos = +v.val() || 0; }; ref.on('value', on);
+      const ref = R.child('tgp'), on = v => { const w = v.val(); pos = Array.isArray(w) ? w : +w || 0; }; ref.on('value', on);
       const push = () => { tm = null; lastW = Date.now(); R.child('tg/' + uid).set({ c: pend }).catch(() => {}); };
-      tug = { side: { k, name: Q.tn ? Q.tn[k] : '' }, rope: () => pos, onTap: n => { pend = n; if (!tm) tm = setTimeout(push, Math.max(0, 350 - (Date.now() - lastW))); } };
+      tug = { side: { k, name: Q.tn ? Q.tn[k] : '' }, rope: () => pos, lanes: () => Array.isArray(pos) ? pos : null, names: Q.tn || [], cols: Q.tc || null, onTap: n => { pend = n; if (!tm) tm = setTimeout(push, Math.max(0, 350 - (Date.now() - lastW))); } };
       const was = send; send = async sc => { ref.off('value', on); if (tm) { clearTimeout(tm); push(); } return was(sc); };
     }
     game = MDGames.run(Q.g, root.querySelector('#mpG'), Object.assign({ seed: Q.seed, ar: Q.L !== 'en', left: () => Math.max(0, 1 - (now() - st.t0) / 1000 / st.dur), finish: s2 => send(s2), tick: () => buzz(10), bad: () => buzz(60) }, tug));
@@ -300,7 +328,7 @@
     if (!SC || !OK || (SC.q != null && SC.q !== st.i)) { if (st.ph === 'rev') screen(`<div class="mp-wait"><p>${B('لحظة…', 'One moment…')}</p></div>`); shown = ''; return; }
     if (st.ph === 'lb' && TOP) return screen(`<div class="mp-res end"><p class="mp-big">${B('الترتيب', 'Ranking')}</p>${topList()}<p class="mp-rank">${B(`مركزك: ${SC.r}`, `Your place: ${SC.r}`)}</p></div>` + rxBar(), 'end');
     if (game) { game.stop(); game = null; }
-    if (Q && Q.i === st.i && (Q.type === 'poll' || Q.type === 'open' || Q.type === 'stage')) return screen(`<div class="mp-res end"><p class="mp-sym"></p><p class="mp-big">${SC.a ? B('شكرًا، وصلت مشاركتك', 'Thanks, your answer is in') : B('انتهى الوقت', 'Time’s up')}</p><p>${B('انظر النتائج على الشاشة', 'See the results on the screen')}</p><p class="mp-rank">${B(`مركزك: ${SC.r}`, `Your place: ${SC.r}`)}</p></div>` + rxBar(), 'end');
+    if (Q && Q.i === st.i && (Q.type === 'poll' || Q.type === 'open' || Q.type === 'stage')) return screen(`<div class="mp-res end"><p class="mp-sym"></p><p class="mp-big">${SC.a ? B('شكرًا، وصلت مشاركتك', 'Thanks, your answer is in') : B('انتهى الوقت', 'Time’s up')}</p><p>${(PM ? '' : B('انظر النتائج على الشاشة', 'See the results on the screen'))}</p><p class="mp-rank">${B(`مركزك: ${SC.r}`, `Your place: ${SC.r}`)}</p></div>` + rxBar(), 'end');
     // skipped for the average: no right or wrong, just the answer and what the skip brought
     if (Q && Q.i === st.i && Q.type !== 'game' && [].concat(SC.pw || []).includes('sk')) {
       const ol = v => `<ol class="mp-ordr">${[].concat(v).map(z => `<li dir="auto">${esc(z)}</li>`).join('')}</ol>`;
@@ -394,7 +422,7 @@
     return `<svg class="mp-jsvg" viewBox="0 0 ${W} ${H}" dir="ltr" role="img" aria-label="${T('مسار مركزك بعد كل سؤال', 'Your place after each question')}">${g}<g class="mp-jax">${ax}${ay}</g></svg>`;
   }
   function journeyHtml() {
-    const D = jData(); if (!D || D.me < 0) return '';
+    const D = jData(); if (!D || D.me < 0 || D.n < 2) return '';
     const S = D.st, q = t => T(`السؤال ${t + 1}`, `question ${t + 1}`), lines = [];
     if (S.lead) lines.push(B(`تصدّرت الترتيب في ${S.lead} ${S.lead === 1 ? 'سؤال' : 'أسئلة'}`, `You led after ${S.lead} question${S.lead > 1 ? 's' : ''}`));
     else lines.push(B(`أفضل مركز وصلته: ${S.best} بعد ${q(S.bestAt)}`, `Best place: ${S.best}, after ${q(S.bestAt)}`));
@@ -442,8 +470,8 @@
     const cv = document.createElement('canvas'), x = cv.getContext('2d');
     const F = (w, s) => `${w} ${s}px "IBM Plex Sans Arabic", system-ui, sans-serif`;
     const wrap = (txt, font, max) => { x.font = font; const out = []; let line = ''; String(txt).split(/\s+/).forEach(w => { const t = line ? line + ' ' + w : w; if (x.measureText(t).width > max && line) { out.push(line); line = w; } else line = t; }); if (line) out.push(line); return out; };
-    const rows = L.slice(0, 30).map(h => { const q = wrap(`${h.n}. ${h.q}`, F(600, 34), W - pad * 2 - 90); const sub = h.judged && !h.c && h.ok ? wrap((ar ? 'الصحيحة: ' : 'Right: ') + h.ok, F(400, 28), W - pad * 2 - 90) : []; return { h, q, sub, H: q.length * 46 + sub.length * 38 + 34 }; });
-    const D = jData(), JH = D && D.me >= 0 ? 470 : 0;
+    const rows = L.slice(0, 30).map(h => { const q = wrap(`${h.n}. ${h.q}`, F(600, 34), W - pad * 2 - 130); const sub = h.judged && !h.c && h.ok ? wrap((ar ? 'الصحيحة: ' : 'Right: ') + h.ok, F(400, 28), W - pad * 2 - 90) : []; return { h, q, sub, H: q.length * 46 + sub.length * 38 + 34 }; });
+    const D = jData(), JH = D && D.me >= 0 && D.n > 1 ? 470 : 0;
     const H = 560 + JH + rows.reduce((s, r) => s + r.H, 0) + 140; cv.width = W; cv.height = H;
     const g = x.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#26336b'); g.addColorStop(1, '#1a2350'); x.fillStyle = g; x.fillRect(0, 0, W, H);
     x.direction = ar ? 'rtl' : 'ltr'; x.textAlign = 'center';
@@ -452,7 +480,7 @@
     const right = L.filter(h => h.judged && h.c).length, judged = L.filter(h => h.judged).length;
     x.fillStyle = '#f4ead8'; x.font = F(600, 40); x.fillText(`${me || ''}`, W / 2, 330);
     x.fillStyle = '#e0a458'; x.font = F(700, 52); x.fillText(ar ? `المركز ${SC && SC.r || '-'} · ${SC ? SC.s : 0} نقطة` : `Place ${SC && SC.r || '-'} · ${SC ? SC.s : 0} points`, W / 2, 405);
-    x.fillStyle = '#c9cde0'; x.font = F(400, 32); x.fillText(ar ? `${right} إجابة صحيحة من ${judged}` : `${right} of ${judged} answered right`, W / 2, 460);
+    x.fillStyle = '#c9cde0'; x.font = F(400, 32); x.fillText(ar ? `الإجابات الصحيحة: ${right} من ${judged}` : `Right answers: ${right} of ${judged}`, W / 2, 460);
     if (JH) {   // the journey: my line over the others'
       const X0 = pad + 40, X1 = W - pad, Y0 = 520, Y1 = 520 + JH - 120, N = Math.max(D.n, 2), show = Math.min(D.n, 12);
       const X = t => X0 + (X1 - X0) * t / (D.steps - 1), Y = r => Y0 + (Y1 - Y0) * (Math.min(r, N) - 1) / (N - 1);
@@ -470,7 +498,9 @@
       x.fillStyle = 'rgba(255,255,255,.07)'; x.beginPath(); x.roundRect(pad - 20, y - 40, W - (pad - 20) * 2, r.H - 12, 22); x.fill();
       x.fillStyle = '#fff'; x.font = F(600, 34); r.q.forEach((l, k) => x.fillText(l, sx, y + k * 46));
       x.fillStyle = '#e0a458'; x.font = F(400, 28); r.sub.forEach((l, k) => x.fillText(l, sx, y + r.q.length * 46 + k * 38));
-      x.textAlign = 'center'; x.font = F(700, 40); x.fillStyle = !r.h.judged ? '#c9cde0' : r.h.c ? '#6fd39b' : '#ff8a80'; x.fillText(!r.h.judged ? (r.h.d ? '+' + r.h.d : '·') : r.h.c ? '✓' : '✕', mx, y + 4); x.textAlign = ar ? 'right' : 'left';
+      if (r.h.judged) { x.textAlign = 'center'; x.font = F(700, 40); x.fillStyle = r.h.c ? '#6fd39b' : '#ff8a80'; x.fillText(r.h.c ? '✓' : '✕', mx, y + 4); }
+      else if (r.h.d) { x.textAlign = ar ? 'left' : 'right'; x.font = F(700, 28); x.fillStyle = '#e0a458'; x.fillText('+' + r.h.d, ar ? pad + 4 : W - pad - 4, y); }
+      x.textAlign = ar ? 'right' : 'left';
       y += r.H;
     });
     x.textAlign = 'center'; x.fillStyle = '#e0a458'; x.font = F(600, 34); x.fillText('alsamani.com/play/maydan', W / 2, H - 60);

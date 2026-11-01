@@ -480,3 +480,29 @@ html.mp-embed body{padding-top:0!important}
 .md-rpf span{width:clamp(30px,5vh,54px);height:clamp(30px,5vh,54px);background:var(--c);display:grid;place-items:center;font-weight:800;font-size:clamp(13px,2vh,22px);clip-path:polygon(50% 0,61% 22%,85% 15%,78% 39%,100% 50%,78% 61%,85% 85%,61% 78%,50% 100%,39% 78%,15% 85%,22% 61%,0 50%,22% 39%,15% 15%,39% 22%)}
 .md-rpf small{font-weight:800;font-size:clamp(14px,2.2vh,24px);color:#e0a458}
 .md-rpf.lead span{background:#e0a458;color:#16204a;filter:drop-shadow(0 0 10px #e0a458)}
+/* the camel race on the phone: every team's lane */
+.mg-track{width:100%;display:flex;flex-direction:column;gap:6px;direction:ltr;flex:none}
+.mg-tl{position:relative;height:44px;border-radius:10px;background:color-mix(in srgb,var(--c) 14%,transparent);border:1px solid color-mix(in srgb,var(--c) 40%,transparent)}
+.mg-tl.me{background:color-mix(in srgb,var(--c) 26%,transparent);border-width:2px}
+.mg-tl span{position:absolute;left:8px;top:50%;transform:translateY(-50%);font-size:.7rem;font-weight:700;color:var(--c);opacity:.85;max-width:40%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.mg-tl b{position:absolute;right:4px;top:50%;transform:translateY(-50%);font-size:.9rem}
+.mg-tc{position:absolute;top:50%;left:calc(var(--p,0%) * .82 + 4%);transform:translateY(-50%) scaleX(-1);font-style:normal;font-size:1.5rem;transition:left .35s linear}
+.mg-tl.me .mg-tc{font-size:1.8rem;filter:drop-shadow(0 0 6px var(--c))}
+/* phones only: the screen's part on the phone */
+.mp-feed:empty{display:none}
+.mp-feed{margin-top:12px;text-align:start}
+.mp-feed p{margin:0 0 6px;font-weight:700;font-size:.9rem}
+.mp-dist{display:flex;flex-direction:column;gap:6px;background:var(--surface,#f5f6fa);border-radius:14px;padding:10px 12px}
+.mp-dbar{display:grid;grid-template-columns:minmax(0,1fr) 1.2fr auto;gap:8px;align-items:center;font-size:.85rem}
+.mp-dbar span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mp-dbar i{height:12px;border-radius:6px;background:linear-gradient(90deg,#8a93b8 var(--w),rgba(138,147,184,.18) var(--w))}
+.mp-dbar.ok i{background:linear-gradient(90deg,#2e8b57 var(--w),rgba(46,139,87,.18) var(--w))}.mp-dbar.ok span{font-weight:700;color:#2e8b57}
+[dir=rtl] .mp-dbar i{transform:scaleX(-1)}
+.mp-cloud{background:var(--surface,#f5f6fa);border-radius:14px;padding:10px 12px}.mp-cloud div{display:flex;flex-wrap:wrap;gap:6px 10px;justify-content:center}
+.mp-cloud span{font-size:calc(.85rem * var(--s));font-weight:700;color:var(--c)}.mp-cloud small{font-size:.65rem;opacity:.7;margin-inline-start:2px}
+.mp-sb{display:flex;flex-direction:column;gap:8px}
+.mp-sb .md-bub{position:static;max-width:none;animation:none;padding:10px 14px;box-shadow:0 0 0 3px var(--c)}
+.mp-fx{position:fixed;inset:0;pointer-events:none;z-index:60;overflow:hidden}
+.mp-fx span{position:absolute;bottom:-40px;left:var(--x);animation:mpFly 2.6s ease-out forwards;transform:rotate(var(--r))}
+.mp-fx .emo{font-size:2rem}.mp-fx .txt{font-size:.95rem;font-weight:700;background:#fff;color:#23336F;border-radius:999px;padding:3px 10px;box-shadow:0 3px 10px rgba(0,0,0,.15)}
+@keyframes mpFly{0%{transform:translateY(0) rotate(var(--r));opacity:0}10%{opacity:1}100%{transform:translateY(-75vh) rotate(var(--r));opacity:0}}

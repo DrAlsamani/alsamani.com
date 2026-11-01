@@ -78,6 +78,15 @@ window.MDLive = (function () {
     return { k: us.map(u => u.slice(0, 8)), n: us.map(u => G.players[u] || ''), s: us.map(u => J.map(o => o[u] || 0)) };
   }
 
+  /* ---------- phones only: what the big screen would show goes to the phones as data ---------- */
+  function phonesResult(x, ans) {
+    const A = Object.keys(ans).filter(u => u in G.players).map(u => ans[u] && ans[u].a);
+    const out = { i: G.i, n: A.length };
+    if (['mc', 'tf', 'poll'].includes(x.type)) { out.c = (x.opts || []).map(() => 0); A.forEach(a => [].concat(a == null ? [] : a).forEach(j => { if (out.c[+j] != null) out.c[+j]++; })); }
+    else if (['open', 'word', 'num'].includes(x.type)) { const f = {}; A.forEach(a => { const w = String(a == null ? '' : a).trim().replace(/\s+/g, ' ').slice(0, 30); if (w) f[w] = (f[w] || 0) + 1; }); out.w = Object.entries(f).sort((p, q) => q[1] - p[1]).slice(0, 15); }
+    G.ref.child('rv').set(out).catch(() => {});
+  }
+
   /* ---------- the room ---------- */
   let G = null; // the running game
   function shell() {
@@ -198,7 +207,7 @@ window.MDLive = (function () {
   /* ---------- phones only: no big screen; the host's own phone runs the quiz and plays it in a panel below ----------
      The panel is the player page itself (same browser, so the same player), kept alive while the screen above changes. */
   function phonesMode(on) {
-    G.phones = on; if (on) G.opts.auto = true;   // nobody stands at a screen, so it moves on by itself
+    G.phones = on; if (on) G.opts.auto = true; G.ref.child('pm').set(on ? 1 : null).catch(() => {});   // nobody stands at a screen, so it moves on by itself
     G.el.classList.toggle('phones', on);
     if (on && !G.fr) {
       const box = document.createElement('div'); box.className = 'md-box'; while (G.el.firstChild) box.appendChild(G.el.firstChild);
@@ -402,7 +411,7 @@ window.MDLive = (function () {
   const qNo = i => G.quiz.qs.slice(0, i + 1).filter(z => z.type !== 'stage').length, qTot = () => G.quiz.qs.filter(z => z.type !== 'stage').length;
   async function next() {
     if (G.stageNext && !G.ended && G.done + 1 <= G.quiz.qs.length) stageNow();
-    statFlush(); G.rxc = 0; journey();
+    statFlush(); G.rxc = 0; journey(); if (G.phones && G.sb && G.sb.length) { G.sb = []; G.ref.child('sb').remove().catch(() => {}); }
     G.i = G.done + 1;
     if (G.i === 0) stat({ [srcOf(G.quiz) + '/go']: 1, [srcOf(G.quiz) + '/p']: Object.keys(G.players).length, [G.phones ? 'x/phones' : 'x/screen']: 1, [G.teams ? 'x/teams' : 'x/solo']: 1 });
     // last survivor: alone it ends with one player left; with teams, when only one team still has someone in
@@ -465,7 +474,7 @@ window.MDLive = (function () {
     if (gold) SND.gold();
     await G.ref.child('an/' + G.i).remove();
     await G.ref.update({ tg: null, tgp: 0 });
-    await G.ref.update({ q: Object.assign({ type: 'game', g: x.g, seed: x.seed || 1, q: nm, opts: [], m, gold, last, i: G.i, n, qn: qNo(G.i), qt: qTot(), L: G.ar ? 'ar' : 'en' }, x.g === 'tug' || x.g === 'race' || x.g === 'sum' ? { ts: x._tug.sides, tn: x._tug.names } : {}), ok: null, st: { ph: 'ready', i: G.i, lock: !!G.lockJoin } });
+    await G.ref.update({ q: Object.assign({ type: 'game', g: x.g, seed: x.seed || 1, q: nm, opts: [], m, gold, last, i: G.i, n, qn: qNo(G.i), qt: qTot(), L: G.ar ? 'ar' : 'en' }, x.g === 'tug' || x.g === 'race' || x.g === 'sum' ? { ts: x._tug.sides, tn: x._tug.names, tc: x._tug.cols || null } : {}), ok: null, st: { ph: 'ready', i: G.i, lock: !!G.lockJoin } });
     setTimeout(() => open(x, q), 4500 + (gold || last ? 1200 : 0));
   }
   /* ---------- tug of war: two balanced sides; teams stay whole when there are teams ---------- */
@@ -546,11 +555,13 @@ window.MDLive = (function () {
     let got = 0, last = -1;
     sub(G.ref.child('an/' + G.i), 'child_added', () => { got++; const a = q('#mdA'); if (a) a.textContent = got; if (got >= (G.opts.surv && !G.teams ? alive() : Object.keys(G.players)).length) reveal(); });
     q('[data-skip]').onclick = () => reveal();
-    if (x.type === 'stage') { let k = 0; sub(G.ref.child('an/' + G.i), 'child_added', s => { const v = s.val() || {}, box = q('#mdStage'); if (!box || typeof v.a !== 'string' || !v.a.trim()) return; const p = box.querySelector('.md-prompt'); if (p) p.remove(); box.insertAdjacentHTML('afterbegin', bubble(G.players[s.key], v.a, k++)); SND.join(); while (box.children.length > 12) box.lastElementChild.remove(); }); }
+    if (x.type === 'stage') { let k = 0; sub(G.ref.child('an/' + G.i), 'child_added', s => { const v = s.val() || {}, box = q('#mdStage'); if (!box || typeof v.a !== 'string' || !v.a.trim()) return; const p = box.querySelector('.md-prompt'); if (p) p.remove(); box.insertAdjacentHTML('afterbegin', bubble(G.players[s.key], v.a, k++)); SND.join(); if (G.phones) { G.sb = [{ n: G.players[s.key] || '', t: String(v.a).slice(0, 140) }].concat(G.sb || []).slice(0, 12); G.ref.child('sb').set(G.sb).catch(() => {}); } while (box.children.length > 12) box.lastElementChild.remove(); }); }
     if (x.type === 'game' && !['tug', 'race'].includes(x.g)) { const fin = {}; let pr = {};
       sub(G.ref.child('an/' + G.i), 'child_added', a => { fin[a.key] = +(a.val() || {}).a || 0; arena(x, pr, fin); });
       sub(G.ref.child('tg'), 'value', v => { pr = {}; Object.entries(v.val() || {}).forEach(([u, o]) => { pr[u] = +o.c || 0; }); arena(x, pr, fin); }); arena(x, pr, fin); }
-    if (x.g === 'race') sub(G.ref.child('tg'), 'value', v => { const taps = {}; Object.entries(v.val() || {}).forEach(([u, o]) => { taps[u] = +o.c || 0; }); raceDraw(x, taps); });
+    // the camel and number races: the screen draws the lanes, and the phones get each lane's progress to draw their own
+    if (x.g === 'race' || x.g === 'sum') { let sentAt = 0; sub(G.ref.child('tg'), 'value', v => { const taps = {}; Object.entries(v.val() || {}).forEach(([u, o]) => { taps[u] = +o.c || 0; }); raceDraw(x, taps);
+      if (Date.now() - sentAt > 300) { sentAt = Date.now(); G.ref.child('tgp').set(raceAvg(x, taps).map(a => Math.round(Math.min(100, 100 * a / (x.g === 'sum' ? 22 : RACE_END))))); } }); }
     if (x.g === 'tug') {
       let taps = {}, sentAt = 0;
       sub(G.ref.child('tg'), 'value', v => {
@@ -580,6 +591,7 @@ window.MDLive = (function () {
     keepPlayers(); reactions();
     const ans = (await G.ref.child('an/' + G.i).once('value')).val() || {};
     G.sp = { k: x.type === 'game' ? 'g_' + KEY(x.g) : 't_' + KEY(x.type), p: Object.keys(G.players).length, a: Object.keys(ans).filter(u => u in G.players).length };
+    if (G.phones) phonesResult(x, ans);
     G.pws = {}; Object.keys(ans).forEach(u => { const a = ans[u]; if (a && a.p && G.opts.pw && u in G.players) { G.pws[u] = a; if (/sk/.test(a.p)) delete ans[u]; } });
     if (G.opts.surv) Object.keys(ans).forEach(u => { if (G.out[u] != null) delete ans[u]; });
     if (x.type === 'game') return revealGame(x, m, ans);
