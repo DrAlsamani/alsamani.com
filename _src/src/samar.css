@@ -18,7 +18,7 @@
 .sm-board li{display:grid;grid-template-columns:auto 1fr auto;gap:.6vw;align-items:center;background:rgba(255,255,255,.07);border-radius:12px;padding:.8vh .8vw}
 .sm-board li i{width:1.1em;height:1.1em;border-radius:50%;background:var(--c)}.sm-board li span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.sm-board li b{color:var(--sa);font-variant-numeric:tabular-nums}
 .sm-board .sm-none{display:block;opacity:.6;text-align:center}
-.sm-stage{padding:3vh 3vw;overflow:auto;display:flex;flex-direction:column;justify-content:center}
+.sm-stage{padding:3vh 3vw;overflow:auto;display:flex;flex-direction:column;justify-content:flex-start}.sm-stage>*{margin-block:auto}
 .sm-ctl{grid-column:2;display:flex;gap:10px;align-items:center;padding:1.2vh 1.6vw;background:rgba(0,0,0,.2)}.sm-sp{flex:1}
 .sm-cb{border:1px solid rgba(255,255,255,.3);background:transparent;color:inherit;border-radius:10px;padding:6px 12px;font:inherit;font-size:.8em;display:grid;place-items:center;cursor:pointer}.sm-cb svg{width:20px;height:20px}
 .sm-clock{font-size:1.6em;color:var(--sa);min-width:2em;text-align:center;font-variant-numeric:tabular-nums}.sm-clock.low{color:var(--sr);animation:smPulse 1s infinite}
@@ -127,3 +127,15 @@
 .sm-phone .sm-quote{font-size:1.15rem;background:rgba(23,21,58,.06);padding:16px 18px;border-radius:16px;margin:0 0 12px}
 .sm-form textarea{font:inherit;font-size:1.1rem;padding:12px 14px;border:1.5px solid var(--line,#d6d6e2);border-radius:12px;background:var(--bg,#fff);color:inherit;width:100%;box-sizing:border-box;resize:vertical}
 .sm-ovb select{font:inherit;border-radius:10px;padding:4px 10px;background:rgba(0,0,0,.25);color:inherit;border:1.5px solid rgba(255,255,255,.2)}
+/* inviting: share the link, and a word while nobody is in */
+.sm-share{display:inline-flex;align-items:center;gap:6px;margin-top:1.2vh;font:inherit;font-size:.8em;color:var(--ink);background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.18);border-radius:999px;padding:.6vh 1vw;cursor:pointer}
+.sm-share svg{width:1.1em;height:1.1em}
+.sm-invite{max-width:760px;margin:0 auto 2.4vh;text-align:center;background:rgba(242,184,75,.12);border:1.5px solid rgba(242,184,75,.35);border-radius:16px;padding:1.4vh 1.4vw;line-height:1.8}
+@media (max-width:820px){
+  .sm-side{display:grid;grid-template-columns:auto 1fr;gap:10px 14px;align-items:center;padding:12px 16px}
+  .sm-code{display:contents}.sm-qr{grid-row:1/4;width:96px}.sm-code p{margin:0;font-size:.8rem}.sm-code b{font-size:clamp(26px,9vw,44px);line-height:1.1}
+  .sm-share{justify-self:start;margin:0;padding:6px 12px}
+  .sm-teams,.sm-board{grid-column:1/-1}.sm-board{max-height:22vh}
+  .sm-stage{padding:16px}.sm-invite{padding:12px 14px;font-size:.95rem}
+}
+@media (min-width:821px){.sm-games{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))!important}.sm-game small{line-height:1.6}}

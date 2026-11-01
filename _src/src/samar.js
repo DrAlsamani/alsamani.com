@@ -18,6 +18,7 @@
   const SND = { join: () => tone(880, .12, 'triangle', .06), go: () => [523, 659, 784].forEach((f, k) => tone(f, .2, 'triangle', .08, k * .1)), ok: () => { tone(784, .12, 'triangle', .08); tone(1175, .2, 'triangle', .08, .1); }, no: () => tone(220, .25, 'sawtooth', .05), tick: () => tone(1300, .04, 'square', .03), win: () => [523, 659, 784, 1047, 1319].forEach((f, k) => tone(f, .35, 'triangle', .09, k * .13)) };
   const SV = d => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
   const IC = {
+    share: SV('<circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="m8.2 10.8 7.6-4.4M8.2 13.2l7.6 4.4"/>'),
     whose: SV('<path d="M4 5h16v10H9l-5 4z"/><path d="M9 9h6M9 12h3"/><circle cx="18" cy="18" r="3"/>'),
     arrow: SV('<path d="M5 12h14M13 6l6 6-6 6"/>'), undo: SV('<path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/>'),
     spy: SV('<circle cx="8" cy="15" r="3"/><circle cx="16" cy="15" r="3"/><path d="M11 15h2M3 11h18M6 11l2-6h8l2 6"/>'),
@@ -184,7 +185,7 @@
     const url = `${location.origin}/play/samar/?k=${S.pin}`;
     let qr = ''; try { const q = qrcode(0, 'M'); q.addData(url); q.make(); qr = q.createSvgTag({ cellSize: 4, margin: 1, scalable: true }); } catch (e) {}
     const order = players().sort((a, b) => (S.sc[b] || 0) - (S.sc[a] || 0));
-    HE().innerHTML = `<div class="sm-screen"><div class="sm-side"><div class="sm-code"><div class="sm-qr">${qr}</div><p dir="ltr">${JOIN}</p><b dir="ltr">${S.pin.slice(0, 3)} ${S.pin.slice(3)}</b></div>
+    HE().innerHTML = `<div class="sm-screen"><div class="sm-side"><div class="sm-code"><div class="sm-qr">${qr}</div><p dir="ltr">${JOIN}</p><b dir="ltr">${S.pin.slice(0, 3)} ${S.pin.slice(3)}</b><button type="button" class="sm-share" data-share>${IC.share}${B('شارك رابط الدخول', 'Share the join link')}</button></div>
       ${teamsHtml()}<ol class="sm-board">${boardHtml()}</ol></div>
       <div class="sm-stage">${stage}</div><div class="sm-fx" aria-hidden="true"></div>
       <div class="sm-ctl">${foot || ''}<span class="sm-sp"></span><b class="sm-clock" id="smClock"></b><button type="button" class="sm-cb" data-mute>${store.get('mute', false) ? IC.mute : IC.vol}</button><button type="button" class="sm-cb" data-fs>${IC.fs}</button><button type="button" class="sm-cb" data-end>${B('إنهاء الجلسة', 'End the session')}</button></div></div>`;
@@ -192,6 +193,9 @@
     q('[data-mute]').onclick = e => { const m = !store.get('mute', false); store.set('mute', m); e.currentTarget.innerHTML = m ? IC.mute : IC.vol; };
     q('[data-fs]').onclick = () => document.fullscreenElement ? document.exitFullscreen() : HE().requestFullscreen && HE().requestFullscreen().catch(() => {});
     q('[data-end]').onclick = () => { if (!confirm(T('إنهاء الجلسة لكل اللاعبين؟', 'End the session for everyone?'))) return; db.ref('khh/' + S.pin).remove(); S.ref.remove(); store.set('host', null); HE().remove(); document.documentElement.classList.remove('sm-on'); home(); };
+    q('[data-share]').onclick = async () => { const t = T(`تعال العب معنا في سمر، الرمز ${S.pin}`, `Come and play Samar with us, code ${S.pin}`);
+      try { if (navigator.share) { await navigator.share({ title: T('سمر', 'Samar'), text: t, url }); return; } } catch (e) { return; }
+      try { await navigator.clipboard.writeText(t + '\n' + url); fly('✓'); } catch (e) { prompt(T('انسخ الرابط', 'Copy the link'), url); } };
     paintClock(); setTimeout(pushRemote, 0);
     return q;
   }
@@ -199,7 +203,8 @@
   function picker() {
     const n = players().length;
     const cats = ['mix'].concat(Object.keys(CAT).filter(k => k !== 'mine' || mineWords().length >= 6));
-    const q = frame(`<div class="sm-pick"><h2>${S.played ? B('اختر اللعبة التالية', 'Choose the next game') : B('اختر اللعبة', 'Choose a game')}</h2>
+    const invite = n < 2 ? `<p class="sm-invite">${n ? B('دخل لاعب واحد. الألعاب تُفتح من لاعبين فأكثر.', 'One player is in. The games open from two players.') : B('ادعُ الحاضرين: يمسحون الرمز، أو يدخلون الرابط ويكتبون الرقم، أو أرسل لهم الرابط. الألعاب تُفتح حين يدخل لاعبان.', 'Invite everyone: they scan the code, or open the link and type the number, or send them the link. The games open once two players are in.')}</p>` : '';
+    const q = frame(`<div class="sm-pick"><h2>${S.played ? B('اختر اللعبة التالية', 'Choose the next game') : B('اختر اللعبة', 'Choose a game')}</h2>${invite}
       <div class="sm-catrow"><span>${B('الكلمات:', 'Words:')}</span>${cats.map(c => `<button type="button" data-cat="${c}" aria-pressed="${S.cat === c}">${c === 'mix' ? B('منوّعة', 'Mixed') : B(CAT[c][0], CAT[c][1])}</button>`).join('')}<button type="button" class="sm-catset" data-set>${B('كلماتك والإعدادات', 'Your words and settings')}</button></div>
       <div class="sm-games">${GAMES.map(g => `<button type="button" class="sm-game" data-g="${g.id}"${n < g.min ? ' disabled' : ''}><i>${g.icon}</i><b>${B(g.ar, g.en)}</b><small>${B(g.dAr, g.dEn)}</small>${n < g.min ? `<em>${B(`تحتاج ${g.min} لاعبين على الأقل`, `Needs at least ${g.min} players`)}</em>` : ''}</button>`).join('')}</div></div>`, S.played ? `<button type="button" class="btn ghost" data-final>${B('ختام الجلسة', 'End with the podium')}</button>` : '');
     HE().querySelectorAll('[data-g]').forEach(b => b.onclick = () => startGame(b.dataset.g));
