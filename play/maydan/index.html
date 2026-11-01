@@ -2479,7 +2479,7 @@ if (typeof module !== 'undefined') module.exports = QZParse;
       b.disabled = true; b.innerHTML = B('جارٍ كتابة الأسئلة…', 'Writing the questions…'); st.textContent = T('عادةً أقل من دقيقة، حسب العدد.', 'Usually under a minute, depending on the number.');
       try {
         const text = await geminiWrite(prompt());
-        const got = QZParse.fromText(text).filter(usable);
+        const got = QZParse.fromText(text.replace(/\*\*([^*\n]+)\*\*/g, '$1').replace(/^#+\s*/gm, '')).filter(usable);
         if (!got.length) throw new Error('empty');
         add(got); try { localStorage.setItem('qzGen', JSON.stringify({ d: day, n: (used.d === day ? used.n : 0) + 1 })); } catch (e) {}
         st.textContent = T(`أُضيفت الأسئلة (${got.length}). راجعها وعدّل ما تريد.`, `${got.length} questions added. Review and edit as you like.`);
