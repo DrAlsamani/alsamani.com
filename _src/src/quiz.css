@@ -224,3 +224,11 @@
 .qz-rvh{display:flex;flex-wrap:wrap;gap:6px;align-items:center;justify-content:space-between}.qz-rvh b{font-size:1.0625rem}
 .qz-rvb{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}.qz-rvb .btn{display:inline-flex;gap:6px;align-items:center}
 .qz-ibok{background:#2f7d5b!important;color:#fff!important;border-color:transparent!important}.qz-ib.qz-ibok{border-radius:12px}
+/* new questions, checked before they join the quiz */
+.qz-merge{width:min(620px,100%)}
+.qz-mlist{margin:0;padding:0;list-style:none;display:grid;gap:6px;max-height:46vh;overflow:auto;counter-reset:m}
+.qz-mlist li{border:1px solid var(--line,#e5e5ea);border-radius:12px;padding:8px 10px;counter-increment:m}
+.qz-mlist li.off{opacity:.45}
+.qz-mlist label{display:flex;gap:10px;align-items:flex-start;cursor:pointer}.qz-mlist input{width:auto;margin-top:4px;flex:none}
+.qz-mlist span{display:grid;gap:2px;min-width:0}.qz-mlist b{font-weight:600;line-height:1.6;overflow-wrap:anywhere}.qz-mlist small{color:#2f7d5b;overflow-wrap:anywhere}
+.qz-mwhere{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;font-size:.9375rem}.qz-mwhere span{font-weight:700}.qz-mwhere label{display:inline-flex;gap:6px;align-items:center;cursor:pointer}.qz-mwhere input{width:auto}

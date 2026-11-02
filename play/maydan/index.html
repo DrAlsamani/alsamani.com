@@ -562,6 +562,14 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
 .qz-rvh{display:flex;flex-wrap:wrap;gap:6px;align-items:center;justify-content:space-between}.qz-rvh b{font-size:1.0625rem}
 .qz-rvb{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}.qz-rvb .btn{display:inline-flex;gap:6px;align-items:center}
 .qz-ibok{background:#2f7d5b!important;color:#fff!important;border-color:transparent!important}.qz-ib.qz-ibok{border-radius:12px}
+/* new questions, checked before they join the quiz */
+.qz-merge{width:min(620px,100%)}
+.qz-mlist{margin:0;padding:0;list-style:none;display:grid;gap:6px;max-height:46vh;overflow:auto;counter-reset:m}
+.qz-mlist li{border:1px solid var(--line,#e5e5ea);border-radius:12px;padding:8px 10px;counter-increment:m}
+.qz-mlist li.off{opacity:.45}
+.qz-mlist label{display:flex;gap:10px;align-items:flex-start;cursor:pointer}.qz-mlist input{width:auto;margin-top:4px;flex:none}
+.qz-mlist span{display:grid;gap:2px;min-width:0}.qz-mlist b{font-weight:600;line-height:1.6;overflow-wrap:anywhere}.qz-mlist small{color:#2f7d5b;overflow-wrap:anywhere}
+.qz-mwhere{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;font-size:.9375rem}.qz-mwhere span{font-weight:700}.qz-mwhere label{display:inline-flex;gap:6px;align-items:center;cursor:pointer}.qz-mwhere input{width:auto}
 </style>
 <div id="qz" class="sn qz"><noscript><span class="ar">تعمل هذه الأداة مع تفعيل JavaScript.</span><span class="en">This tool needs JavaScript.</span></noscript></div>
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script><script>/* Maydan library: ready quizzes to start at once or open and edit. Written in the editor's own format. */
@@ -1058,7 +1066,7 @@ if (typeof module !== 'undefined') module.exports = QZParse;
 
   // the landing: what Maydan is, where it fits, and how it works
   const SV = d => `<svg class="qz-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
-  const IC = { cloud: SV('<path d="M7 18h10a4 4 0 0 0 .5-7.97A6 6 0 0 0 6 9.5 4.25 4.25 0 0 0 7 18z"/>'), trash: SV('<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/>'), eye: SV('<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>'), save: SV('<path d="M5 3h11l3 3v15H5z"/><path d="M8 3v5h7V3M8 21v-7h8v7"/>'), up: SV('<path d="M12 15V3M7 8l5-5 5 5"/><path d="M4 15v5h16v-5"/>'), shuffle: SV('<path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/>') };
+  const IC = { cloud: SV('<path d="M7 18h10a4 4 0 0 0 .5-7.97A6 6 0 0 0 6 9.5 4.25 4.25 0 0 0 7 18z"/>'), trash: SV('<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/>'), eye: SV('<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>'), save: SV('<path d="M5 3h11l3 3v15H5z"/><path d="M8 3v5h7V3M8 21v-7h8v7"/>'), up: SV('<path d="M12 15V3M7 8l5-5 5 5"/><path d="M4 15v5h16v-5"/>'), shuffle: SV('<path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/>'), undo: SV('<path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/>') };
   function intro() {
     const card = (i, a, e, da, de) => `<div class="qi-c"><span>${i}</span><b>${B(a, e)}</b><small>${B(da, de)}</small></div>`;
     return `<div class="qi">
@@ -1206,7 +1214,7 @@ if (typeof module !== 'undefined') module.exports = QZParse;
       <div id="qzQs" class="qz-qs"></div>
       <div class="qz-addq"><button type="button" class="btn ghost" id="qzAddQ">${B('+ سؤال', '+ Question')}</button><button type="button" class="btn ghost" id="qzAddTF">${B('+ صح أو خطأ', '+ True or false')}</button><button type="button" class="btn ghost" id="qzAddG">${B('+ تحدٍّ تفاعلي ', '+ Challenge ')}</button></div>
 
-      <div class="qz-bar"><div class="qz-chk" id="qzChk"></div><div class="qz-bar-b"><button type="button" class="btn solid md-go" id="qzGo">${B('ابدأ المسابقة ▶', 'Start the quiz ▶')}</button><button type="button" class="qz-ib" id="qzPv" title="${T('معاينة', 'Preview')}">${IC.eye}<small>${B('معاينة', 'Preview')}</small></button><button type="button" class="qz-ib" id="qzExp" title="${T('حفظ نسخة', 'Save a copy')}">${IC.save}<small>${B('حفظ', 'Save')}</small></button><button type="button" class="qz-ib" id="qzPub" title="${T('انشرها في المكتبة', 'Offer it to the library')}">${IC.up}<small>${B('نشر', 'Offer')}</small></button></div></div>`;
+      <div class="qz-bar"><div class="qz-chk" id="qzChk"></div><div class="qz-bar-b"><button type="button" class="btn solid md-go" id="qzGo">${B('ابدأ المسابقة ▶', 'Start the quiz ▶')}</button><button type="button" class="qz-ib" id="qzUnd" hidden>${IC.undo}<small>${B('تراجع', 'Undo')}</small></button><button type="button" class="qz-ib" id="qzPv" title="${T('معاينة', 'Preview')}">${IC.eye}<small>${B('معاينة', 'Preview')}</small></button><button type="button" class="qz-ib" id="qzExp" title="${T('حفظ نسخة', 'Save a copy')}">${IC.save}<small>${B('حفظ', 'Save')}</small></button><button type="button" class="qz-ib" id="qzPub" title="${T('انشرها في المكتبة', 'Offer it to the library')}">${IC.up}<small>${B('نشر', 'Offer')}</small></button></div></div>`;
     const q = s => root.querySelector(s);
     q('#qzBack').onclick = () => { if (Q.rev) return review(); persist(); home(); };
     if (Q.rev) { q('#qzBack').innerHTML = B('‹ صفحة المراجعة', '‹ Review page'); const pb = q('#qzPub'); pb.classList.add('qz-ibok'); pb.querySelector('small').innerHTML = B('اعتمد وانشر', 'Approve'); }
@@ -1235,7 +1243,10 @@ if (typeof module !== 'undefined') module.exports = QZParse;
     q('#qzTpl').onclick = template;
     // AI
     // what the author wants is the request; pasted content, when there is any, becomes the only source
-    const prompt = () => { const c = q('#qzTopic').value.trim(), g = q('#qzGuide').value.trim(); return aiPrompt(c || g, +q('#qzN').value, q('#qzLv').value, q('#qzTy').value, q('#qzLg').value, { aud: q('#qzAud').value, tone: q('#qzTone').value, guide: c ? g : '' }); };
+    const have = () => { const L = real().filter(x => x.type !== 'game' && (x.q || '').trim()).map(x => '- ' + x.q.trim().replace(/\s+/g, ' ').slice(0, 120)).slice(0, 80); if (!L.length) return '';
+      return q('#qzLg').value === 'ar' ? `\n\nفي المسابقة الآن هذه الأسئلة، فلا تكرّرها ولا تكتب أسئلة قريبة منها جدًا، واكتب أسئلة جديدة تكمّلها:\n${L.join('\n')}` : `\n\nThe quiz already has these questions; do not repeat them or write near copies. Write new ones that complement them:\n${L.join('\n')}`; };
+    const prompt = () => prompt0() + have();
+    const prompt0 = () => { const c = q('#qzTopic').value.trim(), g = q('#qzGuide').value.trim(); return aiPrompt(c || g, +q('#qzN').value, q('#qzLv').value, q('#qzTy').value, q('#qzLg').value, { aud: q('#qzAud').value, tone: q('#qzTone').value, guide: c ? g : '' }); };
     // a long text cannot travel in a link; then the links open the AI empty and the request is copied on the way
     const links = () => { const raw = prompt(), p = encodeURIComponent(raw), long = p.length > 6000; q('#qzGpt').href = 'https://chatgpt.com/' + (long ? '' : '?q=' + p); q('#qzCl').href = 'https://claude.ai/new' + (long ? '' : '?q=' + p); q('#qzGpt').dataset.long = q('#qzCl').dataset.long = long ? 1 : '';
       const t = q('#qzTopic').value.trim(), w = t ? t.split(/\s+/).length : 0; q('#qzLen').textContent = w > 60 ? T(`نص من ${w} كلمة: تُبنى الأسئلة منه وحده.`, `A text of ${w} words: the questions come from it alone.`) : ''; };
@@ -1253,7 +1264,7 @@ if (typeof module !== 'undefined') module.exports = QZParse;
         const got = QZParse.fromText(text.replace(/\*\*([^*\n]+)\*\*/g, '$1').replace(/^#+\s*/gm, '')).filter(usable);
         if (!got.length) throw new Error('empty');
         add(got); try { localStorage.setItem('qzGen', JSON.stringify({ d: day, n: (used.d === day ? used.n : 0) + 1 })); } catch (e) {}
-        st.textContent = T(`أُضيفت الأسئلة (${got.length}). راجعها وعدّل ما تريد.`, `${got.length} questions added. Review and edit as you like.`);
+        st.textContent = T(`كتب ${got.length} سؤالًا. راجعها وعدّل ما تريد.`, `It wrote ${got.length} questions. Review and edit as you like.`);
       } catch (e) {
         console.error(e);
         st.textContent = T('تعذّر الإنشاء الآن. جرّب بعد قليل، أو استعمل نسخ الطلب أدناه.', 'Could not make them right now. Try again shortly, or copy the request below.');
@@ -1272,6 +1283,7 @@ if (typeof module !== 'undefined') module.exports = QZParse;
     // spreading replaces the challenges already placed, so pressing it again simply re-deals them
     q('#qzSpr').onclick = () => {
       const qs = Q.qs.filter(z => z.type !== 'game'), every = +q('#qzEvery').value;
+      if (qs.length) snap(T('توزيع التحديات', 'spreading the challenges'));
       if (!qs.length) { toast(B('أضف الأسئلة أولًا، ثم وزّع التحديات بينها.', 'Add the questions first, then spread the challenges.'), 1); return; }
       const slots = Math.floor((qs.length - 1) / every) || (qs.length >= every ? 1 : 0); if (!slots) { toast(B('الأسئلة أقل من أن يوضع بينها تحدٍّ بهذا التوزيع.', 'Too few questions for that spacing.'), 1); return; }
       const gs = pickGames(slots), out = []; let k = 0;
@@ -1282,6 +1294,7 @@ if (typeof module !== 'undefined') module.exports = QZParse;
     };
     q('#qzAddTF').onclick = () => { Q.qs.push(norm({ type: 'tf', opts: [T('صح', 'True'), T('خطأ', 'False')] })); draw(); focusLast(); later(); };
     q('#qzPv').onclick = () => preview(0);
+    q('#qzUnd').onclick = undo; undoBtn();
     q('#qzPub').onclick = offer;
     q('#qzGo').onclick = () => {
       persist();
@@ -1296,16 +1309,49 @@ if (typeof module !== 'undefined') module.exports = QZParse;
     if (!Q.qs.length) q('#qzPaste').focus({ preventScroll: true });
   }
   const focusLast = () => { const t = root.querySelectorAll('.qz-q textarea'); if (t.length) { t[t.length - 1].focus(); t[t.length - 1].scrollIntoView({ block: 'center', behavior: 'smooth' }); } };
-  function add(qs) {
+  /* ---------- adding to a quiz you are building: see the new ones first, choose where they go, and undo if needed ---------- */
+  const UNDO = [];
+  function snap(label) { if (UNDO.id !== Q.id) { UNDO.length = 0; UNDO.id = Q.id; } UNDO.push({ qs: JSON.stringify(Q.qs), label }); if (UNDO.length > 15) UNDO.shift(); undoBtn(); }
+  function undoBtn() { const b = root.querySelector('#qzUnd'); if (!b) return; const ok = UNDO.id === Q.id && UNDO.length; b.hidden = !ok; if (ok) b.title = T('تراجع: ', 'Undo: ') + UNDO[UNDO.length - 1].label; }
+  function undo() { if (UNDO.id !== Q.id || !UNDO.length) return; const u = UNDO.pop(); Q.qs = JSON.parse(u.qs).map(norm); persist(); draw(); checks(); undoBtn(); toast(B('رجعت المسابقة كما كانت قبل: ', 'Back to how it was before: ') + esc(u.label)); }
+  const real = () => Q.qs.filter(x => x.type === 'game' || (x.q || '').trim() || (x.opts || []).some(Boolean));
+  // the new questions placed among the old ones: at the end, at the start, or spread evenly between them (challenges keep their places)
+  function place(news, where) {
+    const old = real();
+    if (where === 'start') return news.concat(old);
+    if (where !== 'mix' || !old.length) return old.concat(news);
+    const out = [], m = old.length, k = news.length; let j = 0;
+    old.forEach((x, i) => { out.push(x); while (j < k && Math.floor((j + 1) * m / (k + 1)) === i + 1) out.push(news[j++]); });
+    while (j < k) out.push(news[j++]);
+    return out;
+  }
+  function add(qs, src) {
     qs = qs.filter(usable);
     if (!qs.length) { toast(B('لم أجد أسئلة في الملف. جرّب اللصق.', 'No questions found in the file. Try pasting.'), 1); return; }
-    // an empty first question left from a new quiz is replaced
-    if (Q.qs.length === 1 && !Q.qs[0].q && !Q.qs[0].opts.some(Boolean)) Q.qs = [];
-    const from = Q.qs.length;
-    Q.qs.push(...qs.map(norm));
-    persist(); draw(); checks();
-    toast(B(`أُضيفت الأسئلة (${qs.length}).`, `${qs.length} question${qs.length > 1 ? 's' : ''} added.`));
-    const c = root.querySelectorAll('.qz-q')[from]; if (c) c.scrollIntoView({ block: 'start', behavior: 'smooth' });
+    if (!real().length) { snap(T('إضافة الأسئلة', 'adding questions')); Q.qs = qs.map(norm); persist(); draw(); checks(); toast(B(`أُضيفت الأسئلة (${qs.length}).`, `${qs.length} question${qs.length > 1 ? 's' : ''} added.`)); return; }
+    mergeBox(qs.map(norm), src);
+  }
+  const ansOf = x => x.type === 'mc' || x.type === 'tf' ? x.opts.filter((o, j) => x.ok.includes(j)).join(' · ') : ['num', 'word'].includes(x.type) ? String(x.ans == null ? '' : x.ans) : x.type === 'order' ? (x.items || []).join(' ← ') : '';
+  function mergeBox(news, src) {
+    const keep = news.map(() => true), n0 = real().length;
+    const d = document.createElement('div'); d.className = 'qz-modal';
+    const paint = () => {
+      const k = keep.filter(Boolean).length;
+      d.innerHTML = `<div class="qz-mbox qz-merge"><h3>${B(`أسئلة جديدة (${news.length})`, `New questions (${news.length})`)}</h3>
+        <p class="pt-fine">${B(`راجعها قبل ضمّها؛ أسئلتك الحالية (${n0}) تبقى كما هي. أزل علامة ما لا تريده.`, `Check them before they join; your ${n0} current ones stay as they are. Untick any you do not want.`)}</p>
+        <ol class="qz-mlist">${news.map((x, i) => { const a = ansOf(x); return `<li class="${keep[i] ? '' : 'off'}"><label><input type="checkbox" data-k="${i}"${keep[i] ? ' checked' : ''}><span><b dir="auto">${esc(x.q || T('(بلا نص)', '(no text)'))}</b>${a ? `<small dir="auto">✓ ${esc(a)}</small>` : ''}</span></label></li>`; }).join('')}</ol>
+        <div class="qz-mwhere"><span>${B('أين تذهب؟', 'Where do they go?')}</span>${[['mix', T('وزّعها بين أسئلتي', 'Spread among mine')], ['end', T('في آخر المسابقة', 'At the end')], ['start', T('في أولها', 'At the start')]].map(([v, l], j) => `<label><input type="radio" name="qzW" value="${v}"${j === 0 ? ' checked' : ''}> ${l}</label>`).join('')}</div>
+        <div class="sn-two"><button type="button" class="btn solid" data-ok${k ? '' : ' disabled'}>${B(`ضمّ ${k} سؤالًا`, `Add ${k}`)}</button><button type="button" class="btn ghost" data-no>${B('تجاهلها', 'Discard them')}</button></div></div>`;
+      d.querySelectorAll('[data-k]').forEach(c => c.onchange = () => { keep[+c.dataset.k] = c.checked; const w = (d.querySelector('[name=qzW]:checked') || {}).value; paint(); const r = d.querySelector(`[name=qzW][value=${w}]`); if (r) r.checked = true; });
+      d.querySelector('[data-no]').onclick = () => { d.remove(); toast(B('لم يُضَف شيء، ومسابقتك كما هي.', 'Nothing added; your quiz is unchanged.')); };
+      d.querySelector('[data-ok]').onclick = () => {
+        const pick = news.filter((x, i) => keep[i]), w = d.querySelector('[name=qzW]:checked').value;
+        snap(T(`ضمّ ${pick.length} سؤالًا`, `adding ${pick.length}`)); Q.qs = place(pick, w); persist(); draw(); checks(); d.remove();
+        toast(B(`ضُمّت ${pick.length} سؤالًا ${w === 'mix' ? 'موزّعة بين أسئلتك' : w === 'start' ? 'في أول المسابقة' : 'في آخرها'}. <button type="button" class="sn-lnk" id="qzUndoM">تراجع</button>`, `${pick.length} added. <button type="button" class="sn-lnk" id="qzUndoM">Undo</button>`));
+        const u = document.getElementById('qzUndoM'); if (u) u.onclick = () => { undo(); document.getElementById('qzToast').classList.remove('on'); };
+      };
+    };
+    paint(); document.body.appendChild(d);
   }
 
   /* ---------- the questions ---------- */
