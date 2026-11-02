@@ -199,7 +199,7 @@
     return '';
   }
   function run() {
-    listenRx();
+    listenRx(); joinReqs();
     on(G.ref.child('mv'), 'child_added', s => { const v = s.val() || {}; apply(s.key, v.k, v.c, v.x); s.ref.remove(); });
     show();
   }
@@ -244,7 +244,7 @@
         const s = (await db.ref('kh/' + p + '/st').once('value')).val();
         if (!s) { e.currentTarget.disabled = false; return err(B('لا توجد لعبة بهذا الرمز.', 'No game with this code.')); }
         const mine = (await db.ref('kh/' + p + '/pl/' + uid).once('value')).val();
-        if (!mine) { if (s !== 'lobby') { toast(B('بدأت اللعبة، فدخلت متفرجًا وتقدر تتفاعل.', 'The game has started, so you are in as a fan and can react.')); return watch(p, n); } await db.ref('kh/' + p + '/pl/' + uid).set({ n, at: TS() }); }
+        if (!mine) { if (s !== 'lobby') { toast(B('الجولة بدأت، فدخلت متفرجًا. تقدر تطلب اللعب من الجولة الجاية.', 'The round has started, so you are watching. You can ask to play from the next round.')); return watch(p, n); } await db.ref('kh/' + p + '/pl/' + uid).set({ n, at: TS() }); }
         player(p);
       } catch (er) { console.error('kh join', er && er.message); e.currentTarget.disabled = false; err(B('تعذّر الدخول. تأكد من الإنترنت.', 'Could not join. Check the internet.')); }
     };
@@ -286,12 +286,38 @@
     const leave = () => { history.replaceState(null, '', location.pathname); home(); };
     on(G.ref.child('st'), 'value', s => { if (!s.exists()) { stop(); root.innerHTML = `<div class="kh-card kh-narrow"><p class="kh-big">${B('انتهت اللعبة', 'The game has ended')}</p><button type="button" class="btn ghost" id="khHome">${B('الرئيسية', 'Home')}</button></div>`; root.querySelector('#khHome').onclick = leave; } });
     on(G.ref.child('names'), 'value', s => { G.names = s.val() || {}; });
-    listenRx();
+    listenRx(); askBar(pin, name);
     on(G.ref.child('g'), 'value', s => {
       G.P = s.val();
+      if (G.P && G.P.team && G.P.team[uid] != null && G.mode === 'watch') { toast(B('بدأت جولتك! أنت الآن لاعب.', 'Your round has started! You are playing now.')); return player(pin); }
       if (!G.P) { root.innerHTML = `<div class="kh-card kh-narrow kh-wait"><p class="kh-big">${B('أنت تشاهد', 'You are watching')}</p><p>${B('لم تبدأ اللعبة بعد؛ ستظهر هنا حين تبدأ.', 'The game has not started yet; it will show here when it does.')}</p></div>`; return; }
       G.redraw = () => view({ P: G.P, hand: null, me: null, names: G.names, screen: true, watch: true, act: () => '', again: leave }); G.redraw();
     });
+  }
+
+  /* ---------- joining a game already under way: a watcher asks, the host lets them in from the next round ---------- */
+  function askBar(pin, name) {
+    const el = document.createElement('div'); el.className = 'kh-ask'; document.body.appendChild(el); G.off.push(() => el.remove());
+    let st = 'idle';
+    const paint = () => { el.innerHTML = st === 'idle' ? `<button type="button" class="btn solid" data-ask>${B('أبي ألعب من الجولة الجاية', 'I want to play next round')}</button>`
+      : `<p>${st === 'sent' ? B('وصل طلبك للمضيف…', 'Your request reached the host…') : st === 'ok' ? B('وافق المضيف: تدخل من الجولة الجاية', 'Approved: you join from the next round') : B('المضيف أبقاك متفرجًا هذه المرة', 'The host kept you watching this time')}</p>`;
+      const b = el.querySelector('[data-ask]'); if (b) b.onclick = () => { if (!name) name = (prompt(T('اسمك؟', 'Your name?')) || '').trim().slice(0, 24); if (!name) return; G.ref.child('au/' + uid).update({ n: name }).catch(() => {}); G.ref.child('rx/' + uid).set({ e: '^j', t: TS() }).catch(() => {}); st = 'sent'; paint(); }; };
+    on(G.ref.child('ok/' + uid), 'value', s => { const v = s.val(); if (v === 1) st = 'ok'; else if (v === 0) st = 'no'; paint(); });
+    paint();
+  }
+  // the host: who is asking, and a yes that seats them on the smallest team from the next round
+  function joinReqs() {
+    if (G.reqOn) return; G.reqOn = true; G.req = {};
+    const el = document.createElement('div'); el.className = 'kh-req'; document.body.appendChild(el);
+    const paint = () => { const us = Object.keys(G.req); el.hidden = !us.length; el.innerHTML = us.map(u => `<div><b dir="auto">${esc(G.req[u])}</b> ${B('يبي يلعب', 'wants to play')}<button type="button" class="btn solid" data-y="${u}">${B('ضمّه من الجولة الجاية', 'Seat from next round')}</button><button type="button" class="btn ghost" data-n="${u}">${B('يبقى متفرج', 'Keep watching')}</button></div>`).join('');
+      el.querySelectorAll('[data-y]').forEach(b => b.onclick = () => { const u = b.dataset.y, n = G.req[u]; delete G.req[u];
+        const c = [...Array(G.o.teams).keys()].map(k => Object.values(G.tm).filter(t => t === k).length); G.tm[u] = c.indexOf(Math.min(...c)); G.names[u] = n;
+        G.ref.update({ ['pl/' + u]: { n, at: TS() }, ['ok/' + u]: 1, tm: G.tm, names: G.names }).catch(e => console.error(e)); store.set('run', Object.assign(store.get('run', {}) || {}, { names: G.names, tm: G.tm }));
+        toast(B(`${esc(n)} يلعب من الجولة الجاية مع ${TN(G.tm[u])}.`, `${esc(n)} plays from the next round with ${TN(G.tm[u])}.`)); paint(); });
+      el.querySelectorAll('[data-n]').forEach(b => b.onclick = () => { const u = b.dataset.n; delete G.req[u]; G.ref.child('ok/' + u).set(0).catch(() => {}); paint(); }); };
+    const f = s => { const v = s.val() || {}; if (v.e !== '^j' || !G || G.names[s.key]) return; const n = ((G.aud || {})[s.key] || {}).n || T('مشجّع', 'A fan'); if (G.req[s.key]) return; G.req[s.key] = String(n).slice(0, 24); buzz(20); paint(); };
+    on(G.ref.child('rx'), 'child_added', f); on(G.ref.child('rx'), 'child_changed', f); G.off.push(() => { el.remove(); G.reqOn = false; });
+    paint();
   }
 
   /* ---------- reactions: emoji and short ready phrases that float over the board for everyone ---------- */
@@ -302,7 +328,7 @@
   const blocked = new Set(store.get('blk', [])); let muted = store.get('mute', false);
   function listenRx() {
     on(G.ref.child('au'), 'value', s => { G.aud = s.val() || {}; const st = root.querySelector('.kh-stands'); if (st) st.outerHTML = stands(); });
-    const fly = s => { const v = s.val() || {}; if (!v.e || !G || muted || blocked.has(s.key)) return; G.rxSeen = G.rxSeen || {}; const was = G.rxSeen[s.key]; if (was && was.e === v.e && Date.now() - was.at < 1100) return; G.rxSeen[s.key] = { e: v.e, at: Date.now() }; if (Date.now() - (v.t || 0) - off > 15000) return; const fan = G.aud && G.aud[s.key]; float(v.e, (G.names && G.names[s.key]) || (fan && fan.n) || ''); if (fan) cheer(s.key, v.e); };
+    const fly = s => { const v = s.val() || {}; if (!v.e || !G || muted || blocked.has(s.key) || String(v.e).charAt(0) === '^') return; G.rxSeen = G.rxSeen || {}; const was = G.rxSeen[s.key]; if (was && was.e === v.e && Date.now() - was.at < 1100) return; G.rxSeen[s.key] = { e: v.e, at: Date.now() }; if (Date.now() - (v.t || 0) - off > 15000) return; const fan = G.aud && G.aud[s.key]; float(v.e, (G.names && G.names[s.key]) || (fan && fan.n) || ''); if (fan) cheer(s.key, v.e); };
     on(G.ref.child('rx'), 'child_added', fly); on(G.ref.child('rx'), 'child_changed', fly);
   }
   // the stands: everyone watching, by name; a fan's chip jumps when they react

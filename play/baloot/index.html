@@ -202,6 +202,12 @@
 .kh-cfgbox{background:rgba(224,164,88,.18);border:1px solid rgba(224,164,88,.6);border-radius:12px;padding:8px 12px;font-weight:600}
 .kh-cfgr{display:flex;align-items:center;justify-content:center;gap:8px}.kh-cfgr .kh-cfg{margin:0}
 .kh-snd{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.08);color:#fff;cursor:pointer}.kh-snd[aria-pressed="false"]{opacity:.6}
+/* joining mid-game: the watcher's request, and the host's yes or no */
+.kh-ask{position:fixed;z-index:60;inset-inline:12px;bottom:calc(76px + env(safe-area-inset-bottom));display:flex;justify-content:center;pointer-events:none}
+.kh-ask>*{pointer-events:auto;box-shadow:0 8px 22px rgba(0,0,0,.25)}.kh-ask p{margin:0;background:#173b2c;color:#fff;border-radius:12px;padding:8px 14px;font-size:.9375rem}
+.kh-req{position:fixed;z-index:61;inset-inline:12px;top:calc(12px + env(safe-area-inset-top));margin:auto;max-width:520px;display:grid;gap:8px}
+.kh-req>div{display:flex;flex-wrap:wrap;gap:8px;align-items:center;background:#fff;color:#14204a;border-radius:14px;padding:10px 12px;box-shadow:0 10px 26px rgba(0,0,0,.28)}
+.kh-req b{font-weight:700}.kh-req .btn{padding:6px 12px;font-size:.875rem}.kh-req .btn.ghost{color:#14204a!important;border-color:#c9cde0!important}
 .bl{--felt:#0f4d3a;--felt2:#0b3b2c;--gold:#e0a458;--us:#3fa36b;--them:#d0574f}
 .bl-home{display:grid;gap:12px;max-width:640px;margin:0 auto}
 .bl-mode{display:grid;gap:4px;text-align:start;font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px 20px;cursor:pointer}
