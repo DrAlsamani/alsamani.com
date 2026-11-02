@@ -178,9 +178,48 @@ html.dw-on{overflow:hidden}
 .dw-words.dw-dim span{opacity:.75;font-size:clamp(14px,1.6vw,22px)}
 .dw-letters{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;direction:ltr}.dw-letters span{width:clamp(48px,6vw,84px);aspect-ratio:1;display:grid;place-items:center;background:#fff;color:#14204a;border-radius:14px;font-size:clamp(26px,3.6vw,48px);font-weight:900;box-shadow:0 5px 0 #c9822b}
 .dw-buzz .dw-opts button:disabled:not(.no):not(.ok){filter:none;cursor:default}
+/* the AI builder on the page */
+.dw-ai{background:linear-gradient(135deg,#1d2a5e,#2c3f86);color:#fff;border-radius:18px;padding:16px 18px;display:grid;gap:10px}
+.dw-ai h2{margin:0!important;color:#e9a54a}.dw-ai p{margin:0;opacity:.9;line-height:1.7}
+.dw-ai textarea,.dw-ai input,.dw-ai select{font:inherit;border:0;border-radius:10px;padding:9px 11px;background:#fff;color:#14204a;min-width:0}
+.dw-aig{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}.dw-aig label,.dw-ail{display:grid;gap:4px;font-size:.875rem}
+.dw-aik{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.9375rem}.dw-aik label{display:inline-flex;gap:6px;align-items:center}
+.dw-ai .btn{justify-self:start;background:#e9a54a!important;color:#1d1b3a!important;border-color:#e9a54a!important}.dw-ai .dw-found{color:#bff0d2}
+/* the evening's challenges in the setup */
+.dw-chbox{display:grid;gap:8px}
+.dw-chl{list-style:none;margin:0;padding:0;display:grid;gap:6px}.dw-chl li{display:flex;gap:8px;align-items:center;background:rgba(255,255,255,.06);border-radius:12px;padding:8px 10px}
+.dw-chl span{flex:1;min-width:0;display:grid;gap:2px}.dw-chl small{opacity:.75;font-size:.8125rem;line-height:1.6}
+.dw-chl button{all:unset;cursor:pointer;width:34px;height:34px;display:grid;place-items:center;border-radius:50%;background:rgba(255,255,255,.1)}.dw-chl button svg{width:18px;height:18px}
+.dw-mats{margin:0;background:rgba(233,165,74,.15);border-radius:12px;padding:8px 12px;line-height:1.8}.dw-mats b{color:#e9a54a}
+.dw-add{all:unset;cursor:pointer;justify-self:start;color:#e9a54a;font-weight:700;padding:4px 2px}
+.dw-modal{position:fixed;inset:0;z-index:5;background:rgba(8,12,34,.6);display:grid;place-items:center;padding:14px}
+.dw-mbox{width:min(520px,100%);background:#fff;color:#14204a;border-radius:18px;padding:18px;display:grid;gap:10px}.dw-mbox h3{margin:0}
+.dw-mbox label{display:grid;gap:4px;font-size:.875rem;font-weight:600}.dw-mbox input,.dw-mbox textarea,.dw-mbox select{font:inherit;font-weight:400;border:1px solid #cfd6e4;border-radius:10px;padding:8px 10px}
+.dw-two{display:grid;grid-template-columns:1fr 1fr;gap:8px}.dw-mbox .dw-btn.ghost{color:#14204a;border-color:#cfd6e4}
+/* the judge's marks */
+.dw-judge{display:grid;gap:10px;justify-items:center;width:min(820px,100%)}.dw-judge>p{margin:0;font-size:clamp(16px,1.8vw,22px)}
+.dw-judge>div{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px;width:100%}
+.dw-jr{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.07);border-radius:12px;padding:6px 10px;border-inline-start:6px solid var(--c)}
+.dw-jr b{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dw-jr button{all:unset;cursor:pointer;width:36px;height:36px;display:grid;place-items:center;border-radius:10px;background:rgba(255,255,255,.14);font-size:1.25rem;font-weight:800}
+.dw-jr input{width:62px;text-align:center;font:inherit;font-weight:800;font-size:1.125rem;border:0;border-radius:10px;padding:6px;background:#fff;color:#14204a}
+/* the categories board */
+.dw-bd{width:min(1200px,100%)}.dw-bd h2 span{color:color-mix(in srgb,var(--c) 55%,#fff)}
+.dw-grid{display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));gap:clamp(6px,1vw,12px);width:100%}
+.dw-col{display:grid;gap:clamp(6px,1vw,10px);align-content:start}.dw-col h3{margin:0;background:#e9a54a;color:#1d1b3a;border-radius:12px;padding:10px 6px;font-size:clamp(14px,1.6vw,22px);overflow-wrap:anywhere}
+.dw-col button{all:unset;cursor:pointer;text-align:center;background:#23336f;border:2px solid rgba(255,255,255,.18);border-radius:12px;padding:clamp(10px,2vh,22px) 4px;font-size:clamp(20px,2.8vw,40px);font-weight:900;color:#e9a54a;transition:transform .15s}
+.dw-col button:hover:not(:disabled){transform:scale(1.04);border-color:#e9a54a}.dw-col button:disabled{background:rgba(255,255,255,.04);border-color:transparent;cursor:default}
+/* the teams' path */
+.dw-path{width:100%;display:grid;gap:clamp(8px,1.4vh,14px)}
+.dw-lane{display:grid;grid-template-columns:minmax(70px,160px) 1fr auto;gap:12px;align-items:center;font-size:clamp(15px,1.7vw,22px)}
+.dw-lane span{font-weight:800;text-align:start;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.dw-lane strong{min-width:3ch}
+.dw-trk{position:relative;height:clamp(34px,5vh,48px);border-radius:999px;background:repeating-linear-gradient(90deg,rgba(255,255,255,.08) 0 14px,rgba(255,255,255,.03) 14px 28px);border:2px solid color-mix(in srgb,var(--c) 50%,transparent)}
+.dw-trk i{position:absolute;top:50%;inset-inline-start:var(--x);width:6px;height:6px;margin:-3px;border-radius:50%;background:rgba(255,255,255,.25)}
+.dw-tok{position:absolute;top:50%;inset-inline-start:var(--p);transform:translateY(-50%);margin-inline-start:calc(clamp(30px,4.2vh,42px) / -2);width:clamp(30px,4.2vh,42px);aspect-ratio:1;border-radius:50%;display:grid;place-items:center;background:var(--c);color:#fff;font-weight:900;box-shadow:0 0 0 3px #fff,0 6px 16px rgba(0,0,0,.35);transition:inset-inline-start 1.4s cubic-bezier(.2,.8,.2,1)}
+.dw-flag{position:absolute;inset-inline-end:6px;top:50%;transform:translateY(-50%);width:18px;height:18px;background:conic-gradient(#fff 0 25%,#14204a 0 50%,#fff 0 75%,#14204a 0);border-radius:3px;opacity:.8}
 </style>
 <div id="dw" class="dw-page"><noscript><span class="ar">تعمل هذه اللعبة مع تفعيل JavaScript.</span><span class="en">This game needs JavaScript.</span></noscript></div>
-<script>/* Maydan library: ready quizzes to start at once or open and edit. Written in the editor's own format. */
+<script>window.MD_CFG={"apiKey": "AIzaSyA50i75DT1Is1a6Yn6snW1_JVObc8S3F0Y", "authDomain": "maydan-705ae.firebaseapp.com", "databaseURL": "https://maydan-705ae-default-rtdb.europe-west1.firebasedatabase.app", "projectId": "maydan-705ae", "appId": "1:342187013133:web:d5c2396f0db413f3c51144"};</script><script>/* Maydan library: ready quizzes to start at once or open and edit. Written in the editor's own format. */
 window.MDLib = (function () {
   const mc = (q, opts, ok) => ({ type: 'mc', q, opts, ok: [ok] });
   const tf = (q, yes) => ({ type: 'tf', q, opts: ['صح', 'خطأ'], ok: [yes ? 0 : 1] });
@@ -633,32 +672,37 @@ window.Dawwara = (function () {
   /* ---------- 1. setting up: the groups, their leaders, how many questions each ---------- */
   function start(quiz) {
     const qs = (quiz.qs || []).filter(usable).map(clean);
-    D = { title: quiz.title || T('دوّارة', 'Dawwara'), all: qs, cfg: cfgGet() };
+    D = { title: quiz.title || T('دوّارة', 'Dawwara'), all: qs, cfg: cfgGet(), ch: quiz.ch || [], chosen: null };
     // no questions at all still makes an evening of challenges
     setup();
   }
   function setup() {
     const c = D.cfg, n = Math.min(8, Math.max(2, c.n)), P = D.all.length, mc = D.all.filter(isMC).length;
-    if (!c.r || c.rn !== n) { c.r = defRounds(n, P, mc); c.rn = n; }
+    const catQ = D.all.filter(x => (x.cat || '').trim()).length, cats = new Set(D.all.map(x => (x.cat || '').trim()).filter(Boolean)).size;
+    if (!c.r || c.rn !== n || c.rq !== P) { c.r = defRounds(n, P, mc, cats >= 2 ? catQ : 0); c.rn = n; c.rq = P; }
+    if (c.r.board == null) c.r.board = 0;
+    if (!D.chosen) fillChal(c.r.chal);
     const opt = (k, max, unit) => `<select data-r="${k}">${Array.from({ length: max + 1 }, (_, v) => `<option value="${v}"${c.r[k] === v ? ' selected' : ''}>${v ? NUM(v) + ' ' + unit : T('بدونها', 'None')}</option>`).join('')}</select>`;
     shell(`<div class="dw-set"><header><b class="dw-logo">${T('دوّارة', 'Dawwara')}</b><h2 dir="auto">${esc(D.title)}</h2><p>${T(`مسابقة فرق على جهاز واحد: كل مجموعة يجيها دورها وسؤالها، وقائدها يقول الإجابة، وأنت تسجّلها بلمسة. الصح والأسرع يكسب أكثر. الأسئلة الصالحة: ${NUM(D.all.length)}`, `A team quiz on one device: each group gets its turn and its own question, its leader says the answer and you tap it. Right and fast scores more. Usable questions: ${D.all.length}`)}</p></header>
       <div class="dw-row"><span>${T('عدد المجموعات', 'Groups')}</span><div class="dw-seg">${[2, 3, 4, 5, 6, 7, 8].map(k => `<button type="button" data-n="${k}" aria-pressed="${k === n}"${k > D.all.length ? ' disabled' : ''}>${NUM(k)}</button>`).join('')}</div></div>
       <div class="dw-groups">${Array.from({ length: n }, (_, k) => `<div class="dw-g" style="--c:${COL[k]}"><i></i><input data-name="${k}" maxlength="18" dir="auto" value="${esc(c.names[k] || NAMES()[k])}" aria-label="${T('اسم المجموعة', 'Group name')}"><input data-lead="${k}" maxlength="18" dir="auto" value="${esc(c.leads[k] || '')}" placeholder="${T('القائد (اختياري)', 'Leader (optional)')}"></div>`).join('')}</div>
       <div class="dw-rounds"><h3>${T('جولات الأمسية', 'The rounds')}</h3>
         <div class="dw-row"><span>${ROUND().all[0]}<small>${T('الكل يجاوب في نفس الوقت', 'All answer at once')}</small></span>${opt('all', Math.min(15, P), T('أسئلة', 'questions'))}</div>
+        ${cats >= 2 ? `<div class="dw-row"><span>${ROUND().board[0]}<small>${T('اختر الفئة والقيمة، مثل كتاب «حروف»', 'Pick a category and a value')}</small></span>${opt('board', Math.min(24, catQ), T('مربعات', 'tiles'))}</div>` : ''}
         <div class="dw-row"><span>${ROUND().turn[0]}<small>${T('لكل مجموعة سؤالها', 'A question per group')}</small></span>${opt('turn', Math.min(6, Math.floor(P / n)), T('لكل مجموعة', 'per group'))}</div>
         <div class="dw-row"><span>${ROUND().buzz[0]}<small>${T('أول يد ترتفع تجاوب', 'First hand up answers')}</small></span>${opt('buzz', Math.min(15, mc), T('أسئلة', 'questions'))}</div>
         <div class="dw-row"><span>${ROUND().chal[0]}<small>${T('حركة وإبداع وذكاء، بلا أجهزة', 'Moving, creating, thinking')}</small></span>${opt('chal', 10, T('تحديات', 'challenges'))}</div>
-        <p class="dw-need" id="dwNeed"></p></div>
+        <p class="dw-need" id="dwNeed"></p><div class="dw-chbox" id="dwCh"></div></div>
       <div class="dw-row"><span>${T('وقت السؤال', 'Time per question')}</span><select data-time>${[[0, T('كما في المسابقة', 'As in the quiz')], [20, NUM(20) + T(' ثانية', ' s')], [30, NUM(30) + T(' ثانية', ' s')], [45, NUM(45) + T(' ثانية', ' s')], [60, T('دقيقة', '1 min')], [90, T('دقيقة ونصف', '1.5 min')]].map(([v, l]) => `<option value="${v}"${c.time === v ? ' selected' : ''}>${l}</option>`).join('')}</select></div>
       <label class="dw-ck"><input type="checkbox" data-steal${c.steal ? ' checked' : ''}> ${T('السرقة: إذا أخطأت المجموعة، أول مجموعة ترفع يدها تجاوب وتخطف نصف النقاط', 'Stealing: after a miss, the first group to raise a hand answers for half the points')}</label>
       <label class="dw-ck"><input type="checkbox" data-life${c.life ? ' checked' : ''}> ${T('وسائل المساعدة لكل مجموعة مرة واحدة: حذف خيارين، ووقت إضافي، وتبديل السؤال', 'Helps, once per group: remove two options, extra time, swap the question')}</label>
       <div class="dw-acts"><button type="button" class="dw-btn" data-main>${T('ابدأ دوّارة', 'Start Dawwara')}</button><button type="button" class="dw-btn ghost" data-cards>${IC.print}${T('اطبع بطاقات المجموعات', 'Print group cards')}</button></div></div>`, 'dw-setup');
     const read = () => { c.names = [...el.querySelectorAll('[data-name]')].map(i => i.value.trim()); c.leads = [...el.querySelectorAll('[data-lead]')].map(i => i.value.trim()); el.querySelectorAll('[data-r]').forEach(x => { c.r[x.dataset.r] = +x.value; }); c.time = +el.querySelector('[data-time]').value; c.steal = el.querySelector('[data-steal]').checked; c.life = el.querySelector('[data-life]').checked; cfgSet(c); };
     el.querySelectorAll('[data-n]').forEach(b => b.onclick = () => { read(); c.n = +b.dataset.n; c.r = null; cfgSet(c); setup(); });
-    const need = () => { read(); const q = c.r.turn * n + c.r.all + c.r.buzz, e = el.querySelector('#dwNeed'), st = el.querySelector('[data-main]');
+    const chRe = () => { const b = el.querySelector('#dwCh'); b.innerHTML = chalBox(); chalBind(() => { el.querySelector('[data-r="chal"]').value = String(Math.min(10, D.chosen.length)); chRe(); need(); }); };
+    const need = () => { read(); if (D.chosen.length !== c.r.chal) { fillChal(c.r.chal); chRe(); } const q = c.r.turn * n + c.r.all + c.r.buzz + (c.r.board || 0), e = el.querySelector('#dwNeed'), st = el.querySelector('[data-main]');
       e.textContent = T(`تحتاج ${NUM(q)} سؤالًا من ${NUM(P)} متاحة، و${NUM(c.r.chal)} تحديات.`, `Needs ${q} of the ${P} questions, and ${c.r.chal} challenges.`); e.classList.toggle('bad', q > P); st.disabled = q > P || !(q + c.r.chal); };
-    el.querySelectorAll('[data-r]').forEach(x => x.onchange = need); need();
+    el.querySelectorAll('[data-r]').forEach(x => x.onchange = need); chRe(); need();
     el.querySelector('[data-cards]').onclick = () => { read(); cards(); };
     el.querySelector('[data-main]').onclick = () => { read(); begin(); };
   }
@@ -679,9 +723,9 @@ window.Dawwara = (function () {
   }
   function ask() {
     const tn = D.steps[D.t], g = D.groups[tn.g], x = tn.x, dur = D.cfg.time || x.time || (x.type === 'tf' ? 15 : 30);
-    const st = D.q = { tn, g, x, dur, left: dur, t0: Date.now(), hide: [], locked: false, stealer: null, tried: [] };
+    const st = D.q = { tn, g, x, dur, left: dur, t0: Date.now(), hide: [], locked: false, stealer: null, tried: [], val: tn.val || 0 };
     const text = ['num', 'word'].includes(x.type);
-    shell(`${board(tn.g)}<div class="dw-q" style="--c:${g.col}"><div class="dw-qh"><span class="dw-who" dir="auto">${esc(g.name)}${g.lead ? ` · ${esc(g.lead)}` : ''}</span><div class="dw-ring"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="44"/><circle cx="50" cy="50" r="44" id="dwArc"/></svg><b id="dwT">${NUM(dur)}</b></div></div>
+    shell(`${board(tn.g)}<div class="dw-q" style="--c:${g.col}"><div class="dw-qh"><span class="dw-who" dir="auto">${esc(g.name)}${tn.val ? ` · ${esc(tn.cat)} ${NUM(tn.val)}` : g.lead ? ` · ${esc(g.lead)}` : ''}</span><div class="dw-ring"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="44"/><circle cx="50" cy="50" r="44" id="dwArc"/></svg><b id="dwT">${NUM(dur)}</b></div></div>
       <h2 class="dw-qt" dir="auto">${esc(x.q)}</h2>${x.img ? `<img class="dw-img" src="${x.img}" alt="">` : ''}
       ${text ? `<div class="dw-say"><p>${T('القائد يقول الإجابة، ثم:', 'The leader says the answer, then:')}</p><button type="button" class="dw-btn" data-main data-show>${T('اكشف الإجابة', 'Reveal the answer')}</button></div>`
         : `<div class="dw-opts n${x.opts.length}">${x.opts.map((o, j) => `<button type="button" data-j="${j}" style="--o:var(--dwo${j})"><i>${LET()[j]}</i><span dir="auto">${esc(o)}</span></button>`).join('')}</div>`}
@@ -718,7 +762,7 @@ window.Dawwara = (function () {
     SND.go();
   }
   // points: 100 for a right answer, up to 50 more for speed; a steal is worth half, without the speed
-  const worth = st => 100 + Math.round(50 * Math.max(0, st.left) / st.dur);
+  const worth = st => 50 + Math.round(50 * Math.max(0, st.left) / st.dur);
   function pick(j) {
     const st = D.q; if (!st || (st.locked && !st.stealer)) return; if (st.tried.includes(j)) return;
     const right = st.x.ok.includes(j); st.tried.push(j);
@@ -732,7 +776,7 @@ window.Dawwara = (function () {
   }
   function settle(right) {
     const st = D.q; clearInterval(tick);
-    const who = st.stealer || st.g, pts = right ? (st.stealer ? 50 : worth(st)) : 0;
+    const who = st.stealer || st.g, pts = right ? (st.stealer ? Math.round((st.val || 100) / 2) : (st.val || worth(st))) : 0;
     st.locked = true;
     if (right) { who.score += pts; if (st.stealer) who.steals++; else who.right++; SND.ok(); }
     else SND.no();
@@ -771,43 +815,46 @@ window.Dawwara = (function () {
   const isMC = x => ['mc', 'tf'].includes(x.type);
   const ROUND = () => ({
     all: [T('سؤال للجميع', 'Everyone answers'), T('كل المجموعات تجاوب على نفس السؤال في نفس الوقت: ترفع بطاقة الحرف أو تكتب الإجابة على ورقة، والمدير يسجّل.', 'All groups answer the same question at once: they raise the letter card or write the answer, and the host records it.')],
+    board: [T('لوحة الفئات', 'The categories board'), T('المجموعة صاحبة الدور تختار الفئة والقيمة، مثل كتاب «حروف». كلما زادت القيمة صعب السؤال وكثرت النقاط، ومن يخطئ يُسرق منه.', 'The group on turn picks a category and a value. The higher the value, the harder the question and the more points; a miss can be stolen.')],
     turn: [T('جولة الدور', 'Turn round'), T('لكل مجموعة سؤالها، وقائدها يقول الإجابة. ومن يخطئ يمكن السرقة منه.', 'Each group gets its own question and its leader answers. A miss can be stolen.')],
     buzz: [T('جولة السرعة', 'Speed round'), T('أول مجموعة ترفع يدها تجاوب. الخطأ يُخرجها من السؤال، والصحيح الأسرع يكسب أكثر.', 'The first group to raise a hand answers. A wrong answer puts it out of that question; the fastest right one wins most.')],
     chal: [T('جولة التحديات', 'Challenge round'), T('تحدٍّ للمجموعات كلها في وقت واحد، والمدير يرتّب الفائزين.', 'A challenge for all groups at once; the host ranks the winners.')]
   });
   // a sensible program for the number of groups: few groups play by turn; many groups play all together
-  const defRounds = (n, pool, mc) => {
+  const defRounds = (n, pool, mc, catQ) => {
     const r = n <= 3 ? { turn: 2, all: 3, buzz: 3, chal: 2 } : n <= 5 ? { turn: 1, all: 4, buzz: 4, chal: 2 } : { turn: 0, all: 5, buzz: 5, chal: 3 };
-    r.buzz = Math.min(r.buzz, mc); while (r.turn * n + r.all + r.buzz > pool && (r.turn || r.all || r.buzz)) { if (r.turn) r.turn--; else if (r.all >= r.buzz && r.all) r.all--; else r.buzz--; }
+    r.board = catQ >= 4 ? Math.min(n <= 3 ? 9 : 12, catQ) : 0; if (r.board) r.turn = 0;
+    r.buzz = Math.min(r.buzz, mc); while (r.turn * n + r.all + r.buzz + r.board > pool && (r.turn || r.all || r.buzz || r.board)) { if (r.turn) r.turn--; else if (r.board > 6) r.board--; else if (r.all >= r.buzz && r.all) r.all--; else if (r.buzz) r.buzz--; else r.board--; }
     return r;
   };
   function program() {
     const c = D.cfg, n = c.n, R = c.r;
     const order = ['mc', 'tf', 'num', 'word'], rest = D.all.map((x, i) => ({ x, i })).sort((a, b) => order.indexOf(a.x.type) - order.indexOf(b.x.type) || a.i - b.i).map(o => o.x);
     const take = (k, f) => { const out = []; for (let i = 0; i < rest.length && out.length < k;) { if (!f || f(rest[i])) out.push(rest.splice(i, 1)[0]); else i++; } return out; };
+    D.tiles = boardTiles(R.board || 0, rest);
     const buzzQ = take(R.buzz, isMC), turnQ = take(R.turn * n), allQ = take(R.all);
     D.spare = rest;
     const hands = D.groups.map(() => []); turnQ.forEach((x, k) => hands[k % n].push(x));
     const turns = []; for (let r = 0; r < R.turn; r++) for (let g = 0; g < n; g++) if (hands[g][r]) turns.push({ k: 'turn', g, x: hands[g][r], r });
-    const used = new Set(), chs = Array.from({ length: R.chal }, () => ({ k: 'chal', c: nextChal(used) })).filter(o => o.c);
-    const blocks = [['all', allQ.map(x => ({ k: 'all', x }))], ['turn', turns], ['buzz', buzzQ.map(x => ({ k: 'buzz', x }))]].filter(b => b[1].length);
+    const chs = (D.chosen || []).map(byKey).filter(Boolean).map(c => ({ k: 'chal', c }));
+    const blocks = [['all', allQ.map(x => ({ k: 'all', x }))], ['board', D.tiles.map((_, i) => ({ k: 'board', g: i % n }))], ['turn', turns], ['buzz', buzzQ.map(x => ({ k: 'buzz', x }))]].filter(b => b[1].length);
     const per = Math.ceil(chs.length / Math.max(1, blocks.length)), steps = [];
     const push = (type, items) => { if (!items.length) return; steps.push({ k: 'round', type, n: items.length }); items.forEach(i => steps.push(i)); steps.push({ k: 'stand' }); };
     blocks.forEach(([t, items]) => { push(t, items); push('chal', chs.splice(0, per)); });
     push('chal', chs);
     if (steps.length && steps[steps.length - 1].k === 'stand') steps.pop();
-    D.steps = steps; D.used = used;
+    D.steps = steps;
   }
   function run() {
     const s = D.steps[D.t]; clearInterval(tick);
     if (!s) return final();
-    ({ round: roundCard, turn: intro, all: askAll, buzz: askBuzz, chal: challenge, stand: standings })[s.k](s);
+    ({ round: roundCard, board: boardPick, turn: intro, all: askAll, buzz: askBuzz, chal: challenge, stand: standings })[s.k](s);
   }
   const go = () => { D.t++; run(); };
-  const nextLabel = () => { const s = D.steps[D.t + 1]; return !s ? T('النتيجة النهائية', 'Final result') : s.k === 'stand' ? T('الترتيب', 'Standings') : s.k === 'round' ? T('الجولة التالية', 'Next round') : s.k === 'turn' ? T('الدور التالي', 'Next turn') : s.k === 'chal' ? T('التحدي التالي', 'Next challenge') : T('السؤال التالي', 'Next question'); };
+  const nextLabel = () => { const s = D.steps[D.t + 1]; return !s ? T('النتيجة النهائية', 'Final result') : s.k === 'stand' ? T('الترتيب', 'Standings') : s.k === 'round' ? T('الجولة التالية', 'Next round') : s.k === 'turn' || s.k === 'board' ? T('الدور التالي', 'Next turn') : s.k === 'chal' ? T('التحدي التالي', 'Next challenge') : T('السؤال التالي', 'Next question'); };
   function roundCard(s) {
     const no = D.steps.slice(0, D.t + 1).filter(x => x.k === 'round').length, all = D.steps.filter(x => x.k === 'round').length, [t, d] = ROUND()[s.type];
-    shell(`${board(-1)}<div class="dw-mid dw-rcard dw-r-${s.type}"><p class="dw-sub">${T(`الجولة ${NUM(no)} من ${NUM(all)}`, `Round ${no} of ${all}`)}</p><h2>${t}</h2><p>${d}</p><p class="dw-sub">${s.type === 'chal' ? T(`${NUM(s.n)} ${s.n === 1 ? 'تحدٍّ' : 'تحديات'}`, `${s.n} challenge${s.n > 1 ? 's' : ''}`) : s.type === 'turn' ? T(`${NUM(s.n)} أسئلة بالتناوب`, `${s.n} questions in turn`) : T(`${NUM(s.n)} أسئلة`, `${s.n} questions`)}</p><button type="button" class="dw-btn" data-main>${T('ابدأ الجولة', 'Start the round')}</button></div>`, 'dw-in');
+    shell(`${board(-1)}<div class="dw-mid dw-rcard dw-r-${s.type}"><p class="dw-sub">${T(`الجولة ${NUM(no)} من ${NUM(all)}`, `Round ${no} of ${all}`)}</p><h2>${t}</h2><p>${d}</p><p class="dw-sub">${s.type === 'chal' ? T(`${NUM(s.n)} ${s.n === 1 ? 'تحدٍّ' : 'تحديات'}`, `${s.n} challenge${s.n > 1 ? 's' : ''}`) : s.type === 'board' ? T(`${NUM(s.n)} مربعات`, `${s.n} tiles`) : s.type === 'turn' ? T(`${NUM(s.n)} أسئلة بالتناوب`, `${s.n} questions in turn`) : T(`${NUM(s.n)} أسئلة`, `${s.n} questions`)}</p><button type="button" class="dw-btn" data-main>${T('ابدأ الجولة', 'Start the round')}</button></div>`, 'dw-in');
     el.querySelector('[data-main]').onclick = go; SND.go();
   }
   // a ring that counts down, for any screen that has one
@@ -873,7 +920,7 @@ window.Dawwara = (function () {
     };
     el.querySelectorAll('[data-j]').forEach(b => b.onclick = () => {
       if (st.who == null || st.locked) return; const j = +b.dataset.j, k = st.who, right = x.ok.includes(j);
-      if (right) { b.classList.add('ok'); const pts = 100 + Math.round(50 * st.left / st.dur); D.groups[k].score += pts; D.groups[k].right++; return end(k, pts); }
+      if (right) { b.classList.add('ok'); const pts = 50 + Math.round(50 * st.left / st.dur); D.groups[k].score += pts; D.groups[k].right++; return end(k, pts); }
       b.classList.add('no'); b.disabled = true; SND.no(); st.out.push(k); st.who = null;
       const open = [...el.querySelectorAll('[data-j]')].filter(o => !o.classList.contains('no')).length;
       if (st.out.length >= D.groups.length || open <= 1) return end(null); hands();
@@ -887,22 +934,27 @@ window.Dawwara = (function () {
   const PLACE = [150, 100, 70, 50, 30, 20, 10, 10];
   function nextChal(used, not) { const L = CHAL().map((c, i) => i).filter(i => !used.has(i) && i !== not); if (!L.length) return null; const i = L[Math.floor(Math.random() * L.length)]; used.add(i); return Object.assign({ i }, CHAL()[i]); }
   function challenge(s) {
-    const ch = s.c, st = D.q = { dur: ch.s, left: ch.s, locked: false, rank: [], extra: extra(ch) };
-    shell(`${board(-1)}<div class="dw-mid dw-ch"><p class="dw-tag">${esc(ch.cat)}</p><h2>${esc(ch.t)}</h2><p>${esc(ch.d)}</p><div class="dw-x" id="dwX">${st.extra.pre || ''}</div>${ring(ch.s)}
+    const ch = s.c, st = D.q = { dur: ch.s, left: ch.s, locked: false, rank: [], extra: extra(ch), sc: ch.sc || 'rank' };
+    shell(`${board(-1)}<div class="dw-mid dw-ch"><p class="dw-tag">${esc(ch.cat)}</p><h2 dir="auto">${esc(ch.t)}</h2><p dir="auto">${esc(ch.d)}</p>${ch.mat ? `<p class="dw-sub">${T('يحتاج', 'Needs')}: ${esc(ch.mat)}</p>` : ''}<div class="dw-x" id="dwX">${st.extra.pre || ''}</div>${ring(ch.s)}
       <div class="dw-foot" id="dwFoot"><div class="dw-acts"><button type="button" class="dw-btn" data-main data-go>${T('ابدأ المؤقت', 'Start the timer')}</button><button type="button" class="dw-btn ghost" data-swap>${IC.swap}${T('تحدٍّ آخر', 'Another challenge')}</button></div></div></div>`, 'dw-in');
-    el.querySelector('[data-swap]').onclick = () => { const n = nextChal(D.used, ch.i); if (n) { s.c = n; challenge(s); } };
+    el.querySelector('[data-swap]').onclick = () => { const P = shuf(pool().filter(c => !(D.chosen || []).includes(c.key))); if (P.length) { D.chosen = (D.chosen || []).map(k => k === ch.key ? P[0].key : k); s.c = P[0]; challenge(s); } };
     el.querySelector('[data-go]').onclick = () => {
       SND.go(); const x = el.querySelector('#dwX'); if (st.extra.live) x.innerHTML = st.extra.live;
       if (st.extra.hideAt) setTimeout(() => { if (D && D.q === st && x.isConnected) x.innerHTML = st.extra.after; }, st.extra.hideAt * 1000);
       el.querySelector('#dwFoot').innerHTML = `<button type="button" class="dw-btn ghost" data-main data-stop>${T('انتهى التحدي', 'The challenge is over')}</button>`;
-      el.querySelector('[data-stop]').onclick = rank; clock(st, () => { SND.win(); rank(); });
+      el.querySelector('[data-stop]').onclick = score; clock(st, () => { SND.win(); score(); });
     };
+    const score = () => { st.again = score; if (st.sc === 'judge') { st.locked = true; clearInterval(tick); const x = el.querySelector('#dwX'); if (st.extra.answer) x.innerHTML = st.extra.answer;
+      return judgeBox(st, m => { let best = -1; m.forEach((v, k) => { D.groups[k].score += v; if (best < 0 || v > m[best]) best = k; }); if (best >= 0 && m[best] > 0) D.groups[best].chal = (D.groups[best].chal || 0) + 1; SND.ok();
+        after(`<p>${T('أُضيفت الدرجات', 'Marks added')}${best >= 0 && m[best] > 0 ? ` · ${T('الأعلى', 'Top')}: <span dir="auto">${esc(D.groups[best].name)}</span> <b>+${NUM(m[best])}</b>` : ''}</p>`); }); }
+      rank(); };
     const rank = () => {
       st.locked = true; clearInterval(tick); const f = el.querySelector('#dwFoot'), x = el.querySelector('#dwX'); if (st.extra.answer) x.innerHTML = st.extra.answer;
       const paint = () => { f.innerHTML = `<div class="dw-steal"><p>${T('اضغط المجموعات بترتيب الفوز: الأول ثم الثاني…', 'Tap the groups in winning order: first, then second…')}</p><div>${D.groups.map((g, k) => { const p = st.rank.indexOf(k); return `<button type="button" data-rk="${k}" style="--c:${g.col}" class="${p >= 0 ? 'on' : ''}" dir="auto">${p >= 0 ? `<em>${NUM(p + 1)}</em>` : ''}${esc(g.name)}</button>`; }).join('')}</div></div>
-        <div class="dw-acts"><button type="button" class="dw-btn" data-main data-ok${st.rank.length ? '' : ' disabled'}>${T('اعتمد النتيجة', 'Confirm')}</button><button type="button" class="dw-btn ghost" data-re>${T('أعد الترتيب', 'Reset')}</button></div>`;
+        <div class="dw-acts"><button type="button" class="dw-btn" data-main data-ok${st.rank.length ? '' : ' disabled'}>${T('اعتمد النتيجة', 'Confirm')}</button><button type="button" class="dw-btn ghost" data-re>${T('أعد الترتيب', 'Reset')}</button><button type="button" class="dw-btn ghost" data-tojudge>${T('ضع درجات بدلًا من الترتيب', 'Give marks instead')}</button></div>`;
         f.querySelectorAll('[data-rk]').forEach(b => b.onclick = () => { const k = +b.dataset.rk; if (!st.rank.includes(k)) st.rank.push(k); paint(); });
         f.querySelector('[data-re]').onclick = () => { st.rank = []; paint(); };
+        f.querySelector('[data-tojudge]').onclick = () => { st.sc = 'judge'; score(); };
         f.querySelector('[data-ok]').onclick = () => { st.rank.forEach((k, p) => { D.groups[k].score += PLACE[p] || 10; D.groups[k].chal = (D.groups[k].chal || 0) + (p === 0 ? 1 : 0); }); SND.ok(); const w = D.groups[st.rank[0]];
           after(`<p><b>+${NUM(PLACE[0])}</b> ${T('للفائز', 'to the winner')} <span dir="auto">${esc(w.name)}</span></p>`); };
       };
@@ -967,12 +1019,183 @@ window.Dawwara = (function () {
       [K, 'الجملة الطويلة', 'كوّنوا أطول جملة مفيدة يقول فيها كل عضو كلمة واحدة بدوره.', 'Long sentence', 'Build the longest sensible sentence, one word per member in turn.', 60]
     ].map(r => ({ cat: r[0], t: A ? r[1] : r[3], d: A ? r[2] : r[4], s: r[5], x: r[6] || '' })); };
 
+  /* ---------- challenges: the bank, the evening's own (from the AI), and the host's own; each scored by place or by the judge ---------- */
+  const MAT = { 'الطائرة الورقية': 'أوراق A4', 'البرج': 'أوراق وأقلام', 'الكرة الورقية': 'ورقة', 'خريطة المملكة': 'ورق وأقلام', 'شعار المجموعة': 'ورق وأقلام ملونة', 'رسّام المجموعة': 'سبورة أو ورق وأقلام', 'الرسم الأعمى': 'ورق وأقلام', 'المطاردة': '', 'بيتان من الشعر': 'ورقة وقلم', 'القصة الجماعية': '', 'مدن المملكة': 'ورقة وقلم لكل مجموعة', 'حرف الميم': 'ورقة وقلم لكل مجموعة', 'أكلاتنا': 'ورقة وقلم لكل مجموعة', 'حيوانات الصحراء': 'ورقة وقلم لكل مجموعة', 'دول بحرف السين': 'ورقة وقلم لكل مجموعة', 'ذاكرة الشاشة': 'ورقة وقلم لكل مجموعة', 'كلمات من كلمة': 'ورقة وقلم لكل مجموعة', 'أشياء مشتركة': 'ورقة وقلم لكل مجموعة', 'سؤال للمنافس': 'ورقة وقلم لكل مجموعة' };
+  const myChal = () => { try { return JSON.parse(localStorage.getItem('dw.mych') || '[]'); } catch (e) { return []; } };
+  function pool() {
+    const C = T('إبداع', 'Create');
+    const bank = CHAL().map((c, i) => Object.assign({ key: 'b' + i, sc: c.cat === C ? 'judge' : 'rank', mat: isAr() ? (MAT[c.t] || '') : '' }, c));
+    const own = (D.ch || []).map((c, i) => Object.assign({ sc: 'judge', s: 90, cat: T('تحدي الأمسية', 'This evening'), x: '' }, c, { key: 'q' + i }));
+    const mine = myChal().map((c, i) => Object.assign({ sc: 'judge', s: 90, cat: T('تحدياتك', 'Yours'), x: '' }, c, { key: 'm' + i }));
+    return own.concat(mine, bank);
+  }
+  const byKey = k => pool().find(c => c.key === k);
+  // fill the evening's challenges up to the count: the evening's own first, then the bank at random
+  function fillChal(n) {
+    const P = pool(), keep = (D.chosen || []).filter(k => P.some(c => c.key === k)).slice(0, n);
+    const own = P.filter(c => c.key.charAt(0) === 'q' && !keep.includes(c.key)), bank = shuf(P.filter(c => c.key.charAt(0) === 'b' && !keep.includes(c.key)));
+    while (keep.length < n && own.length) keep.push(own.shift().key);
+    while (keep.length < n && bank.length) keep.push(bank.shift().key);
+    D.chosen = keep;
+  }
+  function chalBox() {
+    const L = D.chosen.map(byKey).filter(Boolean), mats = [...new Set(L.map(c => (c.mat || '').trim()).filter(Boolean))];
+    return `${L.length ? `<ol class="dw-chl">${L.map((c, i) => `<li><span><b dir="auto">${esc(c.t)}</b><small>${esc(c.cat)} · ${NUM(c.s)} ${T('ثانية', 's')} · ${c.sc === 'judge' ? T('درجات الحكم', 'judge’s marks') : T('بالترتيب', 'by place')}${c.mat ? ' · ' + T('يحتاج: ', 'needs: ') + esc(c.mat) : ''}</small></span><button type="button" data-cs="${i}" title="${T('بدّله', 'Swap')}">${IC.swap}</button><button type="button" data-cx="${i}" title="${T('احذفه', 'Remove')}">${IC.x}</button></li>`).join('')}</ol>` : ''}
+      ${mats.length ? `<p class="dw-mats"><b>${T('جهّز قبل الأمسية', 'Prepare beforehand')}:</b> ${mats.map(esc).join(T('، ', ', '))}</p>` : ''}
+      <button type="button" class="dw-add" data-cadd>+ ${T('أضف تحديًا من عندك', 'Add your own challenge')}</button>`;
+  }
+  function chalBind(again) {
+    el.querySelectorAll('[data-cs]').forEach(b => b.onclick = () => { const i = +b.dataset.cs, cur = D.chosen[i], P = shuf(pool().filter(c => !D.chosen.includes(c.key) && c.key !== cur)); if (P.length) D.chosen[i] = P[0].key; again(); });
+    el.querySelectorAll('[data-cx]').forEach(b => b.onclick = () => { D.chosen.splice(+b.dataset.cx, 1); D.cfg.r.chal = D.chosen.length; again(); });
+    const a = el.querySelector('[data-cadd]'); if (a) a.onclick = () => chalForm(again);
+  }
+  // the host's own challenge: a game, an activity, a scene to act, a contest outside — with its time, how it is scored and what it needs
+  function chalForm(again) {
+    const d = document.createElement('div'); d.className = 'dw-modal'; el.appendChild(d);
+    d.innerHTML = `<div class="dw-mbox"><h3>${T('تحدٍّ من عندك', 'Your own challenge')}</h3>
+      <label>${T('العنوان', 'Title')}<input data-f="t" maxlength="40" dir="auto" placeholder="${T('مثال: سباق الملاعق', 'e.g. Spoon race')}"></label>
+      <label>${T('التعليمات كما تظهر على الشاشة', 'Instructions as shown on the screen')}<textarea data-f="d" rows="3" dir="auto" maxlength="240"></textarea></label>
+      <div class="dw-two"><label>${T('الوقت', 'Time')}<select data-f="s">${[30, 45, 60, 90, 120, 180, 300].map(v => `<option value="${v}"${v === 90 ? ' selected' : ''}>${v < 60 ? NUM(v) + T(' ثانية', ' s') : NUM(v / 60) + T(' دقيقة', ' min')}</option>`).join('')}</select></label>
+        <label>${T('الاحتساب', 'Scoring')}<select data-f="sc"><option value="judge">${T('درجات يضعها الحكم', 'Marks from the judge')}</option><option value="rank">${T('بترتيب الفوز', 'By place')}</option></select></label></div>
+      <label>${T('يحتاج (اختياري)', 'Needs (optional)')}<input data-f="mat" maxlength="60" dir="auto" placeholder="${T('مثال: ملاعق وليمون', 'e.g. spoons and lemons')}"></label>
+      <div class="dw-acts"><button type="button" class="dw-btn" data-ok>${T('أضفه', 'Add it')}</button><button type="button" class="dw-btn ghost" data-no>${T('إلغاء', 'Cancel')}</button></div></div>`;
+    const f = k => d.querySelector(`[data-f="${k}"]`);
+    d.querySelector('[data-no]').onclick = () => d.remove();
+    d.querySelector('[data-ok]').onclick = () => {
+      const c = { t: f('t').value.trim(), d: f('d').value.trim(), s: +f('s').value, sc: f('sc').value, mat: f('mat').value.trim() }; if (!c.t) return f('t').focus();
+      const L = myChal(); L.unshift(c); try { localStorage.setItem('dw.mych', JSON.stringify(L.slice(0, 60))); } catch (e) {}
+      d.remove(); D.chosen.unshift('m0'); D.chosen = D.chosen.map((k, i) => i && k.charAt(0) === 'm' ? 'm' + (+k.slice(1) + 1) : k); D.cfg.r.chal = D.chosen.length; again();
+    };
+  }
+  // the judge's marks: a number for each group, quick to set
+  function judgeBox(st, done) {
+    const f = el.querySelector('#dwFoot'); st.marks = st.marks || D.groups.map(() => 0); const mx = st.max || 100;
+    const paint = () => { f.innerHTML = `<div class="dw-judge"><p>${T('ضع درجة كل مجموعة', 'Mark each group')} <small>(${T('من', 'out of')} ${NUM(mx)})</small></p><div>${D.groups.map((g, k) => `<div class="dw-jr" style="--c:${g.col}"><b dir="auto">${esc(g.name)}</b><button type="button" data-jm="${k}">−</button><input type="number" inputmode="numeric" min="0" max="${mx}" step="5" data-jv="${k}" value="${st.marks[k]}"><button type="button" data-jp="${k}">+</button></div>`).join('')}</div></div>
+      <div class="dw-acts"><button type="button" class="dw-btn" data-main data-jok>${T('اعتمد الدرجات', 'Confirm the marks')}</button><button type="button" class="dw-btn ghost" data-jrank>${T('احسبها بالترتيب', 'Score by place instead')}</button></div>`;
+      const set = (k, v) => { st.marks[k] = Math.max(0, Math.min(mx, Math.round(v))); const i = f.querySelector(`[data-jv="${k}"]`); if (i) i.value = st.marks[k]; };
+      f.querySelectorAll('[data-jm]').forEach(b => b.onclick = () => set(+b.dataset.jm, st.marks[+b.dataset.jm] - 10));
+      f.querySelectorAll('[data-jp]').forEach(b => b.onclick = () => set(+b.dataset.jp, st.marks[+b.dataset.jp] + 10));
+      f.querySelectorAll('[data-jv]').forEach(i => i.oninput = () => { st.marks[+i.dataset.jv] = Math.max(0, Math.min(mx, +i.value || 0)); });
+      f.querySelector('[data-jok]').onclick = () => done(st.marks);
+      f.querySelector('[data-jrank]').onclick = () => { st.sc = 'rank'; st.again(); };
+    };
+    paint();
+  }
+
+  /* ---------- the categories board, like the «حروف» book: the group on turn picks a category and a value ---------- */
+  function boardTiles(n, rest) {
+    const cats = {}; rest.forEach(x => { const c = (x.cat || '').trim(); if (c) (cats[c] = cats[c] || []).push(x); });
+    const names = Object.keys(cats).filter(c => cats[c].length).slice(0, 6); if (names.length < 2) return [];
+    names.forEach(c => cats[c].sort((a, b) => (a.lv || 2) - (b.lv || 2)));
+    const tiles = []; let r = 0;
+    while (tiles.length < n && names.some(c => cats[c].length)) { names.forEach(c => { if (tiles.length < n && cats[c].length) { const x = cats[c].shift(); rest.splice(rest.indexOf(x), 1); tiles.push({ cat: c, x, v: 100 * (x.lv || Math.min(4, r + 1)), used: false }); } }); r++; }
+    tiles.forEach(t => { t.v = Math.max(100, Math.min(400, t.v)); });
+    return tiles;
+  }
+  function boardPick(s) {
+    const g = D.groups[s.g], cats = [...new Set(D.tiles.map(t => t.cat))];
+    shell(`${board(s.g)}<div class="dw-mid dw-bd" style="--c:${g.col}"><h2>${T('دور', 'Turn:')} <span dir="auto">${esc(g.name)}</span></h2><p>${T('اختاروا الفئة والقيمة: كلما زادت القيمة صعب السؤال وكثرت النقاط', 'Pick a category and a value: the higher, the harder and the more points')}</p>
+      <div class="dw-grid" style="--n:${cats.length}">${cats.map(c => `<div class="dw-col"><h3 dir="auto">${esc(c)}</h3>${D.tiles.map((t, i) => t.cat === c ? `<button type="button" data-tile="${i}"${t.used ? ' disabled' : ''}>${t.used ? '' : NUM(t.v)}</button>` : '').join('')}</div>`).join('')}</div></div>`, 'dw-in');
+    el.querySelectorAll('[data-tile]').forEach(b => b.onclick = () => { const t = D.tiles[+b.dataset.tile]; t.used = true; s.x = t.x; s.val = t.v; s.cat = t.cat; SND.go(); ask(); });
+  }
+
+  /* ---------- the teams' path: tokens that move along the road as the points come in ---------- */
+  function pathHtml() {
+    const top = Math.max(1, ...D.groups.map(g => g.score)), pos = g => 4 + 88 * g.score / top;
+    D.prevPos = D.prevPos || {};
+    const html = `<div class="dw-path">${D.groups.map((g, k) => `<div class="dw-lane" style="--c:${g.col}"><span dir="auto">${esc(g.name)}</span><div class="dw-trk">${Array.from({ length: 9 }, (_, j) => `<i style="--x:${(j + 1) * 10}%"></i>`).join('')}<b class="dw-tok" data-tok="${k}" style="--p:${D.prevPos[k] == null ? 4 : D.prevPos[k]}%">${esc(g.name.charAt(0))}</b><em class="dw-flag"></em></div><strong>${NUM(g.score)}</strong></div>`).join('')}</div>`;
+    setTimeout(() => { D.groups.forEach((g, k) => { const t = el && el.querySelector(`[data-tok="${k}"]`); if (t) t.style.setProperty('--p', pos(g) + '%'); D.prevPos[k] = pos(g); }); }, 120);
+    return html;
+  }
+
+  /* ---------- writing the evening with AI: questions in categories and levels, and challenges to suit ---------- */
+  const AI_V = '11.10.0', AI_KEY = '6Le4gQsuAAAAAE3jS1mLgG9B2XT8AucvEecF6Kp4', AI_MODELS = ['gemini-3.6-flash', 'gemini-3.8-flash', 'gemini-3-flash-preview', 'gemini-flash-latest'];
+  let aiMk = null, aiModel = null;
+  async function gemini(p) {
+    if (window.__dwAI) return window.__dwAI(p);
+    if (!window.MD_CFG) throw new Error('no-config');
+    if (!aiMk) {
+      const u = n => `https://www.gstatic.com/firebasejs/${AI_V}/firebase-${n}.js`;
+      const [{ initializeApp, getApps }, { initializeAppCheck, ReCaptchaEnterpriseProvider }, { getAI, getGenerativeModel, VertexAIBackend }] = await Promise.all([import(u('app')), import(u('app-check')), import(u('ai'))]);
+      const app = getApps().find(a => a.name === 'mdai') || initializeApp(window.MD_CFG, 'mdai');
+      try { initializeAppCheck(app, { provider: new ReCaptchaEnterpriseProvider(AI_KEY), isTokenAutoRefreshEnabled: false }); } catch (e) {}
+      const ai = getAI(app, { backend: new VertexAIBackend('global') });
+      aiMk = m => getGenerativeModel(ai, { model: m, generationConfig: { temperature: 0.8, responseMimeType: 'application/json', thinkingConfig: { thinkingBudget: 1024 } } });
+    }
+    for (let k = aiModel ? aiModel.k : 0; k < AI_MODELS.length; k++) {
+      try { const m = aiModel && aiModel.k === k ? aiModel.m : aiMk(AI_MODELS[k]); const r = await m.generateContent(p); aiModel = { k, m }; return r.response.text(); }
+      catch (e) { if (!/not.?found|404|not supported/i.test(String(e && e.message))) throw e; aiModel = null; }
+    }
+    throw new Error('no model');
+  }
+  const AUD = () => [['fam', T('العائلة والأصدقاء', 'Family and friends')], ['prim', T('طلاب الابتدائي', 'Primary pupils')], ['mid', T('طلاب المتوسط', 'Middle school')], ['sec', T('طلاب الثانوي', 'Secondary school')], ['uni', T('طلاب الجامعة', 'University students')], ['work', T('زملاء العمل', 'Colleagues')]];
+  function aiPrompt(o) {
+    const aud = (AUD().find(a => a[0] === o.aud) || AUD()[0])[1];
+    return `أنت معدّ مسابقات محترف لجمهور سعودي. اكتب محتوى أمسية مسابقات مجموعات حماسية.
+الموضوع أو المحتوى: ${o.topic || 'ثقافة عامة منوعة'}
+الجمهور: ${aud}
+الفئات: ${o.cats.join('، ')}
+عدد الأسئلة لكل فئة: ${o.per}، متدرجة الصعوبة: سهل (lv 1) ثم متوسط (lv 2) ثم صعب (lv 3)، بتوزيع متقارب.
+عدد التحديات: ${o.nch}، من الأنواع: ${o.kinds.join('، ') || 'منوعة'}. ${o.mat ? 'يجوز أن تحتاج أدوات بسيطة متوفرة في البيت أو المدرسة.' : 'بلا أي أدوات.'}
+
+القواعد:
+- معظم الأسئلة اختيار من متعدد بأربعة خيارات قريبة ومقنعة، وبعضها صح أو خطأ، وقليل منها جوابه رقم أو كلمة واحدة.
+- تحقق من صحة كل إجابة مرتين، واحذف أي سؤال فيه شك.
+- مناسب للبيئة السعودية والذوق العام، بلا أمثلة غربية ولا مناسبات غير مألوفة، ولا موسيقى ولا رقص.
+- التحديات أنشطة جماعية للمجموعات كلها في وقت واحد: تعليمات واضحة قصيرة تُقرأ على الشاشة، ووقت مناسب بالثواني، وطريقة احتساب: "rank" للسباقات والمنافسات التي لها فائز واضح، و"judge" لما يحتاج تقدير الحكم (تمثيل، إبداع، رسم).
+- اكتب بالعربية الفصيحة السهلة.
+
+أعد JSON فقط بهذا الشكل:
+{"title":"عنوان قصير جذاب","questions":[{"cat":"الفئة","lv":1,"type":"mc","q":"السؤال","opts":["","","",""],"ok":0},{"cat":"الفئة","lv":2,"type":"tf","q":"عبارة","ok":true},{"cat":"الفئة","lv":3,"type":"num","q":"السؤال","ans":1932,"unit":""},{"cat":"الفئة","lv":2,"type":"word","q":"تلميح","ans":"كلمة"}],"challenges":[{"t":"العنوان","d":"التعليمات","s":90,"sc":"rank","mat":"الأدوات أو فارغ","kind":"النوع"}]}`;
+  }
+  function fromAI(text) {
+    const m = text.match(/\{[\s\S]*\}/); if (!m) throw new Error('no-json'); const j = JSON.parse(m[0]);
+    const qs = (j.questions || []).map(q => {
+      const base = { cat: String(q.cat || '').trim().slice(0, 20), lv: Math.max(1, Math.min(3, +q.lv || 2)), q: String(q.q || '').trim(), time: 30 };
+      if (q.type === 'tf') return Object.assign(base, { type: 'tf', opts: [T('صح', 'True'), T('خطأ', 'False')], ok: [q.ok === false || q.ok === 'false' || q.ok === 1 ? 1 : 0], time: 20 });
+      if (q.type === 'num') return Object.assign(base, { type: 'num', ans: +q.ans, unit: q.unit || '', opts: ['', ''], ok: [] });
+      if (q.type === 'word') return Object.assign(base, { type: 'word', ans: String(q.ans || '').trim(), opts: ['', ''], ok: [] });
+      const opts = (q.opts || []).map(o => String(o).trim()).filter(Boolean).slice(0, 6), ok = +q.ok;
+      return Object.assign(base, { type: 'mc', opts, ok: ok >= 0 && ok < opts.length ? [ok] : [] });
+    }).filter(usable);
+    const ch = (j.challenges || []).map(c => ({ t: String(c.t || '').trim().slice(0, 40), d: String(c.d || '').trim().slice(0, 260), s: Math.max(20, Math.min(600, +c.s || 90)), sc: c.sc === 'rank' ? 'rank' : 'judge', mat: String(c.mat || '').trim().slice(0, 60) })).filter(c => c.t && c.d);
+    return { title: String(j.title || '').trim().slice(0, 80), qs, ch };
+  }
+  function aiBox() {
+    return `<section class="dw-ai"><h2>${T('اصنع أمسيتك بالذكاء الاصطناعي', 'Make your evening with AI')}</h2><p>${T('اكتب الموضوع أو الصق درسًا، واختر الفئات، فتُكتب الأسئلة مصنفة ومتدرجة الصعوبة مع تحديات تناسبها. تراجعها في شاشة التجهيز.', 'Write a topic or paste a lesson and choose the categories; you get questions by category and level, with challenges to suit.')}</p>
+      <textarea id="dwAiT" rows="3" dir="auto" placeholder="${T('مثال: اليوم الوطني، أو درس الفصل الثالث في العلوم، أو ثقافة عامة للعائلة', 'e.g. National Day, a science lesson, general culture for the family')}"></textarea>
+      <div class="dw-aig"><label>${T('الجمهور', 'Audience')}<select id="dwAiA">${AUD().map(a => `<option value="${a[0]}">${a[1]}</option>`).join('')}</select></label>
+        <label>${T('أسئلة لكل فئة', 'Per category')}<select id="dwAiN">${[2, 3, 4, 5, 6].map(v => `<option${v === 4 ? ' selected' : ''}>${v}</option>`).join('')}</select></label>
+        <label>${T('عدد التحديات', 'Challenges')}<select id="dwAiC">${[0, 2, 3, 4, 5, 6, 8].map(v => `<option${v === 4 ? ' selected' : ''}>${v}</option>`).join('')}</select></label></div>
+      <label class="dw-ail">${T('الفئات (افصل بينها بفاصلة)', 'Categories (comma separated)')}<input id="dwAiK" dir="auto" value="${T('دين، علوم، تاريخ، جغرافيا، رياضة، عامة', 'Religion, Science, History, Geography, Sport, General')}"></label>
+      <div class="dw-aik">${[T('حركية', 'Moving'), T('تمثيل', 'Acting'), T('إبداع ورسم', 'Creative'), T('ذكاء وسرعة بديهة', 'Quick wits'), T('تعاون', 'Teamwork')].map((k, i) => `<label><input type="checkbox" data-kind="${esc(k)}"${i < 4 ? ' checked' : ''}> ${k}</label>`).join('')}<label><input type="checkbox" id="dwAiM" checked> ${T('أدوات بسيطة مسموحة', 'Simple items allowed')}</label></div>
+      <button type="button" class="btn solid" id="dwAiGo">${T('اصنع الأمسية', 'Make the evening')}</button><p class="dw-found" id="dwAiS" aria-live="polite"></p></section>`;
+  }
+  function aiBind(root) {
+    const q = s => root.querySelector(s), b = q('#dwAiGo'); if (!b) return;
+    b.onclick = async () => {
+      const o = { topic: q('#dwAiT').value.trim(), aud: q('#dwAiA').value, per: +q('#dwAiN').value, nch: +q('#dwAiC').value, cats: q('#dwAiK').value.split(/[،,]/).map(s => s.trim()).filter(Boolean).slice(0, 6), kinds: [...root.querySelectorAll('[data-kind]:checked')].map(i => i.dataset.kind), mat: q('#dwAiM').checked };
+      if (!o.cats.length) o.cats = [T('عامة', 'General')];
+      const day = new Date().toISOString().slice(0, 10); let used = {}; try { used = JSON.parse(localStorage.getItem('dw.ai') || '{}'); } catch (e) {}
+      if (used.d === day && used.n >= 15) { q('#dwAiS').textContent = T('وصلت حد اليوم. جرّب غدًا.', 'Today’s limit reached. Try tomorrow.'); return; }
+      b.disabled = true; q('#dwAiS').textContent = T('يكتب الأسئلة والتحديات… عادةً أقل من دقيقة', 'Writing the questions and challenges… usually under a minute');
+      try {
+        const r = fromAI(await gemini(aiPrompt(o))); if (r.qs.length < 2 && !r.ch.length) throw new Error('empty');
+        try { localStorage.setItem('dw.ai', JSON.stringify({ d: day, n: (used.d === day ? used.n : 0) + 1 })); } catch (e) {}
+        const quiz = { id: Math.random().toString(36).slice(2, 10), title: r.title || o.topic.slice(0, 60) || T('أمسية دوّارة', 'A Dawwara evening'), at: Date.now(), qs: r.qs, ch: r.ch, src: 'dw' };
+        try { const L = JSON.parse(localStorage.getItem('qz.list') || '[]'); L.unshift(quiz); localStorage.setItem('qz.list', JSON.stringify(L)); } catch (e) {}
+        q('#dwAiS').textContent = T(`كُتب ${NUM(r.qs.length)} سؤالًا و${NUM(r.ch.length)} تحديات، وحُفظت في «مسابقاتك».`, `${r.qs.length} questions and ${r.ch.length} challenges, saved under “Your quizzes”.`);
+        b.disabled = false; start(quiz);
+      } catch (e) { console.error(e); b.disabled = false; q('#dwAiS').textContent = T('تعذّر الآن. جرّب بعد قليل.', 'Could not do it now. Try again shortly.'); }
+    };
+  }
+
   /* ---------- 3. after each round, and at the end ---------- */
   const ranked = () => D.groups.slice().sort((a, b) => b.score - a.score || b.right - a.right);
   function standings() {
     const top = Math.max(1, ...D.groups.map(g => g.score));
     shell(`<div class="dw-mid dw-st"><h2>${T('الترتيب', 'Standings')}</h2>
-      <ol class="dw-bars">${ranked().map(g => `<li style="--c:${g.col};--w:${Math.max(4, 100 * g.score / top)}%"><span dir="auto">${esc(g.name)}</span><i></i><b>${NUM(g.score)}</b></li>`).join('')}</ol>
+      ${pathHtml()}
       <button type="button" class="dw-btn" data-main>${nextLabel()}</button></div>`, 'dw-in');
     el.querySelector('[data-main]').onclick = go;
   }
@@ -1009,7 +1232,7 @@ window.Dawwara = (function () {
     const lib = (window.MDLib || []).map(z => ({ z, n: (z.qs || []).filter(usable).length })).filter(o => o.n >= 4);
     const item = (o, k, src) => `<button type="button" class="dw-pick" data-src="${src}" data-k="${k}"><b dir="auto">${esc(o.z.title || T('بلا عنوان', 'Untitled'))}</b><small>${T(`${NUM(o.n)} سؤالًا صالحًا`, `${o.n} usable questions`)}${o.z.who ? ' · ' + esc(o.z.who) : ''}</small></button>`;
     root.innerHTML = `<ol class="dw-how"><li><b>${NUM(1)}</b>${T('قسّم الحضور مجموعات، ولكل مجموعة قائد.', 'Split the room into groups, each with a leader.')}</li><li><b>${NUM(2)}</b>${T('كل مجموعة يجيها دورها وسؤالها على الشاشة.', 'Each group gets its turn and its own question on the screen.')}</li><li><b>${NUM(3)}</b>${T('القائد يقول الإجابة وأنت تضغطها: الصح والأسرع يكسب أكثر.', 'The leader says the answer and you tap it: right and fast wins more.')}</li></ol>
-      <div class="dw-src">
+      <div class="dw-src">${aiBox()}
         ${mine.length ? `<h2>${T('مسابقاتك', 'Your quizzes')}</h2><div class="dw-picks">${mine.map((o, k) => item(o, k, 'm')).join('')}</div>` : ''}
         <h2>${T('الصق أسئلتك', 'Paste your questions')}</h2>
         <textarea id="dwPaste" rows="6" dir="auto" placeholder="${T('١. ما عاصمة المملكة؟\nأ) جدة\nب) الرياض *\nج) الدمام\n\n٢. الشمس نجم (صح أو خطأ)\nالإجابة: صح', '1. What is the capital of France?\na) Lyon\nb) Paris *\n\n2. The Sun is a star (true or false)\nAnswer: true')}"></textarea>
@@ -1017,7 +1240,8 @@ window.Dawwara = (function () {
         ${lib.length ? `<h2>${T('مسابقات جاهزة', 'Ready quizzes')}</h2><div class="dw-picks">${lib.map((o, k) => item(o, k, 'l')).join('')}</div>` : ''}
         <h2>${T('أمسية تحديات', 'An evening of challenges')}</h2><p class="dw-more" style="margin:0">${T('بلا أسئلة: تحديات حركة وإبداع وذكاء للمجموعات.', 'No questions: moving, creating and thinking challenges for groups.')}</p><button type="button" class="btn ghost" id="dwChal">${T('ابدأ أمسية تحديات', 'Start an evening of challenges')}</button>
         <p class="dw-more">${T('تبي تكتب أسئلتك بالذكاء الاصطناعي أو من ملف؟ اكتبها في', 'Want to write questions with AI or from a file? Write them in')} <a href="/play/maydan/#build">${T('محرر ميدان', 'the Maydan editor')}</a>${T('، وتظهر هنا في «مسابقاتك».', ', and they appear here under “Your quizzes”.')}</p></div>`;
-    root.querySelectorAll('.dw-pick').forEach(b => b.onclick = () => { const o = (b.dataset.src === 'm' ? mine : lib)[+b.dataset.k]; start({ title: o.z.title, qs: JSON.parse(JSON.stringify(o.z.qs)) }); });
+    aiBind(root);
+    root.querySelectorAll('.dw-pick').forEach(b => b.onclick = () => { const o = (b.dataset.src === 'm' ? mine : lib)[+b.dataset.k]; start({ title: o.z.title, qs: JSON.parse(JSON.stringify(o.z.qs)), ch: o.z.ch || [] }); });
     const ta = root.querySelector('#dwPaste'), go = root.querySelector('#dwGo'), fd = root.querySelector('#dwFound'); let got = [];
     ta.oninput = () => { got = window.QZParse ? QZParse.fromText(ta.value).filter(usable) : []; go.disabled = got.length < 2; fd.textContent = ta.value.trim() ? T(`وجدتُ ${NUM(got.length)} سؤالًا`, `Found ${got.length} questions`) : ''; };
     go.onclick = () => start({ title: T('مسابقة دوّارة', 'A Dawwara quiz'), qs: got });
