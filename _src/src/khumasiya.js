@@ -42,7 +42,9 @@
   }
   const TS = () => firebase.database.ServerValue.TIMESTAMP;
   const wipe = async pin => { try { await db.ref('khh/' + pin).remove(); } catch (e) {} try { await db.ref('kh/' + pin).remove(); } catch (e) {} };
-  const stop = () => { if (G && G.off) G.off.forEach(f => f()); if (G && G.botT) clearTimeout(G.botT); if (G && G.tt) clearTimeout(G.tt); clearInterval(clk); G = null; };
+  // voice: everyone at the table talks while they play, as if sitting together
+  const avOn = (n, h) => { if (window.AV && G && G.ref && !(G.o && G.o.bot)) AV.attach({ ref: G.ref.child('av'), uid, name: n, host: !!h }); };
+  const stop = () => { if (window.AV) AV.detach(); if (G && G.off) G.off.forEach(f => f()); if (G && G.botT) clearTimeout(G.botT); if (G && G.tt) clearTimeout(G.tt); clearInterval(clk); G = null; };
   let clk = null;
   const on = (ref, ev, fn) => { ref.on(ev, fn); G.off.push(() => ref.off(ev, fn)); };
 
@@ -130,6 +132,7 @@
     if (!pin) { toast(B('تعذّر إنشاء اللعبة.', 'Could not create the game.'), 1); return home(); }
     G = { mode: 'host', pin, o: Object.assign({ tt: 15 }, o), ser: new Array(o.teams).fill(0), rnd: 0, ref: db.ref('kh/' + pin), names: {}, tm: {}, off: [], me: o.role === 'play' ? uid : null };
     if (G.me) await G.ref.child('pl/' + uid).set({ n: name, at: TS() });
+    avOn(name || T('المضيف', 'Host'), true);
     lobby();
   }
   function lobby() {
@@ -215,6 +218,7 @@
     const snap = await db.ref('kh/' + P.pin + '/host').once('value');
     if (snap.val() !== uid) { store.del('run'); toast(B('انتهت هذه اللعبة.', 'This game has ended.'), 1); return home(); }
     G = { mode: 'host', pin: P.pin, o: Object.assign({ tt: 0 }, P.o), ref: db.ref('kh/' + P.pin), names: P.names, tm: P.tm, off: [], me: P.me, st: P.st, ser: P.ser, rnd: P.rnd || 0, counted: P.counted };
+    avOn((G.names || {})[uid] || store.get('name', '') || T('المضيف', 'Host'), true);
     run(); publish(false);
   }
 
@@ -254,6 +258,7 @@
   function player(pin) {
     stop();
     G = { mode: 'player', pin, ref: db.ref('kh/' + pin), me: uid, off: [], hand: [], P: null, names: {}, tm: {}, stt: 'lobby' };
+    avOn(store.get('name', '') || T('لاعب', 'Player'));
     const draw = () => {
       if (!G) return;
       if (G.stt === 'lobby' || !G.P) {
@@ -275,6 +280,7 @@
   function watch(pin, name) {
     stop();
     G = { mode: 'watch', pin, ref: db.ref('kh/' + pin), off: [], P: null, names: {} };
+    avOn(name || T('متفرج', 'Fan'));
     // take a seat in the stands; it is freed when the page closes
     const seat = G.ref.child('au/' + uid); seat.set({ n: name, at: TS() }).catch(() => {}); seat.onDisconnect().remove(); G.off.push(() => { seat.remove().catch(() => {}); });
     const leave = () => { history.replaceState(null, '', location.pathname); home(); };

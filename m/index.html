@@ -1447,6 +1447,8 @@ window.AV = (function () {
     camOff: SV('<rect x="3" y="7" width="13" height="10" rx="2"/><path d="m16 11 5-3v8l-5-3M3 3l18 18"/>'),
     out: SV('<path d="M10 17l-5-5 5-5M5 12h11M14 4h5v16h-5"/>'),
     ppl: SV('<circle cx="9" cy="8" r="3"/><path d="M3 20c0-3 3-5 6-5s6 2 6 5M16 5a3 3 0 0 1 0 6M18 15c2 .5 3 2 3 5"/>'),
+    eye: SV('<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>'),
+    eyeOff: SV('<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12zM3 3l18 18"/>'),
     wave: SV('<path d="M4 10v4M8 7v10M12 4v16M16 7v10M20 10v4"/>')
   };
   let A = null;   // the live state for this page
@@ -1601,8 +1603,9 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
     const vids = Object.keys(A.in).filter(u => u !== A.uid && A.in[u].v && A.P[u] && A.P[u].vt && canSee(u)).sort((a, b) => spot(b) - spot(a));
     const tiles = (A.cam ? [`<div class="av-t me${spot(A.uid) ? ' big' : ''}" data-tu="${A.uid}"><video data-me muted playsinline autoplay></video><span>${T('أنت', 'You')}</span></div>`] : []).concat(vids.slice(0, 6).map(u => `<div class="av-t${spot(u) ? ' big' : ''}" data-tu="${u}"><video data-v="${u}" playsinline autoplay muted></video><span dir="auto">${esc(A.in[u].n)}</span></div>`)).join('');
     const st = status();
-    A.el.innerHTML = `${tiles ? `<div class="av-tiles">${tiles}</div>` : ''}${A.note ? `<div class="av-note">${esc(A.note)}</div>` : ''}<div class="av-bar">${A.joined
-      ? `<button type="button" data-mic class="${A.mic && canTalk(A.uid) ? '' : 'off'}" title="${T('الميكروفون', 'Microphone')}">${A.mic ? IC.mic : IC.micOff}</button><button type="button" data-cam class="${A.cam ? 'on' : ''}" title="${T('الكاميرا', 'Camera')}">${A.cam ? IC.cam : IC.camOff}</button><small data-who>${esc(st || T(`${n} في الصوت`, `${n} in voice`))}</small>${A.host ? `<button type="button" data-man title="${T('إدارة الصوت', 'Manage voice')}">${IC.ppl}<span>${n}</span></button>` : `<button type="button" data-ppl title="${T('من في الصوت', 'Who is in')}">${IC.ppl}<span>${n}</span></button>`}<button type="button" data-out title="${T('خروج من الصوت', 'Leave voice')}">${IC.out}</button>`
+    const vb = tiles ? `<button type="button" data-vis title="${A.hideV ? T('أظهر الكاميرات', 'Show cameras') : T('أخفِ الكاميرات', 'Hide cameras')}">${A.hideV ? IC.eyeOff : IC.eye}</button>` : '';
+    A.el.innerHTML = `${tiles && !A.hideV ? `<div class="av-tiles">${tiles}</div>` : ''}${A.note ? `<div class="av-note">${esc(A.note)}</div>` : ''}<div class="av-bar">${A.joined
+      ? `<button type="button" data-mic class="${A.mic && canTalk(A.uid) ? '' : 'off'}" title="${T('الميكروفون', 'Microphone')}">${A.mic ? IC.mic : IC.micOff}</button><button type="button" data-cam class="${A.cam ? 'on' : ''}" title="${T('الكاميرا', 'Camera')}">${A.cam ? IC.cam : IC.camOff}</button>${vb}<small data-who>${esc(st || T(`${n} في الصوت`, `${n} in voice`))}</small>${A.host ? `<button type="button" data-man title="${T('إدارة الصوت', 'Manage voice')}">${IC.ppl}<span>${n}</span></button>` : `<button type="button" data-ppl title="${T('من في الصوت', 'Who is in')}">${IC.ppl}<span>${n}</span></button>`}<button type="button" data-out title="${T('خروج من الصوت', 'Leave voice')}">${IC.out}</button>`
       : `<button type="button" class="join" data-join>${IC.mic}<span>${T('انضم للصوت', 'Join voice')}</span></button>${n ? `<small>${T(`${n} يتكلمون`, `${n} in voice`)}</small>` : ''}${A.host ? `<button type="button" data-man title="${T('إدارة الصوت', 'Manage voice')}">${IC.ppl}</button>` : ''}`}</div>`;
     A.el.querySelectorAll('[data-v]').forEach(v => { const P = A.P[v.dataset.v]; if (P && P.vt) { v.srcObject = new MediaStream([P.vt]); v.play().catch(() => {}); } });
     const me = A.el.querySelector('[data-me]'); if (me && A.vT) { me.srcObject = new MediaStream([A.vT]); me.play().catch(() => {}); }
@@ -1614,7 +1617,7 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
     const on = (s, f) => { const b = q(s); if (b) b.onclick = f; };
     on('[data-hon]', () => { A.ref.child('on').set(true); manage(); });
     on('[data-join]', join); on('[data-mic]', toggleMic); on('[data-cam]', toggleCam); on('[data-out]', () => leave());
-    on('[data-man]', manage); on('[data-ppl]', people);
+    on('[data-man]', manage); on('[data-ppl]', people); on('[data-vis]', () => { A.hideV = !A.hideV; paint(); });
   }
   function sheet(html) { const d = document.createElement('div'); d.className = 'av-sheet'; d.innerHTML = `<div class="av-sbox">${html}</div>`; (document.fullscreenElement || document.body).appendChild(d); d.onclick = e => { if (e.target === d) d.remove(); }; return d; }
   function people() {

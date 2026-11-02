@@ -312,7 +312,7 @@ def khumasiya_body():
 <header class="kh-head">{KH_MARK}<div><h1>{bi('تسلسل', 'Tasalsul')}</h1><p>{bi('على طريقة لعبة سيكوينس المعروفة: كوّن صفوفك من أربع أو خمس قبل خصمك', 'In the style of the well-known game Sequence: make your rows of four or five before the others')}</p></div></header>
 <style>{src('khumasiya.css')}</style>
 <div id="kh" class="kh"><noscript>{bi("تعمل هذه اللعبة مع تفعيل JavaScript.", "This game needs JavaScript.")}</noscript></div>
-{MD_SCRIPTS()}<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script><script>{src('kh_engine.js')}</script><script>{src('khumasiya.js')}</script>
+{MD_SCRIPTS()}<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script><script>{src('kh_engine.js')}</script><script>{src('av.js')}</script><script>{src('khumasiya.js')}</script>
 </section>'''
 
 FB = 'https://www.gstatic.com/firebasejs/10.12.2/'
