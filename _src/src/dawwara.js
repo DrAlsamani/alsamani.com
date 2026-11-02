@@ -52,6 +52,7 @@ window.Dawwara = (function () {
   function start(quiz) {
     const qs = (quiz.qs || []).filter(usable).map(clean);
     D = { title: quiz.title || T('دوّارة', 'Dawwara'), all: qs, cfg: cfgGet(), ch: quiz.ch || [], chosen: null };
+    if (quiz.tpl) { Object.assign(D.cfg, { tpl: quiz.tpl.kind, dur: quiz.tpl.dur, pack: quiz.tpl.pack || '', r: null }); } else D.cfg.tpl = null;
     // no questions at all still makes an evening of challenges
     setup();
   }
@@ -59,7 +60,7 @@ window.Dawwara = (function () {
     const c = D.cfg, n = Math.min(8, Math.max(2, c.n)), P = D.all.length, mc = D.all.filter(isMC).length;
     const catQ = D.all.filter(x => (x.cat || '').trim()).length, cats = new Set(D.all.map(x => (x.cat || '').trim()).filter(Boolean)).size;
     if (c.dur == null) c.dur = 30;
-    if (!c.r || c.rn !== n || c.rq !== P) { c.r = defRounds(n, P - (c.wager !== false && P > 2 ? 1 : 0), mc, cats >= 2 ? catQ : 0); c.rn = n; c.rq = P; if (c.dur) c.r = fitTime(c, n, P - (c.wager !== false && P > 2 ? 1 : 0), mc, c.dur); D.chosen = null; }
+    if (!c.r || c.rn !== n || c.rq !== P) { c.r = defRounds(n, P - (c.wager !== false && P > 2 ? 1 : 0), mc, cats >= 2 ? catQ : 0); c.rn = n; c.rq = P; if (c.dur) c.r = fitTime(c, n, P - (c.wager !== false && P > 2 ? 1 : 0), mc, c.dur); if (c.tpl) applyTpl(c, n, P, mc, cats >= 2 ? catQ : 0); D.chosen = null; }
     if (c.r.board == null) c.r.board = 0;
     if (!D.chosen) fillChal(c.r.chal);
     const opt = (k, max, unit) => `<select data-r="${k}">${Array.from({ length: max + 1 }, (_, v) => `<option value="${v}"${c.r[k] === v ? ' selected' : ''}>${v ? NUM(v) + ' ' + unit : T('بدونها', 'None')}</option>`).join('')}</select>`;
@@ -73,7 +74,7 @@ window.Dawwara = (function () {
       <details class="dw-adv"><summary>${T('خيارات إضافية', 'More options')}<small>${T('الجولات والتحديات والوقت والسرقة', 'rounds, challenges, time, stealing')}</small></summary>
       <div class="dw-rounds"><h3>${T('جولات الأمسية', 'The rounds')}</h3>
         <div class="dw-row"><span>${ROUND().all[0]}<small>${T('الكل يجاوب في نفس الوقت', 'All answer at once')}</small></span>${opt('all', Math.min(15, P), T('أسئلة', 'questions'))}</div>
-        ${cats >= 2 ? `<div class="dw-row"><span>${ROUND().board[0]}<small>${T('اختر الفئة والقيمة، مثل كتاب «حروف»', 'Pick a category and a value')}</small></span>${opt('board', Math.min(24, catQ), T('مربعات', 'tiles'))}<select data-bmode><option value="v"${c.bmode !== 'h' ? ' selected' : ''}>${T('فئة ثم قيمة', 'Category, then value')}</option><option value="h"${c.bmode === 'h' ? ' selected' : ''}>${T('حروف: فئة ثم حرف ثم رقم', 'Huroof: category, letter, number')}</option></select></div>` : ''}
+        ${cats >= 2 ? `<div class="dw-row"><span>${ROUND().board[0]}<small>${T('اختر الفئة والقيمة، مثل كتاب «حروف»', 'Pick a category and a value')}</small></span>${opt('board', Math.min(48, catQ), T('مربعات', 'tiles'))}<select data-bmode><option value="v"${c.bmode !== 'h' ? ' selected' : ''}>${T('فئة ثم قيمة', 'Category, then value')}</option><option value="h"${c.bmode === 'h' ? ' selected' : ''}>${T('حروف: فئة ثم حرف ثم رقم', 'Huroof: category, letter, number')}</option></select></div>` : ''}
         <div class="dw-row"><span>${ROUND().turn[0]}<small>${T('لكل مجموعة سؤالها', 'A question per group')}</small></span>${opt('turn', Math.min(6, Math.floor(P / n)), T('لكل مجموعة', 'per group'))}</div>
         <div class="dw-row"><span>${ROUND().buzz[0]}<small>${T('أول يد ترتفع تجاوب', 'First hand up answers')}</small></span>${opt('buzz', Math.min(15, mc), T('أسئلة', 'questions'))}</div>
         <div class="dw-row"><span>${ROUND().chal[0]}<small>${T('حركة وإبداع وذكاء، بلا أجهزة', 'Moving, creating, thinking')}</small></span>${opt('chal', 10, T('تحديات', 'challenges'))}</div>
@@ -89,7 +90,7 @@ window.Dawwara = (function () {
     el.querySelectorAll('[data-n]').forEach(b => b.onclick = () => { read(); c.n = +b.dataset.n; c.r = null; cfgSet(c); setup(); });
     const chRe = () => { const b = el.querySelector('#dwCh'); b.innerHTML = chalBox(); chalBind(() => { el.querySelector('[data-r="chal"]').value = String(Math.min(10, D.chosen.length)); chRe(); need(); }); };
     const need = () => { read(); if (D.chosen.length !== c.r.chal) { fillChal(c.r.chal); chRe(); } el.querySelector('#dwEst').textContent = T(`حوالي ${NUM(estimate(c.r, n))} دقيقة`, `about ${estimate(c.r, n)} minutes`); const q = c.r.turn * n + c.r.all + c.r.buzz + (c.r.board || 0) + (c.wager !== false && P > 2 ? 1 : 0), e = el.querySelector('#dwNeed'), st = el.querySelector('[data-main]');
-      { const R = ROUND(), parts = [['all', c.r.all], ['board', c.r.board || 0], ['turn', c.r.turn ? c.r.turn * n : 0], ['buzz', c.r.buzz], ['chal', c.r.chal]].filter(x => x[1]).map(([k, v]) => `${R[k][0]} (${NUM(v)})`), mats = [...new Set((D.chosen || []).map(byKey).filter(Boolean).map(x => (x.mat || '').trim()).filter(Boolean))];
+      { const R = ROUND(), parts = [['all', c.r.all], ['board', c.r.board || 0], ['turn', c.r.turn ? c.r.turn * n : 0], ['buzz', c.r.buzz], ['chal', c.r.chal]].filter(x => x[1]).map(([k, v]) => `${k === 'board' && c.bmode === 'h' ? T('حروف', 'Huroof') : R[k][0]} (${NUM(v)})`), mats = [...new Set((D.chosen || []).map(byKey).filter(Boolean).map(x => (x.mat || '').trim()).filter(Boolean))];
         el.querySelector('#dwSum').innerHTML = `<b>${T('الأمسية', 'The evening')}:</b> ${parts.join(T('، ', ', '))}${c.wager !== false && P > 2 ? T('، ثم المراهنة الختامية', ', then the final wager') : ''} · ${T(`حوالي ${NUM(estimate(c.r, n))} دقيقة`, `about ${estimate(c.r, n)} min`)}${mats.length ? `<br><b>${T('جهّز', 'Prepare')}:</b> ${mats.map(esc).join(T('، ', ', '))}` : ''}`; }
       e.textContent = T(`تحتاج ${NUM(q)} سؤالًا من ${NUM(P)} متاحة، و${NUM(c.r.chal)} تحديات.`, `Needs ${q} of the ${P} questions, and ${c.r.chal} challenges.`); e.classList.toggle('bad', q > P); st.disabled = q > P || !(q + c.r.chal); };
     el.querySelectorAll('[data-r]').forEach(x => x.onchange = () => { el.querySelector('[data-dur]').value = '0'; need(); });
@@ -257,7 +258,7 @@ window.Dawwara = (function () {
   const go = () => { D.t++; run(); };
   const nextLabel = () => { const s = D.steps[D.t + 1]; return !s ? T('النتيجة النهائية', 'Final result') : s.k === 'stand' ? T('الترتيب', 'Standings') : s.k === 'round' ? T('الجولة التالية', 'Next round') : s.k === 'turn' || s.k === 'board' ? T('الدور التالي', 'Next turn') : s.k === 'chal' ? T('التحدي التالي', 'Next challenge') : s.k === 'wager' ? T('المراهنة الختامية', 'The final wager') : T('السؤال التالي', 'Next question'); };
   function roundCard(s) {
-    const no = D.steps.slice(0, D.t + 1).filter(x => x.k === 'round').length, all = D.steps.filter(x => x.k === 'round').length, [t, d] = ROUND()[s.type];
+    const no = D.steps.slice(0, D.t + 1).filter(x => x.k === 'round').length, all = D.steps.filter(x => x.k === 'round').length, [t, d] = s.type === 'board' && D.cfg.bmode === 'h' ? [T('حروف', 'Huroof'), T('المجموعة صاحبة الدور تختار الفئة، ثم الحرف الذي تبدأ به الإجابة، ثم رقمًا. الأصعب نقاطه أكثر، ومن يخطئ يُسرق منه.', 'The group on turn picks a category, then the letter the answer starts with, then a number. Harder pays more; a miss can be stolen.')] : ROUND()[s.type];
     shell(`${board(-1)}<div class="dw-mid dw-rcard dw-r-${s.type}"><p class="dw-sub">${T(`الجولة ${NUM(no)} من ${NUM(all)}`, `Round ${no} of ${all}`)}</p><h2>${t}</h2><p>${d}</p><p class="dw-sub">${s.type === 'chal' ? T(`${NUM(s.n)} ${s.n === 1 ? 'تحدٍّ' : 'تحديات'}`, `${s.n} challenge${s.n > 1 ? 's' : ''}`) : s.type === 'board' ? T(`${NUM(s.n)} مربعات`, `${s.n} tiles`) : s.type === 'turn' ? T(`${NUM(s.n)} أسئلة بالتناوب`, `${s.n} questions in turn`) : T(`${NUM(s.n)} أسئلة`, `${s.n} questions`)}</p><button type="button" class="dw-btn" data-main>${T('ابدأ الجولة', 'Start the round')}</button></div>`, 'dw-in');
     el.querySelector('[data-main]').onclick = go; SND.go();
   }
@@ -591,7 +592,7 @@ window.Dawwara = (function () {
   function fitTime(c, n, P, mc, minutes) {
     const r = Object.assign({}, c.r), need = () => MIN.all * r.all + MIN.board * (r.board || 0) + MIN.turn * r.turn * n + MIN.buzz * r.buzz + MIN.chal * r.chal + 3;
     let guard = 200;
-    while (need() < minutes - 2 && guard--) { const q = r.all + (r.board || 0) + r.turn * n + r.buzz; if (q < P) { if ((r.board || 0) && r.board < 24 && r.board <= r.all) r.board++; else if (r.buzz < mc && r.buzz <= r.all) r.buzz++; else r.all++; } else if (r.chal < 10) r.chal++; else break; }
+    while (need() < minutes - 2 && guard--) { const q = r.all + (r.board || 0) + r.turn * n + r.buzz; if (q < P) { if ((r.board || 0) && r.board < 48 && r.board <= r.all) r.board++; else if (r.buzz < mc && r.buzz <= r.all) r.buzz++; else r.all++; } else if (r.chal < 10) r.chal++; else break; }
     while (need() > minutes + 2 && guard--) { if (r.chal > 1 && r.chal * MIN.chal > minutes / 3) r.chal--; else if (r.turn) r.turn--; else if (r.all >= r.buzz && r.all > 1) r.all--; else if (r.buzz > 1) r.buzz--; else if ((r.board || 0) > 3) r.board--; else if (r.chal) r.chal--; else break; }
     while (r.all + (r.board || 0) + r.turn * n + r.buzz > P && guard--) { if (r.turn) r.turn--; else if (r.all >= r.buzz && r.all) r.all--; else if (r.buzz) r.buzz--; else if (r.board) r.board--; else break; }
     return r;
@@ -632,7 +633,7 @@ window.Dawwara = (function () {
           <div class="de-add"><button type="button" class="btn ghost" data-addq>+ ${T('سؤال', 'Question')}</button><button type="button" class="btn ghost" data-aiq>${T('+ أسئلة بالذكاء الاصطناعي', '+ Questions with AI')}</button></div>`
         : `<div class="de-list">${z.ch.map(cCard).join('') || `<p class="dw-pane-h">${T('لا تحديات بعد. أضف تحديًا من عندك أو من البنك.', 'No challenges yet. Add your own or one from the bank.')}</p>`}</div>
           <div class="de-add"><button type="button" class="btn ghost" data-addc>+ ${T('تحدٍّ من عندك', 'Your own challenge')}</button><button type="button" class="btn ghost" data-bank>+ ${T('من بنك التحديات', 'From the bank')}</button></div>`}
-        <div class="de-bar"><span>${T(`أسئلة جاهزة: ${NUM(good)} من ${NUM(z.qs.length)} · تحديات: ${NUM(z.ch.length)}`, `Ready: ${good} of ${z.qs.length} questions · ${z.ch.length} challenges`)}</span><button type="button" class="dw-btn" data-play${good + z.ch.length ? '' : ' disabled'}>${T('العب الآن ▶', 'Play now ▶')}</button></div></div>`;
+        <div class="de-bar"><span>${T(`أسئلة جاهزة: ${NUM(good)} من ${NUM(z.qs.length)} · تحديات: ${NUM(z.ch.length)}`, `Ready: ${good} of ${z.qs.length} questions · ${z.ch.length} challenges`)}</span><button type="button" class="dw-btn" data-play${good + z.ch.length ? '' : ' disabled'}>${z.tpl ? T('موافق، التالي ▶', 'OK, next ▶') : T('العب الآن ▶', 'Play now ▶')}</button></div></div>`;
       bind();
     };
     const q = s => root.querySelector(s);
@@ -641,7 +642,7 @@ window.Dawwara = (function () {
       q('[data-title]').oninput = e => { z.title = e.target.value; later(); };
       root.querySelectorAll('[data-t]').forEach(b => b.onclick = () => { tab = b.dataset.t; paint(); });
       root.querySelectorAll('[data-f]').forEach(b => b.onclick = () => { filt = b.dataset.f; paint(); });
-      q('[data-play]').onclick = () => { saveQuiz(z); start({ title: z.title || T('أمسية دوّارة', 'A Dawwara evening'), qs: JSON.parse(JSON.stringify(z.qs.filter(ok))), ch: z.ch.filter(c => c.t && c.d) }); };
+      q('[data-play]').onclick = () => { saveQuiz(z); start({ title: z.title || T('أمسية دوّارة', 'A Dawwara evening'), qs: JSON.parse(JSON.stringify(z.qs.filter(ok))), ch: z.ch.filter(c => c.t && c.d), tpl: z.tpl }); };
       root.querySelectorAll('.de-q[data-i]').forEach(card => { const x = z.qs[+card.dataset.i], mark = () => card.classList.toggle('bad', !ok(x));
         card.querySelectorAll('[data-k]').forEach(f => { f[f.tagName === 'SELECT' ? 'onchange' : 'oninput'] = () => { const k = f.dataset.k;
           if (k === 'lv') x.lv = +f.value; else if (k === 'type') { x.type = f.value; if (x.type === 'tf') { x.opts = [T('صح', 'True'), T('خطأ', 'False')]; x.ok = [0]; } else if (x.type === 'mc') { x.opts = ['', '', '', '']; x.ok = [0]; } else { x.opts = ['', '']; x.ok = []; } later(); return paint(); }
@@ -903,30 +904,46 @@ window.Dawwara = (function () {
     const ch = (j.challenges || []).map(c => ({ t: String(c.t || '').trim().slice(0, 40), d: String(c.d || '').trim().slice(0, 260), s: Math.max(20, Math.min(600, +c.s || 90)), sc: c.sc === 'rank' ? 'rank' : 'judge', mat: String(c.mat || '').trim().slice(0, 60), alt: String(c.alt || '').trim().slice(0, 100) })).filter(c => c.t && c.d);
     return { title: String(j.title || '').trim().slice(0, 80), qs, ch };
   }
+  /* ---------- «جهّزها لي»: the length, the kinds of questions and the shape — the AI writes it all, you review or just start ---------- */
+  const TYPES = () => [T('دينية', 'Religion'), T('تاريخ إسلامي', 'Islamic history'), T('السيرة النبوية', 'The Prophet’s life'), T('تاريخ السعودية', 'Saudi history'), T('جغرافيا', 'Geography'), T('علوم', 'Science'), T('لغة عربية وأدب', 'Arabic and literature'), T('رياضة', 'Sport'), T('ثقافة عامة', 'General knowledge'), T('أمثال وتراث', 'Proverbs and heritage')];
+  const TPL = () => [['mix', T('مكس: أسئلة وحروف وتحديات', 'Mix: questions, Huroof and challenges')], ['h', T('حروف فقط', 'Huroof only')], ['q', T('أسئلة بلا تحديات', 'Questions, no challenges')], ['c', T('تحديات أكثر', 'More challenges')]];
+  const sizeOf = (kind, dur) => { const rate = { mix: .5, h: .75, q: .8, c: .3 }[kind] || .5, ch = { mix: Math.round(dur / 15), h: 0, q: 0, c: Math.min(10, Math.round(dur / 8)) }[kind]; return { nq: Math.max(8, Math.min(60, Math.round(dur * rate))), nch: ch }; };
   function aiBox() {
-    return `<div class="dw-ai"><textarea id="dwAiT" rows="3" dir="auto" placeholder="${T('مثال: اليوم الوطني، أو درس الفصل الثالث في العلوم، أو ثقافة عامة للعائلة', 'e.g. National Day, a science lesson, general culture for the family')}"></textarea>
-      <div class="dw-aig"><label>${T('الجمهور', 'Audience')}<select id="dwAiA">${AUD().map(a => `<option value="${a[0]}">${a[1]}</option>`).join('')}</select></label><button type="button" class="dw-btn" id="dwAiGo">${T('اصنع الأمسية', 'Make the evening')}</button></div>
-      <details class="dw-adv2"><summary>${T('خيارات إضافية', 'More options')}</summary><div class="dw-aig"><label>${T('أسئلة لكل فئة', 'Per category')}<select id="dwAiN">${[2, 3, 4, 5, 6].map(v => `<option${v === 4 ? ' selected' : ''}>${v}</option>`).join('')}</select></label>
-        <label>${T('عدد التحديات', 'Challenges')}<select id="dwAiC">${[0, 2, 3, 4, 5, 6, 8].map(v => `<option${v === 4 ? ' selected' : ''}>${v}</option>`).join('')}</select></label></div><label class="dw-ail">${T('الفئات (افصل بينها بفاصلة)', 'Categories (comma separated)')}<input id="dwAiK" dir="auto" value="${T('دين، علوم، تاريخ، جغرافيا، رياضة، عامة', 'Religion, Science, History, Geography, Sport, General')}"></label><div class="dw-aik">${[T('حركية', 'Moving'), T('تمثيل', 'Acting'), T('إبداع ورسم', 'Creative'), T('ذكاء وسرعة بديهة', 'Quick wits'), T('تعاون', 'Teamwork')].map((k, i) => `<label><input type="checkbox" data-kind="${esc(k)}"${i < 4 ? ' checked' : ''}> ${k}</label>`).join('')}<label><input type="checkbox" id="dwAiM" checked> ${T('أدوات بسيطة مسموحة', 'Simple items allowed')}</label></div></details>
-      <p class="dw-found" id="dwAiS" aria-live="polite"></p></div>`;
+    const chip = (name, v, l, on, multi) => `<label class="dw-chip"><input type="${multi ? 'checkbox' : 'radio'}" name="${name}" value="${esc(v)}"${on ? ' checked' : ''}><span>${l}</span></label>`;
+    return `<div class="dw-ai dw-wiz">
+      <div class="dw-wq"><b>${T('كم مدة الفعالية؟', 'How long is the event?')}</b><div class="dw-chips">${[30, 45, 60, 90].map(v => chip('wzD', v, v === 60 ? T('ساعة', '1 hour') : v === 90 ? T('ساعة ونصف', '1.5 hours') : NUM(v) + T(' دقيقة', ' min'), v === 60)).join('')}</div></div>
+      <div class="dw-wq"><b>${T('وش نوع الأسئلة؟', 'What kind of questions?')}</b><div class="dw-chips">${TYPES().map((t, i) => chip('wzT', t, t, i === 0 || i === 1 || i === 8, true)).join('')}</div><input id="wzX" dir="auto" placeholder="${T('أو اكتب نوعًا آخر أو موضوعًا (اختياري)', 'Or write another kind or topic (optional)')}"></div>
+      <div class="dw-wq"><b>${T('شكل المسابقة', 'The shape')}</b><div class="dw-chips">${TPL().map(([v, l], i) => chip('wzS', v, l, i === 0)).join('')}</div></div>
+      <div class="dw-aig"><label>${T('الجمهور', 'Audience')}<select id="dwAiA">${AUD().map(a => `<option value="${a[0]}">${a[1]}</option>`).join('')}</select></label><label>${T('المناسبة', 'The occasion')}<select id="wzP">${PACK().map(([v, l]) => `<option value="${v}">${v ? l : T('عامة', 'General')}</option>`).join('')}</select></label></div>
+      <button type="button" class="dw-btn" id="dwAiGo">${T('جهّزها', 'Prepare it')}</button><p class="dw-found" id="dwAiS" aria-live="polite"></p></div>`;
   }
   function aiBind(root) {
     const q = s => root.querySelector(s), b = q('#dwAiGo'); if (!b) return;
     b.onclick = async () => {
-      const o = { topic: q('#dwAiT').value.trim(), aud: q('#dwAiA').value, per: +q('#dwAiN').value, nch: +q('#dwAiC').value, cats: q('#dwAiK').value.split(/[،,]/).map(s => s.trim()).filter(Boolean).slice(0, 6), kinds: [...root.querySelectorAll('[data-kind]:checked')].map(i => i.dataset.kind), mat: q('#dwAiM').checked };
-      if (!o.cats.length) o.cats = [T('عامة', 'General')];
+      const dur = +(root.querySelector('[name=wzD]:checked') || {}).value || 60, kind = (root.querySelector('[name=wzS]:checked') || {}).value || 'mix', extra = q('#wzX').value.trim();
+      const cats = [...root.querySelectorAll('[name=wzT]:checked')].map(i => i.value).concat(extra && extra.length < 30 ? [extra] : []).slice(0, 6);
+      if (!cats.length) { q('#dwAiS').textContent = T('اختر نوعًا واحدًا على الأقل.', 'Choose at least one kind.'); return; }
+      const sz = sizeOf(kind, dur), pack = q('#wzP').value, kinds = { cls: [T('ذكاء وسرعة بديهة', 'Quick wits'), T('تعاون', 'Teamwork')], maj: [T('تمثيل', 'Acting'), T('ذكاء وسرعة بديهة', 'Quick wits')], bar: [T('حركية', 'Moving'), T('تعاون', 'Teamwork')], wrk: [T('تعاون', 'Teamwork'), T('إبداع ورسم', 'Creative')] }[pack] || [T('حركية', 'Moving'), T('تمثيل', 'Acting'), T('ذكاء وسرعة بديهة', 'Quick wits')];
+      const o = { topic: extra.length >= 30 ? extra : '', aud: q('#dwAiA').value, per: Math.max(2, Math.ceil(sz.nq / cats.length)), nch: sz.nch, cats, kinds, mat: true };
       const day = new Date().toISOString().slice(0, 10); let used = {}; try { used = JSON.parse(localStorage.getItem('dw.ai') || '{}'); } catch (e) {}
       if (used.d === day && used.n >= 15) { q('#dwAiS').textContent = T('وصلت حد اليوم. جرّب غدًا.', 'Today’s limit reached. Try tomorrow.'); return; }
-      b.disabled = true; q('#dwAiS').textContent = T('يكتب الأسئلة والتحديات… عادةً أقل من دقيقة', 'Writing the questions and challenges… usually under a minute');
+      b.disabled = true; q('#dwAiS').textContent = T(`يجهّز ${NUM(o.per * cats.length)} سؤالًا${sz.nch ? ` و${NUM(sz.nch)} تحديات` : ''}… قرابة دقيقة`, `Preparing ${o.per * cats.length} questions${sz.nch ? ` and ${sz.nch} challenges` : ''}… about a minute`);
       try {
         const r = fromAI(await gemini(aiPrompt(o))); if (r.qs.length < 2 && !r.ch.length) throw new Error('empty');
         try { localStorage.setItem('dw.ai', JSON.stringify({ d: day, n: (used.d === day ? used.n : 0) + 1 })); } catch (e) {}
-        const quiz = { id: Math.random().toString(36).slice(2, 10), title: r.title || o.topic.slice(0, 60) || T('أمسية دوّارة', 'A Dawwara evening'), at: Date.now(), qs: r.qs, ch: r.ch, src: 'dw' };
-        try { const L = JSON.parse(localStorage.getItem('qz.list') || '[]'); L.unshift(quiz); localStorage.setItem('qz.list', JSON.stringify(L)); } catch (e) {}
-        q('#dwAiS').textContent = T(`كُتب ${NUM(r.qs.length)} سؤالًا و${NUM(r.ch.length)} تحديات. راجعها ثم العب.`, `${r.qs.length} questions and ${r.ch.length} challenges, saved under “Your quizzes”.`);
-        b.disabled = false; editor(root, quiz, () => home(root));
+        const quiz = { id: Math.random().toString(36).slice(2, 10), title: r.title || cats.join(T(' و', ' & ')), at: Date.now(), qs: r.qs, ch: r.ch, src: 'dw', tpl: { kind, dur, pack } };
+        saveQuiz(quiz); b.disabled = false; q('#dwAiS').textContent = '';
+        editor(root, quiz, () => home(root));
       } catch (e) { console.error(e); b.disabled = false; q('#dwAiS').textContent = T('تعذّر الآن. جرّب بعد قليل.', 'Could not do it now. Try again shortly.'); }
     };
+  }
+  // the shape chosen in «جهّزها لي» decides the rounds
+  function applyTpl(c, n, P, mc, catQ) {
+    const t = c.tpl, W = c.wager !== false && P > 2 ? 1 : 0;
+    if (t === 'h') { c.bmode = 'h'; c.r = { all: 0, turn: 0, buzz: 0, chal: 0, board: Math.min(48, Math.max(0, catQ - W)) }; return; }
+    if (t === 'q') c.r.chal = 0;
+    if (t === 'c') c.r.chal = Math.min(10, Math.max(c.r.chal, Math.round((c.dur || 60) / 8)));
+    if (catQ >= 4) c.bmode = 'h';
   }
 
   /* ---------- 3. after each round, and at the end ---------- */
@@ -971,8 +988,8 @@ window.Dawwara = (function () {
     const lib = (window.MDLib || []).map(z => ({ z, n: (z.qs || []).filter(usable).length })).filter(o => o.n >= 4);
     const item = (o, k, src) => `<button type="button" class="dw-pick" data-src="${src}" data-k="${k}"><b dir="auto">${esc(o.z.title || T('بلا عنوان', 'Untitled'))}</b><small>${T(`${NUM(o.n)} سؤالًا صالحًا`, `${o.n} usable questions`)}${o.z.who ? ' · ' + esc(o.z.who) : ''}</small></button>`;
     root.innerHTML = `<div class="dw-start"><h2>${T('اختر الأسئلة', 'Choose the questions')}</h2>
-      <div class="dw-tabs" role="tablist"><button type="button" role="tab" data-tab="ai" aria-selected="true">${T('بالذكاء الاصطناعي', 'With AI')}</button><button type="button" role="tab" data-tab="ready" aria-selected="false">${T('مسابقة جاهزة', 'A ready quiz')}</button><button type="button" role="tab" data-tab="chal" aria-selected="false">${T('تحديات فقط', 'Challenges only')}</button><button type="button" role="tab" data-tab="own" aria-selected="false">${T('اكتبها بنفسك', 'Write your own')}</button></div>
-      <div data-pane="ai"><p class="dw-pane-h">${T('اكتب الموضوع، فتُكتب الأسئلة مصنفة ومتدرجة مع تحديات تناسبها.', 'Write a topic; you get questions by category and level, with challenges to suit.')}</p>${aiBox()}</div>
+      <div class="dw-tabs" role="tablist"><button type="button" role="tab" data-tab="ai" aria-selected="true">${T('جهّزها لي', 'Prepare it for me')}</button><button type="button" role="tab" data-tab="ready" aria-selected="false">${T('مسابقة جاهزة', 'A ready quiz')}</button><button type="button" role="tab" data-tab="chal" aria-selected="false">${T('تحديات فقط', 'Challenges only')}</button><button type="button" role="tab" data-tab="own" aria-selected="false">${T('اكتبها بنفسك', 'Write your own')}</button></div>
+      <div data-pane="ai"><p class="dw-pane-h">${T('ثلاثة اختيارات، وتُجهَّز لك فعالية كاملة تراجعها أو تبدأ بها مباشرة.', 'Three choices, and a whole event is prepared; review it or start straight away.')}</p>${aiBox()}</div>
       <div data-pane="ready" hidden>
         ${mine.length ? `<h3>${T('مسابقاتك', 'Your quizzes')}</h3><div class="dw-picks">${mine.map((o, k) => `<div class="dw-pickw">${item(o, k, 'm')}<button type="button" class="dw-edb" data-ed="${k}">${T('عدّل', 'Edit')}</button></div>`).join('')}</div>` : ''}
         ${lib.length ? `<h3>${T('من المكتبة', 'From the library')}</h3><div class="dw-picks">${lib.map((o, k) => item(o, k, 'l')).join('')}</div>` : ''}
@@ -986,7 +1003,7 @@ window.Dawwara = (function () {
     root.querySelectorAll('[data-ed]').forEach(b => b.onclick = () => editor(root, mine[+b.dataset.ed].z, () => home(root)));
     root.querySelectorAll('[data-tab]').forEach(b => b.onclick = () => { root.querySelectorAll('[data-tab]').forEach(x => x.setAttribute('aria-selected', x === b)); root.querySelectorAll('[data-pane]').forEach(p => { p.hidden = p.dataset.pane !== b.dataset.tab; }); });
     aiBind(root);
-    root.querySelectorAll('.dw-pick').forEach(b => b.onclick = () => { const o = (b.dataset.src === 'm' ? mine : lib)[+b.dataset.k]; start({ title: o.z.title, qs: JSON.parse(JSON.stringify(o.z.qs)), ch: o.z.ch || [] }); });
+    root.querySelectorAll('.dw-pick').forEach(b => b.onclick = () => { const o = (b.dataset.src === 'm' ? mine : lib)[+b.dataset.k]; start({ title: o.z.title, qs: JSON.parse(JSON.stringify(o.z.qs)), ch: o.z.ch || [], tpl: o.z.tpl }); });
     const ta = root.querySelector('#dwPaste'), go = root.querySelector('#dwGo'), fd = root.querySelector('#dwFound'); let got = [];
     ta.oninput = () => { got = window.QZParse ? QZParse.fromText(ta.value).filter(usable) : []; go.disabled = got.length < 2; fd.textContent = ta.value.trim() ? T(`وجدتُ ${NUM(got.length)} سؤالًا`, `Found ${got.length} questions`) : ''; };
     go.onclick = () => start({ title: T('مسابقة دوّارة', 'A Dawwara quiz'), qs: got });
