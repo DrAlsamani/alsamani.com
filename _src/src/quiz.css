@@ -232,3 +232,10 @@
 .qz-mlist label{display:flex;gap:10px;align-items:flex-start;cursor:pointer}.qz-mlist input{width:auto;margin-top:4px;flex:none}
 .qz-mlist span{display:grid;gap:2px;min-width:0}.qz-mlist b{font-weight:600;line-height:1.6;overflow-wrap:anywhere}.qz-mlist small{color:#2f7d5b;overflow-wrap:anywhere}
 .qz-mwhere{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;font-size:.9375rem}.qz-mwhere span{font-weight:700}.qz-mwhere label{display:inline-flex;gap:6px;align-items:center;cursor:pointer}.qz-mwhere input{width:auto}
+/* improving written questions */
+.qz-impb{display:inline-flex;gap:6px;align-items:center}
+.qz-chips{display:flex;flex-wrap:wrap;gap:6px}.qz-chips button{font:inherit;font-size:.875rem;border:1px solid var(--line,#cfd6e4);background:var(--surface,#fff);color:var(--ink);border-radius:999px;padding:6px 12px;cursor:pointer}.qz-chips button[aria-pressed=true]{background:var(--ink,#14204a);color:var(--bg,#fff);border-color:transparent}
+.qz-num{width:4.2em!important;padding:4px 6px!important;display:inline-block}
+.qz-imp del{color:#9a3b22;opacity:.75;font-size:.875rem}.qz-imp i{font-style:normal}
+.qz-iop{list-style:none;margin:4px 0 0;padding:0;display:grid;gap:3px;font-size:.875rem}.qz-iop li{border:0;padding:0}.qz-iop li.ok i{color:#2f7d5b;font-weight:700}
+.qz-in{font-style:normal;font-size:.75rem;color:var(--muted)}

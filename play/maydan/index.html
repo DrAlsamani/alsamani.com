@@ -570,6 +570,13 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
 .qz-mlist label{display:flex;gap:10px;align-items:flex-start;cursor:pointer}.qz-mlist input{width:auto;margin-top:4px;flex:none}
 .qz-mlist span{display:grid;gap:2px;min-width:0}.qz-mlist b{font-weight:600;line-height:1.6;overflow-wrap:anywhere}.qz-mlist small{color:#2f7d5b;overflow-wrap:anywhere}
 .qz-mwhere{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;font-size:.9375rem}.qz-mwhere span{font-weight:700}.qz-mwhere label{display:inline-flex;gap:6px;align-items:center;cursor:pointer}.qz-mwhere input{width:auto}
+/* improving written questions */
+.qz-impb{display:inline-flex;gap:6px;align-items:center}
+.qz-chips{display:flex;flex-wrap:wrap;gap:6px}.qz-chips button{font:inherit;font-size:.875rem;border:1px solid var(--line,#cfd6e4);background:var(--surface,#fff);color:var(--ink);border-radius:999px;padding:6px 12px;cursor:pointer}.qz-chips button[aria-pressed=true]{background:var(--ink,#14204a);color:var(--bg,#fff);border-color:transparent}
+.qz-num{width:4.2em!important;padding:4px 6px!important;display:inline-block}
+.qz-imp del{color:#9a3b22;opacity:.75;font-size:.875rem}.qz-imp i{font-style:normal}
+.qz-iop{list-style:none;margin:4px 0 0;padding:0;display:grid;gap:3px;font-size:.875rem}.qz-iop li{border:0;padding:0}.qz-iop li.ok i{color:#2f7d5b;font-weight:700}
+.qz-in{font-style:normal;font-size:.75rem;color:var(--muted)}
 </style>
 <div id="qz" class="sn qz"><noscript><span class="ar">تعمل هذه الأداة مع تفعيل JavaScript.</span><span class="en">This tool needs JavaScript.</span></noscript></div>
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script><script>/* Maydan library: ready quizzes to start at once or open and edit. Written in the editor's own format. */
@@ -1066,7 +1073,7 @@ if (typeof module !== 'undefined') module.exports = QZParse;
 
   // the landing: what Maydan is, where it fits, and how it works
   const SV = d => `<svg class="qz-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
-  const IC = { cloud: SV('<path d="M7 18h10a4 4 0 0 0 .5-7.97A6 6 0 0 0 6 9.5 4.25 4.25 0 0 0 7 18z"/>'), trash: SV('<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/>'), eye: SV('<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>'), save: SV('<path d="M5 3h11l3 3v15H5z"/><path d="M8 3v5h7V3M8 21v-7h8v7"/>'), up: SV('<path d="M12 15V3M7 8l5-5 5 5"/><path d="M4 15v5h16v-5"/>'), shuffle: SV('<path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/>'), undo: SV('<path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/>') };
+  const IC = { cloud: SV('<path d="M7 18h10a4 4 0 0 0 .5-7.97A6 6 0 0 0 6 9.5 4.25 4.25 0 0 0 7 18z"/>'), trash: SV('<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/>'), eye: SV('<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>'), save: SV('<path d="M5 3h11l3 3v15H5z"/><path d="M8 3v5h7V3M8 21v-7h8v7"/>'), up: SV('<path d="M12 15V3M7 8l5-5 5 5"/><path d="M4 15v5h16v-5"/>'), shuffle: SV('<path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/>'), undo: SV('<path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/>'), wand: SV('<path d="m4 20 11-11M14 4v3M12.5 5.5h3M19 9v3M17.5 10.5h3"/><path d="m13 8 3 3"/>') };
   function intro() {
     const card = (i, a, e, da, de) => `<div class="qi-c"><span>${i}</span><b>${B(a, e)}</b><small>${B(da, de)}</small></div>`;
     return `<div class="qi">
@@ -1212,7 +1219,7 @@ if (typeof module !== 'undefined') module.exports = QZParse;
       </div>
       <div class="qz-spr"><span>${B('وزّع تحديات بين الأسئلة: تحدٍّ بعد كل', 'Spread challenges between the questions: one after every')}</span><select id="qzEvery">${[1, 2, 3, 5, 10].map(n => `<option value="${n}"${n === 3 ? ' selected' : ''}>${n === 1 ? T('سؤال واحد', '1 question') : n === 2 ? T('سؤالين', '2 questions') : n + ' ' + T('أسئلة', 'questions')}</option>`).join('')}</select><button type="button" class="btn ghost" id="qzSpr">${B('وزّع', 'Spread')}</button></div>
       <div id="qzQs" class="qz-qs"></div>
-      <div class="qz-addq"><button type="button" class="btn ghost" id="qzAddQ">${B('+ سؤال', '+ Question')}</button><button type="button" class="btn ghost" id="qzAddTF">${B('+ صح أو خطأ', '+ True or false')}</button><button type="button" class="btn ghost" id="qzAddG">${B('+ تحدٍّ تفاعلي ', '+ Challenge ')}</button></div>
+      <div class="qz-addq"><button type="button" class="btn ghost qz-impb" id="qzImpAll">${IC.wand}${B('حسّن أسئلتي', 'Improve my questions')}</button><button type="button" class="btn ghost" id="qzAddQ">${B('+ سؤال', '+ Question')}</button><button type="button" class="btn ghost" id="qzAddTF">${B('+ صح أو خطأ', '+ True or false')}</button><button type="button" class="btn ghost" id="qzAddG">${B('+ تحدٍّ تفاعلي ', '+ Challenge ')}</button></div>
 
       <div class="qz-bar"><div class="qz-chk" id="qzChk"></div><div class="qz-bar-b"><button type="button" class="btn solid md-go" id="qzGo">${B('ابدأ المسابقة ▶', 'Start the quiz ▶')}</button><button type="button" class="qz-ib" id="qzUnd" hidden>${IC.undo}<small>${B('تراجع', 'Undo')}</small></button><button type="button" class="qz-ib" id="qzPv" title="${T('معاينة', 'Preview')}">${IC.eye}<small>${B('معاينة', 'Preview')}</small></button><button type="button" class="qz-ib" id="qzExp" title="${T('حفظ نسخة', 'Save a copy')}">${IC.save}<small>${B('حفظ', 'Save')}</small></button><button type="button" class="qz-ib" id="qzPub" title="${T('انشرها في المكتبة', 'Offer it to the library')}">${IC.up}<small>${B('نشر', 'Offer')}</small></button></div></div>`;
     const q = s => root.querySelector(s);
@@ -1295,6 +1302,7 @@ if (typeof module !== 'undefined') module.exports = QZParse;
     q('#qzAddTF').onclick = () => { Q.qs.push(norm({ type: 'tf', opts: [T('صح', 'True'), T('خطأ', 'False')] })); draw(); focusLast(); later(); };
     q('#qzPv').onclick = () => preview(0);
     q('#qzUnd').onclick = undo; undoBtn();
+    q('#qzImpAll').onclick = () => improve(null);
     q('#qzPub').onclick = offer;
     q('#qzGo').onclick = () => {
       persist();
@@ -1439,7 +1447,7 @@ if (typeof module !== 'undefined') module.exports = QZParse;
         ${typeSel(x.type)}
         <select data-k="time" aria-label="time" title="${T('وقت الإجابة', 'Time to answer')}">${TIMES.map(s => `<option value="${s}"${s === t ? ' selected' : ''}>${s} ${T('ث', 's')}${!x.timeSet && s === t ? ' ✦' : ''}</option>`).join('')}</select>
         <select data-k="pts" aria-label="points"><option value="1"${x.pts === 1 ? ' selected' : ''}>${T('نقاط عادية', 'Standard points')}</option><option value="2"${x.pts === 2 ? ' selected' : ''}>${T('نقاط مضاعفة', 'Double points')}</option><option value="0"${x.pts === 0 ? ' selected' : ''}>${T('بلا نقاط', 'No points')}</option></select>
-        <span class="qz-act"><label class="qz-ib" title="${T('صورة', 'Image')}"><input type="file" accept="image/*" hidden data-k="img"></label><button type="button" class="qz-ib" data-a="dup" title="${T('تكرار', 'Duplicate')}">⧉</button><button type="button" class="qz-ib" data-a="del" title="${T('حذف', 'Delete')}">✕</button></span></div>
+        <span class="qz-act"><label class="qz-ib" title="${T('صورة', 'Image')}"><input type="file" accept="image/*" hidden data-k="img"></label>${IMPK.includes(x.type) ? `<button type="button" class="qz-ib" data-a="ai" title="${T('حسّنه بالذكاء الاصطناعي', 'Improve with AI')}">${IC.wand}</button>` : ''}<button type="button" class="qz-ib" data-a="dup" title="${T('تكرار', 'Duplicate')}">⧉</button><button type="button" class="qz-ib" data-a="del" title="${T('حذف', 'Delete')}">✕</button></span></div>
       <textarea data-k="q" rows="2" dir="auto" maxlength="300" placeholder="${x.type === 'word' ? T('تلميح عن الكلمة (مثال: عاصمة عربية)', 'A hint about the word (e.g. an Arab capital)') : x.type === 'num' ? T('السؤال (مثال: كم طول برج المملكة بالمتر؟)', 'The question (e.g. how tall is the Kingdom Tower in metres?)') : x.type === 'open' ? T('السؤال (مثال: صف رحلتنا بكلمة)', 'The question (e.g. describe our trip in one word)') : T('اكتب السؤال', 'Type the question')}">${esc(x.q)}</textarea>
       ${x.img ? `<div class="qz-img"><img src="${x.img}" alt=""><button type="button" data-a="noimg">${B('إزالة الصورة', 'Remove image')}</button>${x.type === 'mc' ? `<label class="qz-rev"><input type="checkbox" data-k="reveal"${x.reveal ? ' checked' : ''}> ${B('أخفِ الصورة واكشفها تدريجيًا (الأسرع في التعرف يكسب أكثر)', 'Hide the picture and reveal it bit by bit (the quickest to recognise it earns most)')}</label>` : ''}</div>` : ''}`;
     if (TEXTY.includes(x.type)) {
@@ -1512,6 +1520,7 @@ if (typeof module !== 'undefined') module.exports = QZParse;
     if (a('item')) a('item').onclick = () => { x.items.push(''); if (x.type === 'rapid') x.truth.push(true); re().querySelector(`[data-it="${x.items.length - 1}"]`).focus(); };
     if (a('opt')) a('opt').onclick = () => { x.opts.push(''); const c = re(); c.querySelector(`[data-o="${x.opts.length - 1}"]`).focus(); };
     if (a('noimg')) a('noimg').onclick = () => { x.img = null; re(); };
+    if (a('ai')) a('ai').onclick = () => improve([x]);
     a('dup').onclick = () => { const c = norm(JSON.parse(JSON.stringify(Object.assign({}, x, { id: uid() })))); c.timeSet = x.timeSet; Q.qs.splice(Q.qs.indexOf(x) + 1, 0, c); draw(); later(); };
     a('del').onclick = () => {
       const i = Q.qs.indexOf(x); Q.qs.splice(i, 1); draw(); later();
@@ -1750,11 +1759,97 @@ if (typeof module !== 'undefined') module.exports = QZParse;
       catch (e) { console.error(e); toast(B('تعذّر النشر (الصلاحية).', 'Could not publish (permission).'), 1); }
     };
   }
+  /* ---------- improve questions already written: harder wrong options, easier, clearer — shown side by side before anything changes ---------- */
+  const IMPK = ['mc', 'tf', 'poll', 'num', 'word', 'open'];
+  const IMPP = () => [['hard', T('خيارات خاطئة أصعب ومقنعة', 'Harder, more convincing wrong options')], ['easy', T('أسهل قليلًا', 'A little easier')], ['clear', T('صياغة أوضح وأقصر', 'Clearer, shorter wording')], ['deep', T('السؤال أعمق وأذكى', 'A deeper, smarter question')], ['fun', T('طابع أطرف', 'A lighter, funnier touch')]];
+  function improve(only, keepNote) {
+    const can = Q.qs.filter(x => IMPK.includes(x.type) && (x.q || '').trim());
+    if (!can.length) return toast(B('لا أسئلة يمكن تحسينها بعد.', 'No questions to improve yet.'), 1);
+    const d = document.createElement('div'); d.className = 'qz-modal'; const all = Q.qs.filter(x => x.type !== 'game');
+    d.innerHTML = `<div class="qz-mbox qz-merge"><h3>${only ? B(`حسّن السؤال ${all.indexOf(only[0]) + 1}`, `Improve question ${all.indexOf(only[0]) + 1}`) : B('حسّن أسئلتك بالذكاء الاصطناعي', 'Improve your questions with AI')}</h3>
+      <p class="pt-fine">${B('اختر ما تريد أو اكتب ملاحظتك، فيقترح التعديلات وتراها بجانب الأصل قبل أن يتغيّر شيء. الإجابة الصحيحة تبقى كما هي.', 'Pick what you want or write a note; you see the suggestions beside the originals before anything changes. The right answer stays the same.')}</p>
+      ${only ? '' : `<div class="qz-mwhere"><span>${B('أي الأسئلة؟', 'Which questions?')}</span><label><input type="radio" name="imS" value="all" checked> ${T(`كلها (${can.length})`, `All (${can.length})`)}</label><label><input type="radio" name="imS" value="rng"> ${T('من', 'From')} <input type="number" id="imA" min="1" max="${all.length}" value="1" class="qz-num"> ${T('إلى', 'to')} <input type="number" id="imB" min="1" max="${all.length}" value="${all.length}" class="qz-num"></label></div>`}
+      <div class="qz-chips">${IMPP().map(([k, l]) => `<button type="button" data-p="${k}" aria-pressed="${k === 'hard'}">${l}</button>`).join('')}</div>
+      <label class="sn-lbl">${B('ملاحظتك (اختياري)', 'Your note (optional)')}<textarea id="imN" rows="2" dir="auto" placeholder="${T('مثال: خلّ الخيارات الخاطئة أرقامًا قريبة من الصحيحة، أو أسماء من نفس المجال', 'e.g. make the wrong options numbers close to the right one, or names from the same field')}">${esc(keepNote || '')}</textarea></label>
+      <p class="qz-gens" id="imSt" aria-live="polite"></p>
+      <div class="sn-two"><button type="button" class="btn solid" id="imGo">${B('اقترح التعديلات', 'Suggest changes')}</button><button type="button" class="btn ghost" id="imX">${B('إلغاء', 'Cancel')}</button></div></div>`;
+    document.body.appendChild(d);
+    const g = s2 => d.querySelector(s2);
+    d.querySelectorAll('[data-p]').forEach(b => b.onclick = () => { b.setAttribute('aria-pressed', b.getAttribute('aria-pressed') !== 'true'); });
+    if (g('#imA')) ['#imA', '#imB'].forEach(k => g(k).onfocus = () => { d.querySelector('[name=imS][value=rng]').checked = true; });
+    g('#imX').onclick = () => d.remove();
+    g('#imGo').onclick = async () => {
+      const ps = [...d.querySelectorAll('[data-p][aria-pressed=true]')].map(b => b.dataset.p), note = g('#imN').value.trim();
+      if (!ps.length && !note) return toast(B('اختر نوع التحسين أو اكتب ملاحظتك.', 'Pick a kind of change or write a note.'), 1);
+      let list = only;
+      if (!list) { const rng = d.querySelector('[name=imS]:checked').value === 'rng'; const A = Math.max(1, +g('#imA').value || 1), Bn = Math.min(all.length, +g('#imB').value || all.length); list = (rng ? all.slice(A - 1, Bn) : all).filter(x => IMPK.includes(x.type) && (x.q || '').trim()); }
+      if (!list.length) return toast(B('لا أسئلة في هذا النطاق.', 'No questions in that range.'), 1);
+      const day = new Date().toISOString().slice(0, 10); let used = {}; try { used = JSON.parse(localStorage.getItem('qzImp') || '{}'); } catch (e) {}
+      if (used.d === day && used.n >= 40) { g('#imSt').textContent = T('وصلت حد اليوم من التحسين. جرّب غدًا.', 'You have reached today’s limit. Try tomorrow.'); return; }
+      const b = g('#imGo'); b.disabled = true; b.textContent = T('يقترح…', 'Thinking…'); g('#imSt').textContent = T('عادةً أقل من دقيقة.', 'Usually under a minute.');
+      try {
+        const out = [];
+        for (let k = 0; k < list.length; k += 20) {
+          const part = list.slice(k, k + 20); if (list.length > 20) g('#imSt').textContent = T(`الأسئلة ${k + 1}–${k + part.length} من ${list.length}…`, `Questions ${k + 1}–${k + part.length} of ${list.length}…`);
+          const text = await geminiWrite(impPrompt(part, ps, note)); const m = text.match(/\[[\s\S]*\]/); if (!m) continue; let arr = []; try { arr = JSON.parse(m[0]); } catch (e) { continue; }
+          arr.forEach(r => {
+            const x = part[r && r.i]; if (!x || typeof r.q !== 'string') return;
+            const cur = x.opts.filter(o => o.trim()), multi = ['mc', 'poll'].includes(x.type), opts = multi && Array.isArray(r.opts) ? r.opts.map(o => String(o).trim()) : null;
+            if (multi && !(opts && opts.length === cur.length && opts.every(Boolean))) return;
+            // the right answer must stay word for word where it was
+            if (x.type === 'mc' && x.ok.some(j => opts[cur.indexOf(x.opts[j])] !== x.opts[j].trim())) return;
+            const nq = r.q.trim() || x.q.trim(); if (nq === x.q.trim() && (!opts || JSON.stringify(opts) === JSON.stringify(cur))) return;
+            out.push({ x, q: nq, opts });
+          });
+        }
+        try { localStorage.setItem('qzImp', JSON.stringify({ d: day, n: (used.d === day ? used.n : 0) + 1 })); } catch (e) {}
+        d.remove();
+        if (!out.length) return toast(B('لم يقترح تغييرًا يستحق. جرّب ملاحظة أوضح.', 'No worthwhile change suggested. Try a clearer note.'));
+        impReview(out, only, note);
+      } catch (e) { console.error(e); b.disabled = false; b.textContent = T('اقترح التعديلات', 'Suggest changes'); g('#imSt').textContent = T('تعذّر الآن. جرّب بعد قليل.', 'Could not do it now. Try again shortly.'); }
+    };
+  }
+  function impPrompt(list, ps, note) {
+    const ar = list.some(x => /[؀-ۿ]/.test(x.q));
+    const W = { hard: ar ? 'اجعل الخيارات الخاطئة أصعب: قريبة من الإجابة الصحيحة ومن نفس مجالها ومقنعة لمن لا يعرف، مع بقائها خاطئة يقينًا' : 'make the wrong options harder: close to the right answer, from the same field, convincing to someone who does not know, yet certainly wrong',
+      easy: ar ? 'اجعل السؤال أسهل قليلًا: صياغة مباشرة وخيارات خاطئة أبعد عن الصحيحة' : 'make it a little easier: direct wording and wrong options further from the right one',
+      clear: ar ? 'اجعل صياغة السؤال أوضح وأقصر دون تغيير معناه' : 'make the wording clearer and shorter without changing its meaning',
+      deep: ar ? 'اجعل السؤال أعمق وأذكى يحتاج تفكيرًا لا حفظًا، مع بقاء الإجابة الصحيحة نفسها' : 'make the question deeper, needing thought rather than recall, with the same right answer',
+      fun: ar ? 'أضف لمسة مرحة خفيفة للصياغة تناسب جمهورًا سعوديًا عائليًا' : 'add a light, playful touch to the wording' };
+    const want = ps.map(k => '- ' + W[k]).join('\n') + (note ? '\n- ' + (ar ? 'ملاحظة صاحب المسابقة (التزم بها): ' : 'The author’s note (follow it): ') + note : '');
+    const data = list.map((x, i) => ({ i, type: x.type, q: x.q, opts: ['mc', 'poll', 'tf'].includes(x.type) ? x.opts.filter(o => o.trim()) : undefined, right: x.type === 'mc' || x.type === 'tf' ? x.ok.map(j => x.opts[j]) : ['num', 'word'].includes(x.type) ? x.ans : undefined }));
+    return (ar ? `حسّن أسئلة هذه المسابقة حسب المطلوب:\n${want}\n\nالقواعد:\n- الإجابة الصحيحة (right) لا تتغيّر أبدًا بحرف واحد، ولا يتغيّر مكانها بين الخيارات.\n- عدد الخيارات يبقى كما هو.\n- في «صح أو خطأ» غيّر صياغة السؤال فقط إن لزم، والخياران كما هما.\n- في الأسئلة الرقمية وخمّن الكلمة غيّر صياغة السؤال فقط.\n- لا تكتب في أي خيار ما يدل على أنه صحيح أو خاطئ.\n- تحقق من أن كل خيار خاطئ خاطئ فعلًا.\n\nأعد JSON فقط بلا أي كلام آخر: مصفوفة عناصر {"i": رقم السؤال, "q": نص السؤال, "opts": [الخيارات بالترتيب نفسه]} لكل سؤال.\n\nالأسئلة:\n`
+      : `Improve the questions of this quiz as asked:\n${want}\n\nRules:\n- The right answer (right) never changes by a single letter, nor its position among the options.\n- Keep the same number of options.\n- For true/false, only reword the question if needed; keep both options.\n- For number and word questions, only reword the question.\n- No option may hint that it is right or wrong.\n- Check that every wrong option is really wrong.\n\nReturn JSON only, nothing else: an array of {"i": question number, "q": question text, "opts": [options in the same order]} for each question.\n\nThe questions:\n`) + JSON.stringify(data);
+  }
+  function impReview(out, only, note) {
+    const keep = out.map(() => true), all = Q.qs.filter(x => x.type !== 'game');
+    const d = document.createElement('div'); d.className = 'qz-modal';
+    const paint = () => {
+      const k = keep.filter(Boolean).length;
+      d.innerHTML = `<div class="qz-mbox qz-merge"><h3>${B(`التعديلات المقترحة (${out.length})`, `Suggested changes (${out.length})`)}</h3><p class="pt-fine">${B('الأصل مشطوب والمقترح بجانبه. أزل علامة ما لا تريده.', 'The original is struck through, the suggestion beside it. Untick what you do not want.')}</p>
+        <ol class="qz-mlist qz-imp">${out.map((r, i) => { const x = r.x, n = all.indexOf(x) + 1, oo = x.opts.filter(o => o.trim()), ok = j => (x.type === 'mc' || x.type === 'tf') && x.ok.includes(x.opts.indexOf(oo[j]));
+          return `<li class="${keep[i] ? '' : 'off'}"><label><input type="checkbox" data-k="${i}"${keep[i] ? ' checked' : ''}><span><em class="qz-in">${T('السؤال', 'Question')} ${n}</em>${r.q !== x.q.trim() ? `<del dir="auto">${esc(x.q)}</del><b dir="auto">${esc(r.q)}</b>` : `<b dir="auto">${esc(x.q)}</b>`}
+            ${r.opts ? `<ul class="qz-iop">${r.opts.map((o, j) => `<li class="${ok(j) ? 'ok' : ''}">${o !== oo[j] ? `<del dir="auto">${esc(oo[j])}</del> ← <i dir="auto">${esc(o)}</i>` : `<i dir="auto">${esc(o)}</i>`}${ok(j) ? ' ✓' : ''}</li>`).join('')}</ul>` : ''}</span></label></li>`; }).join('')}</ol>
+        <div class="sn-two"><button type="button" class="btn solid" data-ok${k ? '' : ' disabled'}>${B(`طبّق ${k}`, `Apply ${k}`)}</button><button type="button" class="btn ghost" data-again>${B('اطلب غيرها', 'Ask again')}</button><button type="button" class="btn ghost" data-no>${B('تجاهلها', 'Discard')}</button></div></div>`;
+      d.querySelectorAll('[data-k]').forEach(c => c.onchange = () => { keep[+c.dataset.k] = c.checked; paint(); });
+      d.querySelector('[data-no]').onclick = () => d.remove();
+      d.querySelector('[data-again]').onclick = () => { d.remove(); improve(only, note); };
+      d.querySelector('[data-ok]').onclick = () => {
+        const pick = out.filter((r, i) => keep[i]); snap(T(`تحسين ${pick.length} سؤالًا`, `improving ${pick.length}`));
+        pick.forEach(r => { r.x.q = r.q; if (r.opts) { const idx = r.x.opts.map((o, j) => o.trim() ? j : -1).filter(j => j >= 0); idx.forEach((j, t) => { r.x.opts[j] = r.opts[t]; }); } });
+        persist(); draw(); checks(); d.remove();
+        toast(B(`عُدّلت ${pick.length}. <button type="button" class="sn-lnk" id="qzUndoI">تراجع</button>`, `${pick.length} changed. <button type="button" class="sn-lnk" id="qzUndoI">Undo</button>`));
+        const u = document.getElementById('qzUndoI'); if (u) u.onclick = () => { undo(); document.getElementById('qzToast').classList.remove('on'); };
+      };
+    };
+    paint(); document.body.appendChild(d);
+  }
   // Gemini, loaded only when asked for: Firebase's modular SDK, with App Check (reCAPTCHA Enterprise) in front of it
   const AI_V = '11.10.0', AI_KEY = '6Le4gQsuAAAAAE3jS1mLgG9B2XT8AucvEecF6Kp4';
   let aiModel = null, aiMk = null;
   const AI_MODELS = ['gemini-3.6-flash', 'gemini-3.8-flash', 'gemini-3-flash-preview', 'gemini-flash-latest'];
   async function geminiWrite(p) {
+    if (window.__qzAI) return window.__qzAI(p);   // a stand-in for tests
     if (!aiMk) {
       const u = n => `https://www.gstatic.com/firebasejs/${AI_V}/firebase-${n}.js`;
       const [{ initializeApp, getApps }, { initializeAppCheck, ReCaptchaEnterpriseProvider }, { getAI, getGenerativeModel, VertexAIBackend }] = await Promise.all([import(u('app')), import(u('app-check')), import(u('ai'))]);
