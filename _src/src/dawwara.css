@@ -105,3 +105,25 @@ html.dw-on{overflow:hidden}
 @keyframes dw-fall{to{transform:translateY(110vh) rotate(540deg)}}
 @media (max-width:640px){.dw-opts{grid-template-columns:1fr}.dw-board{padding:56px 10px 0}.dw-g{grid-template-columns:auto 1fr}.dw-g input[data-lead]{grid-column:2}}
 @media (prefers-reduced-motion:reduce){.dw-turn::before,.dw-bars i,.dw-conf i,.dw-res,.dw-steal{animation:none}}
+/* rounds */
+.dw-rounds{display:grid;gap:8px}.dw-rounds h3{margin:6px 0 0;font-size:1.0625rem;color:#e9a54a}
+.dw-rounds .dw-row span{display:grid;gap:2px}.dw-rounds .dw-row small{font-weight:400;opacity:.75;font-size:.8125rem}
+.dw-need{margin:0;opacity:.85;font-size:.9375rem;text-align:center}.dw-need.bad{color:#ff9a8a;opacity:1;font-weight:700}
+.dw-btn:disabled,.dw-btn[disabled]{opacity:.4;cursor:default}
+.dw-rcard h2{color:#e9a54a}.dw-rcard::before{content:'';width:min(160px,34vw);aspect-ratio:1;border-radius:50%;background:conic-gradient(#2a7fa8 0 25%,#b0533a 0 50%,#2f7d5b 0 75%,#c9822b 0);mask:radial-gradient(circle,transparent 42%,#000 43%);-webkit-mask:radial-gradient(circle,transparent 42%,#000 43%);animation:dw-spin 1.2s ease-out}
+.dw-opts.dw-view button{cursor:default;transform:none!important;min-height:clamp(48px,8vh,96px)}
+.dw-rec{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px}
+.dw-rg{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.07);border-radius:12px;padding:6px 10px;border-inline-start:6px solid var(--c)}
+.dw-rg b{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dw-rg span{display:flex;gap:4px;flex-wrap:wrap}.dw-rg em{font-style:normal;opacity:.6;font-size:.875rem}
+.dw-rg button{font:inherit;font-weight:800;min-width:38px;height:38px;padding:0 8px;border-radius:9px;border:2px solid var(--o,rgba(255,255,255,.4));background:transparent;color:#fff;cursor:pointer}
+.dw-rg button[aria-pressed=true]{background:var(--o,#fff)}.dw-rg button.y{--o:#2f7d5b}.dw-rg button.n{--o:#b0533a}
+.dw-rg i{font-style:normal;font-weight:800;padding:2px 8px;border-radius:999px}.dw-rg i.ok{background:#2f7d5b}.dw-rg i.no{background:rgba(255,255,255,.12)}
+.dw-pulse{animation:dw-pulse 1s infinite}@keyframes dw-pulse{50%{transform:scale(1.06)}}
+.dw-steal button.on{outline:3px solid #fff}.dw-steal button em{font-style:normal;background:#fff;color:#14204a;border-radius:50%;width:1.5em;height:1.5em;display:inline-grid;place-items:center;margin-inline-end:6px}
+.dw-ch .dw-ring{margin:4px auto}.dw-tag{display:inline-block;margin:0!important;padding:4px 14px;border-radius:999px;background:rgba(233,165,74,.2);color:#e9a54a!important;font-weight:700;font-size:.9375rem!important}
+.dw-x{width:100%}.dw-big{font-size:clamp(26px,4vw,52px)!important;font-weight:800;color:#e9a54a}
+.dw-words{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}.dw-words span{background:#fff;color:#14204a;border-radius:12px;padding:10px 18px;font-size:clamp(18px,2.4vw,32px);font-weight:700}
+.dw-words.dw-dim span{opacity:.75;font-size:clamp(14px,1.6vw,22px)}
+.dw-letters{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;direction:ltr}.dw-letters span{width:clamp(48px,6vw,84px);aspect-ratio:1;display:grid;place-items:center;background:#fff;color:#14204a;border-radius:14px;font-size:clamp(26px,3.6vw,48px);font-weight:900;box-shadow:0 5px 0 #c9822b}
+.dw-buzz .dw-opts button:disabled:not(.no):not(.ok){filter:none;cursor:default}
