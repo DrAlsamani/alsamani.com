@@ -634,3 +634,8 @@ body>.md-xov{position:fixed}
   .md-live.phones:not(.started) .md-ctl{position:static;padding:6px 10px;gap:6px}
   .md-live.phones .md-me{min-height:52vh}
 }
+.mp-sheet{position:fixed;inset:0;z-index:95;background:rgba(10,14,30,.45);display:flex;align-items:flex-end;justify-content:center}
+.mp-sbox{width:min(520px,100%);background:#fff;color:#14204a;border-radius:18px 18px 0 0;padding:16px 16px calc(16px + env(safe-area-inset-bottom));display:grid;gap:8px;box-shadow:0 -10px 30px rgba(0,0,0,.25)}
+.mp-sbox textarea{width:100%;box-sizing:border-box;border:1px solid #cfd6e4;border-radius:12px;padding:10px 12px;font:inherit;font-size:16px;resize:none}
+.mp-sx{background:none;border:0;color:#6b7390;font:inherit;padding:6px;cursor:pointer}
+.mp-toast{bottom:calc(90px + env(safe-area-inset-bottom))}

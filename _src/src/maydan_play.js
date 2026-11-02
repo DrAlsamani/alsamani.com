@@ -168,7 +168,7 @@
     const fx = SC && SC.q === st.i && st.ph === 'rev' ? pwNote() : '';
     root.innerHTML = `<div class="mp-play ${cls || ''}"><div class="mp-top"><span dir="auto">${FAN ? '' : ''}${esc(me)}${TEAMS && myTeam != null ? ` <i style="--c:var(--qz${(myTeam) % 6})">${esc(TEAMS[myTeam])}</i>` : ''}</span>${qn}<b>${FAN ? '' : SC ? SC.s : 0}</b></div>${fx}${/<div class="mp-(mic|rx)"/.test(html) ? html.replace(/<div class="mp-(mic|rx)"/, m => '<div class="mp-feed" id="mpFeed"></div>' + m) : html + '<div class="mp-feed" id="mpFeed"></div>'}${!FAN && ['rev', 'lb', 'ready'].includes(st.ph) ? toolsBar() : ''}${!FAN && st.ph === 'q' && cls === 'q' ? skipBtn() : ''}${extras()}</div>`; if (R) { rxBind(); toolsBind(); xBind(); } feed(); }
   /* ---------- while waiting: switch between playing and watching, write to the screen or to the host, and be told when it starts ---------- */
-  let msgOpen = false, msgDraft = '', lastMsg = 0;
+  let msgDraft = '', lastMsg = 0;
   function annHtml() { return ANN && (st.ph === 'lobby' || st.ph === 'pause') ? `<div class="mp-ann"><small>${B('من المشرف', 'From the host')}</small><p dir="auto">${esc(ANN)}</p></div>` : ''; }
   function wuHtml() {
     if (!WU || !window.MDGames || !(st.ph === 'lobby' || st.ph === 'pause')) return ''; const g = MDGames.byId(WU.g), best = store.get('wu.' + PIN + '.' + WU.g + '.' + WU.seed, 0);
@@ -190,23 +190,34 @@
     const calm = ['lobby', 'pause', 'rev', 'lb'].includes(st.ph) || FAN; if (!calm || st.ph === 'end') return '';
     const nt = st.ph === 'lobby' && 'Notification' in window && Notification.permission === 'default' ? `<button type="button" class="mp-xb" data-ntf>${B('نبّهني إذا بدأت وأنا خارج الصفحة', 'Tell me when it starts if I leave the page')}</button>` : '';
     return `<div class="mp-xtra">
-      <div class="mp-msg${msgOpen ? ' on' : ''}">${msgOpen ? `<textarea id="mpMsg" maxlength="80" rows="2" dir="auto" placeholder="${T('رسالتك (٨٠ حرفًا)', 'Your message (80 characters)')}">${esc(msgDraft)}</textarea>
-        <div class="mp-msgb"><button type="button" class="btn solid" data-msg="s">${B('أرسلها للشاشة', 'Send to the screen')}</button><button type="button" class="btn ghost" data-msg="h">${B('للمشرف فقط', 'To the host only')}</button></div>`
-        : `<button type="button" class="mp-xb" data-msgo>${B('اكتب رسالة للشاشة أو للمشرف', 'Write to the screen or the host')}</button>`}</div>
+      <div class="mp-msg"><button type="button" class="mp-xb" data-msgo>${B('اكتب رسالة للشاشة أو للمشرف', 'Write to the screen or the host')}</button></div>
       <button type="button" class="mp-xb" data-sw>${FAN ? B('انضم كلاعب', 'Join as a player') : B('تحوّل إلى متفرج', 'Switch to watching')}</button>${nt}</div>`;
   }
   function xBind() {
-    const o = root.querySelector('[data-msgo]'); if (o) o.onclick = () => { msgOpen = true; shown = ''; draw(); setTimeout(() => { const t = root.querySelector('#mpMsg'); if (t) t.focus(); }, 50); };
-    const t = root.querySelector('#mpMsg'); if (t) t.oninput = () => { msgDraft = t.value; };
-    root.querySelectorAll('[data-msg]').forEach(b => b.onclick = async () => {
-      const m = (msgDraft || '').trim().replace(/\s+/g, ' ').slice(0, 80); if (!m) return;
-      if (Date.now() - lastMsg < 15000) return flashMsg(T('انتظر قليلًا قبل رسالة أخرى.', 'Wait a moment before another message.'));
-      try { await R.child('msg/' + uid).set({ m, to: b.dataset.msg, t: TS }); lastMsg = Date.now(); msgDraft = ''; msgOpen = false; buzz(25); shown = ''; draw(); flashMsg(b.dataset.msg === 's' ? T('وصلت رسالتك للشاشة.', 'Your message is on its way to the screen.') : T('وصلت رسالتك للمشرف.', 'Your message reached the host.')); }
-      catch (e) { flashMsg(T('تعذّر إرسال الرسالة الآن.', 'The message could not be sent now.')); }
-    });
+    const o = root.querySelector('[data-msgo]'); if (o) o.onclick = msgSheet;
     const wb = root.querySelector('[data-wu]'); if (wb) wb.onclick = () => { if (!wuGame) playWarmup(); };
     const sw = root.querySelector('[data-sw]'); if (sw) sw.onclick = () => { FAN = !FAN; store.set('fan.' + PIN, FAN ? 1 : 0); R.child('rx/' + uid).set({ e: FAN ? '^f' : '^p', t: TS }).catch(() => {}); buzz(25); shown = ''; draw(); };
     const nb = root.querySelector('[data-ntf]'); if (nb) nb.onclick = () => { try { Notification.requestPermission().then(() => { shown = ''; draw(); }); } catch (e) {} };
+  }
+  // writing sits in its own sheet over the page, so the live updates underneath never interrupt it
+  function msgSheet() {
+    if (document.querySelector('.mp-sheet')) return;
+    const d = document.createElement('div'); d.className = 'mp-sheet';
+    d.innerHTML = `<div class="mp-sbox"><textarea maxlength="80" rows="2" dir="auto" placeholder="${T('رسالتك (٨٠ حرفًا)', 'Your message (80 characters)')}">${esc(msgDraft)}</textarea>
+      <div class="mp-msgb"><button type="button" class="btn solid" data-msg="s">${B('أرسلها للشاشة', 'Send to the screen')}</button><button type="button" class="btn ghost" data-msg="h">${B('للمشرف فقط', 'To the host only')}</button></div>
+      <button type="button" class="mp-sx" data-x>${B('إلغاء', 'Cancel')}</button></div>`;
+    document.body.appendChild(d);
+    const t = d.querySelector('textarea'), close = () => { msgDraft = t.value; d.remove(); };
+    setTimeout(() => t.focus(), 30);
+    d.onclick = e => { if (e.target === d) close(); };
+    d.querySelector('[data-x]').onclick = close;
+    d.querySelectorAll('[data-msg]').forEach(b => b.onclick = async () => {
+      const m = t.value.trim().replace(/\s+/g, ' ').slice(0, 80); if (!m) return t.focus();
+      if (Date.now() - lastMsg < 15000) return flashMsg(T('انتظر قليلًا قبل رسالة أخرى.', 'Wait a moment before another message.'));
+      b.disabled = true;
+      try { await R.child('msg/' + uid).set({ m, to: b.dataset.msg, t: TS }); lastMsg = Date.now(); msgDraft = ''; d.remove(); buzz(25); flashMsg(b.dataset.msg === 's' ? T('وصلت رسالتك للشاشة.', 'Your message is on its way to the screen.') : T('وصلت رسالتك للمشرف.', 'Your message reached the host.')); }
+      catch (e) { b.disabled = false; flashMsg(T('تعذّر إرسال الرسالة الآن.', 'The message could not be sent now.')); }
+    });
   }
   function flashMsg(t) { const d = document.createElement('div'); d.className = 'mp-toast'; d.textContent = t; document.body.appendChild(d); setTimeout(() => d.remove(), 2600); }
   // the screen stays awake while waiting, and the start is announced: sound, vibration, the tab title and, if allowed, a notification
