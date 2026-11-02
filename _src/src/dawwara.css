@@ -166,3 +166,13 @@ html.dw-on{overflow:hidden}
 .dw-trk i{position:absolute;top:50%;inset-inline-start:var(--x);width:6px;height:6px;margin:-3px;border-radius:50%;background:rgba(255,255,255,.25)}
 .dw-tok{position:absolute;top:50%;inset-inline-start:var(--p);transform:translateY(-50%);margin-inline-start:calc(clamp(30px,4.2vh,42px) / -2);width:clamp(30px,4.2vh,42px);aspect-ratio:1;border-radius:50%;display:grid;place-items:center;background:var(--c);color:#fff;font-weight:900;box-shadow:0 0 0 3px #fff,0 6px 16px rgba(0,0,0,.35);transition:inset-inline-start 1.4s cubic-bezier(.2,.8,.2,1)}
 .dw-flag{position:absolute;inset-inline-end:6px;top:50%;transform:translateY(-50%);width:18px;height:18px;background:conic-gradient(#fff 0 25%,#14204a 0 50%,#fff 0 75%,#14204a 0);border-radius:3px;opacity:.8}
+/* Huroof and the wager */
+.dw-crumb{margin:0;color:#e9a54a!important;font-weight:800;font-size:clamp(18px,2.2vw,28px)!important}
+.dw-hbtns{display:flex;flex-wrap:wrap;gap:clamp(8px,1.2vw,14px);justify-content:center;max-width:1000px}
+.dw-hbtns button{all:unset;cursor:pointer;display:grid;gap:4px;justify-items:center;min-width:clamp(120px,14vw,190px);padding:clamp(14px,2.4vh,24px) 16px;border-radius:16px;background:#23336f;border:2px solid rgba(255,255,255,.18);font-size:clamp(18px,2.2vw,30px);font-weight:900;transition:transform .15s}
+.dw-hbtns button:hover{transform:scale(1.05);border-color:#e9a54a}.dw-hbtns small{font-size:.55em;font-weight:600;opacity:.65}
+.dw-hl button,.dw-hn button{min-width:0;width:clamp(64px,8vw,104px);aspect-ratio:1;padding:0;place-items:center;font-size:clamp(28px,4vw,56px);color:#e9a54a;border-radius:50%}
+.dw-hn button{background:#e9a54a;color:#1d1b3a;border-color:#e9a54a}
+.dw-wg h2{color:#e9a54a}.dw-jr .dw-all{width:auto;padding:0 10px;font-size:.875rem}.dw-jr b small{opacity:.65;font-weight:600}
+.dw-row select+select{margin-inline-start:6px}
+.dw-wg .dw-judge>div{grid-template-columns:repeat(auto-fill,minmax(310px,1fr))}.dw-wg .dw-jr b{white-space:normal}
