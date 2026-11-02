@@ -301,7 +301,7 @@ def dawwara_body():
     return f'''<section class="first tl-page sn-page-wrap">
 <nav class="tl-crumb" aria-label="breadcrumb"><a href="../index.html">{bi('منصة الألعاب التفاعلية', 'Interactive games')}</a><i class="chev"></i><span>{bi('دوّارة', 'Dawwara')}</span></nav>
 <header class="dw-head">{DW_MARK}<div><h1>{bi('دوّارة', 'Dawwara')}</h1><p>{bi('مسابقة المجموعات على شاشة واحدة', 'The team quiz on one screen')}</p></div></header>
-<p class="dw-lead">{bi('تكفيها شاشة واحدة بلا أجهزة للحضور: تتناوب المجموعات على الأسئلة، وقائد كل مجموعة يقول الإجابة، والمدير يسجّلها بلمسة. للفصول والمجالس والفعاليات.', 'One screen and no devices for the room: groups take turns, each leader says the answer and the host taps it. For classrooms, family gatherings and events.')}</p>
+<p class="dw-lead">{bi('شاشة واحدة، والحضور مجموعات بلا أجوال: يطلع السؤال، وقائد المجموعة يقول الإجابة، وأنت تضغطها. الصح والأسرع يكسب.', 'One screen, the room in groups, no phones: the question shows, each leader says the answer and you tap it. Right and fast wins.')}</p>
 <style>{src('dawwara.css')}</style>
 <div id="dw" class="dw-page"><noscript>{bi("تعمل هذه اللعبة مع تفعيل JavaScript.", "This game needs JavaScript.")}</noscript></div>
 <script>window.MD_CFG={open(os.path.join(ROOT, 'data', 'maydan.json')).read().strip()};</script><script>{src('maydan_lib.js')}</script><script>{src('quiz_parse.js')}</script><script>{src('dawwara.js')}</script>

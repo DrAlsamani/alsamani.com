@@ -48,7 +48,7 @@
 <section class="first tl-page sn-page-wrap">
 <nav class="tl-crumb" aria-label="breadcrumb"><a href="../index.html"><span class="ar">منصة الألعاب التفاعلية</span><span class="en">Interactive games</span></a><i class="chev"></i><span><span class="ar">دوّارة</span><span class="en">Dawwara</span></span></nav>
 <header class="dw-head"><svg class="dw-mark" viewBox="0 0 48 48" aria-hidden="true"><rect x="4" y="4" width="40" height="40" rx="12" fill="#1d2a5e"/><path d="M24 11a13 13 0 0 1 13 13" stroke="#2a7fa8" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M37 24a13 13 0 0 1-13 13" stroke="#b0533a" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M24 37a13 13 0 0 1-13-13" stroke="#2f7d5b" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M11 24a13 13 0 0 1 13-13" stroke="#c9822b" stroke-width="5" fill="none" stroke-linecap="round"/><circle cx="24" cy="24" r="4.5" fill="#fff"/></svg><div><h1><span class="ar">دوّارة</span><span class="en">Dawwara</span></h1><p><span class="ar">مسابقة المجموعات على شاشة واحدة</span><span class="en">The team quiz on one screen</span></p></div></header>
-<p class="dw-lead"><span class="ar">تكفيها شاشة واحدة بلا أجهزة للحضور: تتناوب المجموعات على الأسئلة، وقائد كل مجموعة يقول الإجابة، والمدير يسجّلها بلمسة. للفصول والمجالس والفعاليات.</span><span class="en">One screen and no devices for the room: groups take turns, each leader says the answer and the host taps it. For classrooms, family gatherings and events.</span></p>
+<p class="dw-lead"><span class="ar">شاشة واحدة، والحضور مجموعات بلا أجوال: يطلع السؤال، وقائد المجموعة يقول الإجابة، وأنت تضغطها. الصح والأسرع يكسب.</span><span class="en">One screen, the room in groups, no phones: the question shows, each leader says the answer and you tap it. Right and fast wins.</span></p>
 <style>/* Dawwara — a team quiz on one screen */
 .dw-head{display:flex;align-items:center;gap:14px;justify-content:center;margin:0 0 10px}.dw-head .dw-mark{width:56px;height:56px}.dw-head h1{margin:0}.dw-head p{margin:2px 0 0;opacity:.7}
 .dw-lead{max-width:640px;margin:0 auto 18px;text-align:center;line-height:1.8;color:var(--muted)}
@@ -227,6 +227,28 @@ html.dw-on{overflow:hidden}
 .dw-wg h2{color:#e9a54a}.dw-jr .dw-all{width:auto;padding:0 10px;font-size:.875rem}.dw-jr b small{opacity:.65;font-weight:600}
 .dw-row select+select{margin-inline-start:6px}
 .dw-wg .dw-judge>div{grid-template-columns:repeat(auto-fill,minmax(310px,1fr))}.dw-wg .dw-jr b{white-space:normal}
+/* the simpler start */
+.dw-start{max-width:760px;margin:0 auto;display:grid;gap:12px}
+.dw-start>h2{margin:0;font-size:1.25rem;text-align:center}
+.dw-tabs{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+.dw-tabs button{font:inherit;font-weight:700;border:1px solid var(--line,#d6d9e4);background:var(--surface,#fff);color:var(--ink);border-radius:999px;padding:9px 18px;cursor:pointer}
+.dw-tabs button[aria-selected=true]{background:#1d2a5e;color:#fff;border-color:#1d2a5e}
+.dw-start [data-pane]{display:grid;gap:10px}.dw-start [data-pane][hidden]{display:none}
+.dw-start h3{margin:6px 0 0;font-size:1rem}.dw-pane-h{margin:0;color:var(--muted);text-align:center;line-height:1.8}
+.dw-next{margin:4px 0 0;text-align:center;color:var(--muted);font-size:.9375rem}
+.dw-start .dw-ai{background:var(--surface,#fff);color:var(--ink);border:1px solid var(--line,#e5e5ea);border-radius:16px;padding:14px}
+.dw-start .dw-ai textarea,.dw-start .dw-ai input,.dw-start .dw-ai select{border:1px solid var(--line,#cfd6e4)}
+.dw-start .dw-aig{grid-template-columns:1fr auto;align-items:end}.dw-start .dw-aig .dw-btn{min-height:44px;font-size:1rem}
+.dw-adv2{border-top:1px dashed var(--line,#d6d9e4);padding-top:8px}.dw-adv2 summary{cursor:pointer;color:var(--muted);font-weight:600}
+.dw-adv2[open]{display:grid;gap:10px}.dw-adv2 .dw-aig{grid-template-columns:repeat(auto-fit,minmax(140px,1fr))}
+.dw-start .dw-ai .dw-found{color:#2f7d5b}
+.dw-start [data-pane="chal"] .dw-btn{justify-self:center}
+/* the setup, essentials first */
+.dw-sum{margin:0;background:rgba(255,255,255,.07);border-radius:14px;padding:10px 14px;line-height:1.9}.dw-sum b{color:#e9a54a}
+.dw-adv{background:rgba(255,255,255,.04);border-radius:14px;padding:8px 12px}
+.dw-adv>summary{cursor:pointer;font-weight:700;padding:6px 2px;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}.dw-adv>summary small{font-weight:400;opacity:.7}
+.dw-adv[open]{display:grid;gap:10px}
+.dw-set .dw-row span{display:grid;gap:2px}.dw-set .dw-row small{font-weight:400;opacity:.75;font-size:.8125rem}
 </style>
 <div id="dw" class="dw-page"><noscript><span class="ar">تعمل هذه اللعبة مع تفعيل JavaScript.</span><span class="en">This game needs JavaScript.</span></noscript></div>
 <script>window.MD_CFG={"apiKey": "AIzaSyA50i75DT1Is1a6Yn6snW1_JVObc8S3F0Y", "authDomain": "maydan-705ae.firebaseapp.com", "databaseURL": "https://maydan-705ae-default-rtdb.europe-west1.firebasedatabase.app", "projectId": "maydan-705ae", "appId": "1:342187013133:web:d5c2396f0db413f3c51144"};</script><script>/* Maydan library: ready quizzes to start at once or open and edit. Written in the editor's own format. */
@@ -689,30 +711,37 @@ window.Dawwara = (function () {
   function setup() {
     const c = D.cfg, n = Math.min(8, Math.max(2, c.n)), P = D.all.length, mc = D.all.filter(isMC).length;
     const catQ = D.all.filter(x => (x.cat || '').trim()).length, cats = new Set(D.all.map(x => (x.cat || '').trim()).filter(Boolean)).size;
-    if (!c.r || c.rn !== n || c.rq !== P) { c.r = defRounds(n, P - (c.wager !== false && P > 2 ? 1 : 0), mc, cats >= 2 ? catQ : 0); c.rn = n; c.rq = P; }
+    if (c.dur == null) c.dur = 30;
+    if (!c.r || c.rn !== n || c.rq !== P) { c.r = defRounds(n, P - (c.wager !== false && P > 2 ? 1 : 0), mc, cats >= 2 ? catQ : 0); c.rn = n; c.rq = P; if (c.dur) c.r = fitTime(c, n, P - (c.wager !== false && P > 2 ? 1 : 0), mc, c.dur); D.chosen = null; }
     if (c.r.board == null) c.r.board = 0;
     if (!D.chosen) fillChal(c.r.chal);
     const opt = (k, max, unit) => `<select data-r="${k}">${Array.from({ length: max + 1 }, (_, v) => `<option value="${v}"${c.r[k] === v ? ' selected' : ''}>${v ? NUM(v) + ' ' + unit : T('بدونها', 'None')}</option>`).join('')}</select>`;
-    shell(`<div class="dw-set"><header><b class="dw-logo">${T('دوّارة', 'Dawwara')}</b><h2 dir="auto">${esc(D.title)}</h2><p>${T(`مسابقة فرق على جهاز واحد: كل مجموعة يجيها دورها وسؤالها، وقائدها يقول الإجابة، وأنت تسجّلها بلمسة. الصح والأسرع يكسب أكثر. الأسئلة الصالحة: ${NUM(D.all.length)}`, `A team quiz on one device: each group gets its turn and its own question, its leader says the answer and you tap it. Right and fast scores more. Usable questions: ${D.all.length}`)}</p></header>
+    shell(`<div class="dw-set"><header><b class="dw-logo">${T('دوّارة', 'Dawwara')}</b><h2 dir="auto">${esc(D.title)}</h2><p>${T('حدّد المجموعات والمدة والمناسبة، ثم ابدأ.', 'Set the groups, the length and the occasion, then start.')}</p></header>
       <div class="dw-row"><span>${T('عدد المجموعات', 'Groups')}</span><div class="dw-seg">${[2, 3, 4, 5, 6, 7, 8].map(k => `<button type="button" data-n="${k}" aria-pressed="${k === n}"${k > D.all.length ? ' disabled' : ''}>${NUM(k)}</button>`).join('')}</div></div>
       <div class="dw-groups">${Array.from({ length: n }, (_, k) => `<div class="dw-g" style="--c:${COL[k]}"><i></i><input data-name="${k}" maxlength="18" dir="auto" value="${esc(c.names[k] || NAMES()[k])}" aria-label="${T('اسم المجموعة', 'Group name')}"><input data-lead="${k}" maxlength="18" dir="auto" value="${esc(c.leads[k] || '')}" placeholder="${T('القائد (اختياري)', 'Leader (optional)')}"></div>`).join('')}</div>
-      <div class="dw-rounds"><h3>${T('جولات الأمسية', 'The rounds')}</h3>
         <div class="dw-row"><span>${T('مدة الأمسية', 'The evening’s length')}<small id="dwEst"></small></span><select data-dur>${[[0, T('أحددها بنفسي', 'I set the rounds')], [20, NUM(20) + T(' دقيقة', ' min')], [30, NUM(30) + T(' دقيقة', ' min')], [45, NUM(45) + T(' دقيقة', ' min')], [60, T('ساعة', '1 hour')], [90, T('ساعة ونصف', '1.5 hours')]].map(([v, l]) => `<option value="${v}"${(c.dur || 0) === v ? ' selected' : ''}>${l}</option>`).join('')}</select></div>
+        <div class="dw-row"><span>${T('المناسبة', 'The occasion')}<small>${T('تختار التحديات المناسبة لها', 'Picks challenges to suit it')}</small></span><select data-pack>${PACK().map(([v, l]) => `<option value="${v}"${(c.pack || '') === v ? ' selected' : ''}>${l}</option>`).join('')}</select></div>
+      <p class="dw-sum" id="dwSum"></p>
+      <details class="dw-adv"><summary>${T('خيارات إضافية', 'More options')}<small>${T('الجولات والتحديات والوقت والسرقة', 'rounds, challenges, time, stealing')}</small></summary>
+      <div class="dw-rounds"><h3>${T('جولات الأمسية', 'The rounds')}</h3>
         <div class="dw-row"><span>${ROUND().all[0]}<small>${T('الكل يجاوب في نفس الوقت', 'All answer at once')}</small></span>${opt('all', Math.min(15, P), T('أسئلة', 'questions'))}</div>
         ${cats >= 2 ? `<div class="dw-row"><span>${ROUND().board[0]}<small>${T('اختر الفئة والقيمة، مثل كتاب «حروف»', 'Pick a category and a value')}</small></span>${opt('board', Math.min(24, catQ), T('مربعات', 'tiles'))}<select data-bmode><option value="v"${c.bmode !== 'h' ? ' selected' : ''}>${T('فئة ثم قيمة', 'Category, then value')}</option><option value="h"${c.bmode === 'h' ? ' selected' : ''}>${T('حروف: فئة ثم حرف ثم رقم', 'Huroof: category, letter, number')}</option></select></div>` : ''}
         <div class="dw-row"><span>${ROUND().turn[0]}<small>${T('لكل مجموعة سؤالها', 'A question per group')}</small></span>${opt('turn', Math.min(6, Math.floor(P / n)), T('لكل مجموعة', 'per group'))}</div>
         <div class="dw-row"><span>${ROUND().buzz[0]}<small>${T('أول يد ترتفع تجاوب', 'First hand up answers')}</small></span>${opt('buzz', Math.min(15, mc), T('أسئلة', 'questions'))}</div>
-        <div class="dw-row"><span>${ROUND().chal[0]}<small>${T('حركة وإبداع وذكاء، بلا أجهزة', 'Moving, creating, thinking')}</small></span>${opt('chal', 10, T('تحديات', 'challenges'))}<select data-pack>${PACK().map(([v, l]) => `<option value="${v}"${(c.pack || '') === v ? ' selected' : ''}>${l}</option>`).join('')}</select></div>
+        <div class="dw-row"><span>${ROUND().chal[0]}<small>${T('حركة وإبداع وذكاء، بلا أجهزة', 'Moving, creating, thinking')}</small></span>${opt('chal', 10, T('تحديات', 'challenges'))}</div>
         <label class="dw-ck"><input type="checkbox" data-wager${c.wager !== false ? ' checked' : ''}> ${T('الختام بالمراهنة: سؤال أخير تراهن فيه كل مجموعة على جزء من نقاطها', 'Finish with a wager: one last question where each group stakes part of its points')}</label>
         <p class="dw-need" id="dwNeed"></p><div class="dw-chbox" id="dwCh"></div></div>
       <div class="dw-row"><span>${T('وقت السؤال', 'Time per question')}</span><select data-time>${[[0, T('كما في المسابقة', 'As in the quiz')], [20, NUM(20) + T(' ثانية', ' s')], [30, NUM(30) + T(' ثانية', ' s')], [45, NUM(45) + T(' ثانية', ' s')], [60, T('دقيقة', '1 min')], [90, T('دقيقة ونصف', '1.5 min')]].map(([v, l]) => `<option value="${v}"${c.time === v ? ' selected' : ''}>${l}</option>`).join('')}</select></div>
       <label class="dw-ck"><input type="checkbox" data-steal${c.steal ? ' checked' : ''}> ${T('السرقة: إذا أخطأت المجموعة، أول مجموعة ترفع يدها تجاوب وتخطف نصف النقاط', 'Stealing: after a miss, the first group to raise a hand answers for half the points')}</label>
       <label class="dw-ck"><input type="checkbox" data-life${c.life ? ' checked' : ''}> ${T('وسائل المساعدة لكل مجموعة مرة واحدة: حذف خيارين، ووقت إضافي، وتبديل السؤال', 'Helps, once per group: remove two options, extra time, swap the question')}</label>
+      </details>
       <div class="dw-acts"><button type="button" class="dw-btn" data-main>${T('ابدأ دوّارة', 'Start Dawwara')}</button><button type="button" class="dw-btn ghost" data-cards>${IC.print}${T('اطبع بطاقات المجموعات', 'Print group cards')}</button></div></div>`, 'dw-setup');
     const read = () => { c.names = [...el.querySelectorAll('[data-name]')].map(i => i.value.trim()); c.leads = [...el.querySelectorAll('[data-lead]')].map(i => i.value.trim()); el.querySelectorAll('[data-r]').forEach(x => { c.r[x.dataset.r] = +x.value; }); const bm = el.querySelector('[data-bmode]'); if (bm) c.bmode = bm.value; c.pack = el.querySelector('[data-pack]').value; c.wager = el.querySelector('[data-wager]').checked; c.dur = +el.querySelector('[data-dur]').value; c.time = +el.querySelector('[data-time]').value; c.steal = el.querySelector('[data-steal]').checked; c.life = el.querySelector('[data-life]').checked; cfgSet(c); };
     el.querySelectorAll('[data-n]').forEach(b => b.onclick = () => { read(); c.n = +b.dataset.n; c.r = null; cfgSet(c); setup(); });
     const chRe = () => { const b = el.querySelector('#dwCh'); b.innerHTML = chalBox(); chalBind(() => { el.querySelector('[data-r="chal"]').value = String(Math.min(10, D.chosen.length)); chRe(); need(); }); };
     const need = () => { read(); if (D.chosen.length !== c.r.chal) { fillChal(c.r.chal); chRe(); } el.querySelector('#dwEst').textContent = T(`حوالي ${NUM(estimate(c.r, n))} دقيقة`, `about ${estimate(c.r, n)} minutes`); const q = c.r.turn * n + c.r.all + c.r.buzz + (c.r.board || 0) + (c.wager !== false && P > 2 ? 1 : 0), e = el.querySelector('#dwNeed'), st = el.querySelector('[data-main]');
+      { const R = ROUND(), parts = [['all', c.r.all], ['board', c.r.board || 0], ['turn', c.r.turn ? c.r.turn * n : 0], ['buzz', c.r.buzz], ['chal', c.r.chal]].filter(x => x[1]).map(([k, v]) => `${R[k][0]} (${NUM(v)})`), mats = [...new Set((D.chosen || []).map(byKey).filter(Boolean).map(x => (x.mat || '').trim()).filter(Boolean))];
+        el.querySelector('#dwSum').innerHTML = `<b>${T('الأمسية', 'The evening')}:</b> ${parts.join(T('، ', ', '))}${c.wager !== false && P > 2 ? T('، ثم المراهنة الختامية', ', then the final wager') : ''} · ${T(`حوالي ${NUM(estimate(c.r, n))} دقيقة`, `about ${estimate(c.r, n)} min`)}${mats.length ? `<br><b>${T('جهّز', 'Prepare')}:</b> ${mats.map(esc).join(T('، ', ', '))}` : ''}`; }
       e.textContent = T(`تحتاج ${NUM(q)} سؤالًا من ${NUM(P)} متاحة، و${NUM(c.r.chal)} تحديات.`, `Needs ${q} of the ${P} questions, and ${c.r.chal} challenges.`); e.classList.toggle('bad', q > P); st.disabled = q > P || !(q + c.r.chal); };
     el.querySelectorAll('[data-r]').forEach(x => x.onchange = () => { el.querySelector('[data-dur]').value = '0'; need(); });
     el.querySelector('[data-dur]').onchange = () => { read(); if (c.dur) { c.r = fitTime(c, n, P - (c.wager !== false ? 1 : 0), mc, c.dur); Object.keys(c.r).forEach(k => { const x = el.querySelector(`[data-r="${k}"]`); if (x) x.value = String(Math.min(c.r[k], x.options.length - 1)); }); } need(); };
@@ -1261,14 +1290,11 @@ window.Dawwara = (function () {
     return { title: String(j.title || '').trim().slice(0, 80), qs, ch };
   }
   function aiBox() {
-    return `<section class="dw-ai"><h2>${T('اصنع أمسيتك بالذكاء الاصطناعي', 'Make your evening with AI')}</h2><p>${T('اكتب الموضوع أو الصق درسًا، واختر الفئات، فتُكتب الأسئلة مصنفة ومتدرجة الصعوبة مع تحديات تناسبها. تراجعها في شاشة التجهيز.', 'Write a topic or paste a lesson and choose the categories; you get questions by category and level, with challenges to suit.')}</p>
-      <textarea id="dwAiT" rows="3" dir="auto" placeholder="${T('مثال: اليوم الوطني، أو درس الفصل الثالث في العلوم، أو ثقافة عامة للعائلة', 'e.g. National Day, a science lesson, general culture for the family')}"></textarea>
-      <div class="dw-aig"><label>${T('الجمهور', 'Audience')}<select id="dwAiA">${AUD().map(a => `<option value="${a[0]}">${a[1]}</option>`).join('')}</select></label>
-        <label>${T('أسئلة لكل فئة', 'Per category')}<select id="dwAiN">${[2, 3, 4, 5, 6].map(v => `<option${v === 4 ? ' selected' : ''}>${v}</option>`).join('')}</select></label>
-        <label>${T('عدد التحديات', 'Challenges')}<select id="dwAiC">${[0, 2, 3, 4, 5, 6, 8].map(v => `<option${v === 4 ? ' selected' : ''}>${v}</option>`).join('')}</select></label></div>
-      <label class="dw-ail">${T('الفئات (افصل بينها بفاصلة)', 'Categories (comma separated)')}<input id="dwAiK" dir="auto" value="${T('دين، علوم، تاريخ، جغرافيا، رياضة، عامة', 'Religion, Science, History, Geography, Sport, General')}"></label>
-      <div class="dw-aik">${[T('حركية', 'Moving'), T('تمثيل', 'Acting'), T('إبداع ورسم', 'Creative'), T('ذكاء وسرعة بديهة', 'Quick wits'), T('تعاون', 'Teamwork')].map((k, i) => `<label><input type="checkbox" data-kind="${esc(k)}"${i < 4 ? ' checked' : ''}> ${k}</label>`).join('')}<label><input type="checkbox" id="dwAiM" checked> ${T('أدوات بسيطة مسموحة', 'Simple items allowed')}</label></div>
-      <button type="button" class="btn solid" id="dwAiGo">${T('اصنع الأمسية', 'Make the evening')}</button><p class="dw-found" id="dwAiS" aria-live="polite"></p></section>`;
+    return `<div class="dw-ai"><textarea id="dwAiT" rows="3" dir="auto" placeholder="${T('مثال: اليوم الوطني، أو درس الفصل الثالث في العلوم، أو ثقافة عامة للعائلة', 'e.g. National Day, a science lesson, general culture for the family')}"></textarea>
+      <div class="dw-aig"><label>${T('الجمهور', 'Audience')}<select id="dwAiA">${AUD().map(a => `<option value="${a[0]}">${a[1]}</option>`).join('')}</select></label><button type="button" class="dw-btn" id="dwAiGo">${T('اصنع الأمسية', 'Make the evening')}</button></div>
+      <details class="dw-adv2"><summary>${T('خيارات إضافية', 'More options')}</summary><div class="dw-aig"><label>${T('أسئلة لكل فئة', 'Per category')}<select id="dwAiN">${[2, 3, 4, 5, 6].map(v => `<option${v === 4 ? ' selected' : ''}>${v}</option>`).join('')}</select></label>
+        <label>${T('عدد التحديات', 'Challenges')}<select id="dwAiC">${[0, 2, 3, 4, 5, 6, 8].map(v => `<option${v === 4 ? ' selected' : ''}>${v}</option>`).join('')}</select></label></div><label class="dw-ail">${T('الفئات (افصل بينها بفاصلة)', 'Categories (comma separated)')}<input id="dwAiK" dir="auto" value="${T('دين، علوم، تاريخ، جغرافيا، رياضة، عامة', 'Religion, Science, History, Geography, Sport, General')}"></label><div class="dw-aik">${[T('حركية', 'Moving'), T('تمثيل', 'Acting'), T('إبداع ورسم', 'Creative'), T('ذكاء وسرعة بديهة', 'Quick wits'), T('تعاون', 'Teamwork')].map((k, i) => `<label><input type="checkbox" data-kind="${esc(k)}"${i < 4 ? ' checked' : ''}> ${k}</label>`).join('')}<label><input type="checkbox" id="dwAiM" checked> ${T('أدوات بسيطة مسموحة', 'Simple items allowed')}</label></div></details>
+      <p class="dw-found" id="dwAiS" aria-live="polite"></p></div>`;
   }
   function aiBind(root) {
     const q = s => root.querySelector(s), b = q('#dwAiGo'); if (!b) return;
@@ -1330,15 +1356,18 @@ window.Dawwara = (function () {
     mine = mine.map(z => ({ z, n: (z.qs || []).filter(usable).length })).filter(o => o.n >= 2);
     const lib = (window.MDLib || []).map(z => ({ z, n: (z.qs || []).filter(usable).length })).filter(o => o.n >= 4);
     const item = (o, k, src) => `<button type="button" class="dw-pick" data-src="${src}" data-k="${k}"><b dir="auto">${esc(o.z.title || T('بلا عنوان', 'Untitled'))}</b><small>${T(`${NUM(o.n)} سؤالًا صالحًا`, `${o.n} usable questions`)}${o.z.who ? ' · ' + esc(o.z.who) : ''}</small></button>`;
-    root.innerHTML = `<ol class="dw-how"><li><b>${NUM(1)}</b>${T('قسّم الحضور مجموعات، ولكل مجموعة قائد.', 'Split the room into groups, each with a leader.')}</li><li><b>${NUM(2)}</b>${T('كل مجموعة يجيها دورها وسؤالها على الشاشة.', 'Each group gets its turn and its own question on the screen.')}</li><li><b>${NUM(3)}</b>${T('القائد يقول الإجابة وأنت تضغطها: الصح والأسرع يكسب أكثر.', 'The leader says the answer and you tap it: right and fast wins more.')}</li></ol>
-      <div class="dw-src">${aiBox()}
-        ${mine.length ? `<h2>${T('مسابقاتك', 'Your quizzes')}</h2><div class="dw-picks">${mine.map((o, k) => item(o, k, 'm')).join('')}</div>` : ''}
-        <h2>${T('الصق أسئلتك', 'Paste your questions')}</h2>
-        <textarea id="dwPaste" rows="6" dir="auto" placeholder="${T('١. ما عاصمة المملكة؟\nأ) جدة\nب) الرياض *\nج) الدمام\n\n٢. الشمس نجم (صح أو خطأ)\nالإجابة: صح', '1. What is the capital of France?\na) Lyon\nb) Paris *\n\n2. The Sun is a star (true or false)\nAnswer: true')}"></textarea>
-        <p class="dw-found" id="dwFound"></p><button type="button" class="btn solid" id="dwGo" disabled>${T('العب بهذه الأسئلة', 'Play with these')}</button>
-        ${lib.length ? `<h2>${T('مسابقات جاهزة', 'Ready quizzes')}</h2><div class="dw-picks">${lib.map((o, k) => item(o, k, 'l')).join('')}</div>` : ''}
-        <h2>${T('أمسية تحديات', 'An evening of challenges')}</h2><p class="dw-more" style="margin:0">${T('بلا أسئلة: تحديات حركة وإبداع وذكاء للمجموعات.', 'No questions: moving, creating and thinking challenges for groups.')}</p><button type="button" class="btn ghost" id="dwChal">${T('ابدأ أمسية تحديات', 'Start an evening of challenges')}</button>
-        <p class="dw-more">${T('تبي تكتب أسئلتك بالذكاء الاصطناعي أو من ملف؟ اكتبها في', 'Want to write questions with AI or from a file? Write them in')} <a href="/play/maydan/#build">${T('محرر ميدان', 'the Maydan editor')}</a>${T('، وتظهر هنا في «مسابقاتك».', ', and they appear here under “Your quizzes”.')}</p></div>`;
+    root.innerHTML = `<div class="dw-start"><h2>${T('اختر الأسئلة', 'Choose the questions')}</h2>
+      <div class="dw-tabs" role="tablist"><button type="button" role="tab" data-tab="ai" aria-selected="true">${T('بالذكاء الاصطناعي', 'With AI')}</button><button type="button" role="tab" data-tab="ready" aria-selected="false">${T('مسابقة جاهزة', 'A ready quiz')}</button><button type="button" role="tab" data-tab="chal" aria-selected="false">${T('تحديات فقط', 'Challenges only')}</button></div>
+      <div data-pane="ai"><p class="dw-pane-h">${T('اكتب الموضوع، فتُكتب الأسئلة مصنفة ومتدرجة مع تحديات تناسبها.', 'Write a topic; you get questions by category and level, with challenges to suit.')}</p>${aiBox()}</div>
+      <div data-pane="ready" hidden>
+        ${mine.length ? `<h3>${T('مسابقاتك', 'Your quizzes')}</h3><div class="dw-picks">${mine.map((o, k) => item(o, k, 'm')).join('')}</div>` : ''}
+        ${lib.length ? `<h3>${T('من المكتبة', 'From the library')}</h3><div class="dw-picks">${lib.map((o, k) => item(o, k, 'l')).join('')}</div>` : ''}
+        <details class="dw-adv2"><summary>${T('أو الصق أسئلتك', 'Or paste your questions')}</summary>
+          <textarea id="dwPaste" rows="6" dir="auto" placeholder="${T('١. ما عاصمة المملكة؟\nأ) جدة\nب) الرياض *\nج) الدمام', '1. What is the capital of France?\na) Lyon\nb) Paris *')}"></textarea>
+          <p class="dw-found" id="dwFound"></p><button type="button" class="btn solid" id="dwGo" disabled>${T('العب بهذه الأسئلة', 'Play with these')}</button></details></div>
+      <div data-pane="chal" hidden><p class="dw-pane-h">${T('أمسية بلا أسئلة: تحديات حركة وإبداع وذكاء للمجموعات، تختار مناسبتها في الخطوة التالية.', 'No questions: moving, creating and thinking challenges; you pick the occasion next.')}</p><button type="button" class="dw-btn" id="dwChal">${T('ابدأ أمسية تحديات', 'Start an evening of challenges')}</button></div>
+      <p class="dw-next">${T('بعدها تحدد عدد المجموعات والمدة، وتبدأ.', 'Then you set the groups and the length, and start.')}</p></div>`;
+    root.querySelectorAll('[data-tab]').forEach(b => b.onclick = () => { root.querySelectorAll('[data-tab]').forEach(x => x.setAttribute('aria-selected', x === b)); root.querySelectorAll('[data-pane]').forEach(p => { p.hidden = p.dataset.pane !== b.dataset.tab; }); });
     aiBind(root);
     root.querySelectorAll('.dw-pick').forEach(b => b.onclick = () => { const o = (b.dataset.src === 'm' ? mine : lib)[+b.dataset.k]; start({ title: o.z.title, qs: JSON.parse(JSON.stringify(o.z.qs)), ch: o.z.ch || [] }); });
     const ta = root.querySelector('#dwPaste'), go = root.querySelector('#dwGo'), fd = root.querySelector('#dwFound'); let got = [];

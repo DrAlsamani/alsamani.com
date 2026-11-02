@@ -176,3 +176,25 @@ html.dw-on{overflow:hidden}
 .dw-wg h2{color:#e9a54a}.dw-jr .dw-all{width:auto;padding:0 10px;font-size:.875rem}.dw-jr b small{opacity:.65;font-weight:600}
 .dw-row select+select{margin-inline-start:6px}
 .dw-wg .dw-judge>div{grid-template-columns:repeat(auto-fill,minmax(310px,1fr))}.dw-wg .dw-jr b{white-space:normal}
+/* the simpler start */
+.dw-start{max-width:760px;margin:0 auto;display:grid;gap:12px}
+.dw-start>h2{margin:0;font-size:1.25rem;text-align:center}
+.dw-tabs{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+.dw-tabs button{font:inherit;font-weight:700;border:1px solid var(--line,#d6d9e4);background:var(--surface,#fff);color:var(--ink);border-radius:999px;padding:9px 18px;cursor:pointer}
+.dw-tabs button[aria-selected=true]{background:#1d2a5e;color:#fff;border-color:#1d2a5e}
+.dw-start [data-pane]{display:grid;gap:10px}.dw-start [data-pane][hidden]{display:none}
+.dw-start h3{margin:6px 0 0;font-size:1rem}.dw-pane-h{margin:0;color:var(--muted);text-align:center;line-height:1.8}
+.dw-next{margin:4px 0 0;text-align:center;color:var(--muted);font-size:.9375rem}
+.dw-start .dw-ai{background:var(--surface,#fff);color:var(--ink);border:1px solid var(--line,#e5e5ea);border-radius:16px;padding:14px}
+.dw-start .dw-ai textarea,.dw-start .dw-ai input,.dw-start .dw-ai select{border:1px solid var(--line,#cfd6e4)}
+.dw-start .dw-aig{grid-template-columns:1fr auto;align-items:end}.dw-start .dw-aig .dw-btn{min-height:44px;font-size:1rem}
+.dw-adv2{border-top:1px dashed var(--line,#d6d9e4);padding-top:8px}.dw-adv2 summary{cursor:pointer;color:var(--muted);font-weight:600}
+.dw-adv2[open]{display:grid;gap:10px}.dw-adv2 .dw-aig{grid-template-columns:repeat(auto-fit,minmax(140px,1fr))}
+.dw-start .dw-ai .dw-found{color:#2f7d5b}
+.dw-start [data-pane="chal"] .dw-btn{justify-self:center}
+/* the setup, essentials first */
+.dw-sum{margin:0;background:rgba(255,255,255,.07);border-radius:14px;padding:10px 14px;line-height:1.9}.dw-sum b{color:#e9a54a}
+.dw-adv{background:rgba(255,255,255,.04);border-radius:14px;padding:8px 12px}
+.dw-adv>summary{cursor:pointer;font-weight:700;padding:6px 2px;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}.dw-adv>summary small{font-weight:400;opacity:.7}
+.dw-adv[open]{display:grid;gap:10px}
+.dw-set .dw-row span{display:grid;gap:2px}.dw-set .dw-row small{font-weight:400;opacity:.75;font-size:.8125rem}
