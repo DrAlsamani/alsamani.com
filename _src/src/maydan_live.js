@@ -324,9 +324,10 @@ window.MDLive = (function () {
       if (v.e === '^f' || v.e === '^p') return switchSide(s.key, v.e === '^p');
       if (/^w\d{1,7}$/.test(v.e)) return wuScore(s.key, +v.e.slice(1));
       if (/^#[01][A-Za-z0-9]{1,6}$/.test(v.e)) { if (G) { G.sid = G.sid || {}; const o = G.sid[s.key] = G.sid[s.key] || ['', '']; o[+v.e[1]] = v.e.slice(2); } return; }
-      if (v.e.charAt(0) === '%') { if (G) { G.av = G.av || {}; G.av[s.key] = v.e.slice(1, 3); } return; }
+      if (v.e.charAt(0) === '%') { if (G) { G.av = G.av || {}; G.av[s.key] = v.e.slice(1, 3); if (G.drawLobby) G.drawLobby(); } return; }
       if (G) { G.aw = G.aw || {}; const w = G.aw[s.key] = G.aw[s.key] || {}; w.rx = (w.rx || 0) + 1; }
       if (G) G.rxc = (G.rxc || 0) + 1;
+      if (figSay(s.key, v.e, true)) return;
       const fx = G && G.el.querySelector('.md-fx'); if (!fx) return;
       const e = document.createElement('span'); e.textContent = v.e; e.style.setProperty('--x', (8 + Math.random() * 84) + '%'); e.style.setProperty('--r', (Math.random() * 40 - 20) + 'deg');
       fx.appendChild(e); setTimeout(() => e.remove(), 2600);
@@ -355,8 +356,13 @@ window.MDLive = (function () {
     const nameOf = u => (G.players || {})[u] || (G.fans || {})[u] || T('مشارك', 'A player');
     const got = s => { const v = s.val() || {}; if (!v.m || seen[s.key] === v.t || now() - (v.t || 0) > 60000) return; seen[s.key] = v.t;
       if (v.to === 'h') { G.inbox.push({ n: nameOf(s.key), m: v.m, t: v.t }); inboxBadge(); SND.join(); return; }
-      if (G.noMsg) return; G.mq.push({ n: nameOf(s.key), m: v.m }); if (!G.mShow) showMsg(); };
+      if (G.noMsg) return; if (figSay(s.key, v.m)) return; G.mq.push({ n: nameOf(s.key), m: v.m, u: s.key }); if (!G.mShow) showMsg(); };
     sub(G.ref.child('msg'), 'child_added', got); sub(G.ref.child('msg'), 'child_changed', got);
+  }
+  function figSay(u, t, short) {
+    const c = G && G.el.querySelector(`.md-pchip[data-u="${u}"]`); if (!c) return false;
+    c.querySelectorAll('.md-say').forEach(x => x.remove()); const b = document.createElement('span'); b.className = 'md-say' + (short && /\p{Extended_Pictographic}/u.test(t) && t.length <= 4 ? ' short' : ''); b.dir = 'auto'; b.textContent = t; c.appendChild(b);
+    setTimeout(() => b.remove(), short ? 2600 : 7000); return true;
   }
   function showMsg() {
     const z = G.mq.shift(); if (!z) { G.mShow = false; return; } G.mShow = true;
@@ -522,7 +528,8 @@ window.MDLive = (function () {
       try { if (navigator.share && /iP(hone|ad)|Android/i.test(navigator.userAgent)) await navigator.share({ text }); else { await navigator.clipboard.writeText(text); e.currentTarget.textContent = '✓ ' + T('نُسخ', 'Copied'); } } catch (er) {}
     };
     const names = q('#mdNames'), go = q('[data-go]'), set = q('#mdSet'), tp = q('#mdTeamP'), mv = q('#mdMove');
-    const chipHtml = u => `<button type="button" class="md-chip" data-u="${u}" style="--tc:${G.teams && G.team[u] != null ? `var(--qz${G.team[u] % 6})` : 'transparent'}" dir="auto">${esc(G.players[u] || '')}</button>`;
+    // each player as their own figure, with a speech bubble above it when they react or write
+    const chipHtml = u => `<button type="button" class="md-chip md-pchip" data-u="${u}" style="--tc:${G.teams && G.team[u] != null ? `var(--qz${G.team[u] % 6})` : 'transparent'}"><i class="md-cav" style="${avSt((G.av || {})[u]) || '--c:var(--qz' + (u.charCodeAt(0) % 6) + ')'}"><span>${esc((G.players[u] || '?').charAt(0))}</span></i><em dir="auto">${esc(G.players[u] || '')}</em></button>`;
     // with teams the names sit in a column per team, so everyone can see where they are
     const draw = () => {
       const us = Object.keys(G.players);

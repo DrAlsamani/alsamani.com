@@ -601,3 +601,13 @@ body>.md-xov{position:fixed}
 .md-annb{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:70;max-width:80vw;padding:12px 22px;border-radius:16px;background:#f2b84b;color:#17153a;font-weight:800;font-size:clamp(18px,2.2vw,28px);text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.25);opacity:0}
 .md-annb.on{animation:mdAnnb 9s ease-in-out forwards}
 @keyframes mdAnnb{0%{opacity:0;transform:translate(-50%,-14px)}6%{opacity:1;transform:translate(-50%,0)}88%{opacity:1}100%{opacity:0}}
+/* the lobby as a little square: figures with names, and speech bubbles */
+.md-pchip{position:relative;display:inline-flex;align-items:center;gap:8px;padding:6px 14px 6px 8px}
+.md-cav{display:inline-grid;font-style:normal}
+.md-cav span{width:30px;height:30px;display:grid;place-items:center;border-radius:50%;background:var(--c,#5d5a80);color:#fff;font-weight:800;font-size:.9rem}
+.md-cav[style*="--fs"] span{clip-path:var(--fs);border-radius:0;background:var(--fc)}
+.md-pchip em{font-style:normal}
+.md-say{position:absolute;bottom:calc(100% + 10px);left:50%;transform:translateX(-50%);max-width:260px;width:max-content;padding:8px 12px;border-radius:14px;background:#fff;color:#17153a;font-weight:700;font-size:1rem;line-height:1.4;box-shadow:0 8px 24px rgba(0,0,0,.25);z-index:5;animation:mdSay .35s ease-out;white-space:normal}
+.md-say:after{content:'';position:absolute;top:100%;left:50%;margin-left:-7px;border:7px solid transparent;border-top-color:#fff}
+.md-say.short{font-size:1.5rem;padding:4px 10px;background:transparent;box-shadow:none}.md-say.short:after{display:none}
+@keyframes mdSay{from{opacity:0;transform:translate(-50%,8px) scale(.8)}to{opacity:1;transform:translate(-50%,0)}}
