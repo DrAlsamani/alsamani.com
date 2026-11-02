@@ -116,6 +116,7 @@
 
   /* ---------- the game: follow the room and draw what this phone should show ---------- */
   function play() {
+    if (window.AV && !REMOTE && !document.documentElement.classList.contains('mp-embed')) AV.attach({ ref: R.child('av'), uid, name: me || T('مشجّع', 'A fan') });
     { const a = store.get('av', ''); if (a && R && !REMOTE) setTimeout(() => R.child('rx/' + uid).set({ e: '%' + a, t: TS }).catch(() => {}), 400); }
     // a graded quiz: the student ID goes to the host in two short parts
     if (R && !REMOTE) R.child('sidreq').once('value', s2 => { const id = store.get('sid', ''); if (!s2.val() || !id || FAN) return; setTimeout(() => R.child('rx/' + uid).set({ e: '#0' + id.slice(0, 6), t: TS }).catch(() => {}), 1200); setTimeout(() => R.child('rx/' + uid).set({ e: '#1' + id.slice(6, 12), t: TS }).catch(() => {}), 2400); });

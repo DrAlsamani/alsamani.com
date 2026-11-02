@@ -249,7 +249,15 @@ window.MDLive = (function () {
     } catch (e) { fail(el, resume); }
   }
   function leave() { document.querySelectorAll('.md-live').forEach(x => x.remove()); document.documentElement.classList.remove('md-on'); if (document.fullscreenElement) document.exitFullscreen().catch(() => {}); document.dispatchEvent(new Event('md:closed')); }
+  // voice for players far apart: the host's page joins as host; during a question only the host talks
+  function avHost() {
+    if (!window.AV || !G) return; AV.attach({ ref: G.ref.child('av'), uid, name: T('المشرف', 'Host'), host: true, top: true });
+    if (G.avSt) return; G.avSt = 1;
+    const f = s => { const v = s.val() || {}, x = G.quiz.qs[v.i]; AV.policy(v.ph === 'q' && x && !['stage', 'game', 'poll', 'open'].includes(x.type) ? { o: [uid], w: T('وقت السؤال: الكلام للمشرف فقط حتى لا تنكشف الإجابات', 'Question time: only the host talks, so no answers slip out') } : {}); };
+    G.ref.child('st').on('value', f); G.subs.push(() => G.ref.child('st').off('value', f));
+  }
   function close() {
+    if (window.AV) AV.detach();
     if (G) { clearInterval(G.timer); G.subs.forEach(f => f()); G.ref.remove().catch(() => {}); }
     G = null; forget(); leave();
   }
@@ -479,6 +487,7 @@ window.MDLive = (function () {
 
   /* ---------- lobby: the code, a QR code, who has joined, and the settings ---------- */
   function lobby() {
+    avHost();
     const url = 'https://' + JOIN + '/?p=' + G.pin;
     let svg = ''; try { const qr = qrcode(0, 'M'); qr.addData(url); qr.make(); svg = qr.createSvgTag({ cellSize: 6, margin: 1, scalable: true }); } catch (e) {}
     const O = G.opts;

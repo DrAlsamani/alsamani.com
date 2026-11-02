@@ -107,7 +107,7 @@
   let S = null;   // this device's session (host or player)
   const subs = [];
   const on = (ref, ev, fn) => { ref.on(ev, fn); subs.push(() => ref.off(ev, fn)); };
-  const stopAll = () => { document.documentElement.classList.remove('sm-in'); subs.splice(0).forEach(f => f()); if (S && S.tm) clearInterval(S.tm); S = null; };
+  const stopAll = () => { if (window.AV) AV.detach(); document.documentElement.classList.remove('sm-in'); subs.splice(0).forEach(f => f()); if (S && S.tm) clearInterval(S.tm); S = null; };
 
   /* ---------- the evening's card: a picture to keep or send to the group ---------- */
   function cardCanvas(rank, titles, tw, hls) {
@@ -236,6 +236,7 @@
       S = { mode: 'host', pin, ref: db.ref('kh/' + pin), pl: {}, sc: R.sc || {}, stt: R.stt || {}, hl: R.hl || {}, played: !!R.played, gn: R.gn || 0, rc: R.rc || String(1000 + Math.floor(Math.random() * 9000)), remote: R.remote || null, teams: !!R.teams, tm: R.tm || {}, g: null, gs: null, seq: {}, L: isAr() ? 'ar' : 'en', cat: store.get('cat', 'mix') };
       saveHost(); if (R.pin) { pub({ ph: 'pick' }); pushScores(); }
       remember('kh', pin);
+      if (window.AV) AV.attach({ ref: S.ref.child('av'), uid, name: T('المضيف', 'Host'), host: true });
       on(S.ref.child('pl'), 'child_added', s => { if (s.key === S.remote) return; const v = s.val() || {}; S.pl[s.key] = v.n || '؟'; if (S.sc[s.key] == null) S.sc[s.key] = 0; if (S.teams && S.tm[s.key] == null) { S.tm[s.key] = teamCount(0) <= teamCount(1) ? 0 : 1; pushTeams(); } SND.join();
         // arriving mid-game: the game takes them in from where it is, when it can
         if (S.roster && !S.roster[s.key] && S.gs && S.gs.join) { S.roster[s.key] = 1; try { S.gs.join(s.key); } catch (e) { console.error(e); } }
@@ -259,7 +260,9 @@
   const nameOf = u => S.pl[u] || '؟';
   const colOf = u => COLS[Math.abs([...u].reduce((a, c) => a * 31 + c.charCodeAt(0) | 0, 7)) % COLS.length];
   // public state for the phones, private parts for each player, and the session's points
-  const pub = o => { S.g = Object.assign({ id: S.gs ? S.gs.id : null, gn: S.gn, at: now() }, o); return S.ref.child('g').set(S.g).catch(() => {}); };
+  const pub = o => { S.g = Object.assign({ id: S.gs ? S.gs.id : null, gn: S.gn, at: now() }, o); setTimeout(avSync, 0); return S.ref.child('g').set(S.g).catch(() => {}); };
+  // voice: the game says who has the floor now (the actor, the accused…); everyone talks otherwise
+  function avSync() { if (!window.AV || !S || S.mode !== 'host') return; let p = {}; try { if (S.gs && S.gs.av && S.g && S.g.ph !== 'over' && S.g.ph !== 'pick') p = S.gs.av(S.ph) || {}; } catch (e) {} AV.policy(p); }
   const priv = (u, o) => db.ref('khh/' + S.pin + '/' + u).set(Object.assign({ gn: S.gn }, o)).catch(() => {});
   // the session is kept on this device, so a reload or a closed tab can pick it up again
   const saveHost = () => store.set('host', { pin: S.pin, sc: S.sc, stt: S.stt, hl: S.hl || {}, played: S.played, gn: S.gn, rc: S.rc, remote: S.remote, teams: S.teams, tm: S.tm, at: Date.now() });
@@ -808,6 +811,7 @@
     const st = { turn: -1, gained: {}, sc: [0, 0], used: [] }, TT = [['الصقور', 'Falcons', '#f2b84b'], ['النجوم', 'Stars', '#2bb3a3']];
     const teamOf = u => st.team[u];
     const G = {
+      av(ph) { if (ph === 'act' && st.actor) return { c: [st.actor], m: [st.actor], w: T(`${nameOf(st.actor)} يمثّل بلا كلام، وفريقه يخمّن`, `${nameOf(st.actor)} acts without words; the team guesses`) }; },
       start() {
         S.lastGame = 'silent'; const us = shuffle(inGame()); st.team = {};
         if (S.teams) us.forEach(u => { st.team[u] = S.tm[u] != null ? S.tm[u] : (Object.values(st.team).filter(t => t === 0).length <= Object.values(st.team).filter(t => t === 1).length ? 0 : 1); });
@@ -905,6 +909,7 @@
     const st = { turn: -1, gained: {}, cast: [], rate: {}, votes: {} }, L = () => STAGE[S.L] || STAGE.ar;
     const inCast = u => st.cast.includes(u), castN = () => st.cast.map(nameOf).join(T(' و', ' & '));
     const G = {
+      av(ph) { if (!st.cast.length) return; if (ph === 'show') return { o: st.cast, c: st.cast, w: T(`المسرح لـ${castN()}، والجمهور يستمع`, `The stage is ${castN()}'s; the audience listens`) }; if (ph === 'up' || ph === 'prep') return { c: st.cast }; },
       // a lottery each turn: not everyone gets called up, so it is you and your luck
       start() { S.lastGame = 'stage'; st.turns = Math.min(S.auto ? 4 : 6, Math.max(3, inGame().length)); st.done = []; st.turn = -1; st.gained = {}; S.stUsed = S.stUsed || []; G.next(); },
       join(u) { priv(u, G.mine(u)); },
@@ -1003,6 +1008,7 @@
     const roleOf = u => u === st.acc ? 'acc' : u === st.pro ? 'pro' : u === st.law ? 'law' : 'jury';
     const STEPS = [['case', 'التهمة', 'The charge'], ['pros', 'الشكوى', 'Prosecution'], ['def', 'الدفاع', 'Defence'], ['vote', 'التصويت', 'The vote'], ['verdict', 'الحكم', 'The verdict']];
     const G = {
+      av(ph) { const sp = ph === 'pros' ? [st.pro] : ph === 'def' ? [st.acc, st.law].filter(Boolean) : null; if (sp && sp.length) return { o: sp, c: sp, w: ph === 'pros' ? T(`الكلمة للمشتكي ${nameOf(st.pro)}`, `The prosecutor ${nameOf(st.pro)} has the floor`) : T(`الكلمة للدفاع: ${sp.map(nameOf).join(' و')}`, `The defence has the floor: ${sp.map(nameOf).join(' & ')}`) }; },
       start() { S.lastGame = 'court'; st.turns = Math.min(S.auto ? 2 : 3, Math.max(1, Math.floor(inGame().length / 2))); st.done = []; st.turn = -1; st.gained = {}; S.chUsed = S.chUsed || []; G.next(); },
       join(u) { priv(u, G.mine(u)); },
       mine(u) { return { g: 'court', t: st.turn, role: roleOf(u), vote: st.votes[u] || '' }; },
@@ -1169,6 +1175,7 @@
     const st = { turn: -1, order: [], got: {}, gained: {} };
     const mine = () => ({ g: 'mime', role: 'actor', t: st.turn, curb: st.curb, word: st.word, got: Object.keys(st.got).map(nameOf) });
     const G = {
+      av(ph) { if (ph === 'act' && st.actor) return { c: [st.actor], m: [st.actor], w: T(`${nameOf(st.actor)} يمثّل بلا كلام ولا أصوات`, `${nameOf(st.actor)} acts without a sound`) }; },
       start() { S.lastGame = 'mime'; st.order = shuffle(inGame()).slice(0, S.auto ? 4 : 6); st.turn = -1; st.gained = {}; G.next(); },
       join(u) { priv(u, { g: 'mime', role: 'guess', t: st.turn }); },
       next() {
@@ -1329,6 +1336,7 @@
       on(S.ref.child('rb'), 'value', v => { S.rb = v.val(); phone(); });
       on(S.ref.child('host'), 'value', v => { if (!v.exists()) { store.set('pj', null); stopAll(); home(T('انتهت الجلسة.', 'The session has ended.')); } });
       S.clk = setInterval(phoneClock, 250); subs.push(() => clearInterval(S && S.clk));
+      if (window.AV) AV.attach({ ref: S.ref.child('av'), uid, name });
       phone();
     } catch (e) { console.error(e); home(T('تعذّر الدخول. تأكد من الإنترنت.', 'Could not join. Check the internet.')); }
   }
