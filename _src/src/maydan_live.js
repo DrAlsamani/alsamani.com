@@ -322,6 +322,7 @@ window.MDLive = (function () {
       if (v.e.charAt(0) === '@') return remote(s.key, v.e);
       // a player steps back to watch, or a watcher joins in; their points wait for them
       if (v.e === '^f' || v.e === '^p') return switchSide(s.key, v.e === '^p');
+      if (/^w\d{1,7}$/.test(v.e)) return wuScore(s.key, +v.e.slice(1));
       if (/^#[01][A-Za-z0-9]{1,6}$/.test(v.e)) { if (G) { G.sid = G.sid || {}; const o = G.sid[s.key] = G.sid[s.key] || ['', '']; o[+v.e[1]] = v.e.slice(2); } return; }
       if (v.e.charAt(0) === '%') { if (G) { G.av = G.av || {}; G.av[s.key] = v.e.slice(1, 3); } return; }
       if (G) { G.aw = G.aw || {}; const w = G.aw[s.key] = G.aw[s.key] || {}; w.rx = (w.rx || 0) + 1; }
@@ -333,6 +334,12 @@ window.MDLive = (function () {
     sub(G.ref.child('rx'), 'child_added', fly); sub(G.ref.child('rx'), 'child_changed', fly);
     messages();
   }
+  function wuScore(u, n) { if (!G || !G.wu) return; G.wuB = G.wuB || {}; if (n > (G.wuB[u] || 0)) { G.wuB[u] = n; wuBoard(); } }
+  function wuBoard() {
+    const el = G && G.el.querySelector('#mdWu'); if (!el) return; const B2 = G.wuB || {}, nm = u => (G.players || {})[u] || (G.fans || {})[u] || T('مشارك', 'A player');
+    el.innerHTML = Object.keys(B2).sort((a, b) => B2[b] - B2[a]).slice(0, 5).map((u, k) => `<li><i>${k + 1}</i><span dir="auto">${esc(nm(u))}</span><b>${B2[u]}</b></li>`).join('');
+  }
+  function annBanner(m) { let d = G.el.querySelector('.md-annb'); if (!d) { d = document.createElement('div'); d.className = 'md-annb'; G.el.appendChild(d); } d.textContent = m; d.classList.remove('on'); void d.offsetWidth; d.classList.add('on'); }
   function switchSide(u, play) {
     if (!G) return; G.fans = G.fans || {}; G.held = G.held || {};
     if (play && u in G.fans) { G.players[u] = G.fans[u]; delete G.fans[u]; G.score[u] = G.held[u] != null ? G.held[u] : (G.score[u] || 0); G.streak[u] = 0; }
@@ -475,6 +482,8 @@ window.MDLive = (function () {
       <p class="md-motto">${B('الميدان يا حميدان', 'The field will tell')}</p>
       <h2 class="md-title">${esc(G.quiz.title || T('ميدان', 'Maydan'))}</h2>
       <div class="md-count"><b id="mdN">0</b> ${B('مشارك', 'players')} <small id="mdFans"></small></div><div class="md-names" id="mdNames"></div>
+      <div class="md-wait"><div class="md-ann"><input data-ann maxlength="100" dir="auto" placeholder="${T('اكتب للجميع، مثل: نبدأ بعد خمس دقائق', 'Write to everyone, e.g. We start in five minutes')}"><button type="button" class="btn ghost" data-annb>${B('أرسل', 'Send')}</button></div>
+        <div class="md-wu"><button type="button" class="btn ghost" data-wu>${G.wu ? B(`تحدي الانتظار: «${MDGames.byId(G.wu.g).ar}» · غيّره`, `Waiting challenge: ${MDGames.byId(G.wu.g).en} · change it`) : B('أطلق تحدي الانتظار على الجوالات', 'Start a waiting challenge on the phones')}</button><ol class="md-wub" id="mdWu"></ol></div></div>
       <div class="md-set" id="mdSet" hidden>
         <h3>${B('إعدادات المسابقة', 'Quiz settings')}</h3>
         <label class="md-ck"><input type="checkbox" data-o="sid"${O.sid ? ' checked' : ''}> ${B('مسابقة بدرجات: يكتب كل طالب رقمه الجامعي، وفي النهاية ملف درجات لنظام التعلم (بلاك بورد أو مودل أو كانفس)', 'A graded quiz: each student types their ID, and at the end a grades file for the LMS (Blackboard, Moodle or Canvas)')}</label>
@@ -526,6 +535,12 @@ window.MDLive = (function () {
       names.classList.toggle('md-has-cols', !!G.teams);
     };
     G.drawLobby = () => { if (G.el.querySelector('#mdN')) { draw(); count(); } };
+    // while they wait: a word from the host on every phone, and a short challenge with its own little ranking
+    const annI = q('[data-ann]'), annSend = () => { const m = annI.value.trim().slice(0, 100); if (!m) return; G.ref.child('ann').set({ m, t: firebase.database.ServerValue.TIMESTAMP }).catch(() => {}); G.ann = m; annI.value = ''; annBanner(m); };
+    q('[data-annb]').onclick = annSend; annI.onkeydown = e => { if (e.key === 'Enter') annSend(); };
+    q('[data-wu]').onclick = () => { const L = MDGames.LIST.filter(g => !g.team && g.id !== (G.wu && G.wu.g)); const g = L[Math.floor(Math.random() * L.length)]; G.wu = { g: g.id, seed: 1 + Math.floor(Math.random() * 1e6) }; G.wuB = {}; G.ref.child('wu').set(G.wu).catch(() => {});
+      q('[data-wu]').innerHTML = B(`تحدي الانتظار: «${g.ar}» · غيّره`, `Waiting challenge: ${g.en} · change it`); wuBoard(); SND.go(); };
+    wuBoard();
     const chip = () => draw();
     names.onclick = e => {
       const c = e.target.closest('[data-u]'); if (!c) return; const u = c.dataset.u, r = c.getBoundingClientRect();

@@ -121,6 +121,8 @@
     if (R && !REMOTE) R.child('sidreq').once('value', s2 => { const id = store.get('sid', ''); if (!s2.val() || !id || FAN) return; setTimeout(() => R.child('rx/' + uid).set({ e: '#0' + id.slice(0, 6), t: TS }).catch(() => {}), 1200); setTimeout(() => R.child('rx/' + uid).set({ e: '#1' + id.slice(6, 12), t: TS }).catch(() => {}), 2400); });
     if (REMOTE) { const seen = {}; const got = m => { const v = m.val() || {}; if (v.to !== 'h' || !v.m || seen[m.key] === v.t) return; seen[m.key] = v.t; R.child('pl/' + m.key + '/n').once('value', n => { RIN.push({ n: n.val() || T('مشارك', 'A player'), m: v.m }); buzz([30, 40, 30]); shown = ''; draw(); }); };
       R.child('msg').on('child_added', got); R.child('msg').on('child_changed', got); }
+    R.child('ann').on('value', a => { const v = a.val(); ANN = v && v.m ? v.m : ''; if (ANN && now() - (v.t || 0) < 3600000) { if (st.ph && st.ph !== 'lobby' && st.ph !== 'pause') return; buzz([40, 60, 40]); tone(988, .12); shown = ''; draw(); } });
+    R.child('wu').on('value', w => { WU = w.val(); if (st.ph === 'lobby' || st.ph === 'pause') { shown = ''; draw(); } });
     R.child('st').on('value', s => { st = s.val() || {}; if (!s.exists()) return gone(); phaseSeen(); draw(); tryAsk(); askBtn(); });
     R.child('q').on('value', s => { Q = s.val(); if (Q && Q.pw) TOOLS = true; });
     R.child('pl/' + uid + '/w').once('value', s => { FAN = !!s.val(); const o = store.get('fan.' + PIN, null); if (o != null && !!o !== FAN && !REMOTE) { FAN = !!o; R.child('rx/' + uid).set({ e: FAN ? '^f' : '^p', t: TS }).catch(() => {}); shown = ''; draw(); } });
@@ -134,7 +136,7 @@
     R.child('cm').on('value', s => { CM = s.val(); feed(); });
     R.child('rc').on('value', s => { RCON = s.val() === uid.slice(0, 8); if (REMOTE) { shown = ''; draw(); } });
     R.child('sb').on('value', s => { SB = s.val() || []; feed(); });
-    { const seen = {}; const fx = s => { const v = s.val() || {}; if (!PM || !v.e || v.e === '🎤' || s.key === uid || seen[s.key] === v.t) return; seen[s.key] = v.t; if (now() - (v.t || 0) > 8000) return; floatRx(v.e); };
+    { const seen = {}; const fx = s => { const v = s.val() || {}; if (!PM || !v.e || v.e === '🎤' || /^(w\d|\^|%|#|@)/.test(v.e) || s.key === uid || seen[s.key] === v.t) return; seen[s.key] = v.t; if (now() - (v.t || 0) > 8000) return; floatRx(v.e); };
       R.child('rx').on('child_added', fx); R.child('rx').on('child_changed', fx); }
     R.child('top').on('value', s => { TOP = s.val(); if (FAN && st.ph === 'q') { shown = ''; draw(); return; }
       if (st.ph === 'q' && Q && Q.type === 'game') { const sp = root.querySelector('#mpStrip'); if (sp) sp.innerHTML = arenaFan(true); if (sent === st.i) { shown = ''; draw(); } return; } if (TOP && TOP.mic && !TOP.mic.n && !TOP.mic.on) micOn = false; if (['lb', 'end', 'rev'].includes(st.ph)) { shown = ''; draw(); } });
@@ -147,8 +149,8 @@
     const key = st.ph + ':' + st.i + ':' + (st.ph === 'rev' || st.ph === 'lb' || st.ph === 'end' ? JSON.stringify(SC) + (OK ? 'k' : '') + (TOP ? JSON.stringify(TOP).length : '') : '');
     if (key === shown) return; shown = key;
     clearInterval(tick);
-    if (st.ph === 'lobby') return screen(`<div class="mp-wait"><p class="mp-big">${B('أنت في الميدان!', 'You are in!')}</p><p class="mp-me" dir="auto">${esc(me)}</p>${TEAMS && myTeam != null ? `<p class="mp-tm" style="--c:var(--qz${(myTeam) % 6})">${esc(TEAMS[myTeam])}</p>` : ''}<p>${(PM ? B('ستبدأ المسابقة قريبًا، وتتابعها كاملة من جوالك.', 'The quiz will start soon; follow all of it on your phone.') : B('انظر إلى الشاشة؛ ستبدأ المسابقة قريبًا.', 'Watch the screen; the quiz will start soon.'))}</p></div>` + rxBar());
-    if (st.ph === 'pause') return screen(`<div class="mp-wait"><p class="mp-big"></p><p class="mp-big">${B('توقفت المسابقة مؤقتًا', 'The quiz is paused')}</p><p>${B('ابقَ على هذه الصفحة؛ ستُستأنف من حيث توقفت.', 'Stay on this page; it will continue where it stopped.')}</p></div>`);
+    if (st.ph === 'lobby') return screen(annHtml() + wuHtml() + `<div class="mp-wait"><p class="mp-big">${B('أنت في الميدان!', 'You are in!')}</p><p class="mp-me" dir="auto">${esc(me)}</p>${TEAMS && myTeam != null ? `<p class="mp-tm" style="--c:var(--qz${(myTeam) % 6})">${esc(TEAMS[myTeam])}</p>` : ''}<p>${(PM ? B('ستبدأ المسابقة قريبًا، وتتابعها كاملة من جوالك.', 'The quiz will start soon; follow all of it on your phone.') : B('انظر إلى الشاشة؛ ستبدأ المسابقة قريبًا.', 'Watch the screen; the quiz will start soon.'))}</p></div>` + rxBar());
+    if (st.ph === 'pause') return screen(annHtml() + `<div class="mp-wait"><p class="mp-big"></p><p class="mp-big">${B('توقفت المسابقة مؤقتًا', 'The quiz is paused')}</p><p>${B('ابقَ على هذه الصفحة؛ ستُستأنف من حيث توقفت.', 'Stay on this page; it will continue where it stopped.')}</p></div>`);
     if (st.ph === 'ready') { if (!Q || Q.i !== st.i) { shown = ''; setTimeout(draw, 200); return; } bet = false; const gm = Q.type === 'game' && window.MDGames ? MDGames.byId(Q.g) : null; return screen(`<div class="mp-wait${Q.gold ? ' gold' : ''}"><p>${B('استعد…', 'Get ready…')}</p><p class="mp-big">${gm ? `${gm.icon} ${Q.L === 'en' ? gm.en : gm.ar}` : B('السؤال', 'Question') + ' ' + ((st.i || 0) + 1)}</p>${gm ? `<p class="mp-how">${Q.L === 'en' ? gm.howEn : gm.howAr}</p>` : ''}${Q.gold ? `<p class="mp-gold">${B('السؤال الذهبي! نقاط مضاعفة', 'The golden question! Double points')}</p>` : Q.last ? `<p class="mp-gold">${B('السؤال الأخير — نقاط مضاعفة', 'The last question — double points')}</p>` : ''}</div>`); }
     // last survivor: once out, a player watches the rest
     if (st.ph === 'q' && SC && SC.out && SC.q != null && SC.q < st.i) return screen(`<div class="mp-wait"><p class="mp-sym"></p><p class="mp-big">${B('أنت الآن متفرج', 'You are watching now')}</p><p>${B('خرجت من المنافسة؛ تابع الأسئلة على الشاشة وشجّع الناجين.', 'You are out of the race; follow along on the screen and cheer for those still in.')}</p><p class="mp-rank">${B(`الناجون: ${SC.left}`, `Still in: ${SC.left}`)}</p></div>` + rxBar());
@@ -167,6 +169,22 @@
     root.innerHTML = `<div class="mp-play ${cls || ''}"><div class="mp-top"><span dir="auto">${FAN ? '' : ''}${esc(me)}${TEAMS && myTeam != null ? ` <i style="--c:var(--qz${(myTeam) % 6})">${esc(TEAMS[myTeam])}</i>` : ''}</span>${qn}<b>${FAN ? '' : SC ? SC.s : 0}</b></div>${fx}${/<div class="mp-(mic|rx)"/.test(html) ? html.replace(/<div class="mp-(mic|rx)"/, m => '<div class="mp-feed" id="mpFeed"></div>' + m) : html + '<div class="mp-feed" id="mpFeed"></div>'}${!FAN && ['rev', 'lb', 'ready'].includes(st.ph) ? toolsBar() : ''}${!FAN && st.ph === 'q' && cls === 'q' ? skipBtn() : ''}${extras()}</div>`; if (R) { rxBind(); toolsBind(); xBind(); } feed(); }
   /* ---------- while waiting: switch between playing and watching, write to the screen or to the host, and be told when it starts ---------- */
   let msgOpen = false, msgDraft = '', lastMsg = 0;
+  function annHtml() { return ANN && (st.ph === 'lobby' || st.ph === 'pause') ? `<div class="mp-ann"><small>${B('من المشرف', 'From the host')}</small><p dir="auto">${esc(ANN)}</p></div>` : ''; }
+  function wuHtml() {
+    if (!WU || !window.MDGames || !(st.ph === 'lobby' || st.ph === 'pause')) return ''; const g = MDGames.byId(WU.g), best = store.get('wu.' + PIN + '.' + WU.g + '.' + WU.seed, 0);
+    return `<div class="mp-wu"><p>${B('تحدي الانتظار', 'Waiting challenge')}: <b>${B(g.ar, g.en)}</b></p><button type="button" class="btn solid" data-wu>${best ? B(`العب مرة ثانية · أفضل نتيجة لك ${best}`, `Play again · your best ${best}`) : B('العب ٣٠ ثانية، وأفضل النتائج على الشاشة', 'Play 30 seconds; the best scores go on the screen')}</button></div>`;
+  }
+  function playWarmup() {
+    const g = MDGames.byId(WU.g), key = 'wu.' + PIN + '.' + WU.g + '.' + WU.seed, ov = document.createElement('div'); ov.className = 'mp-wuo';
+    ov.innerHTML = `<div class="mp-wuh"><b>${B(g.ar, g.en)}</b><span class="mp-wut">30</span><button type="button" aria-label="${T('إغلاق', 'Close')}">×</button></div><div class="mp-bar"><i id="mpWuBar"></i></div><div class="mp-wug"></div>`;
+    document.body.appendChild(ov); const t0 = Date.now(), dur = 30;
+    const end = () => { if (!wuGame) return; const sc = Math.max(0, Math.round(wuGame.score() || 0)); wuGame.stop(); wuGame = null; clearInterval(ti); ov.remove();
+      const best = store.get(key, 0); if (sc > best) { store.set(key, sc); R.child('rx/' + uid).set({ e: 'w' + Math.min(9999999, sc), t: TS }).catch(() => {}); }
+      flashMsg(sc > best ? T(`نتيجتك ${sc}، أفضل نتيجة لك!`, `You scored ${sc}, your best!`) : T(`نتيجتك ${sc}`, `You scored ${sc}`)); buzz([30, 50, 30]); shown = ''; draw(); };
+    wuGame = MDGames.run(WU.g, ov.querySelector('.mp-wug'), { seed: WU.seed, ar: isAr(), left: () => Math.max(0, 1 - (Date.now() - t0) / 1000 / dur), finish: end, tick: () => buzz(10), bad: () => buzz(60) });
+    const ti = setInterval(() => { const l = Math.max(0, dur - (Date.now() - t0) / 1000); ov.querySelector('.mp-wut').textContent = Math.ceil(l); ov.querySelector('#mpWuBar').style.width = (100 * l / dur) + '%'; if (l <= 0 || (st.ph && st.ph !== 'lobby' && st.ph !== 'pause')) end(); }, 100);
+    ov.querySelector('button').onclick = end;
+  }
   function extras() {
     if (REMOTE || !R) return '';
     const calm = ['lobby', 'pause', 'rev', 'lb'].includes(st.ph) || FAN; if (!calm || st.ph === 'end') return '';
@@ -186,6 +204,7 @@
       try { await R.child('msg/' + uid).set({ m, to: b.dataset.msg, t: TS }); lastMsg = Date.now(); msgDraft = ''; msgOpen = false; buzz(25); shown = ''; draw(); flashMsg(b.dataset.msg === 's' ? T('وصلت رسالتك للشاشة.', 'Your message is on its way to the screen.') : T('وصلت رسالتك للمشرف.', 'Your message reached the host.')); }
       catch (e) { flashMsg(T('تعذّر إرسال الرسالة الآن.', 'The message could not be sent now.')); }
     });
+    const wb = root.querySelector('[data-wu]'); if (wb) wb.onclick = () => { if (!wuGame) playWarmup(); };
     const sw = root.querySelector('[data-sw]'); if (sw) sw.onclick = () => { FAN = !FAN; store.set('fan.' + PIN, FAN ? 1 : 0); R.child('rx/' + uid).set({ e: FAN ? '^f' : '^p', t: TS }).catch(() => {}); buzz(25); shown = ''; draw(); };
     const nb = root.querySelector('[data-ntf]'); if (nb) nb.onclick = () => { try { Notification.requestPermission().then(() => { shown = ''; draw(); }); } catch (e) {} };
   }
@@ -306,7 +325,7 @@
   let acx = null;
   function tone(f, d, v) { try { acx = acx || new (window.AudioContext || window.webkitAudioContext)(); if (acx.state === 'suspended') acx.resume(); const o = acx.createOscillator(), g = acx.createGain(), t = acx.currentTime; o.type = 'triangle'; o.frequency.value = f; g.gain.setValueAtTime(v || .06, t); g.gain.exponentialRampToValueAtTime(.0001, t + d); o.connect(g).connect(acx.destination); o.start(t); o.stop(t + d + .02); } catch (e) {} }
   /* ---------- a fan: follows the questions and the ranking, and cheers ---------- */
-  let FAN = false, PIN = '', RIN = [];
+  let FAN = false, PIN = '', RIN = [], ANN = '', WU = null, wuGame = null;
   // each player's figure: a shape and a colour they chose ('%' + shape digit + colour digit, sent once on joining)
   const AVS = ['polygon(50% 0,61% 22%,85% 15%,78% 39%,100% 50%,78% 61%,85% 85%,61% 78%,50% 100%,39% 78%,15% 85%,22% 61%,0 50%,22% 39%,15% 15%,39% 22%)', 'polygon(50% 0,63% 27%,93% 25%,76% 50%,93% 75%,63% 73%,50% 100%,37% 73%,7% 75%,24% 50%,7% 25%,37% 27%)', 'circle(50%)', 'polygon(50% 0,100% 50%,50% 100%,0 50%)', 'polygon(25% 4%,75% 4%,100% 50%,75% 96%,25% 96%,0 50%)', 'polygon(50% 0,100% 22%,88% 72%,50% 100%,12% 72%,0 22%)'], AVC = ['#C9822B', '#2a7fa8', '#2e8b57', '#b0533a', '#7a4fb5', '#d14d8b', '#23336F', '#1f8f8a'];
   const avSt = a => { a = String(a || ''); if (!/^\d\d$/.test(a)) return ''; return `--fs:${AVS[+a[0]] || AVS[0]};--fc:${AVC[+a[1]] || AVC[0]};`; };

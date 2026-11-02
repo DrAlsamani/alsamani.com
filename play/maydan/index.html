@@ -2390,6 +2390,25 @@ body>.md-xov{position:fixed}
 .md-inbox{position:fixed;inset-inline-end:16px;bottom:16px;z-index:70;display:flex;align-items:center;gap:4px;padding:8px 10px;border-radius:12px;border:1px solid rgba(127,127,127,.3);background:rgba(127,127,127,.1);color:inherit;cursor:pointer;opacity:.6}
 .md-inbox.new{opacity:1}.md-inbox i{font-style:normal;font-size:.8rem;background:#c0392b;color:#fff;border-radius:999px;padding:1px 6px}
 .mp-msg .mp-xb{width:100%}
+/* the host's word and the waiting challenge, on the phone */
+.mp-ann{margin:0 0 12px;padding:12px 16px;border-radius:14px;background:#fff6dd;border:1px solid #f2b84b;animation:mpAnn .5s ease-out}
+.mp-ann small{color:#a36a00;font-weight:700}.mp-ann p{margin:4px 0 0;font-size:1.15rem;font-weight:700}
+@keyframes mpAnn{0%{transform:scale(.95);opacity:0}100%{transform:none;opacity:1}}
+.mp-wu{margin:0 0 12px;padding:12px 14px;border-radius:14px;background:rgba(37,99,235,.06);display:flex;flex-direction:column;gap:8px;text-align:center}
+.mp-wu p{margin:0}
+.mp-wuo{position:fixed;inset:0;z-index:90;background:var(--bg,#fff);display:flex;flex-direction:column;padding:12px;box-sizing:border-box}
+.mp-wuh{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:4px 4px 10px}
+.mp-wuh button{border:0;background:none;font-size:1.6rem;cursor:pointer;color:inherit}.mp-wut{font-weight:800;font-size:1.3rem}
+.mp-wug{flex:1;min-height:0;overflow:auto}
+/* on the big screen: the host's tools while waiting, the challenge board and the host's word */
+.md-wait{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;align-items:flex-start;margin:14px auto 0;max-width:900px}
+.md-ann{display:flex;gap:8px;flex:1;min-width:280px}.md-ann input{flex:1;min-width:0;padding:10px 12px;border-radius:12px;border:1px solid rgba(127,127,127,.35);font:inherit;background:transparent;color:inherit}
+.md-wu{display:flex;flex-direction:column;gap:8px;min-width:260px}
+.md-wub{list-style:none;margin:0;padding:0;display:grid;gap:4px}.md-wub li{display:flex;gap:10px;align-items:center;padding:4px 10px;border-radius:10px;background:rgba(127,127,127,.08)}
+.md-wub i{font-style:normal;font-weight:800;color:#f2b84b;width:1.2em}.md-wub span{flex:1}.md-wub b{font-variant-numeric:tabular-nums}
+.md-annb{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:70;max-width:80vw;padding:12px 22px;border-radius:16px;background:#f2b84b;color:#17153a;font-weight:800;font-size:clamp(18px,2.2vw,28px);text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.25);opacity:0}
+.md-annb.on{animation:mdAnnb 9s ease-in-out forwards}
+@keyframes mdAnnb{0%{opacity:0;transform:translate(-50%,-14px)}6%{opacity:1;transform:translate(-50%,0)}88%{opacity:1}100%{opacity:0}}
 </style><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script>window.MD_CFG={"apiKey": "AIzaSyA50i75DT1Is1a6Yn6snW1_JVObc8S3F0Y", "authDomain": "maydan-705ae.firebaseapp.com", "databaseURL": "https://maydan-705ae-default-rtdb.europe-west1.firebasedatabase.app", "projectId": "maydan-705ae", "appId": "1:342187013133:web:d5c2396f0db413f3c51144"};window.MD_MARK="<svg class=\"md-mark\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><rect x=\"4\" y=\"4\" width=\"40\" height=\"40\" rx=\"12\" fill=\"#23336F\"/><path d=\"M24 9l4.2 6.8 7.8-1.8-1.8 7.8L41 24l-6.8 4.2 1.8 7.8-7.8-1.8L24 39l-4.2-6.8-7.8 1.8 1.8-7.8L7 24l6.8-4.2-1.8-7.8 7.8 1.8z\" fill=\"#C9822B\"/><circle cx=\"24\" cy=\"24\" r=\"6.5\" fill=\"#23336F\"/><circle cx=\"24\" cy=\"24\" r=\"3\" fill=\"#F3E3C7\"/></svg>";</script><script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script><script>/* Maydan challenges: short games played on every phone at once. Every phone gets the same level (same seed),
    so the race is fair. Each game reports a score; higher is better. */
 window.MDGames = (function () {
@@ -3680,6 +3699,7 @@ window.MDLive = (function () {
       if (v.e.charAt(0) === '@') return remote(s.key, v.e);
       // a player steps back to watch, or a watcher joins in; their points wait for them
       if (v.e === '^f' || v.e === '^p') return switchSide(s.key, v.e === '^p');
+      if (/^w\d{1,7}$/.test(v.e)) return wuScore(s.key, +v.e.slice(1));
       if (/^#[01][A-Za-z0-9]{1,6}$/.test(v.e)) { if (G) { G.sid = G.sid || {}; const o = G.sid[s.key] = G.sid[s.key] || ['', '']; o[+v.e[1]] = v.e.slice(2); } return; }
       if (v.e.charAt(0) === '%') { if (G) { G.av = G.av || {}; G.av[s.key] = v.e.slice(1, 3); } return; }
       if (G) { G.aw = G.aw || {}; const w = G.aw[s.key] = G.aw[s.key] || {}; w.rx = (w.rx || 0) + 1; }
@@ -3691,6 +3711,12 @@ window.MDLive = (function () {
     sub(G.ref.child('rx'), 'child_added', fly); sub(G.ref.child('rx'), 'child_changed', fly);
     messages();
   }
+  function wuScore(u, n) { if (!G || !G.wu) return; G.wuB = G.wuB || {}; if (n > (G.wuB[u] || 0)) { G.wuB[u] = n; wuBoard(); } }
+  function wuBoard() {
+    const el = G && G.el.querySelector('#mdWu'); if (!el) return; const B2 = G.wuB || {}, nm = u => (G.players || {})[u] || (G.fans || {})[u] || T('مشارك', 'A player');
+    el.innerHTML = Object.keys(B2).sort((a, b) => B2[b] - B2[a]).slice(0, 5).map((u, k) => `<li><i>${k + 1}</i><span dir="auto">${esc(nm(u))}</span><b>${B2[u]}</b></li>`).join('');
+  }
+  function annBanner(m) { let d = G.el.querySelector('.md-annb'); if (!d) { d = document.createElement('div'); d.className = 'md-annb'; G.el.appendChild(d); } d.textContent = m; d.classList.remove('on'); void d.offsetWidth; d.classList.add('on'); }
   function switchSide(u, play) {
     if (!G) return; G.fans = G.fans || {}; G.held = G.held || {};
     if (play && u in G.fans) { G.players[u] = G.fans[u]; delete G.fans[u]; G.score[u] = G.held[u] != null ? G.held[u] : (G.score[u] || 0); G.streak[u] = 0; }
@@ -3833,6 +3859,8 @@ window.MDLive = (function () {
       <p class="md-motto">${B('الميدان يا حميدان', 'The field will tell')}</p>
       <h2 class="md-title">${esc(G.quiz.title || T('ميدان', 'Maydan'))}</h2>
       <div class="md-count"><b id="mdN">0</b> ${B('مشارك', 'players')} <small id="mdFans"></small></div><div class="md-names" id="mdNames"></div>
+      <div class="md-wait"><div class="md-ann"><input data-ann maxlength="100" dir="auto" placeholder="${T('اكتب للجميع، مثل: نبدأ بعد خمس دقائق', 'Write to everyone, e.g. We start in five minutes')}"><button type="button" class="btn ghost" data-annb>${B('أرسل', 'Send')}</button></div>
+        <div class="md-wu"><button type="button" class="btn ghost" data-wu>${G.wu ? B(`تحدي الانتظار: «${MDGames.byId(G.wu.g).ar}» · غيّره`, `Waiting challenge: ${MDGames.byId(G.wu.g).en} · change it`) : B('أطلق تحدي الانتظار على الجوالات', 'Start a waiting challenge on the phones')}</button><ol class="md-wub" id="mdWu"></ol></div></div>
       <div class="md-set" id="mdSet" hidden>
         <h3>${B('إعدادات المسابقة', 'Quiz settings')}</h3>
         <label class="md-ck"><input type="checkbox" data-o="sid"${O.sid ? ' checked' : ''}> ${B('مسابقة بدرجات: يكتب كل طالب رقمه الجامعي، وفي النهاية ملف درجات لنظام التعلم (بلاك بورد أو مودل أو كانفس)', 'A graded quiz: each student types their ID, and at the end a grades file for the LMS (Blackboard, Moodle or Canvas)')}</label>
@@ -3884,6 +3912,12 @@ window.MDLive = (function () {
       names.classList.toggle('md-has-cols', !!G.teams);
     };
     G.drawLobby = () => { if (G.el.querySelector('#mdN')) { draw(); count(); } };
+    // while they wait: a word from the host on every phone, and a short challenge with its own little ranking
+    const annI = q('[data-ann]'), annSend = () => { const m = annI.value.trim().slice(0, 100); if (!m) return; G.ref.child('ann').set({ m, t: firebase.database.ServerValue.TIMESTAMP }).catch(() => {}); G.ann = m; annI.value = ''; annBanner(m); };
+    q('[data-annb]').onclick = annSend; annI.onkeydown = e => { if (e.key === 'Enter') annSend(); };
+    q('[data-wu]').onclick = () => { const L = MDGames.LIST.filter(g => !g.team && g.id !== (G.wu && G.wu.g)); const g = L[Math.floor(Math.random() * L.length)]; G.wu = { g: g.id, seed: 1 + Math.floor(Math.random() * 1e6) }; G.wuB = {}; G.ref.child('wu').set(G.wu).catch(() => {});
+      q('[data-wu]').innerHTML = B(`تحدي الانتظار: «${g.ar}» · غيّره`, `Waiting challenge: ${g.en} · change it`); wuBoard(); SND.go(); };
+    wuBoard();
     const chip = () => draw();
     names.onclick = e => {
       const c = e.target.closest('[data-u]'); if (!c) return; const u = c.dataset.u, r = c.getBoundingClientRect();

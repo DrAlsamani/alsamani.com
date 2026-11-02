@@ -582,3 +582,22 @@ body>.md-xov{position:fixed}
 .md-inbox{position:fixed;inset-inline-end:16px;bottom:16px;z-index:70;display:flex;align-items:center;gap:4px;padding:8px 10px;border-radius:12px;border:1px solid rgba(127,127,127,.3);background:rgba(127,127,127,.1);color:inherit;cursor:pointer;opacity:.6}
 .md-inbox.new{opacity:1}.md-inbox i{font-style:normal;font-size:.8rem;background:#c0392b;color:#fff;border-radius:999px;padding:1px 6px}
 .mp-msg .mp-xb{width:100%}
+/* the host's word and the waiting challenge, on the phone */
+.mp-ann{margin:0 0 12px;padding:12px 16px;border-radius:14px;background:#fff6dd;border:1px solid #f2b84b;animation:mpAnn .5s ease-out}
+.mp-ann small{color:#a36a00;font-weight:700}.mp-ann p{margin:4px 0 0;font-size:1.15rem;font-weight:700}
+@keyframes mpAnn{0%{transform:scale(.95);opacity:0}100%{transform:none;opacity:1}}
+.mp-wu{margin:0 0 12px;padding:12px 14px;border-radius:14px;background:rgba(37,99,235,.06);display:flex;flex-direction:column;gap:8px;text-align:center}
+.mp-wu p{margin:0}
+.mp-wuo{position:fixed;inset:0;z-index:90;background:var(--bg,#fff);display:flex;flex-direction:column;padding:12px;box-sizing:border-box}
+.mp-wuh{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:4px 4px 10px}
+.mp-wuh button{border:0;background:none;font-size:1.6rem;cursor:pointer;color:inherit}.mp-wut{font-weight:800;font-size:1.3rem}
+.mp-wug{flex:1;min-height:0;overflow:auto}
+/* on the big screen: the host's tools while waiting, the challenge board and the host's word */
+.md-wait{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;align-items:flex-start;margin:14px auto 0;max-width:900px}
+.md-ann{display:flex;gap:8px;flex:1;min-width:280px}.md-ann input{flex:1;min-width:0;padding:10px 12px;border-radius:12px;border:1px solid rgba(127,127,127,.35);font:inherit;background:transparent;color:inherit}
+.md-wu{display:flex;flex-direction:column;gap:8px;min-width:260px}
+.md-wub{list-style:none;margin:0;padding:0;display:grid;gap:4px}.md-wub li{display:flex;gap:10px;align-items:center;padding:4px 10px;border-radius:10px;background:rgba(127,127,127,.08)}
+.md-wub i{font-style:normal;font-weight:800;color:#f2b84b;width:1.2em}.md-wub span{flex:1}.md-wub b{font-variant-numeric:tabular-nums}
+.md-annb{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:70;max-width:80vw;padding:12px 22px;border-radius:16px;background:#f2b84b;color:#17153a;font-weight:800;font-size:clamp(18px,2.2vw,28px);text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.25);opacity:0}
+.md-annb.on{animation:mdAnnb 9s ease-in-out forwards}
+@keyframes mdAnnb{0%{opacity:0;transform:translate(-50%,-14px)}6%{opacity:1;transform:translate(-50%,0)}88%{opacity:1}100%{opacity:0}}
