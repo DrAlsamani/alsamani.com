@@ -267,10 +267,11 @@ def play_index():
     return f'''<section class="first tl-page">
 <header class="tl-head"><h1>{bi('منصة الألعاب التفاعلية', 'Interactive games')}</h1><p class="tl-lede">{bi('منصة تعليمية ترفيهية للتوظيف داخل بيئة التعلم والأنشطة والاجتماعات.', 'An educational and entertaining platform to use in learning, activities and meetings.')}</p></header>
 <div class="md-units"><a class="md-unit" href="maydan/index.html">{MAYDAN_MARK}<span><b>{bi('ميدان', 'Maydan')}</b><small>{bi('مسابقات تفاعلية حيّة: سؤال على الشاشة، وكل مشارك يجيب من جواله، والأسرع والأدق يتصدّر. ومعها مكتبة مسابقات جاهزة.', 'Live quizzes: a question on the screen, everyone answers from their phone, and the fastest right answers lead. With a library of ready quizzes.')}</small></span></a>
+<a class="md-unit" href="dawwara/index.html">{DW_MARK}<span><b>{bi('دوّارة', 'Dawwara')}</b><small>{bi('مسابقة المجموعات على شاشة واحدة بلا أجهزة للحضور: تتناوب المجموعات، والقائد يجاوب، والصح والأسرع يكسب. للفصول والمجالس.', 'The team quiz on one screen, no devices needed: groups take turns, leaders answer, right and fast wins. For classrooms and gatherings.')}</small></span></a>
 <a class="md-unit" href="samar/index.html">{SM_MARK}<span><b>{bi('سمر', 'Samar')}</b><small>{bi('تحلو سهرتكم مع سمر: ألعاب تفاعلية متنوعة وممتعة للآخر. شخص يستضيف اللعبة ويديرها، والباقي يشاركون من جوالاتهم.', 'Make your evening with Samar: varied interactive games, fun all the way. One person hosts and runs the game; everyone else joins from their phones.')}</small></span></a>
 <a class="md-unit" href="tasalsul/index.html">{KH_MARK}<span><b>{bi('تسلسل', 'Tasalsul')}</b><small>{bi('على طريقة سيكوينس: كوّن صفوفك من أربع أو خمس قبل خصمك. اللوح على الشاشة والأوراق في الجوالات، أو عن بُعد، أو ضد الجهاز.', 'In the style of Sequence: make rows of four or five before the others. The board on a screen and the hands on phones, remote play, or against the computer.')}</small></span></a>
 </div>
-<style>.md-units{{display:grid;gap:14px;max-width:760px;margin:0 auto}}.md-unit{{display:flex;gap:16px;align-items:center;background:var(--surface);border-radius:18px;padding:18px;text-decoration:none;color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.04)}}.md-unit:hover{{box-shadow:0 6px 22px rgba(0,0,0,.08)}}.md-unit .md-mark,.md-unit .kh-mark,.md-unit .sm-mark{{width:64px;height:64px;flex:none}}.md-unit b{{display:block;font-size:1.25rem;margin-bottom:4px}}.md-unit small{{color:var(--muted);font-size:.9375rem;line-height:1.7}}.md-lib-ic{{width:64px;height:64px;flex:none;display:grid;place-items:center;font-size:2.4rem;background:#f4ead8;border-radius:16px}}</style>
+<style>.md-units{{display:grid;gap:14px;max-width:760px;margin:0 auto}}.md-unit{{display:flex;gap:16px;align-items:center;background:var(--surface);border-radius:18px;padding:18px;text-decoration:none;color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.04)}}.md-unit:hover{{box-shadow:0 6px 22px rgba(0,0,0,.08)}}.md-unit .md-mark,.md-unit .kh-mark,.md-unit .sm-mark,.md-unit .dw-mark{{width:64px;height:64px;flex:none}}.md-unit b{{display:block;font-size:1.25rem;margin-bottom:4px}}.md-unit small{{color:var(--muted);font-size:.9375rem;line-height:1.7}}.md-lib-ic{{width:64px;height:64px;flex:none;display:grid;place-items:center;font-size:2.4rem;background:#f4ead8;border-radius:16px}}</style>
 </section>'''
 def maydan_body():
     src = lambda f: open(os.path.join(ROOT, 'src', f)).read()
@@ -293,6 +294,17 @@ def baloot_body():
 <style>{src('khumasiya.css')}{src('baloot.css')}</style>
 <div id="bl" class="bl"><noscript>{bi("تعمل هذه اللعبة مع تفعيل JavaScript.", "This game needs JavaScript.")}</noscript></div>
 {MD_SCRIPTS()}<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script><script>{src('bl_engine.js')}</script><script>{src('bl_bot.js')}</script><script>{src('baloot.js')}</script>
+</section>'''
+DW_MARK = '<svg class="dw-mark" viewBox="0 0 48 48" aria-hidden="true"><rect x="4" y="4" width="40" height="40" rx="12" fill="#1d2a5e"/><path d="M24 11a13 13 0 0 1 13 13" stroke="#2a7fa8" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M37 24a13 13 0 0 1-13 13" stroke="#b0533a" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M24 37a13 13 0 0 1-13-13" stroke="#2f7d5b" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M11 24a13 13 0 0 1 13-13" stroke="#c9822b" stroke-width="5" fill="none" stroke-linecap="round"/><circle cx="24" cy="24" r="4.5" fill="#fff"/></svg>'
+def dawwara_body():
+    src = lambda f: open(os.path.join(ROOT, 'src', f)).read()
+    return f'''<section class="first tl-page sn-page-wrap">
+<nav class="tl-crumb" aria-label="breadcrumb"><a href="../index.html">{bi('منصة الألعاب التفاعلية', 'Interactive games')}</a><i class="chev"></i><span>{bi('دوّارة', 'Dawwara')}</span></nav>
+<header class="dw-head">{DW_MARK}<div><h1>{bi('دوّارة', 'Dawwara')}</h1><p>{bi('مسابقة المجموعات على شاشة واحدة', 'The team quiz on one screen')}</p></div></header>
+<p class="dw-lead">{bi('تكفيها شاشة واحدة بلا أجهزة للحضور: تتناوب المجموعات على الأسئلة، وقائد كل مجموعة يقول الإجابة، والمدير يسجّلها بلمسة. للفصول والمجالس والفعاليات.', 'One screen and no devices for the room: groups take turns, each leader says the answer and the host taps it. For classrooms, family gatherings and events.')}</p>
+<style>{src('dawwara.css')}</style>
+<div id="dw" class="dw-page"><noscript>{bi("تعمل هذه اللعبة مع تفعيل JavaScript.", "This game needs JavaScript.")}</noscript></div>
+<script>{src('maydan_lib.js')}</script><script>{src('quiz_parse.js')}</script><script>{src('dawwara.js')}</script>
 </section>'''
 SM_MARK = '<svg class="sm-mark" viewBox="0 0 48 48" aria-hidden="true"><rect x="4" y="4" width="40" height="40" rx="12" fill="#17153a"/><path d="M27 12a12 12 0 1 0 9 20a10 10 0 1 1-9-20z" fill="#f2b84b"/><path d="M33 13l1.2 2.6 2.8.4-2 2 .5 2.8-2.5-1.3-2.5 1.3.5-2.8-2-2 2.8-.4z" fill="#f4eedf"/><circle cx="14" cy="34" r="1.6" fill="#2bb3a3"/><circle cx="20" cy="37" r="1.2" fill="#e0607e"/></svg>'
 def samar_body():

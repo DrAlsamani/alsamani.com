@@ -705,6 +705,8 @@ PAGES.append(('play/baloot', 2, 'بلوت: الطاولة على الشاشة و
 DESCS['play/baloot'] = 'Baloot with the table on a screen and the hands on phones, the jack draw and Qaid as at the majlis, and a smart computer player in several styles. بلوت: الطاولة على الشاشة والأوراق في الجوالات، وطق الولد والقيد، وجهاز ذكي.'
 PAGES.append(('play/tasalsul', 2, 'تسلسل: على طريقة سيكوينس | Tasalsul: in the style of Sequence | Dr. Omar A. Alsamani', _tp.khumasiya_body))
 DESCS['play/tasalsul'] = 'Tasalsul, a game in the style of Sequence: make rows of four or five before the others, with friends on a big screen and phones, remotely, or against the computer. تسلسل: لعبة على طريقة سيكوينس، صفوف من أربع أو خمس قبل خصمك.'
+PAGES.append(('play/dawwara', 2, 'دوّارة: مسابقة المجموعات | Dawwara: the team quiz | Dr. Omar A. Alsamani', _tp.dawwara_body))
+DESCS['play/dawwara'] = 'دوّارة: مسابقة المجموعات على شاشة واحدة بلا أجهزة للحضور؛ تتناوب المجموعات والقائد يجاوب. Dawwara: a team quiz on one screen, no devices needed.'
 PAGES.append(('play/samar', 2, 'سمر: تحلو سهرتكم | Samar: games for your evening | Dr. Omar A. Alsamani', _tp.samar_body))
 DESCS['play/samar'] = 'تحلو سهرتكم مع سمر: ألعاب تفاعلية متنوعة، شخص يستضيفها والباقي يشاركون من جوالاتهم. Samar: interactive games for an evening, one host and everyone on their phones.'
 PAGES.append(('play/maydan', 2, 'ميدان: مسابقات تفاعلية حيّة | Maydan: live quizzes | Dr. Omar A. Alsamani', _tp.maydan_body))
