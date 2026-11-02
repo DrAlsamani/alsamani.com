@@ -1001,7 +1001,12 @@ if (typeof module !== 'undefined') module.exports = QZParse;
       try {
         const v = (await Cloud.ref().once('value')).val() || {}, gone = store.get('gone', []), by = {};
         list.forEach(z => { by[z.id] = z; });
-        Object.keys(v).forEach(id => { if (gone.includes(id)) { Cloud.ref().child(id).remove().catch(() => {}); return; } let z = null; try { z = JSON.parse(v[id].j); } catch (e) {} if (!z || !Array.isArray(z.qs)) return; z.id = id; z.at = v[id].at || z.at || 0; if (!by[id] || (by[id].at || 0) < z.at) by[id] = z; });
+        // the leagues travel with the quizzes: one copy merged league by league, the one with more rounds wins
+        if (v._lg) { try { const C = JSON.parse(v._lg.j) || [], L = JSON.parse(localStorage.getItem('md-leagues') || '[]'), lg = JSON.parse(localStorage.getItem('md-lg-gone') || '[]'), m = {};
+          L.concat(C).forEach(z => { if (!z || !z.id || lg.includes(z.id)) return; if (!m[z.id] || (z.rounds || []).length > (m[z.id].rounds || []).length) m[z.id] = z; });
+          localStorage.setItem('md-leagues', JSON.stringify(Object.values(m))); } catch (e) {} }
+        Cloud.putLg();
+        Object.keys(v).forEach(id => { if (id === '_lg') return; if (gone.includes(id)) { Cloud.ref().child(id).remove().catch(() => {}); return; } let z = null; try { z = JSON.parse(v[id].j); } catch (e) {} if (!z || !Array.isArray(z.qs)) return; z.id = id; z.at = v[id].at || z.at || 0; if (!by[id] || (by[id].at || 0) < z.at) by[id] = z; });
         list = Object.values(by).sort((a, b) => (b.at || 0) - (a.at || 0)); store.set('list', list); store.set('gone', []);
         const up = {}; list.forEach(z => { if (!v[z.id] || (v[z.id].at || 0) < (z.at || 0)) up[z.id] = { j: JSON.stringify(z), at: z.at || Date.now() }; });
         if (Object.keys(up).length) await Cloud.ref().update(up);
@@ -1009,6 +1014,7 @@ if (typeof module !== 'undefined') module.exports = QZParse;
       } catch (e) { console.error(e); Cloud.ok = false; Cloud.err = e && e.code || String(e); }
       if (onHome) home();
     },
+    putLg() { if (!Cloud.user) return; Cloud.ref().child('_lg').set({ j: localStorage.getItem('md-leagues') || '[]', at: Date.now() }).catch(e => console.error(e)); },
     put(z) { if (!Cloud.user) return; Cloud.ref().child(z.id).set({ j: JSON.stringify(z), at: z.at || Date.now() }).catch(e => console.error(e)); },
     del(id) { if (Cloud.user) Cloud.ref().child(id).remove().catch(() => {}); else { const g = store.get('gone', []); g.push(id); store.set('gone', g.slice(-200)); } },
     async signIn() {
@@ -1020,6 +1026,7 @@ if (typeof module !== 'undefined') module.exports = QZParse;
       const u = a.currentUser; if (u) { Cloud.user = u; await Cloud.pull(); }
     }
   };
+  addEventListener('md-leagues', () => Cloud.putLg());
   if (document.readyState === 'complete') Cloud.init(); else addEventListener('load', () => Cloud.init());
   const persist = () => { if (!Q) return; Q.at = Date.now(); const i = list.findIndex(x => x.id === Q.id); if (i >= 0) list[i] = Q; else list.unshift(Q); Cloud.put(Q); if (!store.set('list', list)) toast(B('امتلأت مساحة الحفظ في المتصفح، فاحفظ نسخة في جهازك أو صغّر الصور.', 'Browser storage is full; save a copy to your device or use smaller images.'), 1); };
   let tSave; const later = () => { clearTimeout(tSave); tSave = setTimeout(() => { persist(); checks(); }, 400); };
@@ -1098,8 +1105,8 @@ if (typeof module !== 'undefined') module.exports = QZParse;
       ${RLIB().length ? `<h2 class="qz-h" id="lib">${B('مكتبة ميدان: مسابقات جاهزة', 'The Maydan library: ready quizzes')}</h2><p class="pt-fine">${B('ابدأ أيًّا منها مباشرة، أو افتحها وعدّل عليها لتصير مسابقتك.', 'Start any of them now, or open one and make it your own.')}</p>
       <div class="qz-lib">${RLIB().map((z, k) => `<div class="qz-lc"${k >= 5 ? ' data-more hidden' : ''}><span class="qz-li">${z.icon}</span><b>${esc(z.title)}</b><small>${esc(z.desc)}</small><em>${esc(z.who)} · ${z.qs.length} ${z.qs.every(x => x.type === 'game') ? B('تحديات', 'challenges') : B('فقرة', 'items')}</em><span class="qz-lb"><button type="button" class="btn solid" data-lgo="${z.id}">${B('ابدأ الآن ▶', 'Start now ▶')}</button><button type="button" class="btn ghost" data-led="${z.id}">${B('افتحها وعدّلها', 'Open and edit')}</button></span></div>`).join('')}</div>${RLIB().length > 5 ? `<button type="button" class="btn ghost qz-libmore" id="qzLibMore">${B(`عرض كل المسابقات (${RLIB().length})`, `Show all quizzes (${RLIB().length})`)}</button>` : ''}` : ''}
       ${list.length ? `<h2 class="qz-h">${B(`مسابقاتك (${list.length})`, `Your quizzes (${list.length})`)}</h2><ul class="qz-list">${list.map(x => `<li data-li="${x.id}"><button type="button" data-open="${x.id}"><b>${esc(x.title || T('بلا عنوان', 'Untitled'))}</b><small>${T('الأسئلة: ', 'Questions: ')}${x.qs.length}${x.at ? ' · ' + new Date(x.at).toLocaleDateString(isAr() ? 'ar-SA-u-ca-gregory-nu-arab' : 'en-GB', { day: 'numeric', month: 'short' }) : ''}</small></button><button type="button" class="qz-del" data-del="${x.id}" title="${T('احذف', 'Delete')}" aria-label="${T('احذف', 'Delete')}">${IC.trash}</button></li>`).join('')}</ul>` : ''}
-      <div class="qz-acct">${Cloud.user ? `<p>${IC.cloud}${B('مسابقاتك محفوظة في حسابك', 'Your quizzes are saved in your account')} <b dir="ltr">${esc(Cloud.user.email || '')}</b>${Cloud.ok === false ? ` <em>${B('تعذّرت المزامنة الآن', 'Could not sync right now')}</em>` : ''}</p><button type="button" class="sn-lnk" id="qzOut">${B('خروج من الحساب', 'Sign out')}</button>`
-        : `<p>${IC.cloud}${B('احفظ مسابقاتك في حسابك على Google: تلقاها في أي جهاز، وما تضيع لو انمسح المتصفح.', 'Keep your quizzes in your Google account: on any device, and safe if the browser is cleared.')}</p><button type="button" class="btn solid" id="qzG">${B('ادخل بحساب Google', 'Sign in with Google')}</button>`}</div>
+      <div class="qz-acct">${Cloud.user ? `<p>${IC.cloud}${B('مسابقاتك ودورياتك محفوظة في حسابك', 'Your quizzes and leagues are saved in your account')} <b dir="ltr">${esc(Cloud.user.email || '')}</b>${Cloud.ok === false ? ` <em>${B('تعذّرت المزامنة الآن', 'Could not sync right now')}</em>` : ''}</p><button type="button" class="sn-lnk" id="qzOut">${B('خروج من الحساب', 'Sign out')}</button>`
+        : `<p>${IC.cloud}${B('احفظ مسابقاتك ودورياتك في حسابك على Google: تلقاها في أي جهاز، وما تضيع لو انمسح المتصفح.', 'Keep your quizzes and leagues in your Google account: on any device, and safe if the browser is cleared.')}</p><button type="button" class="btn solid" id="qzG">${B('ادخل بحساب Google', 'Sign in with Google')}</button>`}</div>
       <div class="qz-keep"><label class="qz-imp btn ghost">${B('فتح نسخة محفوظة', 'Open a saved copy')}<input type="file" accept=".json,application/json" hidden id="qzImp"></label>${list.length ? `<button type="button" class="btn ghost" id="qzAll">${IC.save}${B('احفظ نسخة من كل مسابقاتي', 'Save a copy of all my quizzes')}</button>` : ''}</div>
       <p class="pt-fine">${B('تُحفظ المسابقات في هذا المتصفح وتبقى ما دام لم يُمسح سجله. وللاحتياط، احفظ نسخة منها كلها في ملف، وافتحها في أي متصفح أو جهاز.', 'Quizzes stay in this browser unless its data is cleared. To be safe, save a copy of them all in one file and open it on any browser or device.')}</p></div>${window.MDX ? `<div class="sn-card" id="qzLg">${MDX.listHtml()}</div>` : ''}${introMore()}`;
     if (window.MDX) MDX.bindList(root.querySelector('#qzLg'), home);
@@ -2367,6 +2374,22 @@ body>.md-xov{position:fixed}
 .md-bbt tr.abs td{opacity:.55}
 .md-motto{text-align:center;color:#e0a458;font-weight:700;letter-spacing:.02em;font-size:clamp(14px,2.2vh,24px);margin:1vh 0 0}
 .md-wait .md-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+/* waiting extras on the phone: a message, playing or watching, a heads-up when it starts */
+.mp-xtra{display:flex;flex-direction:column;gap:8px;margin:14px 0 4px}
+.mp-xb{background:none;border:1px dashed var(--line,#cfd6e4);border-radius:12px;padding:10px 12px;font:inherit;color:var(--accent,#2563eb);cursor:pointer}
+.mp-msg textarea{width:100%;box-sizing:border-box;border:1px solid var(--line,#cfd6e4);border-radius:12px;padding:10px 12px;font:inherit;resize:none}
+.mp-msgb{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.mp-toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#17153a;color:#fff;padding:10px 18px;border-radius:12px;z-index:99;font-size:.95rem;max-width:90vw;text-align:center}
+.mp-rin{margin-top:16px;text-align:start}.mp-rin h3{margin:0 0 8px;font-size:1rem}
+.mp-rin p{display:flex;flex-direction:column;margin:0 0 8px;padding:8px 12px;border-radius:10px;background:rgba(37,99,235,.06)}.mp-rin b{font-size:.85rem;opacity:.8}
+/* messages on the big screen, and the host's quiet inbox */
+.md-msgb{position:fixed;left:50%;bottom:9vh;transform:translateX(-50%);z-index:70;display:flex;align-items:center;gap:14px;max-width:80vw;padding:14px 22px;border-radius:18px;background:rgba(23,21,58,.92);color:#fff;box-shadow:0 14px 40px rgba(0,0,0,.35);font-size:clamp(18px,2.4vw,30px);animation:mdMsgIn .45s ease-out}
+.md-msgb b{color:#f2b84b;white-space:nowrap}.md-msgb button{background:none;border:0;color:rgba(255,255,255,.5);font-size:1.1em;cursor:pointer;padding:0 4px}
+.md-msgb.out{opacity:0;transition:opacity .5s}
+@keyframes mdMsgIn{from{opacity:0;transform:translate(-50%,20px)}to{opacity:1;transform:translate(-50%,0)}}
+.md-inbox{position:fixed;inset-inline-end:16px;bottom:16px;z-index:70;display:flex;align-items:center;gap:4px;padding:8px 10px;border-radius:12px;border:1px solid rgba(127,127,127,.3);background:rgba(127,127,127,.1);color:inherit;cursor:pointer;opacity:.6}
+.md-inbox.new{opacity:1}.md-inbox i{font-style:normal;font-size:.8rem;background:#c0392b;color:#fff;border-radius:999px;padding:1px 6px}
+.mp-msg .mp-xb{width:100%}
 </style><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script>window.MD_CFG={"apiKey": "AIzaSyA50i75DT1Is1a6Yn6snW1_JVObc8S3F0Y", "authDomain": "maydan-705ae.firebaseapp.com", "databaseURL": "https://maydan-705ae-default-rtdb.europe-west1.firebasedatabase.app", "projectId": "maydan-705ae", "appId": "1:342187013133:web:d5c2396f0db413f3c51144"};window.MD_MARK="<svg class=\"md-mark\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><rect x=\"4\" y=\"4\" width=\"40\" height=\"40\" rx=\"12\" fill=\"#23336F\"/><path d=\"M24 9l4.2 6.8 7.8-1.8-1.8 7.8L41 24l-6.8 4.2 1.8 7.8-7.8-1.8L24 39l-4.2-6.8-7.8 1.8 1.8-7.8L7 24l6.8-4.2-1.8-7.8 7.8 1.8z\" fill=\"#C9822B\"/><circle cx=\"24\" cy=\"24\" r=\"6.5\" fill=\"#23336F\"/><circle cx=\"24\" cy=\"24\" r=\"3\" fill=\"#F3E3C7\"/></svg>";</script><script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script><script>/* Maydan challenges: short games played on every phone at once. Every phone gets the same level (same seed),
    so the race is fair. Each game reports a score; higher is better. */
 window.MDGames = (function () {
@@ -3264,7 +3287,8 @@ window.MDX = (function () {
   /* ---------- leagues: the results of several quizzes for one group, kept in this browser ---------- */
   const LK = 'md-leagues';
   const all = () => { try { return JSON.parse(localStorage.getItem(LK) || '[]'); } catch (e) { return []; } };
-  const save = L => { try { localStorage.setItem(LK, JSON.stringify(L)); } catch (e) {} };
+  // every change is announced, so the host's Google account (when signed in) keeps a copy too
+  const save = L => { try { localStorage.setItem(LK, JSON.stringify(L)); window.dispatchEvent(new Event('md-leagues')); } catch (e) {} };
   const nameKey = n => String(n || '').trim().replace(/\s+/g, ' ').replace(/[أإآ]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي').toLowerCase();
   const PTS = r => [10, 8, 6, 5, 4, 3, 2][r - 1] || 1;
   function create(name) { const L = all(), id = Math.random().toString(36).slice(2, 10); L.push({ id, name: name.slice(0, 60), made: Date.now(), rounds: [] }); save(L); return id; }
@@ -3298,7 +3322,7 @@ window.MDX = (function () {
     const msg = t => { d.querySelector('[data-msg]').textContent = t; };
     d.querySelector('[data-sh]').onclick = async () => { msg(T('جارٍ النشر…', 'Publishing…')); const ok = await publish(lg); if (!ok) return msg(T('تعذّر النشر من هذا الجهاز.', 'Could not publish from this device.')); const u = shareUrl(lg.id); try { await navigator.clipboard.writeText(u); } catch (e) {} msg(T('نُسخ الرابط: ', 'Link copied: ') + u); };
     d.querySelector('[data-ex]').onclick = () => download(`league-${lg.name}.json`, JSON.stringify(lg), 'application/json');
-    d.querySelector('[data-del]').onclick = () => { if (!confirm(T(`حذف دوري «${lg.name}» من هذا المتصفح؟`, `Delete the league “${lg.name}” from this browser?`))) return; save(all().filter(z => z.id !== id)); d.remove(); if (onChange) onChange(); };
+    d.querySelector('[data-del]').onclick = () => { if (!confirm(T(`حذف دوري «${lg.name}»؟`, `Delete the league “${lg.name}”?`))) return; try { const g = JSON.parse(localStorage.getItem('md-lg-gone') || '[]'); g.push(id); localStorage.setItem('md-lg-gone', JSON.stringify(g.slice(-100))); } catch (e) {} save(all().filter(z => z.id !== id)); d.remove(); if (onChange) onChange(); };
   }
   function importFile(file, onChange) {
     const r = new FileReader(); r.onload = () => { try { const lg = JSON.parse(r.result); if (!lg.id || !Array.isArray(lg.rounds)) throw 0; const L = all().filter(z => z.id !== lg.id); L.push(lg); save(L); if (onChange) onChange(); } catch (e) { alert(T('هذا الملف ليس نسخة دوري.', 'This file is not a league backup.')); } }; r.readAsText(file);
@@ -3654,6 +3678,8 @@ window.MDLive = (function () {
       if (now() - (v.t || 0) > 8000) return;
       if (v.e === '🎤') { stat({ 'x/mic': 1 }); return micVote(s.key); }
       if (v.e.charAt(0) === '@') return remote(s.key, v.e);
+      // a player steps back to watch, or a watcher joins in; their points wait for them
+      if (v.e === '^f' || v.e === '^p') return switchSide(s.key, v.e === '^p');
       if (/^#[01][A-Za-z0-9]{1,6}$/.test(v.e)) { if (G) { G.sid = G.sid || {}; const o = G.sid[s.key] = G.sid[s.key] || ['', '']; o[+v.e[1]] = v.e.slice(2); } return; }
       if (v.e.charAt(0) === '%') { if (G) { G.av = G.av || {}; G.av[s.key] = v.e.slice(1, 3); } return; }
       if (G) { G.aw = G.aw || {}; const w = G.aw[s.key] = G.aw[s.key] || {}; w.rx = (w.rx || 0) + 1; }
@@ -3663,6 +3689,41 @@ window.MDLive = (function () {
       fx.appendChild(e); setTimeout(() => e.remove(), 2600);
     };
     sub(G.ref.child('rx'), 'child_added', fly); sub(G.ref.child('rx'), 'child_changed', fly);
+    messages();
+  }
+  function switchSide(u, play) {
+    if (!G) return; G.fans = G.fans || {}; G.held = G.held || {};
+    if (play && u in G.fans) { G.players[u] = G.fans[u]; delete G.fans[u]; G.score[u] = G.held[u] != null ? G.held[u] : (G.score[u] || 0); G.streak[u] = 0; }
+    else if (!play && u in G.players) { G.fans[u] = G.players[u]; G.held[u] = G.score[u] || 0; delete G.players[u]; delete G.score[u]; }
+    else return;
+    const f = G.el.querySelector('#mdFans'); if (f) f.textContent = Object.keys(G.fans).length || '';
+    const n = G.el.querySelector('#mdN'); if (n) n.textContent = Object.keys(G.players).length;
+    keep(); if (G.drawLobby) G.drawLobby();
+  }
+  /* ---------- messages from the phones: to the big screen, one at a time, or to the host alone ---------- */
+  function messages() {
+    const seen = {}; G.inbox = G.inbox || []; G.mq = [];
+    const nameOf = u => (G.players || {})[u] || (G.fans || {})[u] || T('مشارك', 'A player');
+    const got = s => { const v = s.val() || {}; if (!v.m || seen[s.key] === v.t || now() - (v.t || 0) > 60000) return; seen[s.key] = v.t;
+      if (v.to === 'h') { G.inbox.push({ n: nameOf(s.key), m: v.m, t: v.t }); inboxBadge(); SND.join(); return; }
+      if (G.noMsg) return; G.mq.push({ n: nameOf(s.key), m: v.m }); if (!G.mShow) showMsg(); };
+    sub(G.ref.child('msg'), 'child_added', got); sub(G.ref.child('msg'), 'child_changed', got);
+  }
+  function showMsg() {
+    const z = G.mq.shift(); if (!z) { G.mShow = false; return; } G.mShow = true;
+    const d = document.createElement('div'); d.className = 'md-msgb';
+    d.innerHTML = `<b dir="auto">${esc(z.n)}</b><span dir="auto">${esc(z.m)}</span><button type="button" aria-label="${T('إيقاف رسائل الشاشة', 'Stop screen messages')}" title="${T('إيقاف رسائل الشاشة', 'Stop screen messages')}">×</button>`;
+    d.querySelector('button').onclick = () => { G.noMsg = true; G.mq = []; d.remove(); G.mShow = false; };
+    G.el.appendChild(d); setTimeout(() => { d.classList.add('out'); setTimeout(() => { d.remove(); showMsg(); }, 500); }, 6500);
+  }
+  // messages for the host: only a quiet count on the screen; the words open on a tap, or on the host's phone
+  function inboxBadge() {
+    let b = G.el.querySelector('.md-inbox'); if (!b) { b = document.createElement('button'); b.type = 'button'; b.className = 'md-inbox'; G.el.appendChild(b);
+      b.onclick = () => { const L = G.inbox.slice().reverse(); const d = document.createElement('div'); d.className = 'md-asks';
+        d.innerHTML = `<div class="md-asksb"><h3>${B('رسائل لك', 'Messages for you')}</h3>${L.map(z => `<div class="md-ask"><p dir="auto">${esc(z.m)}</p><small dir="auto">${esc(z.n)}</small></div>`).join('')}<button type="button" class="btn ghost" data-x>${B('إغلاق', 'Close')}</button></div>`;
+        G.el.appendChild(d); d.querySelector('[data-x]').onclick = () => d.remove(); G.seenIn = G.inbox.length; inboxBadge(); }; }
+    const n = G.inbox.length - (G.seenIn || 0); b.hidden = !G.inbox.length; b.classList.toggle('new', n > 0);
+    b.innerHTML = `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>${n > 0 ? `<i>${n}</i>` : ''}`;
   }
 
   /* ---------- phones only: no big screen; the host's own phone runs the quiz and plays it in a panel below ----------
@@ -3822,6 +3883,7 @@ window.MDLive = (function () {
       }
       names.classList.toggle('md-has-cols', !!G.teams);
     };
+    G.drawLobby = () => { if (G.el.querySelector('#mdN')) { draw(); count(); } };
     const chip = () => draw();
     names.onclick = e => {
       const c = e.target.closest('[data-u]'); if (!c) return; const u = c.dataset.u, r = c.getBoundingClientRect();

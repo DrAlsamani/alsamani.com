@@ -320,6 +320,8 @@ window.MDLive = (function () {
       if (now() - (v.t || 0) > 8000) return;
       if (v.e === '🎤') { stat({ 'x/mic': 1 }); return micVote(s.key); }
       if (v.e.charAt(0) === '@') return remote(s.key, v.e);
+      // a player steps back to watch, or a watcher joins in; their points wait for them
+      if (v.e === '^f' || v.e === '^p') return switchSide(s.key, v.e === '^p');
       if (/^#[01][A-Za-z0-9]{1,6}$/.test(v.e)) { if (G) { G.sid = G.sid || {}; const o = G.sid[s.key] = G.sid[s.key] || ['', '']; o[+v.e[1]] = v.e.slice(2); } return; }
       if (v.e.charAt(0) === '%') { if (G) { G.av = G.av || {}; G.av[s.key] = v.e.slice(1, 3); } return; }
       if (G) { G.aw = G.aw || {}; const w = G.aw[s.key] = G.aw[s.key] || {}; w.rx = (w.rx || 0) + 1; }
@@ -329,6 +331,41 @@ window.MDLive = (function () {
       fx.appendChild(e); setTimeout(() => e.remove(), 2600);
     };
     sub(G.ref.child('rx'), 'child_added', fly); sub(G.ref.child('rx'), 'child_changed', fly);
+    messages();
+  }
+  function switchSide(u, play) {
+    if (!G) return; G.fans = G.fans || {}; G.held = G.held || {};
+    if (play && u in G.fans) { G.players[u] = G.fans[u]; delete G.fans[u]; G.score[u] = G.held[u] != null ? G.held[u] : (G.score[u] || 0); G.streak[u] = 0; }
+    else if (!play && u in G.players) { G.fans[u] = G.players[u]; G.held[u] = G.score[u] || 0; delete G.players[u]; delete G.score[u]; }
+    else return;
+    const f = G.el.querySelector('#mdFans'); if (f) f.textContent = Object.keys(G.fans).length || '';
+    const n = G.el.querySelector('#mdN'); if (n) n.textContent = Object.keys(G.players).length;
+    keep(); if (G.drawLobby) G.drawLobby();
+  }
+  /* ---------- messages from the phones: to the big screen, one at a time, or to the host alone ---------- */
+  function messages() {
+    const seen = {}; G.inbox = G.inbox || []; G.mq = [];
+    const nameOf = u => (G.players || {})[u] || (G.fans || {})[u] || T('مشارك', 'A player');
+    const got = s => { const v = s.val() || {}; if (!v.m || seen[s.key] === v.t || now() - (v.t || 0) > 60000) return; seen[s.key] = v.t;
+      if (v.to === 'h') { G.inbox.push({ n: nameOf(s.key), m: v.m, t: v.t }); inboxBadge(); SND.join(); return; }
+      if (G.noMsg) return; G.mq.push({ n: nameOf(s.key), m: v.m }); if (!G.mShow) showMsg(); };
+    sub(G.ref.child('msg'), 'child_added', got); sub(G.ref.child('msg'), 'child_changed', got);
+  }
+  function showMsg() {
+    const z = G.mq.shift(); if (!z) { G.mShow = false; return; } G.mShow = true;
+    const d = document.createElement('div'); d.className = 'md-msgb';
+    d.innerHTML = `<b dir="auto">${esc(z.n)}</b><span dir="auto">${esc(z.m)}</span><button type="button" aria-label="${T('إيقاف رسائل الشاشة', 'Stop screen messages')}" title="${T('إيقاف رسائل الشاشة', 'Stop screen messages')}">×</button>`;
+    d.querySelector('button').onclick = () => { G.noMsg = true; G.mq = []; d.remove(); G.mShow = false; };
+    G.el.appendChild(d); setTimeout(() => { d.classList.add('out'); setTimeout(() => { d.remove(); showMsg(); }, 500); }, 6500);
+  }
+  // messages for the host: only a quiet count on the screen; the words open on a tap, or on the host's phone
+  function inboxBadge() {
+    let b = G.el.querySelector('.md-inbox'); if (!b) { b = document.createElement('button'); b.type = 'button'; b.className = 'md-inbox'; G.el.appendChild(b);
+      b.onclick = () => { const L = G.inbox.slice().reverse(); const d = document.createElement('div'); d.className = 'md-asks';
+        d.innerHTML = `<div class="md-asksb"><h3>${B('رسائل لك', 'Messages for you')}</h3>${L.map(z => `<div class="md-ask"><p dir="auto">${esc(z.m)}</p><small dir="auto">${esc(z.n)}</small></div>`).join('')}<button type="button" class="btn ghost" data-x>${B('إغلاق', 'Close')}</button></div>`;
+        G.el.appendChild(d); d.querySelector('[data-x]').onclick = () => d.remove(); G.seenIn = G.inbox.length; inboxBadge(); }; }
+    const n = G.inbox.length - (G.seenIn || 0); b.hidden = !G.inbox.length; b.classList.toggle('new', n > 0);
+    b.innerHTML = `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>${n > 0 ? `<i>${n}</i>` : ''}`;
   }
 
   /* ---------- phones only: no big screen; the host's own phone runs the quiz and plays it in a panel below ----------
@@ -488,6 +525,7 @@ window.MDLive = (function () {
       }
       names.classList.toggle('md-has-cols', !!G.teams);
     };
+    G.drawLobby = () => { if (G.el.querySelector('#mdN')) { draw(); count(); } };
     const chip = () => draw();
     names.onclick = e => {
       const c = e.target.closest('[data-u]'); if (!c) return; const u = c.dataset.u, r = c.getBoundingClientRect();

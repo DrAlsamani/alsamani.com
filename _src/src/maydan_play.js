@@ -46,7 +46,7 @@
         await within(ready());
         const s = await within(db.ref('rooms/' + pin + '/st').once('value'));
         if (!s.exists()) return codeScreen(T('لا توجد مسابقة بهذا الرمز. تأكد منه على الشاشة.', 'No quiz with this code. Check it on the screen.'));
-        R = db.ref('rooms/' + pin); loadH(); SIDREQ = !!(await within(R.child('sidreq').once('value'))).val();
+        R = db.ref('rooms/' + pin); PIN = pin; loadH(); SIDREQ = !!(await within(R.child('sidreq').once('value'))).val();
         const mine = (await within(R.child('pl/' + uid).once('value'))).val();
         if (REMOTE) { if (!mine) await within(R.child('pl/' + uid).set({ n: T('جوال المضيف', 'Host phone'), at: TS, w: 1 })); FAN = true; me = ''; R.child('rx/' + uid).set({ e: '@' + REMOTE, t: TS }).catch(() => {}); return play(); }
         if (mine) { me = mine.n; return play(); }
@@ -119,9 +119,11 @@
     { const a = store.get('av', ''); if (a && R && !REMOTE) setTimeout(() => R.child('rx/' + uid).set({ e: '%' + a, t: TS }).catch(() => {}), 400); }
     // a graded quiz: the student ID goes to the host in two short parts
     if (R && !REMOTE) R.child('sidreq').once('value', s2 => { const id = store.get('sid', ''); if (!s2.val() || !id || FAN) return; setTimeout(() => R.child('rx/' + uid).set({ e: '#0' + id.slice(0, 6), t: TS }).catch(() => {}), 1200); setTimeout(() => R.child('rx/' + uid).set({ e: '#1' + id.slice(6, 12), t: TS }).catch(() => {}), 2400); });
-    R.child('st').on('value', s => { st = s.val() || {}; if (!s.exists()) return gone(); draw(); tryAsk(); askBtn(); });
+    if (REMOTE) { const seen = {}; const got = m => { const v = m.val() || {}; if (v.to !== 'h' || !v.m || seen[m.key] === v.t) return; seen[m.key] = v.t; R.child('pl/' + m.key + '/n').once('value', n => { RIN.push({ n: n.val() || T('مشارك', 'A player'), m: v.m }); buzz([30, 40, 30]); shown = ''; draw(); }); };
+      R.child('msg').on('child_added', got); R.child('msg').on('child_changed', got); }
+    R.child('st').on('value', s => { st = s.val() || {}; if (!s.exists()) return gone(); phaseSeen(); draw(); tryAsk(); askBtn(); });
     R.child('q').on('value', s => { Q = s.val(); if (Q && Q.pw) TOOLS = true; });
-    R.child('pl/' + uid + '/w').once('value', s => { FAN = !!s.val(); });
+    R.child('pl/' + uid + '/w').once('value', s => { FAN = !!s.val(); const o = store.get('fan.' + PIN, null); if (o != null && !!o !== FAN && !REMOTE) { FAN = !!o; R.child('rx/' + uid).set({ e: FAN ? '^f' : '^p', t: TS }).catch(() => {}); shown = ''; draw(); } });
     R.child('teams').on('value', t => { TEAMS = t.val(); });
     R.child('pl/' + uid + '/t').once('value', t => { if (t.val() != null) myTeam = +t.val(); });
     R.child('asg/' + uid).on('value', t => { if (t.val() != null) { myTeam = +t.val(); shown = ''; draw(); } });
@@ -162,7 +164,50 @@
     if (FAN) html = fanHtml(html);
     const qn = Q && Q.n && st.i >= 0 && ['q', 'ready', 'rev'].includes(st.ph) ? `<span class="mp-qn">${Q.type === 'stage' ? '' + B('منصة التصريحات', 'The stage') : B(`السؤال ${Q.qn || st.i + 1} من ${Q.qt || Q.n}`, `Question ${Q.qn || st.i + 1} of ${Q.qt || Q.n}`)}</span>` : '';
     const fx = SC && SC.q === st.i && st.ph === 'rev' ? pwNote() : '';
-    root.innerHTML = `<div class="mp-play ${cls || ''}"><div class="mp-top"><span dir="auto">${FAN ? '' : ''}${esc(me)}${TEAMS && myTeam != null ? ` <i style="--c:var(--qz${(myTeam) % 6})">${esc(TEAMS[myTeam])}</i>` : ''}</span>${qn}<b>${FAN ? '' : SC ? SC.s : 0}</b></div>${fx}${/<div class="mp-(mic|rx)"/.test(html) ? html.replace(/<div class="mp-(mic|rx)"/, m => '<div class="mp-feed" id="mpFeed"></div>' + m) : html + '<div class="mp-feed" id="mpFeed"></div>'}${!FAN && ['rev', 'lb', 'ready'].includes(st.ph) ? toolsBar() : ''}${!FAN && st.ph === 'q' && cls === 'q' ? skipBtn() : ''}</div>`; if (R) { rxBind(); toolsBind(); } feed(); }
+    root.innerHTML = `<div class="mp-play ${cls || ''}"><div class="mp-top"><span dir="auto">${FAN ? '' : ''}${esc(me)}${TEAMS && myTeam != null ? ` <i style="--c:var(--qz${(myTeam) % 6})">${esc(TEAMS[myTeam])}</i>` : ''}</span>${qn}<b>${FAN ? '' : SC ? SC.s : 0}</b></div>${fx}${/<div class="mp-(mic|rx)"/.test(html) ? html.replace(/<div class="mp-(mic|rx)"/, m => '<div class="mp-feed" id="mpFeed"></div>' + m) : html + '<div class="mp-feed" id="mpFeed"></div>'}${!FAN && ['rev', 'lb', 'ready'].includes(st.ph) ? toolsBar() : ''}${!FAN && st.ph === 'q' && cls === 'q' ? skipBtn() : ''}${extras()}</div>`; if (R) { rxBind(); toolsBind(); xBind(); } feed(); }
+  /* ---------- while waiting: switch between playing and watching, write to the screen or to the host, and be told when it starts ---------- */
+  let msgOpen = false, msgDraft = '', lastMsg = 0;
+  function extras() {
+    if (REMOTE || !R) return '';
+    const calm = ['lobby', 'pause', 'rev', 'lb'].includes(st.ph) || FAN; if (!calm || st.ph === 'end') return '';
+    const nt = st.ph === 'lobby' && 'Notification' in window && Notification.permission === 'default' ? `<button type="button" class="mp-xb" data-ntf>${B('نبّهني إذا بدأت وأنا خارج الصفحة', 'Tell me when it starts if I leave the page')}</button>` : '';
+    return `<div class="mp-xtra">
+      <div class="mp-msg${msgOpen ? ' on' : ''}">${msgOpen ? `<textarea id="mpMsg" maxlength="80" rows="2" dir="auto" placeholder="${T('رسالتك (٨٠ حرفًا)', 'Your message (80 characters)')}">${esc(msgDraft)}</textarea>
+        <div class="mp-msgb"><button type="button" class="btn solid" data-msg="s">${B('أرسلها للشاشة', 'Send to the screen')}</button><button type="button" class="btn ghost" data-msg="h">${B('للمشرف فقط', 'To the host only')}</button></div>`
+        : `<button type="button" class="mp-xb" data-msgo>${B('اكتب رسالة للشاشة أو للمشرف', 'Write to the screen or the host')}</button>`}</div>
+      <button type="button" class="mp-xb" data-sw>${FAN ? B('انضم كلاعب', 'Join as a player') : B('تحوّل إلى متفرج', 'Switch to watching')}</button>${nt}</div>`;
+  }
+  function xBind() {
+    const o = root.querySelector('[data-msgo]'); if (o) o.onclick = () => { msgOpen = true; shown = ''; draw(); setTimeout(() => { const t = root.querySelector('#mpMsg'); if (t) t.focus(); }, 50); };
+    const t = root.querySelector('#mpMsg'); if (t) t.oninput = () => { msgDraft = t.value; };
+    root.querySelectorAll('[data-msg]').forEach(b => b.onclick = async () => {
+      const m = (msgDraft || '').trim().replace(/\s+/g, ' ').slice(0, 80); if (!m) return;
+      if (Date.now() - lastMsg < 15000) return flashMsg(T('انتظر قليلًا قبل رسالة أخرى.', 'Wait a moment before another message.'));
+      try { await R.child('msg/' + uid).set({ m, to: b.dataset.msg, t: TS }); lastMsg = Date.now(); msgDraft = ''; msgOpen = false; buzz(25); shown = ''; draw(); flashMsg(b.dataset.msg === 's' ? T('وصلت رسالتك للشاشة.', 'Your message is on its way to the screen.') : T('وصلت رسالتك للمشرف.', 'Your message reached the host.')); }
+      catch (e) { flashMsg(T('تعذّر إرسال الرسالة الآن.', 'The message could not be sent now.')); }
+    });
+    const sw = root.querySelector('[data-sw]'); if (sw) sw.onclick = () => { FAN = !FAN; store.set('fan.' + PIN, FAN ? 1 : 0); R.child('rx/' + uid).set({ e: FAN ? '^f' : '^p', t: TS }).catch(() => {}); buzz(25); shown = ''; draw(); };
+    const nb = root.querySelector('[data-ntf]'); if (nb) nb.onclick = () => { try { Notification.requestPermission().then(() => { shown = ''; draw(); }); } catch (e) {} };
+  }
+  function flashMsg(t) { const d = document.createElement('div'); d.className = 'mp-toast'; d.textContent = t; document.body.appendChild(d); setTimeout(() => d.remove(), 2600); }
+  // the screen stays awake while waiting, and the start is announced: sound, vibration, the tab title and, if allowed, a notification
+  let wake = null, startedOnce = false, lastPh = null; const PAGE_T = document.title;
+  async function keepAwake(on) { try { if (on && !wake && navigator.wakeLock && document.visibilityState === 'visible') { wake = await navigator.wakeLock.request('screen'); wake.addEventListener('release', () => { wake = null; }); } else if (!on && wake) { wake.release(); wake = null; } } catch (e) {} }
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') { document.title = PAGE_T; if (st.ph === 'lobby') keepAwake(true); } });
+  function announce(first) {
+    const hidden = document.visibilityState !== 'visible';
+    if (first) { tone(660, .15); setTimeout(() => tone(880, .15), 180); setTimeout(() => tone(1175, .3), 360); buzz([300, 100, 300, 100, 600]); }
+    if (hidden) { document.title = (first ? T('بدأت المسابقة! ', 'The quiz has started! ') : T('سؤال جديد! ', 'New question! ')) + '· ' + PAGE_T;
+      try { if ('Notification' in window && Notification.permission === 'granted') new Notification(first ? T('بدأت المسابقة في ميدان!', 'Your Maydan quiz has started!') : T('سؤال جديد في ميدان', 'A new question in Maydan'), { body: T('ارجع للصفحة وشارك.', 'Come back and play.'), tag: 'md-' + PIN, renotify: true }); } catch (e) {} }
+  }
+  function phaseSeen() {
+    if (REMOTE) return; const ph = st.ph;
+    if (ph === 'lobby') keepAwake(true);
+    if (lastPh === 'lobby' && ph && ph !== 'lobby' && !startedOnce) { startedOnce = true; announce(true); keepAwake(false); }
+    else if (ph === 'q' && lastPh !== 'q' && startedOnce) announce(false);
+    if (ph && ph !== 'lobby') startedOnce = true;
+    lastPh = ph;
+  }
 
 
   /* ---------- the host's remote: big buttons that send short commands to the screen ---------- */
@@ -175,6 +220,8 @@
       <p class="mp-big">${esc(where)}</p><p>${esc(state)}</p>
       <div class="mp-rcb">${ph === 'end' ? `<button type="button" data-c="@r">${B('إعادة السباق', 'Replay the race')}</button>`
         : `<button type="button" class="go" data-c="@n">${ph === 'lobby' ? B('ابدأ', 'Start') : B('التالي', 'Next')}</button>${ph === 'q' ? `<button type="button" data-c="@s">${B('أنهِ الوقت واكشف الإجابة', 'End the time, show the answer')}</button>` : ''}${['rev', 'lb', 'ready', 'q'].includes(ph) ? `<button type="button" data-c="@m">${B('منصة التصريحات بعد هذه الجولة', 'The stage after this round')}</button>` : ''}`}</div></div>`;
+    // messages written for the host alone come to the host's phone
+    if (RIN.length) root.querySelector('.mp-remote').insertAdjacentHTML('beforeend', `<div class="mp-rin"><h3>${B('رسائل لك', 'Messages for you')}</h3>${RIN.slice().reverse().slice(0, 12).map(z => `<p><b dir="auto">${esc(z.n)}</b><span dir="auto">${esc(z.m)}</span></p>`).join('')}</div>`);
     root.querySelectorAll('[data-c]').forEach(b => b.onclick = () => { cmd(b.dataset.c); b.classList.add('sent'); setTimeout(() => b.classList.remove('sent'), 600); });
   }
   /* ---------- the audience asks: a fan writes a true-or-false statement; it reaches the host with the next question ---------- */
@@ -259,7 +306,7 @@
   let acx = null;
   function tone(f, d, v) { try { acx = acx || new (window.AudioContext || window.webkitAudioContext)(); if (acx.state === 'suspended') acx.resume(); const o = acx.createOscillator(), g = acx.createGain(), t = acx.currentTime; o.type = 'triangle'; o.frequency.value = f; g.gain.setValueAtTime(v || .06, t); g.gain.exponentialRampToValueAtTime(.0001, t + d); o.connect(g).connect(acx.destination); o.start(t); o.stop(t + d + .02); } catch (e) {} }
   /* ---------- a fan: follows the questions and the ranking, and cheers ---------- */
-  let FAN = false;
+  let FAN = false, PIN = '', RIN = [];
   // each player's figure: a shape and a colour they chose ('%' + shape digit + colour digit, sent once on joining)
   const AVS = ['polygon(50% 0,61% 22%,85% 15%,78% 39%,100% 50%,78% 61%,85% 85%,61% 78%,50% 100%,39% 78%,15% 85%,22% 61%,0 50%,22% 39%,15% 15%,39% 22%)', 'polygon(50% 0,63% 27%,93% 25%,76% 50%,93% 75%,63% 73%,50% 100%,37% 73%,7% 75%,24% 50%,7% 25%,37% 27%)', 'circle(50%)', 'polygon(50% 0,100% 50%,50% 100%,0 50%)', 'polygon(25% 4%,75% 4%,100% 50%,75% 96%,25% 96%,0 50%)', 'polygon(50% 0,100% 22%,88% 72%,50% 100%,12% 72%,0 22%)'], AVC = ['#C9822B', '#2a7fa8', '#2e8b57', '#b0533a', '#7a4fb5', '#d14d8b', '#23336F', '#1f8f8a'];
   const avSt = a => { a = String(a || ''); if (!/^\d\d$/.test(a)) return ''; return `--fs:${AVS[+a[0]] || AVS[0]};--fc:${AVC[+a[1]] || AVC[0]};`; };

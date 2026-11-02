@@ -566,3 +566,19 @@ body>.md-xov{position:fixed}
 .md-bbt tr.abs td{opacity:.55}
 .md-motto{text-align:center;color:#e0a458;font-weight:700;letter-spacing:.02em;font-size:clamp(14px,2.2vh,24px);margin:1vh 0 0}
 .md-wait .md-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+/* waiting extras on the phone: a message, playing or watching, a heads-up when it starts */
+.mp-xtra{display:flex;flex-direction:column;gap:8px;margin:14px 0 4px}
+.mp-xb{background:none;border:1px dashed var(--line,#cfd6e4);border-radius:12px;padding:10px 12px;font:inherit;color:var(--accent,#2563eb);cursor:pointer}
+.mp-msg textarea{width:100%;box-sizing:border-box;border:1px solid var(--line,#cfd6e4);border-radius:12px;padding:10px 12px;font:inherit;resize:none}
+.mp-msgb{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.mp-toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#17153a;color:#fff;padding:10px 18px;border-radius:12px;z-index:99;font-size:.95rem;max-width:90vw;text-align:center}
+.mp-rin{margin-top:16px;text-align:start}.mp-rin h3{margin:0 0 8px;font-size:1rem}
+.mp-rin p{display:flex;flex-direction:column;margin:0 0 8px;padding:8px 12px;border-radius:10px;background:rgba(37,99,235,.06)}.mp-rin b{font-size:.85rem;opacity:.8}
+/* messages on the big screen, and the host's quiet inbox */
+.md-msgb{position:fixed;left:50%;bottom:9vh;transform:translateX(-50%);z-index:70;display:flex;align-items:center;gap:14px;max-width:80vw;padding:14px 22px;border-radius:18px;background:rgba(23,21,58,.92);color:#fff;box-shadow:0 14px 40px rgba(0,0,0,.35);font-size:clamp(18px,2.4vw,30px);animation:mdMsgIn .45s ease-out}
+.md-msgb b{color:#f2b84b;white-space:nowrap}.md-msgb button{background:none;border:0;color:rgba(255,255,255,.5);font-size:1.1em;cursor:pointer;padding:0 4px}
+.md-msgb.out{opacity:0;transition:opacity .5s}
+@keyframes mdMsgIn{from{opacity:0;transform:translate(-50%,20px)}to{opacity:1;transform:translate(-50%,0)}}
+.md-inbox{position:fixed;inset-inline-end:16px;bottom:16px;z-index:70;display:flex;align-items:center;gap:4px;padding:8px 10px;border-radius:12px;border:1px solid rgba(127,127,127,.3);background:rgba(127,127,127,.1);color:inherit;cursor:pointer;opacity:.6}
+.md-inbox.new{opacity:1}.md-inbox i{font-style:normal;font-size:.8rem;background:#c0392b;color:#fff;border-radius:999px;padding:1px 6px}
+.mp-msg .mp-xb{width:100%}

@@ -51,7 +51,12 @@
       try {
         const v = (await Cloud.ref().once('value')).val() || {}, gone = store.get('gone', []), by = {};
         list.forEach(z => { by[z.id] = z; });
-        Object.keys(v).forEach(id => { if (gone.includes(id)) { Cloud.ref().child(id).remove().catch(() => {}); return; } let z = null; try { z = JSON.parse(v[id].j); } catch (e) {} if (!z || !Array.isArray(z.qs)) return; z.id = id; z.at = v[id].at || z.at || 0; if (!by[id] || (by[id].at || 0) < z.at) by[id] = z; });
+        // the leagues travel with the quizzes: one copy merged league by league, the one with more rounds wins
+        if (v._lg) { try { const C = JSON.parse(v._lg.j) || [], L = JSON.parse(localStorage.getItem('md-leagues') || '[]'), lg = JSON.parse(localStorage.getItem('md-lg-gone') || '[]'), m = {};
+          L.concat(C).forEach(z => { if (!z || !z.id || lg.includes(z.id)) return; if (!m[z.id] || (z.rounds || []).length > (m[z.id].rounds || []).length) m[z.id] = z; });
+          localStorage.setItem('md-leagues', JSON.stringify(Object.values(m))); } catch (e) {} }
+        Cloud.putLg();
+        Object.keys(v).forEach(id => { if (id === '_lg') return; if (gone.includes(id)) { Cloud.ref().child(id).remove().catch(() => {}); return; } let z = null; try { z = JSON.parse(v[id].j); } catch (e) {} if (!z || !Array.isArray(z.qs)) return; z.id = id; z.at = v[id].at || z.at || 0; if (!by[id] || (by[id].at || 0) < z.at) by[id] = z; });
         list = Object.values(by).sort((a, b) => (b.at || 0) - (a.at || 0)); store.set('list', list); store.set('gone', []);
         const up = {}; list.forEach(z => { if (!v[z.id] || (v[z.id].at || 0) < (z.at || 0)) up[z.id] = { j: JSON.stringify(z), at: z.at || Date.now() }; });
         if (Object.keys(up).length) await Cloud.ref().update(up);
@@ -59,6 +64,7 @@
       } catch (e) { console.error(e); Cloud.ok = false; Cloud.err = e && e.code || String(e); }
       if (onHome) home();
     },
+    putLg() { if (!Cloud.user) return; Cloud.ref().child('_lg').set({ j: localStorage.getItem('md-leagues') || '[]', at: Date.now() }).catch(e => console.error(e)); },
     put(z) { if (!Cloud.user) return; Cloud.ref().child(z.id).set({ j: JSON.stringify(z), at: z.at || Date.now() }).catch(e => console.error(e)); },
     del(id) { if (Cloud.user) Cloud.ref().child(id).remove().catch(() => {}); else { const g = store.get('gone', []); g.push(id); store.set('gone', g.slice(-200)); } },
     async signIn() {
@@ -70,6 +76,7 @@
       const u = a.currentUser; if (u) { Cloud.user = u; await Cloud.pull(); }
     }
   };
+  addEventListener('md-leagues', () => Cloud.putLg());
   if (document.readyState === 'complete') Cloud.init(); else addEventListener('load', () => Cloud.init());
   const persist = () => { if (!Q) return; Q.at = Date.now(); const i = list.findIndex(x => x.id === Q.id); if (i >= 0) list[i] = Q; else list.unshift(Q); Cloud.put(Q); if (!store.set('list', list)) toast(B('امتلأت مساحة الحفظ في المتصفح، فاحفظ نسخة في جهازك أو صغّر الصور.', 'Browser storage is full; save a copy to your device or use smaller images.'), 1); };
   let tSave; const later = () => { clearTimeout(tSave); tSave = setTimeout(() => { persist(); checks(); }, 400); };
@@ -148,8 +155,8 @@
       ${RLIB().length ? `<h2 class="qz-h" id="lib">${B('مكتبة ميدان: مسابقات جاهزة', 'The Maydan library: ready quizzes')}</h2><p class="pt-fine">${B('ابدأ أيًّا منها مباشرة، أو افتحها وعدّل عليها لتصير مسابقتك.', 'Start any of them now, or open one and make it your own.')}</p>
       <div class="qz-lib">${RLIB().map((z, k) => `<div class="qz-lc"${k >= 5 ? ' data-more hidden' : ''}><span class="qz-li">${z.icon}</span><b>${esc(z.title)}</b><small>${esc(z.desc)}</small><em>${esc(z.who)} · ${z.qs.length} ${z.qs.every(x => x.type === 'game') ? B('تحديات', 'challenges') : B('فقرة', 'items')}</em><span class="qz-lb"><button type="button" class="btn solid" data-lgo="${z.id}">${B('ابدأ الآن ▶', 'Start now ▶')}</button><button type="button" class="btn ghost" data-led="${z.id}">${B('افتحها وعدّلها', 'Open and edit')}</button></span></div>`).join('')}</div>${RLIB().length > 5 ? `<button type="button" class="btn ghost qz-libmore" id="qzLibMore">${B(`عرض كل المسابقات (${RLIB().length})`, `Show all quizzes (${RLIB().length})`)}</button>` : ''}` : ''}
       ${list.length ? `<h2 class="qz-h">${B(`مسابقاتك (${list.length})`, `Your quizzes (${list.length})`)}</h2><ul class="qz-list">${list.map(x => `<li data-li="${x.id}"><button type="button" data-open="${x.id}"><b>${esc(x.title || T('بلا عنوان', 'Untitled'))}</b><small>${T('الأسئلة: ', 'Questions: ')}${x.qs.length}${x.at ? ' · ' + new Date(x.at).toLocaleDateString(isAr() ? 'ar-SA-u-ca-gregory-nu-arab' : 'en-GB', { day: 'numeric', month: 'short' }) : ''}</small></button><button type="button" class="qz-del" data-del="${x.id}" title="${T('احذف', 'Delete')}" aria-label="${T('احذف', 'Delete')}">${IC.trash}</button></li>`).join('')}</ul>` : ''}
-      <div class="qz-acct">${Cloud.user ? `<p>${IC.cloud}${B('مسابقاتك محفوظة في حسابك', 'Your quizzes are saved in your account')} <b dir="ltr">${esc(Cloud.user.email || '')}</b>${Cloud.ok === false ? ` <em>${B('تعذّرت المزامنة الآن', 'Could not sync right now')}</em>` : ''}</p><button type="button" class="sn-lnk" id="qzOut">${B('خروج من الحساب', 'Sign out')}</button>`
-        : `<p>${IC.cloud}${B('احفظ مسابقاتك في حسابك على Google: تلقاها في أي جهاز، وما تضيع لو انمسح المتصفح.', 'Keep your quizzes in your Google account: on any device, and safe if the browser is cleared.')}</p><button type="button" class="btn solid" id="qzG">${B('ادخل بحساب Google', 'Sign in with Google')}</button>`}</div>
+      <div class="qz-acct">${Cloud.user ? `<p>${IC.cloud}${B('مسابقاتك ودورياتك محفوظة في حسابك', 'Your quizzes and leagues are saved in your account')} <b dir="ltr">${esc(Cloud.user.email || '')}</b>${Cloud.ok === false ? ` <em>${B('تعذّرت المزامنة الآن', 'Could not sync right now')}</em>` : ''}</p><button type="button" class="sn-lnk" id="qzOut">${B('خروج من الحساب', 'Sign out')}</button>`
+        : `<p>${IC.cloud}${B('احفظ مسابقاتك ودورياتك في حسابك على Google: تلقاها في أي جهاز، وما تضيع لو انمسح المتصفح.', 'Keep your quizzes and leagues in your Google account: on any device, and safe if the browser is cleared.')}</p><button type="button" class="btn solid" id="qzG">${B('ادخل بحساب Google', 'Sign in with Google')}</button>`}</div>
       <div class="qz-keep"><label class="qz-imp btn ghost">${B('فتح نسخة محفوظة', 'Open a saved copy')}<input type="file" accept=".json,application/json" hidden id="qzImp"></label>${list.length ? `<button type="button" class="btn ghost" id="qzAll">${IC.save}${B('احفظ نسخة من كل مسابقاتي', 'Save a copy of all my quizzes')}</button>` : ''}</div>
       <p class="pt-fine">${B('تُحفظ المسابقات في هذا المتصفح وتبقى ما دام لم يُمسح سجله. وللاحتياط، احفظ نسخة منها كلها في ملف، وافتحها في أي متصفح أو جهاز.', 'Quizzes stay in this browser unless its data is cleared. To be safe, save a copy of them all in one file and open it on any browser or device.')}</p></div>${window.MDX ? `<div class="sn-card" id="qzLg">${MDX.listHtml()}</div>` : ''}${introMore()}`;
     if (window.MDX) MDX.bindList(root.querySelector('#qzLg'), home);

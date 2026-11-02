@@ -191,7 +191,8 @@ window.MDX = (function () {
   /* ---------- leagues: the results of several quizzes for one group, kept in this browser ---------- */
   const LK = 'md-leagues';
   const all = () => { try { return JSON.parse(localStorage.getItem(LK) || '[]'); } catch (e) { return []; } };
-  const save = L => { try { localStorage.setItem(LK, JSON.stringify(L)); } catch (e) {} };
+  // every change is announced, so the host's Google account (when signed in) keeps a copy too
+  const save = L => { try { localStorage.setItem(LK, JSON.stringify(L)); window.dispatchEvent(new Event('md-leagues')); } catch (e) {} };
   const nameKey = n => String(n || '').trim().replace(/\s+/g, ' ').replace(/[أإآ]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي').toLowerCase();
   const PTS = r => [10, 8, 6, 5, 4, 3, 2][r - 1] || 1;
   function create(name) { const L = all(), id = Math.random().toString(36).slice(2, 10); L.push({ id, name: name.slice(0, 60), made: Date.now(), rounds: [] }); save(L); return id; }
@@ -225,7 +226,7 @@ window.MDX = (function () {
     const msg = t => { d.querySelector('[data-msg]').textContent = t; };
     d.querySelector('[data-sh]').onclick = async () => { msg(T('جارٍ النشر…', 'Publishing…')); const ok = await publish(lg); if (!ok) return msg(T('تعذّر النشر من هذا الجهاز.', 'Could not publish from this device.')); const u = shareUrl(lg.id); try { await navigator.clipboard.writeText(u); } catch (e) {} msg(T('نُسخ الرابط: ', 'Link copied: ') + u); };
     d.querySelector('[data-ex]').onclick = () => download(`league-${lg.name}.json`, JSON.stringify(lg), 'application/json');
-    d.querySelector('[data-del]').onclick = () => { if (!confirm(T(`حذف دوري «${lg.name}» من هذا المتصفح؟`, `Delete the league “${lg.name}” from this browser?`))) return; save(all().filter(z => z.id !== id)); d.remove(); if (onChange) onChange(); };
+    d.querySelector('[data-del]').onclick = () => { if (!confirm(T(`حذف دوري «${lg.name}»؟`, `Delete the league “${lg.name}”?`))) return; try { const g = JSON.parse(localStorage.getItem('md-lg-gone') || '[]'); g.push(id); localStorage.setItem('md-lg-gone', JSON.stringify(g.slice(-100))); } catch (e) {} save(all().filter(z => z.id !== id)); d.remove(); if (onChange) onChange(); };
   }
   function importFile(file, onChange) {
     const r = new FileReader(); r.onload = () => { try { const lg = JSON.parse(r.result); if (!lg.id || !Array.isArray(lg.rounds)) throw 0; const L = all().filter(z => z.id !== lg.id); L.push(lg); save(L); if (onChange) onChange(); } catch (e) { alert(T('هذا الملف ليس نسخة دوري.', 'This file is not a league backup.')); } }; r.readAsText(file);
