@@ -639,3 +639,13 @@ body>.md-xov{position:fixed}
 .mp-sbox textarea{width:100%;box-sizing:border-box;border:1px solid #cfd6e4;border-radius:12px;padding:10px 12px;font:inherit;font-size:16px;resize:none}
 .mp-sx{background:none;border:0;color:#6b7390;font:inherit;padding:6px;cursor:pointer}
 .mp-toast{bottom:calc(90px + env(safe-area-inset-bottom))}
+/* the watcher: who answered, and who chose what */
+.mp-fan{gap:10px}
+.mp-who{display:grid;gap:8px;width:100%}
+.mp-wc{margin:0;font-weight:700;color:#5a6185}
+.mp-wl{display:flex;flex-wrap:wrap;gap:5px;justify-content:center}
+.mp-wn{background:#eef0f8;color:#14204a;border-radius:999px;padding:3px 10px;font-size:.8125rem}
+.mp-fr li{display:grid;gap:6px}.mp-fr li p{margin:0;display:flex;gap:6px;align-items:center}.mp-fr li em{margin-inline-start:auto;font-style:normal;font-weight:800;background:rgba(255,255,255,.25);border-radius:999px;padding:0 9px}
+.mp-fr li.no{opacity:.55}.mp-fr li.ok{box-shadow:0 0 0 3px #fff inset,0 0 0 2px var(--c)}
+.mp-fr .mp-wn{background:rgba(255,255,255,.9)}
+.mp-fan .mp-fo{width:100%;max-width:420px}

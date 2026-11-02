@@ -342,12 +342,35 @@
   const avSt = a => { a = String(a || ''); if (!/^\d\d$/.test(a)) return ''; return `--fs:${AVS[+a[0]] || AVS[0]};--fc:${AVC[+a[1]] || AVC[0]};`; };
   const arenaFan = quiet => { const A = TOP && TOP.ar; if (!A || A.i !== st.i) return quiet ? '' : `<p>${B('التحدي جارٍ…', 'The challenge is on…')}</p>`;
     return `<div class="mp-arena">${A.g.map(gr => `<div class="mp-al" style="--c:var(--qz${gr.k % 6})"><b dir="auto">${esc(gr.n)}</b>${gr.p.map(x => `<i style="left:${x.p}%;${avSt(x.a)}" class="${x.d ? 'done' : ''}${x.n === me ? ' me' : ''}" title="${esc(x.n)}">${esc(x.n.charAt(0))}</i>`).join('')}</div>`).join('')}</div>`; };
+  /* ---------- the watcher sees the question, who has answered, and after it who chose what ---------- */
+  let PLN = {}, AN = {}, anI = null, plOn = false;
+  function fanWatch() {
+    if (!R) return;
+    if (!plOn) { plOn = true; R.child('pl').on('value', s => { const v = s.val() || {}; PLN = {}; Object.keys(v).forEach(k => { if (v[k] && !v[k].w) PLN[k] = v[k].n; }); fanWho(); }); }
+    if (anI !== st.i) { if (anI != null) R.child('an/' + anI).off(); anI = st.i; AN = {}; if (st.i >= 0) R.child('an/' + st.i).on('value', s => { AN = s.val() || {}; fanWho(); }); }
+  }
+  const chips = us => us.map(u => `<span class="mp-wn" dir="auto">${esc(PLN[u] || '')}</span>`).join('');
+  function fanWho() {
+    const el = root.querySelector('#mpWho'); if (!el || !FAN || !Q || Q.i !== st.i) return;
+    const all = Object.keys(PLN), got = Object.keys(AN).filter(u => u in PLN).sort((a, b) => (AN[a].t || 0) - (AN[b].t || 0));
+    if (st.ph === 'q') { el.innerHTML = `<p class="mp-wc">${B(`أجاب ${got.length} من ${all.length}`, `${got.length} of ${all.length} answered`)}</p><div class="mp-wl">${chips(got)}</div>`; return; }
+    // after the question: under each option, the names that chose it; the right ones marked
+    if (['mc', 'tf', 'poll'].includes(Q.type) && (Q.opts || []).length) {
+      const okS = new Set([].concat(OK == null ? [] : OK).map(Number));
+      el.innerHTML = `<ol class="mp-fo mp-fr">${Q.opts.map((o, j) => { const by = got.filter(u => [].concat(AN[u].a).map(Number).includes(j)); const ok = Q.type !== 'poll' && okS.has(j);
+        return `<li class="${ok ? 'ok' : Q.type !== 'poll' && OK != null ? 'no' : ''}" style="--c:var(--qz${j})"><p><i>${LET()[j]}</i> <span dir="auto">${esc(o)}</span>${ok ? ' <b>✓</b>' : ''}<em>${by.length}</em></p>${by.length ? `<div class="mp-wl">${chips(by)}</div>` : ''}</li>`; }).join('')}</ol>${all.length > got.length ? `<p class="mp-wc">${B(`لم يجب: ${all.length - got.length}`, `No answer: ${all.length - got.length}`)}</p>` : ''}`;
+      return; }
+    el.innerHTML = `<p class="mp-wc">${B(`أجاب ${got.length} من ${all.length}`, `${got.length} of ${all.length} answered`)}</p>${Q.type !== 'game' ? `<div class="mp-wl">${got.map(u => `<span class="mp-wn" dir="auto">${esc(PLN[u] || '')}${['num', 'word'].includes(Q.type) && AN[u].a != null ? ': <b>' + esc(String(AN[u].a).slice(0, 20)) + '</b>' : ''}</span>`).join('')}</div>` : ''}`;
+  }
   function fanHtml(html) {
-    if (st.ph === 'q' && Q && Q.i === st.i && Q.type === 'game') return `<div class="mp-wait"><p class="mp-qt" dir="auto">${esc(Q.q)}</p>${arenaFan()}</div>` + rxBar();
-    if (st.ph === 'q' && Q && Q.i === st.i) return `<div class="mp-wait"><p class="mp-qt" dir="auto">${esc(Q.q)}</p>${(Q.opts || []).length ? `<ol class="mp-fo">${Q.opts.map((o, j) => `<li style="--c:var(--qz${j})"><i>${LET()[j]}</i> <span dir="auto">${esc(o)}</span></li>`).join('')}</ol>` : ''}<p>${B('أنت متفرج: شجّع من هنا', 'You are watching: cheer from here')}</p></div>` + rxBar();
+    fanWatch(); setTimeout(fanWho, 0);
+    const cur = Q && Q.i === st.i;
+    if (st.ph === 'q' && cur && Q.type === 'game') return `<div class="mp-wait"><p class="mp-qt" dir="auto">${esc(Q.q)}</p>${arenaFan()}</div>` + rxBar();
+    if (st.ph === 'q' && cur) return `<div class="mp-wait mp-fan"><p class="mp-qt" dir="auto">${esc(Q.q)}</p>${Q.img ? `<img class="mp-img" src="${Q.img}" alt="">` : ''}${(Q.opts || []).length ? `<ol class="mp-fo">${Q.opts.map((o, j) => `<li style="--c:var(--qz${j})"><i>${LET()[j]}</i> <span dir="auto">${esc(o)}</span></li>`).join('')}</ol>` : ''}<div class="mp-who" id="mpWho"></div></div>` + rxBar();
+    if (st.ph === 'rev' && cur && Q.type !== 'game') return `<div class="mp-wait mp-fan"><p class="mp-qt" dir="auto">${esc(Q.q)}</p><div class="mp-who" id="mpWho"></div>${TOP ? `<p class="mp-big">${B('الترتيب', 'Ranking')}</p>${topList()}` : ''}</div>` + rxBar();
     if ((st.ph === 'rev' || st.ph === 'lb') && TOP) return `<div class="mp-res end"><p class="mp-big">${B('الترتيب', 'Ranking')}</p>${topList()}</div>` + rxBar();
     if (st.ph === 'end') return html;
-    return `<div class="mp-wait"><p class="mp-sym"></p><p class="mp-big">${B('أنت متفرج', 'You are watching')}</p><p>${B('تابع وشجّع بالتفاعلات.', 'Follow along and cheer.')}</p></div>` + rxBar();
+    return `<div class="mp-wait"><p class="mp-sym"></p><p class="mp-big">${B('أنت متفرج', 'You are watching')}</p><p>${B('تشاهد الأسئلة ومن أجاب عليها، وتشجّع بالتفاعلات.', 'See each question and who answered it, and cheer.')}</p></div>` + rxBar();
   }
   let game = null;
   function playGame() {
