@@ -649,6 +649,50 @@
     try { if (navigator.canShare && navigator.canShare({ files: [file] })) return await navigator.share({ files: [file] }); } catch (e) { if (e && e.name === 'AbortError') return; }
     const l = document.createElement('a'); l.href = URL.createObjectURL(blob); l.download = 'maydan.png'; l.click();
   }
+  // the result to share: place, points, the titles (mine marked), the journey, the podium; made to send in a chat or a story
+  async function shareCard(title) {
+    const W = 1080, H = 1350, ar = document.documentElement.lang !== 'en', cv = document.createElement('canvas'), x = cv.getContext('2d'); cv.width = W; cv.height = H;
+    const F = (w, s2) => `${w} ${s2}px "IBM Plex Sans Arabic", system-ui, sans-serif`, t = (a, e) => ar ? a : e;
+    const g = x.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#2a3878'); g.addColorStop(1, '#151c44'); x.fillStyle = g; x.fillRect(0, 0, W, H);
+    for (let k = 0; k < 60; k++) { x.fillStyle = `rgba(255,255,255,${Math.random() * .25})`; x.beginPath(); x.arc(Math.random() * W, Math.random() * 420, Math.random() * 2, 0, 7); x.fill(); }
+    x.direction = ar ? 'rtl' : 'ltr'; x.textAlign = 'center';
+    x.fillStyle = '#e0a458'; x.font = F(800, 56); x.fillText(t('ميدان', 'Maydan'), W / 2, 100);
+    x.fillStyle = 'rgba(255,255,255,.85)'; x.font = F(600, 34); x.fillText(String(title || '').slice(0, 48), W / 2, 156, W - 140);
+    // the place, big
+    const r = SC && SC.r, D = jData(), S = D && D.me >= 0 ? D.st : null;
+    x.fillStyle = r === 1 ? '#f2c14e' : r === 2 ? '#c9d1e3' : r === 3 ? '#d9965b' : '#e0a458'; x.beginPath(); x.arc(W / 2, 300, 104, 0, 7); x.fill();
+    x.fillStyle = '#17153a'; x.font = F(800, 112); x.fillText(String(r || '-'), W / 2, 340);
+    x.fillStyle = '#fff'; x.font = F(700, 46); x.fillText(String(me || ''), W / 2, 462, W - 140);
+    x.fillStyle = '#e0a458'; x.font = F(700, 40); x.fillText(t(`المركز ${r || '-'} · ${SC ? SC.s : 0} نقطة`, `Place ${r || '-'} · ${SC ? SC.s : 0} points`), W / 2, 520);
+    let y = 580;
+    if (S) { x.fillStyle = '#c9cde0'; x.font = F(500, 30); x.fillText(t(`أفضل مركز ${S.best}${S.up ? ` · أكبر صعود ${S.up}` : ''}${S.lead ? ` · تصدّر ${arN(S.lead, 'مرة', 'مرتين', 'مرات', 'مرة')}` : ''}`, `Best place ${S.best}${S.up ? ` · biggest climb ${S.up}` : ''}${S.lead ? ` · led ${S.lead}×` : ''}`), W / 2, y); y += 40; }
+    // the titles: two to a row, mine in gold
+    const L = (TOP && TOP.aw) || [];
+    if (L.length) { y += 10; L.slice(0, 6).forEach((a, k) => { const mine = a.u === uid.slice(0, 8), col = k % 2, cx = L.length === 1 ? W / 2 : W / 2 + (col ? -1 : 1) * (ar ? 1 : -1) * 240, cy = y + Math.floor(k / 2) * 98;
+      x.fillStyle = mine ? '#e0a458' : 'rgba(255,255,255,.09)'; x.beginPath(); x.roundRect(cx - 225, cy, 450, 84, 20); x.fill();
+      x.fillStyle = mine ? '#17153a' : '#e0a458'; x.font = F(700, 28); x.fillText(TITLE[a.k] ? TITLE[a.k][ar ? 0 : 1] : '', cx, cy + 34, 420);
+      x.fillStyle = mine ? '#17153a' : '#fff'; x.font = F(700, 30); x.fillText(mine ? t('أنت!', 'You!') : String(a.n || ''), cx, cy + 70, 420); });
+      y += Math.ceil(Math.min(L.length, 6) / 2) * 98 + 16; }
+    // the journey: my line over the others'
+    if (D && D.me >= 0 && D.n > 1) {
+      const X0 = 110, X1 = W - 90, Y0 = y + 80, Y1 = Math.min(H - 260, y + 330), N = Math.max(D.n, 2), show = Math.min(D.n, 10);
+      x.fillStyle = 'rgba(255,255,255,.06)'; x.beginPath(); x.roundRect(60, y, W - 120, Y1 - y + 70, 24); x.fill();
+      x.fillStyle = '#e0a458'; x.font = F(700, 30); x.fillText(t('رحلتك في المسابقة', 'Your journey'), W / 2, y + 36);
+      const X = k => X0 + (X1 - X0) * k / (D.steps - 1), Y = rr => Y0 + (Y1 - Y0) * (Math.min(rr, N) - 1) / (N - 1), COLS = ['#5b8def', '#4fbf8f', '#e7766b', '#a77fe0', '#4cc3d9', '#c9d1e3'];
+      const line = (p2, col, w, a) => { x.globalAlpha = a; x.strokeStyle = col; x.lineWidth = w; x.lineJoin = 'round'; x.beginPath(); D.line(p2).forEach((rr, k) => k ? x.lineTo(X(k), Y(rr)) : x.moveTo(X(k), Y(rr))); x.stroke(); x.globalAlpha = 1; };
+      for (let p2 = 0; p2 < show; p2++) if (p2 !== D.me) line(p2, COLS[p2 % 6], 4, .55);
+      line(D.me, '#e0a458', 9, 1); const ML = D.line(D.me); x.fillStyle = '#e0a458'; x.beginPath(); x.arc(X(ML.length - 1), Y(ML[ML.length - 1]), 12, 0, 7); x.fill();
+      x.fillStyle = 'rgba(255,255,255,.6)'; x.font = F(500, 22); x.textAlign = 'right'; x.fillText('1', X0 - 18, Y(1) + 8); x.fillText(String(N), X0 - 18, Y(N) + 8); x.textAlign = 'center';
+      y = Y1 + 90;
+    }
+    // the podium
+    const P = ((TOP && TOP.p) || []).slice(0, 3);
+    if (P.length && y < H - 150) { x.fillStyle = '#c9cde0'; x.font = F(500, 28); x.fillText(P.map((p2, k) => `${k + 1}. ${p2.n}`).join('    '), W / 2, Math.min(y + 10, H - 120), W - 120); }
+    x.fillStyle = 'rgba(255,255,255,.6)'; x.font = F(600, 30); x.fillText('alsamani.com/play/maydan', W / 2, H - 50);
+    const blob = await new Promise(rs => cv.toBlob(rs, 'image/png')), file = new File([blob], 'maydan-result.png', { type: 'image/png' });
+    try { if (navigator.canShare && navigator.canShare({ files: [file] })) return await navigator.share({ files: [file], text: t('نتيجتي في ميدان', 'My Maydan result') }); } catch (e) { if (e && e.name === 'AbortError') return; }
+    const l = document.createElement('a'); l.href = URL.createObjectURL(blob); l.download = 'maydan-result.png'; l.click();
+  }
   // after the game: an invitation to build one's own quiz (not inside the host's own panel)
   const MAKE = () => document.documentElement.classList.contains('mp-embed') ? '' : `<a class="btn solid mp-make" href="/play/maydan/">${B('جرّب وأنشئ مسابقتك', 'Make your own quiz')}</a>`;
   function final() {
@@ -657,8 +701,9 @@
       <p class="mp-big">${r && r <= 3 ? B('على منصة التتويج!', 'On the podium!') : B('انتهت المسابقة', 'The quiz is over')}</p>
       ${r ? `<p class="mp-rank">${B(`مركزك النهائي: ${r}`, `Final place: ${r}`)}</p><p class="mp-plus">${SC.s} ${B('نقطة', 'points')}</p>` : ''}
       ${TOP && TOP.t && TOP.t.length ? `<p class="mp-tm" style="--c:var(--qz${TOP.t[0].k % 6})">${B('الفريق الفائز:', 'Winning team:')} ${esc(TOP.t[0].n)}</p>` : ''}${topList()}
-      ${titlesHtml()}${replayHtml()}${journeyHtml()}<p>${B('شكرًا لمشاركتك.', 'Thanks for playing.')}</p>${hList().length || jData() ? `<button type="button" class="btn ghost mp-save" id="mpSave">${B('احفظ ملخصك صورة', 'Save your summary as a picture')}</button>` : ''}${MAKE()}</div>${review()}` + rxBar(), 'end');
+      ${titlesHtml()}${replayHtml()}${journeyHtml()}<p>${B('شكرًا لمشاركتك.', 'Thanks for playing.')}</p>${SC && SC.r ? `<button type="button" class="btn solid mp-save" id="mpShare">${B('شارك نتيجتك: المركز والألقاب والرحلة', 'Share your result: place, titles, journey')}</button>` : ''}${hList().length || jData() ? `<button type="button" class="btn ghost mp-save" id="mpSave">${B('احفظ إجاباتك صورة', 'Save your answers as a picture')}</button>` : ''}${MAKE()}</div>${review()}` + rxBar(), 'end');
     if (root.querySelector('#mpRp') && !root.querySelector('#mpRp').dataset.on) { root.querySelector('#mpRp').dataset.on = 1; replayRun(); }
+    const sh = root.querySelector('#mpShare'); if (sh) sh.onclick = async () => { sh.disabled = true; try { const t = (await R.child('title').once('value')).val(); await shareCard(t); } catch (e) { console.error(e); } sh.disabled = false; };
     const sv = root.querySelector('#mpSave'); if (sv) sv.onclick = async () => { sv.disabled = true; try { const t = (await R.child('title').once('value')).val(); await saveCard(t); } catch (e) {} sv.disabled = false; };
   }
   function gone() { clearInterval(tick); R && R.off(); root.innerHTML = `<div class="mp-card"><p class="mp-big">${B('انتهت المسابقة', 'The quiz has ended')}</p><button type="button" class="btn ghost" id="mpAgain">${B('مسابقة أخرى', 'Another quiz')}</button>${MAKE()}</div>`; root.querySelector('#mpAgain').onclick = () => { history.replaceState(null, '', location.pathname); codeScreen(); }; }
