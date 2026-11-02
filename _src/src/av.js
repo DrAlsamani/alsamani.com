@@ -16,6 +16,7 @@ window.AV = (function () {
     camOff: SV('<rect x="3" y="7" width="13" height="10" rx="2"/><path d="m16 11 5-3v8l-5-3M3 3l18 18"/>'),
     out: SV('<path d="M10 17l-5-5 5-5M5 12h11M14 4h5v16h-5"/>'),
     ppl: SV('<circle cx="9" cy="8" r="3"/><path d="M3 20c0-3 3-5 6-5s6 2 6 5M16 5a3 3 0 0 1 0 6M18 15c2 .5 3 2 3 5"/>'),
+    grip: SV('<circle cx="9" cy="6" r="1"/><circle cx="15" cy="6" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="9" cy="18" r="1"/><circle cx="15" cy="18" r="1"/>'),
     eye: SV('<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>'),
     eyeOff: SV('<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12zM3 3l18 18"/>'),
     wave: SV('<path d="M4 10v4M8 7v10M12 4v16M16 7v10M20 10v4"/>')
@@ -30,7 +31,9 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
 .av:not(.av-top):not(.av-pill){inset-inline:10px;align-items:stretch}.av:not(.av-top):not(.av-pill) .av-bar{justify-content:flex-start}.av:not(.av-top):not(.av-pill) .av-bar small{flex:1;max-width:none}
 .av:not(.av-top):not(.av-pill) .av-tiles,.av:not(.av-top):not(.av-pill) .av-note{align-self:flex-start}
 .av-tiles{pointer-events:none}
-.av.av-top{bottom:auto;top:calc(10px + env(safe-area-inset-top));flex-direction:column-reverse}
+.av.av-top{inset-inline-start:auto;left:50%;transform:translateX(-50%);bottom:calc(6px + env(safe-area-inset-bottom));align-items:center}.av.av-top .av-bar small{max-width:22vw}@media (max-width:760px){.av.av-top{bottom:calc(64px + env(safe-area-inset-bottom))}.av.av-top .av-bar small{display:none}}
+.av.av-moved{transform:none!important;right:auto!important;bottom:auto!important;inset-inline-start:auto}
+.av-grip{cursor:grab!important;touch-action:none;opacity:.7;min-width:26px!important;padding:0 2px!important}.av-grip:active{cursor:grabbing!important}
 .av-bar{display:flex;align-items:center;gap:4px;background:rgba(20,24,52,.92);color:#fff;border-radius:999px;padding:4px;box-shadow:0 8px 24px rgba(0,0,0,.3);backdrop-filter:blur(6px)}
 .av-bar button{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:6px;height:38px;min-width:38px;justify-content:center;border-radius:999px;padding:0 10px;font-size:.875rem;color:#fff;box-sizing:border-box}
 .av-bar button:hover{background:rgba(255,255,255,.12)}.av-bar button.off{color:#ff9a8a}.av-bar button.on{background:#2f7d5b}.av-bar button.join{background:#e9a54a;color:#1d1b3a;font-weight:700;padding:0 14px}
@@ -184,15 +187,33 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
     const tiles = (A.cam ? [`<div class="av-t me${spot(A.uid) ? ' big' : ''}" data-tu="${A.uid}"><video data-me muted playsinline autoplay></video><span>${T('أنت', 'You')}</span></div>`] : []).concat(vids.slice(0, 6).map(u => `<div class="av-t${spot(u) ? ' big' : ''}" data-tu="${u}"><video data-v="${u}" playsinline autoplay muted></video><span dir="auto">${esc(A.in[u].n)}</span></div>`)).join('');
     const st = status();
     const vb = tiles ? `<button type="button" data-vis title="${A.hideV ? T('أظهر الكاميرات', 'Show cameras') : T('أخفِ الكاميرات', 'Hide cameras')}">${A.hideV ? IC.eyeOff : IC.eye}</button>` : '';
-    A.el.innerHTML = `${tiles && !A.hideV ? `<div class="av-tiles">${tiles}</div>` : ''}${A.note ? `<div class="av-note">${esc(A.note)}</div>` : ''}<div class="av-bar">${A.joined
+    A.el.innerHTML = `${tiles && !A.hideV ? `<div class="av-tiles">${tiles}</div>` : ''}${A.note ? `<div class="av-note">${esc(A.note)}</div>` : ''}<div class="av-bar"><button type="button" class="av-grip" data-grip title="${T('اسحب لتحريكه', 'Drag to move')}">${IC.grip}</button>${A.joined
       ? `<button type="button" data-mic class="${A.mic && canTalk(A.uid) ? '' : 'off'}" title="${T('الميكروفون', 'Microphone')}">${A.mic ? IC.mic : IC.micOff}</button><button type="button" data-cam class="${A.cam ? 'on' : ''}" title="${T('الكاميرا', 'Camera')}">${A.cam ? IC.cam : IC.camOff}</button>${vb}<small data-who>${esc(st || T(`${n} في الصوت`, `${n} in voice`))}</small>${A.host ? `<button type="button" data-man title="${T('إدارة الصوت', 'Manage voice')}">${IC.ppl}<span>${n}</span></button>` : `<button type="button" data-ppl title="${T('من في الصوت', 'Who is in')}">${IC.ppl}<span>${n}</span></button>`}<button type="button" data-out title="${T('خروج من الصوت', 'Leave voice')}">${IC.out}</button>`
       : `<button type="button" class="join" data-join>${IC.mic}<span>${T('انضم للصوت', 'Join voice')}</span></button>${n ? `<small>${T(`${n} يتكلمون`, `${n} in voice`)}</small>` : ''}${A.host ? `<button type="button" data-man title="${T('إدارة الصوت', 'Manage voice')}">${IC.ppl}</button>` : ''}`}</div>`;
     A.el.querySelectorAll('[data-v]').forEach(v => { const P = A.P[v.dataset.v]; if (P && P.vt) { v.srcObject = new MediaStream([P.vt]); v.play().catch(() => {}); } });
     const me = A.el.querySelector('[data-me]'); if (me && A.vT) { me.srcObject = new MediaStream([A.vT]); me.play().catch(() => {}); }
-    bind(); paintTalk();
+    place(); bind(); paintTalk();
   }
   const canSee = u => !((A.ctl.ban || {})[u]);
+  // the bar and the cameras can be dragged anywhere; the spot is kept for this page
+  const posKey = () => 'av.pos.' + location.pathname + (A && A.host ? '.h' : '');
+  function place() {
+    let p = null; try { p = JSON.parse(localStorage.getItem(posKey()) || 'null'); } catch (e) {}
+    const el = A.el; if (!p) { el.classList.remove('av-moved'); el.style.left = el.style.top = ''; return; }
+    el.classList.add('av-moved'); const w = el.offsetWidth || 200, h = el.offsetHeight || 50;
+    el.style.left = Math.max(4, Math.min(innerWidth - w - 4, p.x * innerWidth)) + 'px'; el.style.top = Math.max(4, Math.min(innerHeight - h - 4, p.y * innerHeight)) + 'px';
+  }
+  function drag(e) {
+    const el = A.el, r = el.getBoundingClientRect(), dx = e.clientX - r.left, dy = e.clientY - r.top; let moved = false;
+    e.preventDefault(); try { e.target.setPointerCapture(e.pointerId); } catch (x) {}
+    const mv = ev => { moved = true; el.classList.add('av-moved'); el.style.left = Math.max(4, Math.min(innerWidth - el.offsetWidth - 4, ev.clientX - dx)) + 'px'; el.style.top = Math.max(4, Math.min(innerHeight - el.offsetHeight - 4, ev.clientY - dy)) + 'px'; };
+    const up = () => { removeEventListener('pointermove', mv); removeEventListener('pointerup', up); removeEventListener('pointercancel', up);
+      if (moved) { const q = el.getBoundingClientRect(); try { localStorage.setItem(posKey(), JSON.stringify({ x: q.left / innerWidth, y: q.top / innerHeight })); } catch (x) {} } };
+    addEventListener('pointermove', mv); addEventListener('pointerup', up); addEventListener('pointercancel', up);
+  }
+  addEventListener('resize', () => { if (A && A.el) place(); });
   function bind() {
+    const g = A.el.querySelector('[data-grip]'); if (g) { g.onpointerdown = drag; g.ondblclick = () => { try { localStorage.removeItem(posKey()); } catch (x) {} place(); }; }
     const q = s => A.el.querySelector(s);
     const on = (s, f) => { const b = q(s); if (b) b.onclick = f; };
     on('[data-hon]', () => { A.ref.child('on').set(true); manage(); });
@@ -233,6 +254,8 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
     detach();
     A = { ref: o.ref, uid: o.uid, name: o.name || '', host: !!o.host, top: !!o.top, hostU: o.hostUid || (o.host ? o.uid : null), on: false, in: {}, ctl: {}, pol: {}, P: {}, talk: {}, joined: false };
     const R = A.ref, subs = A.subs = [];
+    // the host's screen redraws itself (and goes fullscreen); the bar comes back at once if it was swept away
+    A.keep = setInterval(() => { if (A && A.el && A.el.parentNode !== (document.fullscreenElement || document.body)) paint(); }, 500);
     if (!A.hostU) R.parent.child('host').once('value', s => { if (A) { A.hostU = s.val(); apply(); paint(); } }).catch(() => {});
     const sub = (ref, ev, f) => { ref.on(ev, f); subs.push(() => ref.off(ev, f)); };
     sub(R.child('on'), 'value', s => { A.on = !!s.val(); if (!A.on && A.joined) leave(T('أوقف المشرف الصوت.', 'The host turned voice off.')); paint(); });
@@ -244,7 +267,7 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
     paint();
   }
   document.addEventListener('fullscreenchange', () => { if (A) paint(); });
-  function detach() { if (!A) return; leave(); (A.subs || []).forEach(f => f()); if (A.el) A.el.remove(); A = null; document.querySelectorAll('.av-sheet').forEach(x => x.remove()); }
+  function detach() { if (!A) return; clearInterval(A.keep); leave(); (A.subs || []).forEach(f => f()); if (A.el) A.el.remove(); A = null; document.querySelectorAll('.av-sheet').forEach(x => x.remove()); }
   // the host's game sets who may talk (o), whose camera is in the spotlight (c), who must stay silent (m), and the line that explains it (w)
   function policy(p) {
     if (!A || !A.host) return;
