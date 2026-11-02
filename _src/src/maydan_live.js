@@ -496,7 +496,7 @@ window.MDLive = (function () {
         <div class="md-qr">${svg}<small>${B('أو امسح الرمز', 'or scan')}</small></div></div>
       <p class="md-motto">${B('الميدان يا حميدان', 'The field will tell')}</p>
       <h2 class="md-title">${esc(G.quiz.title || T('ميدان', 'Maydan'))}</h2>
-      <div class="md-count"><b id="mdN">0</b> ${B('مشارك', 'players')} <small id="mdFans"></small></div><div class="md-names" id="mdNames"></div>
+      <div class="md-count"><b id="mdN">0</b> ${B('مشارك', 'players')} <small id="mdFans"></small></div><div class="md-names" id="mdNames"></div>${G.opts.cls ? clsBox() : ''}
       <details class="md-waitd" id="mdWaitD" hidden><summary>${B('تواصل مع المنتظرين', 'Talk to those waiting')}</summary><div class="md-wait"><div class="md-ann"><input data-ann maxlength="100" dir="auto" placeholder="${T('اكتب للجميع، مثل: نبدأ بعد خمس دقائق', 'Write to everyone, e.g. We start in five minutes')}"><button type="button" class="btn ghost" data-annb>${B('أرسل', 'Send')}</button></div>
         <div class="md-wu"><button type="button" class="btn ghost" data-wu>${G.wu ? B(`تحدي الانتظار: «${MDGames.byId(G.wu.g).ar}» · غيّره`, `Waiting challenge: ${MDGames.byId(G.wu.g).en} · change it`) : B('أطلق تحدي الانتظار على الجوالات', 'Start a waiting challenge on the phones')}</button><ol class="md-wub" id="mdWu"></ol></div></div></details>
       <div class="md-set" id="mdSet" hidden>
@@ -514,7 +514,7 @@ window.MDLive = (function () {
         <label class="md-ck"><input type="checkbox" data-o="auto"${O.auto ? ' checked' : ''}> ${B('▶ تقدّم تلقائي (المشرف يلعب من جواله أيضًا: ادخل بالرمز نفسه)', '▶ Move on automatically (so the host can play on a phone too, with the same code)')}</label>
         <label class="md-ck"><input type="checkbox" data-o="bet"${O.bet ? ' checked' : ''}> ${B('الثقة: يراهن المشارك على إجابته فيكسب أو يخسر نقاطًا إضافية', 'Confidence: players can bet on their answer to win or lose extra points')}</label>
         <button type="button" class="btn solid" data-done>${B('تم', 'Done')}</button></div>
-      <div class="md-mode"><span>${B('كيف تعرضون المسابقة؟', 'How will you follow the quiz?')}</span><button type="button" data-mode="screen" aria-pressed="${!G.phones}">${B('شاشة عرض', 'A big screen')}</button><button type="button" data-mode="phones" aria-pressed="${!!G.phones}">${B('جوالات فقط (وأنا ألعب معهم)', 'Phones only (and I play too)')}</button></div>
+      <div class="md-mode"><span>${B('كيف تعرضون المسابقة؟', 'How will you follow the quiz?')}</span><button type="button" data-mode="screen" aria-pressed="${!G.phones && !G.opts.cls}">${B('شاشة عرض', 'A big screen')}</button><button type="button" data-mode="phones" aria-pressed="${!!G.phones}">${B('جوالات فقط (وأنا ألعب معهم)', 'Phones only (and I play too)')}</button><button type="button" data-mode="class" aria-pressed="${!!G.opts.cls}">${B('فصل بلا أجهزة للطلاب', 'A class without devices')}</button></div>
       <div class="md-set md-teamp" id="mdTeamP" hidden>
         <h3>${B('الفرق', 'Teams')}</h3>
         <label>${B('عدد الفرق', 'Number of teams')}<select data-o="teams"><option value="0">${T('بلا فرق (كل مشارك وحده)', 'No teams (everyone on their own)')}</option>${[2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 15, 20, 25, 30].map(n => `<option value="${n}"${G.teams && G.teams.length === n ? ' selected' : ''}>${n} ${n <= 10 ? T('فرق', 'teams') : T('فريقًا', 'teams')}</option>`).join('')}</select></label>
@@ -601,7 +601,8 @@ window.MDLive = (function () {
     teamNames(); draw();
     q('[data-set]').onclick = () => { tp.hidden = true; set.hidden = !set.hidden; };
     const lgs = q('[data-lgs]'); if (lgs) lgs.onchange = () => { let v = lgs.value; if (v === '+') { const n = (prompt(T('اسم الدوري (مثل: الصف الثالث - أ)', 'League name (e.g. Class 3A)')) || '').trim(); v = n ? MDX.create(n) : ''; } G.league = v || null; keep(); lobby(); setTimeout(() => { const s2 = G.el.querySelector('#mdSet'); if (s2) s2.hidden = false; }, 0); };
-    G.el.querySelectorAll('[data-mode]').forEach(b => b.onclick = () => { phonesMode(b.dataset.mode === 'phones'); lobby(); });
+    G.el.querySelectorAll('[data-mode]').forEach(b => b.onclick = () => { const md = b.dataset.mode; G.opts.cls = md === 'class'; if (G.opts.cls) { G.opts.speed = false; G.opts.auto = false; } phonesMode(md === 'phones'); keep(); lobby(); });
+    G.el.classList.toggle('md-cls', !!G.opts.cls); clsBind();
     q('[data-teams]').onclick = () => { set.hidden = true; tp.hidden = !tp.hidden; };
     tp.querySelector('[data-tdone]').onclick = () => { tp.hidden = true; };
     set.querySelector('[data-done]').onclick = () => { set.hidden = true; };
@@ -757,6 +758,70 @@ window.MDLive = (function () {
     const a = sum.map((v, k) => cnt[k] ? v / cnt[k] : 0);
     return { avg: a, p: Math.max(-1, Math.min(1, (a[1] - a[0]) / (a[0] + a[1] + 6))) };
   }
+  /* ---------- the classroom without devices: the teacher's screen shows the question, groups or pupils raise answer cards, the teacher records them with a tap ---------- */
+  const CLS_DEF = () => [1, 2, 3, 4].map(k => T('المجموعة ', 'Group ') + (G.ar ? '٠١٢٣٤٥٦٧٨٩'[k] : k)).join('\n');
+  const clsIds = () => Object.keys(G.players).filter(u => u.startsWith('c-')).sort((a, b) => +a.slice(2) - +b.slice(2));
+  function clsBox() {
+    const names = clsIds().map(u => G.players[u]);
+    return `<div class="md-cset"><p>${B('اكتب أسماء المجموعات أو الطلاب، كل اسم في سطر. يرفع كلٌّ منهم بطاقة إجابته، وأنت تسجّلها بلمسة.', 'Write the groups or pupils, one per line. Each raises an answer card and you record it with a tap.')}</p>
+      <textarea data-cn rows="5" dir="auto">${esc(names.length ? names.join('\n') : CLS_DEF())}</textarea>
+      <div class="md-crow"><button type="button" class="btn solid" data-cok>${B(names.length ? 'حدّث الأسماء' : 'اعتمد الأسماء', names.length ? 'Update the names' : 'Use these names')}</button><button type="button" class="btn ghost" data-cprint>${B('اطبع بطاقات الإجابة', 'Print the answer cards')}</button></div></div>`;
+  }
+  function clsBind() {
+    const box = G.el.querySelector('.md-cset'); if (!box) return;
+    box.querySelector('[data-cok]').onclick = async () => {
+      const L = box.querySelector('[data-cn]').value.split('\n').map(s => s.trim().replace(/\s+/g, ' ').slice(0, 24)).filter(Boolean).slice(0, 40);
+      if (!L.length) return;
+      const up = {}; L.forEach((n, k) => { up['pl/c-' + (k + 1)] = { n, at: TS }; }); clsIds().forEach(u => { if (+u.slice(2) > L.length) up['pl/' + u] = null; });
+      await G.ref.update(up).catch(e => console.error(e)); setTimeout(lobby, 400);
+    };
+    box.querySelector('[data-cprint]').onclick = clsCards;
+  }
+  // big coloured cards to print: one sheet per letter, and true / false
+  function clsCards() {
+    const ar = G.ar, C = ['#2a7fa8', '#b0533a', '#2f7d5b', '#c9822b'], L = ar ? ['أ', 'ب', 'ج', 'د'] : ['A', 'B', 'C', 'D'];
+    const card = (t, c, s) => `<section style="background:${c}"><b>${t}</b>${s ? `<small>${s}</small>` : ''}</section>`;
+    const w = window.open('', '_blank'); if (!w) return;
+    w.document.write(`<!doctype html><html lang="${ar ? 'ar' : 'en'}" dir="${ar ? 'rtl' : 'ltr'}"><meta charset="utf-8"><title>${T('بطاقات الإجابة · ميدان', 'Answer cards · Maydan')}</title>
+      <style>@page{size:A4 landscape;margin:0}body{margin:0;font-family:system-ui,'Segoe UI',Tahoma,sans-serif}section{height:100vh;break-after:page;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}b{font-size:62vh;line-height:1}small{font-size:6vh;opacity:.9}</style>
+      ${L.map((l, k) => card(l, C[k], '')).join('')}${card(T('صح', 'True'), '#2f7d5b', '✓')}${card(T('خطأ', 'False'), '#b0533a', '✗')}<script>setTimeout(()=>print(),400)<\/script></html>`);
+    w.document.close();
+  }
+  // what a tick or a cross means for each kind of question, in the form the scoring already reads
+  function clsVal(x, right) {
+    if (x.type === 'num') return right ? x.ans : (+x.ans || 0) * 10 + 999;
+    if (x.type === 'word') return right ? x.ans : '—';
+    if (x.type === 'order') { const v = x.items.map((_, p) => (x._sh || x.items.map((_, k) => k)).indexOf(p)); return right ? v : v.slice().reverse(); }
+    if (x.type === 'match') { const v = x.pairs.map((_, j) => (x._mr || x.pairs.map((_, k) => k)).indexOf(j)); return right ? v : v.map((_, j) => v[(j + 1) % v.length]); }
+    if (x.type === 'rapid') return x.truth.map(t => (t ? 1 : 0) ^ (right ? 0 : 1));
+    if (x.type === 'game') return right ? 100 : 0;
+    return null;
+  }
+  function clsPanel(x) {
+    const us = clsIds(); if (!us.length) return;
+    const got = {}, kind = ['mc', 'tf', 'poll'].includes(x.type) ? 'opt' : ['open', 'stage'].includes(x.type) ? 'none' : 'judge', multi = x.type === 'mc' && x.ok.length > 1;
+    const fab = document.createElement('button'); fab.type = 'button'; fab.className = 'md-cfab'; G.el.appendChild(fab);
+    const sh = document.createElement('div'); sh.className = 'md-csheet'; sh.hidden = true; G.el.appendChild(sh);
+    const done = () => Object.keys(got).length;
+    const fabTxt = () => { fab.innerHTML = kind === 'none' ? B('سؤال للنقاش، لا يُسجَّل', 'For discussion, nothing to record') : B(`سجّل الإجابات (${done()}/${us.length})`, `Record the answers (${done()}/${us.length})`); };
+    const send = (u, a, label) => { got[u] = label; G.ref.child('an/' + G.i + '/' + u).set({ a, t: TS }).catch(e => console.error(e)); paint(); fabTxt(); };
+    const paint = () => {
+      sh.innerHTML = `<div class="md-cbox"><h3>${B('إجابات الفصل', 'The class’s answers')} <small>${done()}/${us.length}</small></h3>
+        ${kind === 'none' ? `<p>${B('هذا السؤال للنقاش، فلا يحتاج تسجيلًا.', 'This one is for discussion; nothing to record.')}</p>` : `<ul>${us.map(u => `<li><b dir="auto">${esc(G.players[u])}</b><span>${kind === 'opt'
+          ? x.opts.map((o, j) => `<button type="button" data-u="${u}" data-j="${j}" style="--c:var(--qz${j % 6})" aria-pressed="${[].concat(got[u] == null ? [] : got[u]).includes(j)}">${x.type === 'tf' ? esc(o) : LET()[j]}</button>`).join('')
+          : x.type === 'game' ? `<button type="button" data-u="${u}" data-r="1" class="ok" aria-pressed="${got[u] === 1}">${B('فاز', 'Won')}</button><button type="button" data-u="${u}" data-r="0" class="no" aria-pressed="${got[u] === 0}">${B('لا', 'No')}</button>`
+          : `<button type="button" data-u="${u}" data-r="1" class="ok" aria-pressed="${got[u] === 1}">✓</button><button type="button" data-u="${u}" data-r="0" class="no" aria-pressed="${got[u] === 0}">✗</button>`}</span></li>`).join('')}</ul>`}
+        <div class="md-crow"><button type="button" class="btn solid" data-crev>${B('أظهر الإجابة الصحيحة', 'Show the right answer')}</button><button type="button" class="btn ghost" data-cx>${B('أخفِ', 'Hide')}</button></div></div>`;
+      sh.querySelectorAll('[data-j]').forEach(b => b.onclick = () => { const u = b.dataset.u, j = +b.dataset.j;
+        if (multi) { const s = new Set([].concat(got[u] == null ? [] : got[u])); s.has(j) ? s.delete(j) : s.add(j); const v = [...s].sort(); if (!v.length) return; send(u, v, v); } else send(u, j, j); });
+      sh.querySelectorAll('[data-r]').forEach(b => b.onclick = () => { const r = +b.dataset.r; send(b.dataset.u, clsVal(x, !!r), r); });
+      sh.querySelector('[data-crev]').onclick = () => { sh.remove(); fab.remove(); reveal(); };
+      sh.querySelector('[data-cx]').onclick = () => { sh.hidden = true; };
+    };
+    fab.onclick = () => { sh.hidden = !sh.hidden; };
+    G.clsOpen = () => { sh.hidden = false; };
+    paint(); fabTxt();
+  }
   async function open(x, q) {
     if (!G || !q('[data-skip]')) return;   // the screen moved on before the question opened
     await G.ref.child('st').set({ ph: 'q', i: G.i, t0: TS, dur: x.time, lock: !!G.lockJoin });
@@ -766,7 +831,8 @@ window.MDLive = (function () {
     q('[data-skip]').disabled = false;
     const ring = q('#mdRing'), C = 2 * Math.PI * 44; ring.style.strokeDasharray = C;
     let got = 0, last = -1;
-    sub(G.ref.child('an/' + G.i), 'child_added', () => { got++; const a = q('#mdA'); if (a) a.textContent = got; if (got >= (G.opts.surv && !G.teams ? alive() : Object.keys(G.players)).length) reveal(); });
+    if (G.opts.cls) clsPanel(x);
+    sub(G.ref.child('an/' + G.i), 'child_added', () => { got++; const a = q('#mdA'); if (a) a.textContent = got; if (!G.opts.cls && got >= (G.opts.surv && !G.teams ? alive() : Object.keys(G.players)).length) reveal(); });
     q('[data-skip]').onclick = () => reveal();
     if (x.type === 'stage') { let k = 0; sub(G.ref.child('an/' + G.i), 'child_added', s => { const v = s.val() || {}, box = q('#mdStage'); if (!box || typeof v.a !== 'string' || !v.a.trim()) return; const p = box.querySelector('.md-prompt'); if (p) p.remove(); box.insertAdjacentHTML('afterbegin', bubble(G.players[s.key], v.a, k++)); SND.join(); { G.sb = [{ n: G.players[s.key] || '', t: String(v.a).slice(0, 140) }].concat(G.sb || []).slice(0, 12); G.ref.child('sb').set(G.sb).catch(() => {}); } while (box.children.length > 12) box.lastElementChild.remove(); }); }
     if (x.type === 'game' && !['tug', 'race'].includes(x.g)) { const fin = {}; let pr = {};
@@ -789,6 +855,7 @@ window.MDLive = (function () {
       el.textContent = s; ring.style.strokeDashoffset = C * (1 - left / x.time);
       if (x.type === 'word') { const k = Math.min(x._order.length - 1, Math.floor((1 - left / x.time) / .8 * x._order.length)); if (k !== x._shown) { x._shown = k; const w = mask(x, k); const e = q('#mdW'); if (e) e.textContent = w; G.ref.child('wr').set(w); } }
       if (s !== last && s <= 5 && s > 0) SND.tick(); last = s;
+      if (left <= 0 && G.opts.cls) { clearInterval(G.timer); if (G.clsOpen) G.clsOpen(); return; }
       if (left <= 0) { if (x.type === 'game') { clearInterval(G.timer); setTimeout(reveal, 1800); } else reveal(); }
     }, 100);
   }
@@ -796,6 +863,7 @@ window.MDLive = (function () {
   /* ---------- the answer, the points ---------- */
   async function reveal() {
     if (!G || G.revealing === G.i) return; G.revealing = G.i;
+    G.el.querySelectorAll('.md-cfab,.md-csheet').forEach(e => e.remove()); G.clsOpen = null;
     clearInterval(G.timer);
     const x = G.quiz.qs[G.i], m = multOf(G.i);
     await G.ref.child('st').update({ ph: 'rev' });

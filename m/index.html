@@ -697,6 +697,26 @@ body>.md-xov{position:fixed}
 .mp-fr li.no{opacity:.55}.mp-fr li.ok{box-shadow:0 0 0 3px #fff inset,0 0 0 2px var(--c)}
 .mp-fr .mp-wn{background:rgba(255,255,255,.9)}
 .mp-fan .mp-fo{width:100%;max-width:420px}
+/* the classroom without devices */
+.md-live.md-cls .md-lobby,.md-live.md-cls .md-motto,.md-live.md-cls .md-waitd{display:none}
+.md-cset{max-width:620px;margin:1.5vh auto 0;display:grid;gap:8px;text-align:center}
+.md-cset p{margin:0;opacity:.85;font-size:.9375rem;line-height:1.7}
+.md-cset textarea{font:inherit;font-size:1rem;border-radius:12px;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.95);color:#14204a;padding:10px 12px;resize:vertical}
+.md-crow{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.md-cset .btn.ghost,.md-csheet .btn.ghost{color:#fff!important;border-color:rgba(255,255,255,.5)!important;background:none!important}
+.md-cfab{position:absolute;z-index:30;left:50%;transform:translateX(-50%);bottom:calc(8px + env(safe-area-inset-bottom));font:inherit;font-weight:700;border:0;border-radius:999px;padding:12px 22px;background:#e9a54a;color:#1d1b3a;box-shadow:0 10px 26px rgba(0,0,0,.35);cursor:pointer}
+.md-csheet{position:absolute;z-index:31;inset:0;background:rgba(8,12,34,.55);display:flex;align-items:flex-end;justify-content:center;padding:12px}
+.md-csheet[hidden]{display:none}
+.md-cbox{width:min(760px,100%);max-height:78vh;overflow:auto;background:#17204d;color:#fff;border-radius:18px;padding:14px 16px;display:grid;gap:10px;box-shadow:0 -10px 30px rgba(0,0,0,.4)}
+.md-cbox h3{margin:0;font-size:1.25rem}.md-cbox h3 small{opacity:.7;font-weight:400}
+.md-cbox ul{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.md-cbox li{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.07);border-radius:12px;padding:6px 10px}
+.md-cbox li b{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:1.0625rem}
+.md-cbox li span{display:flex;gap:6px;flex-wrap:wrap}
+.md-cbox li button{font:inherit;font-weight:800;min-width:46px;height:42px;border-radius:10px;border:2px solid var(--c,rgba(255,255,255,.4));background:transparent;color:#fff;cursor:pointer;padding:0 10px}
+.md-cbox li button[aria-pressed=true]{background:var(--c,#fff);color:#fff}
+.md-cbox li button.ok{--c:#2f7d5b}.md-cbox li button.no{--c:#b0533a}
+.md-live.md-cls .av{display:none!important}
 </style>
 <div id="mp" class="sn mp"><noscript><span class="ar">تعمل هذه الصفحة مع تفعيل JavaScript.</span><span class="en">This page needs JavaScript.</span></noscript></div>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script>window.MD_CFG={"apiKey": "AIzaSyA50i75DT1Is1a6Yn6snW1_JVObc8S3F0Y", "authDomain": "maydan-705ae.firebaseapp.com", "databaseURL": "https://maydan-705ae-default-rtdb.europe-west1.firebasedatabase.app", "projectId": "maydan-705ae", "appId": "1:342187013133:web:d5c2396f0db413f3c51144"};window.MD_MARK="<svg class=\"md-mark\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><rect x=\"4\" y=\"4\" width=\"40\" height=\"40\" rx=\"12\" fill=\"#23336F\"/><path d=\"M24 9l4.2 6.8 7.8-1.8-1.8 7.8L41 24l-6.8 4.2 1.8 7.8-7.8-1.8L24 39l-4.2-6.8-7.8 1.8 1.8-7.8L7 24l6.8-4.2-1.8-7.8 7.8 1.8z\" fill=\"#C9822B\"/><circle cx=\"24\" cy=\"24\" r=\"6.5\" fill=\"#23336F\"/><circle cx=\"24\" cy=\"24\" r=\"3\" fill=\"#F3E3C7\"/></svg>";</script><script>/* Maydan challenges: short games played on every phone at once. Every phone gets the same level (same seed),
