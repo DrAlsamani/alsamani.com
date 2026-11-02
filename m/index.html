@@ -2042,6 +2042,53 @@ window.MDGames = (function () {
     try { if (navigator.canShare && navigator.canShare({ files: [file] })) return await navigator.share({ files: [file] }); } catch (e) { if (e && e.name === 'AbortError') return; }
     const l = document.createElement('a'); l.href = URL.createObjectURL(blob); l.download = 'maydan.png'; l.click();
   }
+  /* ---------- the race as a short video to share: the same replay, drawn on a canvas and recorded on the phone ---------- */
+  function raceVideo(title, onProgress) {
+    const D = jData(); if (!D || D.me < 0 || !window.MediaRecorder || !HTMLCanvasElement.prototype.captureStream) return Promise.reject(new Error('unsupported'));
+    const S = 720, cv = document.createElement('canvas'); cv.width = S; cv.height = S; const x = cv.getContext('2d'), ar = document.documentElement.lang !== 'en', t = (a, e) => ar ? a : e;
+    const F = (w, s2) => `${w} ${s2}px "IBM Plex Sans Arabic", system-ui, sans-serif`;
+    const J = D.J, n = Math.min(D.n, 12), max = Math.max(1, ...J.s.map(a => Math.max(...a)));
+    const lanes = Math.min(n, 7), mid = Math.floor(lanes / 2), lane = []; let k = 0;
+    for (let p = 0; p < n; p++) { if (p === D.me) { lane[p] = mid; continue; } let l = k % lanes; if (l === mid && lanes > 1) { k++; l = k % lanes; } lane[p] = l; k++; }
+    const top = 150, bottom = S - 120, LH = (bottom - top) / lanes, WW = S * 3, x0 = 50, X = v => x0 + (WW - x0 - 70) * v / max, Y = l => top + l * LH + LH / 2;
+    const shape = (cx, cy, r, a) => { const sh = AVS[+String(a || '')[0]] || 'circle(50%)'; x.beginPath(); if (/circle/.test(sh)) x.arc(cx, cy, r, 0, 7); else sh.replace(/polygon\(|\)/g, '').split(',').forEach((pt, i) => { const [px, py] = pt.trim().split(/\s+/).map(v => parseFloat(v) / 100); const X2 = cx - r + px * 2 * r, Y2 = cy - r + py * 2 * r; i ? x.lineTo(X2, Y2) : x.moveTo(X2, Y2); }); x.closePath(); };
+    const ease = u => u < .5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2, STEP = Math.max(500, Math.min(1100, 14000 / (D.steps + 1))), HOLD = 2600, total = STEP * (D.steps + 1) + HOLD;
+    const pos = (p, f) => { const i = Math.floor(f), u = ease(f - i), a = i <= 0 ? 0 : J.s[p][Math.min(i - 1, D.steps - 1)], b = J.s[p][Math.min(i, D.steps - 1)]; return i >= D.steps ? J.s[p][D.steps - 1] : a + (b - a) * u; };
+    function frame(ms) {
+      const f = Math.min(D.steps, ms / STEP), st = Math.min(D.steps - 1, Math.max(0, Math.round(f) - 1));
+      const g = x.createLinearGradient(0, 0, 0, S); g.addColorStop(0, '#26336b'); g.addColorStop(1, '#151c44'); x.fillStyle = g; x.fillRect(0, 0, S, S);
+      const meX = X(pos(D.me, f)), cam = Math.min(0, Math.max(S - WW, S * .55 - meX));
+      x.save(); x.translate(cam, 0);
+      for (let l = 0; l < lanes; l++) { x.fillStyle = l % 2 ? 'rgba(255,255,255,.04)' : 'rgba(255,255,255,.08)'; x.fillRect(0, top + l * LH, WW, LH); }
+      x.fillStyle = '#e0a458'; x.fillRect(x0 - 3, top, 6, bottom - top); for (let yy = top; yy < bottom; yy += 20) { x.fillStyle = ((yy - top) / 20) % 2 ? '#fff' : '#17153a'; x.fillRect(WW - 63, yy, 10, 10); x.fillStyle = ((yy - top) / 20) % 2 ? '#17153a' : '#fff'; x.fillRect(WW - 53, yy, 10, 10); x.fillRect(WW - 63, yy + 10, 10, 10); }
+      const order = [...Array(n).keys()].sort((a, b) => (a === D.me) - (b === D.me));
+      order.forEach(p => { const me2 = p === D.me, cx = X(pos(p, f)), cy = Y(lane[p]) + (me2 ? 0 : (p % 3 - 1) * 5), r = me2 ? 26 : 19;
+        if (me2) { x.fillStyle = 'rgba(224,164,88,.35)'; x.beginPath(); x.arc(cx, cy, r + 12, 0, 7); x.fill(); }
+        x.fillStyle = AVC[+String((J.a || [])[p] || '')[1]] || ['#5b8def', '#4fbf8f', '#e7766b', '#a77fe0', '#4cc3d9', '#e0a458'][p % 6]; shape(cx, cy, r, (J.a || [])[p]); x.fill();
+        x.fillStyle = '#fff'; x.font = F(800, me2 ? 24 : 18); x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText((J.n[p] || '?').trim().charAt(0), cx, cy + 1);
+        x.font = F(me2 ? 800 : 500, me2 ? 20 : 14); x.fillStyle = me2 ? '#e0a458' : 'rgba(255,255,255,.75)'; x.fillText(me2 ? t('أنت', 'You') : String(J.n[p] || '').slice(0, 10), cx, cy + r + 16); });
+      x.restore(); x.textBaseline = 'alphabetic';
+      // the head: the quiz, the question, my place
+      x.fillStyle = '#e0a458'; x.font = F(800, 34); x.textAlign = 'center'; x.fillText(t('ميدان', 'Maydan'), S / 2, 50);
+      x.fillStyle = 'rgba(255,255,255,.8)'; x.font = F(600, 22); x.fillText(String(title || '').slice(0, 40), S / 2, 84, S - 60);
+      const rank = f < 1 ? null : D.line(D.me)[st], prev = st > 0 ? D.line(D.me)[st - 1] : null;
+      x.fillStyle = '#fff'; x.font = F(700, 26); x.fillText(f < 1 ? t('انطلق السباق', 'And they are off') : t(`بعد السؤال ${st + 1}  ·  مركزك ${rank}`, `After question ${st + 1}  ·  place ${rank}`), S / 2, 128);
+      if (rank && prev && prev !== rank) { x.fillStyle = prev > rank ? '#6fd39b' : '#ff8a80'; x.font = F(800, 24); x.fillText((prev > rank ? '▲' : '▼') + Math.abs(prev - rank), S - 50, 128); }
+      // the end: my place, big
+      if (ms > STEP * (D.steps + 1)) { const a = Math.min(1, (ms - STEP * (D.steps + 1)) / 500); x.globalAlpha = a * .92; x.fillStyle = '#151c44'; x.fillRect(0, S / 2 - 110, S, 220); x.globalAlpha = a;
+        x.fillStyle = '#e0a458'; x.font = F(800, 72); x.fillText(t(`المركز ${D.line(D.me)[D.steps - 1]}`, `Place ${D.line(D.me)[D.steps - 1]}`), S / 2, S / 2 + 10); x.fillStyle = '#fff'; x.font = F(600, 30); x.fillText(String(me || ''), S / 2, S / 2 + 64); x.globalAlpha = 1; }
+      x.fillStyle = 'rgba(255,255,255,.55)'; x.font = F(600, 20); x.fillText('alsamani.com/play/maydan', S / 2, S - 30);
+    }
+    const types = ['video/mp4;codecs=avc1', 'video/mp4', 'video/webm;codecs=vp9', 'video/webm'], type = types.find(m => MediaRecorder.isTypeSupported(m)) || '';
+    return new Promise((ok, no) => {
+      frame(0); const stream = cv.captureStream(30), rec = new MediaRecorder(stream, type ? { mimeType: type, videoBitsPerSecond: 2500000 } : undefined), chunks = [];
+      rec.ondataavailable = e => { if (e.data && e.data.size) chunks.push(e.data); };
+      rec.onstop = () => { const mt = rec.mimeType || type || 'video/webm'; ok(new File([new Blob(chunks, { type: mt })], 'maydan-race.' + (/mp4/.test(mt) ? 'mp4' : 'webm'), { type: mt.split(';')[0] })); };
+      rec.onerror = e => no(e); rec.start(250); const t0 = performance.now();
+      const loop = now => { const ms = now - t0; frame(ms); if (onProgress) onProgress(Math.min(1, ms / total)); if (ms < total) requestAnimationFrame(loop); else setTimeout(() => rec.stop(), 150); };
+      requestAnimationFrame(loop);
+    });
+  }
   // the result to share: place, points, the titles (mine marked), the journey, the podium; made to send in a chat or a story
   async function shareCard(title) {
     const W = 1080, H = 1350, ar = document.documentElement.lang !== 'en', cv = document.createElement('canvas'), x = cv.getContext('2d'); cv.width = W; cv.height = H;
@@ -2094,8 +2141,16 @@ window.MDGames = (function () {
       <p class="mp-big">${r && r <= 3 ? B('على منصة التتويج!', 'On the podium!') : B('انتهت المسابقة', 'The quiz is over')}</p>
       ${r ? `<p class="mp-rank">${B(`مركزك النهائي: ${r}`, `Final place: ${r}`)}</p><p class="mp-plus">${SC.s} ${B('نقطة', 'points')}</p>` : ''}
       ${TOP && TOP.t && TOP.t.length ? `<p class="mp-tm" style="--c:var(--qz${TOP.t[0].k % 6})">${B('الفريق الفائز:', 'Winning team:')} ${esc(TOP.t[0].n)}</p>` : ''}${topList()}
-      ${titlesHtml()}${replayHtml()}${journeyHtml()}<p>${B('شكرًا لمشاركتك.', 'Thanks for playing.')}</p>${SC && SC.r ? `<button type="button" class="btn solid mp-save" id="mpShare">${B('شارك نتيجتك: المركز والألقاب والرحلة', 'Share your result: place, titles, journey')}</button>` : ''}${hList().length || jData() ? `<button type="button" class="btn ghost mp-save" id="mpSave">${B('احفظ إجاباتك صورة', 'Save your answers as a picture')}</button>` : ''}${MAKE()}</div>${review()}` + rxBar(), 'end');
+      ${titlesHtml()}${replayHtml()}${journeyHtml()}<p>${B('شكرًا لمشاركتك.', 'Thanks for playing.')}</p>${SC && SC.r && window.MediaRecorder && jData() ? `<button type="button" class="btn ghost mp-save" id="mpVid">${B('شارك سباقك فيديو قصير', 'Share your race as a short video')}</button>` : ''}${SC && SC.r ? `<button type="button" class="btn solid mp-save" id="mpShare">${B('شارك نتيجتك: المركز والألقاب والرحلة', 'Share your result: place, titles, journey')}</button>` : ''}${hList().length || jData() ? `<button type="button" class="btn ghost mp-save" id="mpSave">${B('احفظ إجاباتك صورة', 'Save your answers as a picture')}</button>` : ''}${MAKE()}</div>${review()}` + rxBar(), 'end');
     if (root.querySelector('#mpRp') && !root.querySelector('#mpRp').dataset.on) { root.querySelector('#mpRp').dataset.on = 1; replayRun(); }
+    // the video is recorded first; a second tap shares it, since phones only share straight from a tap
+    let vid = null; const vb = root.querySelector('#mpVid'); if (vb) vb.onclick = async () => {
+      if (vid) { try { if (navigator.canShare && navigator.canShare({ files: [vid] })) { await navigator.share({ files: [vid], text: T('سباقي في ميدان', 'My Maydan race') }); return; } } catch (e) { if (e && e.name === 'AbortError') return; }
+        const l = document.createElement('a'); l.href = URL.createObjectURL(vid); l.download = vid.name; l.click(); return; }
+      const was = vb.innerHTML; vb.disabled = true;
+      try { const t = (await R.child('title').once('value')).val(); vid = await raceVideo(t, p => { vb.textContent = T(`جارٍ تجهيز الفيديو… ${Math.round(p * 100)}٪`, `Making the video… ${Math.round(p * 100)}%`); });
+        vb.disabled = false; vb.classList.replace('ghost', 'solid'); vb.textContent = T('الفيديو جاهز: اضغط لمشاركته', 'The video is ready: tap to share it'); buzz([30, 40, 30]);
+      } catch (e) { console.error(e); vid = null; vb.innerHTML = was; vb.disabled = false; flashMsg(T('تعذّر تجهيز الفيديو على هذا الجهاز؛ شارك الصورة بدلًا منه.', 'The video could not be made on this device; share the picture instead.')); } };
     const sh = root.querySelector('#mpShare'); if (sh) sh.onclick = async () => { sh.disabled = true; try { const t = (await R.child('title').once('value')).val(); await shareCard(t); } catch (e) { console.error(e); } sh.disabled = false; };
     const sv = root.querySelector('#mpSave'); if (sv) sv.onclick = async () => { sv.disabled = true; try { const t = (await R.child('title').once('value')).val(); await saveCard(t); } catch (e) {} sv.disabled = false; };
   }
