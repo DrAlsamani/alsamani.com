@@ -2516,6 +2516,29 @@ body>.md-xov{position:fixed}
 .md-say:after{content:'';position:absolute;top:100%;left:50%;margin-left:-7px;border:7px solid transparent;border-top-color:#fff}
 .md-say.short{font-size:1.5rem;padding:4px 10px;background:transparent;box-shadow:none}.md-say.short:after{display:none}
 @keyframes mdSay{from{opacity:0;transform:translate(-50%,8px) scale(.8)}to{opacity:1;transform:translate(-50%,0)}}
+/* the host's lobby stays light: waiting tools folded until someone joins */
+.md-waitd{margin:12px auto 0;max-width:900px;text-align:center}
+.md-waitd>summary{cursor:pointer;list-style:none;display:inline-block;color:rgba(255,255,255,.75);font-size:.9375rem;border-bottom:1px dashed rgba(255,255,255,.4);padding-bottom:2px}
+.md-waitd>summary::-webkit-details-marker{display:none}
+/* join link panel */
+.md-shp{position:fixed;inset-inline:12px;bottom:calc(env(safe-area-inset-bottom) + 130px);z-index:40;margin:auto;max-width:460px;background:#fff;color:#14204a;border-radius:16px;padding:14px;box-shadow:0 16px 40px rgba(0,0,0,.35);display:grid;gap:10px;text-align:center}
+.md-shp p{margin:0;font-weight:700;font-size:1.0625rem;overflow-wrap:anywhere}
+.md-shp div{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;align-items:center}
+.md-shp .btn{padding:8px 16px}.md-shp .btn.ghost{color:#14204a!important;border-color:#c9cde0!important}
+.md-shp .md-cb{color:#14204a;border-color:#c9cde0;background:none}
+/* host plays on the same phone: a slim lobby on top, the player's view under it */
+@media (max-width:760px){
+  .md-live.phones:not(.started) .md-box{max-height:none;flex:0 0 auto;overflow:visible}
+  .md-live.phones:not(.started) .md-scr{padding:8px 12px;gap:6px}
+  .md-live.phones:not(.started) .md-lobby{gap:8px}
+  .md-live.phones:not(.started) .md-qr,.md-live.phones:not(.started) .md-motto,.md-live.phones:not(.started) .md-title,.md-live.phones:not(.started) .md-names,.md-live.phones:not(.started) .md-waitd,.md-live.phones:not(.started) .md-how{display:none}
+  .md-live.phones:not(.started) .md-url{font-size:1rem;margin:0}
+  .md-live.phones:not(.started) .md-pin{font-size:1.75rem;padding:4px 14px;margin:0}
+  .md-live.phones:not(.started) .md-count{margin:0;font-size:.9375rem}
+  .md-live.phones:not(.started) .md-mode{margin:4px 0 0}
+  .md-live.phones:not(.started) .md-ctl{position:static;padding:6px 10px;gap:6px}
+  .md-live.phones .md-me{min-height:52vh}
+}
 </style><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script>window.MD_CFG={"apiKey": "AIzaSyA50i75DT1Is1a6Yn6snW1_JVObc8S3F0Y", "authDomain": "maydan-705ae.firebaseapp.com", "databaseURL": "https://maydan-705ae-default-rtdb.europe-west1.firebasedatabase.app", "projectId": "maydan-705ae", "appId": "1:342187013133:web:d5c2396f0db413f3c51144"};window.MD_MARK="<svg class=\"md-mark\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><rect x=\"4\" y=\"4\" width=\"40\" height=\"40\" rx=\"12\" fill=\"#23336F\"/><path d=\"M24 9l4.2 6.8 7.8-1.8-1.8 7.8L41 24l-6.8 4.2 1.8 7.8-7.8-1.8L24 39l-4.2-6.8-7.8 1.8 1.8-7.8L7 24l6.8-4.2-1.8-7.8 7.8 1.8z\" fill=\"#C9822B\"/><circle cx=\"24\" cy=\"24\" r=\"6.5\" fill=\"#23336F\"/><circle cx=\"24\" cy=\"24\" r=\"3\" fill=\"#F3E3C7\"/></svg>";</script><script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script><script>/* Maydan challenges: short games played on every phone at once. Every phone gets the same level (same seed),
    so the race is fair. Each game reports a score; higher is better. */
 window.MDGames = (function () {
@@ -3998,8 +4021,8 @@ window.MDLive = (function () {
       <p class="md-motto">${B('الميدان يا حميدان', 'The field will tell')}</p>
       <h2 class="md-title">${esc(G.quiz.title || T('ميدان', 'Maydan'))}</h2>
       <div class="md-count"><b id="mdN">0</b> ${B('مشارك', 'players')} <small id="mdFans"></small></div><div class="md-names" id="mdNames"></div>
-      <div class="md-wait"><div class="md-ann"><input data-ann maxlength="100" dir="auto" placeholder="${T('اكتب للجميع، مثل: نبدأ بعد خمس دقائق', 'Write to everyone, e.g. We start in five minutes')}"><button type="button" class="btn ghost" data-annb>${B('أرسل', 'Send')}</button></div>
-        <div class="md-wu"><button type="button" class="btn ghost" data-wu>${G.wu ? B(`تحدي الانتظار: «${MDGames.byId(G.wu.g).ar}» · غيّره`, `Waiting challenge: ${MDGames.byId(G.wu.g).en} · change it`) : B('أطلق تحدي الانتظار على الجوالات', 'Start a waiting challenge on the phones')}</button><ol class="md-wub" id="mdWu"></ol></div></div>
+      <details class="md-waitd" id="mdWaitD" hidden><summary>${B('تواصل مع المنتظرين', 'Talk to those waiting')}</summary><div class="md-wait"><div class="md-ann"><input data-ann maxlength="100" dir="auto" placeholder="${T('اكتب للجميع، مثل: نبدأ بعد خمس دقائق', 'Write to everyone, e.g. We start in five minutes')}"><button type="button" class="btn ghost" data-annb>${B('أرسل', 'Send')}</button></div>
+        <div class="md-wu"><button type="button" class="btn ghost" data-wu>${G.wu ? B(`تحدي الانتظار: «${MDGames.byId(G.wu.g).ar}» · غيّره`, `Waiting challenge: ${MDGames.byId(G.wu.g).en} · change it`) : B('أطلق تحدي الانتظار على الجوالات', 'Start a waiting challenge on the phones')}</button><ol class="md-wub" id="mdWu"></ol></div></div></details>
       <div class="md-set" id="mdSet" hidden>
         <h3>${B('إعدادات المسابقة', 'Quiz settings')}</h3>
         <label class="md-ck"><input type="checkbox" data-o="sid"${O.sid ? ' checked' : ''}> ${B('مسابقة بدرجات: يكتب كل طالب رقمه الجامعي، وفي النهاية ملف درجات لنظام التعلم (بلاك بورد أو مودل أو كانفس)', 'A graded quiz: each student types their ID, and at the end a grades file for the LMS (Blackboard, Moodle or Canvas)')}</label>
@@ -4033,9 +4056,15 @@ window.MDLive = (function () {
        <button type="button" class="md-cb" data-set>${B('الإعدادات', 'Settings')}</button>
        <button type="button" class="md-cb" data-share>${B('رابط الدخول', 'Join link')}</button>
        <label class="md-opt"><input type="checkbox" data-lock> ${B('إقفال الدخول', 'Lock joining')}</label>`, true);
-    q('[data-share]').onclick = async e => {
-      const link = url, text = T(`ادخل مسابقة «${G.quiz.title || 'ميدان'}»: `, `Join “${G.quiz.title || 'Maydan'}”: `) + link;
-      try { if (navigator.share && /iP(hone|ad)|Android/i.test(navigator.userAgent)) await navigator.share({ text }); else { await navigator.clipboard.writeText(text); e.currentTarget.textContent = '✓ ' + T('نُسخ', 'Copied'); } } catch (er) {}
+    q('[data-share]').onclick = () => {
+      const text = T(`ادخل مسابقة «${G.quiz.title || 'ميدان'}»: `, `Join “${G.quiz.title || 'Maydan'}”: `) + url;
+      let d = G.el.querySelector('.md-shp'); if (d) return d.remove();
+      d = document.createElement('div'); d.className = 'md-shp';
+      d.innerHTML = `<p dir="ltr">${url.replace('https://', '')}</p><div>${navigator.share ? `<button type="button" class="btn solid" data-sh>${B('مشاركة', 'Share')}</button>` : ''}<button type="button" class="btn ghost" data-cp>${B('نسخ', 'Copy')}</button><a class="btn ghost" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent(text)}">${B('واتساب', 'WhatsApp')}</a><button type="button" class="md-cb" data-x aria-label="${T('إغلاق', 'Close')}">✕</button></div>`;
+      G.el.appendChild(d);
+      d.querySelector('[data-x]').onclick = () => d.remove();
+      const sh = d.querySelector('[data-sh]'); if (sh) sh.onclick = () => navigator.share({ title: G.quiz.title || 'ميدان', text, url }).catch(() => {});
+      d.querySelector('[data-cp]').onclick = async e => { const b = e.currentTarget; try { await navigator.clipboard.writeText(text); } catch (er) { const t = document.createElement('textarea'); t.value = text; document.body.appendChild(t); t.select(); try { document.execCommand('copy'); } catch (x) {} t.remove(); } b.innerHTML = B('✓ نُسخ', '✓ Copied'); };
     };
     const names = q('#mdNames'), go = q('[data-go]'), set = q('#mdSet'), tp = q('#mdTeamP'), mv = q('#mdMove');
     // each player as their own figure, with a speech bubble above it when they react or write
@@ -4067,7 +4096,7 @@ window.MDLive = (function () {
       mv.querySelector('[data-rm]').onclick = () => { mv.hidden = true; G.ref.child('pl/' + u).remove(); };
       mv.querySelector('[data-x]').onclick = () => { mv.hidden = true; };
     };
-    const count = () => { if (q('#mdN')) { q('#mdN').textContent = Object.keys(G.players).length; go.disabled = !Object.keys(G.players).length; } };
+    const count = () => { if (q('#mdN')) { const n = Object.keys(G.players).length; q('#mdN').textContent = n; go.disabled = !n; const wd = q('#mdWaitD'); if (wd) wd.hidden = !n; } };
     sub(G.ref.child('pl'), 'child_added', s => {
       const v = s.val() || {}; if (v.w) { G.fans[s.key] = v.n; const f = q('#mdFans'); if (f) f.textContent = Object.keys(G.fans).length ? '' + Object.keys(G.fans).length : ''; return; }
       G.players[s.key] = v.n; if (!(s.key in G.score)) G.score[s.key] = 0; G.streak[s.key] = G.streak[s.key] || 0; if (v.t != null) G.team[s.key] = +v.t;

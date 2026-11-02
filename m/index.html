@@ -659,6 +659,29 @@ body>.md-xov{position:fixed}
 .md-say:after{content:'';position:absolute;top:100%;left:50%;margin-left:-7px;border:7px solid transparent;border-top-color:#fff}
 .md-say.short{font-size:1.5rem;padding:4px 10px;background:transparent;box-shadow:none}.md-say.short:after{display:none}
 @keyframes mdSay{from{opacity:0;transform:translate(-50%,8px) scale(.8)}to{opacity:1;transform:translate(-50%,0)}}
+/* the host's lobby stays light: waiting tools folded until someone joins */
+.md-waitd{margin:12px auto 0;max-width:900px;text-align:center}
+.md-waitd>summary{cursor:pointer;list-style:none;display:inline-block;color:rgba(255,255,255,.75);font-size:.9375rem;border-bottom:1px dashed rgba(255,255,255,.4);padding-bottom:2px}
+.md-waitd>summary::-webkit-details-marker{display:none}
+/* join link panel */
+.md-shp{position:fixed;inset-inline:12px;bottom:calc(env(safe-area-inset-bottom) + 130px);z-index:40;margin:auto;max-width:460px;background:#fff;color:#14204a;border-radius:16px;padding:14px;box-shadow:0 16px 40px rgba(0,0,0,.35);display:grid;gap:10px;text-align:center}
+.md-shp p{margin:0;font-weight:700;font-size:1.0625rem;overflow-wrap:anywhere}
+.md-shp div{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;align-items:center}
+.md-shp .btn{padding:8px 16px}.md-shp .btn.ghost{color:#14204a!important;border-color:#c9cde0!important}
+.md-shp .md-cb{color:#14204a;border-color:#c9cde0;background:none}
+/* host plays on the same phone: a slim lobby on top, the player's view under it */
+@media (max-width:760px){
+  .md-live.phones:not(.started) .md-box{max-height:none;flex:0 0 auto;overflow:visible}
+  .md-live.phones:not(.started) .md-scr{padding:8px 12px;gap:6px}
+  .md-live.phones:not(.started) .md-lobby{gap:8px}
+  .md-live.phones:not(.started) .md-qr,.md-live.phones:not(.started) .md-motto,.md-live.phones:not(.started) .md-title,.md-live.phones:not(.started) .md-names,.md-live.phones:not(.started) .md-waitd,.md-live.phones:not(.started) .md-how{display:none}
+  .md-live.phones:not(.started) .md-url{font-size:1rem;margin:0}
+  .md-live.phones:not(.started) .md-pin{font-size:1.75rem;padding:4px 14px;margin:0}
+  .md-live.phones:not(.started) .md-count{margin:0;font-size:.9375rem}
+  .md-live.phones:not(.started) .md-mode{margin:4px 0 0}
+  .md-live.phones:not(.started) .md-ctl{position:static;padding:6px 10px;gap:6px}
+  .md-live.phones .md-me{min-height:52vh}
+}
 </style>
 <div id="mp" class="sn mp"><noscript><span class="ar">تعمل هذه الصفحة مع تفعيل JavaScript.</span><span class="en">This page needs JavaScript.</span></noscript></div>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script>window.MD_CFG={"apiKey": "AIzaSyA50i75DT1Is1a6Yn6snW1_JVObc8S3F0Y", "authDomain": "maydan-705ae.firebaseapp.com", "databaseURL": "https://maydan-705ae-default-rtdb.europe-west1.firebasedatabase.app", "projectId": "maydan-705ae", "appId": "1:342187013133:web:d5c2396f0db413f3c51144"};window.MD_MARK="<svg class=\"md-mark\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><rect x=\"4\" y=\"4\" width=\"40\" height=\"40\" rx=\"12\" fill=\"#23336F\"/><path d=\"M24 9l4.2 6.8 7.8-1.8-1.8 7.8L41 24l-6.8 4.2 1.8 7.8-7.8-1.8L24 39l-4.2-6.8-7.8 1.8 1.8-7.8L7 24l6.8-4.2-1.8-7.8 7.8 1.8z\" fill=\"#C9822B\"/><circle cx=\"24\" cy=\"24\" r=\"6.5\" fill=\"#23336F\"/><circle cx=\"24\" cy=\"24\" r=\"3\" fill=\"#F3E3C7\"/></svg>";</script><script>/* Maydan challenges: short games played on every phone at once. Every phone gets the same level (same seed),

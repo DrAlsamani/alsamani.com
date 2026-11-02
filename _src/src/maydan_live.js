@@ -488,8 +488,8 @@ window.MDLive = (function () {
       <p class="md-motto">${B('الميدان يا حميدان', 'The field will tell')}</p>
       <h2 class="md-title">${esc(G.quiz.title || T('ميدان', 'Maydan'))}</h2>
       <div class="md-count"><b id="mdN">0</b> ${B('مشارك', 'players')} <small id="mdFans"></small></div><div class="md-names" id="mdNames"></div>
-      <div class="md-wait"><div class="md-ann"><input data-ann maxlength="100" dir="auto" placeholder="${T('اكتب للجميع، مثل: نبدأ بعد خمس دقائق', 'Write to everyone, e.g. We start in five minutes')}"><button type="button" class="btn ghost" data-annb>${B('أرسل', 'Send')}</button></div>
-        <div class="md-wu"><button type="button" class="btn ghost" data-wu>${G.wu ? B(`تحدي الانتظار: «${MDGames.byId(G.wu.g).ar}» · غيّره`, `Waiting challenge: ${MDGames.byId(G.wu.g).en} · change it`) : B('أطلق تحدي الانتظار على الجوالات', 'Start a waiting challenge on the phones')}</button><ol class="md-wub" id="mdWu"></ol></div></div>
+      <details class="md-waitd" id="mdWaitD" hidden><summary>${B('تواصل مع المنتظرين', 'Talk to those waiting')}</summary><div class="md-wait"><div class="md-ann"><input data-ann maxlength="100" dir="auto" placeholder="${T('اكتب للجميع، مثل: نبدأ بعد خمس دقائق', 'Write to everyone, e.g. We start in five minutes')}"><button type="button" class="btn ghost" data-annb>${B('أرسل', 'Send')}</button></div>
+        <div class="md-wu"><button type="button" class="btn ghost" data-wu>${G.wu ? B(`تحدي الانتظار: «${MDGames.byId(G.wu.g).ar}» · غيّره`, `Waiting challenge: ${MDGames.byId(G.wu.g).en} · change it`) : B('أطلق تحدي الانتظار على الجوالات', 'Start a waiting challenge on the phones')}</button><ol class="md-wub" id="mdWu"></ol></div></div></details>
       <div class="md-set" id="mdSet" hidden>
         <h3>${B('إعدادات المسابقة', 'Quiz settings')}</h3>
         <label class="md-ck"><input type="checkbox" data-o="sid"${O.sid ? ' checked' : ''}> ${B('مسابقة بدرجات: يكتب كل طالب رقمه الجامعي، وفي النهاية ملف درجات لنظام التعلم (بلاك بورد أو مودل أو كانفس)', 'A graded quiz: each student types their ID, and at the end a grades file for the LMS (Blackboard, Moodle or Canvas)')}</label>
@@ -523,9 +523,15 @@ window.MDLive = (function () {
        <button type="button" class="md-cb" data-set>${B('الإعدادات', 'Settings')}</button>
        <button type="button" class="md-cb" data-share>${B('رابط الدخول', 'Join link')}</button>
        <label class="md-opt"><input type="checkbox" data-lock> ${B('إقفال الدخول', 'Lock joining')}</label>`, true);
-    q('[data-share]').onclick = async e => {
-      const link = url, text = T(`ادخل مسابقة «${G.quiz.title || 'ميدان'}»: `, `Join “${G.quiz.title || 'Maydan'}”: `) + link;
-      try { if (navigator.share && /iP(hone|ad)|Android/i.test(navigator.userAgent)) await navigator.share({ text }); else { await navigator.clipboard.writeText(text); e.currentTarget.textContent = '✓ ' + T('نُسخ', 'Copied'); } } catch (er) {}
+    q('[data-share]').onclick = () => {
+      const text = T(`ادخل مسابقة «${G.quiz.title || 'ميدان'}»: `, `Join “${G.quiz.title || 'Maydan'}”: `) + url;
+      let d = G.el.querySelector('.md-shp'); if (d) return d.remove();
+      d = document.createElement('div'); d.className = 'md-shp';
+      d.innerHTML = `<p dir="ltr">${url.replace('https://', '')}</p><div>${navigator.share ? `<button type="button" class="btn solid" data-sh>${B('مشاركة', 'Share')}</button>` : ''}<button type="button" class="btn ghost" data-cp>${B('نسخ', 'Copy')}</button><a class="btn ghost" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent(text)}">${B('واتساب', 'WhatsApp')}</a><button type="button" class="md-cb" data-x aria-label="${T('إغلاق', 'Close')}">✕</button></div>`;
+      G.el.appendChild(d);
+      d.querySelector('[data-x]').onclick = () => d.remove();
+      const sh = d.querySelector('[data-sh]'); if (sh) sh.onclick = () => navigator.share({ title: G.quiz.title || 'ميدان', text, url }).catch(() => {});
+      d.querySelector('[data-cp]').onclick = async e => { const b = e.currentTarget; try { await navigator.clipboard.writeText(text); } catch (er) { const t = document.createElement('textarea'); t.value = text; document.body.appendChild(t); t.select(); try { document.execCommand('copy'); } catch (x) {} t.remove(); } b.innerHTML = B('✓ نُسخ', '✓ Copied'); };
     };
     const names = q('#mdNames'), go = q('[data-go]'), set = q('#mdSet'), tp = q('#mdTeamP'), mv = q('#mdMove');
     // each player as their own figure, with a speech bubble above it when they react or write
@@ -557,7 +563,7 @@ window.MDLive = (function () {
       mv.querySelector('[data-rm]').onclick = () => { mv.hidden = true; G.ref.child('pl/' + u).remove(); };
       mv.querySelector('[data-x]').onclick = () => { mv.hidden = true; };
     };
-    const count = () => { if (q('#mdN')) { q('#mdN').textContent = Object.keys(G.players).length; go.disabled = !Object.keys(G.players).length; } };
+    const count = () => { if (q('#mdN')) { const n = Object.keys(G.players).length; q('#mdN').textContent = n; go.disabled = !n; const wd = q('#mdWaitD'); if (wd) wd.hidden = !n; } };
     sub(G.ref.child('pl'), 'child_added', s => {
       const v = s.val() || {}; if (v.w) { G.fans[s.key] = v.n; const f = q('#mdFans'); if (f) f.textContent = Object.keys(G.fans).length ? '' + Object.keys(G.fans).length : ''; return; }
       G.players[s.key] = v.n; if (!(s.key in G.score)) G.score[s.key] = 0; G.streak[s.key] = G.streak[s.key] || 0; if (v.t != null) G.team[s.key] = +v.t;
