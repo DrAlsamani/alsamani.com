@@ -1501,18 +1501,23 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
   /* ---------- the connections ---------- */
   function sig(to, k, d) { A.ref.child('sig/' + to).push({ f: A.uid, k, d: JSON.stringify(d) }).catch(() => {}); }
   function feed(P) {
-    const tr = P.pc.getTransceivers();
+    const tr = P.pc.getTransceivers(), n = Object.keys(A.P).length;
     const ta = tr.find(t => t.receiver.track && t.receiver.track.kind === 'audio'), tv = tr.find(t => t.receiver.track && t.receiver.track.kind === 'video');
-    if (ta) { ta.direction = 'sendrecv'; ta.sender.replaceTrack(A.aT || null).catch(() => {}); }
-    if (tv) { tv.direction = 'sendrecv'; tv.sender.replaceTrack(A.vT || null).catch(() => {});
-      try { const pr = tv.sender.getParameters(); if (pr.encodings && pr.encodings[0]) { pr.encodings[0].maxBitrate = 260000; tv.sender.setParameters(pr).catch(() => {}); } } catch (e) {} }
+    const tune = (t, enc) => { try { const pr = t.sender.getParameters(); if (!pr.encodings || !pr.encodings.length) pr.encodings = [{}]; Object.assign(pr.encodings[0], enc); t.sender.setParameters(pr).catch(() => {}); } catch (e) {} };
+    if (ta) { ta.direction = 'sendrecv'; ta.sender.replaceTrack(A.aT || null).catch(() => {}); tune(ta, { priority: 'high', networkPriority: 'high', maxBitrate: 40000 }); }
+    // each phone sends its camera once per person, so the picture gets lighter as the room grows and the voice stays clear
+    if (tv) { tv.direction = 'sendrecv'; tv.sender.replaceTrack(A.vT || null).catch(() => {}); tune(tv, { priority: 'low', networkPriority: 'low', maxBitrate: n <= 2 ? 240000 : n <= 4 ? 150000 : 100000, maxFramerate: n <= 3 ? 15 : 10 }); }
   }
+  function retune() { if (A) Object.values(A.P).forEach(feed); }
   function peer(u, first) {
     if (A.P[u]) return A.P[u];
     const pc = new RTCPeerConnection(ICE), P = A.P[u] = { pc, q: [], first, ms: new MediaStream() };
     pc.onicecandidate = e => { if (e.candidate) sig(u, 'i', e.candidate); };
-    pc.ontrack = e => { P.ms.addTrack(e.track); if (e.track.kind === 'audio') { if (!P.au) { P.au = new Audio(); P.au.autoplay = true; P.au.setAttribute('playsinline', ''); } P.au.srcObject = new MediaStream([e.track]); P.au.play().catch(() => {}); level(u, e.track); } else P.vt = e.track; apply(); paint(); };
-    pc.onconnectionstatechange = () => { if (pc.connectionState === 'failed') { drop(u); if (first && A && A.in[u]) setTimeout(() => { if (A && A.joined && A.in[u] && !A.P[u]) call(u); }, 1500); } };
+    pc.ontrack = e => { P.ms.addTrack(e.track); if (e.track.kind === 'audio') { if (!P.au) { P.au = new Audio(); P.au.autoplay = true; P.au.setAttribute('playsinline', ''); } P.au.srcObject = new MediaStream([e.track]); P.au.play().catch(() => {}); } else P.vt = e.track; apply(); paint(); };
+    pc.onconnectionstatechange = () => {
+      if (pc.connectionState === 'disconnected' && first) { clearTimeout(P.rt); P.rt = setTimeout(async () => { if (A && A.P[u] === P && pc.connectionState === 'disconnected') { try { const o = await pc.createOffer({ iceRestart: true }); await pc.setLocalDescription(o); sig(u, 'o', pc.localDescription); } catch (e) {} } }, 3000); }
+      if (pc.connectionState === 'connected') { clearTimeout(P.rt); retune(); }
+      if (pc.connectionState === 'failed') { drop(u); if (first && A && A.in[u]) setTimeout(() => { if (A && A.joined && A.in[u] && !A.P[u]) call(u); }, 1500); } };
     return P;
   }
   async function call(u) {
@@ -1522,44 +1527,49 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
   async function onSig(m) {
     if (!A || !A.joined || !m || !m.f) return; const u = m.f; let d = null; try { d = JSON.parse(m.d); } catch (e) { return; }
     try {
-      if (m.k === 'o') { if (A.P[u]) drop(u); const P = peer(u, false); await P.pc.setRemoteDescription(d); feed(P); const a = await P.pc.createAnswer(); await P.pc.setLocalDescription(a); sig(u, 'a', P.pc.localDescription); P.q.splice(0).forEach(c => P.pc.addIceCandidate(c).catch(() => {})); }
+      if (m.k === 'o') { const old = A.P[u]; if (old && old.pc.signalingState === 'stable' && old.pc.connectionState !== 'failed') { await old.pc.setRemoteDescription(d); const a = await old.pc.createAnswer(); await old.pc.setLocalDescription(a); sig(u, 'a', old.pc.localDescription); return; }
+        if (old) drop(u); const P = peer(u, false); await P.pc.setRemoteDescription(d); feed(P); const a = await P.pc.createAnswer(); await P.pc.setLocalDescription(a); sig(u, 'a', P.pc.localDescription); P.q.splice(0).forEach(c => P.pc.addIceCandidate(c).catch(() => {})); }
       else if (m.k === 'a') { const P = A.P[u]; if (P) { await P.pc.setRemoteDescription(d); P.q.splice(0).forEach(c => P.pc.addIceCandidate(c).catch(() => {})); } }
       else if (m.k === 'i') { const P = A.P[u]; if (!P) return; if (P.pc.remoteDescription) P.pc.addIceCandidate(d).catch(() => {}); else P.q.push(d); }
     } catch (e) { console.warn('av', e); }
   }
-  function drop(u) { const P = A && A.P[u]; if (!P) return; try { P.pc.close(); } catch (e) {} if (P.au) { P.au.srcObject = null; } if (P.an) clearInterval(P.an); delete A.P[u]; paint(); }
-  // who is talking right now: a light ring on their tile and their name in the bar
-  function level(u, track) {
-    try { A.ac = A.ac || new (window.AudioContext || window.webkitAudioContext)(); const src = A.ac.createMediaStreamSource(new MediaStream([track])), an = A.ac.createAnalyser(); an.fftSize = 256; src.connect(an); const buf = new Uint8Array(an.frequencyBinCount);
-      const P = A.P[u] || A; clearInterval(P.an); P.an = setInterval(() => { an.getByteFrequencyData(buf); let s = 0; for (let k = 0; k < buf.length; k++) s += buf[k]; const on = s / buf.length > 18 && (u === A.uid ? A.mic : canTalk(u)); if (on !== !!A.talk[u]) { A.talk[u] = on; paintTalk(); } }, 250);
-    } catch (e) {}
+  function drop(u) { const P = A && A.P[u]; if (!P) return; try { P.pc.close(); } catch (e) {} if (P.au) { P.au.srcObject = null; } clearTimeout(P.rt); delete A.P[u]; retune(); paint(); }
+  // who is talking right now, read from the connections themselves (no audio processing on the phone, which spoils the sound on iPhone)
+  async function talkPoll() {
+    if (!A || !A.joined) return; let ch = false;
+    Object.keys(A.P).forEach(u => { const r = A.P[u].pc.getReceivers().find(x => x.track && x.track.kind === 'audio'); let on = false;
+      try { const src = r && r.getSynchronizationSources ? r.getSynchronizationSources()[0] : null; on = !!(src && src.audioLevel > 0.04); } catch (e) {}
+      on = on && canTalk(u); if (on !== !!A.talk[u]) { A.talk[u] = on; ch = true; } });
+    const p0 = Object.values(A.P)[0]; let me = false;
+    if (p0 && A.aT && A.mic && canTalk(A.uid)) { try { const st = await p0.pc.getStats(); st.forEach(x => { if (x.type === 'media-source' && x.kind === 'audio' && x.audioLevel > 0.04) me = true; }); } catch (e) {} }
+    if (me !== !!A.talk[A.uid]) { A.talk[A.uid] = me; ch = true; }
+    if (ch) paintTalk();
   }
-
   /* ---------- this phone: mic, camera, joining and leaving ---------- */
   async function join() {
     if (A.joined) return; const n = Object.keys(A.in).length;
     if (n >= MAX) return note(T(`الغرفة الصوتية ممتلئة (${MAX}). تقدر تتابع اللعب بدونها.`, `The voice room is full (${MAX}). You can keep playing without it.`));
     if ((A.ctl.ban || {})[A.uid]) return note(T('أوقف المشرف صوتك في هذه الجلسة.', 'The host has turned your voice off for this session.'));
-    try { A.ms = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true } }); A.aT = A.ms.getAudioTracks()[0]; A.mic = true; level(A.uid, A.aT); }
+    try { A.ms = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true } }); A.aT = A.ms.getAudioTracks()[0]; A.mic = true; }
     catch (e) { A.aT = null; A.mic = false; note(T('لم يُسمح بالميكروفون، فتسمع فقط. تقدر تسمح له من إعدادات المتصفح.', 'No microphone allowed, so you can only listen. Allow it in the browser settings.')); }
-    try { A.ac = A.ac || new (window.AudioContext || window.webkitAudioContext)(); A.ac.resume(); } catch (e) {}
     A.joined = true; const me = A.ref.child('in/' + A.uid);
     me.onDisconnect().remove(); A.ref.child('sig/' + A.uid).onDisconnect().remove();
     await me.set({ n: A.name.slice(0, 24), a: A.mic ? 1 : 0, v: 0, t: firebase.database.ServerValue.TIMESTAMP }).catch(() => { A.joined = false; });
     if (!A.joined) { stopTracks(); return note(T('تعذّر الدخول للصوت الآن.', 'Could not join the voice now.')); }
     A.sigRef = A.ref.child('sig/' + A.uid); A.sigRef.on('child_added', s => { onSig(s.val()); s.ref.remove().catch(() => {}); });
     Object.keys(A.in).forEach(u => { if (u !== A.uid && A.uid < u) call(u); });
+    clearInterval(A.tp); A.tp = setInterval(talkPoll, 400);
     apply(); paint();
   }
   function stopTracks() { [A.aT, A.vT].forEach(t => { if (t) t.stop(); }); A.aT = A.vT = null; A.mic = A.cam = false; }
   function leave(msg) {
     if (!A || !A.joined) return; A.joined = false; if (A.sigRef) A.sigRef.off();
-    Object.keys(A.P).forEach(drop); stopTracks(); clearInterval(A.an);
+    Object.keys(A.P).forEach(drop); stopTracks(); clearInterval(A.tp);
     A.ref.child('in/' + A.uid).remove().catch(() => {}); A.ref.child('sig/' + A.uid).remove().catch(() => {});
     A.ref.child('in/' + A.uid).onDisconnect().cancel(); paint(); if (msg) note(msg);
   }
   async function toggleMic() {
-    if (!A.aT) { try { const s = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } }); A.aT = s.getAudioTracks()[0]; level(A.uid, A.aT); Object.values(A.P).forEach(feed); } catch (e) { return note(T('المتصفح لم يسمح بالميكروفون.', 'The browser did not allow the microphone.')); } A.mic = true; }
+    if (!A.aT) { try { const s = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } }); A.aT = s.getAudioTracks()[0]; Object.values(A.P).forEach(feed); } catch (e) { return note(T('المتصفح لم يسمح بالميكروفون.', 'The browser did not allow the microphone.')); } A.mic = true; }
     else A.mic = !A.mic;
     A.ref.child('in/' + A.uid + '/a').set(A.mic ? 1 : 0).catch(() => {}); apply(); paint();
   }
@@ -1589,7 +1599,8 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
   function paintTalk() { if (!A || !A.el) return; A.el.querySelectorAll('[data-tu]').forEach(t => t.classList.toggle('talk', !!A.talk[t.dataset.tu])); const s = A.el.querySelector('[data-who]'); if (s) s.textContent = status(); }
   function status() {
     const t = Object.keys(A.talk).filter(u => A.talk[u] && (A.in[u] || u === A.uid)).map(u => u === A.uid ? T('أنت', 'you') : (A.in[u] || {}).n).filter(Boolean);
-    if (t.length) return t.slice(0, 2).join(T('، ', ', ')) + T(' يتكلم', ' talking');
+    if (t.length === 1 && t[0] === T('أنت', 'you')) return T('أنت تتكلم', 'You are talking');
+    if (t.length) return t.slice(0, 2).join(T(' و', ' & ')) + (t.length > 1 ? T(' يتكلمون', ' talking') : T(' يتكلم', ' talking'));
     if (A.joined && !canTalk(A.uid)) return why();
     return A.pol && A.pol.w ? A.pol.w : '';
   }
