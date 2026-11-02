@@ -205,3 +205,6 @@
 .qz-acct p{margin:0;display:flex;align-items:center;gap:8px;flex-wrap:wrap;flex:1;min-width:220px}
 .qz-acct svg{width:20px;height:20px;flex:none;color:var(--accent,#2563eb)}
 .qz-acct em{font-style:normal;color:#c0392b}
+.qz-list li>button[data-open] b{min-width:0;flex:1}
+.qz-list li>button[data-open] small{flex:none}
+.qz-list li{min-width:0}
