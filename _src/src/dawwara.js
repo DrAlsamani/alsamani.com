@@ -329,7 +329,7 @@ window.Dawwara = (function () {
   function nextChal(used, not) { const L = CHAL().map((c, i) => i).filter(i => !used.has(i) && i !== not); if (!L.length) return null; const i = L[Math.floor(Math.random() * L.length)]; used.add(i); return Object.assign({ i }, CHAL()[i]); }
   function challenge(s) {
     const ch = s.c, st = D.q = { dur: ch.s, left: ch.s, locked: false, rank: [], extra: extra(ch), sc: ch.sc || 'rank' };
-    shell(`${board(-1)}<div class="dw-mid dw-ch"><p class="dw-tag">${esc(ch.cat)}</p><h2 dir="auto">${esc(ch.t)}</h2><p dir="auto">${esc(ch.d)}</p>${ch.mat ? `<p class="dw-sub">${T('يحتاج', 'Needs')}: ${esc(ch.mat)}</p>` : ''}<div class="dw-x" id="dwX">${st.extra.pre || ''}</div>${ring(ch.s)}
+    shell(`${board(-1)}<div class="dw-mid dw-ch"><p class="dw-tag">${esc(ch.cat)}</p><h2 dir="auto">${esc(ch.t)}</h2><p dir="auto">${esc(ch.d)}</p>${ch.mat ? `<p class="dw-sub">${T('يحتاج', 'Needs')}: ${esc(ch.mat)}${ch.alt ? ` · ${T('أو', 'or')}: ${esc(ch.alt)}` : ''}</p>` : ''}<div class="dw-x" id="dwX">${st.extra.pre || ''}</div>${ring(ch.s)}
       <div class="dw-foot" id="dwFoot"><div class="dw-acts"><button type="button" class="dw-btn" data-main data-go>${T('ابدأ المؤقت', 'Start the timer')}</button><button type="button" class="dw-btn ghost" data-swap>${IC.swap}${T('تحدٍّ آخر', 'Another challenge')}</button></div></div></div>`, 'dw-in');
     el.querySelector('[data-swap]').onclick = () => { const P = shuf(pool().filter(c => !(D.chosen || []).includes(c.key))); if (P.length) { D.chosen = (D.chosen || []).map(k => k === ch.key ? P[0].key : k); s.c = P[0]; challenge(s); } };
     el.querySelector('[data-go]').onclick = () => {
@@ -463,7 +463,7 @@ window.Dawwara = (function () {
   }
   function chalBox() {
     const L = D.chosen.map(byKey).filter(Boolean), mats = [...new Set(L.map(c => (c.mat || '').trim()).filter(Boolean))];
-    return `${L.length ? `<ol class="dw-chl">${L.map((c, i) => `<li><span><b dir="auto">${esc(c.t)}</b><small>${esc(c.cat)} · ${NUM(c.s)} ${T('ثانية', 's')} · ${c.sc === 'judge' ? T('درجات الحكم', 'judge’s marks') : T('بالترتيب', 'by place')}${c.mat ? ' · ' + T('يحتاج: ', 'needs: ') + esc(c.mat) : ''}</small></span><button type="button" data-cs="${i}" title="${T('بدّله', 'Swap')}">${IC.swap}</button><button type="button" data-cx="${i}" title="${T('احذفه', 'Remove')}">${IC.x}</button></li>`).join('')}</ol>` : ''}
+    return `${L.length ? `<ol class="dw-chl">${L.map((c, i) => `<li><span><b dir="auto">${esc(c.t)}</b><small>${esc(c.cat)} · ${NUM(c.s)} ${T('ثانية', 's')} · ${c.sc === 'judge' ? T('درجات الحكم', 'judge’s marks') : T('بالترتيب', 'by place')}${c.mat ? ' · ' + T('يحتاج: ', 'needs: ') + esc(c.mat) : ''}${c.alt ? ' · ' + T('البديل: ', 'or: ') + esc(c.alt) : ''}</small></span><button type="button" data-cs="${i}" title="${T('بدّله', 'Swap')}">${IC.swap}</button><button type="button" data-cx="${i}" title="${T('احذفه', 'Remove')}">${IC.x}</button></li>`).join('')}</ol>` : ''}
       ${mats.length ? `<p class="dw-mats"><b>${T('جهّز قبل الأمسية', 'Prepare beforehand')}:</b> ${mats.map(esc).join(T('، ', ', '))}</p>` : ''}
       <button type="button" class="dw-add" data-cadd>+ ${T('أضف تحديًا من عندك', 'Add your own challenge')}</button>`;
   }
@@ -573,6 +573,100 @@ window.Dawwara = (function () {
   }
   const estimate = (r, n) => Math.round(MIN.all * r.all + MIN.board * (r.board || 0) + MIN.turn * r.turn * n + MIN.buzz * r.buzz + MIN.chal * r.chal + 3);
 
+  /* ---------- the Dawwara editor: write the questions and challenges yourself, or review what the AI wrote, before playing ---------- */
+  const saveQuiz = z => { try { const L = JSON.parse(localStorage.getItem('qz.list') || '[]'), i = L.findIndex(x => x.id === z.id); z.at = Date.now(); if (i >= 0) L[i] = z; else L.unshift(z); localStorage.setItem('qz.list', JSON.stringify(L)); return true; } catch (e) { return false; } };
+  const LV = () => [[1, T('سهل', 'Easy')], [2, T('متوسط', 'Medium')], [3, T('صعب', 'Hard')]];
+  const KIND = () => [['mc', T('اختيار من متعدد', 'Multiple choice')], ['tf', T('صح أو خطأ', 'True or false')], ['num', T('جوابه رقم', 'A number')], ['word', T('جوابه كلمة', 'A word')]];
+  const blankQ = cat => ({ cat: cat || '', lv: 2, type: 'mc', q: '', opts: ['', '', '', ''], ok: [0], time: 30 });
+  function editor(root, z, back) {
+    z = JSON.parse(JSON.stringify(z || { id: Math.random().toString(36).slice(2, 10), title: '', qs: [], ch: [], src: 'dw' }));
+    z.qs = (z.qs || []).filter(x => KINDS.includes(x.type)).map(x => Object.assign({ cat: '', lv: 2 }, x, x.type === 'mc' ? { opts: (x.opts || []).concat(['', '', '', '']).slice(0, Math.max(4, (x.opts || []).length)) } : {}));
+    z.ch = z.ch || [];
+    let tab = 'q', filt = '', tSave = null;
+    const later = () => { clearTimeout(tSave); tSave = setTimeout(() => { saveQuiz(z); const s = root.querySelector('#deSaved'); if (s) s.textContent = T('حُفظت', 'Saved'); }, 500); };
+    const cats = () => [...new Set(z.qs.map(x => (x.cat || '').trim()).filter(Boolean))];
+    const ok = x => usable(x);
+    const qCard = (x, i) => `<div class="de-q${ok(x) ? '' : ' bad'}" data-i="${i}">
+      <div class="de-row"><input data-k="cat" list="deCats" dir="auto" value="${esc(x.cat || '')}" placeholder="${T('الفئة', 'Category')}"><select data-k="lv">${LV().map(([v, l]) => `<option value="${v}"${(x.lv || 2) === v ? ' selected' : ''}>${l}</option>`).join('')}</select><select data-k="type">${KIND().map(([v, l]) => `<option value="${v}"${x.type === v ? ' selected' : ''}>${l}</option>`).join('')}</select><button type="button" class="de-x" data-del title="${T('احذف', 'Delete')}">${IC.x}</button></div>
+      <textarea data-k="q" rows="2" dir="auto" placeholder="${T('اكتب السؤال', 'Write the question')}">${esc(x.q || '')}</textarea>
+      ${x.type === 'mc' ? `<div class="de-opts">${x.opts.map((o, j) => `<label class="${x.ok.includes(j) ? 'on' : ''}"><input type="radio" name="ok${i}" data-ok="${j}"${x.ok.includes(j) ? ' checked' : ''} title="${T('الإجابة الصحيحة', 'The right answer')}"><i>${LET()[j]}</i><input data-o="${j}" dir="auto" value="${esc(o || '')}" placeholder="${T('خيار', 'Option')}"></label>`).join('')}</div><p class="de-tip">${T('اضغط الدائرة بجانب الإجابة الصحيحة', 'Tick the circle beside the right answer')}</p>`
+        : x.type === 'tf' ? `<div class="de-tf">${[T('صح', 'True'), T('خطأ', 'False')].map((l, j) => `<label class="${x.ok[0] === j ? 'on' : ''}"><input type="radio" name="ok${i}" data-tf="${j}"${x.ok[0] === j ? ' checked' : ''}> ${l}</label>`).join('')}</div>`
+        : `<div class="de-row"><input data-k="ans" dir="auto" value="${esc(x.ans == null ? '' : x.ans)}" placeholder="${x.type === 'num' ? T('الرقم الصحيح', 'The right number') : T('الكلمة الصحيحة', 'The right word')}">${x.type === 'num' ? `<input data-k="unit" dir="auto" value="${esc(x.unit || '')}" placeholder="${T('الوحدة (اختياري)', 'Unit (optional)')}">` : ''}</div>`}</div>`;
+    const cCard = (c, i) => `<div class="de-q${c.t && c.d ? '' : ' bad'}" data-c="${i}">
+      <div class="de-row"><input data-ck="t" dir="auto" value="${esc(c.t || '')}" placeholder="${T('عنوان التحدي', 'Challenge title')}"><select data-ck="s">${[30, 45, 60, 90, 120, 180, 300, 600].map(v => `<option value="${v}"${(c.s || 90) === v ? ' selected' : ''}>${v < 60 ? NUM(v) + T(' ثانية', ' s') : NUM(v / 60) + T(' دقيقة', ' min')}</option>`).join('')}</select><select data-ck="sc"><option value="rank"${c.sc === 'rank' ? ' selected' : ''}>${T('بالترتيب', 'By place')}</option><option value="judge"${c.sc !== 'rank' ? ' selected' : ''}>${T('درجات الحكم', 'Judge’s marks')}</option></select><button type="button" class="de-x" data-cdel title="${T('احذف', 'Delete')}">${IC.x}</button></div>
+      <textarea data-ck="d" rows="2" dir="auto" placeholder="${T('التعليمات كما تظهر على الشاشة', 'Instructions as shown on the screen')}">${esc(c.d || '')}</textarea>
+      <div class="de-row"><input data-ck="mat" dir="auto" value="${esc(c.mat || '')}" placeholder="${T('يحتاج (أدوات)', 'Needs (items)')}"><input data-ck="alt" dir="auto" value="${esc(c.alt || '')}" placeholder="${T('بديل أسهل إن لم تتوفر', 'An easier option if not')}"></div></div>`;
+    const paint = () => {
+      const C = cats(), shown = z.qs.map((x, i) => [x, i]).filter(([x]) => !filt || (x.cat || '') === filt), good = z.qs.filter(ok).length;
+      root.innerHTML = `<div class="de"><div class="de-top"><button type="button" class="sn-lnk" data-back>‹ ${T('رجوع', 'Back')}</button><span id="deSaved" class="de-saved"></span></div>
+        <input class="de-title" data-title dir="auto" value="${esc(z.title || '')}" placeholder="${T('عنوان الأمسية', 'The evening’s title')}">
+        <div class="dw-tabs"><button type="button" data-t="q" aria-selected="${tab === 'q'}">${T('الأسئلة', 'Questions')} (${NUM(z.qs.length)})</button><button type="button" data-t="c" aria-selected="${tab === 'c'}">${T('التحديات', 'Challenges')} (${NUM(z.ch.length)})</button></div>
+        ${tab === 'q' ? `${C.length > 1 ? `<div class="de-cats"><button type="button" data-f="" aria-pressed="${!filt}">${T('الكل', 'All')}</button>${C.map(c => `<button type="button" data-f="${esc(c)}" aria-pressed="${filt === c}" dir="auto">${esc(c)} <small>${NUM(z.qs.filter(x => x.cat === c).length)}</small></button>`).join('')}</div>` : ''}
+          <datalist id="deCats">${C.map(c => `<option value="${esc(c)}">`).join('')}</datalist>
+          <div class="de-list">${shown.map(([x, i]) => qCard(x, i)).join('') || `<p class="dw-pane-h">${T('لا أسئلة بعد. أضف سؤالًا أو اطلبها من الذكاء الاصطناعي.', 'No questions yet. Add one, or ask the AI.')}</p>`}</div>
+          <div class="de-add"><button type="button" class="btn ghost" data-addq>+ ${T('سؤال', 'Question')}</button><button type="button" class="btn ghost" data-aiq>${T('+ أسئلة بالذكاء الاصطناعي', '+ Questions with AI')}</button></div>`
+        : `<div class="de-list">${z.ch.map(cCard).join('') || `<p class="dw-pane-h">${T('لا تحديات بعد. أضف تحديًا من عندك أو من البنك.', 'No challenges yet. Add your own or one from the bank.')}</p>`}</div>
+          <div class="de-add"><button type="button" class="btn ghost" data-addc>+ ${T('تحدٍّ من عندك', 'Your own challenge')}</button><button type="button" class="btn ghost" data-bank>+ ${T('من بنك التحديات', 'From the bank')}</button></div>`}
+        <div class="de-bar"><span>${T(`أسئلة جاهزة: ${NUM(good)} من ${NUM(z.qs.length)} · تحديات: ${NUM(z.ch.length)}`, `Ready: ${good} of ${z.qs.length} questions · ${z.ch.length} challenges`)}</span><button type="button" class="dw-btn" data-play${good + z.ch.length ? '' : ' disabled'}>${T('العب الآن ▶', 'Play now ▶')}</button></div></div>`;
+      bind();
+    };
+    const q = s => root.querySelector(s);
+    function bind() {
+      q('[data-back]').onclick = () => { saveQuiz(z); back(); };
+      q('[data-title]').oninput = e => { z.title = e.target.value; later(); };
+      root.querySelectorAll('[data-t]').forEach(b => b.onclick = () => { tab = b.dataset.t; paint(); });
+      root.querySelectorAll('[data-f]').forEach(b => b.onclick = () => { filt = b.dataset.f; paint(); });
+      q('[data-play]').onclick = () => { saveQuiz(z); start({ title: z.title || T('أمسية دوّارة', 'A Dawwara evening'), qs: JSON.parse(JSON.stringify(z.qs.filter(ok))), ch: z.ch.filter(c => c.t && c.d) }); };
+      root.querySelectorAll('.de-q[data-i]').forEach(card => { const x = z.qs[+card.dataset.i], mark = () => card.classList.toggle('bad', !ok(x));
+        card.querySelectorAll('[data-k]').forEach(f => { f[f.tagName === 'SELECT' ? 'onchange' : 'oninput'] = () => { const k = f.dataset.k;
+          if (k === 'lv') x.lv = +f.value; else if (k === 'type') { x.type = f.value; if (x.type === 'tf') { x.opts = [T('صح', 'True'), T('خطأ', 'False')]; x.ok = [0]; } else if (x.type === 'mc') { x.opts = ['', '', '', '']; x.ok = [0]; } else { x.opts = ['', '']; x.ok = []; } later(); return paint(); }
+          else if (k === 'ans') x.ans = x.type === 'num' ? (f.value.trim() === '' ? '' : +f.value) : f.value; else x[k] = f.value; mark(); later(); }; });
+        card.querySelectorAll('[data-o]').forEach(f => f.oninput = () => { x.opts[+f.dataset.o] = f.value; mark(); later(); });
+        card.querySelectorAll('[data-ok]').forEach(f => f.onchange = () => { x.ok = [+f.dataset.ok]; card.querySelectorAll('.de-opts label').forEach((l, j) => l.classList.toggle('on', j === +f.dataset.ok)); mark(); later(); });
+        card.querySelectorAll('[data-tf]').forEach(f => f.onchange = () => { x.ok = [+f.dataset.tf]; card.querySelectorAll('.de-tf label').forEach((l, j) => l.classList.toggle('on', j === +f.dataset.tf)); later(); });
+        card.querySelector('[data-del]').onclick = () => { z.qs.splice(z.qs.indexOf(x), 1); later(); paint(); };
+      });
+      root.querySelectorAll('.de-q[data-c]').forEach(card => { const c = z.ch[+card.dataset.c];
+        card.querySelectorAll('[data-ck]').forEach(f => { f[f.tagName === 'SELECT' ? 'onchange' : 'oninput'] = () => { const k = f.dataset.ck; c[k] = k === 's' ? +f.value : f.value; card.classList.toggle('bad', !(c.t && c.d)); later(); }; });
+        card.querySelector('[data-cdel]').onclick = () => { z.ch.splice(z.ch.indexOf(c), 1); later(); paint(); };
+      });
+      const aq = q('[data-addq]'); if (aq) aq.onclick = () => { z.qs.push(blankQ(filt)); paint(); const t = root.querySelectorAll('.de-q textarea'); if (t.length) { t[t.length - 1].focus(); t[t.length - 1].scrollIntoView({ block: 'center' }); } };
+      const ac = q('[data-addc]'); if (ac) ac.onclick = () => { z.ch.push({ t: '', d: '', s: 90, sc: 'judge', mat: '', alt: '' }); paint(); const t = root.querySelectorAll('.de-q [data-ck="t"]'); if (t.length) t[t.length - 1].focus(); };
+      const bk = q('[data-bank]'); if (bk) bk.onclick = () => bankPick(c => { z.ch.push({ t: c.t, d: c.d, s: c.s, sc: c.sc0 || 'rank', mat: c.mat0 || MAT[c.t] || '', alt: '' }); later(); paint(); });
+      const ai = q('[data-aiq]'); if (ai) ai.onclick = () => aiMore(z, () => { later(); paint(); });
+    }
+    paint();
+  }
+  // a challenge from the bank, by occasion
+  function bankPick(done) {
+    const d = document.createElement('div'); d.className = 'qz-modal de-modal'; document.body.appendChild(d); let pk = '';
+    const ALL = CHAL(); const paint = () => { const L = ALL.map((c, i) => [c, i]).filter(([c]) => !pk || c.pk === pk || (pk === 'gen' && !c.pk));
+      d.innerHTML = `<div class="qz-mbox de-bank"><h3>${T('بنك التحديات', 'The challenge bank')}</h3><div class="de-cats">${[['', T('الكل', 'All')], ['gen', T('عامة', 'General')]].concat(PACK().slice(1)).map(([v, l]) => `<button type="button" data-pk="${v}" aria-pressed="${pk === v}">${l}</button>`).join('')}</div>
+        <div class="de-blist">${L.map(([c, i]) => `<button type="button" data-b="${i}"><b dir="auto">${esc(c.t)}</b><small dir="auto">${esc(c.d)}</small></button>`).join('')}</div><button type="button" class="btn ghost" data-x>${T('إغلاق', 'Close')}</button></div>`;
+      d.querySelectorAll('[data-pk]').forEach(b => b.onclick = () => { pk = b.dataset.pk; paint(); });
+      d.querySelectorAll('[data-b]').forEach(b => b.onclick = () => { d.remove(); done(ALL[+b.dataset.b]); });
+      d.querySelector('[data-x]').onclick = () => d.remove(); };
+    paint();
+  }
+  // more questions from the AI, added to what is there
+  function aiMore(z, done) {
+    const d = document.createElement('div'); d.className = 'qz-modal de-modal'; document.body.appendChild(d);
+    d.innerHTML = `<div class="qz-mbox"><h3>${T('أسئلة بالذكاء الاصطناعي', 'Questions with AI')}</h3><p class="pt-fine">${T('تُضاف إلى أسئلتك ولا تحذف شيئًا، وتراجعها هنا.', 'They are added to yours, nothing removed; review them here.')}</p>
+      <textarea id="amT" rows="3" dir="auto" placeholder="${T('الموضوع، أو الصق المحتوى (درس، فصل، مقال)', 'The topic, or paste the content (a lesson, a chapter)')}"></textarea>
+      <div class="dw-two"><label>${T('الفئات', 'Categories')}<input id="amK" dir="auto" value="${esc(cats0(z) || T('عامة', 'General'))}"></label><label>${T('لكل فئة', 'Per category')}<select id="amN">${[2, 3, 4, 5, 6].map(v => `<option${v === 3 ? ' selected' : ''}>${v}</option>`).join('')}</select></label></div>
+      <label>${T('الجمهور', 'Audience')}<select id="amA">${AUD().map(a => `<option value="${a[0]}">${a[1]}</option>`).join('')}</select></label>
+      <p class="qz-gens" id="amS"></p><div class="sn-two"><button type="button" class="btn solid" id="amGo">${T('اكتبها', 'Write them')}</button><button type="button" class="btn ghost" id="amX">${T('إلغاء', 'Cancel')}</button></div></div>`;
+    const g = s => d.querySelector(s); g('#amX').onclick = () => d.remove();
+    g('#amGo').onclick = async () => {
+      const o = { topic: g('#amT').value.trim(), aud: g('#amA').value, per: +g('#amN').value, nch: 0, cats: g('#amK').value.split(/[،,]/).map(s => s.trim()).filter(Boolean).slice(0, 6), kinds: [], mat: false };
+      if (!o.cats.length) o.cats = [T('عامة', 'General')];
+      const b = g('#amGo'); b.disabled = true; g('#amS').textContent = T('يكتب… عادةً أقل من دقيقة', 'Writing… usually under a minute');
+      try { const r = fromAI(await gemini(aiPrompt(o) + (z.qs.length ? `\n\nلا تكرر هذه الأسئلة الموجودة:\n${z.qs.slice(0, 60).map(x => '- ' + x.q).join('\n')}` : ''))); r.qs.forEach(x => z.qs.push(Object.assign({ cat: '', lv: 2 }, x, x.type === 'mc' ? { opts: x.opts.concat(['', '', '', '']).slice(0, Math.max(4, x.opts.length)) } : {}))); d.remove(); done(); }
+      catch (e) { console.error(e); b.disabled = false; g('#amS').textContent = T('تعذّر الآن. جرّب بعد قليل.', 'Could not do it now. Try again shortly.'); }
+    };
+  }
+  const cats0 = z => [...new Set((z.qs || []).map(x => (x.cat || '').trim()).filter(Boolean))].join(T('، ', ', '));
+
   /* ---------- the teams' path: tokens that move along the road as the points come in ---------- */
   function pathHtml() {
     const top = Math.max(1, ...D.groups.map(g => g.score)), pos = g => 4 + 88 * g.score / top;
@@ -616,12 +710,13 @@ window.Dawwara = (function () {
 - معظم الأسئلة اختيار من متعدد بأربعة خيارات قريبة ومقنعة، وبعضها صح أو خطأ، وقليل منها جوابه رقم أو كلمة واحدة.
 - تحقق من صحة كل إجابة مرتين، واحذف أي سؤال فيه شك.
 - مناسب للبيئة السعودية والذوق العام، بلا أمثلة غربية ولا مناسبات غير مألوفة، ولا موسيقى ولا رقص.
+- لكل تحدٍّ يحتاج أدوات اكتب في "alt" بديلًا أسهل لا يحتاج شيئًا.
 - التحديات أنشطة جماعية للمجموعات كلها في وقت واحد: تعليمات واضحة قصيرة تُقرأ على الشاشة، ووقت مناسب بالثواني، وطريقة احتساب: "rank" للسباقات والمنافسات التي لها فائز واضح، و"judge" لما يحتاج تقدير الحكم (تمثيل، إبداع، رسم).
 - لكل سؤال اختيار من متعدد أو كلمة، اكتب في "letter" أول حرف من الإجابة الصحيحة دون «ال» التعريف (تُستعمل في لعبة الحروف).
 - اكتب بالعربية الفصيحة السهلة.
 
 أعد JSON فقط بهذا الشكل:
-{"title":"عنوان قصير جذاب","questions":[{"cat":"الفئة","lv":1,"type":"mc","q":"السؤال","opts":["","","",""],"ok":0,"letter":"ر"},{"cat":"الفئة","lv":2,"type":"tf","q":"عبارة","ok":true},{"cat":"الفئة","lv":3,"type":"num","q":"السؤال","ans":1932,"unit":""},{"cat":"الفئة","lv":2,"type":"word","q":"تلميح","ans":"كلمة"}],"challenges":[{"t":"العنوان","d":"التعليمات","s":90,"sc":"rank","mat":"الأدوات أو فارغ","kind":"النوع"}]}`;
+{"title":"عنوان قصير جذاب","questions":[{"cat":"الفئة","lv":1,"type":"mc","q":"السؤال","opts":["","","",""],"ok":0,"letter":"ر"},{"cat":"الفئة","lv":2,"type":"tf","q":"عبارة","ok":true},{"cat":"الفئة","lv":3,"type":"num","q":"السؤال","ans":1932,"unit":""},{"cat":"الفئة","lv":2,"type":"word","q":"تلميح","ans":"كلمة"}],"challenges":[{"t":"العنوان","d":"التعليمات","s":90,"sc":"rank","mat":"الأدوات أو فارغ","alt":"بديل أسهل","kind":"النوع"}]}`;
   }
   function fromAI(text) {
     const m = text.match(/\{[\s\S]*\}/); if (!m) throw new Error('no-json'); const j = JSON.parse(m[0]);
@@ -633,7 +728,7 @@ window.Dawwara = (function () {
       const opts = (q.opts || []).map(o => String(o).trim()).filter(Boolean).slice(0, 6), ok = +q.ok;
       return Object.assign(base, { type: 'mc', opts, ok: ok >= 0 && ok < opts.length ? [ok] : [] });
     }).filter(usable);
-    const ch = (j.challenges || []).map(c => ({ t: String(c.t || '').trim().slice(0, 40), d: String(c.d || '').trim().slice(0, 260), s: Math.max(20, Math.min(600, +c.s || 90)), sc: c.sc === 'rank' ? 'rank' : 'judge', mat: String(c.mat || '').trim().slice(0, 60) })).filter(c => c.t && c.d);
+    const ch = (j.challenges || []).map(c => ({ t: String(c.t || '').trim().slice(0, 40), d: String(c.d || '').trim().slice(0, 260), s: Math.max(20, Math.min(600, +c.s || 90)), sc: c.sc === 'rank' ? 'rank' : 'judge', mat: String(c.mat || '').trim().slice(0, 60), alt: String(c.alt || '').trim().slice(0, 100) })).filter(c => c.t && c.d);
     return { title: String(j.title || '').trim().slice(0, 80), qs, ch };
   }
   function aiBox() {
@@ -656,8 +751,8 @@ window.Dawwara = (function () {
         try { localStorage.setItem('dw.ai', JSON.stringify({ d: day, n: (used.d === day ? used.n : 0) + 1 })); } catch (e) {}
         const quiz = { id: Math.random().toString(36).slice(2, 10), title: r.title || o.topic.slice(0, 60) || T('أمسية دوّارة', 'A Dawwara evening'), at: Date.now(), qs: r.qs, ch: r.ch, src: 'dw' };
         try { const L = JSON.parse(localStorage.getItem('qz.list') || '[]'); L.unshift(quiz); localStorage.setItem('qz.list', JSON.stringify(L)); } catch (e) {}
-        q('#dwAiS').textContent = T(`كُتب ${NUM(r.qs.length)} سؤالًا و${NUM(r.ch.length)} تحديات، وحُفظت في «مسابقاتك».`, `${r.qs.length} questions and ${r.ch.length} challenges, saved under “Your quizzes”.`);
-        b.disabled = false; start(quiz);
+        q('#dwAiS').textContent = T(`كُتب ${NUM(r.qs.length)} سؤالًا و${NUM(r.ch.length)} تحديات. راجعها ثم العب.`, `${r.qs.length} questions and ${r.ch.length} challenges, saved under “Your quizzes”.`);
+        b.disabled = false; editor(root, quiz, () => home(root));
       } catch (e) { console.error(e); b.disabled = false; q('#dwAiS').textContent = T('تعذّر الآن. جرّب بعد قليل.', 'Could not do it now. Try again shortly.'); }
     };
   }
@@ -700,20 +795,23 @@ window.Dawwara = (function () {
   /* ---------- the game's own page: where the questions come from ---------- */
   function home(root) {
     let mine = []; try { mine = JSON.parse(localStorage.getItem('qz.list') || '[]'); } catch (e) {}
-    mine = mine.map(z => ({ z, n: (z.qs || []).filter(usable).length })).filter(o => o.n >= 2);
+    mine = mine.map(z => ({ z, n: (z.qs || []).filter(usable).length })).filter(o => o.n >= 2 || (o.z.ch || []).length);
     const lib = (window.MDLib || []).map(z => ({ z, n: (z.qs || []).filter(usable).length })).filter(o => o.n >= 4);
     const item = (o, k, src) => `<button type="button" class="dw-pick" data-src="${src}" data-k="${k}"><b dir="auto">${esc(o.z.title || T('بلا عنوان', 'Untitled'))}</b><small>${T(`${NUM(o.n)} سؤالًا صالحًا`, `${o.n} usable questions`)}${o.z.who ? ' · ' + esc(o.z.who) : ''}</small></button>`;
     root.innerHTML = `<div class="dw-start"><h2>${T('اختر الأسئلة', 'Choose the questions')}</h2>
-      <div class="dw-tabs" role="tablist"><button type="button" role="tab" data-tab="ai" aria-selected="true">${T('بالذكاء الاصطناعي', 'With AI')}</button><button type="button" role="tab" data-tab="ready" aria-selected="false">${T('مسابقة جاهزة', 'A ready quiz')}</button><button type="button" role="tab" data-tab="chal" aria-selected="false">${T('تحديات فقط', 'Challenges only')}</button></div>
+      <div class="dw-tabs" role="tablist"><button type="button" role="tab" data-tab="ai" aria-selected="true">${T('بالذكاء الاصطناعي', 'With AI')}</button><button type="button" role="tab" data-tab="ready" aria-selected="false">${T('مسابقة جاهزة', 'A ready quiz')}</button><button type="button" role="tab" data-tab="chal" aria-selected="false">${T('تحديات فقط', 'Challenges only')}</button><button type="button" role="tab" data-tab="own" aria-selected="false">${T('اكتبها بنفسك', 'Write your own')}</button></div>
       <div data-pane="ai"><p class="dw-pane-h">${T('اكتب الموضوع، فتُكتب الأسئلة مصنفة ومتدرجة مع تحديات تناسبها.', 'Write a topic; you get questions by category and level, with challenges to suit.')}</p>${aiBox()}</div>
       <div data-pane="ready" hidden>
-        ${mine.length ? `<h3>${T('مسابقاتك', 'Your quizzes')}</h3><div class="dw-picks">${mine.map((o, k) => item(o, k, 'm')).join('')}</div>` : ''}
+        ${mine.length ? `<h3>${T('مسابقاتك', 'Your quizzes')}</h3><div class="dw-picks">${mine.map((o, k) => `<div class="dw-pickw">${item(o, k, 'm')}<button type="button" class="dw-edb" data-ed="${k}">${T('عدّل', 'Edit')}</button></div>`).join('')}</div>` : ''}
         ${lib.length ? `<h3>${T('من المكتبة', 'From the library')}</h3><div class="dw-picks">${lib.map((o, k) => item(o, k, 'l')).join('')}</div>` : ''}
         <details class="dw-adv2"><summary>${T('أو الصق أسئلتك', 'Or paste your questions')}</summary>
           <textarea id="dwPaste" rows="6" dir="auto" placeholder="${T('١. ما عاصمة المملكة؟\nأ) جدة\nب) الرياض *\nج) الدمام', '1. What is the capital of France?\na) Lyon\nb) Paris *')}"></textarea>
           <p class="dw-found" id="dwFound"></p><button type="button" class="btn solid" id="dwGo" disabled>${T('العب بهذه الأسئلة', 'Play with these')}</button></details></div>
       <div data-pane="chal" hidden><p class="dw-pane-h">${T('أمسية بلا أسئلة: تحديات حركة وإبداع وذكاء للمجموعات، تختار مناسبتها في الخطوة التالية.', 'No questions: moving, creating and thinking challenges; you pick the occasion next.')}</p><button type="button" class="dw-btn" id="dwChal">${T('ابدأ أمسية تحديات', 'Start an evening of challenges')}</button></div>
+      <div data-pane="own" hidden><p class="dw-pane-h">${T('اكتب أسئلتك بفئاتها وصعوبتها، وتحدياتك بأدواتها، في محرر بسيط. تُحفظ وتلعبها متى شئت.', 'Write your questions by category and level, and your challenges with their items. Saved for whenever you play.')}</p><button type="button" class="dw-btn" id="dwOwn">${T('افتح المحرر', 'Open the editor')}</button></div>
       <p class="dw-next">${T('بعدها تحدد عدد المجموعات والمدة، وتبدأ.', 'Then you set the groups and the length, and start.')}</p></div>`;
+    root.querySelector('#dwOwn').onclick = () => editor(root, null, () => home(root));
+    root.querySelectorAll('[data-ed]').forEach(b => b.onclick = () => editor(root, mine[+b.dataset.ed].z, () => home(root)));
     root.querySelectorAll('[data-tab]').forEach(b => b.onclick = () => { root.querySelectorAll('[data-tab]').forEach(x => x.setAttribute('aria-selected', x === b)); root.querySelectorAll('[data-pane]').forEach(p => { p.hidden = p.dataset.pane !== b.dataset.tab; }); });
     aiBind(root);
     root.querySelectorAll('.dw-pick').forEach(b => b.onclick = () => { const o = (b.dataset.src === 'm' ? mine : lib)[+b.dataset.k]; start({ title: o.z.title, qs: JSON.parse(JSON.stringify(o.z.qs)), ch: o.z.ch || [] }); });

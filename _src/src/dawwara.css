@@ -198,3 +198,33 @@ html.dw-on{overflow:hidden}
 .dw-adv>summary{cursor:pointer;font-weight:700;padding:6px 2px;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}.dw-adv>summary small{font-weight:400;opacity:.7}
 .dw-adv[open]{display:grid;gap:10px}
 .dw-set .dw-row span{display:grid;gap:2px}.dw-set .dw-row small{font-weight:400;opacity:.75;font-size:.8125rem}
+/* the Dawwara editor */
+.de{max-width:820px;margin:0 auto;display:grid;gap:12px}
+.de-top{display:flex;justify-content:space-between;align-items:center}.de .sn-lnk{all:unset;cursor:pointer;color:#1d4fa0;font-weight:700}.de-saved{color:#2f7d5b;font-size:.875rem}
+.de-title{font:inherit;font-size:1.375rem;font-weight:800;border:0;border-bottom:2px solid var(--line,#d6d9e4);padding:6px 2px;background:transparent;color:var(--ink)}
+.de-cats{display:flex;gap:6px;flex-wrap:wrap}.de-cats button{font:inherit;font-size:.875rem;border:1px solid var(--line,#d6d9e4);background:var(--surface,#fff);color:var(--ink);border-radius:999px;padding:5px 12px;cursor:pointer}
+.de-cats button[aria-pressed=true]{background:#1d2a5e;color:#fff;border-color:#1d2a5e}.de-cats small{opacity:.6}
+.de-list{display:grid;gap:10px}
+.de-q{background:var(--surface,#fff);border:1px solid var(--line,#e5e5ea);border-inline-start:5px solid #2f7d5b;border-radius:14px;padding:10px 12px;display:grid;gap:8px}
+.de-q.bad{border-inline-start-color:#c9822b}
+.de-row{display:flex;gap:6px;flex-wrap:wrap;align-items:center}.de-row>*{min-width:0}
+.de-q input,.de-q select,.de-q textarea{font:inherit;border:1px solid var(--line,#d6d9e4);border-radius:10px;padding:7px 10px;background:var(--bg,#fff);color:var(--ink)}
+.de-q textarea{resize:vertical;width:100%;box-sizing:border-box}.de-row input{flex:1 1 140px}
+.de-x{all:unset;cursor:pointer;margin-inline-start:auto;width:34px;height:34px;display:grid;place-items:center;border-radius:50%;color:#b0533a}.de-x svg{width:18px;height:18px}
+.de-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.de-opts label,.de-tf label{display:flex;gap:6px;align-items:center;border:1px solid var(--line,#d6d9e4);border-radius:10px;padding:4px 8px;cursor:pointer}
+.de-opts label.on,.de-tf label.on{border-color:#2f7d5b;background:rgba(47,125,91,.08)}
+.de-opts label i{font-style:normal;font-weight:800;color:var(--muted)}.de-opts label input[data-o]{border:0;flex:1;padding:6px 2px;background:transparent}
+.de-opts input[type=radio],.de-tf input{accent-color:#2f7d5b;width:18px;height:18px;flex:none}
+.de-tf{display:flex;gap:8px}.de-tip{margin:0;font-size:.8125rem;color:var(--muted)}
+.de-add{display:flex;gap:8px;flex-wrap:wrap}
+.de-bar{position:sticky;bottom:10px;display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;background:#1d2a5e;color:#fff;border-radius:16px;padding:10px 14px;box-shadow:0 10px 26px rgba(0,0,0,.2)}
+.de-bar .dw-btn{min-height:44px;font-size:1rem}
+@media (max-width:560px){.de-opts{grid-template-columns:1fr}}
+.dw-pickw{display:flex;gap:6px;align-items:stretch}.dw-pickw .dw-pick{flex:1}.dw-edb{font:inherit;font-size:.875rem;border:1px solid var(--line,#d6d9e4);background:var(--surface,#fff);color:#1d4fa0;border-radius:12px;padding:0 12px;cursor:pointer}
+.de-modal{position:fixed;inset:0;z-index:400;background:rgba(10,14,30,.55);display:grid;place-items:center;padding:14px}
+.de-modal .qz-mbox{width:min(560px,100%);max-height:88vh;overflow:auto;background:var(--bg,#fff);color:var(--ink,#14204a);border-radius:18px;padding:18px;display:grid;gap:10px}
+.de-modal h3{margin:0}.de-modal label{display:grid;gap:4px;font-size:.875rem;font-weight:600}.de-modal input,.de-modal select,.de-modal textarea{font:inherit;font-weight:400;border:1px solid #cfd6e4;border-radius:10px;padding:8px 10px}
+.de-modal .sn-two{display:flex;gap:8px}.de-modal .pt-fine,.de-modal .qz-gens{margin:0;color:var(--muted);font-size:.875rem}
+.de-blist{display:grid;gap:6px;max-height:52vh;overflow:auto}.de-blist button{all:unset;cursor:pointer;display:grid;gap:2px;border:1px solid var(--line,#e5e5ea);border-radius:12px;padding:8px 12px}.de-blist button:hover{border-color:#c9822b}.de-blist small{color:var(--muted)}
+.de-row select{width:auto!important;flex:0 0 auto}.de-row input{width:auto!important}.de-opts label input[data-o]{width:auto!important;min-width:0}.de-row .de-x{flex:none}
