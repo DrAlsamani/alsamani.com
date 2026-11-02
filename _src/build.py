@@ -28,6 +28,15 @@ for _r in research:   # feature articles and paper-derived metadata (data/articl
 css = open(P('src/site.css')).read() + open(P('src/extra.css')).read() + open(P('src/apple.css')).read() + open(P('src/blocks.css')).read() + open(P('src/pv.css')).read() + open(P('src/tools.css')).read() + open(P('src/journey.css')).read()
 js = open(P('src/site.js')).read() + open(P('src/pv.js')).read() + open(P('src/tools.js')).read() + open(P('src/journey.js')).read()
 featured = open(P('src/featured.html')).read()
+# the shared styles and scripts go in two cached files instead of being repeated inside every page
+import hashlib, glob as _glob
+os.makedirs(P('dist', 'assets'), exist_ok=True)
+for _old in _glob.glob(P('dist', 'assets', 'site-*.css')) + _glob.glob(P('dist', 'assets', 'site-*.js')):
+    os.remove(_old)
+CSS_URL = '/assets/site-' + hashlib.sha1(css.encode()).hexdigest()[:10] + '.css'
+JS_URL = '/assets/site-' + hashlib.sha1(js.encode()).hexdigest()[:10] + '.js'
+open(P('dist') + CSS_URL, 'w').write(css)
+open(P('dist') + JS_URL, 'w').write(js)
 e = html.escape
 
 def bi(ar, en, tag='span'):
@@ -54,8 +63,8 @@ def page(name, depth, title_ar, body, full, seo_html=''):
 {head_meta}<link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
-<script>try{{var t=localStorage.getItem('siteTheme');if(t)document.documentElement.dataset.theme=t}}catch(e){{}}</script>
-<style>{css}</style>
+<script>try{{var t=localStorage.getItem('siteTheme');if(t)document.documentElement.dataset.theme=t;var l=localStorage.getItem('siteLang')||((navigator.language||'').slice(0,2)==='ar'?'ar':'en');document.documentElement.lang=l;document.documentElement.dir=l==='ar'?'rtl':'ltr'}}catch(e){{}}</script>
+<link rel="stylesheet" href="{CSS_URL}">
 '''
     content = f'''<div class="wrap">
 <header class="top"><div class="bar wrap">
@@ -78,7 +87,7 @@ def page(name, depth, title_ar, body, full, seo_html=''):
 </footer>
 </div>
 <div class="lb" id="lb" hidden><button class="x" id="lbx" aria-label="Close">×</button><button class="pv" id="lbp" aria-label="Previous">‹</button><img id="lbi" alt=""><span class="lb-cr">© Omar A. Alsamani</span><button class="nx" id="lbn" aria-label="Next">›</button></div>
-<script>{js}</script>
+<script src="{JS_URL}"></script>
 '''
     if full:
         return f'<!doctype html>\n<html lang="en" dir="ltr">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">\n{inner}</head>\n<body>\n{content}</body>\n</html>\n'
@@ -696,8 +705,8 @@ PAGES.append(('play/baloot', 2, 'بلوت: الطاولة على الشاشة و
 DESCS['play/baloot'] = 'Baloot with the table on a screen and the hands on phones, the jack draw and Qaid as at the majlis, and a smart computer player in several styles. بلوت: الطاولة على الشاشة والأوراق في الجوالات، وطق الولد والقيد، وجهاز ذكي.'
 PAGES.append(('play/tasalsul', 2, 'تسلسل: على طريقة سيكوينس | Tasalsul: in the style of Sequence | Dr. Omar A. Alsamani', _tp.khumasiya_body))
 DESCS['play/tasalsul'] = 'Tasalsul, a game in the style of Sequence: make rows of four or five before the others, with friends on a big screen and phones, remotely, or against the computer. تسلسل: لعبة على طريقة سيكوينس، صفوف من أربع أو خمس قبل خصمك.'
-PAGES.append(('play/samar', 2, 'سمر: ألعاب الجلسة | Samar: games for a gathering | Dr. Omar A. Alsamani', _tp.samar_body))
-DESCS['play/samar'] = 'Samar: party games on one code — the secret word, who am I, draw and guess, and the letter game. سمر: ألعاب الجلسة.'
+PAGES.append(('play/samar', 2, 'سمر: تحلو سهرتكم | Samar: games for your evening | Dr. Omar A. Alsamani', _tp.samar_body))
+DESCS['play/samar'] = 'تحلو سهرتكم مع سمر: ألعاب تفاعلية متنوعة، شخص يستضيفها والباقي يشاركون من جوالاتهم. Samar: interactive games for an evening, one host and everyone on their phones.'
 PAGES.append(('play/maydan', 2, 'ميدان: مسابقات تفاعلية حيّة | Maydan: live quizzes | Dr. Omar A. Alsamani', _tp.maydan_body))
 DESCS['play/maydan'] = 'Maydan: live interactive quizzes. Write the questions by pasting them, uploading Word, Excel or PDF, or asking an AI. ميدان: مسابقات تفاعلية حيّة.'
 PAGES.append(('tools/qr', 2, 'رمز QR | QR code | Dr. Omar A. Alsamani', _tp.qr_body))
@@ -757,3 +766,7 @@ write(P('dist', 'sitemap.xml'), '<?xml version="1.0" encoding="UTF-8"?>\n<urlset
 write(P('dist', 'robots.txt'), 'User-agent: *\nAllow: /\nDisallow: /_src/\nSitemap: https://alsamani.com/sitemap.xml\n')
 print('built', len(feed), 'feed items,', len(pubs), 'publications')
 write_legacy()
+
+# /courses/ on its own: send the visitor to the course that lives there
+if not os.path.exists(P('dist', 'courses', 'index.html')):
+    open(P('dist', 'courses', 'index.html'), 'w').write('<!doctype html><html lang="ar"><head><meta charset="utf-8"><meta http-equiv="refresh" content="0; url=/courses/entrepreneurship-101/"><link rel="canonical" href="https://alsamani.com/courses/entrepreneurship-101/"><title>alsamani.com</title></head><body><a href="/courses/entrepreneurship-101/">alsamani.com</a></body></html>')

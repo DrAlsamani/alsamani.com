@@ -1,7 +1,8 @@
 (function(){
   const root=document.documentElement, $=id=>document.getElementById(id);
   function setLang(l,save){root.lang=l;root.dir=l==='ar'?'rtl':'ltr';$('langBtn').textContent=l==='ar'?'English':'العربية';if(save)try{localStorage.setItem('siteLang',l)}catch(e){}}
-  let saved='en';try{saved=localStorage.getItem('siteLang')||'en'}catch(e){}
+  // a first visit follows the browser's language; after that, the visitor's own choice
+  let saved='en';try{saved=localStorage.getItem('siteLang')||((navigator.language||'').slice(0,2)==='ar'?'ar':'en')}catch(e){}
   setLang(saved);
   $('langBtn').onclick=()=>setLang(root.lang==='ar'?'en':'ar',true);
   // header turns dark while it sits over the black photo stage
