@@ -47,52 +47,78 @@ window.MDGames = (function () {
     }
   };
 
-  /* ---------- the throw: flick the ball into a moving hoop ---------- */
+  /* ---------- the throw: aim the ball into a moving hoop ----------
+     The swipe only aims: its direction sets where the ball goes, and the ball always rises just above the rim,
+     so the skill is in leading the moving hoop. A dotted path shows the aim while the finger is down. */
   const shoot = {
     id: 'shoot', icon: '🏀', ar: 'الرمية', en: 'The throw', kind: ['مهارة', 'Skill'],
-    howAr: 'اسحب الكرة إلى الأعلى واتركها لترميها في السلة المتحركة. كل إصابة نقطة.',
-    howEn: 'Drag the ball up and let go to throw it into the moving hoop. Every basket counts.',
+    howAr: 'اسحب إصبعك من الكرة باتجاه السلة واتركها. الخط المنقّط يبيّن مسارها، والسلة تتحرك فاسبقها.',
+    howEn: 'Drag from the ball towards the hoop and let go. The dotted line shows the path; the hoop moves, so lead it.',
     play(el, ctx) {
-      const r = rngOf(ctx.seed), cv = h('canvas', 'mg-cv'), info = h('p', 'mg-info');
+      const r = rngOf(ctx.seed), cv = h('canvas', 'mg-cv mg-court'), info = h('p', 'mg-info');
       el.append(info, cv);
       const x = cv.getContext('2d'), dpr = Math.min(2, window.devicePixelRatio || 1);
       let W, H; const size = () => { W = cv.clientWidth; H = cv.clientHeight; cv.width = W * dpr; cv.height = H * dpr; x.setTransform(dpr, 0, 0, dpr, 0, 0); };
       size();
-      const R = Math.max(16, W * .055), phase = r() * 6.28, base = .8 + r() * .5;
-      let hits = 0, shots = 0, ball = null, drag = null, t0 = performance.now(), last = t0, stop = false;
-      const home = () => ({ x: W / 2, y: H - R * 2.2, vx: 0, vy: 0, live: false, up: false });
+      const R = Math.max(15, Math.min(W, H) * .05), phase = r() * 6.28, base = .45 + r() * .2;
+      let hits = 0, streak = 0, ball = null, aim = null, t0 = performance.now(), last = t0, stop = false, pop = null;
+      const G = () => H * 1.7, home = () => ({ x: W / 2, y: H - R * 2.4, vx: 0, vy: 0, live: false, done: false });
       ball = home();
-      const hoop = t => { const spd = base + hits * .12; return { x: W / 2 + Math.sin(t / 1000 * spd + phase) * (W / 2 - 60), y: H * .2, w: Math.max(70, W * .22) }; };
-      cv.addEventListener('pointerdown', e => { if (ball.live) return; const b = cv.getBoundingClientRect(); drag = { x: e.clientX - b.left, y: e.clientY - b.top, t: performance.now() }; cv.setPointerCapture(e.pointerId); });
-      cv.addEventListener('pointerup', e => {
-        if (!drag || ball.live) return; const b = cv.getBoundingClientRect(), ux = e.clientX - b.left, uy = e.clientY - b.top, dt = Math.max(40, performance.now() - drag.t);
-        const dx = ux - drag.x, dy = uy - drag.y; drag = null;
-        if (dy > -20) return;
-        const k = Math.min(2.2, 260 / dt);
-        ball.vx = dx * k * 2.2; ball.vy = Math.max(-H * 2.6, dy * k * 3.2); ball.live = true; ball.up = true; shots++;
-      });
+      const hoop = t => { const spd = base + Math.min(hits, 10) * .07; return { x: W / 2 + Math.sin(t / 1000 * spd + phase) * (W / 2 - Math.max(60, W * .2)), y: H * .26, w: Math.max(74, W * .24) }; };
+      // the launch: the ball's peak sits a little above the rim; the swipe's slant sets the sideways speed
+      const launch = (dx, dy) => { const top = H * .26 - R * 3.2, vy = -Math.sqrt(2 * G() * Math.max(40, ball.y - top)), tUp = -vy / G(), tDown = Math.sqrt(2 * (H * .26 - top) / G()), T = tUp + tDown;
+        const ang = Math.max(-1.2, Math.min(1.2, dx / Math.max(30, -dy))); return { vx: ang * (W * .62) / T, vy }; };
+      const pt = e => { const b = cv.getBoundingClientRect(); return { x: e.clientX - b.left, y: e.clientY - b.top }; };
+      cv.addEventListener('pointerdown', e => { if (ball.live) return; const p = pt(e); aim = { x0: p.x, y0: p.y, x: p.x, y: p.y }; cv.setPointerCapture(e.pointerId); });
+      cv.addEventListener('pointermove', e => { if (!aim) return; const p = pt(e); aim.x = p.x; aim.y = p.y; });
+      const release = () => { if (!aim || ball.live) { aim = null; return; } const dx = aim.x - aim.x0, dy = aim.y - aim.y0; aim = null; if (dy > -18) return; const v = launch(dx, dy); ball.vx = v.vx; ball.vy = v.vy; ball.live = true; };
+      cv.addEventListener('pointerup', release); cv.addEventListener('pointercancel', () => { aim = null; });
+      function court() {
+        const g = x.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#1b2a55'); g.addColorStop(1, '#0f1733'); x.fillStyle = g; x.fillRect(0, 0, W, H);
+        x.strokeStyle = 'rgba(255,255,255,.08)'; x.lineWidth = 2; x.beginPath(); x.arc(W / 2, H + H * .15, H * .45, Math.PI, 0); x.stroke();
+      }
+      function drawHoop(hp) {
+        const bw = hp.w * 1.25, bh = hp.w * .62;
+        x.fillStyle = 'rgba(255,255,255,.92)'; x.strokeStyle = '#d9dde8'; x.lineWidth = 3; x.beginPath(); x.roundRect(hp.x - bw / 2, hp.y - bh - 6, bw, bh, 6); x.fill(); x.stroke();
+        x.strokeStyle = '#e4572e'; x.lineWidth = 3; x.strokeRect(hp.x - hp.w * .28, hp.y - bh * .62, hp.w * .56, bh * .5);
+        // the net
+        x.strokeStyle = 'rgba(255,255,255,.75)'; x.lineWidth = 1.5;
+        for (let k = 0; k <= 6; k++) { x.beginPath(); x.moveTo(hp.x - hp.w / 2 + k * hp.w / 6, hp.y); x.lineTo(hp.x - hp.w * .32 + k * hp.w * .64 / 6, hp.y + hp.w * .42); x.stroke(); }
+        for (let j = 1; j <= 3; j++) { const yy = hp.y + j * hp.w * .14, ww = hp.w * (1 - j * .12); x.beginPath(); x.moveTo(hp.x - ww / 2, yy); x.lineTo(hp.x + ww / 2, yy); x.stroke(); }
+        // the rim, thick and bright
+        x.strokeStyle = '#ff7a1a'; x.lineWidth = 6; x.beginPath(); x.ellipse(hp.x, hp.y, hp.w / 2, hp.w * .09, 0, 0, 7); x.stroke();
+      }
+      function drawBall(bx, by, rot) {
+        const g = x.createRadialGradient(bx - R * .35, by - R * .35, R * .2, bx, by, R); g.addColorStop(0, '#ffb15c'); g.addColorStop(1, '#d4651c');
+        x.fillStyle = g; x.beginPath(); x.arc(bx, by, R, 0, 7); x.fill();
+        x.save(); x.translate(bx, by); x.rotate(rot); x.strokeStyle = 'rgba(40,20,0,.55)'; x.lineWidth = 2;
+        x.beginPath(); x.moveTo(-R, 0); x.lineTo(R, 0); x.moveTo(0, -R); x.lineTo(0, R); x.stroke();
+        x.beginPath(); x.arc(-R * 1.25, 0, R * .9, -.9, .9); x.stroke(); x.beginPath(); x.arc(R * 1.25, 0, R * .9, Math.PI - .9, Math.PI + .9); x.stroke(); x.restore();
+      }
       function frame(now) {
         if (stop) return;
-        const dt = Math.min(.04, (now - last) / 1000); last = now;
-        x.clearRect(0, 0, W, H);
-        const hp = hoop(now - t0);
-        // backboard and hoop
-        x.fillStyle = 'rgba(255,255,255,.12)'; x.fillRect(hp.x - hp.w * .6, hp.y - 46, hp.w * 1.2, 40);
-        x.strokeStyle = '#C9822B'; x.lineWidth = 6; x.beginPath(); x.moveTo(hp.x - hp.w / 2, hp.y); x.lineTo(hp.x + hp.w / 2, hp.y); x.stroke();
-        x.strokeStyle = 'rgba(255,255,255,.35)'; x.lineWidth = 2; for (let k = 0; k <= 4; k++) { x.beginPath(); x.moveTo(hp.x - hp.w / 2 + k * hp.w / 4, hp.y); x.lineTo(hp.x - hp.w / 3 + k * hp.w / 6, hp.y + 30); x.stroke(); }
+        const dt = Math.min(.033, (now - last) / 1000); last = now;
+        court(); const hp = hoop(now - t0); drawHoop(hp);
+        // the aim: a dotted path of where the ball will go
+        if (aim && !ball.live) { const dx = aim.x - aim.x0, dy = aim.y - aim.y0; if (dy < -18) { const v = launch(dx, dy); x.fillStyle = 'rgba(255,255,255,.7)'; for (let k = 1; k < 22; k++) { const t = k * .045, px = ball.x + v.vx * t, py = ball.y + v.vy * t + G() * t * t / 2; if (py > ball.y) break; x.beginPath(); x.arc(px, py, Math.max(1.5, 3.5 - k * .1), 0, 7); x.fill(); } } }
         if (ball.live) {
-          const py = ball.y; ball.vy += H * 1.6 * dt; ball.x += ball.vx * dt; ball.y += ball.vy * dt;
-          // a basket: coming down through the rim
-          if (ball.vy > 0 && py < hp.y && ball.y >= hp.y && Math.abs(ball.x - hp.x) < hp.w / 2 - R * .4) { hits++; ctx.tick(); flash = 18; }
-          if (ball.y > H + R || ball.x < -R * 2 || ball.x > W + R * 2) ball = home();
+          const py = ball.y; ball.vy += G() * dt; ball.x += ball.vx * dt; ball.y += ball.vy * dt;
+          if (ball.x < R || ball.x > W - R) { ball.vx *= -.6; ball.x = Math.max(R, Math.min(W - R, ball.x)); }
+          if (!ball.done && ball.vy > 0 && py < hp.y && ball.y >= hp.y) {
+            const off = Math.abs(ball.x - hp.x);
+            if (off < hp.w / 2 - R * .25) { ball.done = true; hits++; streak++; ctx.tick(); pop = { t: now, ok: true, txt: streak >= 3 ? (ctx.ar ? `سلة! ${streak} متتالية` : `Basket! ${streak} in a row`) : (ctx.ar ? 'سلة!' : 'Basket!') }; ball.vx *= .25; }
+            else if (off < hp.w / 2 + R) { ball.vy *= -.45; ball.vx += (ball.x < hp.x ? -1 : 1) * W * .25; ball.done = true; streak = 0; pop = { t: now, ok: false, txt: ctx.ar ? 'قريبة!' : 'So close!' }; ctx.bad(); }
+            else { ball.done = true; streak = 0; }
+          }
+          if (ball.y > H + R * 2) ball = home();
         }
-        x.fillStyle = '#d97a2b'; x.beginPath(); x.arc(ball.x, ball.y, R, 0, 7); x.fill();
-        x.strokeStyle = 'rgba(0,0,0,.35)'; x.lineWidth = 2; x.beginPath(); x.arc(ball.x, ball.y, R, 0, 7); x.moveTo(ball.x - R, ball.y); x.lineTo(ball.x + R, ball.y); x.stroke();
-        if (flash > 0) { flash--; x.fillStyle = 'rgba(243,210,122,' + flash / 30 + ')'; x.fillRect(0, 0, W, H); }
+        drawBall(ball.x, ball.y, ball.live ? (now - t0) / 120 : 0);
+        if (pop && now - pop.t < 900) { const a = 1 - (now - pop.t) / 900; x.globalAlpha = a; x.fillStyle = pop.ok ? '#ffd166' : '#ffffff'; x.font = `800 ${Math.round(Math.min(W, H) * .09)}px system-ui, sans-serif`; x.textAlign = 'center'; x.fillText(pop.txt, W / 2, H * .62 - (1 - a) * 30); x.globalAlpha = 1; }
+        if (!ball.live && !aim) { x.fillStyle = 'rgba(255,255,255,.55)'; x.font = `600 ${Math.round(Math.min(W, H) * .045)}px system-ui, sans-serif`; x.textAlign = 'center'; x.fillText(ctx.ar ? 'اسحب من الكرة نحو السلة' : 'Drag from the ball towards the hoop', W / 2, H - R * .4); }
         info.textContent = (ctx.ar ? 'الإصابات: ' : 'Baskets: ') + hits;
         requestAnimationFrame(frame);
       }
-      let flash = 0; requestAnimationFrame(frame);
+      requestAnimationFrame(frame);
       return { score: () => hits * 100, stop: () => { stop = true; } };
     }
   };
