@@ -304,7 +304,7 @@ def dawwara_body():
 <p class="dw-lead">{bi('شاشة واحدة، والحضور مجموعات بلا أجوال: يطلع السؤال، وقائد المجموعة يقول الإجابة، وأنت تضغطها. الصح والأسرع يكسب.', 'One screen, the room in groups, no phones: the question shows, each leader says the answer and you tap it. Right and fast wins.')}</p>
 <style>{src('dawwara.css')}</style>
 <div id="dw" class="dw-page"><noscript>{bi("تعمل هذه اللعبة مع تفعيل JavaScript.", "This game needs JavaScript.")}</noscript></div>
-<script>window.MD_CFG={open(os.path.join(ROOT, 'data', 'maydan.json')).read().strip()};</script><script>{src('maydan_lib.js')}</script><script>{src('quiz_parse.js')}</script><script>{src('dawwara.js')}</script>
+{MD_SCRIPTS()}<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script><script>{src('maydan_lib.js')}</script><script>{src('quiz_parse.js')}</script><script>{src('dawwara.js')}</script>
 </section>'''
 SM_MARK = '<svg class="sm-mark" viewBox="0 0 48 48" aria-hidden="true"><rect x="4" y="4" width="40" height="40" rx="12" fill="#17153a"/><path d="M27 12a12 12 0 1 0 9 20a10 10 0 1 1-9-20z" fill="#f2b84b"/><path d="M33 13l1.2 2.6 2.8.4-2 2 .5 2.8-2.5-1.3-2.5 1.3.5-2.8-2-2 2.8-.4z" fill="#f4eedf"/><circle cx="14" cy="34" r="1.6" fill="#2bb3a3"/><circle cx="20" cy="37" r="1.2" fill="#e0607e"/></svg>'
 def samar_body():
