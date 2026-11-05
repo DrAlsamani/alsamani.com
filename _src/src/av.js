@@ -274,5 +274,5 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
     const v = { o: (p && p.o || []).map(u => u.slice(0, 10)), c: (p && p.c || []).map(u => u.slice(0, 10)), m: (p && p.m || []).map(u => u.slice(0, 10)), w: p && p.w || '' };
     const k = JSON.stringify(v); if (k === A.polK) return; A.polK = k; A.ref.child('pol').set(v).catch(() => {});
   }
-  return { attach, detach, policy, state() { return A ? { on: A.on, joined: A.joined, mic: A.mic, can: canTalk(A.uid), n: Object.keys(A.in).length, peers: Object.keys(A.P).map(u => A.P[u].pc.connectionState), pol: A.pol } : null; }, setHost(u) { if (A) { A.hostU = u; apply(); } } };
+  return { attach, detach, policy, join() { return A ? join() : null; }, state() { return A ? { on: A.on, joined: A.joined, mic: A.mic, can: canTalk(A.uid), n: Object.keys(A.in).length, peers: Object.keys(A.P).map(u => A.P[u].pc.connectionState), pol: A.pol } : null; }, setHost(u) { if (A) { A.hostU = u; apply(); } } };
 })();

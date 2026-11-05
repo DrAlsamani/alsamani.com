@@ -253,6 +253,17 @@ def table_body():
     return _tool_page(TABLE, '',
         f'<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css"><div id="tb"><noscript>{bi("تعمل هذه الأداة مع تفعيل JavaScript.", "This tool needs JavaScript.")}</noscript></div>{MD_SCRIPTS()}',
         ['table.css'], ['av.js', 'table.js'])
+MULTAQA = {'slug': 'multaqa', 't_ar': 'ملتقى', 't_en': 'Multaqa',
+        'q_ar': 'ملتقى علمي على الجوال: قاعة بوسترات يتجول فيها الحضور بأسمائهم ويتحدثون، وتحكيم عن بعد وعلى المسرح.',
+        'q_en': 'A research forum on a phone: a poster hall where people walk under their own names and talk, with judging remotely and on stage.'}
+def multaqa_body():
+    src = lambda f: open(os.path.join(ROOT, 'src', f)).read()
+    return f'''<section class="first tl-page sn-page-wrap">
+<header class="tl-head"><h1>{bi("ملتقى", "Multaqa")}</h1></header>
+<style>{src('multaqa.css')}</style>
+<div id="ml"><noscript>{bi("تعمل هذه الأداة مع تفعيل JavaScript.", "This tool needs JavaScript.")}</noscript></div>{MD_SCRIPTS()}
+<script>{src('av.js')}</script><script>{src('multaqa.js')}</script>
+</section>'''
 COMPARE = {'slug': 'compare', 't_ar': 'مقارنة ملفين', 't_en': 'Compare two files',
         'q_ar': 'ضع نسختين من محضر أو قرار أو خطاب، فتظهر لك الإضافات والحذف وكل رقم أو تاريخ تغيّر.',
         'q_en': 'Put two versions of minutes, a decision or a letter side by side, and see what was added, removed, and every number or date that changed.'}

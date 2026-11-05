@@ -720,6 +720,8 @@ PAGES.append(('tools/compare', 2, 'مقارنة ملفين | Compare two files |
 DESCS['tools/compare'] = 'Compare two versions of minutes, a decision or a letter (Word, PDF or text): additions, removals and every changed number or date, on your device. مقارنة ملفين وإظهار الفروق.'
 PAGES.append(('tools/table', 2, 'طاولة: مستند مشترك مباشر | Table: one live shared document | Dr. Omar A. Alsamani', _tp.table_body))
 DESCS['tools/table'] = 'Write one document together live: voice and video, dictation and recordings into text, Word in and Word or PDF out, and an assistant for the summary, minutes and tasks. طاولة: مستند مشترك مباشر.'
+PAGES.append(('tools/multaqa', 2, 'ملتقى: يوم بحث وملتقى علمي على الجوال | Multaqa | Dr. Omar A. Alsamani', _tp.multaqa_body))
+DESCS['tools/multaqa'] = 'A research forum on a phone: walk a numbered poster hall with real people, talk by voice, and judge remotely or on stage. ملتقى علمي على الجوال: قاعة بوسترات وحضور وتحكيم.'
 PAGES.append(('tools/minutes', 2, 'بناء المحضر | Minutes builder | Dr. Omar A. Alsamani', _tp.minutes_body))
 DESCS['tools/minutes'] = 'Build complete council or committee minutes: attendance and quorum, numbered decisions, votes and reservations, tasks, Hijri date, and a signature table; Word, PDF or straight to signing. بناء محضر اجتماع كامل.'
 if _tp.sign_ready(): PAGES.append(('tools/sign', 2, 'توقيع المحاضر | Signing the minutes | Dr. Omar A. Alsamani', _tp.sign_body))
