@@ -131,7 +131,7 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
     if (!A.joined) { stopTracks(); return note(T('تعذّر الدخول للصوت الآن.', 'Could not join the voice now.')); }
     A.sigRef = A.ref.child('sig/' + A.uid); A.sigRef.on('child_added', s => { onSig(s.val()); s.ref.remove().catch(() => {}); });
     Object.keys(A.in).forEach(u => { if (u !== A.uid && A.uid < u) call(u); });
-    clearInterval(A.tp); A.tp = setInterval(talkPoll, 400);
+    clearInterval(A.tp); A.tp = setInterval(talkPoll, 900);
     apply(); paint();
   }
   function stopTracks() { [A.aT, A.vT].forEach(t => { if (t) t.stop(); }); A.aT = A.vT = null; A.mic = A.cam = false; }

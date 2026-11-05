@@ -144,3 +144,8 @@ body.ml-on:not(.ml-view) #mlCall{bottom:calc(164px + env(safe-area-inset-bottom,
 .sg-i b{position:absolute;top:8px;inset-inline-start:8px;min-width:34px;height:34px;padding:0 6px;box-sizing:border-box;border-radius:9px;display:grid;place-items:center;color:#fff;font-size:1.05rem;box-shadow:0 2px 8px rgba(0,0,0,.35)}
 .sg-t{font-size:.92rem;font-weight:500;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;color:#fff}
 .sg-c small{color:#9CA6BA;font-size:.76rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* the display screen shows only the entry; its controls appear when the pointer moves */
+#mlStage .st-ctl{opacity:0;pointer-events:none;transition:opacity .25s}#mlStage.st-awake .st-ctl{opacity:1;pointer-events:auto}
+#mlStage .st-img img{bottom:2vh;height:calc(100% - 4vh)}
+#mlStage .st-side{padding-bottom:4vh}
