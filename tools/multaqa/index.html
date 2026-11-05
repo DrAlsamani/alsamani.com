@@ -520,10 +520,47 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
     if (o.it) { o.it.own = uid; await R('items/' + uid).set(o.it).catch(() => {}); if (o.th) await R('thumb/' + uid).set(o.th).catch(() => {}); if (o.fu) await R('full/' + uid).set(o.fu).catch(() => {}); }
   }
   function remember(ro) { if (hasAccount() && E.id && E.meta) db.ref('mltu/' + uid + '/' + E.id).set({ t: E.meta.t, ro, at: TS() }).catch(() => {}); }
-  function accountBanner() {
-    if (hasAccount()) return ''; return `<div class="ml-card ml-acc"><p class="ml-mut">${T('سجّل الدخول لتتمكن من الوصول إلى ملتقاك وملفاتك من أي جهاز.', 'Sign in to reach your forum and files from any device.')}</p><div><button class="ml-b" id="mlAcc">${G_ICON}${T('الدخول بحساب Google', 'Sign in with Google')}</button></div></div>`;
+  const MAIL_ICON = '<svg class="ml-i" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>';
+  const acctButtons = () => `<div class="ml-row" data-acct><button class="ml-b" data-gg>${G_ICON}${T('حساب Google', 'Google account')}</button><button class="ml-b" data-em>${MAIL_ICON}${T('البريد الإلكتروني', 'Email')}</button></div>`;
+  /* a one-time link by email: no password to remember, and university mail works */
+  async function sendLink(email) {
+    const a = firebase.auth(); a.languageCode = isAr() ? 'ar' : 'en';
+    await a.sendSignInLinkToEmail(email, { url: base() + '?ml=' + encodeURIComponent(location.hash.slice(1)), handleCodeInApp: true });
+    store.set('em', email);
   }
-  function bindAccount() { const b = $('#mlAcc'); if (b) b.onclick = async () => { if (await signIn()) { const h = parseHash(); if (h.e) { E.meta = null; enter({ e: h.e }); } else home(); } }; }
+  function bindAcct(box, onGoogle) {
+    const row = $('[data-acct]', box); if (!row) return;
+    $('[data-gg]', row).onclick = async () => { if (await signIn()) onGoogle(); };
+    $('[data-em]', row).onclick = () => {
+      row.innerHTML = `<input class="ml-in ml-grow" id="mlEm" type="email" dir="ltr" autocomplete="email" placeholder="name@example.edu" aria-label="${T('البريد الإلكتروني', 'Email')}"><button class="ml-b main" id="mlEmS">${T('إرسال الرابط', 'Send the link')}</button>`;
+      $('#mlEmS', row).onclick = async () => {
+        const v = $('#mlEm', row).value.trim(); if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) return toast(T('البريد غير صحيح', 'This email is not valid'));
+        const nm = $('#mlNm'); if (nm && nm.value.trim().length > 1) store.set('name', nm.value.trim().slice(0, 30));
+        $('#mlEmS', row).disabled = true;
+        try { await sendLink(v); row.innerHTML = `<p class="ml-mut" style="margin:0">${T(`أُرسل رابط الدخول إلى ${esc(v)}. افتحه من هذا الجهاز، وإن لم تجده فتحقق من مجلد الرسائل غير المرغوبة.`, `A sign-in link was sent to ${esc(v)}. Open it on this device, and check your spam folder if it does not arrive.`)}</p>`; }
+        catch (e) { $('#mlEmS', row).disabled = false; toast(e.code === 'auth/operation-not-allowed' ? T('الدخول بالبريد غير مفعّل بعد.', 'Email sign-in is not enabled yet.') : T('تعذر إرسال الرابط.', 'Could not send the link.')); }
+      };
+    };
+  }
+  async function finishEmailLink() {
+    if (!/[?&]oobCode=/.test(location.search)) return; await fb(); const a = firebase.auth(), href = location.href, back = new URLSearchParams(location.search).get('ml') || '', clean = () => history.replaceState(null, '', base() + (back ? '#' + back : ''));
+    if (!a.isSignInWithEmailLink(href)) return clean();
+    let email = store.get('em', '');
+    if (!email) email = await new Promise(ok => { root.innerHTML = `<div class="ml-card"><label class="ml-f"><span>${T('أكّد بريدك الإلكتروني', 'Confirm your email')}</span><input id="mlEm2" type="email" dir="ltr" autocomplete="email"></label><div><button class="ml-b main" id="mlEm2B">${T('متابعة', 'Continue')}</button></div></div>`; $('#mlEm2B').onclick = () => { const v = $('#mlEm2').value.trim(); if (v) ok(v); }; });
+    try {
+      if (a.currentUser && a.currentUser.isAnonymous) {
+        try { await a.currentUser.linkWithCredential(firebase.auth.EmailAuthProvider.credentialWithLink(email, href)); }
+        catch (e) { if (!/already-in-use|provider-already-linked/.test(e.code || '')) throw e; const m = /(?:^|&)e=(\d{6})/.exec(back); let moved = null; if (m) { E.id = m[1]; moved = await carryOut(); } await a.signInWithEmailLink(email, href); uid = a.currentUser.uid; if (moved) await carryIn(moved); E.id = null; }
+      } else await a.signInWithEmailLink(email, href);
+      uid = a.currentUser.uid; store.set('em', '');
+    } catch (e) { toast(T('انتهت صلاحية الرابط. يُرجى طلب رابط جديد.', 'This link has expired. Please request a new one.')); }
+    clean();
+  }
+  function accountBanner() {
+    if (hasAccount()) return ''; return `<div class="ml-card ml-acc" id="mlAccB"><p class="ml-mut">${T('سجّل الدخول لتصل إلى ملتقاك وملفاتك من أي جهاز.', 'Sign in to reach your forum and files from any device.')}</p>${acctButtons()}</div>`;
+  }
+  function bindAccount() { const b = $('#mlAccB'); if (b) bindAcct(b, () => { const h = parseHash(); if (h.e) { E.meta = null; enter({ e: h.e }); } else home(); }); }
+  function askAccount() { return new Promise(ok => { const d = card(`<div class="ml-row"><b class="ml-grow">${T('سجّل الدخول لإنشاء الملتقى', 'Sign in to create the forum')}</b><button class="hl-x" data-x aria-label="${T('إغلاق', 'Close')}">${IC.x}</button></div>${acctButtons()}`); $('[data-x]', d).onclick = () => { d.remove(); ok(false); }; bindAcct(d, () => { d.remove(); ok(true); }); }); }
 
   /* ---------- presets ---------- */
   const RUB = {
@@ -591,9 +628,9 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
     root.innerHTML = `<div class="ml-stack">${accountBanner()}
       <div class="ml-card"><h2>${T('الدخول إلى ملتقى', 'Join a forum')}</h2><div class="ml-row"><input class="ml-in ml-grow" id="mlCode" inputmode="numeric" maxlength="6" placeholder="${T('رمز الملتقى', 'Forum code')}" aria-label="${T('رمز الملتقى', 'Forum code')}"><button class="ml-b main" id="mlJoin">${T('دخول', 'Enter')}</button></div></div>
       <div class="ml-card"><h2>${T('إنشاء ملتقى', 'Create a forum')}</h2>
-        <label class="ml-f"><span>${T('اسم الملتقى', 'Forum name')}</span><input id="mlT" maxlength="80" dir="auto"></label>
+        <label class="ml-f"><span>${T('اسم الملتقى', 'Forum name')}</span><input id="mlT" maxlength="80" dir="auto" value="${esc(store.get('draft', {}).t || '')}"></label>
         <label class="ml-f"><span>${T('اسم المسؤول', 'Organizer’s name')}</span><input id="mlHn" maxlength="30" dir="auto" autocomplete="name" value="${esc(name())}"></label>
-        <label class="ml-f"><span>${T('نوع المشاركات', 'Type of entries')}</span><select id="mlP"><option value="poster">${T('ملصقات علمية', 'Research posters')}</option><option value="project">${T('مشاريع ومسابقات', 'Projects and competitions')}</option></select></label>
+        <label class="ml-f"><span>${T('نوع المشاركات', 'Type of entries')}</span><select id="mlP"><option value="poster">${T('ملصقات علمية', 'Research posters')}</option><option value="project" ${store.get('draft', {}).p === 'project' ? 'selected' : ''}>${T('مشاريع ومسابقات', 'Projects and competitions')}</option></select></label>
         <div class="ml-row"><button class="ml-b main" id="mlNew">${T('إنشاء', 'Create')}</button><button class="ml-b" id="mlDemo">${T('إنشاء نموذج للتجربة', 'Create a sample')}</button></div></div>
       ${mine.length ? `<div class="ml-card"><h2>${T('ملتقياتك', 'Your forums')}</h2><ul class="ml-list">${mine.map(m => `<li><div class="ml-t"><a href="#e=${esc(m.id)}"><b dir="auto">${esc(m.t)}</b></a><small dir="ltr">${esc(m.id)}</small></div></li>`).join('')}</ul></div>` : ''}
     </div>`;
@@ -604,7 +641,7 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
     const t = ($('#mlT').value.trim() || (demo ? T('نموذج ملتقى يوم البحث', 'Sample research day') : '')).slice(0, 80), n = $('#mlHn').value.trim().slice(0, 30);
     if (!t) return toast(T('يلزم اسم الملتقى', 'A forum name is required')); if (n.length < 2) return toast(T('يلزم اسم المسؤول', 'The organizer’s name is required'));
     store.set('name', n); await fb();
-    if (!hasAccount() && !store.get('noacct', false) && !(await signIn())) return;
+    if (!hasAccount() && !store.get('noacct', false)) { store.set('draft', { t, p: $('#mlP').value }); if (!(await askAccount())) return; } store.set('draft', {});
     const tr = demo ? ['الموهبة وتنميتها', 'الابتكار وريادة الأعمال', 'الذكاء الاصطناعي في التعليم'] : [T('المسار العام', 'General track')];
     let id, tries = 0; do { id = String(100000 + Math.floor(Math.random() * 900000)); tries++; } while ((await db.ref('mlt/' + id + '/meta').once('value')).exists() && tries < 6);
     await db.ref('mlt/' + id + '/meta').set({ host: uid, t, at: TS() });
@@ -634,8 +671,8 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
   }
   function nameForm(h) {
     const title = h.j ? T('دخول المحكّم', 'Judge sign-in') : h.p ? T('دخول المشارك', 'Participant sign-in') : h.m ? T('دخول المشرف', 'Supervisor sign-in') : '';
-    root.innerHTML = `<div class="ml-card"><h2 dir="auto">${esc(E.meta.t)}</h2>${title ? `<p class="ml-mut">${title}</p>` : ''}<label class="ml-f"><span>${T('الاسم', 'Name')}</span><input id="mlNm" maxlength="30" dir="auto" autocomplete="name" value="${esc(name())}"></label><div class="ml-row"><button class="ml-b main" id="mlGo">${T('متابعة', 'Continue')}</button>${title && !hasAccount() ? `<button class="ml-b" id="mlGg">${G_ICON}${T('الدخول بحساب Google', 'Sign in with Google')}</button>` : ''}</div></div>`;
-    const gg = $('#mlGg'); if (gg) gg.onclick = async () => { if (await signIn()) { const i = $('#mlNm'); if (i && !i.value) i.value = name(); gg.remove(); } };
+    root.innerHTML = `<div class="ml-card"><h2 dir="auto">${esc(E.meta.t)}</h2>${title ? `<p class="ml-mut">${title}</p>` : ''}<label class="ml-f"><span>${T('الاسم', 'Name')}</span><input id="mlNm" maxlength="30" dir="auto" autocomplete="name" value="${esc(name())}"></label>${title && !hasAccount() ? `<div id="mlNmA"><p class="ml-mut">${T('سجّل الدخول لتصل إلى بياناتك من أي جهاز:', 'Sign in to reach your data from any device:')}</p>${acctButtons()}</div>` : ''}<div><button class="ml-b main" id="mlGo">${T('متابعة', 'Continue')}</button></div></div>`;
+    const na = $('#mlNmA'); if (na) bindAcct(na, () => { const i = $('#mlNm'); if (i && !i.value) i.value = name(); na.remove(); });
     $('#mlGo').onclick = () => { const v = $('#mlNm').value.trim().slice(0, 30); if (v.length < 2) return toast(T('يلزم الاسم', 'A name is required')); store.set('name', v); afterName(h); };
   }
   async function afterName(h) {
@@ -1338,7 +1375,7 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
   /* ---------- route ---------- */
   function route() { const h = parseHash(); if (h.e && /^\d{6}$/.test(h.e)) { if (E.id !== h.e || !E.meta || h.j || h.p || h.stage) enter(h); } else { teardown(); E.id = null; E.meta = null; home(); } }
   addEventListener('hashchange', route);
-  route();
+  finishEmailLink().catch(() => {}).then(route);
 })();
 </script>
 </section>
