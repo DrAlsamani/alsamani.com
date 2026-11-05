@@ -102,6 +102,18 @@ html[lang=ar] .tb-paper .ql-editor.ql-blank::before{right:clamp(16px,4vw,48px)}
 .tb-vb{position:absolute;inset-block:0;inset-inline-start:0;background:#f3ead9;z-index:0;transition:width .3s}.tb-vo button.win .tb-vb{background:#dcefe5}
 .tb-vo b,.tb-vo i,.tb-vo small{position:relative;z-index:1}.tb-vo b{font-weight:600;flex:1}.tb-vo i{font-style:normal;font-weight:700}.tb-vo small{flex-basis:100%;color:var(--mut);font-size:.8rem}
 .tb-vote .tb-hint{margin:0}
+.tb-sg-ins{color:#2f7d5b;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px}
+.tb-sg-del{color:#b0533a;text-decoration:line-through;text-decoration-thickness:2px}
+.tb-who [class*="tb-au-"]{border-radius:2px}
+.tb-sgm{background:#eef6f1;color:#2f5f48}
+#tbSgN{font-style:normal;font-weight:700}
+.tb-sgl{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.tb-sgl li{display:grid;grid-template-columns:auto 1fr auto;gap:4px 8px;align-items:center;border:1px solid #dfe2ee;border-radius:10px;padding:8px 10px}
+.tb-sgl q{grid-column:1/3;quotes:none;cursor:pointer;color:#14204a;line-height:1.6}.tb-sgl li>span:last-child{grid-column:3;grid-row:1/3;display:flex;gap:6px}
+.tb-sgk{font-size:.75rem;border-radius:99px;padding:1px 8px}.tb-sgk.ins{background:#dcefe5;color:#2f5f48}.tb-sgk.del{background:#f6e1db;color:#8a3a26}
+.tb-sgl b{font-size:.85rem;font-weight:600}
+.tb-sh h3 small{color:#5b6282;font-weight:400}
+.tb-b[aria-pressed=true]{background:var(--ink);border-color:var(--ink);color:#fff}.tb-b[data-k=dict][aria-pressed=true],.tb-b[data-k=rec][aria-pressed=true]{background:#b0533a;border-color:#b0533a}
 </style>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css"><div id="tb"><noscript><span class="ar">تعمل هذه الأداة مع تفعيل JavaScript.</span><span class="en">This tool needs JavaScript.</span></noscript></div><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script>window.MD_CFG={"apiKey": "AIzaSyA50i75DT1Is1a6Yn6snW1_JVObc8S3F0Y", "authDomain": "maydan-705ae.firebaseapp.com", "databaseURL": "https://maydan-705ae-default-rtdb.europe-west1.firebasedatabase.app", "projectId": "maydan-705ae", "appId": "1:342187013133:web:d5c2396f0db413f3c51144"};window.MD_MARK="<svg class=\"md-mark\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><rect x=\"4\" y=\"4\" width=\"40\" height=\"40\" rx=\"12\" fill=\"#23336F\"/><path d=\"M24 9l4.2 6.8 7.8-1.8-1.8 7.8L41 24l-6.8 4.2 1.8 7.8-7.8-1.8L24 39l-4.2-6.8-7.8 1.8 1.8-7.8L7 24l6.8-4.2-1.8-7.8 7.8 1.8z\" fill=\"#C9822B\"/><circle cx=\"24\" cy=\"24\" r=\"6.5\" fill=\"#23336F\"/><circle cx=\"24\" cy=\"24\" r=\"3\" fill=\"#F3E3C7\"/></svg>";</script>
 <script>/* alsamani.com — live voice and video for Samar and Maydan rooms, for players far apart on their phones.
@@ -403,6 +415,8 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
     spark: SV('<path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6"/>'),
     lock: SV('<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>'),
     x: SV('<path d="M6 6l12 12M18 6 6 18"/>'),
+    pen: SV('<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13 7l4 4"/>'),
+    sug: SV('<path d="M4 6h10M4 12h7M4 18h5"/><path d="M15 15l2 2 4-4"/>'),
     vote: SV('<path d="M4 13h16v7H4zM8 13l1.5-9h5L16 13"/><path d="M10 8.5l1.5 1.5 3-3"/>')
   };
   const COL = ['#2a7fa8', '#b0533a', '#2f7d5b', '#c9822b', '#6b5aa6', '#23336f', '#a23e6b', '#4f7a2a'];
@@ -452,11 +466,26 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
       <div class="tb-top"><h2 dir="auto" id="tbTitle"${host ? ' contenteditable="plaintext-only" spellcheck="false"' : ''}>${esc(meta.t)}</h2>
         <div class="tb-acts"><button type="button" class="tb-b" data-k="share">${IC.link}<span>${T('رابط الدعوة', 'Invite link')}</span></button><button type="button" class="tb-b" data-k="ppl">${IC.ppl}<span id="tbN">1</span></button></div></div>
       <div class="tb-ro" id="tbRo" hidden>${IC.lock}<span>${T('للعرض فقط', 'View only')}</span><button type="button" class="tb-b" data-k="ask">${T('اطلب التحرير', 'Ask to edit')}</button></div>
-      <div class="tb-tools"><button type="button" class="tb-b" data-k="dict" aria-pressed="false">${IC.mic}<span>${T('إملاء', 'Dictate')}</span></button><button type="button" class="tb-b" data-k="rec" aria-pressed="false">${IC.rec}<span>${T('سجّل وحوّله لنص', 'Record to text')}</span></button><button type="button" class="tb-b" data-k="ai">${IC.spark}<span>${T('المساعد', 'Assistant')}</span></button><button type="button" class="tb-b" data-k="imp">${IC.up}<span>${T('ملف وورد', 'Word file')}</span></button><button type="button" class="tb-b" data-k="exp">${IC.down}<span>${T('صدّر', 'Export')}</span></button>${host ? `<button type="button" class="tb-b" data-k="vote">${IC.vote}<span>${T('تصويت', 'Vote')}</span></button>` : ''}<input type="file" id="tbF" accept=".docx" hidden></div>
+      <div class="tb-tools"><button type="button" class="tb-b" data-k="dict" aria-pressed="false">${IC.mic}<span>${T('إملاء', 'Dictate')}</span></button><button type="button" class="tb-b" data-k="rec" aria-pressed="false">${IC.rec}<span>${T('سجّل وحوّله لنص', 'Record to text')}</span></button><button type="button" class="tb-b" data-k="ai">${IC.spark}<span>${T('المساعد', 'Assistant')}</span></button><button type="button" class="tb-b" data-k="imp">${IC.up}<span>${T('ملف وورد', 'Word file')}</span></button><button type="button" class="tb-b" data-k="exp">${IC.down}<span>${T('صدّر', 'Export')}</span></button>${host ? `<button type="button" class="tb-b" data-k="vote">${IC.vote}<span>${T('تصويت', 'Vote')}</span></button>` : ''}<button type="button" class="tb-b" data-k="who" aria-pressed="false">${IC.pen}<span>${T('من كتب؟', 'Who wrote it?')}</span></button><button type="button" class="tb-b" data-k="sug" id="tbSg" hidden>${IC.sug}<span>${T('الاقتراحات', 'Suggestions')} <i id="tbSgN"></i></span></button><input type="file" id="tbF" accept=".docx" hidden></div>
+      <div class="tb-ro tb-sgm" id="tbSgm" hidden>${IC.sug}<span>${T('وضع الاقتراحات: تعديلاتك تظهر مقترحة حتى يعتمدها المضيف', 'Suggestion mode: your changes show as suggestions until the host accepts them')}</span></div>
       <div class="tb-vote" id="tbVote" hidden></div>
       <div class="tb-paper"><div id="tbEd"></div></div><p class="tb-saved" id="tbSv"></p></div>`;
+    { const P = Quill.import('parchment'); Quill.register(new P.ClassAttributor('au', 'tb-au', { scope: P.Scope.INLINE }), true); Quill.register(new P.ClassAttributor('sg', 'tb-sg', { scope: P.Scope.INLINE, whitelist: ['ins', 'del'] }), true); }
     const quill = new Quill('#tbEd', { theme: 'snow', placeholder: T('ابدأ الكتابة هنا…', 'Start writing here…'), modules: { toolbar: [[{ header: [1, 2, 3, false] }], ['bold', 'italic', 'underline'], [{ list: 'ordered' }, { list: 'bullet' }], [{ align: [] }, { direction: 'rtl' }], ['link', 'blockquote'], ['clean']], history: { userOnly: true } } });
-    W.quill = quill;
+    W.quill = quill; W.me = uid.slice(0, 10).replace(/[^A-Za-z0-9]/g, '') || 'x';
+    ref.child('au/' + W.me).set(name).catch(() => {});
+    const onAu = s => { W.au = s.val() || {}; auStyle(); sugCount(); }; ref.child('au').on('value', onAu); W.off.push(() => ref.child('au').off('value', onAu));
+    // every word carries who wrote it; in suggestion mode a member's additions and deletions stay marked until the host accepts them
+    quill.on('text-change', (delta, old, src) => { if (src === 'user') mark(delta, old); sugCount(); });
+    // in suggestion mode the delete keys strike text through instead of removing it (one's own suggested words are simply removed)
+    const strike = (i, n) => { const ops = quill.getContents(i, n).ops; let at = i + n; for (const d of [...ops].reverse()) { const L = lenOf(d), a = d.attributes || {}; at -= L; if (a.sg === 'ins' && a.au === W.me) quill.deleteText(at, L, 'api'); else if (a.sg !== 'del') quill.formatText(at, L, { sg: 'del', au: W.me }, 'api'); } };
+    const key = (k, fwd) => { quill.keyboard.addBinding({ key: k }, r => { if (!sugOn() || !can()) return true;
+      if (r.length) { strike(r.index, r.length); quill.setSelection(r.index, 0, 'silent'); return false; }
+      const i = fwd ? r.index : r.index - 1; if (i < 0 || i >= quill.getLength() - 1) return false;
+      const len0 = quill.getLength(); strike(i, 1); const gone = quill.getLength() < len0; quill.setSelection(fwd ? (gone ? r.index : r.index + 1) : i, 0, 'silent'); return false; });
+      const arr = quill.keyboard.bindings[k]; if (arr && arr.length > 1) arr.unshift(arr.pop()); };
+    key('Backspace', false); key('Delete', true);
+    quill.root.addEventListener('mouseover', e => { const t = e.target.closest && e.target.closest('[class*="tb-au-"]'); if (!t || !quill.root.classList.contains('tb-who')) return; const k = (t.className.match(/tb-au-([A-Za-z0-9]+)/) || [])[1]; t.title = (t.classList.contains('tb-sg-ins') ? T('اقترح إضافته: ', 'Suggested by ') : t.classList.contains('tb-sg-del') ? T('اقترح حذفه: ', 'Suggested removal by ') : T('كتبه: ', 'Written by ')) + ((W.au || {})[k] || ''); });
     // the shared document: a snapshot, then every change after it, in order
     const doc = new Y.Doc(), text = doc.getText('q');
     const snap = (await ref.child('snap').once('value')).val();
@@ -478,7 +507,7 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
     const onE = s => { W.ed = s.val() || {}; perm(); people(); }; ref.child('ed').on('value', onE); W.off.push(() => ref.child('ed').off('value', onE));
     const onV = s => { W.vote = s.val(); if (W.vote && W.vote.vn) W.vn = W.vote.vn; voteCard(); }; ref.child('vote').on('value', onV); W.off.push(() => ref.child('vote').off('value', onV));
     const onVV = s => { W.vv = s.val() || {}; voteCard(); }; ref.child('vv').on('value', onVV); W.off.push(() => ref.child('vv').off('value', onVV));
-    const onM = s => { W.meta = s.val() || W.meta; const h = root.querySelector('#tbTitle'); if (h && document.activeElement !== h) h.textContent = W.meta.t || ''; perm(); people(); }; ref.child('meta').on('value', onM); W.off.push(() => ref.child('meta').off('value', onM));
+    const onM = s => { W.meta = s.val() || W.meta; setTimeout(perm, 0); const h = root.querySelector('#tbTitle'); if (h && document.activeElement !== h) h.textContent = W.meta.t || ''; perm(); people(); }; ref.child('meta').on('value', onM); W.off.push(() => ref.child('meta').off('value', onM));
     if (host) { const ti = root.querySelector('#tbTitle'); ti.onblur = () => { const t = ti.textContent.trim().slice(0, 80); if (t && t !== W.meta.t) ref.child('meta/t').set(t); }; ti.onkeydown = e => { if (e.key === 'Enter') { e.preventDefault(); ti.blur(); } }; setInterval(compact, 120000); setTimeout(compact, 15000); }
     if (window.AV) { if (host) ref.child('av/on').once('value').then(x => { if (x.val() == null) ref.child('av/on').set(true); }).catch(() => {}); AV.attach({ ref: ref.child('av'), uid, name, host, hostUid: meta.host }); }
     root.querySelectorAll('[data-k]').forEach(b => b.onclick = () => ACT[b.dataset.k](b));
@@ -486,7 +515,7 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
     perm();
   }
   const can = () => W && (W.host || (W.meta && W.meta.open) || W.ed[uid] === true);
-  function perm() { if (!W || !W.quill) return; const ok = can(); W.quill.enable(ok); root.querySelector('#tbRo').hidden = ok; root.querySelectorAll('[data-k=dict],[data-k=rec],[data-k=imp]').forEach(b => { b.disabled = !ok; }); }
+  function perm() { if (!W || !W.quill) return; const ok = can(); const sm = root.querySelector('#tbSgm'); if (sm) sm.hidden = !(ok && sugOn()); W.quill.enable(ok); root.querySelector('#tbRo').hidden = ok; root.querySelectorAll('[data-k=dict],[data-k=rec],[data-k=imp]').forEach(b => { b.disabled = !ok; }); }
   function saved(ok) { const e = root.querySelector('#tbSv'); if (!e) return; e.textContent = ok == null ? T('يحفظ…', 'Saving…') : ok ? T('محفوظ', 'Saved') : T('تعذّر الحفظ؛ تحقق من الإنترنت', 'Not saved; check the internet'); e.classList.toggle('bad', ok === false); }
   // the host keeps the record short: the whole document becomes one snapshot, and changes older than the snapshot before it are cleared
   async function compact() {
@@ -510,10 +539,11 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
   function pplSheet(d) {
     const ids = Object.keys(W.on), H = W.meta.host;
     const html = `<button type="button" class="tb-xb" data-x aria-label="${T('إغلاق', 'Close')}">${IC.x}</button><h3>${T('على الطاولة', 'At the table')}</h3>
-      ${W.host ? `<label class="tb-sw"><input type="checkbox" id="tbOpen"${W.meta.open ? ' checked' : ''}> ${T('الكل يقدر يكتب', 'Everyone can write')}</label>` : ''}
+      ${W.host ? `<label class="tb-sw"><input type="checkbox" id="tbOpen"${W.meta.open ? ' checked' : ''}> ${T('الكل يقدر يكتب', 'Everyone can write')}</label><label class="tb-sw"><input type="checkbox" id="tbSug"${W.meta.sug ? ' checked' : ''}> ${T('وضع الاقتراحات: تعديلات الأعضاء تظهر مقترحة حتى تعتمدها', 'Suggestion mode: members’ changes stay suggestions until you accept them')}</label>` : ''}
       <ul class="tb-ppl">${ids.map((u, i) => { const v = W.on[u] || {}, w = u === H || W.meta.open || W.ed[u] === true; return `<li style="--c:${COL[i % COL.length]}"><b dir="auto">${esc(v.n || '')}</b><small>${u === H ? T('المضيف', 'Host') : w ? T('يكتب', 'Writes') : v.req ? T('يطلب التحرير', 'Asks to edit') : T('يشاهد', 'Views')}${u === uid ? ' · ' + T('أنت', 'you') : ''}</small>${W.host && u !== H && !W.meta.open ? `<button type="button" class="tb-b${v.req && !w ? ' hot' : ''}" data-ed="${u}">${W.ed[u] ? T('للعرض فقط', 'View only') : T('اسمح له بالكتابة', 'Let them write')}</button>` : ''}</li>`; }).join('')}</ul>`;
     if (!d) d = sheet('ppl', html); else d.querySelector('.tb-sh').innerHTML = html;
     const o = d.querySelector('#tbOpen'); if (o) o.onchange = () => W.ref.child('meta/open').set(o.checked);
+    const sg = d.querySelector('#tbSug'); if (sg) sg.onchange = () => W.ref.child('meta/sug').set(sg.checked);
     d.querySelectorAll('[data-ed]').forEach(b => b.onclick = () => { const u = b.dataset.ed; W.ref.child('ed/' + u).set(W.ed[u] ? null : true); });
   }
 
@@ -542,8 +572,8 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
     mr.ondataavailable = e => { if (e.data.size) parts.push(e.data); };
     mr.onstop = async () => { clearInterval(tick); s.getTracks().forEach(t => t.stop()); mr = null; btn.setAttribute('aria-pressed', 'false'); lab.textContent = T('يكتبه المساعد…', 'Writing it out…'); btn.disabled = true;
       try { const blob = new Blob(parts, { type: (type || 'audio/webm').split(';')[0] }), data = b64(new Uint8Array(await blob.arrayBuffer()));
-        const out = await ai([{ inlineData: { mimeType: blob.type, data } }, { text: T('اكتب نص هذا التسجيل كما قيل بدقة، بالعربية الفصحى الميسرة مع الحفاظ على المعنى، وقسّمه إلى فقرات. إن تعدد المتحدثون فابدأ كل مداخلة بـ «متحدث ١:» وهكذا. لا تضف شيئًا لم يُقل. أعد النص فقط.', 'Transcribe this recording accurately, in paragraphs. If several people speak, start each turn with “Speaker 1:” and so on. Add nothing that was not said. Return only the text.') }]);
-        preview(T('نص التسجيل', 'The recording, in text'), out); }
+        const out = await ai([{ inlineData: { mimeType: blob.type, data } }, { text: T('اكتب ما قيل في هذا التسجيل نصًا متصلًا بدقة، مع الحفاظ على كلمات المتحدث ومعناه، وتصحيح الإملاء وعلامات الترقيم فقط، وقسّمه إلى فقرات. لا تكتب أسماء أو تسميات للمتحدثين، ولا عناوين، ولا أي إضافة أو تعليق. أعد النص وحده.', 'Write out what is said in this recording as running text, accurately, keeping the speaker’s words and meaning; fix only spelling and punctuation, in paragraphs. No speaker labels, no headings, no additions or comments. Return the text alone.') }]);
+        preview(T('نص التسجيل', 'The recording, in text'), out, null, true); }
       catch (e) { toast(T('تعذّر تحويل التسجيل. حاول بتسجيل أقصر.', 'Could not transcribe; try a shorter recording.'), 1); }
       btn.disabled = false; lab.textContent = T('سجّل وحوّله لنص', 'Record to text'); };
     mr.start(1000); btn.setAttribute('aria-pressed', 'true');
@@ -588,7 +618,7 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
     });
   }
   // what the assistant wrote: look first, then put it in the document
-  function preview(title, out, replace) {
+  function preview(title, out, replace, bare) {
     out = String(out || '').replace(/^```\w*\n?|```$/g, '').replace(/\*\*/g, '').trim();
     const d = sheet('pv', `<button type="button" class="tb-xb" data-x aria-label="${T('إغلاق', 'Close')}">${IC.x}</button><h3>${esc(title)}</h3><div class="tb-out" dir="auto" contenteditable="plaintext-only">${esc(out)}</div>
       <div class="tb-row">${can() ? `<button type="button" class="btn solid" data-p="${replace ? 'rep' : 'end'}">${replace ? T('استبدل النص المحدد', 'Replace the selection') : T('أضفه آخر المستند', 'Add it at the end')}</button>${replace ? '' : `<button type="button" class="btn ghost" data-p="here">${T('أضفه مكان المؤشر', 'Add it at the cursor')}</button>`}` : ''}<button type="button" class="btn ghost" data-p="copy">${T('انسخ', 'Copy')}</button></div>`);
@@ -597,6 +627,7 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
       const t = d.querySelector('.tb-out').innerText.trim(), q = W.quill, k = b.dataset.p;
       if (k === 'copy') { navigator.clipboard.writeText(t).then(() => toast(T('نُسخ', 'Copied'))); return; }
       if (k === 'rep') { q.deleteText(replace.index, replace.length, 'user'); q.insertText(replace.index, t, 'user'); }
+      else if (bare) { const at = k === 'here' ? at0 : q.getLength() - 1; q.insertText(at, (k === 'end' && q.getLength() > 1 ? '\n' : '') + t + (k === 'here' ? ' ' : '\n'), 'user'); }
       else { const at = k === 'here' ? at0 : q.getLength() - 1, pre = k === 'end' ? '\n' : ''; q.insertText(at, pre + title + '\n', { bold: true }, 'user'); q.insertText(at + pre.length + title.length + 1, t + '\n', { bold: false }, 'user'); }
       d.remove(); toast(T('أُضيف إلى المستند', 'Added to the document'));
     });
@@ -660,7 +691,47 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
     });
   }
 
+  /* ---------- who wrote what, and suggestions the host accepts or rejects ---------- */
+  const sugOn = () => !!(W && W.meta && W.meta.sug && !W.host);
+  const lenOf = o => typeof o.insert === 'string' ? o.insert.length : 1;
+  function mark(delta, old) {
+    const Delta = Quill.import('delta'), sug = sugOn(), out = new Delta(); let pos = 0, oldPos = 0, last = 0, back = null, any = false;
+    for (const op of delta.ops) {
+      if (op.retain != null) { const n = typeof op.retain === 'number' ? op.retain : 1; pos += n; oldPos += n; }
+      else if (op.insert != null) { const n = lenOf(op); out.retain(pos - last).retain(n, { au: W.me, sg: sug ? 'ins' : null }); pos += n; last = pos; any = true; }
+      else if (op.delete) {
+        if (sug) { back = back == null ? pos : back; for (const d of old.slice(oldPos, oldPos + op.delete).ops) { const a = d.attributes || {}; if (a.sg === 'ins' && a.au === W.me) continue; out.retain(pos - last).insert(d.insert, Object.assign({}, a, a.sg === 'ins' ? {} : { sg: 'del', au: a.sg === 'del' ? a.au : W.me })); pos += lenOf(d); last = pos; any = true; } }
+        oldPos += op.delete;
+      }
+    }
+    if (!any) return;
+    W.quill.updateContents(out, 'api'); if (back != null) setTimeout(() => W.quill.setSelection(back, 0, 'silent'), 0);
+  }
+  function auStyle() {
+    let st = document.getElementById('tbAuCss'); if (!st) { st = document.createElement('style'); st.id = 'tbAuCss'; document.head.appendChild(st); }
+    st.textContent = Object.keys(W.au || {}).map((k, i) => { const c = COL[i % COL.length]; return `.tb-who .tb-au-${k}{background:${c}1f;box-shadow:inset 0 -2px 0 ${c}}.tb-sg-ins.tb-au-${k},.tb-sg-del.tb-au-${k}{text-decoration-color:${c}}`; }).join('');
+  }
+  // the suggestions in the document, joined where the same person made the same kind of change in one run
+  function sugList() {
+    const L = []; let i = 0;
+    for (const op of W.quill.getContents().ops) { const a = op.attributes || {}, n = lenOf(op); if (a.sg) { const p = L[L.length - 1]; if (p && p.k === a.sg && p.au === a.au && p.i + p.n === i) { p.n += n; p.t += typeof op.insert === 'string' ? op.insert : ''; } else L.push({ k: a.sg, au: a.au, i, n, t: typeof op.insert === 'string' ? op.insert : '' }); } i += n; }
+    return L;
+  }
+  function sugCount() { const b = root.querySelector('#tbSg'); if (!b || !W.quill) return; const n = sugList().length; b.hidden = !n; root.querySelector('#tbSgN').textContent = n || ''; const sh = document.querySelector('.tb-sheet.sg'); if (sh) sugSheet(sh); }
+  function settle(list, ok) { const q = W.quill; [...list].sort((a, b) => b.i - a.i).forEach(s => { if ((s.k === 'ins') === ok) q.formatText(s.i, s.n, { sg: false }, 'api'); else q.deleteText(s.i, s.n, 'api'); }); }
+  function sugSheet(d) {
+    const L = sugList(), mayDo = W.host;
+    const html = `<button type="button" class="tb-xb" data-x aria-label="${T('إغلاق', 'Close')}">${IC.x}</button><h3>${T('الاقتراحات', 'Suggestions')} <small>${L.length}</small></h3>
+      ${L.length ? `${mayDo ? `<div class="tb-row"><button type="button" class="btn solid" data-s="all1">${T('اقبلها كلها', 'Accept all')}</button><button type="button" class="btn ghost" data-s="all0">${T('ارفضها كلها', 'Reject all')}</button></div>` : ''}
+      <ul class="tb-sgl">${L.map((s, j) => `<li><span class="tb-sgk ${s.k}">${s.k === 'ins' ? T('إضافة', 'Added') : T('حذف', 'Removed')}</span><b dir="auto">${esc((W.au || {})[s.au] || '')}</b><q dir="auto" data-go="${j}">${esc(s.t.replace(/\n/g, ' ').slice(0, 140) || '…')}</q>${mayDo ? `<span><button type="button" class="tb-b" data-s="1" data-j="${j}">${T('اقبل', 'Accept')}</button><button type="button" class="tb-b" data-s="0" data-j="${j}">${T('ارفض', 'Reject')}</button></span>` : ''}</li>`).join('')}</ul>` : `<p class="tb-hint">${T('لا توجد اقتراحات معلّقة.', 'No pending suggestions.')}</p>`}`;
+    if (!d) d = sheet('sg', html); else d.querySelector('.tb-sh').innerHTML = html;
+    d.querySelectorAll('[data-s]').forEach(b => b.onclick = () => { const k = b.dataset.s; if (k === 'all1' || k === 'all0') settle(L, k === 'all1'); else settle([L[+b.dataset.j]], k === '1'); });
+    d.querySelectorAll('[data-go]').forEach(q => q.onclick = () => { const s = L[+q.dataset.go]; W.quill.setSelection(s.i, s.n, 'silent'); W.quill.scrollSelectionIntoView && W.quill.scrollSelectionIntoView(); });
+  }
+
   const ACT = {
+    who: b => { const on = !W.quill.root.classList.toggle('tb-who') ? false : true; b.setAttribute('aria-pressed', on); },
+    sug: () => sugSheet(),
     vote: () => W.vote && W.vote.open ? toast(T('أغلق التصويت الحالي أولًا', 'Close the current vote first'), 1) : voteNew(),
     share: async () => { const url = location.origin + location.pathname + '?t=' + W.id, text = T(`تعال للطاولة: ${W.meta.t}\n`, `Join the table: ${W.meta.t}\n`) + url; try { if (navigator.share && /iP(hone|ad)|Android/i.test(navigator.userAgent)) await navigator.share({ text }); else { await navigator.clipboard.writeText(url); toast(T('نُسخ رابط الدعوة', 'Invite link copied')); } } catch (e) {} },
     ppl: () => pplSheet(), ask: b => { W.ref.child('on/' + uid + '/req').set(1); b.disabled = true; b.textContent = T('وصل طلبك للمضيف', 'Sent to the host'); },
