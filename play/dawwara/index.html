@@ -324,6 +324,15 @@ html.dw-phone .tl-crumb,html.dw-phone .dw-head,html.dw-phone .dw-lead{display:no
 .dw-chip input:focus-visible+span{outline:2px solid #e9a54a;outline-offset:2px}
 .dw-wiz #wzX{font:inherit;border:1px solid var(--line,#d6d9e4);border-radius:10px;padding:8px 10px}
 .dw-wiz>.dw-btn{justify-self:start;min-height:48px;font-size:1.0625rem}
+.dw-opts button{position:relative}
+.dw-tags{position:absolute;inset-inline-end:10px;bottom:8px;display:flex;gap:4px;flex-wrap:wrap;font-style:normal;text-decoration:none}
+.dw-tags b{font-size:clamp(11px,1.1vw,15px);font-weight:600;background:#fff;color:#14204a;border-inline-start:4px solid var(--c);border-radius:99px;padding:2px 9px;text-decoration:none}
+.dw-tags b.n::after{content:' ✗';color:#b0533a}.dw-tags b.y::after{content:' ✓';color:#2f7d5b}
+.dw-opts button.no .dw-tags{text-decoration:none}
+.dw-flash{min-height:1.4em;margin:6px 0 0;text-align:center;font-size:clamp(15px,1.6vw,22px);color:#fff}
+.dw-flash.on{animation:dwFl .5s ease-out}@keyframes dwFl{from{transform:scale(1.15);opacity:.3}to{transform:none;opacity:1}}
+.dw-steal button[aria-pressed=true]{box-shadow:0 0 0 3px #fff inset}
+.dwp-opts button:disabled{opacity:.3;text-decoration:line-through}
 </style>
 <div id="dw" class="dw-page"><noscript><span class="ar">تعمل هذه اللعبة مع تفعيل JavaScript.</span><span class="en">This game needs JavaScript.</span></noscript></div>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script>window.MD_CFG={"apiKey": "AIzaSyA50i75DT1Is1a6Yn6snW1_JVObc8S3F0Y", "authDomain": "maydan-705ae.firebaseapp.com", "databaseURL": "https://maydan-705ae-default-rtdb.europe-west1.firebasedatabase.app", "projectId": "maydan-705ae", "appId": "1:342187013133:web:d5c2396f0db413f3c51144"};window.MD_MARK="<svg class=\"md-mark\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><rect x=\"4\" y=\"4\" width=\"40\" height=\"40\" rx=\"12\" fill=\"#23336F\"/><path d=\"M24 9l4.2 6.8 7.8-1.8-1.8 7.8L41 24l-6.8 4.2 1.8 7.8-7.8-1.8L24 39l-4.2-6.8-7.8 1.8 1.8-7.8L7 24l6.8-4.2-1.8-7.8 7.8 1.8z\" fill=\"#C9822B\"/><circle cx=\"24\" cy=\"24\" r=\"6.5\" fill=\"#23336F\"/><circle cx=\"24\" cy=\"24\" r=\"3\" fill=\"#F3E3C7\"/></svg>";</script><script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script><script>/* Maydan library: ready quizzes to start at once or open and edit. Written in the editor's own format. */
@@ -797,7 +806,7 @@ window.Dawwara = (function () {
       <div class="dw-groups">${Array.from({ length: n }, (_, k) => `<div class="dw-g" style="--c:${COL[k]}"><i></i><input data-name="${k}" maxlength="18" dir="auto" value="${esc(c.names[k] || NAMES()[k])}" aria-label="${T('اسم المجموعة', 'Group name')}"><input data-lead="${k}" maxlength="18" dir="auto" value="${esc(c.leads[k] || '')}" placeholder="${T('القائد (اختياري)', 'Leader (optional)')}"></div>`).join('')}</div>
         <div class="dw-row"><span>${T('مدة الأمسية', 'The evening’s length')}<small id="dwEst"></small></span><select data-dur>${[[0, T('أحددها بنفسي', 'I set the rounds')], [20, NUM(20) + T(' دقيقة', ' min')], [30, NUM(30) + T(' دقيقة', ' min')], [45, NUM(45) + T(' دقيقة', ' min')], [60, T('ساعة', '1 hour')], [90, T('ساعة ونصف', '1.5 hours')]].map(([v, l]) => `<option value="${v}"${(c.dur || 0) === v ? ' selected' : ''}>${l}</option>`).join('')}</select></div>
         <div class="dw-row"><span>${T('المناسبة', 'The occasion')}<small>${T('تختار التحديات المناسبة لها', 'Picks challenges to suit it')}</small></span><select data-pack>${PACK().map(([v, l]) => `<option value="${v}"${(c.pack || '') === v ? ' selected' : ''}>${l}</option>`).join('')}</select></div>
-      <div class="dw-row dw-phr"><span>${T('جوالات قادة الفرق', 'The leaders’ phones')}<small>${T('اختياري: زر السرعة واختيار الإجابة والفرص من الجوال. بدونها تسجّل أنت.', 'Optional: buzzer, answers and chances from the phone. Without them, you record.')}</small></span><button type="button" class="dw-btn ghost" data-phones>${T('اربط الجوالات', 'Link the phones')}</button></div><div id="dwPh"></div>
+      <div class="dw-row dw-phr"><span>${T('مع كل فريق جوال؟', 'Does each team have a phone?')}<small>${c.ph ? T('أول فريق يجاوب صح من جواله يأخذ النقاط، والخطأ ينكشف على الشاشة ويفتح الباب للبقية', 'The first team to answer right on its phone takes the points; a miss shows on the screen and the others go on') : T('تسجّل أنت إجابات الفرق', 'You record the teams’ answers')}</small></span><div class="dw-seg" data-ph><button type="button" data-v="0" aria-pressed="${!c.ph}">${T('لا', 'No')}</button><button type="button" data-v="1" aria-pressed="${!!c.ph}">${T('نعم', 'Yes')}</button></div></div><div id="dwPh"></div>
       <p class="dw-sum" id="dwSum"></p>
       <details class="dw-adv"><summary>${T('خيارات إضافية', 'More options')}<small>${T('الجولات والتحديات والوقت والسرقة', 'rounds, challenges, time, stealing')}</small></summary>
       <div class="dw-rounds"><h3>${T('جولات الأمسية', 'The rounds')}</h3>
@@ -827,8 +836,8 @@ window.Dawwara = (function () {
     ['[data-wager]', '[data-bmode]'].forEach(k => { const x = el.querySelector(k); if (x) x.onchange = need; });
     chRe(); need();
     el.querySelector('[data-cards]').onclick = () => { read(); cards(); };
-    el.querySelector('[data-phones]').onclick = e => { read(); phonesBox(e.currentTarget); };
-    if (ROOM.ref) { el.querySelector('[data-phones]').click(); }
+    el.querySelectorAll('[data-ph] [data-v]').forEach(b => b.onclick = () => { read(); c.ph = b.dataset.v === '1'; cfgSet(c); setup(); });
+    if (c.ph || ROOM.ref) phonesBox();
     el.querySelectorAll('[data-name]').forEach(i => i.addEventListener('input', () => { read(); leadPaint(); pub(); }));
     el.querySelector('[data-main]').onclick = () => { read(); begin(); };
   }
@@ -1010,6 +1019,7 @@ window.Dawwara = (function () {
 
   /* everyone answers: each group raises its card or writes; the host records them, then reveals */
   function askAll(s) {
+    if (D.cfg.ph && ROOM.ref && Object.keys(ROOM.lead).length && isMC(s.x) && !s.bets) return askRace(s);
     const x = s.x, dur = D.cfg.time || x.time || 30, st = D.q = { x, dur, left: dur, rec: {}, ok: {}, shown: false, locked: false };
     shell(`${board(-1)}<div class="dw-q dw-all"><div class="dw-qh"><span class="dw-who">${s.bets ? T('المراهنة الختامية', 'The final wager') : T('سؤال للجميع', 'Everyone answers')}</span>${ring(dur)}</div>${qBody(x, false)}
       ${isMC(x) ? '' : `<p class="dw-hint">${T('كل مجموعة تكتب إجابتها على ورقة وترفعها.', 'Each group writes its answer and holds it up.')}</p>`}
@@ -1037,6 +1047,38 @@ window.Dawwara = (function () {
     el.querySelector('[data-rev]').onclick = reveal;
     clock(st, () => { SND.no(); const b = el.querySelector('[data-rev]'); if (b) b.classList.add('dw-pulse'); });
     SND.go();
+  }
+
+  /* the phone race: the first team to answer right takes the points; a wrong pick is struck out on the screen with the team's name and the rest go on */
+  function askRace(s) {
+    const x = s.x, dur = D.cfg.time || x.time || 30, st = D.q = { x, dur, left: dur, out: [], no: [], tags: {}, sel: null, locked: false };
+    shell(`${board(-1)}<div class="dw-q dw-race"><div class="dw-qh"><span class="dw-who" id="dwWho">${T('سباق: أول إجابة صحيحة تفوز', 'Race: the first right answer wins')}</span>${ring(dur)}</div>${qBody(x, true)}<p class="dw-flash" id="dwRf" aria-live="polite"></p><div class="dw-foot" id="dwFoot"></div></div>`, 'dw-ask');
+    const pts = () => st.out.length ? 50 : 100;
+    const send = () => pub({ ph: 'race', n: x.opts.length, tf: x.type === 'tf' ? 1 : 0, out: st.out, no: st.no, i: D.t });
+    const open = () => el.querySelectorAll('[data-j]').forEach(b => { b.disabled = st.locked || st.no.includes(+b.dataset.j); });
+    // teams without a phone: the host taps the team, then its answer
+    const foot = () => {
+      const f = el.querySelector('#dwFoot'), off = D.groups.map((g, k) => k).filter(k => ROOM.lead[k] == null && !st.out.includes(k));
+      f.innerHTML = `<p class="dw-hint">${st.out.length ? T(`النقاط الآن ${NUM(pts())}`, `Now worth ${pts()}`) : T(`${NUM(100)} نقطة لأول إجابة صحيحة، و${NUM(50)} بعد أي خطأ`, `${100} for the first right answer, ${50} after a miss`)}</p>${off.length ? `<div class="dw-steal"><p>${T('فريق بلا جوال؟ اختره ثم إجابته', 'A team without a phone? Pick it, then its answer')}</p><div>${off.map(k => `<button type="button" data-rt="${k}" style="--c:${D.groups[k].col}" aria-pressed="${st.sel === k}" dir="auto">${esc(D.groups[k].name)}</button>`).join('')}</div></div>` : ''}<button type="button" class="dw-btn ghost" data-stop>${T('أظهر الإجابة', 'Show the answer')}</button>`;
+      f.querySelectorAll('[data-rt]').forEach(b => b.onclick = () => { st.sel = st.sel === +b.dataset.rt ? null : +b.dataset.rt; foot(); });
+      f.querySelector('[data-stop]').onclick = () => end(null);
+    };
+    const tag = (j, k, ok) => { const b = el.querySelector(`[data-j="${j}"]`); if (!b) return; let t = b.querySelector('.dw-tags'); if (!t) { t = document.createElement('em'); t.className = 'dw-tags'; b.appendChild(t); } t.insertAdjacentHTML('beforeend', `<b style="--c:${D.groups[k].col}" class="${ok ? 'y' : 'n'}" dir="auto">${esc(D.groups[k].name)}</b>`); };
+    const say = h => { const f = el.querySelector('#dwRf'); if (f) { f.innerHTML = h; f.classList.remove('on'); void f.offsetWidth; f.classList.add('on'); } };
+    st.onAns = (k, j) => {
+      if (st.locked || st.out.includes(k) || st.no.includes(j) || !(j >= 0 && j < x.opts.length)) return;
+      const g = D.groups[k];
+      if (x.ok.includes(j)) { const b = el.querySelector(`[data-j="${j}"]`); b.classList.add('ok'); tag(j, k, true); const p = award(g, pts()); g.right++; return end(k, p); }
+      st.out.push(k); st.no.push(j); tag(j, k, false); el.querySelector(`[data-j="${j}"]`).classList.add('no'); SND.no();
+      const left = D.groups.length - st.out.length, opts = x.opts.length - st.no.length;
+      say(`<b style="color:${g.col}" dir="auto">${esc(g.name)}</b> ${T('أخطأت', 'missed')} · ${left ? T('الباب مفتوح للبقية', 'the others go on') : ''}`);
+      if (!left || !opts) return end(null);
+      open(); foot(); send();
+    };
+    el.querySelectorAll('[data-j]').forEach(b => b.onclick = () => { if (st.sel == null) { say(T('اختر الفريق أولًا من الأسفل', 'Pick the team first, below')); return; } const k = st.sel; st.sel = null; st.onAns(k, +b.dataset.j); if (!st.locked) foot(); });
+    const end = (k, p) => { st.locked = true; clearInterval(tick); markRight(x); k != null ? SND.ok() : SND.no(); pub({ ph: 'wait', i: D.t, won: k == null ? -1 : k });
+      after(`<p>${k != null ? `<b>+${NUM(p)}</b> ${T('لـ', 'to')}<span dir="auto">${esc(D.groups[k].name)}</span> · ` : ''}${T('الإجابة', 'The answer')}: <b dir="auto">${esc(answerOf(x))}</b></p>`); };
+    open(); foot(); send(); clock(st, () => end(null)); SND.go();
   }
 
   /* speed: the first hand up answers; a wrong answer puts that group out of the question */
@@ -1513,9 +1555,9 @@ window.Dawwara = (function () {
     const names = (D.groups ? D.groups.map(g => g.name) : [...el.querySelectorAll('[data-name]')].map((i, k) => i.value.trim() || NAMES()[k]));
     box.innerHTML = names.map((n, k) => `<span style="--c:${COL[k]}" class="${ROOM.lead[k] ? 'on' : ''}" dir="auto">${esc(n)}: ${ROOM.lead[k] ? esc(ROOM.names[ROOM.lead[k]] || T('متصل', 'connected')) : T('بلا جوال', 'no phone')}</span>`).join('');
   }
-  async function phonesBox(btn) {
-    const box = el.querySelector('#dwPh'); btn.disabled = true; btn.textContent = T('لحظة…', 'One moment…');
-    try { await openRoom(); } catch (e) { btn.disabled = false; btn.textContent = T('تعذّر الاتصال. حاول مرة أخرى', 'Could not connect. Try again'); return; }
+  async function phonesBox() {
+    const box = el.querySelector('#dwPh'); if (!box) return; box.innerHTML = `<p class="dw-hint">${T('لحظة…', 'One moment…')}</p>`;
+    try { await openRoom(); } catch (e) { box.innerHTML = `<p class="dw-hint">${T('تعذّر الاتصال. ', 'Could not connect. ')}<button type="button" class="dw-btn ghost" data-retry>${T('حاول مرة أخرى', 'Try again')}</button></p>`; box.querySelector('[data-retry]').onclick = phonesBox; return; }
     const url = 'https://alsamani.com/play/dawwara/?k=' + ROOM.pin; let svg = '';
     try { const qr = qrcode(0, 'M'); qr.addData(url); qr.make(); svg = qr.createSvgTag({ cellSize: 4, margin: 1, scalable: true }); } catch (e) {}
     box.innerHTML = `<div class="dw-join"><div class="dw-qr">${svg}</div><div><p>${T('يفتح كل قائد فريق الكاميرا ويمسح الرمز، أو يدخل', 'Each team leader scans the code, or goes to')} <b dir="ltr">alsamani.com/play/dawwara</b> ${T('ويكتب الرمز', 'and enters')}</p><p class="dw-pin" dir="ltr">${ROOM.pin.slice(0, 3)} ${ROOM.pin.slice(3)}</p><div class="dw-leads" id="dwLeads"></div></div></div>`;
@@ -1525,6 +1567,7 @@ window.Dawwara = (function () {
   // the phone itself
   function phone(root, pin) {
     let me = null, g = null, lead = {}, ans = null, buzzed = false, lastKey = '';
+    const ph0 = () => (g && g.ph) || '';
     const send = (k, c, x) => db.ref('kh/' + pin + '/mv/' + uid).set({ k, c: String(c == null ? '' : c).slice(0, 3), x: +x || 0, t: TS() }).catch(() => {});
     const buzz = p => { try { navigator.vibrate && navigator.vibrate(p); } catch (e) {} };
     const paint = () => {
@@ -1533,13 +1576,16 @@ window.Dawwara = (function () {
       if (k < 0) { root.innerHTML = `<div class="dwp"><p class="dwp-big">${T('أي فريق تقود؟', 'Which team do you lead?')}</p><div class="dwp-teams">${(g.names || []).map((n, i) => `<button type="button" data-tm="${i}" style="--c:${g.cols[i]}" dir="auto">${esc(n)}${lead[i] ? ` <small>${T('(له قائد)', '(taken)')}</small>` : ''}</button>`).join('')}</div></div>`;
         root.querySelectorAll('[data-tm]').forEach(b => b.onclick = () => { send('j', '', +b.dataset.tm); buzz(30); }); return; }
       const ph = g.ph || 'lobby', key = ph + ':' + (g.i || 0) + ':' + (g.team == null ? '' : g.team); if (key !== lastKey) { lastKey = key; ans = null; buzzed = false; }
+      if (ph === 'race' && ans != null && (g.no || []).includes(ans) && !(g.out || []).includes(k)) ans = null;
       const col = g.cols[k], chs = (g.ch && g.ch[k]) || '', CN = CHN();
       let body = '';
-      if (ph === 'all') body = `<p class="dwp-h">${T('سؤال للجميع: اختاروا الإجابة', 'Everyone answers: choose')}</p>${opts(g.n, g.tf)}`;
+      if (ph === 'race') body = (g.out || []).includes(k) ? `<p class="dwp-big">${T('إجابتكم خاطئة', 'Your answer was wrong')}</p><p class="dwp-h">${T('انتظروا السؤال التالي', 'Wait for the next question')}</p>` : `<p class="dwp-h">${T('سباق! أول إجابة صحيحة تفوز', 'Race! The first right answer wins')}</p>${opts(g.n, g.tf, g.no)}`;
+      else if (ph === 'all') body = `<p class="dwp-h">${T('سؤال للجميع: اختاروا الإجابة', 'Everyone answers: choose')}</p>${opts(g.n, g.tf)}`;
       else if (ph === 'buzz') body = (g.out || []).includes(k) ? `<p class="dwp-big">${T('خرجتم من هذا السؤال', 'You are out of this one')}</p>` : g.who === k ? `<p class="dwp-h">${T('دوركم: اختاروا الإجابة', 'Your turn: choose')}</p>${opts(g.n, g.tf)}` : g.who != null ? `<p class="dwp-big">${T('يجاوب الآن', 'Now answering')}: ${esc(g.names[g.who])}</p>` : `<button type="button" class="dwp-buzz" data-bz${buzzed ? ' disabled' : ''}>${buzzed ? T('ضغطت!', 'Pressed!') : T('اضغط!', 'Press!')}</button>`;
       else if (ph === 'turn') body = g.team === k ? (g.text ? `<p class="dwp-big">${T('قل الإجابة للمدير', 'Say the answer to the host')}</p>` : `<p class="dwp-h">${T('سؤالكم: اختاروا الإجابة', 'Your question: choose')}</p>${opts(g.n, g.tf)}`) : `<p class="dwp-big">${T('دور', 'Turn:')} ${esc(g.names[g.team] || '')}</p>`;
       else if (ph === 'pick') body = g.by === k ? `<p class="dwp-h">${T(`اختاروا سؤال ${g.names[g.for]}: الأصعب عليهم`, `Choose ${g.names[g.for]}’s question: the hardest`)}</p><div class="dwp-pick">${(g.opts || []).map((o, i) => `<button type="button" data-pk="${i}"><small>${esc(o.cat)}</small>${esc(o.q)}</button>`).join('')}</div>` : `<p class="dwp-big">${esc(g.names[g.by] || '')} ${T('تختار سؤالًا', 'is choosing a question')}</p>`;
       else if (ph === 'intro') body = `<p class="dwp-big">${g.team === k ? T('دوركم! استعدوا', 'Your turn! Get ready') : T('دور', 'Turn:') + ' ' + esc(g.names[g.team] || '')}</p>`;
+      else if (ph === 'wait' && g.won != null) body = `<p class="dwp-big">${g.won === k ? T('أصبتم! النقاط لكم', 'Right! The points are yours') : g.won >= 0 ? `${T('سبقكم', 'Beaten by')} ${esc(g.names[g.won] || '')}` : T('لم يُصب أحد', 'Nobody got it')}</p>`;
       else body = `<p class="dwp-big">${ph === 'end' ? T('انتهت الأمسية', 'The evening is over') : ph === 'chal' ? T('تحدٍّ على الشاشة', 'A challenge on the screen') : T('انتبه للشاشة', 'Watch the screen')}</p>`;
       root.innerHTML = `<div class="dwp" style="--c:${col}"><div class="dwp-top"><b dir="auto">${esc(g.names[k])}</b><span>${NUM((g.sc || [])[k] || 0)}${g.dbl && g.dbl[k] ? ' ×٢' : ''}</span></div>${body}
         ${chs ? `<div class="dwp-ch"><p>${T('فرصكم', 'Your chances')}</p>${chs.split('').map(c => `<button type="button" data-ch="${c}">${CN[c]}</button>`).join('')}</div>` : ''}</div>`;
@@ -1552,7 +1598,7 @@ window.Dawwara = (function () {
           d.querySelectorAll('[data-t]').forEach(t => t.onclick = () => { send('c', c, +t.dataset.t); d.remove(); }); d.querySelector('.x').onclick = () => d.remove(); return; }
         if (confirm(CN[c] + '؟')) send('c', c, -1); });
     };
-    const opts = (n, tf) => `<div class="dwp-opts">${Array.from({ length: n || 4 }, (_, j) => `<button type="button" data-a="${j}" style="--o:${['#2a7fa8', '#b0533a', '#2f7d5b', '#c9822b', '#6b5aa6', '#23336f'][j]}" aria-pressed="${ans === j}">${tf ? [T('صح', 'True'), T('خطأ', 'False')][j] : LET()[j]}</button>`).join('')}</div>${ans != null ? `<p class="dwp-ok">${T('وصل اختياركم', 'Your choice is in')}</p>` : ''}`;
+    const opts = (n, tf, no) => `<div class="dwp-opts">${Array.from({ length: n || 4 }, (_, j) => `<button type="button" data-a="${j}" style="--o:${['#2a7fa8', '#b0533a', '#2f7d5b', '#c9822b', '#6b5aa6', '#23336f'][j]}" aria-pressed="${ans === j}"${(no || []).includes(j) || (ph0() === 'race' && ans != null) ? ' disabled' : ''}>${tf ? [T('صح', 'True'), T('خطأ', 'False')][j] : LET()[j]}</button>`).join('')}</div>${ans != null ? `<p class="dwp-ok">${T('وصل اختياركم', 'Your choice is in')}</p>` : ''}`;
     const go = async () => {
       root.innerHTML = `<div class="dwp"><p class="dwp-big">${T('لحظة…', 'One moment…')}</p></div>`;
       try { await fb(); const h = await db.ref('kh/' + pin + '/dw').once('value'); if (!h.exists()) { root.innerHTML = `<div class="dwp"><p class="dwp-big">${T('لا توجد أمسية بهذا الرمز', 'No evening with this code')}</p></div>`; return; } }

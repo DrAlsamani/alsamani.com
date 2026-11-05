@@ -273,3 +273,12 @@ html.dw-phone .tl-crumb,html.dw-phone .dw-head,html.dw-phone .dw-lead{display:no
 .dw-chip input:focus-visible+span{outline:2px solid #e9a54a;outline-offset:2px}
 .dw-wiz #wzX{font:inherit;border:1px solid var(--line,#d6d9e4);border-radius:10px;padding:8px 10px}
 .dw-wiz>.dw-btn{justify-self:start;min-height:48px;font-size:1.0625rem}
+.dw-opts button{position:relative}
+.dw-tags{position:absolute;inset-inline-end:10px;bottom:8px;display:flex;gap:4px;flex-wrap:wrap;font-style:normal;text-decoration:none}
+.dw-tags b{font-size:clamp(11px,1.1vw,15px);font-weight:600;background:#fff;color:#14204a;border-inline-start:4px solid var(--c);border-radius:99px;padding:2px 9px;text-decoration:none}
+.dw-tags b.n::after{content:' ✗';color:#b0533a}.dw-tags b.y::after{content:' ✓';color:#2f7d5b}
+.dw-opts button.no .dw-tags{text-decoration:none}
+.dw-flash{min-height:1.4em;margin:6px 0 0;text-align:center;font-size:clamp(15px,1.6vw,22px);color:#fff}
+.dw-flash.on{animation:dwFl .5s ease-out}@keyframes dwFl{from{transform:scale(1.15);opacity:.3}to{transform:none;opacity:1}}
+.dw-steal button[aria-pressed=true]{box-shadow:0 0 0 3px #fff inset}
+.dwp-opts button:disabled{opacity:.3;text-decoration:line-through}
