@@ -208,6 +208,15 @@
 .kh-req{position:fixed;z-index:61;inset-inline:12px;top:calc(12px + env(safe-area-inset-top));margin:auto;max-width:520px;display:grid;gap:8px}
 .kh-req>div{display:flex;flex-wrap:wrap;gap:8px;align-items:center;background:#fff;color:#14204a;border-radius:14px;padding:10px 12px;box-shadow:0 10px 26px rgba(0,0,0,.28)}
 .kh-req b{font-weight:700}.kh-req .btn{padding:6px 12px;font-size:.875rem}.kh-req .btn.ghost{color:#14204a!important;border-color:#c9cde0!important}
+.kh-away{font-style:normal;font-size:.68rem;color:#14204a;background:#e0a458;border-radius:99px;padding:0 6px;margin-inline-start:3px}
+.kh-awaybar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;background:rgba(224,164,88,.18);border:1px solid #e0a458;color:#fff;border-radius:12px;padding:8px 12px;margin:8px 0}
+.kh-awaybar .btn{padding:6px 14px;font-size:.875rem}
+.kh-psheet{position:fixed;inset:0;z-index:2147483600;background:rgba(10,16,40,.55);display:grid;place-items:end center;padding:12px}
+.kh-psh{background:#fff;color:#14204a;width:min(520px,100%);max-height:80vh;overflow:auto;border-radius:16px;padding:14px;display:grid;gap:10px;box-shadow:0 14px 34px rgba(0,0,0,.3)}
+.kh-psh h3{margin:0;font-size:1.05rem}.kh-psh .btn{padding:7px 12px;font-size:.875rem}.kh-psh .btn.ghost{color:#14204a!important;border-color:#c9cde0!important}
+.kh-pr{display:grid;grid-template-columns:1fr auto;gap:2px 8px;align-items:center;border-inline-start:4px solid var(--c);padding:4px 10px}
+.kh-pr small{color:#5b6282;font-size:.78rem;grid-column:1}.kh-pr b{grid-column:1}.kh-pr span{grid-column:2;grid-row:1/3;display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.kh-pr .btn[disabled]{opacity:.4}
 </style>
 <div id="kh" class="kh"><noscript><span class="ar">تعمل هذه اللعبة مع تفعيل JavaScript.</span><span class="en">This game needs JavaScript.</span></noscript></div>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script>window.MD_CFG={"apiKey": "AIzaSyA50i75DT1Is1a6Yn6snW1_JVObc8S3F0Y", "authDomain": "maydan-705ae.firebaseapp.com", "databaseURL": "https://maydan-705ae-default-rtdb.europe-west1.firebasedatabase.app", "projectId": "maydan-705ae", "appId": "1:342187013133:web:d5c2396f0db413f3c51144"};window.MD_MARK="<svg class=\"md-mark\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><rect x=\"4\" y=\"4\" width=\"40\" height=\"40\" rx=\"12\" fill=\"#23336F\"/><path d=\"M24 9l4.2 6.8 7.8-1.8-1.8 7.8L41 24l-6.8 4.2 1.8 7.8-7.8-1.8L24 39l-4.2-6.8-7.8 1.8 1.8-7.8L7 24l6.8-4.2-1.8-7.8 7.8 1.8z\" fill=\"#C9822B\"/><circle cx=\"24\" cy=\"24\" r=\"6.5\" fill=\"#23336F\"/><circle cx=\"24\" cy=\"24\" r=\"3\" fill=\"#F3E3C7\"/></svg>";</script><script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script><script>/* Tasalsul: the rules. Two packs of cards; a 10×10 board with every card except the jacks twice and four free corners.
@@ -417,7 +426,22 @@ window.KH = (function () {
       seqs: st.seqs, order: st.order, team: st.team, turn: cur(st), n: st.turn, last: st.last, win: st.win, dk: st.deck.length, sw: st.swapped,
       hn: Object.fromEntries(Object.entries(st.hands).map(([k, v]) => [k, v.length])) };
   }
-  return { create, legal, dead, play, swap, pass, canMove, botMove, pub, cur, twoEyed, oneEyed, isCorner, layout };
+  // a player leaves mid-game: their cards go back under the deck and the turns go round the teams again without them
+  function drop(st, id) {
+    const t = st.team[id]; if (t == null) return 'who';
+    const mates = Object.keys(st.team).filter(u => u !== id && st.team[u] === t); if (!mates.length) return 'last';
+    const was = cur(st), seen = [], by = Array.from({ length: st.teams }, () => []);
+    st.order.forEach(u => { if (u !== id && !seen.includes(u)) { seen.push(u); by[st.team[u]].push(u); } });
+    Object.keys(st.team).forEach(u => { if (u !== id && !seen.includes(u)) by[st.team[u]].push(u); });
+    const rounds = Math.max(...by.map(b => b.length)), order = [];
+    for (let r = 0; r < rounds; r++) for (let k = 0; k < st.teams; k++) if (by[k].length) order.push(by[k][r % by[k].length]);
+    st.deck.push(...(st.hands[id] || [])); delete st.hands[id]; delete st.team[id];
+    let j = was === id ? order.findIndex(u => st.team[u] === t) : order.indexOf(was); if (j < 0) j = 0;
+    const len = order.length; let d = ((j - st.turn % len) % len + len) % len; if (was === id && !d) d = len;
+    st.order = order; st.turn += d; st.passes = 0; st.last = null; if (was === id) st.swapped = false;
+    return '';
+  }
+  return { create, drop, legal, dead, play, swap, pass, canMove, botMove, pub, cur, twoEyed, oneEyed, isCorner, layout };
 })();
 </script><script>/* alsamani.com — live voice and video for Samar and Maydan rooms, for players far apart on their phones.
    Phones connect to each other directly (WebRTC); the room's own database carries the handshake.
@@ -867,21 +891,55 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
   }
   // what everyone sees, then each hand to its owner only
   // the turn clock: when it runs out, the computer plays a sensible move for that player
-  const pubOf = () => Object.assign(KH.pub(G.st), { dl: G.dl || 0, tt: G.o.tt || 0, ser: G.ser || null, rnd: G.rnd || 0 });
+  const pubOf = () => Object.assign(KH.pub(G.st), { dl: G.dl || 0, tt: G.o.tt || 0, ser: G.ser || null, rnd: G.rnd || 0, aw: G.aw && Object.keys(G.aw).length ? G.aw : null });
   function clock() {
-    const st = G.st; clearTimeout(G.tt);
+    const st = G.st; clearTimeout(G.tt); clearTimeout(G.bt);
+    if (st.win === -1 && G.aw && G.aw[KH.cur(st)]) { const n = st.turn; G.bt = setTimeout(() => { if (G && G.st && G.st.turn === n && G.st.win === -1) autoMove(2); }, 1600); }
     if (!G.o.tt || st.win !== -1) { G.dl = 0; return; }
     if (G.dlN !== st.turn || !G.dl) { G.dlN = st.turn; G.dl = now() + G.o.tt * 1000; }
     G.tt = setTimeout(timeUp, Math.max(0, G.dl - now()) + 400);
   }
   function timeUp() {
     if (!G || !G.st || G.st.win !== -1 || G.dlN !== G.st.turn) return;
-    // when time runs out the move is chosen at random, so letting the clock run never helps a player
-    const st = G.st, id = KH.cur(st), rnd = () => { const ms = []; for (const c of new Set(st.hands[id])) for (const i of KH.legal(st, c)) ms.push({ card: c, i }); return ms[Math.floor(Math.random() * ms.length)]; };
+    const id = KH.cur(G.st);
+    // two turns in a row run out: the player seems to have left, so the computer takes their turns until they are back
+    G.miss = G.miss || {}; G.miss[id] = (G.miss[id] || 0) + 1;
+    if (G.miss[id] >= 2 && id !== G.me && !(G.aw && G.aw[id])) { G.aw = Object.assign(G.aw || {}, { [id]: 1 }); toast(B(`${esc(G.names[id] || '')} غائب؛ صار الجهاز يلعب عنه. تقدر تخرجه من «اللاعبون».`, `${esc(G.names[id] || '')} seems away; the computer plays for them. You can remove them under “Players”.`)); }
+    autoMove(1);
+  }
+  // a move made for the player whose turn it is: at random when time ran out (so the clock never helps), a sensible one when they are away or skipped
+  function autoMove(how) {
+    const st = G.st, id = KH.cur(st);
+    if (how === 2) { const b = KH.botMove(st, id, 2); if (b && b.swap) KH.swap(st, id, b.swap); const m = b && !b.swap ? b : KH.botMove(st, id, 2); if (m && !m.swap) { KH.play(st, id, m.card, m.i); if (st.last) st.last.auto = 2; } else KH.pass(st, id); G.lastBy = id; publish(false); show(); return; }
+    const rnd = () => { const ms = []; for (const c of new Set(st.hands[id])) for (const i of KH.legal(st, c)) ms.push({ card: c, i }); return ms[Math.floor(Math.random() * ms.length)]; };
     let m = rnd();
     if (!m) { const d = st.hands[id].find(c => KH.dead(st, c)); if (d && !st.swapped) { KH.swap(st, id, d); m = rnd(); } }
     if (!m) KH.pass(st, id); else { KH.play(st, id, m.card, m.i); if (st.last) st.last.auto = true; }
     G.lastBy = id; publish(false); show();
+  }
+  // the host's say over a player who stopped playing: skip their turn now, let the computer play for them, or take them out
+  function manage(u, k) {
+    const st = G.st; if (!st || st.win !== -1) return;
+    const n = esc(G.names[u] || '');
+    if (k === 'skip') { if (KH.cur(st) === u) autoMove(2); return; }
+    if (k === 'away') { G.aw = G.aw || {}; if (G.aw[u]) { delete G.aw[u]; if (G.miss) G.miss[u] = 0; } else G.aw[u] = 1; publish(false); show(); return; }
+    if (k === 'out') {
+      const e = KH.drop(st, u); if (e === 'last') return toast(B(`${n} آخر لاعب في فريقه؛ خلّ الجهاز يلعب عنه بدل إخراجه.`, `${n} is the last of their team; let the computer play for them instead.`), 1); if (e) return;
+      if (G.aw) delete G.aw[u]; delete G.names[u]; delete G.tm[u];
+      G.ref.update({ ['pl/' + u]: null, ['ok/' + u]: null, tm: G.tm }).catch(() => {}); db.ref('khh/' + G.pin + '/' + u).remove().catch(() => {});
+      toast(B(`خرج ${n} من اللعبة.`, `${n} is out of the game.`)); publish(true); show();
+    }
+  }
+  function playersSheet() {
+    const old = document.querySelector('.kh-psheet'); if (old) old.remove();
+    const st = G.st; if (!st) return; const cu = KH.cur(st), aw = G.aw || {};
+    const el = document.createElement('div'); el.className = 'kh-psheet';
+    const ids = Object.keys(st.team).filter(u => u !== G.me);
+    el.innerHTML = `<div class="kh-psh" role="dialog" aria-label="${T('اللاعبون', 'Players')}"><h3>${B('اللاعبون', 'Players')}</h3>${cu !== G.me && st.win === -1 ? `<button type="button" class="btn solid" data-pm="skip" data-u="${cu}">${B(`تخطَّ دور ${esc(G.names[cu] || '')}`, `Skip ${esc(G.names[cu] || '')}’s turn`)}</button>` : ''}
+      ${ids.length ? ids.map(u => { const t = st.team[u], last = !Object.keys(st.team).some(x => x !== u && st.team[x] === t); return `<div class="kh-pr" style="--c:${COL[t]}"><b dir="auto">${esc(G.names[u] || '')}</b><small>${TN(t)}${aw[u] ? ' · ' + T('الجهاز يلعب عنه', 'computer plays') : ''}${u === cu ? ' · ' + T('دوره', 'their turn') : ''}</small><span><button type="button" class="btn ghost" data-pm="away" data-u="${u}">${aw[u] ? B('رجّعه يلعب', 'Back to them') : B('خلّ الجهاز يلعب عنه', 'Computer plays')}</button><button type="button" class="btn ghost" data-pm="out" data-u="${u}"${last ? ` disabled title="${T('آخر لاعب في فريقه', 'Last of the team')}"` : ''}>${B('أخرجه', 'Remove')}</button></span></div>`; }).join('') : `<p>${B('لا لاعبين غيرك.', 'No other players.')}</p>`}
+      <button type="button" class="btn ghost" data-pm="x">${B('إغلاق', 'Close')}</button></div>`;
+    document.body.appendChild(el);
+    el.onclick = e => { const b = e.target.closest('[data-pm]'); if (e.target === el || (b && b.dataset.pm === 'x')) return el.remove(); if (!b) return; const k = b.dataset.pm, u = b.dataset.u; if (k === 'out' && !confirm(T(`تخرج ${G.names[u] || ''} من اللعبة؟ ترجع أوراقه للكومة.`, `Remove ${G.names[u] || ''}? Their cards go back to the deck.`))) return; manage(u, k); el.remove(); if (k === 'away') playersSheet(); };
   }
   async function publish(all) {
     const st = G.st; clock();
@@ -894,22 +952,25 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
   function apply(id, k, c, i) {
     const st = G.st, e = k === 'p' ? KH.play(st, id, c, i) : k === 's' ? KH.swap(st, id, c) : KH.pass(st, id);
     if (e) return e;
+    if (G.miss) G.miss[id] = 0; if (G.aw && G.aw[id]) { delete G.aw[id]; toast(B(`رجع ${esc(G.names[id] || '')} يلعب.`, `${esc(G.names[id] || '')} is back.`)); }
     G.lastBy = id; publish(false); show();
     return '';
   }
   function run() {
     listenRx(); joinReqs();
     on(G.ref.child('mv'), 'child_added', s => { const v = s.val() || {}; apply(s.key, v.k, v.c, v.x); s.ref.remove(); });
+    const back = s => { const v = s.val() || {}; if (v.e !== '^b' || !G.aw || !G.aw[s.key] || now() - (v.t || 0) > 20000) return; delete G.aw[s.key]; if (G.miss) G.miss[s.key] = 0; toast(B(`رجع ${esc(G.names[s.key] || '')} يلعب.`, `${esc(G.names[s.key] || '')} is back.`)); publish(false); show(); };
+    on(G.ref.child('rx'), 'child_added', back); on(G.ref.child('rx'), 'child_changed', back);
     show();
   }
   async function nextRound() {
     const players = Object.keys(G.names).filter(id => G.tm[id] != null).map(id => ({ id, team: G.tm[id] })).sort(() => Math.random() - .5);
-    G.rnd = (G.rnd || 0) + 1; G.dl = 0; G.dlN = null; G.st = KH.create({ players, teams: G.o.teams, L: G.o.L, need: G.o.need });
+    G.rnd = (G.rnd || 0) + 1; G.dl = 0; G.dlN = null; G.miss = {}; G.st = KH.create({ players, teams: G.o.teams, L: G.o.L, need: G.o.need });
     winShown = -1; lastSeen = -1; await publish(true); show();
   }
   function show() {
     const st = G.st;
-    view({ P: pubOf(), hand: G.me ? st.hands[G.me] : null, me: G.me, names: G.names, screen: !G.me, act: (k, c, i) => apply(G.me, k, c, i), again: nextRound, end: async () => { store.del('run'); await wipe(G.pin); home(); } });
+    view({ P: pubOf(), hand: G.me ? st.hands[G.me] : null, me: G.me, names: G.names, screen: !G.me, ctl: true, act: (k, c, i) => apply(G.me, k, c, i), again: nextRound, end: async () => { store.del('run'); await wipe(G.pin); home(); } });
   }
   async function resumeHost(P) {
     stop();
@@ -972,7 +1033,7 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
     on(G.ref.child('cfg'), 'value', s => { G.cfg = s.val(); if (G.stt === 'lobby') draw(); });
     on(G.ref.child('names'), 'value', s => { G.names = s.val() || {}; });
     listenRx();
-    on(G.ref.child('g'), 'value', s => { G.P = s.val(); draw(); });
+    on(G.ref.child('g'), 'value', s => { G.P = s.val(); if (G.P && G.P.team && G.stt !== 'lobby' && G.P.team[uid] == null) { toast(B('أخرجك المضيف من هذه الجولة؛ تقدر تشاهد وتطلب اللعب من الجولة الجاية.', 'The host took you out of this round; you can watch and ask to play from the next one.'), 1); return watch(pin, store.get('name', '')); } draw(); });
     on(db.ref('khh/' + pin + '/' + uid), 'value', s => { G.hand = s.val() || []; draw(); });
   }
 
@@ -1081,7 +1142,7 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
     d.querySelector('[data-w="share"]').onclick = () => shareResult(P, names);
   }
   let lastTurn = null, lastTick = -1;
-  function view({ P, hand, me, names, screen, watch, act, again, end }) {
+  function view({ P, hand, me, names, screen, watch, act, again, end, ctl }) {
     const lay = P.lay.split(','), board = P.board.split('').map(c => c === '.' ? -1 : +c);
     const sq = (P.sq || []).map(s => new Set(String(s || '').split(',').filter(Boolean).map(Number)));
     const team = P.team || {}, myT = me != null ? team[me] : null, turn = P.turn, mine = turn === me && P.win === -1;
@@ -1105,8 +1166,9 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
     // how many turns until mine
     const ord = P.order || [], nT = ord.length, untilMe = me != null && !mine && nT ? (() => { for (let k = 1; k <= nT; k++) if (ord[(P.n + k) % nT] === me) return k; return 0; })() : 0;
     const rulesLine = `<p class="kh-cfg">${B(`صف من ${P.L === 4 ? 'أربع' : 'خمس'} · ${['', 'سلسلة واحدة', 'سلسلتان', 'ثلاث سلاسل'][P.need] || P.need} للفوز${P.tt ? ` · ${P.tt} ثانية للدور` : ''}`, `Rows of ${P.L} · ${P.need} to win${P.tt ? ` · ${P.tt} s a turn` : ''}`)}${P.ser && P.ser.some(x => x) || P.rnd ? ` · ${B('الجولات', 'Rounds')}: ${P.ser.map((x, k) => `<b style="color:${COL[k]}">${x}</b>`).join(' – ')}` : ''}</p>`;
-    if (L && P.n !== lastSeen) { lastSeen = P.n; if (L.auto) toast(`${B(`انتهى وقت ${esc(names[L.id] || '')}، فلُعبت ورقة عنه`, `${esc(names[L.id] || '')} ran out of time; a card was played for them`)}`); else if (L.made) { toast(`${B(`فريق ${TN(L.t)} أكمل سلسلة!`, `${TN(L.t)} made a sequence!`)}`); buzz([60, 40, 60]); } else if (L.rm) toast(`${B(`${esc(names[L.id] || '')} أزال قطعة من فريق ${TN(L.t)}`, `${esc(names[L.id] || '')} removed a ${TN(L.t)} chip`)}`); if (mine) buzz(40); }
-    const teamsBar = [...Array(P.teams).keys()].map(k => `<div class="kh-ts${P.order && names && turn != null && team[turn] === k ? ' on' : ''}" style="--c:${COL[k]}"><b>${TN(k)}</b><span>${'●'.repeat(P.seqs[k] || 0)}${'○'.repeat(Math.max(0, P.need - (P.seqs[k] || 0)))}</span><small dir="auto">${Object.keys(team).filter(u => team[u] === k).map(u => esc(names[u] || '')).join('، ')}</small></div>`).join('');
+    if (L && P.n !== lastSeen) { lastSeen = P.n; if (L.auto === 2) toast(B(`لعب الجهاز عن ${esc(names[L.id] || '')}`, `The computer played for ${esc(names[L.id] || '')}`)); else if (L.auto) toast(`${B(`انتهى وقت ${esc(names[L.id] || '')}، فلُعبت ورقة عنه`, `${esc(names[L.id] || '')} ran out of time; a card was played for them`)}`); else if (L.made) { toast(`${B(`فريق ${TN(L.t)} أكمل سلسلة!`, `${TN(L.t)} made a sequence!`)}`); buzz([60, 40, 60]); } else if (L.rm) toast(`${B(`${esc(names[L.id] || '')} أزال قطعة من فريق ${TN(L.t)}`, `${esc(names[L.id] || '')} removed a ${TN(L.t)} chip`)}`); if (mine) buzz(40); }
+    const teamsBar = [...Array(P.teams).keys()].map(k => `<div class="kh-ts${P.order && names && turn != null && team[turn] === k ? ' on' : ''}" style="--c:${COL[k]}"><b>${TN(k)}</b><span>${'●'.repeat(P.seqs[k] || 0)}${'○'.repeat(Math.max(0, P.need - (P.seqs[k] || 0)))}</span><small dir="auto">${Object.keys(team).filter(u => team[u] === k).map(u => esc(names[u] || '') + (P.aw && P.aw[u] ? ' <i class="kh-away">' + T('غائب', 'away') + '</i>' : '')).join('، ')}</small></div>`).join('');
+    const awayMe = me != null && P.aw && P.aw[me] && P.win === -1;
     const status = P.win >= 0 ? `${B(`فاز فريق ${TN(P.win)}!`, `${TN(P.win)} wins!`)}` : P.win === -2 ? B('تعادل!', 'A draw!')
       : mine ? `<b>${B('دورك!', 'Your turn!')}</b> ${sel ? (KH.oneEyed(sel) ? B('ولد أبو عين: اختر قطعة خصم لإزالتها', 'One-eyed jack: pick a rival chip to remove') : KH.twoEyed(sel) ? B('ولد أبو عينين: ضع قطعتك في أي خانة فارغة', 'Two-eyed jack: put your chip on any empty space') : dead ? B('خانتا هذه الورقة ممتلئتان؛ استبدلها', 'both its spaces are taken; swap it') : B('اختر إحدى الخانتين المضيئتين', 'pick one of the lit spaces')) : B('اختر ورقة من يدك', 'pick a card')}`
       : `${B('دور', 'Turn:')} <b dir="auto" style="color:${COL[team[turn]]}">${esc(names[turn] || '')}</b> (${TN(team[turn])})${untilMe ? ` · <span class="kh-soon${untilMe === 1 ? ' next' : ''}">${untilMe === 1 ? B('أنت التالي!', 'You are next!') : B(`دورك بعد ${untilMe}`, `You play in ${untilMe}`)}</span>` : ''}`;
@@ -1116,13 +1178,14 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
       <p class="kh-status">${P.dl && P.win === -1 ? `<span class="kh-clock${mine ? ' me' : ''}" id="khClk"></span> ` : ''}${watch ? `<span class="kh-eye">${B('مشاهدة', 'Watching')}</span> ` : ''}${status}</p>
       <div class="kh-board${can.length ? ' picking' : ''}">${lay.map((c, i) => { const b = board[i], inq = b >= 0 && sq[b] && sq[b].has(i);
         return `<div class="kh-cell${can.includes(i) ? ' can' : sel && lay[i] === sel ? ' twin' : ''}${L && L.i === i ? ' last' + (fresh ? ' drop' : '') : ''}${P.win >= 0 && inq && b === P.win ? ' won' : ''}" data-i="${i}">${card(c)}${b >= 0 ? `<i class="kh-chip${inq ? ' seq' : ''}" style="--c:${COL[b]}"></i>` : ''}${L && L.i === i && L.rm && fresh ? `<i class="kh-chip ghost" style="--c:${COL[L.t]}"></i>` : ''}</div>`; }).join('')}</div>
+      ${awayMe ? `<div class="kh-awaybar">${B('الجهاز يلعب عنك الآن', 'The computer is playing for you')}<button type="button" class="btn solid" id="khBack1">${B('رجعت، ألعب', 'I’m back')}</button></div>` : ''}
       ${me != null && !screen ? `<div class="kh-hand${mine ? ' mine' : ''}">${hand.map(c => `<button type="button" class="kh-hc${sel === c ? ' on' : ''}${mine && !KH.twoEyed(c) && !KH.oneEyed(c) && !legalOf(c).length ? ' dead' : ''}" data-c="${c}" style="--c:${myT != null ? COL[myT] : '#888'}">${card(c)}</button>`).join('')}</div>
         <div class="kh-row kh-acts">${dead ? `<button type="button" class="btn ghost" id="khSwap">↻ ${B('استبدل الورقة الميتة', 'Swap the dead card')}</button>` : ''}${stuck ? `<button type="button" class="btn ghost" id="khPass">${B('لا حركة لديك: تخطَّ الدور', 'No move: pass')}</button>` : ''}</div>` : ''}
-      ${screen ? `<div class="kh-row"><button type="button" class="btn ghost" id="khFs">${B('ملء الشاشة', 'Full screen')}</button></div>` : ''}
+      ${screen || (ctl && P.win === -1) ? `<div class="kh-row">${ctl && P.win === -1 ? `<button type="button" class="btn ghost" id="khPl">${B('اللاعبون', 'Players')}</button>` : ''}${screen ? `<button type="button" class="btn ghost" id="khFs">${B('ملء الشاشة', 'Full screen')}</button>` : ''}</div>` : ''}
       ${rxBar(G && G.mode !== 'local' && P.win === -1 && !(G.mode === 'host' && !G.me))}
       <div class="kh-help">${rules(false)}</div>
       ${P.win !== -1 ? `<div class="kh-row">${G && G.mode === 'player' ? `<p class="kh-note">${B('بانتظار المضيف يبدأ جولة جديدة…', 'Waiting for the host to start another round…')}</p>` : `<button type="button" class="btn solid" id="khAgain">${G && G.mode === 'host' ? B('جولة جديدة ▶', 'Another round ▶') : B('لعبة جديدة', 'New game')}</button>`}<button type="button" class="btn ghost" id="khShareR">${B('شارك النتيجة', 'Share the result')}</button>${end ? `<button type="button" class="btn ghost" id="khEndS">${B('إنهاء الجلسة', 'End the session')}</button>` : ''}</div>` : ''}</div>`;
-    root.querySelectorAll('[data-c]').forEach(b => b.onclick = () => { sel = sel === b.dataset.c ? null : b.dataset.c; buzz(8); view({ P, hand, me, names, screen, watch, act, again }); });
+    root.querySelectorAll('[data-c]').forEach(b => b.onclick = () => { sel = sel === b.dataset.c ? null : b.dataset.c; buzz(8); view({ P, hand, me, names, screen, watch, act, again, end, ctl }); });
     root.querySelectorAll('.kh-cell.can').forEach(c => c.onclick = () => { const s = sel; sel = null; buzz(20); act('p', s, +c.dataset.i); });
     const sw = root.querySelector('#khSwap'); if (sw) sw.onclick = () => { const s = sel; sel = null; act('s', s); };
     const ps = root.querySelector('#khPass'); if (ps) ps.onclick = () => act('n');
@@ -1139,6 +1202,8 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
     root.querySelectorAll('[data-blk]').forEach(b => b.onclick = () => { const u = b.dataset.blk; if (blocked.has(u)) blocked.delete(u); else blocked.add(u); store.set('blk', [...blocked]); b.setAttribute('aria-pressed', blocked.has(u)); b.textContent = (blocked.has(u) ? '' : '') + b.textContent.replace(/^/, ''); const f = root.querySelector(`[data-fan="${u}"]`); if (f) f.classList.toggle('blk', blocked.has(u)); });
     const sy = root.querySelector('[data-say]'); if (sy) sy.onclick = () => { const ss = root.querySelector('.kh-says'); ss.hidden = !ss.hidden; root.querySelector('.kh-rxset').hidden = true; };
     const sb = root.querySelector('[data-stands]'); if (sb) sb.onclick = () => { G.standsOpen = !G.standsOpen; sb.parentNode.classList.toggle('open', G.standsOpen); };
+    const pl = root.querySelector('#khPl'); if (pl) pl.onclick = playersSheet;
+    const bk = root.querySelector('#khBack1'); if (bk) bk.onclick = () => { G.ref.child('rx/' + uid).set({ e: '^b', t: TS() }).catch(() => {}); bk.disabled = true; };
     const fs = root.querySelector('#khFs'); if (fs) fs.onclick = () => document.fullscreenElement ? document.exitFullscreen() : root.requestFullscreen && root.requestFullscreen();
   }
 

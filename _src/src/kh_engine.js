@@ -205,5 +205,20 @@ window.KH = (function () {
       seqs: st.seqs, order: st.order, team: st.team, turn: cur(st), n: st.turn, last: st.last, win: st.win, dk: st.deck.length, sw: st.swapped,
       hn: Object.fromEntries(Object.entries(st.hands).map(([k, v]) => [k, v.length])) };
   }
-  return { create, legal, dead, play, swap, pass, canMove, botMove, pub, cur, twoEyed, oneEyed, isCorner, layout };
+  // a player leaves mid-game: their cards go back under the deck and the turns go round the teams again without them
+  function drop(st, id) {
+    const t = st.team[id]; if (t == null) return 'who';
+    const mates = Object.keys(st.team).filter(u => u !== id && st.team[u] === t); if (!mates.length) return 'last';
+    const was = cur(st), seen = [], by = Array.from({ length: st.teams }, () => []);
+    st.order.forEach(u => { if (u !== id && !seen.includes(u)) { seen.push(u); by[st.team[u]].push(u); } });
+    Object.keys(st.team).forEach(u => { if (u !== id && !seen.includes(u)) by[st.team[u]].push(u); });
+    const rounds = Math.max(...by.map(b => b.length)), order = [];
+    for (let r = 0; r < rounds; r++) for (let k = 0; k < st.teams; k++) if (by[k].length) order.push(by[k][r % by[k].length]);
+    st.deck.push(...(st.hands[id] || [])); delete st.hands[id]; delete st.team[id];
+    let j = was === id ? order.findIndex(u => st.team[u] === t) : order.indexOf(was); if (j < 0) j = 0;
+    const len = order.length; let d = ((j - st.turn % len) % len + len) % len; if (was === id && !d) d = len;
+    st.order = order; st.turn += d; st.passes = 0; st.last = null; if (was === id) st.swapped = false;
+    return '';
+  }
+  return { create, drop, legal, dead, play, swap, pass, canMove, botMove, pub, cur, twoEyed, oneEyed, isCorner, layout };
 })();
