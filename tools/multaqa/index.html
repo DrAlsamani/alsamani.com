@@ -750,7 +750,7 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
     let meta; try { meta = (await R('meta').once('value')).val(); } catch (e) { root.innerHTML = `<div class="ml-card"><p>${T('تعذر الاتصال بالملتقى.', 'Could not reach the forum.')}</p></div>`; return; }
     if (!meta) { root.innerHTML = `<div class="ml-card"><p>${T('لا يوجد ملتقى بهذا الرمز.', 'No forum has this code.')}</p><div><a class="ml-b" href="#">${T('رجوع', 'Back')}</a></div></div>`; return; }
     E.meta = meta; E.cfg = (await R('cfg').once('value')).val() || {};
-    listen(R('cfg'), 'value', s => { E.cfg = s.val() || {}; if (H.on && inTheatre() && sideMode() !== 'on' && /^t_/.test(Call.room || '')) callEnd(); reorder(); if (H.on) hallItems(); if (view.refresh) view.refresh(); });
+    listen(R('cfg'), 'value', s => { E.cfg = s.val() || {}; if (H.on && inTheatre() && sideMode() !== 'on' && /^t_/.test(Call.room || '')) callEnd(); if (H.on) seatBar(); reorder(); if (H.on) hallItems(); if (view.refresh) view.refresh(); });
     E.rev = {}; listen(R('rev'), 'value', s => { E.rev = s.val() || {}; reorder(); if (H.on) hallItems(); if (view.refresh) view.refresh(); });
     listen(R('items'), 'value', s => { E.items = s.val() || {}; reorder(); if (H.on) hallItems(); if (view.refresh) view.refresh(); });
     listen(R('stage'), 'value', s => { E.stage = s.val() || {}; if (St.on) stageRender(); if (view.onStage) view.onStage(); else if (view.refresh) view.refresh(); stageNudge(); });
