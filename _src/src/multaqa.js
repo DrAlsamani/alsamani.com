@@ -109,7 +109,7 @@
     clean();
   }
   function accountBanner() {
-    if (hasAccount()) return ''; return `<div class="ml-card ml-acc" id="mlAccB"><p class="ml-mut">${T('سجّل الدخول لتصل إلى ملتقاك وملفاتك من أي جهاز.', 'Sign in to reach your forum and files from any device.')}</p>${acctButtons()}</div>`;
+    if (E.preview) return ''; if (hasAccount()) return ''; return `<div class="ml-card ml-acc" id="mlAccB"><p class="ml-mut">${T('سجّل الدخول لتصل إلى ملتقاك وملفاتك من أي جهاز.', 'Sign in to reach your forum and files from any device.')}</p>${acctButtons()}</div>`;
   }
   function bindAccount() { const b = $('#mlAccB'); if (b) bindAcct(b, () => { const h = parseHash(); if (h.e) { E.meta = null; enter({ e: h.e }); } else home(); }); }
   function askAccount() { return new Promise(ok => { const d = card(`<div class="ml-row"><b class="ml-grow">${T('سجّل الدخول لإنشاء الملتقى', 'Sign in to create the forum')}</b><button class="hl-x" data-x aria-label="${T('إغلاق', 'Close')}">${IC.x}</button></div>${acctButtons()}`); $('[data-x]', d).onclick = () => { d.remove(); ok(false); }; bindAcct(d, () => { d.remove(); ok(true); }); }); }
@@ -160,13 +160,15 @@
     return out;
   }
   window.__mlAssign = balancedAssign;
-  window.__mlRenders = () => H.renders || 0;
+  window.__mlRenders = () => H.renders || 0; window.__mlFly = (x, z, y) => { H.pos.x = x; H.pos.z = z; H.yaw = y; H.drawn = 0; return H.L; };
   window.__mlHeads = () => Object.values(H.peers).filter(w => w.vm).length;
 
   /* ---------- event state ---------- */
-  const E = { id: null, meta: null, cfg: null, role: 'guest', code: {}, items: {}, order: [], numOf: {}, mine: {}, stage: {}, assign: {}, here: {}, offs: [] };
-  const R = p => db.ref('mlt/' + E.id + (p ? '/' + p : ''));
-  const isHost = () => E.meta && E.meta.host === uid;
+  const E = { rev: {}, id: null, meta: null, cfg: null, role: 'guest', code: {}, items: {}, order: [], numOf: {}, mine: {}, stage: {}, assign: {}, here: {}, offs: [] };
+  /* a preview shows another person's screen; nothing written from it is kept */
+  const readOnly = r => new Proxy(r, { get(t, k) { if (['set', 'update', 'remove', 'transaction', 'setWithPriority'].includes(k)) return () => Promise.resolve(); if (k === 'push') return () => ({ key: 'preview', set: () => Promise.resolve() }); if (k === 'child') return c => readOnly(t.child(c)); if (k === 'onDisconnect') return () => { const ok = () => Promise.resolve(); return { set: ok, remove: ok, update: ok, cancel: ok }; }; const v = t[k]; return typeof v === 'function' ? v.bind(t) : v; } });
+  const R = p => { const r = db.ref('mlt/' + E.id + (p ? '/' + p : '')); return E.preview && !/^talk/.test(p || '') ? readOnly(r) : r; };
+  const isHost = () => E.meta && E.meta.host === uid && !E.preview;
   const name = () => store.get('name', '');
   const crit = () => (E.cfg && E.cfg.crit) || [];
   const form = () => (E.cfg && E.cfg.form) || [];
@@ -174,8 +176,11 @@
   const tracks = () => (E.cfg && E.cfg.tracks) || [];
   const tcol = i => COL[(+i || 0) % COL.length];
   function listen(ref, ev, fn) { ref.on(ev, fn); E.offs.push(() => ref.off(ev, fn)); }
+  const accepted = p => !E.cfg.review || (E.rev[p] && E.rev[p].s === 'ok');
+  const visItems = () => { const o = {}; E.order.forEach(p => { o[p] = E.items[p]; }); return o; };
+  const closed = () => !!(E.cfg.closeAt && Date.now() > E.cfg.closeAt);
   function reorder() {
-    const ids = Object.keys(E.items).sort((a, b) => (+E.items[a].tr || 0) - (+E.items[b].tr || 0) || (E.items[a].at || 0) - (E.items[b].at || 0) || (a < b ? -1 : 1));
+    const ids = Object.keys(E.items).filter(accepted).sort((a, b) => (+E.items[a].tr || 0) - (+E.items[b].tr || 0) || (E.items[a].at || 0) - (E.items[b].at || 0) || (a < b ? -1 : 1));
     E.order = ids; E.numOf = {}; ids.forEach((p, i) => { E.numOf[p] = i + 1; });
   }
   const parseHash = () => { const o = {}; location.hash.slice(1).split('&').forEach(x => { const [k, v] = x.split('='); if (k) o[k] = decodeURIComponent(v || '1'); }); return o; };
@@ -206,7 +211,7 @@
     const tr = demo ? ['الموهبة وتنميتها', 'الابتكار وريادة الأعمال', 'الذكاء الاصطناعي في التعليم'] : [T('المسار العام', 'General track')];
     let id, tries = 0; do { id = String(100000 + Math.floor(Math.random() * 900000)); tries++; } while ((await db.ref('mlt/' + id + '/meta').once('value')).exists() && tries < 6);
     await db.ref('mlt/' + id + '/meta').set({ host: uid, t, at: TS() });
-    await db.ref('mlt/' + id).update({ sec: { pc: rid(6), jc: rid(6), mc: rid(6) }, cfg: { tracks: tr, kind: $('#mlP').value, how: $('#mlP').value === 'idea' ? 'form' : 'both', form: FORMS[$('#mlP').value]().map(([n2, lim]) => ({ n: n2, lim })), crit: RUB[$('#mlP').value]().map(([n2, w]) => ({ n: n2, w })), stageMin: 3 } });
+    await db.ref('mlt/' + id).update({ sec: { pc: rid(6), jc: rid(6), mc: rid(6) }, cfg: { tracks: tr, kind: $('#mlP').value, how: $('#mlP').value === 'idea' ? 'form' : 'both', form: FORMS[$('#mlP').value]().map(([n2, lim]) => ({ n: n2, lim })), crit: RUB[$('#mlP').value]().map(([n2, w]) => ({ n: n2, w })), stageMin: 3, res: 2, review: demo ? null : true } });
     const mine = store.get('mine', []); mine.unshift({ id, t }); store.set('mine', mine.slice(0, 12)); db.ref('mltu/' + uid + '/' + id).set({ t, ro: 'host', at: TS() }).catch(() => {});
     if (demo) { E.id = id; await seedDemo(); }
     location.hash = 'e=' + id;
@@ -219,19 +224,25 @@
     let meta; try { meta = (await R('meta').once('value')).val(); } catch (e) { root.innerHTML = `<div class="ml-card"><p>${T('تعذر الاتصال بالملتقى.', 'Could not reach the forum.')}</p></div>`; return; }
     if (!meta) { root.innerHTML = `<div class="ml-card"><p>${T('لا يوجد ملتقى بهذا الرمز.', 'No forum has this code.')}</p><div><a class="ml-b" href="#">${T('رجوع', 'Back')}</a></div></div>`; return; }
     E.meta = meta; E.cfg = (await R('cfg').once('value')).val() || {};
-    listen(R('cfg'), 'value', s => { E.cfg = s.val() || {}; });
+    listen(R('cfg'), 'value', s => { E.cfg = s.val() || {}; reorder(); if (H.on) hallItems(); if (view.refresh) view.refresh(); });
+    E.rev = {}; listen(R('rev'), 'value', s => { E.rev = s.val() || {}; reorder(); if (H.on) hallItems(); if (view.refresh) view.refresh(); });
     listen(R('items'), 'value', s => { E.items = s.val() || {}; reorder(); if (H.on) hallItems(); if (view.refresh) view.refresh(); });
     listen(R('stage'), 'value', s => { E.stage = s.val() || {}; if (St.on) stageRender(); if (view.onStage) view.onStage(); else if (view.refresh) view.refresh(); stageNudge(); });
-    E.now = {}; listen(R('now'), 'value', s => { E.now = s.val() || {}; if (St.on) stageRender(); if (view.refresh) view.refresh(); });
+    E.now = {}; listen(R('now'), 'value', s => { E.now = s.val() || {}; if (St.on) stageRender(); if (view.refresh) view.refresh(); if (H.on) { drawScreen(); stagePosterSync(); } });
+    E.team = {}; listen(R('team'), 'value', s => { E.team = s.val() || {}; });
     listen(R('talk/bc/on'), 'value', s => { Bc.live = !!s.val(); if (!Bc.live && Bc.listening) bcQuiet(); bcPaint(); });
     listen(R('assign/' + uid), 'value', s => { E.assign = s.val() || {}; if (view.refresh) view.refresh(); });
     const has = p => R(p + '/' + uid).once('value').then(s => s.exists()).catch(() => false);
     const [isJ, isP, isM] = await Promise.all([has('judges'), has('pres'), has('mods')]); E.teamOf = isP ? await R('pres/' + uid + '/t').once('value').then(s => s.val()).catch(() => null) : null;
     E.role = isHost() ? 'host' : isM ? 'mod' : isJ ? 'judge' : isP ? 'presenter' : 'guest'; E.isJudge = isJ;
-    if (h.stage) return stageOpen();
-    if (h.j || h.p || h.m || !name()) return nameForm(h);
+    if (h.as && (E.role === 'host' || E.role === 'mod') && ['guest', 'presenter', 'judge'].includes(h.as)) { E.preview = h.as; E.role = h.as; E.isJudge = h.as === 'judge'; E.teamOf = null; if (!h.stage) previewBar(h.as); }
+    if (h.stage && !h.m) return stageOpen();
+    if (h.stage && h.m && !name()) store.set('name', T('جهاز العرض', 'Display device'));
+    if (h.j || h.p || (h.m && !h.stage) || !name()) return nameForm(h);
     afterName(h);
   }
+  function previewBar(a) { document.body.classList.add('ml-prev'); const b = document.createElement('div'); b.id = 'mlPrev'; b.innerHTML = `<span>${T('معاينة', 'Preview')}: ${{ guest: T('الزائر', 'Visitor'), presenter: T('المشارك', 'Participant'), judge: T('المحكّم', 'Judge') }[a]} · ${T('لا يُحفظ منها شيء', 'nothing is saved')}</span><a href="#e=${E.id}">${T('إنهاء', 'End')}</a>`; document.body.appendChild(b); }
+  function previewCard() { const a = (t, k) => `<a class="ml-b sm" href="${esc(linkFor('&as=' + k))}">${t}</a>`; return `<div class="ml-card"><h2>${T('معاينة بعين غيرك', 'See it as someone else')}</h2><div class="ml-row">${a(T('الزائر', 'Visitor'), 'guest')}${a(T('المشارك', 'Participant'), 'presenter')}${a(T('المحكّم', 'Judge'), 'judge')}</div></div>`; }
   function nameForm(h) {
     const title = h.j ? T('دخول المحكّم', 'Judge sign-in') : h.p ? T('دخول المشارك', 'Participant sign-in') : h.m ? T('دخول المشرف', 'Supervisor sign-in') : '';
     root.innerHTML = `<div class="ml-card"><h2 dir="auto">${esc(E.meta.t)}</h2>${title ? `<p class="ml-mut">${title}</p>` : ''}<label class="ml-f"><span>${T('الاسم', 'Name')}</span><input id="mlNm" maxlength="30" dir="auto" autocomplete="name" value="${esc(name())}"></label>${title && !hasAccount() ? `<div id="mlNmA"><p class="ml-mut">${T('سجّل الدخول لتصل إلى بياناتك من أي جهاز:', 'Sign in to reach your data from any device:')}</p>${acctButtons()}</div>` : ''}<div><button class="ml-b main" id="mlGo">${T('متابعة', 'Continue')}</button></div></div>`;
@@ -244,14 +255,51 @@
       else if (h.p) { await R('pres/' + uid).set(Object.assign({ c: h.p, n: name(), at: TS() }, h.tm ? { t: h.tm } : {})); if (h.tm) { await R('team/' + h.tm + '/' + uid).set(1); E.teamOf = h.tm; } if (!isHost()) E.role = 'presenter'; }
       else if (h.m) { await R('mods/' + uid).set({ c: h.m, n: name(), at: TS() }); if (!isHost()) E.role = 'mod'; }
     } catch (e) { root.innerHTML = `<div class="ml-card"><p>${T('الرابط غير صالح. يُرجى طلب رابط جديد من المسؤول.', 'This link is not valid. Please ask the organizer for a new one.')}</p></div>`; return; }
-    if (location.hash.includes('&')) history.replaceState(null, '', '#e=' + E.id);
-    remember(E.isJudge && E.role !== 'host' ? 'judge' : E.role);
+    await loadCodes(h);
+    if (location.hash.includes('&') && !E.preview) history.replaceState(null, '', '#e=' + E.id + (h.stage ? '&stage=1' : ''));
+    if (h.stage) return stageOpen();
+    if (!E.preview) remember(E.isJudge && E.role !== 'host' ? 'judge' : E.role);
     if (h.j) return judgeView();
     ({ host: hostView, mod: modView, judge: judgeView, presenter: presenterView, guest: guestView }[E.role])();
   }
-  function guestView() { root.innerHTML = `<div class="ml-card"><h2 dir="auto">${esc(E.meta.t)}</h2><div class="ml-row"><button class="ml-b main" id="mlHallBtn">${T('دخول القاعة', 'Enter the hall')}</button><a class="ml-b" href="${esc(linkFor('&stage=1'))}">${T('متابعة المسرح', 'Follow the stage')}</a><button class="ml-b" data-bcl hidden></button>${E.cfg.live ? `<a class="ml-b" href="${esc(E.cfg.live)}" target="_blank" rel="noopener">${T('مشاهدة البث', 'Watch the broadcast')}</a>` : ''}</div></div>`; $('#mlHallBtn').onclick = () => openHall(); bcPaint(); }
+  const roomsCfg = () => (E.cfg && E.cfg.rooms) || [];
+  /* every place someone can go. Private ones appear only to those they belong to, and their room names carry a code nobody else holds */
+  function spaces() {
+    const c = E.codes || {}, a = roomsCfg().map((r, i) => ({ k: 's' + i, room: 'r_' + i, n: r.n, w: r.w, u: r.u }));
+    a.push({ k: 'help', room: 'r_help', n: T('الاستقبال', 'Reception'), w: T('للمساعدة والاستفسار', 'For help and questions') }, { k: 'meet', room: 'r_meet', n: T('ركن اللقاءات', 'Meeting corner'), w: T('تعارف وحوار', 'Meet and talk') });
+    if (c.o) a.push({ k: 'org', room: 'o_' + c.o, tag: 'x_o', pv: 1, n: T('غرفة المنظمين', 'Organizers’ room') });
+    if (c.j) a.push({ k: 'jud', room: 'j_' + c.j, tag: 'x_j', pv: 1, n: T('غرفة المحكّمين', 'Judges’ room') });
+    if (c.g) a.push({ k: 'vip', room: 'g_' + c.g, tag: 'x_g', pv: 1, n: T('مجلس الضيوف', 'Guests’ lounge') });
+    return a;
+  }
+  /* 2 at the entry, 1 elsewhere in the hall, 0 away; a team counts through any of its members */
+  function ownerState(p) { const it = E.items[p]; if (!it) return 0; const us = [it.own].concat(Object.keys((E.team || {})[p] || {})).filter(Boolean); let st = 0; us.forEach(u => { const d = (E.here || {})[u]; if (d) st = Math.max(st, d.p === p ? 2 : 1); }); return st; }
+  const ownerWord = st => st === 2 ? T('موجود عند مشاركته', 'At the entry') : st === 1 ? T('في القاعة الآن', 'In the hall now') : T('غير موجود الآن', 'Not here now');
+  const spCount = sp => Object.values(E.here || {}).filter(d => d.c === (sp.tag || sp.room)).length;
+  async function loadCodes(h) {
+    if (E.preview) { E.codes = {}; return; }
+    const get = p => R(p).once('value').then(s => s.val()).catch(() => null), c = {};
+    if (isHost()) { const sec = await get('sec') || {}; c.o = sec.mc; c.j = sec.jc; c.g = sec.gc; if (!c.g) { c.g = rid(6); await R('sec/gc').set(c.g).catch(() => { c.g = null; }); } }
+    else { if (E.role === 'mod') c.o = await get('mods/' + uid + '/c'); if (E.isJudge) c.j = await get('judges/' + uid + '/c'); if (h.v) store.set('vip.' + E.id, h.v); E.vip = store.get('vip.' + E.id, null); if (E.vip) c.g = E.vip; }
+    E.codes = c; E.jc = c.j || E.jc;
+    if (isHost() || E.role === 'mod') { let was = 0; listen(R('here'), 'value', s => { const d = s.val() || {}; if (!H.on) E.here = d; const n = Object.keys(d).filter(u => u !== uid && d[u].c === 'r_help').length; if (n > was && Call.room !== 'r_help') toast(T('زائر ينتظر في الاستقبال', 'Someone is waiting at reception')); was = n; if (H.on) lampsPaint(); }); }
+  }
+  function placesHtml() {
+    const st = E.stage || {}, it = st.cur && st.mode !== 'res' && E.items[st.cur], seen = H.visited || store.get('v.' + E.id, {}), talks = {}; Object.values(E.here || {}).forEach(d => { if (d.c && /^p_/.test(d.c)) talks[d.c.slice(2)] = (talks[d.c.slice(2)] || 0) + 1; });
+    const row = (k, t, sub, live) => `<li data-d="${esc(k)}" style="cursor:pointer"><div class="ml-t"><b dir="auto">${t}</b><small dir="auto">${live ? '<span class="ml-dot"></span>' : ''}${sub}</small></div><i class="chev"></i></li>`;
+    const talkRows = Object.keys(talks).filter(p => E.numOf[p]).map(p => row('p:' + p, T(`محادثة عند المشاركة ${num(E.numOf[p])}`, `Conversation at entry ${E.numOf[p]}`), esc(E.items[p].t), true)).join('');
+    return `<ul class="ml-list">${row('stage', T('المسرح', 'Stage'), it ? T(`يُعرض الآن: ${esc(it.t)}`, `Now showing: ${esc(it.t)}`) : T('لم يبدأ العرض', 'The show has not started'), !!it)}${row('hall', T('قاعة المشاركات', 'Entries hall'), T(`${num(E.order.length)} مشاركة · اطّلعت على ${num(E.order.filter(p => seen[p]).length)}`, `${E.order.length} entries · viewed ${E.order.filter(p => seen[p]).length}`))}${talkRows}${spaces().map(sp => [sp, spCount(sp)]).sort((a, b) => (b[1] > 0) - (a[1] > 0)).map(([sp, n]) => row('sp:' + sp.k, esc(sp.n), [sp.pv ? T('خاصة', 'Private') : sp.w ? esc(sp.w) : '', n ? T(`${num(n)} الآن`, `${n} now`) : ''].filter(Boolean).join(' · '), n > 0)).join('')}</ul>`;
+  }
+  function goPlace(k) {
+    const run = () => { closeGuide(); if (k === 'stage') fly(0, H.L.th.z0 + 8.6, 0, () => { if (E.stage && E.stage.cur && E.items[E.stage.cur]) openPoster(E.stage.cur, 'stage'); }); else if (k === 'hall') fly(0, 4, 0); else if (k.startsWith('sp:')) { const key = k.slice(3), d = H.L.doors[key]; if (d) fly(d.x + .9, d.z, Math.PI / 2, () => openRoom(key)); else openRoom(key); } else if (k.startsWith('p:')) travel(k.slice(2)); };
+    if (H.on && H.L) run(); else openHall(run);
+  }
+  function guestView() {
+    const paint = () => { if (H.on) return; root.innerHTML = `<div class="ml-stack"><h2 dir="auto">${esc(E.meta.t)}</h2><div class="ml-card" id="dbP">${placesHtml()}</div><div class="ml-row"><button class="ml-b" data-bcl hidden></button>${E.cfg.live ? `<a class="ml-b" href="${esc(E.cfg.live)}" target="_blank" rel="noopener">${T('مشاهدة البث', 'Watch the broadcast')}</a>` : ''}</div></div>`; $$('[data-d]', root).forEach(l => l.onclick = () => goPlace(l.dataset.d)); bcPaint(); };
+    let t = 0; listen(R('here'), 'value', s => { if (!H.on) { E.here = s.val() || {}; clearTimeout(t); t = setTimeout(paint, 500); } }); view.refresh = paint; paint();
+  }
   const view = { refresh: null, onStage: null };
-  function teardown() { closeHall(); stageClose(); callEnd(); bcStop(); if (Bc.listening) bcQuiet(); E.offs.forEach(f => f()); E.offs = []; view.refresh = view.onStage = null; E.items = {}; E.order = []; E.role = 'guest'; E.stage = {}; E.isJudge = false; }
+  function teardown() { closeHall(); stageClose(); callEnd(); bcStop(); if (Bc.listening) bcQuiet(); E.offs.forEach(f => f()); E.offs = []; view.refresh = view.onStage = null; E.items = {}; E.order = []; E.role = 'guest'; E.stage = {}; E.isJudge = false; E.codes = {}; E.vip = null; E.preview = null; document.body.classList.remove('ml-prev'); ['#mlPrev', '#stMir'].forEach(q => { const n = $(q); if (n) n.remove(); }); }
 
   /* ---------- poster upload ---------- */
   const PDFJS = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/';
@@ -346,7 +394,7 @@
     };
     $('#pfSave', el).onclick = async () => {
       const t = val('#pfT'); if (!t) return msg(T('يلزم العنوان', 'A title is required'));
-      const c = current(), base0 = { t, a: c.a || name(), tr: c.tr, v: val('#pfV'), w: val('#pfW'), at: it.at || TS(), own: it.own || (pid === uid ? uid : null), has: 1, rc: recU || it.rc ? 1 : null, sl: slides ? slides.length : (it.sl || null) };
+      const c = current(), base0 = { t, a: c.a || name(), tr: c.tr, v: val('#pfV'), w: val('#pfW'), at: it.at || TS(), ed: it.at ? Date.now() : null, own: it.own || (pid === uid ? uid : null), has: 1, rc: recU || it.rc ? 1 : null, sl: slides ? slides.length : (it.sl || null) };
       let rec, imgs = null;
       if (mode === 'form') {
         if (!c.el.some(Boolean)) return msg(T('يلزم تعبئة العناصر', 'Please fill in the items'));
@@ -372,10 +420,11 @@
     let editing = !E.items[uid]; const pid0 = E.teamOf || uid;
     if (E.teamOf) { const paintT = () => { const it = E.items[pid0]; root.innerHTML = `<div class="ml-stack"><h2 dir="auto">${esc(E.meta.t)}</h2>${onStagePanel(pid0)}${it ? `<div class="ml-card"><div class="ml-row"><span class="ml-n" style="background:${tcol(it.tr)}">${num(E.numOf[pid0] || '')}</span><div class="ml-t"><b dir="auto">${esc(it.t)}</b><small dir="auto">${T('عضو في الفريق', 'Team member')}</small></div></div><div><button class="ml-b" id="pGo">${T('الوقوف عند المشاركة', 'Go to the entry')}</button></div></div>` : ''}</div>`; onStageBind(pid0); const g = $('#pGo'); if (g) g.onclick = () => openHall(pid0); }; view.refresh = paintT; return paintT(); }
     const paint = () => {
-      const it = E.items[uid];
+      const it = E.items[uid], rv = E.rev[uid] || {}, locked = closed() && rv.s !== 'fix';
+      if ((!it || editing) && locked) { root.innerHTML = `<div class="ml-stack"><h2 dir="auto">${esc(E.meta.t)}</h2><div class="ml-card"><p>${T('انتهى موعد استقبال المشاركات.', 'Submissions have closed.')}</p></div></div>`; return; }
       if (!it || editing) { root.innerHTML = `<div class="ml-stack"><h2 dir="auto">${esc(E.meta.t)}</h2><div id="pfBox"></div></div>`; posterForm($('#pfBox'), uid, () => { editing = false; paint(); }); return; }
-      root.innerHTML = `<div class="ml-stack"><h2 dir="auto">${esc(E.meta.t)}</h2>${accountBanner()}${onStagePanel(uid)}<div class="ml-card"><div class="ml-row"><span class="ml-n" style="background:${tcol(it.tr)}">${num(E.numOf[uid] || '')}</span><div class="ml-t"><b dir="auto">${esc(it.t)}</b><small dir="auto">${esc(tracks()[it.tr] || '')}</small></div></div><div class="ml-row"><button class="ml-b main" id="pGo">${T('الوقوف عند مشاركتي', 'Go to my poster')}</button><button class="ml-b" id="pEd">${T('تعديل', 'Edit')}</button><button class="ml-b" id="pTm">${IC.link}${T('رابط الفريق', 'Team link')}</button></div><p class="ml-mut" id="pSt"></p></div><div class="ml-card" id="pFb" hidden></div></div>`;
-      bindAccount(); scrollTo(0, 0); $('#pGo').onclick = () => openHall(uid); $('#pEd').onclick = () => { editing = true; paint(); }; onStageBind(uid); $('#pTm').onclick = () => R('pres/' + uid + '/c').once('value').then(c => copy(linkFor('&p=' + c.val() + '&tm=' + uid), T('نُسخ رابط الفريق', 'Team link copied')));
+      root.innerHTML = `<div class="ml-stack"><h2 dir="auto">${esc(E.meta.t)}</h2>${accountBanner()}${onStagePanel(uid)}<div class="ml-card"><div class="ml-row"><span class="ml-n" style="background:${tcol(it.tr)}">${num(E.numOf[uid] || '')}</span><div class="ml-t"><b dir="auto">${esc(it.t)}</b><small dir="auto">${esc(tracks()[it.tr] || '')}</small></div></div>${E.cfg.review ? `<p class="ml-mut" style="margin:0">${{ ok: T('مقبولة', 'Accepted'), fix: T('مطلوب تعديل', 'Changes requested'), no: T('لم تُقبل', 'Not accepted') }[rv.s] || T('قيد المراجعة', 'Under review')}</p>${rv.n ? `<p dir="auto" style="margin:0">${esc(rv.n)}</p>` : ''}` : ''}<div class="ml-row">${accepted(uid) ? `<button class="ml-b main" id="pGo">${T('الوقوف عند مشاركتي', 'Go to my entry')}</button>` : ''}${locked ? '' : `<button class="ml-b" id="pEd">${T('تعديل', 'Edit')}</button>`}<button class="ml-b" id="pTm">${IC.link}${T('رابط الفريق', 'Team link')}</button></div><p class="ml-mut" id="pSt"></p></div><div class="ml-card" id="pFb" hidden></div></div>`;
+      bindAccount(); scrollTo(0, 0); const pg = $('#pGo'); if (pg) pg.onclick = () => openHall(uid); const pe = $('#pEd'); if (pe) pe.onclick = () => { editing = true; paint(); }; onStageBind(uid); $('#pTm').onclick = () => R('pres/' + uid + '/c').once('value').then(c => copy(linkFor('&p=' + c.val() + '&tm=' + uid), T('نُسخ رابط الفريق', 'Team link copied')));
       Promise.all([R('seen/' + uid).once('value').catch(() => null), R('notes/' + uid).once('value').catch(() => null)]).then(([a, b]) => { const e = $('#pSt'); if (e) e.textContent = T(`الزيارات ${num(a ? a.numChildren() : 0)} · المداخلات ${num(b ? b.numChildren() : 0)}`, `Visits ${a ? a.numChildren() : 0} · Comments ${b ? b.numChildren() : 0}`); });
       R('fb/' + uid).once('value').then(s => { const v = s.val(), b = $('#pFb'); if (v && v.notes && b) { b.hidden = false; b.innerHTML = `<h2>${T('ملاحظات المحكّمين', 'Judges’ notes')}</h2><ul class="hl-note">${Object.values(v.notes).map(n => `<li dir="auto">${esc(n)}</li>`).join('')}</ul>`; } }).catch(() => {});
     };
@@ -396,7 +445,7 @@
     };
     R('scores/' + uid + '/' + pid).once('value').then(s => { const v = s.val(); if (v) { cur = v; if (Array.isArray(cur.c)) cur.c = Object.assign({}, cur.c); } paint(); }).catch(paint);
   }
-  async function jRoom() { let code = E.jc; if (!code) { const s = await R(isHost() ? 'sec/jc' : 'judges/' + uid + '/c').once('value').catch(() => null); code = E.jc = s && s.val(); } if (code) joinRoom('j_' + code); }
+  async function jRoom() { let code = E.jc; if (!code) { const s = await R(isHost() ? 'sec/jc' : 'judges/' + uid + '/c').once('value').catch(() => null); code = E.jc = s && s.val(); } if (code) joinRoom('j_' + code, false, 'x_j'); }
   function judgeView() {
     let my = {}, sel = null, lastCur = null;
     const seed = p => { let h = 7; (uid + p).split('').forEach(c => h = (h * 31 + c.charCodeAt(0)) >>> 0); return h; };
@@ -424,92 +473,127 @@
   }
   function imgInto(el, p) { R('full/' + p).once('value').then(s => { if (s.val() && el.isConnected) { el.innerHTML = `<img alt="${T('المشاركة', 'Entry')}" src="${s.val()}">`; $('img', el).onclick = () => el.classList.toggle('z'); } }).catch(() => {}); }
   let lastStageCur = null;
-  function stageNudge() { const st = E.stage || {}; if (st.cur === lastStageCur) return; lastStageCur = st.cur; const it = st.cur && E.items[st.cur]; if (it && (it.own === uid || st.cur === E.teamOf) && !St.on && E.role === 'presenter' && H.on) incoming({ k: 'stage' }); if (H.scr) drawScreen(); }
+  function stageNudge() { const st = E.stage || {}; if (st.cur === lastStageCur) return; lastStageCur = st.cur; const it = st.cur && E.items[st.cur]; if (it && (it.own === uid || st.cur === E.teamOf) && !St.on && E.role === 'presenter' && H.on) incoming({ k: 'stage' }); if (H.scr) drawScreen(); if (H.on) stagePosterSync(); }
 
   /* ---------- organizer and supervisor ---------- */
   /* the private control panel: nothing here appears on the stage screen */
   const stageList = (scores, judges) => { const st = E.stage || {}, cur = st.cur, it = cur && E.items[cur], i = E.order.indexOf(cur), pg = it ? (+E.now[cur] || 0) : 0, cs = crit(), full = (j, p) => { const v = scores && scores[j] && scores[j][p]; return v && (v.coi || cs.every((_, k) => v.c && v.c[k] >= 1)); }, jids = Object.keys(judges || {});
-    return `<div class="ml-card"><div class="ml-row"><a class="ml-b main" href="${esc(linkFor('&stage=1'))}" target="_blank" rel="noopener">${T('فتح شاشة العرض', 'Open the display screen')}</a><span class="ml-mut">${T('تُفتح في نافذة تضعها على الشاشة الكبيرة، وتبقى هذه اللوحة عندك.', 'Place it on the big screen; this panel stays with you.')}</span></div>
+    return `<div class="ml-card"><div class="ml-row"><a class="ml-b main" href="${esc(linkFor('&stage=1'))}" target="_blank" rel="noopener">${T('فتح شاشة العرض', 'Open the display screen')}</a><button class="ml-b" id="stMirB">${T('ما يظهر على الشاشة', 'What the screen shows')}</button><button class="ml-b" id="stDevB">${T('ربط جهاز العرض', 'Link the display device')}</button><span class="ml-mut">${T('تُفتح في نافذة تضعها على الشاشة الكبيرة، وتبقى هذه اللوحة عندك.', 'Place it on the big screen; this panel stays with you.')}</span></div><div id="stDev" hidden></div>
       ${it ? `<div class="ml-row"><span class="ml-n" style="background:${tcol(it.tr)}">${num(E.numOf[cur])}</span><div class="ml-t"><b dir="auto">${esc(it.t)}</b><small id="pnClock" dir="ltr" style="justify-content:flex-end"></small></div></div>
       <div class="ml-row"><button class="ml-b sm" data-pg="${i - 1}" ${i < 1 ? 'disabled' : ''}>${T('السابق', 'Previous')}</button><button class="ml-b sm main" data-pg="${i + 1}" ${i >= E.order.length - 1 ? 'disabled' : ''}>${T('التالي', 'Next')}</button><button class="ml-b sm" id="hOpen">${st.open ? T('إغلاق التقييم', 'Close judging') : T('فتح التقييم', 'Open judging')}</button><button class="ml-b sm" id="hAdd1">${T('إضافة دقيقة', 'Add a minute')}</button>${it.rc || it.v ? `<button class="ml-b sm" id="hPlay">${st.play ? T('إيقاف التسجيل', 'Stop the recording') : T('تشغيل التسجيل', 'Play the recording')}</button>` : ''}</div>
       ${it.sl ? `<div class="ml-row"><button class="ml-b sm" data-sl="${pg - 1}" ${pg < 1 ? 'disabled' : ''}>${IC.prev}</button><span class="ml-mut">${T(`الشريحة ${num(pg + 1)} من ${num(it.sl)}`, `Slide ${pg + 1} of ${it.sl}`)}</span><button class="ml-b sm" data-sl="${pg + 1}" ${pg >= it.sl - 1 ? 'disabled' : ''}>${IC.next}</button></div>` : ''}
       ${jids.length ? `<ul class="ml-list">${jids.map(j => `<li><div class="ml-t"><b dir="auto">${esc(judges[j].n)}</b></div>${full(j, cur) ? IC.check : `<small class="ml-mut">${T('لم يُنجز', 'Pending')}</small>`}</li>`).join('')}</ul>` : ''}` : ''}</div>
       <div class="ml-card"><ul class="ml-list">${E.order.map(p => `<li><span class="ml-n" style="background:${tcol(E.items[p].tr)}">${num(E.numOf[p])}</span><div class="ml-t"><b dir="auto">${esc(E.items[p].t)}</b><small dir="auto">${esc(E.items[p].a || '')}${E.items[p].sl ? ' · ' + T('شرائح', 'slides') : ''}</small></div>${E.role === 'host' ? `<input class="ml-in" style="width:64px;padding:6px" type="number" min="1" max="60" data-dm="${esc(p)}" value="${+((E.cfg.dm || {})[p]) || ''}" placeholder="${num(+E.cfg.stageMin || 3)}" aria-label="${T('المدة بالدقائق', 'Minutes')}">` : ''}<button class="ml-b sm ${cur === p ? 'main' : ''}" data-show="${esc(p)}">${cur === p ? T('معروض', 'Showing') : T('عرض', 'Show')}</button></li>`).join('') || `<li class="ml-mut">${T('لا توجد مشاركات بعد', 'No entries yet')}</li>`}</ul></div>`; };
   const showEntry = p => R('stage').update({ cur: p, open: true, mode: 'show', play: null, until: Date.now() + durOf(p) * 1000 });
-  const stageListBind = () => { $$('[data-show]').forEach(b => b.onclick = () => showEntry(b.dataset.show)); $$('[data-pg]').forEach(b => b.onclick = () => { const p = E.order[+b.dataset.pg]; if (p) showEntry(p); }); $$('[data-sl]').forEach(b => b.onclick = () => R('now/' + E.stage.cur).set(+b.dataset.sl)); $$('[data-dm]').forEach(x => x.onchange = () => R('cfg/dm/' + x.dataset.dm).set(+x.value > 0 ? +x.value : null));
+  function mirrorToggle() {
+    const old = $('#stMir'); if (old) return old.remove(); const w = Math.min(460, Math.round(innerWidth * .62)), k = w / 1280, d = document.createElement('div'); d.id = 'stMir'; d.style.cssText = `width:${w}px;height:${Math.round(720 * k)}px`; d.innerHTML = `<iframe title="${T('الشاشة', 'The screen')}" src="${esc(linkFor('&as=guest&stage=1'))}" style="width:1280px;height:720px;transform:scale(${k})"></iframe><button aria-label="${T('إغلاق', 'Close')}">${IC.x}</button>`; d.querySelector('button').onclick = () => d.remove(); document.body.appendChild(d);
+  }
+  function devicePanel() {
+    const box = $('#stDev'); if (!box) return; box.hidden = !E.devOpen; if (!E.devOpen) return; const qr = u => { if (!window.qrcode) return ''; const q = qrcode(0, 'M'); q.addData(u); q.make(); return q.createSvgTag({ scalable: true, margin: 2 }); }, one = (t, sub, u) => `<div class="st-dev"><div class="st-qr">${qr(u)}</div><div class="ml-t"><b>${t}</b><small>${sub}</small><div class="ml-row"><a class="ml-b sm" href="${esc(u)}" target="_blank" rel="noopener">${T('فتح', 'Open')}</a><button class="ml-b sm" data-cp="${esc(u)}">${T('نسخ الرابط', 'Copy link')}</button></div></div></div>`;
+    box.innerHTML = one(T('للعرض فقط', 'Display only'), T('لا يتحكم في شيء', 'Controls nothing'), linkFor('&stage=1')) + (E.codes && E.codes.o ? one(T('للعرض مع التحكم', 'Display with controls'), T('أدوات تظهر عند تحريك الفأرة. رابط خاص بالمشرفين', 'Tools appear when the mouse moves. For supervisors only'), linkFor('&stage=1&m=' + E.codes.o)) : '');
+    $$('[data-cp]', box).forEach(b => b.onclick = () => navigator.clipboard.writeText(b.dataset.cp).then(() => toast(T('تم النسخ', 'Copied'))).catch(() => {}));
+  }
+  const stageListBind = () => { { const m = $('#stMirB'), d = $('#stDevB'); if (m) m.onclick = mirrorToggle; if (d) d.onclick = () => { E.devOpen = !E.devOpen; devicePanel(); }; devicePanel(); } $$('[data-show]').forEach(b => b.onclick = () => showEntry(b.dataset.show)); $$('[data-pg]').forEach(b => b.onclick = () => { const p = E.order[+b.dataset.pg]; if (p) showEntry(p); }); $$('[data-sl]').forEach(b => b.onclick = () => R('now/' + E.stage.cur).set(+b.dataset.sl)); $$('[data-dm]').forEach(x => x.onchange = () => R('cfg/dm/' + x.dataset.dm).set(+x.value > 0 ? +x.value : null));
     const o = $('#hOpen'); if (o) o.onclick = () => R('stage/open').set(!E.stage.open); const a = $('#hAdd1'); if (a) a.onclick = () => R('stage/until').set(Math.max(Date.now(), E.stage.until || 0) + 60000); const pl = $('#hPlay'); if (pl) pl.onclick = () => R('stage/play').set(E.stage.play ? null : { p: E.stage.cur, at: Date.now() }); clearInterval(view.pnT); view.pnT = setInterval(() => { const c = $('#pnClock'); if (!c) return clearInterval(view.pnT); c.textContent = E.stage.until ? clock(Math.max(0, E.stage.until - Date.now())) : ''; }, 500); };
   const peopleList = here => { const pr = E.order.filter(p => E.items[p].own), on = pr.filter(p => here[E.items[p].own]); return `<div class="ml-card"><p class="ml-mut">${T(`المشاركون الموجودون ${num(on.length)} من ${num(pr.length)}`, `Participants present: ${on.length} of ${pr.length}`)}</p><ul class="ml-list">${E.order.map(p => { const o = E.items[p].own && here[E.items[p].own]; return `<li><span class="ml-n" style="background:${tcol(E.items[p].tr)}">${num(E.numOf[p])}</span><div class="ml-t"><b dir="auto">${esc(E.items[p].a || E.items[p].t)}</b><small><span class="ml-dot ${o ? '' : 'off'}"></span>${o ? T('موجود', 'Present') : T('غير موجود', 'Absent')}</small></div></li>`; }).join('')}</ul></div>`; };
   function modView() {
     let tab = 'stage', here = {};
     root.innerHTML = `<div class="ml-stack"><div class="ml-row"><h2 class="ml-grow" dir="auto">${esc(E.meta.t)}</h2><button class="ml-b main" id="mHall">${T('دخول القاعة', 'Enter the hall')}</button></div>${accountBanner()}<div class="ml-tabs"><button data-t="stage" aria-selected="true">${T('المسرح', 'Stage')}</button><button data-t="foll" aria-selected="false">${T('المتابعة', 'Follow-up')}</button></div><div id="mBody" class="ml-stack"></div></div>`;
     bindAccount(); $('#mHall').onclick = () => openHall();
-    const paint = () => { $('#mBody').innerHTML = tab === 'stage' ? stageList(null, null) : peopleList(here); if (tab === 'stage') stageListBind(); };
+    const paint = () => { $('#mBody').innerHTML = tab === 'stage' ? stageList(null, null) + previewCard() : peopleList(here); if (tab === 'stage') stageListBind(); };
     $$('.ml-tabs [data-t]').forEach(b => b.onclick = () => { tab = b.dataset.t; $$('.ml-tabs [data-t]').forEach(x => x.setAttribute('aria-selected', x === b)); paint(); });
     view.refresh = () => { if (!$('#mBody input:focus')) paint(); }; listen(R('here'), 'value', s => { here = s.val() || {}; if (tab !== 'stage') paint(); }); paint();
   }
   function hostView() {
-    let tab = store.get('htab', 'links'), scores = {}, judges = {}, votes = {}, sec = {}, here = {}, editing = null;
-    const tabs = [['links', T('الدعوات', 'Invitations')], ['items', T('المشاركات', 'Entries')], ['judge', T('التحكيم', 'Judging')], ['stage', T('المسرح', 'Stage')], ['res', T('النتائج', 'Results')]];
+    let tab = store.get('htab2', 'home'), scores = {}, judges = {}, votes = {}, sec = {}, here = {}, editing = null;
+    const tabs = [['home', T('الملخص', 'Overview')], ['setup', T('الإعداد', 'Setup')], ['items', T('المشاركات', 'Entries')], ['judge', T('التحكيم', 'Judging')], ['stage', T('المسرح', 'Stage')], ['res', T('النتائج', 'Results')]];
     root.innerHTML = `<div class="ml-stack"><div class="ml-row"><div class="ml-grow"><h2 dir="auto">${esc(E.meta.t)}</h2><small class="ml-mut" id="hSum"></small></div><button class="ml-b main" id="hHall">${T('دخول القاعة', 'Enter the hall')}</button></div>${accountBanner()}<div class="ml-tabs" role="tablist">${tabs.map(t => `<button role="tab" data-t="${t[0]}" aria-selected="${t[0] === tab}">${t[1]}</button>`).join('')}</div><div id="hBody" class="ml-stack"></div></div>`;
     bindAccount(); $('#hHall').onclick = () => openHall();
-    $$('.ml-tabs [data-t]').forEach(b => b.onclick = () => { tab = b.dataset.t; editing = null; store.set('htab', tab); $$('.ml-tabs [data-t]').forEach(x => x.setAttribute('aria-selected', x === b)); paint(true); });
+    $$('.ml-tabs [data-t]').forEach(b => b.onclick = () => { tab = b.dataset.t; editing = null; store.set('htab2', tab); $$('.ml-tabs [data-t]').forEach(x => x.setAttribute('aria-selected', x === b)); paint(true); });
     const P = {
-      links() {
-        const row = (t, u) => `<li><div class="ml-t"><b>${t}</b></div><button class="ml-b sm" data-qrb="${esc(u)}" aria-label="${T('رمز الاستجابة', 'QR code')}">${IC.grid}</button><button class="ml-b sm" data-copy="${esc(u)}">${IC.link}${T('نسخ', 'Copy')}</button></li>`;
-        return `<div class="ml-card"><p class="ml-mut" dir="ltr" style="text-align:start">${T('الرمز', 'Code')} ${esc(E.id)}</p><ul class="ml-list">${row(T('الزوار', 'Visitors'), linkFor(''))}${row(T('المشاركون', 'Participants'), linkFor('&p=' + sec.pc))}${row(T('المحكّمون', 'Judges'), linkFor('&j=' + sec.jc))}${row(T('المشرفون', 'Supervisors'), linkFor('&m=' + sec.mc))}${row(T('شاشة المسرح', 'Stage screen'), linkFor('&stage=1'))}</ul><div id="hQr" style="justify-self:center"></div></div><div><button class="ml-b sm bad" id="hDelE">${T('حذف الملتقى', 'Delete this forum')}</button></div>`;
+      home() {
+        const ids = Object.keys(E.items), cnt = k => ids.filter(p => (E.rev[p] || {}).s === k).length, pend = E.cfg.review ? ids.filter(p => !(E.rev[p] && E.rev[p].s)).length : 0, edited = E.cfg.review ? ids.filter(p => (E.rev[p] || {}).s === 'fix' && E.items[p].ed > (E.rev[p].t || 0)).length : 0, sum = crit().reduce((a, c) => a + (+c.w || 0), 0), jids = Object.keys(judges), acc = E.order.length;
+        const need = acc * Math.max(jids.length ? (Object.keys(E.assign || {}).length ? 1 : jids.length) : 0, 0), dn = Object.keys(scores).reduce((a, j) => a + Object.keys(scores[j] || {}).filter(p => E.numOf[p] && (scores[j][p].coi || crit().every((_, i) => scores[j][p].c && scores[j][p].c[i] >= 1))).length, 0);
+        const mins = E.order.reduce((a, p) => a + durOf(p) / 60, 0);
+        const row = (t, info, go, warn) => `<li data-go-tab="${go}" style="cursor:pointer"><div class="ml-t"><b>${t}</b><small${warn ? ' style="color:var(--ml-bad)"' : ''}>${info}</small></div><i class="chev"></i></li>`;
+        const inv = (t, u) => `<li><div class="ml-t"><b>${t}</b></div><button class="ml-b sm" data-qrb="${esc(u)}" aria-label="${T('رمز الاستجابة', 'QR code')}">${IC.grid}</button><button class="ml-b sm" data-copy="${esc(u)}">${IC.link}${T('نسخ', 'Copy')}</button></li>`;
+        return `<div class="ml-card"><ul class="ml-list">
+          ${row(T('الإعداد', 'Setup'), sum !== 100 ? T(`مجموع أوزان المعايير ${num(sum)}٪ ويلزم أن يكون ١٠٠٪`, `Criteria weights total ${sum}%; they should total 100%`) : (E.cfg.closeAt ? T(`آخر موعد: ${new Date(E.cfg.closeAt).toLocaleDateString('ar-SA-u-ca-gregory')}`, `Deadline: ${new Date(E.cfg.closeAt).toLocaleDateString()}`) : T('لم يُحدد آخر موعد للمشاركات', 'No submission deadline set')), 'setup', sum !== 100)}
+          ${row(T('المشاركات', 'Entries'), E.cfg.review ? T(`${num(ids.length)} واردة · ${num(pend)} بانتظار المراجعة · ${num(cnt('fix'))} طُلب تعديلها${edited ? ` · ${num(edited)} عُدّلت` : ''} · ${num(acc)} مقبولة`, `${ids.length} received · ${pend} to review · ${cnt('fix')} with changes requested${edited ? ` · ${edited} edited` : ''} · ${acc} accepted`) : T(`${num(ids.length)} مشاركة`, `${ids.length} entries`), 'items', pend > 0 || edited > 0)}
+          ${row(T('التحكيم', 'Judging'), jids.length ? T(`${num(jids.length)} محكّمين · أُنجز ${num(dn)} من ${num(need)} تقييمًا`, `${jids.length} judges · ${dn} of ${need} scores done`) : T('لم ينضم محكّمون بعد', 'No judges yet'), 'judge', !jids.length)}
+          ${row(T('المسرح', 'Stage'), acc ? T(`${num(acc)} عرضًا في نحو ${num(Math.round(mins))} دقيقة`, `${acc} talks in about ${Math.round(mins)} minutes`) : T('لا توجد مشاركات مقبولة بعد', 'No accepted entries yet'), 'stage')}
+          ${row(T('النتائج', 'Results'), E.stage && E.stage.mode === 'res' ? T('معلنة', 'Announced') : T('لم تُعلن', 'Not announced'), 'res')}</ul></div>
+        ${previewCard()}<div class="ml-card"><h2>${T('الدعوات', 'Invitations')}</h2><p class="ml-mut" dir="ltr" style="text-align:start">${T('الرمز', 'Code')} ${esc(E.id)}</p><ul class="ml-list">${inv(T('الزوار', 'Visitors'), linkFor(''))}${inv(T('المشاركون', 'Participants'), linkFor('&p=' + sec.pc))}${inv(T('المحكّمون', 'Judges'), linkFor('&j=' + sec.jc))}${inv(T('المشرفون', 'Supervisors'), linkFor('&m=' + sec.mc))}${sec.gc ? inv(T('كبار الضيوف', 'Honored guests'), linkFor('&v=' + sec.gc)) : ''}${inv(T('شاشة العرض', 'Display screen'), linkFor('&stage=1'))}</ul><div id="hQr" style="justify-self:center"></div></div><div><button class="ml-b sm bad" id="hDelE">${T('حذف الملتقى', 'Delete this forum')}</button></div>`;
+      },
+      setup() {
+        const cs = crit(), sum = cs.reduce((a, c) => a + (+c.w || 0), 0), dl = E.cfg.closeAt ? new Date(E.cfg.closeAt - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16) : '';
+        return `<div class="ml-card"><h2>${T('استقبال المشاركات', 'Receiving entries')}</h2><label class="ml-f"><span>${T('آخر موعد', 'Deadline')}</span><input id="hClose" type="datetime-local" dir="ltr" value="${dl}"></label><label class="ml-row" style="font-size:.9rem"><input type="checkbox" id="hRev" ${E.cfg.review ? 'checked' : ''}> ${T('مراجعة كل مشاركة قبل ظهورها', 'Review each entry before it appears')}</label>
+          <label class="ml-f"><span>${T('طريقة المشاركة', 'How participants submit')}</span><select id="hHow"><option value="form" ${E.cfg.how === 'form' ? 'selected' : ''}>${T('تعبئة النموذج', 'Form')}</option><option value="file" ${E.cfg.how === 'file' ? 'selected' : ''}>${T('رفع تصميم جاهز', 'Upload a design')}</option><option value="both" ${(E.cfg.how || 'both') === 'both' ? 'selected' : ''}>${T('الخياران', 'Both')}</option></select></label><p class="ml-mut">${T('عناصر النموذج وعدد كلمات كل عنصر', 'Form items and the word limit of each')}</p><div style="display:grid;gap:8px">${form().map((f, i) => `<div class="ml-crit"><input class="ml-in" dir="auto" data-fn="${i}" maxlength="50" value="${esc(f.n)}" aria-label="${T('العنصر', 'Item')}"><input class="ml-in" type="number" min="0" max="500" data-fl="${i}" value="${+f.lim || 0}" aria-label="${T('عدد الكلمات', 'Word limit')}"><button class="ml-b sm bad" data-fx="${i}" aria-label="${T('حذف', 'Delete')}">${IC.x}</button></div>`).join('')}</div><div class="ml-row"><button class="ml-b sm" id="hFA">${T('إضافة عنصر', 'Add an item')}</button><button class="ml-b sm main" id="hFS">${T('حفظ', 'Save')}</button></div>
+          <label class="ml-f"><span>${T('المسارات، مسار في كل سطر', 'Tracks, one per line')}</span><textarea id="hTr" rows="3" dir="auto">${esc(tracks().join('\n'))}</textarea></label><div><button class="ml-b sm main" id="hTrS">${T('حفظ', 'Save')}</button></div></div>
+        <div class="ml-card"><h2>${T('معايير التقييم', 'Scoring criteria')}</h2><div style="display:grid;gap:8px">${cs.map((c, i) => `<div class="ml-crit"><input class="ml-in" dir="auto" data-cn="${i}" maxlength="60" value="${esc(c.n)}" aria-label="${T('المعيار', 'Criterion')}"><input class="ml-in" type="number" min="0" max="100" data-cw="${i}" value="${+c.w}" aria-label="${T('الوزن', 'Weight')}"><button class="ml-b sm bad" data-crx="${i}" aria-label="${T('حذف', 'Delete')}">${IC.x}</button></div>`).join('')}</div><div class="ml-row"><button class="ml-b sm" id="hCrA">${T('إضافة معيار', 'Add a criterion')}</button><button class="ml-b sm main" id="hCrS">${T('حفظ', 'Save')}</button><span class="ml-mut">${T('المجموع', 'Total')} ${num(sum)}%</span></div><label class="ml-row" style="font-size:.9rem"><input type="checkbox" id="hAud" ${E.cfg.aud ? 'checked' : ''}> ${T('إتاحة تصويت الجمهور', 'Allow audience voting')}</label></div>
+        <div class="ml-card"><h2>${T('الجلسات', 'Sessions')}</h2><div id="hRm" class="ml-stack" style="gap:10px"></div><div><button class="ml-b sm" id="hRmAdd">${T('إضافة جلسة', 'Add a session')}</button></div></div>
+        <div class="ml-card"><h2>${T('العرض', 'The show')}</h2><label class="ml-row"><span class="ml-mut">${T('مدة كل مشاركة بالدقائق', 'Minutes per entry')}</span><input class="ml-in" style="width:80px" id="hSec" type="number" min="1" max="60" value="${+E.cfg.stageMin || 3}"></label><label class="ml-row"><span class="ml-mut">${T('الصفوف الأمامية المحجوزة', 'Reserved front rows')}</span><input class="ml-in" style="width:70px" id="hRes" type="number" min="0" max="4" value="${+E.cfg.res || 0}"></label><label class="ml-f"><span>${T('رابط البث الاحتياطي', 'Backup broadcast link')}</span><input id="hLive" type="url" dir="ltr" maxlength="300" value="${esc(E.cfg.live || '')}"></label></div>`;
       },
       items() {
         if (editing) return `<div><button class="ml-b" id="hEBack">${T('رجوع', 'Back')}</button></div><div id="hEdit"></div>`;
-        return `<div class="ml-row"><button class="ml-b" id="hAdd">${T('إضافة مشاركة', 'Add an entry')}</button></div><div class="ml-card"><ul class="ml-list">${E.order.map(p => `<li><span class="ml-n" style="background:${tcol(E.items[p].tr)}">${num(E.numOf[p])}</span><div class="ml-t"><b dir="auto">${esc(E.items[p].t)}</b><small dir="auto">${esc(E.items[p].a || '')}</small></div><button class="ml-b sm" data-ed="${esc(p)}">${T('تعديل', 'Edit')}</button><button class="ml-b sm bad" data-del="${esc(p)}" aria-label="${T('حذف', 'Delete')}">${IC.x}</button></li>`).join('') || `<li class="ml-mut">${T('لم ترد مشاركات بعد.', 'No entries yet.')}</li>`}</ul></div><details class="ml-card"><summary style="cursor:pointer">${T('نموذج المشاركة', 'Entry form')}</summary><label class="ml-f" style="margin-top:10px"><span>${T('طريقة المشاركة', 'How participants submit')}</span><select id="hHow"><option value="form" ${E.cfg.how === 'form' ? 'selected' : ''}>${T('تعبئة النموذج فقط', 'Form only')}</option><option value="file" ${E.cfg.how === 'file' ? 'selected' : ''}>${T('رفع تصميم جاهز فقط', 'Upload a design only')}</option><option value="both" ${(E.cfg.how || 'both') === 'both' ? 'selected' : ''}>${T('الخياران', 'Both')}</option></select></label><div style="display:grid;gap:8px">${form().map((f, i) => `<div class="ml-crit"><input class="ml-in" dir="auto" data-fn="${i}" maxlength="50" value="${esc(f.n)}" aria-label="${T('العنصر', 'Item')}"><input class="ml-in" type="number" min="0" max="500" data-fl="${i}" value="${+f.lim || 0}" aria-label="${T('عدد الكلمات', 'Word limit')}"><button class="ml-b sm bad" data-fx="${i}" aria-label="${T('حذف', 'Delete')}">${IC.x}</button></div>`).join('')}</div><p class="ml-mut">${T('العنصر وعدد كلماته', 'Each item and its word limit')}</p><div class="ml-row"><button class="ml-b sm" id="hFA">${T('إضافة عنصر', 'Add an item')}</button><button class="ml-b sm main" id="hFS">${T('حفظ', 'Save')}</button></div></details><details class="ml-card"><summary style="cursor:pointer">${T('المسارات', 'Tracks')}</summary><label class="ml-f" style="margin-top:10px"><span>${T('مسار في كل سطر', 'One track per line')}</span><textarea id="hTr" rows="4" dir="auto">${esc(tracks().join('\n'))}</textarea></label><div><button class="ml-b sm main" id="hTrS">${T('حفظ', 'Save')}</button></div></details>`;
+        const all = Object.keys(E.items).sort((a, b) => (E.items[a].at || 0) - (E.items[b].at || 0)), lab = { ok: T('مقبولة', 'Accepted'), fix: T('طُلب تعديلها', 'Changes requested'), no: T('لم تُقبل', 'Not accepted') };
+        return `<div><button class="ml-b" id="hAdd">${T('إضافة مشاركة', 'Add an entry')}</button></div><div class="ml-card"><ul class="ml-list">${all.map(p => { const it = E.items[p], r = E.rev[p] || {}; return `<li style="flex-wrap:wrap"><span class="ml-n" style="background:${tcol(it.tr)}">${num(E.numOf[p] || '–')}</span><div class="ml-t"><b dir="auto">${esc(it.t)}</b><small dir="auto">${esc(it.a || '')}${E.cfg.review ? ' · ' + (lab[r.s] || T('بانتظار المراجعة', 'To review')) + (r.s === 'fix' && it.ed > (r.t || 0) ? ' · ' + T('عُدّلت', 'edited') : '') : ''}</small></div><div class="ml-row">${E.cfg.review && r.s !== 'ok' ? `<button class="ml-b sm main" data-rv="ok" data-p="${esc(p)}">${T('قبول', 'Accept')}</button><button class="ml-b sm" data-rv="fix" data-p="${esc(p)}">${T('طلب تعديل', 'Request changes')}</button>` : ''}<button class="ml-b sm" data-ed="${esc(p)}">${T('فتح', 'Open')}</button><button class="ml-b sm bad" data-del="${esc(p)}" aria-label="${T('حذف', 'Delete')}">${IC.x}</button></div></li>`; }).join('') || `<li class="ml-mut">${T('لم ترد مشاركات بعد.', 'No entries yet.')}</li>`}</ul></div>`;
       },
       judge() {
-        const cs = crit(), sum = cs.reduce((a, c) => a + (+c.w || 0), 0), jids = Object.keys(judges), cnt = j => Object.values(scores[j] || {}).filter(s => s.coi || cs.every((_, i) => s.c && s.c[i] >= 1)).length;
-        return `<div class="ml-card"><h2>${T('المعايير', 'Criteria')}</h2><div style="display:grid;gap:8px">${cs.map((c, i) => `<div class="ml-crit"><input class="ml-in" dir="auto" data-cn="${i}" maxlength="60" value="${esc(c.n)}" aria-label="${T('المعيار', 'Criterion')}"><input class="ml-in" type="number" min="0" max="100" data-cw="${i}" value="${+c.w}" aria-label="${T('الوزن', 'Weight')}"><button class="ml-b sm bad" data-crx="${i}" aria-label="${T('حذف', 'Delete')}">${IC.x}</button></div>`).join('')}</div><div class="ml-row"><button class="ml-b sm" id="hCrA">${T('إضافة معيار', 'Add a criterion')}</button><button class="ml-b sm main" id="hCrS">${T('حفظ', 'Save')}</button><span class="ml-mut">${T('مجموع الأوزان', 'Total weight')} ${num(sum)}%</span></div></div>
-        <div class="ml-card"><h2>${T('المحكّمون', 'Judges')} (${num(jids.length)})</h2><ul class="ml-list">${jids.map(j => `<li><div class="ml-t"><b dir="auto">${esc(judges[j].n)}</b></div><small class="ml-mut">${T(`أنجز ${num(cnt(j))}`, `${cnt(j)} done`)}</small></li>`).join('') || `<li class="ml-mut">${T('لم ينضم محكّمون بعد.', 'No judges yet.')}</li>`}</ul><label class="ml-f"><span>${T('من يقيّم كل مشاركة', 'Who scores each entry')}</span><select id="hWho"><option value="all" ${E.cfg.perPoster ? '' : 'selected'}>${T('جميع المحكّمين', 'All judges')}</option><option value="n" ${E.cfg.perPoster ? 'selected' : ''}>${T('عدد محدد بتوزيع متوازن', 'A set number, evenly distributed')}</option></select></label><div class="ml-row" id="hNum" ${E.cfg.perPoster ? '' : 'hidden'}><input class="ml-in" style="width:70px" id="hPer" type="number" min="1" max="20" value="${+E.cfg.perPoster || 3}" aria-label="${T('العدد', 'Number')}"><button class="ml-b sm" id="hDist" ${jids.length ? '' : 'disabled'}>${T('توزيع', 'Distribute')}</button></div><label class="ml-row" style="font-size:.9rem"><input type="checkbox" id="hLock" ${E.cfg.lock ? 'checked' : ''}> ${T('إغلاق باب التقييم', 'Close judging')}</label><label class="ml-row" style="font-size:.9rem"><input type="checkbox" id="hAud" ${E.cfg.aud ? 'checked' : ''}> ${T('إتاحة تصويت الجمهور', 'Allow audience voting')}</label></div>`;
+        const cs = crit(), jids = Object.keys(judges), cnt = j => Object.values(scores[j] || {}).filter(s => s.coi || cs.every((_, i) => s.c && s.c[i] >= 1)).length;
+        return `<div class="ml-card"><h2>${T('المحكّمون', 'Judges')} (${num(jids.length)})</h2><ul class="ml-list">${jids.map(j => `<li><div class="ml-t"><b dir="auto">${esc(judges[j].n)}</b></div><small class="ml-mut">${T(`أنجز ${num(cnt(j))}`, `${cnt(j)} done`)}</small></li>`).join('') || `<li class="ml-mut">${T('لم ينضم محكّمون بعد.', 'No judges yet.')}</li>`}</ul><label class="ml-f"><span>${T('من يقيّم كل مشاركة', 'Who scores each entry')}</span><select id="hWho"><option value="all" ${E.cfg.perPoster ? '' : 'selected'}>${T('جميع المحكّمين', 'All judges')}</option><option value="n" ${E.cfg.perPoster ? 'selected' : ''}>${T('عدد محدد بتوزيع متوازن', 'A set number, evenly distributed')}</option></select></label><div class="ml-row" id="hNum" ${E.cfg.perPoster ? '' : 'hidden'}><input class="ml-in" style="width:70px" id="hPer" type="number" min="1" max="20" value="${+E.cfg.perPoster || 3}" aria-label="${T('العدد', 'Number')}"><button class="ml-b sm" id="hDist" ${jids.length ? '' : 'disabled'}>${T('توزيع', 'Distribute')}</button></div><label class="ml-row" style="font-size:.9rem"><input type="checkbox" id="hLock" ${E.cfg.lock ? 'checked' : ''}> ${T('إغلاق باب التقييم', 'Close judging')}</label></div>`;
       },
-      stage() { return stageList(scores, judges) + `<div class="ml-card"><label class="ml-row"><span class="ml-mut">${T('مدة العرض لكل مشاركة بالدقائق', 'Minutes per entry')}</span><input class="ml-in" style="width:80px" id="hSec" type="number" min="1" max="60" value="${+E.cfg.stageMin || 3}"></label><label class="ml-f"><span>${T('رابط البث الاحتياطي', 'Backup broadcast link')}</span><input id="hLive" type="url" dir="ltr" maxlength="300" value="${esc(E.cfg.live || '')}"></label></div>` + peopleList(here); },
+      stage() { return stageList(scores, judges) + peopleList(here); },
       res() {
-        const r = computeResults(E.items, scores, crit()), tv = {}; Object.values(votes).forEach(v => { tv[v] = (tv[v] || 0) + 1; });
+        const r = computeResults(visItems(), scores, crit()), tv = {}; Object.values(votes).forEach(v => { tv[v] = (tv[v] || 0) + 1; });
         return `<div class="ml-card"><p class="ml-mut">${r.method === 'z' ? T('تم ترتيب المشاركات بعد معايرة درجات كل محكّم بالدرجة المعيارية؛ لأن المحكّمين لم يقيّموا المشاركات نفسها.', 'Ranked after standardising each judge’s scores, because judges did not score the same entries.') : T('تم ترتيب المشاركات بالمتوسط الموزون.', 'Ranked by the weighted mean.')}</p><div class="ml-tbl"><table><thead><tr><th>${T('الترتيب', 'Rank')}</th><th>${T('الرقم', 'No.')}</th><th>${T('المشاركة', 'Entry')}</th><th>${T('المحكّمون', 'Judges')}</th><th>${T('الدرجة', 'Score')}</th>${r.method === 'z' ? '<th>z</th>' : ''}<th>${T('الانحراف', 'SD')}</th>${E.cfg.aud ? `<th>${T('الجمهور', 'Audience')}</th>` : ''}</tr></thead><tbody>${r.rows.map(x => `<tr><td class="num">${x.rank ? num(x.rank) : '—'}</td><td class="num">${num(E.numOf[x.p])}</td><td class="wr" dir="auto">${esc(E.items[x.p].t)}</td><td class="num">${num(x.k)}</td><td class="num">${x.k ? num(x.mean.toFixed(1)) : '—'}</td>${r.method === 'z' ? `<td class="num" dir="ltr">${x.k ? x.z.toFixed(2) : '—'}</td>` : ''}<td class="num">${x.k > 1 ? num(x.sd.toFixed(1)) : '—'}</td>${E.cfg.aud ? `<td class="num">${num(tv[x.p] || 0)}</td>` : ''}</tr>`).join('')}</tbody></table></div><div class="ml-row"><button class="ml-b sm" id="hCsv">${T('تنزيل CSV', 'Download CSV')}</button><button class="ml-b sm" id="hFb">${T('إرسال الملاحظات إلى المشاركين', 'Send notes to participants')}</button><button class="ml-b sm main" id="hPub">${E.stage && E.stage.mode === 'res' ? T('إخفاء النتائج', 'Hide results') : T('إعلان المراكز الأولى', 'Announce the winners')}</button></div></div>`;
       }
     };
     const bind = () => {
       $$('[data-copy]').forEach(b => b.onclick = () => copy(b.dataset.copy));
       $$('[data-qrb]').forEach(b => b.onclick = () => { const h = $('#hQr'); if (!window.qrcode || !h) return; const q = qrcode(0, 'M'); q.addData(b.dataset.qrb); q.make(); h.innerHTML = q.createSvgTag({ scalable: true, margin: 2 }); h.firstElementChild.style.cssText = 'width:200px;height:200px;background:#fff;border-radius:8px;display:block'; });
+      $$('[data-go-tab]').forEach(l => l.onclick = () => { const b = $(`.ml-tabs [data-t="${l.dataset.goTab}"]`); if (b) b.click(); });
+      $$('[data-rv]').forEach(b => b.onclick = () => { const p = b.dataset.p, it = E.items[p], set = n => R('rev/' + p).set({ s: b.dataset.rv, n: n || null, t: Date.now() }).then(() => { if (it.own) pingTo(it.own, { k: 'rv', s: b.dataset.rv }); }); if (b.dataset.rv !== 'fix') return set(''); const li = b.closest('li'); if ($('.ml-rvn', li)) return; const d = document.createElement('div'); d.className = 'ml-rvn ml-row'; d.style.width = '100%'; d.innerHTML = `<input class="ml-in ml-grow" dir="auto" maxlength="300" placeholder="${T('التعديل المطلوب', 'The change needed')}" aria-label="${T('التعديل المطلوب', 'The change needed')}"><button class="ml-b sm main">${T('إرسال', 'Send')}</button>`; li.appendChild(d); $('button', d).onclick = () => set($('input', d).value.trim()); $('input', d).focus(); });
+      const cl = $('#hClose'); if (cl) { cl.onchange = e => R('cfg/closeAt').set(e.target.value ? new Date(e.target.value).getTime() : null); $('#hRev').onchange = e => R('cfg/review').set(e.target.checked ? true : null); }
       const dl = $('#hDelE'); if (dl) { let armed = false; dl.onclick = () => { if (!armed) { armed = true; dl.textContent = T('تأكيد الحذف النهائي', 'Confirm permanent deletion'); return; } const id = E.id; store.set('mine', store.get('mine', []).filter(m => m.id !== id)); R().remove().then(() => { E.id = null; location.hash = ''; }); }; }
       const add = $('#hAdd'); if (add) add.onclick = () => { editing = R('items').push().key; paint(true); };
       $$('[data-ed]').forEach(b => b.onclick = () => { editing = b.dataset.ed; paint(true); });
       $$('[data-del]').forEach(b => { let armed = false; b.onclick = () => { if (!armed) { armed = true; b.textContent = T('تأكيد', 'Confirm'); return; } const p = b.dataset.del; R().update({ ['items/' + p]: null, ['thumb/' + p]: null, ['full/' + p]: null }); }; });
       if (editing && $('#hEdit')) { posterForm($('#hEdit'), editing, () => { editing = null; paint(true); }); $('#hEBack').onclick = () => { editing = null; paint(true); }; }
-      const fS = $('#hFS'); if (fS) { const read = () => $$('[data-fn]').map((x, i) => ({ n: x.value.trim().slice(0, 50), lim: Math.max(0, +$(`[data-fl="${i}"]`).value || 0) })); fS.onclick = () => { const v = read().filter(f => f.n); R('cfg').update({ form: v, how: $('#hHow').value }).then(() => toast(T('تم الحفظ', 'Saved'))); }; $('#hFA').onclick = () => { E.cfg.form = read().concat([{ n: '', lim: 50 }]); paint(true); $('details.ml-card').open = true; }; $$('[data-fx]').forEach(b => b.onclick = () => { const v = read(); v.splice(+b.dataset.fx, 1); E.cfg.form = v; paint(true); $('details.ml-card').open = true; }); }
+      const fS = $('#hFS'); if (fS) { const read = () => $$('[data-fn]').map((x, i) => ({ n: x.value.trim().slice(0, 50), lim: Math.max(0, +$(`[data-fl="${i}"]`).value || 0) })); fS.onclick = () => { const v = read().filter(f => f.n); R('cfg').update({ form: v, how: $('#hHow').value }).then(() => toast(T('تم الحفظ', 'Saved'))); }; $('#hFA').onclick = () => { E.cfg.form = read().concat([{ n: '', lim: 50 }]); paint(true); }; $$('[data-fx]').forEach(b => b.onclick = () => { const v = read(); v.splice(+b.dataset.fx, 1); E.cfg.form = v; paint(true); }); }
       const trS = $('#hTrS'); if (trS) trS.onclick = () => { const v = $('#hTr').value.split('\n').map(x => x.trim()).filter(Boolean).slice(0, 8); if (v.length) R('cfg/tracks').set(v).then(() => toast(T('تم الحفظ', 'Saved'))); };
       const crS = $('#hCrS');
       if (crS) {
         const read = () => $$('[data-cn]').map((x, i) => ({ n: x.value.trim().slice(0, 60), w: Math.max(0, +$(`[data-cw="${i}"]`).value || 0) }));
+        $('#hAud').onchange = e => R('cfg/aud').set(e.target.checked ? true : null);
         crS.onclick = () => { const v = read().filter(c => c.n); if (v.length) R('cfg/crit').set(v).then(() => toast(T('تم الحفظ', 'Saved'))); };
         $('#hCrA').onclick = () => { E.cfg.crit = read().concat([{ n: '', w: 10 }]); paint(true); };
         $$('[data-crx]').forEach(b => b.onclick = () => { const v = read(); v.splice(+b.dataset.crx, 1); E.cfg.crit = v; paint(true); });
+      }
+      const who = $('#hWho'); if (who) {
         $('#hWho').onchange = e => { const all = e.target.value === 'all'; $('#hNum').hidden = all; if (all) R().update({ 'cfg/perPoster': null, assign: null }).then(() => toast(T('سيقيّم جميع المحكّمين كل المشاركات', 'All judges will score every entry'))); };
         $('#hDist').onclick = () => { const per = Math.max(1, +$('#hPer').value || 3), own = {}; E.order.forEach(p => { own[p] = E.items[p].own; }); R().update({ 'cfg/perPoster': per, assign: balancedAssign(E.order, Object.keys(judges), per, own) }).then(() => toast(T('تم التوزيع', 'Distributed'))); };
-        $('#hLock').onchange = e => R('cfg/lock').set(e.target.checked ? true : null); $('#hAud').onchange = e => R('cfg/aud').set(e.target.checked ? true : null);
+        $('#hLock').onchange = e => R('cfg/lock').set(e.target.checked ? true : null);
       }
       if ($('[data-show]') || $('#hOpen')) stageListBind();
+      const rmBox = $('#hRm'); if (rmBox) { const save = () => { const v = $$('.hl-rm', rmBox).map(e => { const n = $('[data-rm=n]', e).value.trim().slice(0, 40), u = $('[data-rm=u]', e).value.trim(); return n ? { n, w: $('[data-rm=w]', e).value.trim().slice(0, 40) || null, u: /^https:\/\//.test(u) ? u : null } : null; }).filter(Boolean).slice(0, 8); R('cfg/rooms').set(v.length ? v : null).catch(() => toast(T('تعذر الحفظ', 'Could not save'))); }, add = r => { const d = document.createElement('div'); d.className = 'hl-rm'; d.innerHTML = `<input class="ml-in" data-rm="n" dir="auto" placeholder="${T('اسم الجلسة', 'Session name')}" value="${esc(r.n || '')}"><input class="ml-in" data-rm="w" dir="auto" placeholder="${T('الوقت', 'Time')}" value="${esc(r.w || '')}"><input class="ml-in" data-rm="u" dir="ltr" placeholder="${T('رابط خارجي، إن وُجد', 'External link, if any')}" value="${esc(r.u || '')}"><button class="ml-b sm" aria-label="${T('حذف', 'Remove')}">${IC.x}</button>`; d.querySelector('button').onclick = () => { d.remove(); save(); }; $$('input', d).forEach(i => i.onchange = save); rmBox.appendChild(d); return d; }; roomsCfg().forEach(add); $('#hRmAdd').onclick = () => { if ($$('.hl-rm', rmBox).length < 8) add({}).querySelector('input').focus(); }; }
+      const rs = $('#hRes'); if (rs) rs.onchange = e => R('cfg/res').set(Math.max(0, Math.min(4, +e.target.value || 0)));
       const lv = $('#hLive'); if (lv) lv.onchange = e => { const v = e.target.value.trim(); R('cfg/live').set(/^https:\/\//.test(v) ? v : null); };
       const sc = $('#hSec'); if (sc) sc.onchange = e => R('cfg/stageMin').set(Math.max(1, +e.target.value || 3));
       const csv = $('#hCsv'); if (csv) csv.onclick = () => {
-        const r = computeResults(E.items, scores, crit()), head = ['rank', 'no', 'title', 'participant', 'judges', 'mean', 'z', 'sd'].concat(crit().map(c => c.n)), rows = r.rows.map(x => [x.rank || '', E.numOf[x.p], E.items[x.p].t, E.items[x.p].a || '', x.k, x.k ? x.mean.toFixed(2) : '', x.k ? x.z.toFixed(3) : '', x.k > 1 ? x.sd.toFixed(2) : ''].concat(x.crits.map(c => c == null ? '' : c.toFixed(2))));
+        const r = computeResults(visItems(), scores, crit()), head = ['rank', 'no', 'title', 'participant', 'judges', 'mean', 'z', 'sd'].concat(crit().map(c => c.n)), rows = r.rows.map(x => [x.rank || '', E.numOf[x.p], E.items[x.p].t, E.items[x.p].a || '', x.k, x.k ? x.mean.toFixed(2) : '', x.k ? x.z.toFixed(3) : '', x.k > 1 ? x.sd.toFixed(2) : ''].concat(x.crits.map(c => c == null ? '' : c.toFixed(2))));
         const q = v => { let s = String(v); if (/^[=+\-@]/.test(s)) s = "'" + s; return '"' + s.replace(/"/g, '""') + '"'; }, blob = new Blob(['﻿' + [head].concat(rows).map(l => l.map(q).join(',')).join('\n')], { type: 'text/csv' }), a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'multaqa-' + E.id + '.csv'; a.click();
       };
-      const fbB = $('#hFb'); if (fbB) fbB.onclick = () => { const r = computeResults(E.items, scores, crit()), up = {}; r.rows.forEach(x => { const own = E.items[x.p].own || x.p; if (x.notes.length) up[own] = { notes: x.notes }; }); R('fb').set(up).then(() => toast(T('تم الإرسال دون ذكر أسماء المحكّمين', 'Sent without judges’ names'))); };
+      const fbB = $('#hFb'); if (fbB) fbB.onclick = () => { const r = computeResults(visItems(), scores, crit()), up = {}; r.rows.forEach(x => { const own = E.items[x.p].own || x.p; if (x.notes.length) up[own] = { notes: x.notes }; }); R('fb').set(up).then(() => toast(T('تم الإرسال دون ذكر أسماء المحكّمين', 'Sent without judges’ names'))); };
       const pub = $('#hPub'); if (pub) pub.onclick = () => {
         if (E.stage && E.stage.mode === 'res') return R('stage/mode').set('show').then(() => paint(true));
-        const r = computeResults(E.items, scores, crit()), top = r.rows.filter(x => x.rank && x.rank <= 3).slice(0, 5).map(x => ({ rank: x.rank, n: E.numOf[x.p], t: E.items[x.p].t, a: E.items[x.p].a || '' }));
+        const r = computeResults(visItems(), scores, crit()), top = r.rows.filter(x => x.rank && x.rank <= 3).slice(0, 5).map(x => ({ rank: x.rank, n: E.numOf[x.p], t: E.items[x.p].t, a: E.items[x.p].a || '' }));
         if (!top.length) return toast(T('لا توجد درجات بعد', 'No scores yet')); R().update({ results: { top, at: TS() }, 'stage/mode': 'res', 'stage/open': false }).then(() => paint(true));
       };
     };
     const paint = force => {
       const ae = document.activeElement, s = $('#hSum'); if (s) s.textContent = T(`${num(E.order.length)} مشاركة · ${num(Object.keys(judges).length)} محكّمين · ${num(Object.keys(here).length)} في القاعة`, `${E.order.length} entries · ${Object.keys(judges).length} judges · ${Object.keys(here).length} in the hall`);
-      if (!$('#hBody')) return; if (!force && (editing || (ae && /INPUT|TEXTAREA|SELECT/.test(ae.tagName) && $('#hBody').contains(ae)))) return; if (!force && tab === 'links') return;
+      if (!$('#hBody')) return; if (!force && (editing || (ae && /INPUT|TEXTAREA|SELECT/.test(ae.tagName) && $('#hBody').contains(ae)))) return; if (!force && tab === 'setup') return;
       $('#hBody').innerHTML = P[tab](); bind();
     };
     view.refresh = () => paint();
@@ -545,9 +629,9 @@
       el.innerHTML = `<h1>${T('النتائج', 'Results')}</h1><div class="st-rank">${St.res.top.slice().sort((a, b) => a.rank - b.rank).map(x => `<div><i>${num(x.rank)}</i><span><b dir="auto">${esc(x.t)}</b><br><small dir="auto">${esc(x.a)}</small></span></div>`).join('')}</div>` + ctl(`<button class="ml-b" data-m="show">${T('العودة إلى العرض', 'Back to the show')}</button>`);
       $$('[data-m]', el).forEach(b => b.onclick = () => R('stage/mode').set('show')); stageBind(); return;
     }
-    if (!it) { el.innerHTML = `<div class="st-img"><div style="text-align:center"><h1 dir="auto">${esc(E.meta.t)}</h1><p class="st-fin">${T(`${num(E.order.length)} مشاركة`, `${E.order.length} entries`)}</p></div></div><div class="st-side"><div id="stQr" style="width:220px;background:#fff;border-radius:10px"></div><code dir="ltr" style="word-break:break-all;font-size:.75em">${esc(linkFor(''))}</code></div>` + ctl(`<button class="ml-b main" data-go="0">${T('بدء العرض', 'Start')}</button>`); stageBind(); script('https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js').then(() => { const b = $('#stQr', el); if (b && window.qrcode) { const q = qrcode(0, 'M'); q.addData(linkFor('')); q.make(); b.innerHTML = q.createSvgTag({ scalable: true, margin: 2 }); } }).catch(() => {}); return; }
+    if (!it) { el.innerHTML = `<div class="st-img"><div style="text-align:center"><h1 dir="auto">${esc(E.meta.t)}</h1><p class="st-fin">${T(`${num(E.order.length)} مشاركة`, `${E.order.length} entries`)}</p></div></div><div class="st-side"><div id="stQr" style="width:220px;background:#fff;border-radius:10px"></div><code dir="ltr" style="word-break:break-all;font-size:.75em">${esc(linkFor(''))}</code></div>` + ctl(`<button class="ml-b" data-list="1">${T('القائمة', 'List')}</button><button class="ml-b main" data-go="0">${T('بدء العرض', 'Start')}</button>`); stageBind(); script('https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js').then(() => { const b = $('#stQr', el); if (b && window.qrcode) { const q = qrcode(0, 'M'); q.addData(linkFor('')); q.make(); b.innerHTML = q.createSvgTag({ scalable: true, margin: 2 }); } }).catch(() => {}); return; }
     const i = E.order.indexOf(p), yt = it.v && String(it.v).match(/(?:youtu\.be\/|v=|shorts\/|embed\/)([\w-]{11})/), hasMedia = it.rc || it.v;
-    el.innerHTML = `<div class="st-img" id="stMain"></div><div class="st-side"><div class="st-num">${num(E.numOf[p])}</div><h1 dir="auto">${esc(it.t)}</h1>${it.fi ? `<p class="st-fin" dir="auto">${esc(it.fi)}</p>` : ''}<p class="st-au" dir="auto">${esc(it.a || '')}</p><div id="stAudio"></div><div class="st-state"><div class="st-big" id="stClock">${st.until ? clock(Math.max(0, st.until - Date.now())) : ''}</div></div></div>` +
+    el.innerHTML = `<div class="st-img" id="stMain"></div><div class="st-side"><div class="st-num">${num(E.numOf[p])}</div><h1 dir="auto">${esc(it.t)}</h1>${it.fi ? `<p class="st-fin" dir="auto">${esc(it.fi)}</p>` : ''}<div class="ml-spk" id="stSpk" hidden></div><div id="stAudio"></div><div class="st-state"><div class="st-big" id="stClock">${st.until ? clock(Math.max(0, st.until - Date.now())) : ''}</div></div></div>` +
       ctl(`<button class="ml-b" data-list="1">${T('القائمة', 'List')}</button><button class="ml-b" data-go="${i - 1}" ${i < 1 ? 'disabled' : ''}>${T('السابق', 'Previous')}</button><button class="ml-b" data-tog="1">${st.open ? T('إغلاق التقييم', 'Close judging') : T('فتح التقييم', 'Open judging')}</button><button class="ml-b" data-voice="1">${IC.mic}${Bc.on ? T('إيقاف الصوت', 'Stop sound') : T('تشغيل الصوت', 'Start sound')}<small></small></button>${hasMedia ? `<button class="ml-b" data-play="1">${play ? T('إيقاف التسجيل', 'Stop the recording') : T('تشغيل التسجيل', 'Play the recording')}</button>` : ''}${i >= E.order.length - 1 ? (isHost() ? `<button class="ml-b main" data-res="1">${T('إعلان النتائج', 'Announce the results')}</button>` : '') : `<button class="ml-b main" data-go="${i + 1}">${T('المشاركة التالية', 'Next entry')}</button>`}`);
     const main = $('#stMain', el);
     if (play && yt) main.innerHTML = `<div style="width:100%;aspect-ratio:16/9"><iframe src="https://www.youtube-nocookie.com/embed/${yt[1]}?autoplay=1" title="${T('العرض المسجل', 'Recorded talk')}" allow="autoplay; encrypted-media" allowfullscreen style="width:100%;height:100%;border:0"></iframe></div>`;
@@ -574,7 +658,7 @@
     const el = St.el;
     $$('[data-go]', el).forEach(b => b.onclick = () => { const p = E.order[+b.dataset.go]; if (p) R('stage').update({ cur: p, open: true, mode: 'show', play: null, until: Date.now() + durOf(p) * 1000 }); });
     $$('[data-out]', el).forEach(b => b.onclick = () => { location.hash = 'e=' + E.id; });
-    $$('[data-res]', el).forEach(b => b.onclick = () => { const r = computeResults(E.items, St.scores, crit()), top = r.rows.filter(x => x.rank && x.rank <= 3).slice(0, 5).map(x => ({ rank: x.rank, n: E.numOf[x.p], t: E.items[x.p].t, a: E.items[x.p].a || '' })); if (!top.length) return toast(T('لا توجد درجات بعد', 'No scores yet')); R().update({ results: { top, at: TS() }, 'stage/mode': 'res', 'stage/open': false }); });
+    $$('[data-res]', el).forEach(b => b.onclick = () => { const r = computeResults(visItems(), St.scores, crit()), top = r.rows.filter(x => x.rank && x.rank <= 3).slice(0, 5).map(x => ({ rank: x.rank, n: E.numOf[x.p], t: E.items[x.p].t, a: E.items[x.p].a || '' })); if (!top.length) return toast(T('لا توجد درجات بعد', 'No scores yet')); R().update({ results: { top, at: TS() }, 'stage/mode': 'res', 'stage/open': false }); });
     $$('[data-tog]', el).forEach(b => b.onclick = () => R('stage/open').set(!E.stage.open));
     $$('[data-play]', el).forEach(b => b.onclick = () => R('stage/play').set(E.stage.play && E.stage.play.p === E.stage.cur ? null : { p: E.stage.cur, at: Date.now() }));
     $$('[data-voice]', el).forEach(b => b.onclick = async () => { if (Bc.on) { bcStop(); callEnd(); St.key = ''; return stageRender(); } if (!name()) store.set('name', T('المسرح', 'Stage')); joinRoom('stage'); await bcStart(); St.key = ''; stageRender(); });
@@ -584,11 +668,11 @@
 
   /* ---------- conversation: one room, one small control bar, cameras beside the poster ---------- */
   const Call = { room: null, t: null, tiles: {}, note: '' };
-  function joinRoom(room, video) {
+  function joinRoom(room, video, tag) {
     if (!window.AV) return; $$('.hl-card').forEach(c => c.remove());
     if (Call.room !== room) { if (Call.room) AV.detach(); Call.room = room; const ref = R('talk/' + room); ref.child('on').set(true).catch(() => {}); AV.attach({ ref, uid, name: name() || T('زائر', 'Visitor'), host: false, hostUid: 'none' }); }
     Promise.resolve(AV.join()).then(() => { const v = AV.view(); if (video && v && v.joined && !v.cam) AV.toggleCam(); });
-    if (H.on) R('here/' + uid + '/c').set(room).catch(() => {});
+    Call.tag = tag || room; if (H.on) R('here/' + uid + '/c').set(Call.tag).catch(() => {});
     if (!Call.t) Call.t = setInterval(callSync, 300); callSync();
   }
   function callEnd() {
@@ -606,11 +690,17 @@
     const m = $('#clM'), c = $('#clC'), mk = (v.mic ? 'y' : 'n'), ck = (v.cam ? 'y' : 'n'); if (m.dataset.s !== mk) { m.dataset.s = mk; m.innerHTML = v.mic ? IC.mic : IC.micOff; m.className = v.mic ? '' : 'off'; } if (c.dataset.s !== ck) { c.dataset.s = ck; c.innerHTML = v.cam ? IC.cam : IC.camOff; c.className = v.cam ? 'on' : ''; }
     const want = {}; v.people.forEach(p => { want[p.u] = p; });
     Object.keys(Call.tiles).forEach(k => { if (k !== '_me' && !want[k]) { Call.tiles[k].el.remove(); delete Call.tiles[k]; } });
-    v.people.forEach(p => { let t = Call.tiles[p.u]; if (!t) { t = Call.tiles[p.u] = tile(p.u, p.n); wrap.appendChild(t.el); } setTrack(t, p.v ? p.track : null); t.el.classList.toggle('talk', !!v.talk[p.u]); });
+    const sp0 = (St.on || (H.open && H.open.room === 'stage')) ? speakerNow() : null, skip = sp0 ? [sp0.own].concat(Object.keys((E.team && E.team[E.stage.cur]) || {})) : []; v.people.forEach(p => { if (skip.includes(p.u)) { if (Call.tiles[p.u]) { Call.tiles[p.u].el.remove(); delete Call.tiles[p.u]; } return; } let t = Call.tiles[p.u]; if (!t) { t = Call.tiles[p.u] = tile(p.u, p.n); wrap.appendChild(t.el); } setTrack(t, p.v ? p.track : null); t.el.classList.toggle('talk', !!v.talk[p.u]); });
     if (v.cam && v.me) { if (!Call.tiles._me) { Call.tiles._me = tile('_me', name(), true); wrap.appendChild(Call.tiles._me.el); } setTrack(Call.tiles._me, v.me); } else if (Call.tiles._me) { Call.tiles._me.el.remove(); delete Call.tiles._me; }
     if (v.note && v.note !== Call.note) toast(v.note); Call.note = v.note;
     if (H.on) Object.values(H.peers).forEach(w => { const p = want[w.u]; headSet(w, p && p.v ? p.track : null); });
   }
+  /* the participant whose entry is on stage: beside the display, and standing on the stage in the hall */
+  function speakerNow() { const st = E.stage || {}, it = st.cur && E.items[st.cur]; if (!it || st.mode === 'res') return null; const v = window.AV && AV.view(), ids = [it.own].concat(Object.keys((E.team && E.team[st.cur]) || {})), p = v && v.people.find(x => ids.includes(x.u) && x.v && x.track), bt = Bc.vTrack && !Bc.vTrack.muted ? Bc.vTrack : null; return { name: it.a || '', own: it.own, track: p ? p.track : bt, talking: !!(v && v.people.some(x => ids.includes(x.u) && v.talk[x.u])) }; }
+  function spkPaint(box, sp) { if (!box) return; if (!sp) { box.hidden = true; return; } box.hidden = false; if (!box.firstChild) box.innerHTML = '<video playsinline autoplay muted hidden></video><i aria-hidden="true"></i><span dir="auto"></span>'; const v = $('video', box), tr = sp.track || null; if (box._tr !== tr) { box._tr = tr; v.hidden = !tr; if (tr) { v.srcObject = new MediaStream([tr]); v.play().catch(() => {}); } else v.srcObject = null; } $('i', box).textContent = sp.name.charAt(0); $('i', box).hidden = !!tr; $('span', box).textContent = sp.name; box.classList.toggle('talk', sp.talking); }
+  setInterval(() => { if (!St.on && !H.on) return; const sp = speakerNow(); if (St.on) spkPaint($('#stSpk', St.el), sp); if (H.on && H.el) { spkPaint($('#pvSpk', H.el), H.open && H.open.room === 'stage' ? sp : null); if (H.spk) { H.spk.g.visible = !!sp; if (sp && H.spk.nm !== sp.name) { H.spk.nm = sp.name; nameSprite(H.spk, sp.name); } headSet(H.spk, sp ? sp.track : null); if (H.spk.vm && H.cam) H.spk.vm.lookAt(H.cam.position.x, 1.88, H.cam.position.z); } Object.values(H.peers).forEach(w => { w.ownerHidden = !!(sp && sp.own === w.u); }); } }, 500);
+  window.__mlSpk = () => { const sp = speakerNow(); return sp && { name: sp.name, video: !!sp.track, pawn: !!(H.spk && H.spk.g.visible), head: !!(H.spk && H.spk.vm) }; };
+
   /* a person's camera, when on, takes the place of their head in the hall */
   function headSet(w, tr) {
     if (w.vt === tr) return; headOff(w); if (!tr) return; w.vt = tr; const v = document.createElement('video'); v.playsInline = true; v.muted = true; v.autoplay = true; v.srcObject = new MediaStream([tr]); v.play().catch(() => {});
@@ -625,18 +715,18 @@
     if (Bc.on) return; const AC = window.AudioContext || window.webkitAudioContext; Bc.ctx = new AC(); Bc.dest = Bc.ctx.createMediaStreamDestination(); await Bc.ctx.resume().catch(() => {});
     try { const m = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } }); Bc.mic = m; Bc.ctx.createMediaStreamSource(m).connect(Bc.dest); } catch (e) { toast(T('لم يُسمح باستخدام الميكروفون.', 'Microphone access was not allowed.')); }
     Bc.on = true; const ref = R('talk/bc'), lis = ref.child('l'); ref.child('sig').remove().catch(() => {}); ref.child('on').onDisconnect().remove(); ref.child('on').set(true).catch(() => {});
-    const add = async s => { const u = s.key; if (Bc.pcs[u] || Object.keys(Bc.pcs).length >= Bc.MAX) return; const pc = Bc.pcs[u] = new RTCPeerConnection(BC_ICE); Bc.dest.stream.getAudioTracks().forEach(t => { const sn = pc.addTrack(t, Bc.dest.stream); try { const p = sn.getParameters(); if (!p.encodings || !p.encodings.length) p.encodings = [{}]; p.encodings[0].maxBitrate = 48000; sn.setParameters(p).catch(() => {}); } catch (e) {} }); const o = await pc.createOffer(); await pc.setLocalDescription(o); await iceDone(pc); await ref.child('sig/' + u + '/o').set(JSON.stringify(pc.localDescription)); const a = ref.child('sig/' + u + '/a'), f = q => { if (q.val()) { pc.setRemoteDescription(JSON.parse(q.val())).catch(() => {}); a.off('value', f); } }; a.on('value', f); stageCount(); };
+    const add = async s => { const u = s.key; if (Bc.pcs[u] || Object.keys(Bc.pcs).length >= Bc.MAX) return; const pc = Bc.pcs[u] = new RTCPeerConnection(BC_ICE); const vtr = pc.addTransceiver('video', { direction: 'sendonly' }); Bc.vs = Bc.vs || {}; Bc.vs[u] = vtr.sender; try { const p0 = vtr.sender.getParameters(); if (!p0.encodings || !p0.encodings.length) p0.encodings = [{}]; p0.encodings[0].maxBitrate = 140000; vtr.sender.setParameters(p0).catch(() => {}); } catch (e) {} Bc.dest.stream.getAudioTracks().forEach(t => { const sn = pc.addTrack(t, Bc.dest.stream); try { const p = sn.getParameters(); if (!p.encodings || !p.encodings.length) p.encodings = [{}]; p.encodings[0].maxBitrate = 48000; sn.setParameters(p).catch(() => {}); } catch (e) {} }); const o = await pc.createOffer(); await pc.setLocalDescription(o); await iceDone(pc); await ref.child('sig/' + u + '/o').set(JSON.stringify(pc.localDescription)); const a = ref.child('sig/' + u + '/a'), f = q => { if (q.val()) { pc.setRemoteDescription(JSON.parse(q.val())).catch(() => {}); a.off('value', f); } }; a.on('value', f); stageCount(); };
     const rm = s => { const pc = Bc.pcs[s.key]; if (pc) { pc.close(); delete Bc.pcs[s.key]; ref.child('sig/' + s.key).remove().catch(() => {}); stageCount(); } };
     lis.on('child_added', add); lis.on('child_removed', rm); Bc.off = [() => lis.off('child_added', add), () => lis.off('child_removed', rm)];
-    Bc.t = setInterval(() => { const v = window.AV && AV.view(); if (v) v.people.forEach(p => { if (p.audio && !Bc.src[p.audio.id]) { Bc.src[p.audio.id] = 1; try { Bc.ctx.createMediaStreamSource(new MediaStream([p.audio])).connect(Bc.dest); } catch (e) {} } }); const a = St.el && $('#stAudio audio', St.el); if (a && !a.dataset.bc) { a.dataset.bc = 1; try { const n = Bc.ctx.createMediaElementSource(a); n.connect(Bc.dest); n.connect(Bc.ctx.destination); } catch (e) {} } }, 1000);
+    Bc.t = setInterval(() => { const v = window.AV && AV.view(); if (v) v.people.forEach(p => { if (p.audio && !Bc.src[p.audio.id]) { Bc.src[p.audio.id] = 1; try { Bc.ctx.createMediaStreamSource(new MediaStream([p.audio])).connect(Bc.dest); } catch (e) {} } }); const sp = speakerNow(), tv = sp && Object.keys(Bc.pcs).length <= 20 ? sp.track : null; Object.keys(Bc.vs || {}).forEach(u => { const q = Bc.vs[u]; if (!Bc.pcs[u]) return delete Bc.vs[u]; if (q.track !== tv) q.replaceTrack(tv).catch(() => {}); }); const a = St.el && $('#stAudio audio', St.el); if (a && !a.dataset.bc) { a.dataset.bc = 1; try { const n = Bc.ctx.createMediaElementSource(a); n.connect(Bc.dest); n.connect(Bc.ctx.destination); } catch (e) {} } }, 1000);
   }
   function bcStop() { if (!Bc.on) return; Bc.on = false; clearInterval(Bc.t); Bc.off.forEach(f => f()); Object.values(Bc.pcs).forEach(p => p.close()); Bc.pcs = {}; Bc.src = {}; if (Bc.mic) Bc.mic.getTracks().forEach(t => t.stop()); if (Bc.ctx) Bc.ctx.close().catch(() => {}); R('talk/bc/on').remove().catch(() => {}); }
   function stageCount() { const b = St.el && $('[data-voice] small', St.el); if (b) b.textContent = Bc.on ? ' · ' + num(Object.keys(Bc.pcs).length) : ''; }
   async function bcListen() {
     if (Bc.listening) return bcQuiet(); Bc.listening = true; const ref = R('talk/bc'), me = ref.child('l/' + uid); Bc.au = Bc.au || new Audio(); Bc.au.autoplay = true; Bc.au.setAttribute('playsinline', ''); Bc.au.play().catch(() => {});
-    await ref.child('sig/' + uid).remove().catch(() => {}); me.onDisconnect().remove(); await me.set(1).catch(() => {}); const o = ref.child('sig/' + uid + '/o'), f = async q => { if (!q.val() || !Bc.listening) return; o.off('value', f); const pc = Bc.pc = new RTCPeerConnection(BC_ICE); pc.ontrack = e => { Bc.au.srcObject = e.streams[0] || new MediaStream([e.track]); Bc.au.play().catch(() => {}); }; await pc.setRemoteDescription(JSON.parse(q.val())); const a = await pc.createAnswer(); await pc.setLocalDescription(a); await iceDone(pc); await ref.child('sig/' + uid + '/a').set(JSON.stringify(pc.localDescription)); }; o.on('value', f); Bc.oOff = () => o.off('value', f); stageCount(); bcPaint();
+    await ref.child('sig/' + uid).remove().catch(() => {}); me.onDisconnect().remove(); await me.set(1).catch(() => {}); const o = ref.child('sig/' + uid + '/o'), f = async q => { if (!q.val() || !Bc.listening) return; o.off('value', f); const pc = Bc.pc = new RTCPeerConnection(BC_ICE); pc.ontrack = e => { if (e.track.kind === 'video') { Bc.vTrack = e.track; return; } Bc.au.srcObject = new MediaStream([e.track]); Bc.au.play().catch(() => {}); }; await pc.setRemoteDescription(JSON.parse(q.val())); const a = await pc.createAnswer(); await pc.setLocalDescription(a); await iceDone(pc); await ref.child('sig/' + uid + '/a').set(JSON.stringify(pc.localDescription)); }; o.on('value', f); Bc.oOff = () => o.off('value', f); stageCount(); bcPaint();
   }
-  function bcQuiet() { Bc.listening = false; if (Bc.oOff) Bc.oOff(); if (Bc.pc) { Bc.pc.close(); Bc.pc = null; } if (Bc.au) Bc.au.srcObject = null; if (E.id && db) { R('talk/bc/l/' + uid).remove().catch(() => {}); R('talk/bc/l/' + uid).onDisconnect().cancel().catch(() => {}); } bcPaint(); }
+  function bcQuiet() { Bc.listening = false; Bc.vTrack = null; if (Bc.oOff) Bc.oOff(); if (Bc.pc) { Bc.pc.close(); Bc.pc = null; } if (Bc.au) Bc.au.srcObject = null; if (E.id && db) { R('talk/bc/l/' + uid).remove().catch(() => {}); R('talk/bc/l/' + uid).onDisconnect().cancel().catch(() => {}); } bcPaint(); }
   function bcPaint() { $$('[data-bcl]').forEach(b => { b.hidden = !Bc.live; b.innerHTML = `${IC.mic}${Bc.listening ? T('إيقاف الاستماع', 'Stop listening') : T('الاستماع إلى المسرح', 'Listen to the stage')}`; b.onclick = bcListen; }); }
   window.__mlSit = i => sitAt(i);
   window.__mlBc = () => ({ on: Bc.on, n: Object.keys(Bc.pcs).length, states: Object.values(Bc.pcs).map(p => p.connectionState), listening: Bc.listening, state: Bc.pc && Bc.pc.connectionState, live: Bc.live, tracks: Bc.au && Bc.au.srcObject ? Bc.au.srcObject.getAudioTracks().length : 0 });
@@ -649,7 +739,7 @@
   /* layout: rows of boards, numbered from the entrance, right to left in Arabic reading order */
   function layout() {
     const N = Math.max(E.order.length, 1), cols = N <= 3 ? 3 : N <= 8 ? 4 : N <= 30 ? 5 : 6, rows = Math.ceil(N / cols), GX = 6.4, GZ = 7.6;
-    const W = cols * GX + 3, zIn = 5.5, z0row = -1.2, zBack = z0row - (rows - 1) * GZ - 6.2;
+    const W = cols * GX + 3, zIn = 5.5, z0row = -1.2, zBack = Math.min(z0row - (rows - 1) * GZ - 6.2, zIn - 6 - spaces().length * 3.6);
     const L = { cols, rows, GX, GZ, x0: -W / 2, x1: W / 2, zIn, zBack, spots: {}, rowsInfo: [], th: { x0: -8, x1: 8, z0: zBack - 15, z1: zBack } };
     E.order.forEach((p, i) => {
       const r = Math.floor(i / cols), c = i % cols, x = ((cols - 1) / 2 - c) * GX, z = z0row - r * GZ;
@@ -731,6 +821,14 @@
       addBox(.03, .4, .03, -3, 4.42, zs, frame); addBox(.03, .4, .03, 3, 4.42, zs, frame);
       plane(W - 1, .3, cx, .012, ri.z + 2, 0, -Math.PI / 2, new THREE.MeshLambertMaterial({ color: col, transparent: true, opacity: .72 }));
     });
+    // the way to the stage is painted on the floor, and a directory stands at the entrance
+    const chevC = document.createElement('canvas'); chevC.width = chevC.height = 128; { const x = chevC.getContext('2d'); x.strokeStyle = '#1F3FA8'; x.lineWidth = 20; x.lineCap = 'round'; x.lineJoin = 'round'; x.beginPath(); x.moveTo(24, 92); x.lineTo(64, 40); x.lineTo(104, 92); x.stroke(); }
+    const chevT = canvasTex(chevC); chevT.wrapT = THREE.RepeatWrapping; const gx = L.cols % 2 ? L.GX / 2 : 0, runL = L.zIn - .6 - (L.zBack + 1.6), mkRun = (len) => { const t = chevT.clone(); t.needsUpdate = true; t.repeat.set(1, Math.round(len / .9)); return new THREE.MeshBasicMaterial({ map: t, transparent: true, depthWrite: false }); };
+    plane(1, runL, gx, .016, L.zIn - .6 - runL / 2, 0, -Math.PI / 2, mkRun(runL)); if (gx) { plane(1, gx, gx / 2, .017, L.zIn - .6, -Math.PI / 2, -Math.PI / 2, mkRun(gx)); plane(1, gx, gx / 2, .017, L.zBack + 1.6, Math.PI / 2, -Math.PI / 2, mkRun(gx)); }
+    const dirC = document.createElement('canvas'); dirC.width = 512; dirC.height = 680; { const x = dirC.getContext('2d'), ar = isAr(); x.fillStyle = '#16201F'; x.fillRect(0, 0, 512, 680); x.fillStyle = '#E9C48F'; x.font = `600 40px ${F}`; x.direction = ar ? 'rtl' : 'ltr'; x.textAlign = ar ? 'right' : 'left'; const X = ar ? 470 : 42; x.fillText(T('الدليل', 'Directory'), X, 70); x.font = `500 40px ${F}`; x.fillStyle = '#fff'; let y = 150; x.fillText(T('↑  المسرح', '↑  Stage'), X, y); y += 72;  spaces().slice(0, 6).forEach(r => { if (y < 650) { x.fillText(`←  ${String(r.n).slice(0, 18)}`, X, y); y += 60; } }); }
+    plane(1.5, 2, L.x0 + 2.4, 1.5, L.zIn - 2, 0, 0, new THREE.MeshBasicMaterial({ map: canvasTex(dirC), side: THREE.DoubleSide })); H.solids.push({ x0: L.x0 + 1.6, x1: L.x0 + 3.2, z0: L.zIn - 2.1, z1: L.zIn - 1.9 }); H.G = gridFor(L);
+    // the other places open off the wall opposite the windows
+    H.lamps = {}; L.doors = {}; spaces().forEach((sp, i) => { const z = L.zIn - 5 - i * 3.6, dm = plane(1.8, 2.8, L.x0 + .03, 1.4, z, Math.PI / 2, 0, new THREE.MeshLambertMaterial({ color: sp.pv ? '#2A2F36' : '#6B4C2E' })); dm.userData.room = sp.k; H.pick.push(dm); L.doors[sp.k] = { x: L.x0, z }; plane(2.6, .45, L.x0 + .05, 3.1, z, Math.PI / 2, 0, new THREE.MeshBasicMaterial({ map: txt(String(sp.n), 640, 110, { bg: sp.pv ? '#6B4C2E' : '#16201F', s: 50 }) })); const lm = new THREE.Mesh(new THREE.SphereGeometry(.09, 10, 8), new THREE.MeshBasicMaterial({ color: '#8D949B' })); lm.position.set(L.x0 + .1, 3.52, z); H.scene.add(lm); H.lamps[sp.k] = lm; });
     // boards and posters
     const bm = mat('#FAF8F2');
     E.order.forEach(p => {
@@ -743,14 +841,16 @@
       const pq = plane(.8, .48, s.x, 3.63, s.z + .18, 0, 0, new THREE.MeshBasicMaterial({ map: plaque(p), transparent: true }));
       pq.userData.p = p; H.pick.push(pq);
       plane(5, 5, s.x, .015, s.z + 2, 0, -Math.PI / 2, gm);
-      H.poster[p] = { pm, fm, pq, real: false, loading: false };
+      const lamp = new THREE.Mesh(new THREE.SphereGeometry(.17, 14, 10), new THREE.MeshBasicMaterial({ color: '#AEB4BA' })); lamp.position.set(s.x + .62, 3.63, s.z + .2); H.scene.add(lamp);
+      H.poster[p] = { pm, fm, pq, lamp, real: false, loading: false };
     });
     // the stage room
     const scr = document.createElement('canvas'); scr.width = 1024; scr.height = 512; H.scrC = scr; const sm = plane(10, 5, 0, 2.6, L.th.z0 + .05, 0, 0, new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(scr) })); sm.material.map.encoding = THREE.sRGBEncoding; sm.userData.stage = 1; H.pick.push(sm); H.scr = sm; drawScreen();
     addBox(16, .2, 3.2, 0, .1, L.th.z0 + 1.6, mat('#6B4C2E'));
-    H.seats = []; const sg = new THREE.BoxGeometry(.5, .45, .5), bg = new THREE.BoxGeometry(.5, .5, .1), seats = new THREE.InstancedMesh(sg, mat('#2C3E8F'), 60), backs = new THREE.InstancedMesh(bg, mat('#222C63'), 60), d = new THREE.Object3D(); let k = 0;
-    [-1, 1].forEach(si => { for (let r = 0; r < 5; r++) for (let i = 0; i < 6; i++) { const x = si > 0 ? 1.75 + i * .92 : -6.45 + i * .92, z = L.th.z0 + 6 + r * 1.7; d.position.set(x, .3, z); d.updateMatrix(); seats.setMatrixAt(k, d.matrix); d.position.set(x, .72, z + .26); d.updateMatrix(); backs.setMatrixAt(k, d.matrix); H.seats[k] = { x, z }; k++; } });
-    H.scene.add(seats); H.scene.add(backs); seats.userData.seats = 1; H.pick.push(seats);
+    H.seats = []; const TIER = .42, resN = +E.cfg.res || 0, sg = new THREE.BoxGeometry(.5, .45, .5), bg = new THREE.BoxGeometry(.5, .5, .1), seats = new THREE.InstancedMesh(sg, mat('#fff'), 60), backs = new THREE.InstancedMesh(bg, mat('#fff'), 60), d = new THREE.Object3D(), cA = new THREE.Color('#2C3E8F'), cAb = new THREE.Color('#222C63'), cR = new THREE.Color('#B9741F'), cRb = new THREE.Color('#8E5A17'); let k = 0; const rise = mat('#C9BBA4');
+    [-1, 1].forEach(si => { for (let r = 0; r < 5; r++) { const z = L.th.z0 + 6 + r * 1.7, ty = r * TIER; if (r) addBox(5.4, ty, 1.7, si > 0 ? 4.1 : -4.1, ty / 2, z, rise); for (let i = 0; i < 6; i++) { const x = si > 0 ? 1.75 + i * .92 : -6.45 + i * .92; d.position.set(x, .3 + ty, z); d.updateMatrix(); seats.setMatrixAt(k, d.matrix); d.position.set(x, .72 + ty, z + .26); d.updateMatrix(); backs.setMatrixAt(k, d.matrix); seats.setColorAt(k, r < resN ? cR : cA); backs.setColorAt(k, r < resN ? cRb : cAb); H.seats[k] = { x, z, r, y: ty }; k++; } } });
+    seats.instanceColor.needsUpdate = true; backs.instanceColor.needsUpdate = true; H.scene.add(seats); H.scene.add(backs); seats.userData.seats = 1; H.pick.push(seats);
+    H.spk = Object.assign(pawn('#2C3E8F'), { u: '_spk', nm: '' }); H.spk.g.position.set(-6.6, .2, L.th.z0 + 2.2); H.spk.g.visible = false;
     const dg = new THREE.CircleGeometry(.09, 12); dg.rotateX(-Math.PI / 2); H.routeM = new THREE.InstancedMesh(dg, new THREE.MeshBasicMaterial({ color: '#2C3E8F', transparent: true, opacity: .75 }), 200); H.routeM.count = 0; H.routeM.position.y = .02; H.scene.add(H.routeM); H.dummy = new THREE.Object3D();
     Object.values(H.peers).forEach(w => { w.g = null; }); Object.keys(H.peers).forEach(u => { const d = H.peers[u].d; delete H.peers[u]; peerUpdate(u, d); });
     H.tick = 0; H.texT = 99;
@@ -761,7 +861,7 @@
     c.fillStyle = '#E9C48F'; c.font = `500 34px ${F}`; c.fillText(it ? T(`على المسرح: ${num(E.numOf[st.cur])}`, `On stage: ${E.numOf[st.cur]}`) : T('المسرح', 'Stage'), X, 80);
     c.fillStyle = '#fff'; c.font = `700 58px ${F}`; wrapText(c, it ? it.t : E.meta.t, X, 170, 890, 78, 3);
     if (it) { c.fillStyle = '#9CA6BA'; c.font = `400 30px ${F}`; c.fillText(it.a || '', X, 450); }
-    if (it) { const put = img => { const h = 512, w = Math.min(1024, h * img.width / img.height); c.fillStyle = '#10162A'; c.fillRect(0, 0, 1024, 512); c.drawImage(img, (1024 - w) / 2, 0, w, h); if (H.scr) H.scr.material.map.needsUpdate = true; }; if (H.scrImg && H.scrImg.p === st.cur) put(H.scrImg.img); else R('thumb/' + st.cur).once('value').then(s => { if (!s.val() || !H.on) return; const img = new Image(), p0 = st.cur; img.onload = () => { H.scrImg = { p: p0, img }; if ((E.stage || {}).cur === p0) put(img); }; img.src = s.val(); }).catch(() => {}); }
+    if (it) { const pg = it.sl ? Math.min(+E.now[st.cur] || 0, it.sl - 1) : -1, key = st.cur + '/' + pg, put = img => { let w = 1024, h = w * img.height / img.width; if (h > 512) { h = 512; w = h * img.width / img.height; } c.fillStyle = '#10162A'; c.fillRect(0, 0, 1024, 512); c.drawImage(img, (1024 - w) / 2, (512 - h) / 2, w, h); if (H.scr) H.scr.material.map.needsUpdate = true; }; if (H.scrImg && H.scrImg.key === key) put(H.scrImg.img); else R(pg >= 0 ? 'slides/' + key : 'thumb/' + st.cur).once('value').then(s => { if (!s.val() || !H.on) return; const img = new Image(); img.onload = () => { H.scrImg = { key, img }; const n = E.stage || {}; if (n.cur === st.cur) put(img); }; img.src = s.val(); }).catch(() => {}); }
     if (H.scr) H.scr.material.map.needsUpdate = true;
   }
   /* keep real poster images only for the nearest boards so older phones stay smooth */
@@ -779,7 +879,7 @@
 
   /* ---------- real people ---------- */
   let bodyG, headG, shG, shM;
-  const ROLE = () => ({ host: ['#16201F', T('المسؤول', 'Organizer')], mod: ['#6B5AA6', T('مشرف', 'Supervisor')], judge: ['#B9741F', T('محكّم', 'Judge')], presenter: ['#2C3E8F', T('مشارك', 'Participant')], guest: ['#F5F2EA', ''] });
+  const ROLE = () => ({ host: ['#16201F', T('المسؤول', 'Organizer')], mod: ['#6B5AA6', T('مشرف', 'Supervisor')], judge: ['#B9741F', T('محكّم', 'Judge')], presenter: ['#2C3E8F', T('مشارك', 'Participant')], vip: ['#B8922F', T('ضيف الملتقى', 'Honored guest')], guest: ['#F5F2EA', ''] });
   function pawn(col) {
     if (!bodyG) { bodyG = new THREE.LatheGeometry([[0, 0], [.27, 0], [.25, .5], [.21, 1.05], [.17, 1.36], [.09, 1.46], [0, 1.48]].map(p => new THREE.Vector2(p[0], p[1])), 14); headG = new THREE.SphereGeometry(.15, 14, 10); shG = new THREE.CircleGeometry(.42, 16); shG.rotateX(-Math.PI / 2); shM = new THREE.MeshBasicMaterial({ color: '#3C3224', transparent: true, opacity: .2, depthWrite: false }); }
     const g = new THREE.Group(); g.add(new THREE.Mesh(bodyG, mat(col))); const h = new THREE.Mesh(headG, mat('#D9BC98')); h.position.y = 1.6; g.add(h); const s = new THREE.Mesh(shG, shM); s.position.y = .012; g.add(s);
@@ -793,7 +893,7 @@
     if (!w) { const r = ROLE(), ro = r[d.ro] ? d.ro : 'guest'; w = H.peers[u] = Object.assign(pawn(r[ro][0]), { u, nm: '', ro }); w.g.position.set(d.x, 0, d.z); w.hb.userData.person = u; H.pick.push(w.hb); }
     w.d = d; w.tx = d.x; w.tz = d.z; w.tr = (d.r || 0) + Math.PI; const n = String(d.n || '').slice(0, 30); if (n !== w.nm) { w.nm = n; nameSprite(w, n || T('زائر', 'Visitor')); }
     const sa = d.s && d.s.x && Date.now() - (d.s.t || 0) < 9000 ? String(d.s.x) : ''; if (sa && sa !== w.said) { w.said = sa; say(w, sa); } if (!sa) w.said = '';
-    if (E.items[uid] && d.p === uid && w.atMine !== true) { w.atMine = true; if (!(Call.room && d.c === Call.room)) visitorCard(u, d); } else if (d.p !== uid) w.atMine = false;
+    if (E.items[uid] && d.p === uid && w.atMine !== true) { w.atMine = true; if (!(Call.room && d.c === Call.tag)) visitorCard(u, d); } else if (d.p !== uid) w.atMine = false;
   }
   function peerGone(u) { const w = H.peers[u]; if (!w) return; headOff(w); H.scene.remove(w.g); H.pick.splice(H.pick.indexOf(w.hb), 1); delete H.peers[u]; if (H.open && H.open.person === u) closeSheet(); }
   function netTick(dt) {
@@ -801,7 +901,7 @@
     if (key === H.sent) return; H.sent = key; R('here/' + uid).update({ x, z, r }).catch(() => {});
   }
   function presenceOn() {
-    const me = R('here/' + uid), info = db.ref('.info/connected'), f = s => { if (s.val() === true) { me.onDisconnect().remove(); me.set({ x: +H.pos.x.toFixed(1), z: +H.pos.z.toFixed(1), r: 0, n: name(), ro: E.isJudge && E.role !== 'host' ? 'judge' : E.role, t: TS() }).catch(() => {}); } };
+    const me = R('here/' + uid), info = db.ref('.info/connected'), f = s => { if (s.val() === true) { me.onDisconnect().remove(); me.set({ x: +H.pos.x.toFixed(1), z: +H.pos.z.toFixed(1), r: 0, n: name(), ro: E.isJudge && E.role !== 'host' ? 'judge' : E.vip && E.role === 'guest' ? 'vip' : E.role, nm: store.get('nomsg', false) ? 1 : null, t: TS() }).catch(() => {}); } };
     info.on('value', f); H.offs.push(() => info.off('value', f));
     const hr = R('here'), add = s => { E.here[s.key] = s.val(); peerUpdate(s.key, s.val()); }, rm = s => { delete E.here[s.key]; peerGone(s.key); };
     hr.on('child_added', add); hr.on('child_changed', add); hr.on('child_removed', rm); H.offs.push(() => { hr.off('child_added', add); hr.off('child_changed', add); hr.off('child_removed', rm); });
@@ -821,7 +921,8 @@
       const d = card(`<div><b dir="auto">${esc(v.n)}</b>: <span dir="auto">${esc(v.w)}</span></div><div class="ml-row"><button class="ml-b sm" data-a="r">${esc(greetReply(v.w))}</button>${callActions()}<button class="ml-b sm" data-a="x" aria-label="${T('إغلاق', 'Close')}">${IC.x}</button></div>`, 20000);
       bindCall(d, vd => callPerson(v.f, vd)); $('[data-a=r]', d).onclick = () => { const w2 = greetReply(v.w); sayAloud(w2); pingTo(v.f, { k: 'r', w: w2 }); d.remove(); }; $('[data-a=x]', d).onclick = () => d.remove();
     } else if (v.k === 'r') { const w = H.peers[v.f]; if (w) say(w, v.w); toast(`${v.n}: ${v.w}`); }
-    else if (v.k === 'm') chatIn(v);
+    else if (v.k === 'rv') toast(v.s === 'ok' ? T('قُبلت مشاركتك', 'Your entry was accepted') : T('طُلب تعديل مشاركتك', 'Changes were requested to your entry'));
+    else if (v.k === 'm') { if (!store.get('nomsg', false)) chatIn(v); }
     else if (v.k === 'c') {
       if (Call.room === v.room) return;
       const d = card(`<div><b dir="auto">${esc(v.n)}</b> ${T('يطلب محادثتك', 'would like to talk')}</div><div class="ml-row">${callActions()}<button class="ml-b sm" data-a="n">${T('ليس الآن', 'Not now')}</button></div>`, 45000);
@@ -829,7 +930,7 @@
     } else if (v.k === 'd') toast(T(`${v.n} غير متاح الآن`, `${v.n} is not available now`));
     else if (v.k === 'stage') { const d = card(`<div>${T('مشاركتك معروضة على المسرح الآن', 'Your poster is on stage now')}</div><div class="ml-row">${callActions()}<button class="ml-b sm" data-a="n">${T('إغلاق', 'Close')}</button></div>`, 60000); bindCall(d, vd => joinRoom('stage', vd)); $('[data-a=n]', d).onclick = () => d.remove(); }
   }
-  function callPerson(u, video) { const d = E.here[u]; if (d && d.c) return joinRoom(d.c, video); const room = 't_' + rid(8); joinRoom(room, video); pingTo(u, { k: 'c', room }); }
+  function callPerson(u, video) { const d = E.here[u]; if (d && d.c && !d.c.startsWith('x_')) return joinRoom(d.c, video); const room = 't_' + rid(8); joinRoom(room, video); pingTo(u, { k: 'c', room }); }
 
   /* ---------- the hall: open and close ---------- */
   async function openHall(goal) {
@@ -838,7 +939,7 @@
     const el = document.createElement('div'); el.id = 'mlHall'; document.body.appendChild(el); H.el = el; H.visited = store.get('v.' + E.id, {});
     el.innerHTML = `<canvas id="mlGl"></canvas><div class="hl-fade" id="hlFade"></div>
       <div class="hl-top"><button class="hl-p hl-ib" id="hlExit" aria-label="${T('خروج', 'Leave')}">${IC.out}</button><div class="hl-p" id="hlWhere"><span><span id="hlW1"></span><small id="hlW2"></small></span></div><button class="hl-p hl-ib" id="hlGuide" aria-label="${T('الدليل', 'Guide')}">${IC.map}</button></div>
-      <canvas id="hlMini" width="184" height="240" aria-label="${T('الخريطة', 'Map')}"></canvas>
+      <button class="hl-p" id="hlLive" hidden><span class="ml-dot"></span><span>${T('المسرح مباشر', 'Stage is live')}</span></button><canvas id="hlMini" width="184" height="240" aria-label="${T('الخريطة', 'Map')}"></canvas>
       <button id="hlNear" hidden><span style="flex:1;min-width:0"><b id="hlNt"></b><small id="hlNs"></small></span></button>
       <div id="hlStick" aria-hidden="true"><div id="hlKnob"></div></div>
       <div id="hlJump"><button class="ar" id="hlPrev" aria-label="${T('السابق', 'Previous')}">${IC.prev}</button><button class="mid" id="hlMid" aria-label="${T('الانتقال برقم المشاركة', 'Go by poster number')}"></button><button class="ar" id="hlNext" aria-label="${T('التالي', 'Next')}">${IC.next}</button></div>
@@ -849,7 +950,7 @@
       const cv = $('#mlGl', el); H.r3 = new THREE.WebGLRenderer({ canvas: cv, antialias: innerWidth >= 820, powerPreference: 'default' }); H.r3.setPixelRatio(Math.min(devicePixelRatio || 1, innerWidth < 820 ? 1.5 : 1.75)); H.r3.outputEncoding = THREE.sRGBEncoding;
       H.cam = new THREE.PerspectiveCamera(62, 1, .1, 200); H.sig = ''; H.pos = { x: 0, z: 4 }; H.yaw = 0; H.pitch = -.03; hallItems(); hallResize(); addEventListener('resize', hallResize); H.offs.push(() => removeEventListener('resize', hallResize));
       bindHall(); presenceOn(); H.raf = requestAnimationFrame(hallFrame);
-      if (goal && E.items[goal]) setTimeout(() => travel(goal), 300);
+      if (typeof goal === 'function') setTimeout(goal, 300); else if (goal && E.items[goal]) setTimeout(() => travel(goal), 300);
     } catch (e) { el.innerHTML = `<div class="ml-card" style="margin:60px 16px"><p>${T('تعذر تشغيل القاعة على هذا الجهاز.', 'The hall could not start on this device.')}</p><div><button class="ml-b" id="hlExit2">${T('رجوع', 'Back')}</button></div></div>`; $('#hlExit2', el).onclick = closeHall; }
   }
   function closeHall() {
@@ -861,7 +962,7 @@
   }
   function hallResize() { if (!H.r3) return; const w = innerWidth, h = innerHeight; H.r3.setSize(w, h, false); H.cam.aspect = w / h; H.cam.fov = w < h ? 82 : 58; H.cam.updateProjectionMatrix(); }
   function hallItems() {
-    if (!H.r3) return; const sig = E.order.map(p => p + ':' + (E.items[p].ar || '') + ':' + E.items[p].tr + ':' + E.items[p].t).join('|');
+    if (!H.r3) return; const sig = (+E.cfg.res || 0) + '#' + spaces().map(r => r.n).join() + '#' + E.order.map(p => p + ':' + (E.items[p].ar || '') + ':' + E.items[p].tr + ':' + E.items[p].t).join('|');
     if (sig !== H.sig) { H.sig = sig; buildScene(); if (H.pos.z > H.L.zIn || hit(H.pos.x, H.pos.z)) H.pos = { x: 0, z: 4 }; } drawScreen(); jumpLabel();
   }
   function hallFrame(now) {
@@ -879,11 +980,11 @@
       if (!hit(H.pos.x + dx, H.pos.z)) H.pos.x += dx; if (!hit(H.pos.x, H.pos.z + dz)) H.pos.z += dz; H.yaw -= mx * dt * .9;
     } else if (H.route.length) {
       const n = H.route[0], d = Math.hypot(n.x - H.pos.x, n.z - H.pos.z), st = SP * 1.3 * dt;
-      if (d <= st) { H.pos.x = n.x; H.pos.z = n.z; H.route.shift(); drawRoute(); if (!H.route.length && H.goal) { const g = H.goal; H.goal = null; if (g.seat != null) seatDown(g.seat); else if (g.p) standAt(g.p); else if (g.person) { const q = E.here[g.person]; if (q) openPerson(g.person); } else if (g.stage) stageFromHall(); } }
+      if (d <= st) { H.pos.x = n.x; H.pos.z = n.z; H.route.shift(); drawRoute(); if (!H.route.length && H.goal) { const g = H.goal; H.goal = null; if (g.seat != null) seatDown(g.seat); else if (g.room != null) openRoom(g.room); else if (g.p) standAt(g.p); else if (g.person) { const q = E.here[g.person]; if (q) openPerson(g.person); } else if (g.stage) stageFromHall(); } }
       else { H.pos.x += (n.x - H.pos.x) / d * st; H.pos.z += (n.z - H.pos.z) / d * st; const w = Math.atan2(-(n.x - H.pos.x), -(n.z - H.pos.z)); H.yaw += wrapA(w - H.yaw) * Math.min(1, dt * 4.5); H.pitch += (-.03 - H.pitch) * Math.min(1, dt * 3); }
     }
-    H.cam.position.set(H.pos.x, (H.seat != null ? 1.12 : 1.62) + ((len > .08 || H.route.length) ? Math.sin(t * 9) * .012 : 0), H.pos.z); H.cam.rotation.set(H.pitch, H.yaw, 0, 'YXZ');
-    H.peerMove = false; Object.values(H.peers).forEach(w => { const p = w.g.position, k = Math.min(1, dt * 5), mv = Math.hypot(w.tx - p.x, w.tz - p.z); if (mv > .03) H.peerMove = true; p.x += (w.tx - p.x) * k; p.z += (w.tz - p.z) * k; p.y = (w.d && w.d.st != null ? -.42 : 0) + (mv > .05 ? Math.abs(Math.sin(t * 6)) * .025 : 0); w.g.rotation.y += wrapA(w.tr - w.g.rotation.y) * k; if (w.vm) w.vm.lookAt(H.cam.position.x, 1.68, H.cam.position.z); if (w.bb) { w.bbT -= dt; if (w.bbT < 0) { w.g.remove(w.bb); w.bb = null; } } });
+    H.cam.position.set(H.pos.x, (H.seat != null && H.seats[H.seat] ? 1.12 + H.seats[H.seat].y : 1.62) + ((len > .08 || H.route.length) ? Math.sin(t * 9) * .012 : 0), H.pos.z); H.cam.rotation.set(H.pitch, H.yaw, 0, 'YXZ');
+    H.peerMove = false; Object.values(H.peers).forEach(w => { const p = w.g.position, k = Math.min(1, dt * 5), mv = Math.hypot(w.tx - p.x, w.tz - p.z); if (mv > .03) H.peerMove = true; p.x += (w.tx - p.x) * k; p.z += (w.tz - p.z) * k; if (w.ownerHidden !== undefined) w.g.visible = !w.ownerHidden; p.y = (w.d && w.d.st != null && H.seats[w.d.st] ? -.42 + H.seats[w.d.st].y : 0) + (mv > .05 ? Math.abs(Math.sin(t * 6)) * .025 : 0); w.g.rotation.y += wrapA(w.tr - w.g.rotation.y) * k; if (w.vm) w.vm.lookAt(H.cam.position.x, 1.68, H.cam.position.z); if (w.bb) { w.bbT -= dt; if (w.bbT < 0) { w.g.remove(w.bb); w.bb = null; } } });
     netTick(dt);
     H.tick += dt; if (H.tick > .25) { dwell(H.tick); H.tick = 0; nearCheck(); miniMap(); }
     H.texT += dt; if (H.texT > 1.2) { H.texT = 0; texUpdate(); }
@@ -902,8 +1003,15 @@
     else if (!ri) { w1.textContent = T('القاعة', 'Hall'); w2.textContent = ''; }
     else { const side = H.pos.x > (L.x1 * .35) ? T('جهة النوافذ', 'window side') : H.pos.x < (L.x0 * .35) ? T('الجهة المقابلة للنوافذ', 'opposite the windows') : T('الوسط', 'centre'); w1.textContent = T(`الصف ${num(row + 1)}: ${num(ri.from)}–${num(ri.to)}`, `Row ${row + 1}: ${ri.from}–${ri.to}`); w2.textContent = `${tracks()[ri.tr] || ''} · ${side}`; }
     const n = $('#hlNear');
-    if (best && !H.route.length && !H.open) { const it = E.items[best], o = it.own && E.here[it.own]; $('#hlNt').textContent = `${num(E.numOf[best])} · ${it.t}`; $('#hlNs').innerHTML = `<span class="ml-dot ${o ? '' : 'off'}"></span><span dir="auto">${esc(it.a || '')}</span>`; n.hidden = false; n.dataset.p = best; } else n.hidden = true;
-    jumpLabel(); seatBar();
+    if (best && !H.route.length && !H.open) { const it = E.items[best], st = ownerState(best); $('#hlNt').textContent = `${num(E.numOf[best])} · ${it.t}`; $('#hlNs').innerHTML = `<span class="ml-dot ${st ? '' : 'off'}"></span><span dir="auto">${esc(it.a || '')} · ${ownerWord(st)}</span>`; n.hidden = false; n.dataset.p = best; } else n.hidden = true;
+    jumpLabel(); seatBar(); lampsPaint();
+  }
+  function lampsPaint() { E.order.forEach(p => { const P = H.poster[p]; if (P && P.lamp) { const st = ownerState(p); if (P.st !== st) { P.st = st; P.lamp.material.color.set(st ? '#22C074' : '#AEB4BA'); P.lamp.scale.setScalar(st === 2 ? 1.35 : 1); } } }); spaces().forEach(sp => { const m = H.lamps && H.lamps[sp.k]; if (m) m.material.color.set(spCount(sp) ? '#39C486' : '#8D949B'); }); const lv = $('#hlLive'); if (!lv) return; const staff = isHost() || E.role === 'mod', help = spaces().find(x => x.k === 'help'), waiting = staff && Call.room !== 'r_help' && spCount(help) > 0, live = E.stage && E.stage.cur && E.stage.mode !== 'res' && !(H.L && H.pos.z < H.L.zBack); lv.hidden = !!H.open || !(waiting || live); lv.lastChild.textContent = waiting ? T('زائر في الاستقبال', 'Someone at reception') : T('المسرح مباشر', 'Stage is live'); lv.onclick = () => goPlace(waiting ? 'sp:help' : 'stage'); }
+  function fly(x, z, yaw, then) { const f = $('#hlFade'); if (H.seat != null) standUp(); closeSheet(); H.route = []; H.goal = null; drawRoute(); if (f) f.classList.add('on'); setTimeout(() => { H.pos.x = x; H.pos.z = z; H.yaw = yaw || 0; H.pitch = -.03; H.drawn = 0; if (then) then(); if (f) f.classList.remove('on'); }, 170); }
+  function openRoom(k) {
+    const r = spaces().find(x => x.k === k); if (!r) return; H.open = { room_: k, person: '_' }; const s = sheet(), n = spCount(r), full = n >= 10, go = vd => { closeSheet(); joinRoom(r.room, vd, r.tag); };
+    s.innerHTML = `<div class="hl-h"><h3 dir="auto">${esc(r.n)}${r.w || n ? `<br><small class="ml-mut" style="font-weight:400">${[r.w ? esc(r.w) : '', n ? T(`${num(n)} الآن`, `${n} now`) : ''].filter(Boolean).join(' · ')}</small>` : ''}</h3><button class="hl-x" id="hlC" aria-label="${T('إغلاق', 'Close')}">${IC.x}</button></div><div class="hl-act">${/^https:\/\//.test(r.u || '') ? `<a class="ml-b main" href="${esc(r.u)}" target="_blank" rel="noopener">${T('دخول الجلسة', 'Join the session')}</a>` : full ? `<p class="ml-mut">${T('الغرفة ممتلئة الآن', 'The room is full')}</p>` : `<button class="ml-b main" id="rmA">${IC.mic}${T('صوت', 'Voice')}</button><button class="ml-b" id="rmV">${IC.cam}${T('فيديو', 'Video')}</button>`}</div>`;
+    s.classList.add('open', 'mini'); $('#hlC', s).onclick = closeSheet; $('#hlNear', H.el).hidden = true; const a = $('#rmA', s); if (a) { a.onclick = () => go(false); $('#rmV', s).onclick = () => go(true); }
   }
   function miniMap() { const m = $('#hlMini'); if (m && (!H.open || !H.open.p)) drawMap(m, true); const g = $('#hlMap'); if (g && $('#hlG').classList.contains('open')) drawMap(g, false); }
   function drawMap(m, mini) {
@@ -913,14 +1021,14 @@
     const rect = (a, b, d, e) => { const p = mp(a, b), q = mp(d, e); c.strokeRect(Math.min(p[0], q[0]), Math.min(p[1], q[1]), Math.abs(q[0] - p[0]), Math.abs(q[1] - p[1])); };
     rect(L.x0, L.zBack, L.x1, L.zIn + 1.5); rect(L.th.x0, L.th.z0, L.th.x1, L.zBack);
     const win = mp(L.x1, L.zIn - 2), win2 = mp(L.x1, L.zBack + 2); c.save(); c.strokeStyle = '#6FA8D6'; c.lineWidth = mini ? 3 : 5; c.beginPath(); c.moveTo(win[0], win[1]); c.lineTo(win2[0], win2[1]); c.stroke(); c.restore();
-    E.order.forEach(p => { const s = L.spots[p], q = mp(s.x, s.z), w = Math.max(6, 3 * k); c.fillStyle = tcol(E.items[p].tr); c.globalAlpha = H.visited[p] ? 1 : .45; c.fillRect(q[0] - w / 2, q[1] - 2, w, 4); c.globalAlpha = 1; if (!mini) { c.fillStyle = ink; c.font = `600 ${Math.max(16, Math.min(24, 1.2 * k))}px ${F}`; c.textAlign = 'center'; c.fillText(num(E.numOf[p]), q[0], q[1] - 7); } });
+    E.order.forEach(p => { const s = L.spots[p], q = mp(s.x, s.z), w = Math.max(6, 3 * k); c.fillStyle = tcol(E.items[p].tr); c.globalAlpha = H.visited[p] ? 1 : .45; c.fillRect(q[0] - w / 2, q[1] - 2, w, 4); c.globalAlpha = 1; if (ownerState(p)) { c.fillStyle = '#22C074'; c.beginPath(); c.arc(q[0] + w / 2, q[1], mini ? 4 : 6, 0, 7); c.fill(); } if (!mini) { c.fillStyle = ink; c.font = `600 ${Math.max(16, Math.min(24, 1.2 * k))}px ${F}`; c.textAlign = 'center'; c.fillText(num(E.numOf[p]), q[0], q[1] - 7); } });
     if (!mini) { const tc = mp(0, (L.th.z0 + L.zBack) / 2); c.fillStyle = mut; c.textAlign = 'center'; c.font = `500 22px ${F}`; c.fillText(T('المسرح', 'Stage'), tc[0], tc[1]); const ic = mp(0, L.zIn + .4); c.fillText(T('المدخل', 'Entrance'), ic[0], ic[1]); }
     const r = ROLE(); Object.values(H.peers).forEach(w => { const q = mp(w.g.position.x, w.g.position.z); c.fillStyle = w.ro !== 'guest' && r[w.ro] ? r[w.ro][0] : mut; c.beginPath(); c.arc(q[0], q[1], mini ? 2.5 : 5, 0, 7); c.fill(); });
     const me = mp(H.pos.x, H.pos.z), sz = mini ? 8 : 14; c.save(); c.translate(me[0], me[1]); c.rotate(-H.yaw); c.fillStyle = '#C9301F'; c.beginPath(); c.moveTo(0, -sz * 1.2); c.lineTo(sz * .75, sz * .8); c.lineTo(0, sz * .4); c.lineTo(-sz * .75, sz * .8); c.closePath(); c.fill(); c.restore();
   }
   function bindHall() {
     const el = H.el, cv = $('#mlGl', el); let drag = null;
-    $('#hlExit', el).onclick = closeHall; $('#hlGuide', el).onclick = () => openGuide('p'); $('#hlMini', el).onclick = () => openGuide('p');
+    $('#hlExit', el).onclick = closeHall; $('#hlGuide', el).onclick = () => openGuide('d'); $('#hlMini', el).onclick = () => openGuide('d');
     $('#hlNear', el).onclick = () => { const p = $('#hlNear', el).dataset.p; if (p) goPoster(p); };
     $('#hlPrev', el).onclick = () => step(-1); $('#hlNext', el).onclick = () => step(1); $('#hlMid', el).onclick = () => openPad();
     cv.addEventListener('pointerdown', e => { H.drag = true; drag = { id: e.pointerId, x: e.clientX, y: e.clientY, sx: e.clientX, sy: e.clientY, t: performance.now(), m: false }; try { cv.setPointerCapture(e.pointerId); } catch (_) {} });
@@ -934,7 +1042,7 @@
   }
   function pickAt(cx, cy) {
     const r = $('#mlGl', H.el).getBoundingClientRect(), v = new THREE.Vector2((cx - r.left) / r.width * 2 - 1, -(cy - r.top) / r.height * 2 + 1), ray = new THREE.Raycaster(); ray.setFromCamera(v, H.cam);
-    const hits = ray.intersectObjects(H.pick); if (hits.length && hits[0].distance < 34) { const u = hits[0].object.userData; if (u.person) return openPerson(u.person); if (u.seats) return sitAt(hits[0].instanceId); if (u.p) return goPoster(u.p); if (u.stage) return goStage(); }
+    const hits = ray.intersectObjects(H.pick); if (hits.length && hits[0].distance < 34) { const u = hits[0].object.userData; if (u.person) return openPerson(u.person); if (u.seats) return sitAt(hits[0].instanceId); if (u.room != null) { const sp = H.L.doors[u.room]; return walkTo(sp.x + .9, sp.z, { room: u.room }); } if (u.p) return goPoster(u.p); if (u.stage) return goStage(); }
     const f = ray.intersectObject(H.floor); if (f.length) walkTo(f[0].point.x, f[0].point.z, null);
   }
   function walkTo(x, z, goal) { if (H.seat != null) standUp(); closeSheet(); H.route = path(H.pos, { x, z }); H.goal = goal; drawRoute(); }
@@ -956,6 +1064,7 @@
   const sheet = () => $('#hlSheet', H.el);
   function closeGuide() { const g = H.el && $('#hlG', H.el); if (g) g.classList.remove('open'); }
   function standAt(p) { H.stand = p; H.lastNum = E.numOf[p]; H.yaw = 0; H.pitch = 0; markVisited(p); R('here/' + uid + '/p').set(p).catch(() => {}); openPoster(p); }
+  function stagePosterSync() { if (!H.open || H.open.room !== 'stage' || !H.el) return; const c = E.stage && E.stage.cur; if (c && E.items[c] && H.open.p !== c) return openPoster(c, 'stage'); const it = E.items[H.open.p], img = $('#pvImg', H.el); if (it && it.sl && img) { const pg = Math.min(+E.now[H.open.p] || 0, it.sl - 1); R('slides/' + H.open.p + '/' + pg).once('value').then(s => { if (s.val() && img.isConnected) { img.dataset.full = 1; img.src = s.val(); } }).catch(() => {}); } }
   function closeDetails() { const s = sheet(); s.classList.remove('open'); if (H.open) H.open.tab = null; if (H.notesOff) { H.notesOff(); H.notesOff = null; } }
   function closeSheet() {
     if (!H.el) return; const s = sheet(), v = $('#hlV', H.el); if (s) s.classList.remove('open', 'mini'); if (v) { v.hidden = true; v.innerHTML = ''; } document.body.classList.remove('ml-view'); H.el.classList.remove('hl-open');
@@ -964,19 +1073,19 @@
   function openPoster(p, room) {
     const it = E.items[p]; if (!it) return; if (H.notesOff) { H.notesOff(); H.notesOff = null; } H.open = { p, room: room || (it.own ? 'p_' + it.own : null) }; sheet().classList.remove('open', 'mini'); $('#hlNear', H.el).hidden = true; H.el.classList.add('hl-open'); document.body.classList.add('ml-view');
     const v = $('#hlV', H.el); v.hidden = false;
-    v.innerHTML = `<header class="pv-h"><button class="hl-x" id="pvC" aria-label="${T('العودة إلى القاعة', 'Back to the hall')}">${IC.x}</button><span class="ml-n" style="background:${tcol(it.tr)}">${num(E.numOf[p])}</span><div class="pv-t"><b dir="auto">${esc(it.t)}</b><small id="pvS"></small></div><button class="hl-x" data-nav="-1" aria-label="${T('السابق', 'Previous')}">${IC.prev}</button><button class="hl-x" data-nav="1" aria-label="${T('التالي', 'Next')}">${IC.next}</button></header><div class="pv-box" id="pvBox"><img id="pvImg" alt="${T('المشاركة', 'Entry')}" draggable="false"></div><footer class="pv-f" id="pvF"></footer>`;
+    v.innerHTML = `<header class="pv-h"><button class="hl-x" id="pvC" aria-label="${T('العودة إلى القاعة', 'Back to the hall')}">${IC.x}</button><span class="ml-n" style="background:${tcol(it.tr)}">${num(E.numOf[p])}</span><div class="pv-t"><b dir="auto">${esc(it.t)}</b><small id="pvS"></small></div><button class="hl-x" data-nav="-1" aria-label="${T('السابق', 'Previous')}">${IC.prev}</button><button class="hl-x" data-nav="1" aria-label="${T('التالي', 'Next')}">${IC.next}</button></header><div class="pv-box" id="pvBox"><img id="pvImg" alt="${T('المشاركة', 'Entry')}" draggable="false"><div class="ml-spk pv-spk" id="pvSpk" hidden></div></div><footer class="pv-f" id="pvF"></footer>`;
     $('#pvC', v).onclick = closeSheet; $$('[data-nav]', v).forEach(b => b.onclick = () => { const n = E.numOf[p] + +b.dataset.nav, q = E.order[(n - 1 + E.order.length) % E.order.length]; travel(q); });
     const img = $('#pvImg', v); R('thumb/' + p).once('value').then(s => { if (s.val() && img.isConnected && !img.dataset.full) img.src = s.val(); }).catch(() => {}); R('full/' + p).once('value').then(s => { if (s.val() && img.isConnected) { img.dataset.full = 1; img.src = s.val(); } }).catch(() => {});
-    panZoom($('#pvBox', v), img); viewBar();
+    panZoom($('#pvBox', v), img); viewBar(); if (H.open.room === 'stage') stagePosterSync();
   }
   function viewBar() {
     const f = H.el && $('#pvF', H.el), O = H.open; if (!f || !O || !O.p) return; const p = O.p, it = E.items[p], mine = it.own === uid, o = it.own && E.here[it.own], inCall = Call.room && Call.room === O.room, st = $('#pvS', H.el), res = it.w ? ` · ${esc(it.w)}` : '';
     if (st) st.innerHTML = `<span class="ml-dot ${o ? '' : 'off'}"></span><span dir="auto">${esc(it.a || '')}</span>${o || mine ? '' : res}`;
     const canTalk = O.room && (O.room === 'stage' ? E.role !== 'guest' : (mine || o));
-    f.innerHTML = `${!inCall && canTalk ? `<button class="ml-b main" id="pvA">${IC.mic}${T('صوت', 'Voice')}</button><button class="ml-b" id="pvV">${IC.cam}${T('فيديو', 'Video')}</button>${o && !mine ? `<button class="ml-b" id="pvG">${esc(GREET())}</button>` : ''}` : ''}${O.room === 'stage' && E.cfg.live ? `<a class="ml-b" href="${esc(E.cfg.live)}" target="_blank" rel="noopener">${T('مشاهدة البث', 'Watch the broadcast')}</a>` : ''}<button class="ml-b" id="pvD">${T('التفاصيل', 'Details')}</button>${E.isJudge || E.role === 'judge' ? `<button class="ml-b" id="pvJ">${T('التقييم', 'Score')}</button>` : ''}`;
+    f.innerHTML = `${!inCall && canTalk ? `<button class="ml-b main" id="pvA">${IC.mic}${T('صوت', 'Voice')}</button><button class="ml-b" id="pvV">${IC.cam}${T('فيديو', 'Video')}</button>${o && !mine ? `<button class="ml-b" id="pvG">${esc(GREET())}</button>` : ''}` : ''}${O.room === 'stage' ? '<button class="ml-b" data-bcl hidden></button>' : ''}${O.room === 'stage' && E.cfg.live ? `<a class="ml-b" href="${esc(E.cfg.live)}" target="_blank" rel="noopener">${T('مشاهدة البث', 'Watch the broadcast')}</a>` : ''}<button class="ml-b" id="pvD">${T('التفاصيل', 'Details')}</button>${E.isJudge || E.role === 'judge' ? `<button class="ml-b" id="pvJ">${T('التقييم', 'Score')}</button>` : ''}`;
     const go = vd => { joinRoom(O.room, vd); if (!mine && it.own && O.room !== 'stage') pingTo(it.own, { k: 'c', room: O.room }); };
     const a = $('#pvA', f); if (a) { a.onclick = () => go(false); $('#pvV', f).onclick = () => go(true); } const g = $('#pvG', f); if (g) g.onclick = () => { sayAloud(GREET()); pingTo(it.own, { k: 'g', w: GREET(), p }); g.disabled = true; };
-    $('#pvD', f).onclick = () => openDetails(p); const j = $('#pvJ', f); if (j) j.onclick = () => openDetails(p, 'sc');
+    bcPaint(); $('#pvD', f).onclick = () => openDetails(p); const j = $('#pvJ', f); if (j) j.onclick = () => openDetails(p, 'sc');
   }
   function panZoom(box, img) {
     let s = 1, x = 0, y = 0, pts = new Map(), d0 = 0, s0 = 1, last = 0;
@@ -1014,9 +1123,9 @@
   }
   function openPerson(u) {
     const d = E.here[u]; if (!d) return; H.open = { person: u }; const s = sheet(), r = ROLE(), ro = r[d.ro] ? r[d.ro][1] : '', own = E.items[u];
-    s.innerHTML = `<div class="hl-h"><span class="hl-av">${esc(String(d.n || '؟').charAt(0))}</span><h3 dir="auto">${esc(d.n)}${ro ? `<br><small class="ml-mut" style="font-weight:400">${esc(ro)}</small>` : ''}</h3><button class="hl-x" id="hlC" aria-label="${T('إغلاق', 'Close')}">${IC.x}</button></div><div class="hl-act"><button class="ml-b main" id="psA">${IC.mic}${d.c ? T('الانضمام', 'Join') : T('صوت', 'Voice')}</button><button class="ml-b" id="psV">${IC.cam}${T('فيديو', 'Video')}</button><button class="ml-b" id="psG">${esc(GREET())}</button><button class="ml-b" id="psM">${T('رسالة', 'Message')}</button>${own ? `<button class="ml-b" id="psP">${T('مشاركته', 'Their entry')}</button>` : ''}</div>`;
+    s.innerHTML = `<div class="hl-h"><span class="hl-av">${esc(String(d.n || '؟').charAt(0))}</span><h3 dir="auto">${esc(d.n)}${ro ? `<br><small class="ml-mut" style="font-weight:400">${esc(ro)}</small>` : ''}</h3><button class="hl-x" id="hlC" aria-label="${T('إغلاق', 'Close')}">${IC.x}</button></div><div class="hl-act"><button class="ml-b main" id="psA">${IC.mic}${d.c ? T('الانضمام', 'Join') : T('صوت', 'Voice')}</button><button class="ml-b" id="psV">${IC.cam}${T('فيديو', 'Video')}</button><button class="ml-b" id="psG">${esc(GREET())}</button>${d.nm ? '' : `<button class="ml-b" id="psM">${T('رسالة', 'Message')}</button>`}${own ? `<button class="ml-b" id="psP">${T('مشاركته', 'Their entry')}</button>` : ''}</div>`;
     s.classList.add('open', 'mini'); $('#hlNear', H.el).hidden = true; $('#hlC', s).onclick = closeSheet;
-    $('#psA', s).onclick = () => { closeSheet(); callPerson(u, false); }; $('#psV', s).onclick = () => { closeSheet(); callPerson(u, true); }; $('#psG', s).onclick = () => { sayAloud(GREET()); pingTo(u, { k: 'g', w: GREET() }); closeSheet(); }; $('#psM', s).onclick = () => openChat(u); const q = $('#psP', s); if (q) q.onclick = () => travel(u);
+    $('#psA', s).onclick = () => { closeSheet(); callPerson(u, false); }; $('#psV', s).onclick = () => { closeSheet(); callPerson(u, true); }; $('#psG', s).onclick = () => { sayAloud(GREET()); pingTo(u, { k: 'g', w: GREET() }); closeSheet(); }; const pm = $('#psM', s); if (pm) pm.onclick = () => openChat(u); const q = $('#psP', s); if (q) q.onclick = () => travel(u);
   }
   /* a quiet side conversation: text to one person, seen only by the two of them, kept for this visit */
   function openChat(u) {
@@ -1030,29 +1139,29 @@
 
   /* the stage room: real seats, the live screen, and who is sitting nearby */
   function sitAt(i) {
-    const st = H.seats[i]; if (!st) return; const taken = Object.keys(E.here).find(u => u !== uid && E.here[u].st === i); if (taken) return openPerson(taken);
+    const st = H.seats[i]; if (!st) return; if (st.r < (+E.cfg.res || 0) && E.role === 'guest' && !E.vip) return toast(T('هذا الصف محجوز', 'This row is reserved')); const taken = Object.keys(E.here).find(u => u !== uid && E.here[u].st === i); if (taken) return openPerson(taken);
     H.route = path(H.pos, { x: 0, z: st.z + .9 }); H.route.push({ x: st.x > 0 ? 1.3 : -1.3, z: st.z + .9 }); H.goal = { seat: i }; drawRoute();
   }
-  function seatDown(i) { const st = H.seats[i]; H.seat = i; H.pos.x = st.x; H.pos.z = st.z; H.yaw = Math.atan2(st.x, st.z - H.L.th.z0); H.pitch = .1; R('here/' + uid).update({ x: +st.x.toFixed(1), z: +st.z.toFixed(1), r: 0, st: i }).catch(() => {}); seatBar(); }
+  function seatDown(i) { const st = H.seats[i]; H.seat = i; H.pos.x = st.x; H.pos.z = st.z; const dist = st.z - H.L.th.z0; H.yaw = Math.atan2(st.x, dist); H.pitch = Math.atan((2.6 - (1.12 + st.y)) / Math.hypot(st.x, dist)); R('here/' + uid).update({ x: +st.x.toFixed(1), z: +st.z.toFixed(1), r: 0, st: i }).catch(() => {}); seatBar(); }
   function standUp() { if (H.seat == null) return; const st = H.seats[H.seat]; H.seat = null; H.pos.x = 0; H.pos.z = st.z + .9; R('here/' + uid + '/st').remove().catch(() => {}); seatBar(); }
   function seatBar() {
     const b = H.el && $('#hlSeat', H.el), L = H.L; if (!b || !L) return; const inTh = H.pos.z < L.zBack && !(H.open && H.open.p); b.hidden = !inTh; if (!inTh) return;
-    const near = H.seat == null ? [] : Object.keys(E.here).filter(u => u !== uid && E.here[u].st != null).map(u => [u, Math.hypot(E.here[u].x - H.pos.x, E.here[u].z - H.pos.z)]).filter(x => x[1] < 3.4).sort((a, c) => a[1] - c[1]).slice(0, 4), sig = [H.seat, Bc.live, Bc.listening, E.stage && E.stage.cur, near.map(n => n[0]).join()].join('|');
+    const near = H.seat == null ? [] : Object.keys(E.here).filter(u => u !== uid && E.here[u].st != null && !E.here[u].nm).map(u => [u, Math.hypot(E.here[u].x - H.pos.x, E.here[u].z - H.pos.z)]).filter(x => x[1] < 3.4).sort((a, c) => a[1] - c[1]).slice(0, 4), sig = [H.seat, Bc.live, Bc.listening, E.stage && E.stage.cur, store.get('nomsg', false), near.map(n => n[0]).join()].join('|');
     if (b.dataset.sig === sig) return; b.dataset.sig = sig;
-    b.innerHTML = `<div class="ml-row">${E.stage && E.stage.cur ? `<button class="ml-b sm main" id="seV">${T('عرض الشاشة', 'View the screen')}</button>` : ''}<button class="ml-b sm" data-bcl hidden></button>${H.seat != null ? `<button class="ml-b sm" id="seU">${T('مغادرة المقعد', 'Leave the seat')}</button>` : `<span class="ml-mut">${T('المس مقعدًا للجلوس', 'Tap a seat to sit')}</span>`}</div>${near.length ? `<div class="ml-row">${near.map(n => `<button class="ml-b sm" data-ch="${esc(n[0])}" dir="auto">${esc(E.here[n[0]].n)}</button>`).join('')}</div>` : ''}`;
-    const v = $('#seV', b); if (v) v.onclick = () => openPoster(E.stage.cur, 'stage'); const u = $('#seU', b); if (u) u.onclick = standUp; $$('[data-ch]', b).forEach(x => x.onclick = () => openChat(x.dataset.ch)); bcPaint();
+    b.innerHTML = `<div class="ml-row">${E.stage && E.stage.cur ? `<button class="ml-b sm main" id="seV">${T('عرض الشاشة', 'View the screen')}</button>` : ''}<button class="ml-b sm" data-bcl hidden></button>${H.seat != null ? `<button class="ml-b sm" id="seU">${T('مغادرة المقعد', 'Leave the seat')}</button><button class="ml-b sm" id="seM" aria-pressed="${!store.get('nomsg', false)}">${store.get('nomsg', false) ? T('الرسائل مغلقة', 'Messages off') : T('الرسائل مفتوحة', 'Messages on')}</button>` : `<span class="ml-mut">${T('المس مقعدًا للجلوس', 'Tap a seat to sit')}</span>`}</div>${near.length ? `<div class="ml-row">${near.map(n => `<button class="ml-b sm" data-ch="${esc(n[0])}" dir="auto">${esc(E.here[n[0]].n)}</button>`).join('')}</div>` : ''}`;
+    const mg = $('#seM', b); if (mg) mg.onclick = () => { const off = !store.get('nomsg', false); store.set('nomsg', off); R('here/' + uid + '/nm').set(off ? 1 : null).catch(() => {}); b.dataset.sig = ''; seatBar(); }; const v = $('#seV', b); if (v) v.onclick = () => openPoster(E.stage.cur, 'stage'); const u = $('#seU', b); if (u) u.onclick = standUp; $$('[data-ch]', b).forEach(x => x.onclick = () => openChat(x.dataset.ch)); bcPaint();
   }
 
   function openGuide(tab) {
     closeSheet(); const g = $('#hlG', H.el); g.classList.add('open');
     const paint = () => {
       const seen = E.order.filter(p => H.visited[p]).length;
-      g.innerHTML = `<div class="hl-h"><h3>${T('دليل القاعة', 'Hall guide')}</h3><button class="hl-x" id="hlGc" aria-label="${T('إغلاق', 'Close')}">${IC.x}</button></div><div class="ml-tabs"><button data-t="p" aria-selected="${tab === 'p'}">${T('المشاركات', 'Entries')} (${num(seen)}/${num(E.order.length)})</button><button data-t="h" aria-selected="${tab === 'h'}">${T('الحضور', 'People')} (${num(Object.keys(E.here).length)})</button></div><div class="hl-body"><input class="ml-in" id="hlS" placeholder="${T('بحث', 'Search')}" aria-label="${T('بحث', 'Search')}">${tab === 'p' ? `<canvas id="hlMap" width="640" height="${Math.round(640 * Math.min(1.2, (H.L.zIn + 1.5 - H.L.th.z0) / (H.L.x1 - H.L.x0)))}"></canvas><ul class="ml-list" id="hlLs"></ul><div class="ml-row"><button class="ml-b sm" id="hlUn">${T('التالي غير المطّلع عليه', 'Next unviewed')}</button><button class="ml-b sm" id="hlSt">${T('المسرح', 'Stage')}</button></div>` : '<ul class="ml-list" id="hlLs"></ul>'}</div>`;
+      g.innerHTML = `<div class="hl-h"><h3 dir="auto">${esc(E.meta.t)}</h3><button class="hl-x" id="hlGc" aria-label="${T('إغلاق', 'Close')}">${IC.x}</button></div><div class="ml-tabs"><button data-t="d" aria-selected="${tab === 'd'}">${T('الأماكن', 'Places')}</button><button data-t="p" aria-selected="${tab === 'p'}">${T('المشاركات', 'Entries')} (${num(seen)}/${num(E.order.length)})</button><button data-t="h" aria-selected="${tab === 'h'}">${T('الحضور', 'People')} (${num(Object.keys(E.here).length)})</button></div><div class="hl-body">${tab === 'd' ? `<div id="hlPl">${placesHtml()}</div><canvas id="hlMap" width="640" height="${Math.round(640 * Math.min(1.2, (H.L.zIn + 1.5 - H.L.th.z0) / (H.L.x1 - H.L.x0)))}"></canvas>` : `<input class="ml-in" id="hlS" placeholder="${T('بحث', 'Search')}" aria-label="${T('بحث', 'Search')}"><ul class="ml-list" id="hlLs"></ul>${tab === 'p' ? `<div><button class="ml-b sm" id="hlUn">${T('التالية غير المطّلع عليها', 'Next unviewed')}</button></div>` : ''}`}</div>`;
       $('#hlGc', g).onclick = closeGuide; $$('.ml-tabs [data-t]', g).forEach(b => b.onclick = () => { tab = b.dataset.t; paint(); });
-      const ls = q => { const L = $('#hlLs', g); q = (q || '').trim().toLowerCase(); if (tab === 'p') { const en = q.replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d)); L.innerHTML = E.order.filter(p => !q || String(E.numOf[p]) === en || [E.items[p].t, E.items[p].a, E.items[p].fi, tracks()[E.items[p].tr]].join(' ').toLowerCase().includes(q)).map(p => { const it = E.items[p], o = it.own && E.here[it.own]; return `<li data-p="${esc(p)}" style="cursor:pointer"><span class="ml-n" style="background:${tcol(it.tr)}">${num(E.numOf[p])}</span><div class="ml-t"><b dir="auto">${esc(it.t)}</b><small><span class="ml-dot ${o ? '' : 'off'}"></span><span dir="auto">${esc(it.a || '')}</span></small></div>${H.visited[p] ? IC.check : ''}</li>`; }).join(''); $$('[data-p]', L).forEach(l => l.onclick = () => travel(l.dataset.p)); } else { const r = ROLE(); L.innerHTML = Object.keys(E.here).filter(u => !q || String(E.here[u].n || '').toLowerCase().includes(q)).map(u => { const d = E.here[u], ro = r[d.ro] ? r[d.ro][1] : ''; return `<li data-u="${esc(u)}" style="cursor:${u === uid ? 'default' : 'pointer'}"><span class="hl-av">${esc(String(d.n || '؟').charAt(0))}</span><div class="ml-t"><b dir="auto">${esc(d.n)}</b><small>${u === uid ? T('أنت', 'You') : esc(ro)}${d.c ? ' · ' + T('في محادثة', 'in a conversation') : ''}</small></div></li>`; }).join(''); $$('[data-u]', L).forEach(l => { if (l.dataset.u !== uid) l.onclick = () => { closeGuide(); openPerson(l.dataset.u); }; }); } };
-      ls(''); $('#hlS', g).oninput = e => ls(e.target.value);
-      const un = $('#hlUn', g); if (un) un.onclick = () => { closeGuide(); nextUnviewed(); }; const sg = $('#hlSt', g); if (sg) sg.onclick = () => { closeGuide(); goStage(); };
-      const mp = $('#hlMap', g); if (mp) drawMap(mp, false);
+      $$('[data-d]', g).forEach(l => l.onclick = () => goPlace(l.dataset.d)); const mp = $('#hlMap', g); if (mp) drawMap(mp, false);
+      const L = $('#hlLs', g); if (!L) return;
+      const ls = q => { q = (q || '').trim().toLowerCase(); if (tab === 'p') { const en = q.replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d)); L.innerHTML = E.order.filter(p => !q || String(E.numOf[p]) === en || [E.items[p].t, E.items[p].a, E.items[p].fi, tracks()[E.items[p].tr]].join(' ').toLowerCase().includes(q)).map(p => { const it = E.items[p], st = ownerState(p); return `<li data-p="${esc(p)}" style="cursor:pointer"><span class="ml-n" style="background:${tcol(it.tr)}">${num(E.numOf[p])}</span><div class="ml-t"><b dir="auto">${esc(it.t)}</b><small><span class="ml-dot ${st ? '' : 'off'}"></span><span dir="auto">${esc(it.a || '')}${st ? ' · ' + ownerWord(st) : ''}</span></small></div>${H.visited[p] ? IC.check : ''}</li>`; }).join(''); $$('[data-p]', L).forEach(l => l.onclick = () => travel(l.dataset.p)); } else { const r = ROLE(); L.innerHTML = Object.keys(E.here).filter(u => !q || String(E.here[u].n || '').toLowerCase().includes(q)).map(u => { const d = E.here[u], ro = r[d.ro] ? r[d.ro][1] : ''; return `<li data-u="${esc(u)}" style="cursor:${u === uid ? 'default' : 'pointer'}"><span class="hl-av">${esc(String(d.n || '؟').charAt(0))}</span><div class="ml-t"><b dir="auto">${esc(d.n)}</b><small>${u === uid ? T('أنت', 'You') : esc(ro)}${d.c ? ' · ' + T('في محادثة', 'in a conversation') : ''}</small></div></li>`; }).join(''); $$('[data-u]', L).forEach(l => { if (l.dataset.u !== uid) l.onclick = () => { closeGuide(); openPerson(l.dataset.u); }; }); } };
+      ls(''); $('#hlS', g).oninput = e => ls(e.target.value); const un = $('#hlUn', g); if (un) un.onclick = () => { closeGuide(); nextUnviewed(); };
     };
     paint();
   }
@@ -1083,7 +1192,12 @@
   }
 
   /* ---------- route ---------- */
-  function route() { const h = parseHash(); if (h.e && /^\d{6}$/.test(h.e)) { if (E.id !== h.e || !E.meta || h.j || h.p || h.m || h.stage || St.on) enter(h); } else { teardown(); E.id = null; E.meta = null; home(); } }
+  function route() { const h = parseHash(); if (h.e && /^\d{6}$/.test(h.e)) { if (E.id !== h.e || !E.meta || h.j || h.p || h.m || h.as || h.stage || St.on || E.preview) enter(h); } else { teardown(); E.id = null; E.meta = null; home(); } }
   addEventListener('hashchange', route);
+  /* the site's own bars step aside here; move to the top edge or tap it to bring the header back */
+  document.body.classList.add('ml-page'); { const strip = document.createElement('div'); strip.id = 'mlEdge'; strip.setAttribute('aria-hidden', 'true'); document.body.appendChild(strip); const cls = document.body.classList; let t = 0; const covered = () => H.on || !!$('.st-open, #stView'), hideIn = ms => { clearTimeout(t); t = setTimeout(() => cls.remove('ml-head'), ms); };
+    document.addEventListener('pointermove', e => { if (e.pointerType !== 'mouse') return; if (e.clientY < 12 && !covered()) { clearTimeout(t); cls.add('ml-head'); } else if (cls.contains('ml-head') && e.clientY > 76) hideIn(500); }, { passive: true });
+    strip.addEventListener('pointerdown', e => { if (e.pointerType === 'mouse' || covered()) return; cls.add('ml-head'); hideIn(4000); });
+    document.addEventListener('focusin', e => { if (e.target.closest && e.target.closest('header.top')) { clearTimeout(t); cls.add('ml-head'); } else if (cls.contains('ml-head')) hideIn(500); }); }
   finishEmailLink().catch(() => {}).then(route);
 })();
