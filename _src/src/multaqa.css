@@ -67,8 +67,6 @@ body.ml-on{overflow:hidden}
 .hl-toast{position:absolute;z-index:30;left:50%;transform:translateX(-50%);top:calc(62px + env(safe-area-inset-top,0px));background:var(--ink);color:var(--surface);padding:6px 14px;border-radius:999px;font-size:.8rem;max-width:88%;text-align:center}
 .hl-fade{position:absolute;inset:0;z-index:4;background:#fff;opacity:0;pointer-events:none;transition:opacity .16s}.hl-fade.on{opacity:.92}
 .hl-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.hl-pad button{all:unset;cursor:pointer;height:50px;text-align:center;border:1px solid var(--line);border-radius:10px;font-size:1.1rem;font-weight:600;line-height:50px}
-body.ml-on .av{top:calc(112px + env(safe-area-inset-top,0px))!important;bottom:auto!important;inset-inline:12px auto!important}
-body.ml-on:has(.av) {padding-bottom:0!important}
 /* stage */
 #mlStage{position:fixed;inset:0;z-index:1000;background:#0E1322;color:#fff;display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,34%);overflow:hidden;font-size:clamp(14px,1.5vw,22px);line-height:1.55}
 #mlStage .st-img{display:grid;place-items:center;padding:2vh 2vw;min-height:0;min-width:0;background:#090d19}
@@ -88,3 +86,30 @@ body.ml-on:has(.av) {padding-bottom:0!important}
 #mlStage .st-rank i{font-style:normal;font-size:2em;font-weight:700;color:#E3A55A;width:1.4em;text-align:center}
 @media (max-width:700px){#mlStage{grid-template-columns:1fr;grid-template-rows:minmax(0,1.2fr) auto}#mlStage .st-side{padding:14px}}
 .hl-off{display:none!important}
+
+/* the voice module runs unseen here; this page draws its own controls */
+#ml~.av,body>.av{display:none!important}
+#hlWhere{flex:1 1 0}
+#hlNear{bottom:calc(112px + env(safe-area-inset-bottom,0px))}
+/* poster view */
+#hlV{position:absolute;inset:0;z-index:8;background:#0E1322;display:flex;flex-direction:column;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}
+#hlV[hidden]{display:none}
+.pv-h{display:flex;align-items:center;gap:8px;padding:8px 10px;color:#fff;flex:none}.pv-h .hl-x{background:rgba(255,255,255,.12);color:#fff}
+.pv-t{flex:1;min-width:0;line-height:1.35}.pv-t b{display:block;font-size:.9rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.pv-t small{display:flex;gap:5px;align-items:center;font-size:.74rem;color:#C2CADA}
+.pv-box{flex:1;min-height:0;overflow:hidden;touch-action:none;display:grid;place-items:center;position:relative}
+.pv-box img{width:100%;height:100%;object-fit:contain;max-width:none;transform-origin:center;user-select:none;-webkit-user-drag:none;background:transparent}
+.pv-f{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;padding:10px;flex:none;min-height:60px;box-sizing:border-box}
+.pv-f .ml-b:not(.main){background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.25)}
+body.ml-incall .pv-f{padding-bottom:70px}
+.hl-sheet.mini{height:auto}
+.ml-del{all:unset;cursor:pointer;margin-inline-start:auto;color:var(--muted)}.ml-del .ml-i{width:14px;height:14px}
+/* conversation */
+#mlCall{position:fixed;z-index:1200;left:50%;transform:translateX(-50%);bottom:calc(10px + env(safe-area-inset-bottom,0px));display:flex;gap:8px;background:rgba(14,19,34,.92);padding:6px;border-radius:999px}
+body.ml-on:not(.ml-view) #mlCall{bottom:calc(164px + env(safe-area-inset-bottom,0px))}
+#mlCall button{all:unset;cursor:pointer;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;color:#fff;background:rgba(255,255,255,.14)}
+#mlCall button.off{color:#FF9A8A}#mlCall button.on{background:#2F7D5B}#mlCall button.end{background:#B3402A}
+#mlTiles{position:fixed;z-index:1100;inset-inline-end:10px;top:calc(62px + env(safe-area-inset-top,0px));display:flex;flex-direction:column;gap:8px;max-height:calc(100% - 200px);overflow:hidden;pointer-events:none}
+.ml-tile{position:relative;width:96px;height:124px;border-radius:12px;overflow:hidden;background:#1E2747;box-shadow:0 6px 18px rgba(0,0,0,.35);display:grid;place-items:center;color:#fff}
+.ml-tile.me{width:72px;height:92px}.ml-tile i{font-style:normal;font-size:1.6rem;font-weight:600}.ml-tile video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.ml-tile.me video{transform:scaleX(-1)}
+.ml-tile span{position:absolute;inset-inline:0;bottom:0;padding:2px 6px;font-size:.68rem;background:linear-gradient(transparent,rgba(0,0,0,.7));white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ml-tile.talk{box-shadow:0 0 0 3px #E3A55A}
+@media (min-width:820px){.ml-tile{width:150px;height:190px}.ml-tile.me{width:110px;height:140px}}
