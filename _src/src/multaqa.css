@@ -176,3 +176,10 @@ body.ml-page main section.first{padding-top:16px;padding-bottom:40px}
 body.ml-prev #mlHall,body.ml-prev #mlStage{bottom:28px}body.ml-prev main{padding-bottom:32px}
 #stMir{position:fixed;z-index:1250;inset-inline-end:12px;bottom:12px;overflow:hidden;border-radius:10px;border:2px solid #16201F;background:#000;box-shadow:0 8px 24px rgba(0,0,0,.3)}#stMir iframe{border:0;transform-origin:top left;position:absolute;top:0;left:0;pointer-events:none}#stMir button{all:unset;position:absolute;top:4px;inset-inline-start:4px;width:28px;height:28px;display:grid;place-items:center;border-radius:50%;background:rgba(0,0,0,.65);color:#fff;cursor:pointer}#stMir svg{width:16px;height:16px}
 #stDev{margin-top:12px;display:grid;gap:12px}#stDev[hidden]{display:none}.st-dev{display:flex;gap:12px;align-items:center}.st-qr{width:96px;flex:none}.st-qr svg{display:block;width:96px;height:96px;background:#fff;border-radius:6px}.st-dev .ml-row{margin-top:6px}
+#mlNudge{position:fixed;z-index:1350;top:calc(10px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);width:min(440px,calc(100vw - 24px));display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--surface);color:var(--ink);border:1px solid var(--line,#D9D3C5);border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.2)}#mlNudge span{flex:1;min-width:0;font-size:.92rem}
+.hl-pres{display:grid;gap:8px;padding:10px 12px;border:1px solid var(--line,#D9D3C5);border-radius:10px}.hl-pres .ml-row{flex-wrap:wrap}.hl-pres b{font-weight:600;font-size:.92rem}.hl-ct{font-size:.88rem;justify-self:start}
+.ml-more>summary{cursor:pointer;padding:10px 2px;color:var(--muted);font-weight:600}.ml-more>.ml-stack{margin-top:8px}
+.ml-fresh{display:inline-block;min-width:22px;padding:0 6px;border-radius:11px;background:#22C074;color:#fff;font-size:.8rem;text-align:center;font-weight:600}
+#mlHall section.hl-sheet,#mlHall .hl-sheet{padding:0 0 env(safe-area-inset-bottom,0px)}
+label.ml-row{flex-wrap:nowrap}label.ml-row input[type=checkbox]{width:auto;flex:none;margin:0}
+#mlHall{overflow:clip}
