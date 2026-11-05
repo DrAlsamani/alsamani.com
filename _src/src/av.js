@@ -114,6 +114,7 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
       on = on && canTalk(u); if (on !== !!A.talk[u]) { A.talk[u] = on; ch = true; } });
     const p0 = Object.values(A.P)[0]; let me = false;
     if (p0 && A.aT && A.mic && canTalk(A.uid)) { try { const st = await p0.pc.getStats(); st.forEach(x => { if (x.type === 'media-source' && x.kind === 'audio' && x.audioLevel > 0.04) me = true; }); } catch (e) {} }
+    if (!A) return;
     if (me !== !!A.talk[A.uid]) { A.talk[A.uid] = me; ch = true; }
     if (ch) paintTalk();
   }
@@ -275,5 +276,5 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
     const k = JSON.stringify(v); if (k === A.polK) return; A.polK = k; A.ref.child('pol').set(v).catch(() => {});
   }
   return { attach, detach, policy, join() { return A ? join() : null; }, toggleMic() { return A ? toggleMic() : null; }, toggleCam() { return A ? toggleCam() : null; }, leave() { if (A) leave(); },
-    view() { return A ? { joined: A.joined, mic: A.mic, cam: A.cam, note: A.note, me: A.vT, n: Object.keys(A.in).length, talk: A.talk || {}, people: Object.keys(A.in).filter(u => u !== A.uid).map(u => ({ u, n: A.in[u].n, a: A.in[u].a, v: A.in[u].v, track: A.in[u].v && A.P[u] ? A.P[u].vt : null })) } : null; }, state() { return A ? { on: A.on, joined: A.joined, mic: A.mic, can: canTalk(A.uid), n: Object.keys(A.in).length, peers: Object.keys(A.P).map(u => A.P[u].pc.connectionState), pol: A.pol } : null; }, setHost(u) { if (A) { A.hostU = u; apply(); } } };
+    view() { return A ? { joined: A.joined, mic: A.mic, cam: A.cam, note: A.note, me: A.vT, n: Object.keys(A.in).length, talk: A.talk || {}, people: Object.keys(A.in).filter(u => u !== A.uid).map(u => ({ u, n: A.in[u].n, a: A.in[u].a, v: A.in[u].v, track: A.in[u].v && A.P[u] ? A.P[u].vt : null, audio: A.P[u] && A.P[u].au && A.P[u].au.srcObject ? A.P[u].au.srcObject.getAudioTracks()[0] : null })) } : null; }, state() { return A ? { on: A.on, joined: A.joined, mic: A.mic, can: canTalk(A.uid), n: Object.keys(A.in).length, peers: Object.keys(A.P).map(u => A.P[u].pc.connectionState), pol: A.pol } : null; }, setHost(u) { if (A) { A.hostU = u; apply(); } } };
 })();

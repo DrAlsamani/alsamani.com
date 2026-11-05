@@ -71,7 +71,7 @@ body.ml-on{overflow:hidden}
 #mlStage{position:fixed;inset:0;z-index:1000;background:#0E1322;color:#fff;display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,34%);overflow:hidden;font-size:clamp(14px,1.5vw,22px);line-height:1.55}
 #mlStage .st-img{display:grid;place-items:center;padding:2vh 2vw 70px;min-height:0;min-width:0;background:#090d19}
 #mlStage .st-img img{max-width:100%;max-height:calc(100vh - 84px);display:block;border-radius:6px;background:#fff}
-#mlStage .st-side{padding:4vh 3vw 70px;display:flex;flex-direction:column;gap:2vh;min-height:0;overflow:auto}
+#mlStage .st-side{padding:4vh 3vw 90px;display:flex;flex-direction:column;gap:2vh;min-height:0;overflow:auto}
 #mlStage .st-num{font-size:3em;font-weight:700;color:#E3A55A;line-height:1;font-variant-numeric:tabular-nums}
 #mlStage h1{font-size:1.5em;margin:0;line-height:1.35;color:#fff}
 #mlStage .st-fin{font-size:1.1em;margin:0;color:#D9DEEA}
@@ -113,3 +113,11 @@ body.ml-on:not(.ml-view) #mlCall{bottom:calc(164px + env(safe-area-inset-bottom,
 .ml-tile.me{width:72px;height:92px}.ml-tile i{font-style:normal;font-size:1.6rem;font-weight:600}.ml-tile video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.ml-tile.me video{transform:scaleX(-1)}
 .ml-tile span{position:absolute;inset-inline:0;bottom:0;padding:2px 6px;font-size:.68rem;background:linear-gradient(transparent,rgba(0,0,0,.7));white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ml-tile.talk{box-shadow:0 0 0 3px #E3A55A}
 @media (min-width:820px){.ml-tile{width:150px;height:190px}.ml-tile.me{width:110px;height:140px}}
+
+.kv-ml{display:grid;gap:10px;margin:0}.kv-ml dt{font-size:.8rem;color:var(--muted)}.kv-ml dd{margin:0;font-size:.92rem;white-space:pre-wrap}
+#mlStage .kv-ml dt{color:#E3A55A;font-size:.8em}#mlStage .kv-ml dd{color:#D9DEEA;font-size:.9em}
+#mlStage~#mlCall{bottom:12px!important;left:12px!important;transform:none!important}#mlStage~#mlCall button{width:38px;height:38px}
+#mlStage .st-ctl a.ml-b{color:#fff}
+
+#hlSeat{position:absolute;z-index:6;left:50%;transform:translateX(-50%);bottom:calc(112px + env(safe-area-inset-bottom,0px));width:min(420px,calc(100% - 24px));background:var(--surface);opacity:.97;border:1px solid var(--line);border-radius:14px;padding:8px 10px;display:grid;gap:6px}
+#hlSeat[hidden],[data-bcl][hidden]{display:none!important}
