@@ -173,6 +173,29 @@ body.ml-on:not(.ml-view) #mlCall{bottom:calc(164px + env(safe-area-inset-bottom,
 
 #hlSeat{position:absolute;z-index:6;left:50%;transform:translateX(-50%);bottom:calc(112px + env(safe-area-inset-bottom,0px));width:min(420px,calc(100% - 24px));background:var(--surface);opacity:.97;border:1px solid var(--line);border-radius:14px;padding:8px 10px;display:grid;gap:6px}
 #hlSeat[hidden],[data-bcl][hidden]{display:none!important}
+
+/* stage: the poster always fits, and the controls stay over its column */
+#mlStage{height:100vh;height:100dvh}
+#mlStage .st-img{height:100vh;height:100dvh;box-sizing:border-box;overflow:hidden}
+#mlStage .st-img{position:relative;display:block}#mlStage .st-img>div{height:100%;display:grid;place-items:center}#mlStage .st-img img{position:absolute;top:2vh;bottom:72px;left:2vw;right:2vw;width:calc(100% - 4vw);height:calc(100% - 2vh - 72px);max-width:none;max-height:none;object-fit:contain;background:transparent;border-radius:0}
+#mlStage .st-side{height:100vh;height:100dvh;box-sizing:border-box}
+#mlStage:not(.res) .st-ctl{max-width:calc(66vw - 24px);inset-inline-start:33%;left:auto}
+[dir=rtl] #mlStage:not(.res) .st-ctl{transform:translateX(50%)}[dir=ltr] #mlStage:not(.res) .st-ctl{transform:translateX(-50%)}
+@media (max-width:700px){#mlStage .st-side{height:auto}#mlStage .st-img{height:auto;min-height:0}#mlStage:not(.res) .st-ctl{inset-inline-start:auto;left:50%;max-width:96vw;transform:translateX(-50%)!important}}
+#stGal{position:fixed;inset:0;z-index:5;background:#0B0F1C;color:#fff;display:flex;flex-direction:column}
+#stGal header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px clamp(14px,3vw,36px);flex:none}
+#stGal h2{margin:0;font-size:1.25em;color:#fff}#stGal h2 small{color:#9CA6BA;font-weight:400;font-size:.8em}
+#stGal header .ml-b{background:transparent;color:#fff;border-color:#3a4566}
+.sg-b{flex:1;min-height:0;overflow-y:auto;padding:0 clamp(14px,3vw,36px) 24px}
+.sg-b h3{color:#E3A55A;font-size:.95em;font-weight:500;margin:14px 0 10px}
+.sg-g{display:grid;gap:16px;justify-content:center;align-content:center;min-height:100%}
+.sg-c{all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;gap:5px;min-width:0;border-radius:10px;padding:0 0 4px}
+.sg-c:hover,.sg-c:focus-visible{background:#1A2238}.sg-c.on{background:#1E2747;box-shadow:0 0 0 2px #E3A55A}
+.sg-i{position:relative;display:block;aspect-ratio:.72;background:#fff;border-radius:8px;overflow:hidden}
+.sg-i img{width:100%;height:100%;object-fit:contain;display:block}
+.sg-i b{position:absolute;top:8px;inset-inline-start:8px;min-width:34px;height:34px;padding:0 6px;box-sizing:border-box;border-radius:9px;display:grid;place-items:center;color:#fff;font-size:1.05rem;box-shadow:0 2px 8px rgba(0,0,0,.35)}
+.sg-t{font-size:.92rem;font-weight:500;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;color:#fff}
+.sg-c small{color:#9CA6BA;font-size:.76rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 </style>
 <div id="ml"><noscript><span class="ar">تعمل هذه الأداة مع تفعيل JavaScript.</span><span class="en">This tool needs JavaScript.</span></noscript></div><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script>window.MD_CFG={"apiKey": "AIzaSyA50i75DT1Is1a6Yn6snW1_JVObc8S3F0Y", "authDomain": "maydan-705ae.firebaseapp.com", "databaseURL": "https://maydan-705ae-default-rtdb.europe-west1.firebasedatabase.app", "projectId": "maydan-705ae", "appId": "1:342187013133:web:d5c2396f0db413f3c51144"};</script>
 <script>/* alsamani.com — live voice and video for Samar and Maydan rooms, for players far apart on their phones.
@@ -991,6 +1014,20 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
     if (play && it.rc) R('rec/' + p).once('value').then(s => { const b = $('#stAudio', el); if (s.val() && b) { b.innerHTML = `<audio controls autoplay src="${s.val()}" style="width:100%"></audio>`; const a = $('audio', b); a.play().catch(() => {}); } }).catch(() => {});
     stageBind();
   }
+  /* every entry at a glance, sized to whatever screen is on stage */
+  function stageGallery() {
+    const old = $('#stGal'); if (old) return old.remove();
+    const g = document.createElement('div'); g.id = 'stGal'; g.setAttribute('role', 'dialog'); g.setAttribute('aria-label', T('المشاركات', 'Entries'));
+    const cur = (E.stage || {}).cur, done = p => Object.values(St.scores).filter(js => js && js[p] && (js[p].coi || crit().every((_, i) => js[p].c && js[p].c[i] >= 1))).length, jn = Object.keys(St.judges).length;
+    const cardH = p => { const it = E.items[p]; return `<button class="sg-c${p === cur ? ' on' : ''}" data-p="${esc(p)}"><span class="sg-i"><img alt="" data-th="${esc(p)}"><b style="background:${tcol(it.tr)}">${num(E.numOf[p])}</b></span><span class="sg-t" dir="auto">${esc(it.t)}</span><small dir="auto">${esc(it.a || '')}${isHost() && jn ? ` · ${num(done(p))}/${num(jn)}` : ''}</small></button>`; };
+    g.innerHTML = `<header><h2>${T('المشاركات', 'Entries')} <small>${num(E.order.length)}</small></h2><button class="ml-b" data-x>${IC.x}${T('إغلاق', 'Close')}</button></header><div class="sg-b"><div class="sg-g">${E.order.map(cardH).join('')}</div></div>`;
+    St.el.appendChild(g); const box = $('.sg-b', g), grid = $('.sg-g', g), fit = () => { const N = E.order.length || 1, Wd = box.clientWidth - 8, Hh = box.clientHeight - 8, gap = 16, cap = 68; let best = 1, bw = 0; for (let c = 1; c <= N; c++) { const r = Math.ceil(N / c), w = Math.min((Wd - gap * (c - 1)) / c, ((Hh - gap * (r - 1)) / r - cap) * .72); if (w > bw) { bw = w; best = c; } } if (bw < 150) { best = Math.max(1, Math.floor((Wd + gap) / (150 + gap))); bw = 150; } bw = Math.min(bw, 420); grid.style.gridTemplateColumns = `repeat(${best},${Math.floor(bw)}px)`; }; fit(); addEventListener('resize', fit);
+    const close = () => { g.remove(); removeEventListener('keydown', esc1); removeEventListener('resize', fit); }, esc1 = e => { if (e.key === 'Escape') close(); }; addEventListener('keydown', esc1);
+    $('[data-x]', g).onclick = close;
+    $$('.sg-c', g).forEach(c => c.onclick = () => { close(); R('stage').update({ cur: c.dataset.p, open: true, mode: 'show', play: null, until: Date.now() + (+E.cfg.stageSec || 180) * 1000 }); });
+    St.th = St.th || {}; $$('[data-th]', g).forEach(i => { const p = i.dataset.th; if (St.th[p]) i.src = St.th[p]; else R('thumb/' + p).once('value').then(s => { if (s.val()) { St.th[p] = s.val(); i.src = s.val(); } }).catch(() => {}); });
+    const on = $('.sg-c.on', g); if (on) on.scrollIntoView({ block: 'center' });
+  }
   function stageBind() {
     const el = St.el;
     $$('[data-go]', el).forEach(b => b.onclick = () => { const p = E.order[+b.dataset.go]; if (p) R('stage').update({ cur: p, open: true, mode: 'show', play: null, until: Date.now() + (+E.cfg.stageSec || 180) * 1000 }); });
@@ -1000,7 +1037,7 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
     $$('[data-play]', el).forEach(b => b.onclick = () => R('stage/play').set(E.stage.play && E.stage.play.p === E.stage.cur ? null : { p: E.stage.cur, at: Date.now() }));
     $$('[data-voice]', el).forEach(b => b.onclick = async () => { if (Bc.on) { bcStop(); callEnd(); St.key = ''; return stageRender(); } if (!name()) store.set('name', T('المسرح', 'Stage')); joinRoom('stage'); await bcStart(); St.key = ''; stageRender(); });
     stageCount(); bcPaint();
-    $$('[data-list]', el).forEach(b => b.onclick = () => { const d = card(`<div class="ml-row"><b class="ml-grow">${T('المشاركات', 'Entries')}</b><button class="hl-x" data-x aria-label="${T('إغلاق', 'Close')}">${IC.x}</button></div><ul class="ml-list" style="max-height:60vh;overflow:auto">${E.order.map((p, i) => `<li data-i="${i}" style="cursor:pointer"><span class="ml-n" style="background:${tcol(E.items[p].tr)}">${num(E.numOf[p])}</span><div class="ml-t"><b dir="auto">${esc(E.items[p].t)}</b></div></li>`).join('')}</ul>`); d.style.zIndex = 2500; $('[data-x]', d).onclick = () => d.remove(); $$('[data-i]', d).forEach(l => l.onclick = () => { const p = E.order[+l.dataset.i]; d.remove(); R('stage').update({ cur: p, open: true, mode: 'show', play: null, until: Date.now() + (+E.cfg.stageSec || 180) * 1000 }); }); });
+    $$('[data-list]', el).forEach(b => b.onclick = stageGallery);
   }
 
   /* ---------- conversation: one room, one small control bar, cameras beside the poster ---------- */

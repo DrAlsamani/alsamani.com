@@ -534,6 +534,20 @@
     if (play && it.rc) R('rec/' + p).once('value').then(s => { const b = $('#stAudio', el); if (s.val() && b) { b.innerHTML = `<audio controls autoplay src="${s.val()}" style="width:100%"></audio>`; const a = $('audio', b); a.play().catch(() => {}); } }).catch(() => {});
     stageBind();
   }
+  /* every entry at a glance, sized to whatever screen is on stage */
+  function stageGallery() {
+    const old = $('#stGal'); if (old) return old.remove();
+    const g = document.createElement('div'); g.id = 'stGal'; g.setAttribute('role', 'dialog'); g.setAttribute('aria-label', T('المشاركات', 'Entries'));
+    const cur = (E.stage || {}).cur, done = p => Object.values(St.scores).filter(js => js && js[p] && (js[p].coi || crit().every((_, i) => js[p].c && js[p].c[i] >= 1))).length, jn = Object.keys(St.judges).length;
+    const cardH = p => { const it = E.items[p]; return `<button class="sg-c${p === cur ? ' on' : ''}" data-p="${esc(p)}"><span class="sg-i"><img alt="" data-th="${esc(p)}"><b style="background:${tcol(it.tr)}">${num(E.numOf[p])}</b></span><span class="sg-t" dir="auto">${esc(it.t)}</span><small dir="auto">${esc(it.a || '')}${isHost() && jn ? ` · ${num(done(p))}/${num(jn)}` : ''}</small></button>`; };
+    g.innerHTML = `<header><h2>${T('المشاركات', 'Entries')} <small>${num(E.order.length)}</small></h2><button class="ml-b" data-x>${IC.x}${T('إغلاق', 'Close')}</button></header><div class="sg-b"><div class="sg-g">${E.order.map(cardH).join('')}</div></div>`;
+    St.el.appendChild(g); const box = $('.sg-b', g), grid = $('.sg-g', g), fit = () => { const N = E.order.length || 1, Wd = box.clientWidth - 8, Hh = box.clientHeight - 8, gap = 16, cap = 68; let best = 1, bw = 0; for (let c = 1; c <= N; c++) { const r = Math.ceil(N / c), w = Math.min((Wd - gap * (c - 1)) / c, ((Hh - gap * (r - 1)) / r - cap) * .72); if (w > bw) { bw = w; best = c; } } if (bw < 150) { best = Math.max(1, Math.floor((Wd + gap) / (150 + gap))); bw = 150; } bw = Math.min(bw, 420); grid.style.gridTemplateColumns = `repeat(${best},${Math.floor(bw)}px)`; }; fit(); addEventListener('resize', fit);
+    const close = () => { g.remove(); removeEventListener('keydown', esc1); removeEventListener('resize', fit); }, esc1 = e => { if (e.key === 'Escape') close(); }; addEventListener('keydown', esc1);
+    $('[data-x]', g).onclick = close;
+    $$('.sg-c', g).forEach(c => c.onclick = () => { close(); R('stage').update({ cur: c.dataset.p, open: true, mode: 'show', play: null, until: Date.now() + (+E.cfg.stageSec || 180) * 1000 }); });
+    St.th = St.th || {}; $$('[data-th]', g).forEach(i => { const p = i.dataset.th; if (St.th[p]) i.src = St.th[p]; else R('thumb/' + p).once('value').then(s => { if (s.val()) { St.th[p] = s.val(); i.src = s.val(); } }).catch(() => {}); });
+    const on = $('.sg-c.on', g); if (on) on.scrollIntoView({ block: 'center' });
+  }
   function stageBind() {
     const el = St.el;
     $$('[data-go]', el).forEach(b => b.onclick = () => { const p = E.order[+b.dataset.go]; if (p) R('stage').update({ cur: p, open: true, mode: 'show', play: null, until: Date.now() + (+E.cfg.stageSec || 180) * 1000 }); });
@@ -543,7 +557,7 @@
     $$('[data-play]', el).forEach(b => b.onclick = () => R('stage/play').set(E.stage.play && E.stage.play.p === E.stage.cur ? null : { p: E.stage.cur, at: Date.now() }));
     $$('[data-voice]', el).forEach(b => b.onclick = async () => { if (Bc.on) { bcStop(); callEnd(); St.key = ''; return stageRender(); } if (!name()) store.set('name', T('المسرح', 'Stage')); joinRoom('stage'); await bcStart(); St.key = ''; stageRender(); });
     stageCount(); bcPaint();
-    $$('[data-list]', el).forEach(b => b.onclick = () => { const d = card(`<div class="ml-row"><b class="ml-grow">${T('المشاركات', 'Entries')}</b><button class="hl-x" data-x aria-label="${T('إغلاق', 'Close')}">${IC.x}</button></div><ul class="ml-list" style="max-height:60vh;overflow:auto">${E.order.map((p, i) => `<li data-i="${i}" style="cursor:pointer"><span class="ml-n" style="background:${tcol(E.items[p].tr)}">${num(E.numOf[p])}</span><div class="ml-t"><b dir="auto">${esc(E.items[p].t)}</b></div></li>`).join('')}</ul>`); d.style.zIndex = 2500; $('[data-x]', d).onclick = () => d.remove(); $$('[data-i]', d).forEach(l => l.onclick = () => { const p = E.order[+l.dataset.i]; d.remove(); R('stage').update({ cur: p, open: true, mode: 'show', play: null, until: Date.now() + (+E.cfg.stageSec || 180) * 1000 }); }); });
+    $$('[data-list]', el).forEach(b => b.onclick = stageGallery);
   }
 
   /* ---------- conversation: one room, one small control bar, cameras beside the poster ---------- */
