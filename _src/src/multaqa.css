@@ -183,3 +183,7 @@ body.ml-prev #mlHall,body.ml-prev #mlStage{bottom:28px}body.ml-prev main{padding
 #mlHall section.hl-sheet,#mlHall .hl-sheet{padding:0 0 env(safe-area-inset-bottom,0px)}
 label.ml-row{flex-wrap:nowrap}label.ml-row input[type=checkbox]{width:auto;flex:none;margin:0}
 #mlHall{overflow:clip}
+.ml-spk.pv-spk{position:absolute;inset-block:auto 8px;inset-inline:auto 8px;width:84px}@media (min-width:820px){.ml-spk.pv-spk{width:150px}}
+.hl-seated #hlStick,.hl-seated #hlJump,.hl-seated #hlMini,.hl-seated #hlNear{display:none!important}.hl-seated #hlSeat{bottom:calc(12px + env(safe-area-inset-bottom,0px))}
+#stQs .hl-note{margin:0}#stQs:empty{display:none}
+@media (orientation:landscape){.hl-seated #hlSeat{left:auto;transform:none;inset-inline-start:12px;bottom:12px;width:190px}.hl-seated #hlSeat .ml-row{flex-direction:column;align-items:stretch}}
