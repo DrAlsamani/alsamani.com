@@ -94,7 +94,7 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
   }
   async function call(u) {
     const P = peer(u, true); P.pc.addTransceiver('audio', { direction: 'sendrecv' }); P.pc.addTransceiver('video', { direction: 'sendrecv' }); feed(P);
-    const o = await P.pc.createOffer(); await P.pc.setLocalDescription(o); sig(u, 'o', P.pc.localDescription);
+    let o = await P.pc.createOffer(); try { await P.pc.setLocalDescription(o); } catch (e) { o = await P.pc.createOffer(); await P.pc.setLocalDescription(o); } sig(u, 'o', P.pc.localDescription);
   }
   async function onSig(m) {
     if (!A || !A.joined || !m || !m.f) return; const u = m.f; let d = null; try { d = JSON.parse(m.d); } catch (e) { return; }
