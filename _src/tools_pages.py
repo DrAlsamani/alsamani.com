@@ -46,9 +46,9 @@ def tool_body(t):
 <script>window.TOOL={json.dumps(t, ensure_ascii=False)}</script>
 </section>'''
 
-GROUPS = [('work', 'الاجتماعات والملفات', 'Meetings and files', 'أدوات للجان والمجالس والأعمال المكتبية، تعمل من الجوال دون تسجيل.', 'For committees, boards and office work; they run on a phone with no sign-up.'),
-          ('research', 'للطالب الباحث', 'For student researchers', 'من الفكرة الأولى إلى اختيار المنهج والتصميم.', 'From the first idea to the choice of approach and design.'),
-          ('leaders', 'للقادة والمؤسسات', 'For leaders and organizations', 'أدوات تشخيص من كتاب «إدارة الابتكار».', 'Diagnostic tools from <i>Innovation Management</i>.')]
+GROUPS = [('work', 'الاجتماعات والملفات', 'Meetings and files', 'أدوات للجان والمجالس والأعمال المكتبية، تعمل من الجوال ولا تتطلب التسجيل.', 'Tools for committees, boards and office work; they run on a phone and need no sign-up.'),
+          ('research', 'للطالب الباحث', 'For student researchers', 'أدوات ترافق الباحث من الفكرة الأولى إلى اختيار المنهج والتصميم.', 'Tools that accompany the researcher from the first idea to the choice of approach and design.'),
+          ('leaders', 'للقادة والمؤسسات', 'For leaders and organizations', 'أدوات تشخيصية مستمدة من كتاب «إدارة الابتكار».', 'Diagnostic tools from <i>Innovation Management</i>.')]
 GPAGE = {'work': 'work', 'research': 'students', 'leaders': 'leaders'}
 def gname(g):
     x = next(r for r in GROUPS if r[0] == g); return x[1], x[2]
@@ -117,12 +117,12 @@ def group_body(g):
             f'<p class="tl-also">{bi("أدوات أخرى", "More tools")}</p><nav class="tl-gnav">{others}</nav></section>')
 
 JOURNEY = {'slug': 'research-journey', 't_ar': 'رحلة البحث', 't_en': 'The research journey',
-           'q_ar': 'من الفكرة إلى المناقشة.',
-           'q_en': 'From the first idea to the defence.'}
+           'q_ar': 'دليل تفاعلي يرافق الباحث في مراحل البحث، من بلورة الفكرة إلى المناقشة.',
+           'q_en': 'An interactive guide through the stages of research, from shaping the idea to the defence.'}
 RD = json.load(open(os.path.join(ROOT, 'data', 'research_designs.json')))
 METHODS = {'slug': 'research-methods', 't_ar': 'مناهج البحث وتصاميمها', 't_en': 'Research approaches and designs',
-           'q_ar': 'متى يُستخدم كل منهج وتصميم، وكيف يُصاغ سؤاله، وما الذي يتطلبه.',
-           'q_en': 'When each approach and design fits, how its question is framed, and what it requires.'}
+           'q_ar': 'مرجع لمناهج البحث وتصاميمها، يبيّن متى يُستخدم كل منها، وكيف يُصاغ سؤاله، وما متطلباته.',
+           'q_en': 'A reference to research approaches and designs: when each fits, how its question is framed, and what it requires.'}
 def _l(p):
     return bi(e(p[0]), e(p[1]))
 def _guide(g, needs, anchor, name, open_=False):
@@ -165,8 +165,8 @@ def journey_body():
 </section>'''
 
 SIGN = {'slug': 'sign', 't_ar': 'توقيع المحاضر', 't_en': 'Signing the minutes',
-        'q_ar': 'ارفع المحضر وأرسله للأعضاء للتوقيع بيسر وسهولة.',
-        'q_en': 'Upload the minutes and send them to members to sign, simply and easily.'}
+        'q_ar': 'تتيح هذه الخدمة إرسال المحضر إلى الأعضاء برابط واحد، ليوقّع كل عضو في خانته من جواله، ثم يُحفظ المحضر موقّعًا.',
+        'q_en': 'Send the minutes to members through one link; each signs in their own box from their phone, and the signed copy is kept.'}
 def sign_ready():
     return (os.environ.get('SIGN_API') or json.load(open(os.path.join(ROOT, 'data', 'sign.json')))['api']).startswith('http')
 def poll_ready():
@@ -188,26 +188,26 @@ def sign_body():
 </section>'''
 
 PASS = {'slug': 'pass', 't_ar': 'تمرير قرار', 't_en': 'Decision by circulation',
-        'q_ar': 'يصوّت كل عضو على القرار برابط واحد: موافق أو متحفظ أو غير موافق.',
-        'q_en': 'Each member answers the decision from one link: agree, reservation or disagree.'}
+        'q_ar': 'خدمة لتمرير القرارات على الأعضاء برابط واحد، يبدي فيه كل عضو موافقته أو تحفظه أو عدم موافقته، وتُجمع النتيجة تلقائيًا.',
+        'q_en': 'Circulate a decision to members through one link; each records agreement, reservation or disagreement, and the result is tallied automatically.'}
 MEET = {'slug': 'meet', 't_ar': 'موعد الاجتماع', 't_en': 'Meeting time',
-        'q_ar': 'اقترح عدة مواعيد، ويختار كل عضو ما يناسبه، فيظهر الموعد الأنسب.',
-        'q_en': 'Suggest a few times; each member marks what works, and the best time stands out.'}
+        'q_ar': 'خدمة لتنسيق موعد الاجتماع: تُقترح عدة مواعيد، ويحدد كل عضو ما يناسبه، فيظهر الموعد الأنسب للجميع.',
+        'q_en': 'Coordinate a meeting time: propose several times, each member marks what suits them, and the best time for all is shown.'}
 ATTEND = {'slug': 'attend', 't_ar': 'تسجيل الحضور', 't_en': 'Attendance',
-        'q_ar': 'يسجّل كل حاضر حضوره من جواله، وتظهر لك قائمة الحاضرين ومن غاب.',
-        'q_en': 'Each attendee records presence from their phone; you see who came and who did not.'}
+        'q_ar': 'خدمة لتسجيل الحضور من الجوال، تعرض قائمة الحاضرين والغائبين أولًا بأول.',
+        'q_en': 'Record attendance from attendees’ phones, with the list of those present and absent updated as they arrive.'}
 PDFT = {'slug': 'pdf', 't_ar': 'محرر PDF', 't_en': 'PDF editor',
-        'q_ar': 'حرّر ملفات PDF وعبّئها بالكتابة والعلامات، وادمجها ورتّب صفحاتها، واضغط الملفات الكبيرة.',
-        'q_en': 'Edit and fill PDFs with text and marks, merge them and arrange their pages, and shrink large files.'}
+        'q_ar': 'محرر لملفات PDF يتيح تعبئتها والكتابة عليها، ودمجها وترتيب صفحاتها، وضغط الملفات الكبيرة.',
+        'q_en': 'A PDF editor for filling in and writing on files, merging them, arranging their pages and compressing large files.'}
 CERT = {'slug': 'certificates', 't_ar': 'الشهادات', 't_en': 'Certificates',
-        'q_ar': 'ارفع تصميم الشهادة والصق الأسماء، فتصدر شهادة لكل اسم.',
-        'q_en': 'Upload the certificate design and paste the names; a certificate is made for each name.'}
+        'q_ar': 'خدمة لإصدار الشهادات دفعة واحدة: يُرفع تصميم الشهادة وقائمة الأسماء، فتصدر شهادة مستقلة لكل اسم.',
+        'q_en': 'Issue certificates in one batch: upload the design and the list of names, and a separate certificate is produced for each name.'}
 QRT = {'slug': 'qr', 't_ar': 'رمز QR', 't_en': 'QR code',
-       'q_ar': 'حوّل أي رابط إلى رمز QR جاهز للعروض والمطبوعات، ومنه رابط مجلد يجمع عدة ملفات.',
-       'q_en': 'Turn any link into a QR code for slides and print, including a folder link that holds several files.'}
+       'q_ar': 'خدمة لتحويل الروابط إلى رموز QR جاهزة للعروض والمطبوعات، وتشمل إنشاء رابط مجلد يجمع عدة ملفات.',
+       'q_en': 'Turn links into QR codes ready for slides and print, including a folder link that gathers several files.'}
 QUIZ = {'slug': 'quiz', 't_ar': 'المسابقة التفاعلية', 't_en': 'Live quiz',
-        'q_ar': 'اكتب أسئلة مسابقة تفاعلية بسرعة: الصقها أو ارفع ملفها أو اطلبها من الذكاء الاصطناعي.',
-        'q_en': 'Write the questions of a live quiz quickly: paste them, upload a file, or ask an AI.'}
+        'q_ar': 'محرر لإعداد أسئلة المسابقات التفاعلية بلصقها أو رفع ملفها أو توليدها بالذكاء الاصطناعي.',
+        'q_en': 'An editor for preparing live quiz questions by pasting them, uploading a file or generating them with AI.'}
 from tools_seo import SEO
 def about_html(slug):
     d = SEO.get(slug)
@@ -240,8 +240,8 @@ def pdf_body():
         ['sign.css', 'pdftool.css'],
         ['https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js', 'https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js', 'https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js', 'pdftool.js', 'pdfedit.js'])
 MINUTES = {'slug': 'minutes', 't_ar': 'بناء المحضر', 't_en': 'Minutes builder',
-        'q_ar': 'اكتب محضر الاجتماع كاملًا: الحضور والنصاب، والبنود وقراراتها، والتكليفات والتوقيعات، ثم أرسله للتوقيع.',
-        'q_en': 'Write full meeting minutes: attendance and quorum, items and decisions, tasks and signatures, then send them for signing.'}
+        'q_ar': 'خدمة لإعداد محضر الاجتماع كاملًا: الحضور والنصاب، والبنود وقراراتها، والتكليفات والتوقيعات، مع إمكانية إرساله للتوقيع.',
+        'q_en': 'Prepare complete meeting minutes: attendance and quorum, items and decisions, assignments and signatures, ready to send for signing.'}
 def minutes_body():
     return _tool_page(MINUTES, '',
         f'<div id="mn" class="sn mn"><noscript>{bi("تعمل هذه الأداة مع تفعيل JavaScript.", "This tool needs JavaScript.")}</noscript></div>',
@@ -254,8 +254,8 @@ def table_body():
         f'<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css"><div id="tb"><noscript>{bi("تعمل هذه الأداة مع تفعيل JavaScript.", "This tool needs JavaScript.")}</noscript></div>{MD_SCRIPTS()}',
         ['table.css'], ['av.js', 'table.js'])
 MULTAQA = {'slug': 'multaqa', 't_ar': 'ملتقى', 't_en': 'Multaqa',
-        'q_ar': 'ملتقى علمي على الجوال: قاعة بوسترات يتجول فيها الحضور بأسمائهم ويتحدثون، وتحكيم عن بعد وعلى المسرح.',
-        'q_en': 'A research forum on a phone: a poster hall where people walk under their own names and talk, with judging remotely and on stage.'}
+        'q_ar': 'منصة للملتقيات العلمية تعرض البوسترات في قاعة افتراضية يتنقل فيها الحضور ويتحاورون، وتشمل التحكيم عن بُعد وعلى المسرح.',
+        'q_en': 'A platform for research forums: posters shown in a virtual hall where attendees move and talk, with judging both remote and on stage.'}
 def multaqa_body():
     src = lambda f: open(os.path.join(ROOT, 'src', f)).read()
     return f'''<section class="first tl-page sn-page-wrap">
@@ -265,8 +265,8 @@ def multaqa_body():
 <script>{src('av.js')}</script><script>{src('multaqa.js')}</script>
 </section>'''
 COMPARE = {'slug': 'compare', 't_ar': 'مقارنة ملفين', 't_en': 'Compare two files',
-        'q_ar': 'ضع نسختين من محضر أو قرار أو خطاب، فتظهر لك الإضافات والحذف وكل رقم أو تاريخ تغيّر.',
-        'q_en': 'Put two versions of minutes, a decision or a letter side by side, and see what was added, removed, and every number or date that changed.'}
+        'q_ar': 'خدمة لمقارنة نسختين من محضر أو قرار أو خطاب، تُظهر الإضافات والحذف وكل رقم أو تاريخ تغيّر.',
+        'q_en': 'Compare two versions of minutes, a decision or a letter, showing additions, deletions and every changed number or date.'}
 def compare_body():
     return _tool_page(COMPARE, '',
         f'<div id="cm" class="sn cm"><noscript>{bi("تعمل هذه الأداة مع تفعيل JavaScript.", "This tool needs JavaScript.")}</noscript></div>',
@@ -285,11 +285,11 @@ def cert_body():
 MAYDAN_MARK = '<svg class="md-mark" viewBox="0 0 48 48" aria-hidden="true"><rect x="4" y="4" width="40" height="40" rx="12" fill="#23336F"/><path d="M24 9l4.2 6.8 7.8-1.8-1.8 7.8L41 24l-6.8 4.2 1.8 7.8-7.8-1.8L24 39l-4.2-6.8-7.8 1.8 1.8-7.8L7 24l6.8-4.2-1.8-7.8 7.8 1.8z" fill="#C9822B"/><circle cx="24" cy="24" r="6.5" fill="#23336F"/><circle cx="24" cy="24" r="3" fill="#F3E3C7"/></svg>'
 def play_index():
     return f'''<section class="first tl-page">
-<header class="tl-head"><h1>{bi('منصة الألعاب التفاعلية', 'Interactive games')}</h1><p class="tl-lede">{bi('منصة تعليمية ترفيهية للتوظيف داخل بيئة التعلم والأنشطة والاجتماعات.', 'An educational and entertaining platform to use in learning, activities and meetings.')}</p></header>
-<div class="md-units"><a class="md-unit" href="maydan/index.html">{MAYDAN_MARK}<span><b>{bi('ميدان', 'Maydan')}</b><small>{bi('مسابقات تفاعلية حيّة: سؤال على الشاشة، وكل مشارك يجيب من جواله، والأسرع والأدق يتصدّر. ومعها مكتبة مسابقات جاهزة.', 'Live quizzes: a question on the screen, everyone answers from their phone, and the fastest right answers lead. With a library of ready quizzes.')}</small></span></a>
-<a class="md-unit" href="dawwara/index.html">{DW_MARK}<span><b>{bi('دوّارة', 'Dawwara')}</b><small>{bi('مسابقة المجموعات على شاشة واحدة بلا أجهزة للحضور: تتناوب المجموعات، والقائد يجاوب، والصح والأسرع يكسب. للفصول والمجالس.', 'The team quiz on one screen, no devices needed: groups take turns, leaders answer, right and fast wins. For classrooms and gatherings.')}</small></span></a>
-<a class="md-unit" href="samar/index.html">{SM_MARK}<span><b>{bi('سمر', 'Samar')}</b><small>{bi('تحلو سهرتكم مع سمر: ألعاب تفاعلية متنوعة وممتعة للآخر. شخص يستضيف اللعبة ويديرها، والباقي يشاركون من جوالاتهم.', 'Make your evening with Samar: varied interactive games, fun all the way. One person hosts and runs the game; everyone else joins from their phones.')}</small></span></a>
-<a class="md-unit" href="tasalsul/index.html">{KH_MARK}<span><b>{bi('تسلسل', 'Tasalsul')}</b><small>{bi('على طريقة سيكوينس: كوّن صفوفك من أربع أو خمس قبل خصمك. اللوح على الشاشة والأوراق في الجوالات، أو عن بُعد، أو ضد الجهاز.', 'In the style of Sequence: make rows of four or five before the others. The board on a screen and the hands on phones, remote play, or against the computer.')}</small></span></a>
+<header class="tl-head"><h1>{bi('منصة الألعاب التفاعلية', 'Interactive games')}</h1><p class="tl-lede">{bi('منصة تفاعلية تعليمية وترفيهية، تُوظَّف في بيئات التعلم والأنشطة والاجتماعات.', 'An interactive educational and recreational platform for learning settings, activities and meetings.')}</p></header>
+<div class="md-units"><a class="md-unit" href="maydan/index.html">{MAYDAN_MARK}<span><b>{bi('ميدان', 'Maydan')}</b><small>{bi('منصة للمسابقات التفاعلية الحية: يُعرض السؤال على الشاشة ويجيب المشاركون من جوالاتهم، ويتصدر الأدق والأسرع، وتشمل مكتبة من المسابقات الجاهزة.', 'A platform for live quizzes: the question appears on the screen, participants answer from their phones, the most accurate and fastest lead, with a library of ready quizzes.')}</small></span></a>
+<a class="md-unit" href="dawwara/index.html">{DW_MARK}<span><b>{bi('دوّارة', 'Dawwara')}</b><small>{bi('مسابقة للمجموعات على شاشة واحدة، تتناوب فيها المجموعات على الأسئلة والتحديات، ويمكن لقادة المجموعات المشاركة من جوالاتهم. تناسب الفصول الدراسية والفعاليات.', 'A team quiz on one screen: groups take turns at questions and challenges, and group leaders can take part from their phones. Suited to classrooms and events.')}</small></span></a>
+<a class="md-unit" href="samar/index.html">{SM_MARK}<span><b>{bi('سمر', 'Samar')}</b><small>{bi('مجموعة ألعاب تفاعلية جماعية للأمسيات والتجمعات، يستضيفها أحد الحاضرين ويديرها، ويشارك الآخرون من جوالاتهم.', 'A set of interactive group games for evenings and gatherings: one person hosts and runs them, and the others take part from their phones.')}</small></span></a>
+<a class="md-unit" href="tasalsul/index.html">{KH_MARK}<span><b>{bi('تسلسل', 'Tasalsul')}</b><small>{bi('لعبة لوحية على طريقة «سيكوينس»، يسعى فيها كل فريق إلى تكوين صفوف من أربع قطع أو خمس قبل منافسه. يُعرض اللوح على الشاشة والأوراق في الجوالات، ويمكن اللعب عن بُعد أو ضد الجهاز.', 'A board game in the style of Sequence: each team works to complete rows of four or five chips before its rival. The board is on a screen and the hands on phones, with remote play or play against the computer.')}</small></span></a>
 </div>
 <style>.md-units{{display:grid;gap:14px;max-width:760px;margin:0 auto}}.md-unit{{display:flex;gap:16px;align-items:center;background:var(--surface);border-radius:18px;padding:18px;text-decoration:none;color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.04)}}.md-unit:hover{{box-shadow:0 6px 22px rgba(0,0,0,.08)}}.md-unit .md-mark,.md-unit .kh-mark,.md-unit .sm-mark,.md-unit .dw-mark{{width:64px;height:64px;flex:none}}.md-unit b{{display:block;font-size:1.25rem;margin-bottom:4px}}.md-unit small{{color:var(--muted);font-size:.9375rem;line-height:1.7}}.md-lib-ic{{width:64px;height:64px;flex:none;display:grid;place-items:center;font-size:2.4rem;background:#f4ead8;border-radius:16px}}</style>
 </section>'''
@@ -297,7 +297,7 @@ def maydan_body():
     src = lambda f: open(os.path.join(ROOT, 'src', f)).read()
     return f'''<section class="first tl-page sn-page-wrap md-page">
 <nav class="tl-crumb" aria-label="breadcrumb"><a href="../index.html">{bi('منصة الألعاب التفاعلية', 'Interactive games')}</a><i class="chev"></i><span>{bi('ميدان', 'Maydan')}</span></nav>
-<header class="md-head">{MAYDAN_MARK}<div><h1>{bi('ميدان', 'Maydan')}</h1><p>{bi('مسابقات تفاعلية حيّة', 'Live interactive quizzes')}</p></div></header>
+<header class="md-head">{MAYDAN_MARK}<div><h1>{bi('ميدان', 'Maydan')}</h1><p>{bi('مسابقات تفاعلية حية', 'Live interactive quizzes')}</p></div></header>
 <style>{src('sign.css')}{src('pdftool.css')}{src('quiz.css')}</style>
 <div id="qz" class="sn qz"><noscript>{bi("تعمل هذه الأداة مع تفعيل JavaScript.", "This tool needs JavaScript.")}</noscript></div>
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script><script>{src('maydan_lib.js')}</script><script>{src('quiz_parse.js')}</script><script>{src('quiz.js')}</script>
@@ -310,7 +310,7 @@ def baloot_body():
     src = lambda f: open(os.path.join(ROOT, 'src', f)).read()
     return f'''<section class="first tl-page sn-page-wrap">
 <nav class="tl-crumb" aria-label="breadcrumb"><a href="../index.html">{bi('منصة الألعاب التفاعلية', 'Interactive games')}</a><i class="chev"></i><span>{bi('بلوت', 'Baloot')}</span></nav>
-<header class="kh-head">{BL_MARK}<div><h1>{bi('بلوت', 'Baloot')}</h1><p>{bi('الطاولة على الشاشة والأوراق في الجوالات، أو ضد الجهاز', 'The table on a screen and the hands on phones, or against the computer')}</p></div></header>
+<header class="kh-head">{BL_MARK}<div><h1>{bi('بلوت', 'Baloot')}</h1><p>{bi('الطاولة على الشاشة والأوراق في الجوالات، مع إمكانية اللعب ضد الجهاز', 'The table on a screen and the hands on phones, with play against the computer')}</p></div></header>
 <style>{src('khumasiya.css')}{src('baloot.css')}</style>
 <div id="bl" class="bl"><noscript>{bi("تعمل هذه اللعبة مع تفعيل JavaScript.", "This game needs JavaScript.")}</noscript></div>
 {MD_SCRIPTS()}<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script><script>{src('bl_engine.js')}</script><script>{src('bl_bot.js')}</script><script>{src('baloot.js')}</script>
@@ -321,7 +321,7 @@ def dawwara_body():
     return f'''<section class="first tl-page sn-page-wrap">
 <nav class="tl-crumb" aria-label="breadcrumb"><a href="../index.html">{bi('منصة الألعاب التفاعلية', 'Interactive games')}</a><i class="chev"></i><span>{bi('دوّارة', 'Dawwara')}</span></nav>
 <header class="dw-head">{DW_MARK}<div><h1>{bi('دوّارة', 'Dawwara')}</h1><p>{bi('مسابقة المجموعات على شاشة واحدة', 'The team quiz on one screen')}</p></div></header>
-<p class="dw-lead">{bi('شاشة واحدة، والحضور مجموعات بلا أجوال: يطلع السؤال، وقائد المجموعة يقول الإجابة، وأنت تضغطها. الصح والأسرع يكسب.', 'One screen, the room in groups, no phones: the question shows, each leader says the answer and you tap it. Right and fast wins.')}</p>
+<p class="dw-lead">{bi('تُعرض المسابقة على شاشة واحدة ويتوزع الحضور في مجموعات، فيجيب قائد كل مجموعة شفهيًا ويسجّل المدير الإجابة، أو يجيب القائد من جواله إن توفر. وتُحتسب النقاط للإجابة الصحيحة والأسرع.', 'The quiz runs on one screen with the room in groups: each leader answers aloud and the host records it, or answers from a phone where available. Points go to the right and fastest answers.')}</p>
 <style>{src('dawwara.css')}</style>
 <div id="dw" class="dw-page"><noscript>{bi("تعمل هذه اللعبة مع تفعيل JavaScript.", "This game needs JavaScript.")}</noscript></div>
 {MD_SCRIPTS()}<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script><script>{src('maydan_lib.js')}</script><script>{src('quiz_parse.js')}</script><script>{src('dawwara.js')}</script>
@@ -331,8 +331,8 @@ def samar_body():
     src = lambda f: open(os.path.join(ROOT, 'src', f)).read()
     return f'''<section class="first tl-page sn-page-wrap">
 <nav class="tl-crumb" aria-label="breadcrumb"><a href="../index.html">{bi('منصة الألعاب التفاعلية', 'Interactive games')}</a><i class="chev"></i><span>{bi('سمر', 'Samar')}</span></nav>
-<header class="sm-head">{SM_MARK}<div><h1>{bi('سمر', 'Samar')}</h1><p>{bi('تحلو سهرتكم مع سمر', 'Make your evening with Samar')}</p></div></header>
-<p class="sm-lead">{bi('ألعاب تفاعلية متنوعة وممتعة للآخر. شخص يستضيف اللعبة ويديرها، والباقي يشاركون في الفعالية من جوالاتهم.', 'Varied interactive games, fun all the way. One person hosts and runs the game; everyone else joins in from their phones.')}</p>
+<header class="sm-head">{SM_MARK}<div><h1>{bi('سمر', 'Samar')}</h1><p>{bi('ألعاب جماعية للأمسيات والتجمعات', 'Group games for evenings and gatherings')}</p></div></header>
+<p class="sm-lead">{bi('ألعاب تفاعلية متنوعة يستضيفها أحد الحاضرين ويديرها، ويشارك الآخرون من جوالاتهم، في المكان نفسه أو عن بُعد.', 'Varied interactive games: one person hosts and runs them, and the others take part from their phones, in the same room or remotely.')}</p>
 <style>{src('samar.css')}</style>
 <div id="sm" class="sm"><noscript>{bi("تعمل هذه اللعبة مع تفعيل JavaScript.", "This game needs JavaScript.")}</noscript></div>
 {MD_SCRIPTS()}<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script><script>{src('av.js')}</script><script>{src('samar.js')}</script>
@@ -341,7 +341,7 @@ def khumasiya_body():
     src = lambda f: open(os.path.join(ROOT, 'src', f)).read()
     return f'''<section class="first tl-page sn-page-wrap">
 <nav class="tl-crumb" aria-label="breadcrumb"><a href="../index.html">{bi('منصة الألعاب التفاعلية', 'Interactive games')}</a><i class="chev"></i><span>{bi('تسلسل', 'Tasalsul')}</span></nav>
-<header class="kh-head">{KH_MARK}<div><h1>{bi('تسلسل', 'Tasalsul')}</h1><p>{bi('على طريقة لعبة سيكوينس المعروفة: كوّن صفوفك من أربع أو خمس قبل خصمك', 'In the style of the well-known game Sequence: make your rows of four or five before the others')}</p></div></header>
+<header class="kh-head">{KH_MARK}<div><h1>{bi('تسلسل', 'Tasalsul')}</h1><p>{bi('لعبة لوحية على طريقة «سيكوينس»', 'A board game in the style of Sequence')}</p></div></header>
 <style>{src('khumasiya.css')}</style>
 <div id="kh" class="kh"><noscript>{bi("تعمل هذه اللعبة مع تفعيل JavaScript.", "This game needs JavaScript.")}</noscript></div>
 {MD_SCRIPTS()}<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script><script>{src('kh_engine.js')}</script><script>{src('av.js')}</script><script>{src('khumasiya.js')}</script>
