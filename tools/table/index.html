@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>طاولة: مستند مشترك مباشر | Table: one live shared document | Dr. Omar A. Alsamani</title>
-<meta name="description" content="Write one document together live: voice and video, dictation and recordings into text, Word in and Word or PDF out, and an assistant for the summary, minutes and tasks. طاولة: مستند مشترك مباشر.">
+<title>طاولة: مساحة عمل للاجتماعات والتحرير المشترك | Table: a workspace for meetings and shared editing | Dr. Omar A. Alsamani</title>
+<meta name="description" content="A shared workspace for meetings and collaborative editing: agenda, the floor, votes and decisions, voice and video, Word import and export, and minutes ready for signing. طاولة: مساحة عمل للاجتماعات والتحرير المشترك.">
 <link rel="canonical" href="https://alsamani.com/tools/table/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Dr. Omar A. Alsamani">
-<meta property="og:title" content="طاولة: مستند مشترك مباشر | Table: one live shared document | Dr. Omar A. Alsamani">
-<meta property="og:description" content="Write one document together live: voice and video, dictation and recordings into text, Word in and Word or PDF out, and an assistant for the summary, minutes and tasks. طاولة: مستند مشترك مباشر.">
+<meta property="og:title" content="طاولة: مساحة عمل للاجتماعات والتحرير المشترك | Table: a workspace for meetings and shared editing | Dr. Omar A. Alsamani">
+<meta property="og:description" content="A shared workspace for meetings and collaborative editing: agenda, the floor, votes and decisions, voice and video, Word import and export, and minutes ready for signing. طاولة: مساحة عمل للاجتماعات والتحرير المشترك.">
 <meta property="og:url" content="https://alsamani.com/tools/table/">
 <meta property="og:image" content="https://alsamani.com/img/og/site.jpg">
 <meta name="twitter:card" content="summary_large_image">
@@ -256,6 +256,7 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
       on = on && canTalk(u); if (on !== !!A.talk[u]) { A.talk[u] = on; ch = true; } });
     const p0 = Object.values(A.P)[0]; let me = false;
     if (p0 && A.aT && A.mic && canTalk(A.uid)) { try { const st = await p0.pc.getStats(); st.forEach(x => { if (x.type === 'media-source' && x.kind === 'audio' && x.audioLevel > 0.04) me = true; }); } catch (e) {} }
+    if (!A) return;
     if (me !== !!A.talk[A.uid]) { A.talk[A.uid] = me; ch = true; }
     if (ch) paintTalk();
   }
@@ -272,7 +273,7 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
     if (!A.joined) { stopTracks(); return note(T('تعذّر الدخول للصوت الآن.', 'Could not join the voice now.')); }
     A.sigRef = A.ref.child('sig/' + A.uid); A.sigRef.on('child_added', s => { onSig(s.val()); s.ref.remove().catch(() => {}); });
     Object.keys(A.in).forEach(u => { if (u !== A.uid && A.uid < u) call(u); });
-    clearInterval(A.tp); A.tp = setInterval(talkPoll, 400);
+    clearInterval(A.tp); A.tp = setInterval(talkPoll, 900);
     apply(); paint();
   }
   function stopTracks() { [A.aT, A.vT].forEach(t => { if (t) t.stop(); }); A.aT = A.vT = null; A.mic = A.cam = false; }
@@ -416,7 +417,8 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
     const v = { o: (p && p.o || []).map(u => u.slice(0, 10)), c: (p && p.c || []).map(u => u.slice(0, 10)), m: (p && p.m || []).map(u => u.slice(0, 10)), w: p && p.w || '' };
     const k = JSON.stringify(v); if (k === A.polK) return; A.polK = k; A.ref.child('pol').set(v).catch(() => {});
   }
-  return { attach, detach, policy, join() { return A ? join() : null; }, state() { return A ? { on: A.on, joined: A.joined, mic: A.mic, can: canTalk(A.uid), n: Object.keys(A.in).length, peers: Object.keys(A.P).map(u => A.P[u].pc.connectionState), pol: A.pol } : null; }, setHost(u) { if (A) { A.hostU = u; apply(); } } };
+  return { attach, detach, policy, join() { return A ? join() : null; }, toggleMic() { return A ? toggleMic() : null; }, toggleCam() { return A ? toggleCam() : null; }, leave() { if (A) leave(); },
+    view() { return A ? { joined: A.joined, mic: A.mic, cam: A.cam, note: A.note, me: A.vT, n: Object.keys(A.in).length, talk: A.talk || {}, people: Object.keys(A.in).filter(u => u !== A.uid).map(u => ({ u, n: A.in[u].n, a: A.in[u].a, v: A.in[u].v, track: A.in[u].v && A.P[u] ? A.P[u].vt : null, audio: A.P[u] && A.P[u].au && A.P[u].au.srcObject ? A.P[u].au.srcObject.getAudioTracks()[0] : null })) } : null; }, state() { return A ? { on: A.on, joined: A.joined, mic: A.mic, can: canTalk(A.uid), n: Object.keys(A.in).length, peers: Object.keys(A.P).map(u => A.P[u].pc.connectionState), pol: A.pol } : null; }, setHost(u) { if (A) { A.hostU = u; apply(); } } };
 })();
 </script><script>/* alsamani.com — «طاولة»: a live table for working on one document together.
    Everyone with the link sees the same page as it is written (Yjs over the site's Firebase database),
@@ -459,10 +461,10 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
   /* ---------- the start: a new table, or the tables opened before on this device ---------- */
   function home() {
     const mine = store.get('list', []);
-    root.innerHTML = `<div class="tb-start"><div class="tb-new"><div class="tb-kind" role="radiogroup"><button type="button" data-kind="meet" aria-pressed="true"><b>${T('اجتماع', 'A meeting')}</b><small>${T('جدول أعمال، والكلمة بالدور، وقرار أو تصويت لكل بند، ثم المحضر', 'An agenda, the floor in turn, a decision or vote per item, then the minutes')}</small></button><button type="button" data-kind="edit" aria-pressed="false"><b>${T('جلسة تحرير', 'A writing session')}</b><small>${T('مستند واحد تكتبونه معًا', 'One document you write together')}</small></button></div><label><span>${T('عنوان الطاولة', 'The table’s title')}</span><input id="tbT" maxlength="80" dir="auto" placeholder="${T('مثلًا: مسودة خطة القسم', 'e.g. the department plan draft')}"></label>
+    root.innerHTML = `<div class="tb-start"><div class="tb-new"><div class="tb-kind" role="radiogroup"><button type="button" data-kind="meet" aria-pressed="true"><b>${T('اجتماع', 'A meeting')}</b><small>${T('جدول أعمال، وطلب الكلمة، وقرار أو تصويت لكل بند، ومحضر يُعدّ تلقائيًا', 'An agenda, the floor, a decision or vote per item, and minutes prepared automatically')}</small></button><button type="button" data-kind="edit" aria-pressed="false"><b>${T('جلسة تحرير', 'A writing session')}</b><small>${T('تحرير مستند واحد بصورة مشتركة', 'Editing one document together')}</small></button></div><label><span>${T('العنوان', 'Title')}</span><input id="tbT" maxlength="80" dir="auto" placeholder="${T('مثال: اجتماع مجلس القسم', 'e.g. Department council meeting')}"></label>
       <label><span>${T('اسمك', 'Your name')}</span><input id="tbN" maxlength="30" dir="auto" value="${esc(store.get('name', ''))}"></label>
-      <button type="button" class="btn solid" id="tbGo">${T('افتح طاولة', 'Open a table')}</button></div>
-      <ul class="tb-feat"><li>${IC.ppl}${T('تكتبون في المستند نفسه، وكل تعديل يظهر للجميع لحظتها', 'You write in the same document; every change shows for all at once')}</li><li>${IC.mic}${T('صوت وفيديو، وإملاء وتسجيل يتحولان إلى نص', 'Voice and video, dictation and recording into text')}</li><li>${IC.up}${T('ارفع ملف وورد، وصدّر النتيجة وورد أو PDF', 'Bring in a Word file; take it out as Word or PDF')}</li><li>${IC.spark}${T('المساعد يكتب الملخص والمحضر والمهام', 'The assistant writes the summary, minutes and tasks')}</li></ul>
+      <button type="button" class="btn solid" id="tbGo">${T('ابدأ', 'Start')}</button></div>
+      <ul class="tb-feat"><li>${IC.ppl}${T('تحرير جماعي متزامن، مع بيان كاتب كل نص ووضع للاقتراحات يعتمدها المضيف', 'Simultaneous editing, showing who wrote each part, with suggestions the host approves')}</li><li>${IC.vote}${T('إدارة الاجتماع: جدول الأعمال، وطلب الكلمة، والتصويت، والحضور والنصاب', 'Running the meeting: agenda, the floor, votes, attendance and quorum')}</li><li>${IC.mic}${T('الصوت والفيديو، والإملاء، وتحويل التسجيل الصوتي إلى نص', 'Voice and video, dictation, and recordings turned into text')}</li><li>${IC.down}${T('استيراد ملفات وورد وتصديرها وورد أو PDF، ومساعد يُعدّ الملخص والمحضر والمهام', 'Word import, Word or PDF export, and an assistant for the summary, minutes and tasks')}</li></ul>
       ${mine.length ? `<h3>${T('طاولاتك', 'Your tables')}</h3><div class="tb-list">${mine.slice(0, 12).map(m => `<a href="?t=${esc(m.id)}" dir="auto">${esc(m.t || T('بلا عنوان', 'Untitled'))}<small>${new Date(m.at).toLocaleDateString(isAr() ? 'ar-SA-u-ca-gregory' : 'en-GB')}</small></a>`).join('')}</div>` : ''}</div>`;
     let kind = 'meet'; root.querySelectorAll('[data-kind]').forEach(b => b.onclick = () => { kind = b.dataset.kind; root.querySelectorAll('[data-kind]').forEach(x => x.setAttribute('aria-pressed', x === b)); });
     root.querySelector('#tbGo').onclick = async e => {

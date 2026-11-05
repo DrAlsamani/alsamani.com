@@ -85,7 +85,7 @@ def _tag(t):
     # a label only where it tells something the title does not
     if t in (PDFT, MINUTES, COMPARE): return bi('داخل جهازك', 'On your device')
     if t is QRT: return bi('لا تنتهي صلاحيته', 'Does not expire')
-    if t is TABLE: return bi('مباشر مع الآخرين', 'Live with others')
+    if t is TABLE: return bi('عمل جماعي متزامن', 'Live collaboration')
     return bi(t['chn_ar'], t['chn_en']) if t.get('chn_ar') else ''
 def _go(t):
     if t is METHODS: return bi('اقرأ', 'Read')
@@ -247,8 +247,8 @@ def minutes_body():
         f'<div id="mn" class="sn mn"><noscript>{bi("تعمل هذه الأداة مع تفعيل JavaScript.", "This tool needs JavaScript.")}</noscript></div>',
         ['sign.css', 'minutes.css'], ['minutes.js'])
 TABLE = {'slug': 'table', 't_ar': 'طاولة', 't_en': 'Table',
-        'q_ar': 'اكتبوا مستندًا واحدًا معًا مباشرة، مع صوت وفيديو وإملاء، وارفعوا ملف وورد وصدّروه، ودَعوا المساعد يكتب الملخص والمحضر والمهام.',
-        'q_en': 'Write one document together live, with voice, video and dictation; bring in a Word file, export it, and let the assistant write the summary, minutes and tasks.'}
+        'q_ar': 'مساحة عمل مشتركة لإدارة الاجتماعات وتحرير المستندات جماعيًا، تشمل جدول الأعمال وطلب الكلمة والتصويت وتوثيق القرارات، مع الصوت والفيديو، ويُعدّ منها المحضر جاهزًا للتوقيع.',
+        'q_en': 'A shared workspace for running meetings and editing documents together, with the agenda, the floor, votes and recorded decisions, voice and video, and minutes ready for signing.'}
 def table_body():
     return _tool_page(TABLE, '',
         f'<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css"><div id="tb"><noscript>{bi("تعمل هذه الأداة مع تفعيل JavaScript.", "This tool needs JavaScript.")}</noscript></div>{MD_SCRIPTS()}',
