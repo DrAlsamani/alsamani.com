@@ -1499,7 +1499,7 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
   function callPerson(u, video) { const d = E.here[u]; if (d && d.c && !d.c.startsWith('x_')) return joinRoom(d.c, video); const room = 't_' + rid(8); joinRoom(room, video); pingTo(u, { k: 'c', room }); }
 
   /* ---------- the hall: open and close ---------- */
-  function firstHint() { if (E.preview || store.get('hint', false)) return; store.set('hint', true); const d = card(`<p dir="auto" style="margin:0">${T('المس ملصقًا لفتحه، أو مقعدًا للجلوس. وزر الخريطة يأخذك إلى أي مكان.', 'Tap a poster to open it, or a seat to sit. The map button takes you anywhere.')}</p><div class="ml-row"><button class="ml-b sm main" id="hnOk">${T('حسنًا', 'OK')}</button></div>`); $('#hnOk', d).onclick = () => d.remove(); }
+  function firstHint() { if (E.preview || store.get('hint', false)) return; store.set('hint', true); const d = card(`<p dir="auto" style="margin:0">${T('المس ملصقًا لفتحه، أو مقعدًا للجلوس. وزر الخريطة يأخذك إلى أي مكان.', 'Tap a poster to open it, or a seat to sit. The map button takes you anywhere.')}</p>`, 10000); d.style.pointerEvents = 'none'; const off = () => { d.remove(); document.removeEventListener('pointerdown', off, true); }; document.addEventListener('pointerdown', off, true); }
   async function openHall(goal) {
     if (H.on) return; if (St.on) stageClose();
     document.body.classList.add('ml-on'); H.on = true; H.offs = [];
