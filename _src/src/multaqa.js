@@ -422,12 +422,14 @@
     const talkRows = Object.keys(talks).filter(p => E.numOf[p]).map(p => row('p:' + p, T(`محادثة عند المشاركة ${num(E.numOf[p])}`, `Conversation at entry ${E.numOf[p]}`), esc(E.items[p].t), true)).join('');
     return `<ul class="ml-list">${row('stage', T('المسرح', 'Stage'), it ? T(`يُعرض الآن: ${esc(it.t)}`, `Now showing: ${esc(it.t)}`) : T('لم يبدأ العرض', 'The show has not started'), !!it)}${row('hall', T('قاعة المشاركات', 'Entries hall'), T(`${nE(E.order.length)} · اطّلعت على ${num(E.order.filter(p => seen[p]).length)}`, `${E.order.length} entries · viewed ${E.order.filter(p => seen[p]).length}`))}${talkRows}${spaces().map(sp => [sp, spCount(sp)]).sort((a, b) => (b[1] > 0) - (a[1] > 0)).map(([sp, n]) => row('sp:' + sp.k, esc(sp.n), [sp.pv ? T('خاصة', 'Private') : sp.w ? esc(sp.w) : '', n ? T(`${num(n)} الآن`, `${n} now`) : ''].filter(Boolean).join(' · '), n > 0)).join('')}</ul>`;
   }
+  /* far enough back to see the whole door on a phone, without standing inside a board */
+  function doorStand(d) { for (const o of [3, 2.4, 1.8]) { const x = d.x + o; if (!(H.solids || []).some(b => x > b.x0 - .35 && x < b.x1 + .35 && d.z > b.z0 - .35 && d.z < b.z1 + .35)) return x; } return d.x + .9; }
   function goPlace(k) {
-    const run = () => { closeGuide(); if (k === 'stage') fly(0, H.L.th.z0 + 8.6, 0, () => { if (E.stage && E.stage.cur && E.items[E.stage.cur]) openPoster(E.stage.cur, 'stage'); }); else if (k === 'hall') fly(0, 4, 0); else if (k.startsWith('sp:')) { const key = k.slice(3), d = H.L.doors[key]; if (d) fly(d.x + .9, d.z, Math.PI / 2, () => openRoom(key)); else openRoom(key); } else if (k.startsWith('p:')) travel(k.slice(2)); };
+    const run = () => { closeGuide(); if (k === 'stage') fly(0, H.L.th.z0 + 8.6, 0, () => { if (E.stage && E.stage.cur && E.items[E.stage.cur]) openPoster(E.stage.cur, 'stage'); }); else if (k === 'hall') fly(0, 4, 0); else if (k.startsWith('sp:')) { const key = k.slice(3), d = H.L.doors[key]; if (d) fly(doorStand(d), d.z, Math.PI / 2, () => openRoom(key)); else openRoom(key); } else if (k.startsWith('p:')) travel(k.slice(2)); };
     if (H.on && H.L) run(); else openHall(run);
   }
   function guestView() {
-    const paint = () => { if (H.on || (view.refresh && view.refresh !== paint)) return; root.innerHTML = `<div class="ml-stack"><h2 dir="auto">${esc(E.meta.t)}</h2>${outcomeCards()}<div class="ml-card" id="dbP">${placesHtml()}</div><div class="ml-row"><button class="ml-b" data-bcl hidden></button>${E.cfg.live ? `<a class="ml-b" href="${esc(E.cfg.live)}" target="_blank" rel="noopener">${T('مشاهدة البث', 'Watch the broadcast')}</a>` : ''}</div></div>`; $$('[data-d]', root).forEach(l => l.onclick = () => goPlace(l.dataset.d)); outcomeBind(); bcPaint(); };
+    const paint = () => { if (H.on || view.refresh !== paint) return; root.innerHTML = `<div class="ml-stack"><h2 dir="auto">${esc(E.meta.t)}</h2>${outcomeCards()}<div class="ml-card" id="dbP">${placesHtml()}</div><div class="ml-row"><button class="ml-b" data-bcl hidden></button>${E.cfg.live ? `<a class="ml-b" href="${esc(E.cfg.live)}" target="_blank" rel="noopener">${T('مشاهدة البث', 'Watch the broadcast')}</a>` : ''}</div></div>`; $$('[data-d]', root).forEach(l => l.onclick = () => goPlace(l.dataset.d)); outcomeBind(); bcPaint(); };
     let t = 0; listen(R('here'), 'value', s => { if (!H.on) { E.here = s.val() || {}; clearTimeout(t); t = setTimeout(paint, 500); } }); view.refresh = paint; paint();
   }
   const view = { refresh: null, onStage: null };
@@ -1217,7 +1219,7 @@
   }
   function pickAt(cx, cy) {
     const r = $('#mlGl', H.el).getBoundingClientRect(), v = new THREE.Vector2((cx - r.left) / r.width * 2 - 1, -(cy - r.top) / r.height * 2 + 1), ray = new THREE.Raycaster(); ray.setFromCamera(v, H.cam);
-    const hits = ray.intersectObjects(H.pick); if (hits.length && hits[0].distance < 34) { const u = hits[0].object.userData; if (u.person) return openPerson(u.person); if (u.seats) return sitAt(hits[0].instanceId); if (u.room != null) { const sp = H.L.doors[u.room]; return walkTo(sp.x + .9, sp.z, { room: u.room }); } if (u.p) return goPoster(u.p); if (u.stage) return goStage(); }
+    const hits = ray.intersectObjects(H.pick); if (hits.length && hits[0].distance < 34) { const u = hits[0].object.userData; if (u.person) return openPerson(u.person); if (u.seats) return sitAt(hits[0].instanceId); if (u.room != null) { const sp = H.L.doors[u.room]; return walkTo(doorStand(sp), sp.z, { room: u.room }); } if (u.p) return goPoster(u.p); if (u.stage) return goStage(); }
     const f = ray.intersectObject(H.floor); if (f.length) walkTo(f[0].point.x, f[0].point.z, null);
   }
   function walkTo(x, z, goal) { if (H.seat != null) standUp(); closeSheet(); H.route = path(H.pos, { x, z }); H.goal = goal; drawRoute(); }
