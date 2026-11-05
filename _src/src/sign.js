@@ -335,7 +335,7 @@ ${JSON.stringify(uniq)}`);
           <div class="sn-sb"><button type="button" class="btn solid" data-act="ok">${B('اعتمد التصحيح', 'Apply')}</button><button type="button" class="btn ghost" data-act="x">${B('إلغاء', 'Cancel')}</button></div>`);
         sh.querySelector('[data-act=x]').onclick = close;
         sh.querySelector('[data-act=ok]').onclick = () => { slots.forEach((x, i) => { const v = fix[(x.n || '').trim()]; if (v) { x.n = v; setName(i); } }); drawList(); close(); toast(B('صُحّحت الأسماء.', 'Names corrected.')); };
-      } catch (e) { console.error(e); btn.innerHTML = was; btn.disabled = false; toast(B('تعذّر التدقيق الآن، جرّب بعد قليل.', 'Could not check now; try again shortly.'), 1); }
+      } catch (e) { console.error(e); btn.innerHTML = was; btn.disabled = false; toast(B('تعذّر التدقيق الآن؛ يُرجى المحاولة بعد قليل.', 'Could not check now; try again shortly.'), 1); }
     };
     function place() {
       placeBoxes(views, slots, { edit: 1, onBox: (b, i, v) => {
@@ -449,7 +449,7 @@ ${JSON.stringify(uniq)}`);
     const E = ekRaw(id), base = location.origin + location.pathname + '?s=' + id, link = base + (E ? '#e=' + E : '');
     root.innerHTML = `
       ${admin && /new=1/.test(location.search) ? `<div class="sn-card sn-share"><h2>${B('الرابط جاهز', 'The link is ready')}</h2>
-        <p>${B('أرسل هذا الرابط في قروب الاجتماع، وكل عضو يوقّع في خانته:', 'Send this link to the meeting group; each member signs in their own box:')}</p>
+        <p>${B('أرسل هذا الرابط إلى مجموعة الاجتماع، ليوقّع كل عضو في خانته:', 'Send this link to the meeting group; each member signs in their own box:')}</p>
         <div class="sn-link"><input type="text" readonly value="${link}" id="snLink"><button type="button" class="btn solid" id="snCopy">${B('نسخ', 'Copy')}</button>
         <a class="btn ghost" id="snWa" target="_blank" rel="noopener">${B('واتساب', 'WhatsApp')}</a></div>
         <p class="sn-fine">${B('أنت المنسق: تظهر لك أدوات الإدارة في هذا الجهاز. لإدارته من جهاز آخر احفظ رابط الإدارة:', 'You are the coordinator: management tools appear on this device. To manage from another device, keep the management link:')} <button type="button" class="sn-lnk" id="snAdminCopy">${B('نسخ رابط الإدارة', 'Copy management link')}</button></p></div>` : ''}
@@ -475,7 +475,7 @@ ${JSON.stringify(uniq)}`);
     const copy = async (txt, okMsg) => { try { await navigator.clipboard.writeText(txt); toast(okMsg); } catch (e) { prompt('', txt); } };
     if (root.querySelector('#snCopy')) {
       root.querySelector('#snCopy').onclick = () => copy(link, B('نُسخ الرابط.', 'Link copied.'));
-      root.querySelector('#snAdminCopy').onclick = () => copy(base + '#k=' + key + (E ? '&e=' + E : ''), B('نُسخ رابط الإدارة. لا ترسله في القروب.', 'Management link copied. Do not share it with the group.'));
+      root.querySelector('#snAdminCopy').onclick = () => copy(base + '#k=' + key + (E ? '&e=' + E : ''), B('نُسخ رابط الإدارة. لا تُرسله إلى المجموعة.', 'Management link copied. Do not share it with the group.'));
       root.querySelector('#snWa').href = 'https://wa.me/?text=' + encodeURIComponent((S.title ? S.title + '\n' : '') + (isAr() ? 'رابط توقيع المحضر: ' : 'Sign the minutes here: ') + link);
     }
     // a member who signed before on this device: offer their own box straight away

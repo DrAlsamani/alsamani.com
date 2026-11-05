@@ -629,7 +629,7 @@ ${JSON.stringify(uniq)}`);
           <div class="sn-sb"><button type="button" class="btn solid" data-act="ok">${B('اعتمد التصحيح', 'Apply')}</button><button type="button" class="btn ghost" data-act="x">${B('إلغاء', 'Cancel')}</button></div>`);
         sh.querySelector('[data-act=x]').onclick = close;
         sh.querySelector('[data-act=ok]').onclick = () => { slots.forEach((x, i) => { const v = fix[(x.n || '').trim()]; if (v) { x.n = v; setName(i); } }); drawList(); close(); toast(B('صُحّحت الأسماء.', 'Names corrected.')); };
-      } catch (e) { console.error(e); btn.innerHTML = was; btn.disabled = false; toast(B('تعذّر التدقيق الآن، جرّب بعد قليل.', 'Could not check now; try again shortly.'), 1); }
+      } catch (e) { console.error(e); btn.innerHTML = was; btn.disabled = false; toast(B('تعذّر التدقيق الآن؛ يُرجى المحاولة بعد قليل.', 'Could not check now; try again shortly.'), 1); }
     };
     function place() {
       placeBoxes(views, slots, { edit: 1, onBox: (b, i, v) => {
@@ -743,7 +743,7 @@ ${JSON.stringify(uniq)}`);
     const E = ekRaw(id), base = location.origin + location.pathname + '?s=' + id, link = base + (E ? '#e=' + E : '');
     root.innerHTML = `
       ${admin && /new=1/.test(location.search) ? `<div class="sn-card sn-share"><h2>${B('الرابط جاهز', 'The link is ready')}</h2>
-        <p>${B('أرسل هذا الرابط في قروب الاجتماع، وكل عضو يوقّع في خانته:', 'Send this link to the meeting group; each member signs in their own box:')}</p>
+        <p>${B('أرسل هذا الرابط إلى مجموعة الاجتماع، ليوقّع كل عضو في خانته:', 'Send this link to the meeting group; each member signs in their own box:')}</p>
         <div class="sn-link"><input type="text" readonly value="${link}" id="snLink"><button type="button" class="btn solid" id="snCopy">${B('نسخ', 'Copy')}</button>
         <a class="btn ghost" id="snWa" target="_blank" rel="noopener">${B('واتساب', 'WhatsApp')}</a></div>
         <p class="sn-fine">${B('أنت المنسق: تظهر لك أدوات الإدارة في هذا الجهاز. لإدارته من جهاز آخر احفظ رابط الإدارة:', 'You are the coordinator: management tools appear on this device. To manage from another device, keep the management link:')} <button type="button" class="sn-lnk" id="snAdminCopy">${B('نسخ رابط الإدارة', 'Copy management link')}</button></p></div>` : ''}
@@ -769,7 +769,7 @@ ${JSON.stringify(uniq)}`);
     const copy = async (txt, okMsg) => { try { await navigator.clipboard.writeText(txt); toast(okMsg); } catch (e) { prompt('', txt); } };
     if (root.querySelector('#snCopy')) {
       root.querySelector('#snCopy').onclick = () => copy(link, B('نُسخ الرابط.', 'Link copied.'));
-      root.querySelector('#snAdminCopy').onclick = () => copy(base + '#k=' + key + (E ? '&e=' + E : ''), B('نُسخ رابط الإدارة. لا ترسله في القروب.', 'Management link copied. Do not share it with the group.'));
+      root.querySelector('#snAdminCopy').onclick = () => copy(base + '#k=' + key + (E ? '&e=' + E : ''), B('نُسخ رابط الإدارة. لا تُرسله إلى المجموعة.', 'Management link copied. Do not share it with the group.'));
       root.querySelector('#snWa').href = 'https://wa.me/?text=' + encodeURIComponent((S.title ? S.title + '\n' : '') + (isAr() ? 'رابط توقيع المحضر: ' : 'Sign the minutes here: ') + link);
     }
     // a member who signed before on this device: offer their own box straight away
@@ -1100,7 +1100,7 @@ ${JSON.stringify(uniq)}`);
   if (sid && /^[a-f0-9]{20}$/.test(sid)) sessionView(sid); else createView();
 })();
 </script>
-<section class="tl-about"><h2><span class="ar">كيف تعمل؟</span><span class="en">How it works</span></h2><ol class="tl-steps"><li><span class="ar">ارفع المحضر بصيغة PDF، فتُكتشف خانات التوقيع تلقائيًا.</span><span class="en">Upload the minutes as a PDF; signature boxes are detected automatically.</span></li><li><span class="ar">أرسل رابطًا واحدًا في قروب اللجنة أو المجلس.</span><span class="en">Send one link to the committee or board group.</span></li><li><span class="ar">يوقّع كل عضو في خانته من جواله، بإصبعه أو بتوقيعه المحفوظ.</span><span class="en">Each member signs in their own box from their phone, by finger or a saved signature.</span></li><li><span class="ar">حمّل المحضر الموقّع ملف PDF واحدًا.</span><span class="en">Download the signed minutes as one PDF.</span></li></ol>
+<section class="tl-about"><h2><span class="ar">كيف تعمل؟</span><span class="en">How it works</span></h2><ol class="tl-steps"><li><span class="ar">ارفع المحضر بصيغة PDF، فتُكتشف خانات التوقيع تلقائيًا.</span><span class="en">Upload the minutes as a PDF; signature boxes are detected automatically.</span></li><li><span class="ar">أرسل رابطًا واحدًا إلى مجموعة اللجنة أو المجلس.</span><span class="en">Send one link to the committee or board group.</span></li><li><span class="ar">يوقّع كل عضو في خانته من جواله، بإصبعه أو بتوقيعه المحفوظ.</span><span class="en">Each member signs in their own box from their phone, by finger or a saved signature.</span></li><li><span class="ar">حمّل المحضر الموقّع ملف PDF واحدًا.</span><span class="en">Download the signed minutes as one PDF.</span></li></ol>
 <h2><span class="ar">أسئلة شائعة</span><span class="en">Common questions</span></h2><details class="tl-faq"><summary><span class="ar">هل يحتاج الأعضاء إلى تسجيل أو تطبيق؟</span><span class="en">Do members need an account or an app?</span></summary><p><span class="ar">لا. يفتح العضو الرابط من المتصفح ويوقّع مباشرة.</span><span class="en">No. Members open the link in their browser and sign.</span></p></details><details class="tl-faq"><summary><span class="ar">كم تبقى الملفات محفوظة؟</span><span class="en">How long are files kept?</span></summary><p><span class="ar">تُحذف تلقائيًا بعد ٧ أيام، ويستطيع المنسق حذفها فورًا.</span><span class="en">They are deleted automatically after 7 days, and the coordinator can delete them at once.</span></p></details><details class="tl-faq"><summary><span class="ar">هل يستطيع المنسق تعديل موضع توقيع؟</span><span class="en">Can the coordinator adjust a signature?</span></summary><p><span class="ar">نعم، يحرّكه أو يغيّر حجمه أو يحذفه.</span><span class="en">Yes, they can move, resize or delete it.</span></p></details>
 <p class="tl-also"><a href="../work/index.html"><span class="ar">أدوات الاجتماعات والملفات الأخرى</span><span class="en">More meeting and file tools</span></a></p></section>
 </section>

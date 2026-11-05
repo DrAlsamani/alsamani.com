@@ -568,7 +568,7 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
     if (n >= MAX) return note(T(`الغرفة الصوتية ممتلئة (${MAX}). تقدر تتابع اللعب بدونها.`, `The voice room is full (${MAX}). You can keep playing without it.`));
     if ((A.ctl.ban || {})[A.uid]) return note(T('أوقف المشرف صوتك في هذه الجلسة.', 'The host has turned your voice off for this session.'));
     try { A.ms = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true } }); A.aT = A.ms.getAudioTracks()[0]; A.mic = true; }
-    catch (e) { A.aT = null; A.mic = false; note(T('لم يُسمح بالميكروفون، فتسمع فقط. تقدر تسمح له من إعدادات المتصفح.', 'No microphone allowed, so you can only listen. Allow it in the browser settings.')); }
+    catch (e) { A.aT = null; A.mic = false; note(T('لم يُسمح باستخدام الميكروفون، فالمشاركة بالاستماع فقط. ويمكن السماح به من إعدادات المتصفح.', 'No microphone allowed, so you can only listen. Allow it in the browser settings.')); }
     A.joined = true; const me = A.ref.child('in/' + A.uid);
     me.onDisconnect().remove(); A.ref.child('sig/' + A.uid).onDisconnect().remove();
     await me.set({ n: A.name.slice(0, 24), a: A.mic ? 1 : 0, v: 0, t: firebase.database.ServerValue.TIMESTAMP }).catch(() => { A.joined = false; });

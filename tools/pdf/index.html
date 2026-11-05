@@ -1004,7 +1004,7 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
       if (!matching) return; const wrap = e.target.closest('.pe-pg'); if (!wrap) return;
       e.preventDefault(); e.stopPropagation();
       const v = [...views.values()].find(x => x.wrap === wrap), r = wrap.getBoundingClientRect(), st = await textAt(v, (e.clientX - r.left) / v.k, (e.clientY - r.top) / v.k);
-      if (!st) { toast(B('لم أجد نصًا هنا. اضغط على كلمة مكتوبة في الملف.', 'No text found there. Tap a word written in the file.'), 1); return; }
+      if (!st) { toast(B('لم يُعثر على نص في هذا الموضع. اضغط على كلمة مكتوبة في الملف.', 'No text found there. Tap a word written in the file.'), 1); return; }
       const fn = matching; matching = null; hint.hidden = !tool; fn(st);
       toast(B(`أُخذ الحجم ${st.size} واللون والخط الأقرب.`, `Took size ${st.size}, the colour and the closest font.`));
     }, true);

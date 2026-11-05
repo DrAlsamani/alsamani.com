@@ -508,7 +508,7 @@ html:has(.mp-paper){scroll-padding-bottom:110px;scroll-padding-top:80px}
   async function mimicFile(file) {
     let text = '';
     try { text = await readText(file); } catch (e) {}
-    if (text.replace(/\s/g, '').length < 80) return toast(B('لم أستطع قراءة نص الملف. إن كان PDF ممسوحًا ضوئيًا فاستخدم نسخة Word.', 'Could not read the text. If it is a scanned PDF, use the Word file.'), 1);
+    if (text.replace(/\s/g, '').length < 80) return toast(B('تعذّرت قراءة نص الملف. إن كان PDF ممسوحًا ضوئيًا فاستخدم نسخة Word.', 'Could not read the text. If it is a scanned PDF, use the Word file.'), 1);
     M = blank(); const got = mimic(text, M);
     try { const lk = await lookOf(file, M); if (lk) got.push(lk); } catch (e) {}
     editor();

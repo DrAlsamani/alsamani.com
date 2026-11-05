@@ -54,7 +54,7 @@
     } catch (e) {
       nm.textContent = '';
       toast(e.message === 'doc' ? B('صيغة ‎.doc القديمة غير مدعومة؛ احفظ الملف ‎.docx أو PDF.', 'The old .doc format is not supported; save it as .docx or PDF.')
-        : e.message === 'empty' ? B('لم أجد نصًا في الملف. إن كان PDF ممسوحًا ضوئيًا (صورة)، فاستخدم نسخة Word.', 'No text found. If it is a scanned PDF, use the Word version.')
+        : e.message === 'empty' ? B('لم يُعثر على نص في الملف. إن كان PDF ممسوحًا ضوئيًا (صورة)، فاستخدم نسخة Word.', 'No text found. If it is a scanned PDF, use the Word version.')
         : B('تعذّر قراءة الملف.', 'The file could not be read.'), 1);
     }
     box.classList.remove('busy');

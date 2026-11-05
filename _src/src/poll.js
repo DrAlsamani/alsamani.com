@@ -125,7 +125,7 @@
     function render() {
       const ans = S.mine ? S.mine.ans.slice() : S.items.map(() => null), notes = S.mine ? S.mine.notes.slice() : S.items.map(() => '');
       const share = admin && /new=1/.test(location.search) ? `<div class="sn-card sn-share"><h2>${B('الرابط جاهز', 'The link is ready')}</h2>
-        <p>${MODE === 'att' ? B('اعرض رمز QR ليمسحه الحاضرون، أو أرسل الرابط:', 'Show the QR code for attendees to scan, or send the link:') : B('أرسله في قروب المجلس أو اللجنة:', 'Send it to the board or committee group:')}</p>
+        <p>${MODE === 'att' ? B('اعرض رمز QR ليمسحه الحاضرون، أو أرسل الرابط:', 'Show the QR code for attendees to scan, or send the link:') : B('أرسله إلى مجموعة المجلس أو اللجنة:', 'Send it to the board or committee group:')}</p>
         <div class="sn-link"><input type="text" readonly value="${link}" id="psLink"><button type="button" class="btn solid" id="psCopy">${B('نسخ', 'Copy')}</button><a class="btn ghost" id="psWa" target="_blank" rel="noopener">${B('واتساب', 'WhatsApp')}</a></div>
         <p class="sn-fine">${B('النتيجة تظهر لك في هذا الجهاز. لمتابعتها من جهاز آخر احفظ رابط الإدارة:', 'Results appear on this device. To follow them from another device, keep the management link:')} <button type="button" class="sn-lnk" id="psAdm">${B('نسخ رابط الإدارة', 'Copy management link')}</button></p></div>` : '';
       const head = `<div class="sn-card"><h2>${esc(title())}</h2>${S.locked ? `<p class="ps-closed">${B('أُغلق الرابط.', 'This link is closed.')}</p>` : ''}${admin && MODE === 'att' ? `<div class="sn-two"><button type="button" class="btn ghost" id="psQr">${B('رمز QR', 'QR code')}</button></div>` : ''}</div>`;
@@ -189,7 +189,7 @@
       const q = s => root.querySelector(s);
       if (q('#psCopy')) {
         q('#psCopy').onclick = () => copy(link, B('نُسخ الرابط.', 'Link copied.'));
-        q('#psAdm').onclick = () => copy(link + '#k=' + key, B('نُسخ رابط الإدارة. لا ترسله في القروب.', 'Management link copied. Do not share it with the group.'));
+        q('#psAdm').onclick = () => copy(link + '#k=' + key, B('نُسخ رابط الإدارة. لا تُرسله إلى المجموعة.', 'Management link copied. Do not share it with the group.'));
         q('#psWa').href = 'https://wa.me/?text=' + encodeURIComponent((S.title ? S.title + '\n' : '') + T(C.link[0], C.link[1]) + link);
       }
       if (q('#psQr')) q('#psQr').onclick = qr;

@@ -22,7 +22,7 @@ SEO = {
  'sign': {
   'title': ('توقيع المحاضر إلكترونيًا مجانًا', 'Sign meeting minutes online for free'),
   'how': [('ارفع المحضر بصيغة PDF، فتُكتشف خانات التوقيع تلقائيًا.', 'Upload the minutes as a PDF; signature boxes are detected automatically.'),
-          ('أرسل رابطًا واحدًا في قروب اللجنة أو المجلس.', 'Send one link to the committee or board group.'),
+          ('أرسل رابطًا واحدًا إلى مجموعة اللجنة أو المجلس.', 'Send one link to the committee or board group.'),
           ('يوقّع كل عضو في خانته من جواله، بإصبعه أو بتوقيعه المحفوظ.', 'Each member signs in their own box from their phone, by finger or a saved signature.'),
           ('حمّل المحضر الموقّع ملف PDF واحدًا.', 'Download the signed minutes as one PDF.')],
   'faq': [('هل يحتاج الأعضاء إلى تسجيل أو تطبيق؟', 'Do members need an account or an app?', 'لا. يفتح العضو الرابط من المتصفح ويوقّع مباشرة.', 'No. Members open the link in their browser and sign.'),
