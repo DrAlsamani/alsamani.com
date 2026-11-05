@@ -190,3 +190,7 @@ label.ml-row{flex-wrap:nowrap}label.ml-row input[type=checkbox]{width:auto;flex:
 #hlRoomV{position:absolute;inset:0;z-index:7;background:#121829;color:#fff;display:flex;flex-direction:column;align-items:center;padding:calc(64px + env(safe-area-inset-top,0px)) 16px 0;text-align:center}#hlRoomV h2{margin:0;font-size:1.15rem;font-weight:600;color:#fff}#hlRoomV p{margin:40px 0 0;color:#C2CADA}#hlRoomV p[hidden]{display:none}
 body.ml-inroom #mlTiles{inset:calc(108px + env(safe-area-inset-top,0px)) 12px 90px 12px;top:calc(108px + env(safe-area-inset-top,0px));display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));grid-auto-rows:minmax(0,220px);max-height:none;align-content:start;justify-items:center}body.ml-inroom #mlTiles>*{width:100%;height:100%;max-width:300px}
 body.ml-inroom #hlStick,body.ml-inroom #hlJump,body.ml-inroom #hlMini,body.ml-inroom #hlNear,body.ml-inroom #hlLive{display:none!important}
+#hBody li[style*="flex-wrap"] .ml-t{flex:1 1 calc(100% - 48px)}
+@media (max-width:600px){.ml-tbl .d{display:none}}
+#mlStage.res h1{font-size:7vh}#mlStage.res .st-rank{width:min(1100px,86vw);display:grid;gap:2vh}#mlStage.res .st-rank>div{padding:2.2vh 3vw;gap:3vw}#mlStage.res .st-rank i{font-size:7vh;line-height:1}#mlStage.res .st-rank b{font-size:4.6vh;font-weight:600}#mlStage.res .st-rank small{font-size:2.8vh}#mlStage.res .st-rank>div:first-child{border-color:#E3A55A;background:rgba(227,165,90,.1)}
+#mlStage .st-img h1{font-size:6.5vh}#mlStage .st-img .st-fin{font-size:3vh}
