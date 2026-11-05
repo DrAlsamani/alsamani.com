@@ -933,7 +933,7 @@ html:has(.mp-paper){scroll-padding-bottom:110px;scroll-padding-top:80px}
       <div class="sn-two"><button type="button" class="btn solid" id="aiCopy">${B('١. انسخ التعليمات', '1. Copy the instructions')}</button><a class="btn ghost" target="_blank" rel="noopener" href="https://chatgpt.com/">ChatGPT</a><a class="btn ghost" target="_blank" rel="noopener" href="https://claude.ai/new">Claude</a></div>
       <label class="sn-lbl">${B('٢. الصق الرد هنا', '2. Paste the reply here')}<textarea id="aiR" rows="6"></textarea></label>
       <div class="sn-two"><button type="button" class="btn solid" id="aiAdd">${B('طبّق', 'Apply')}</button><button type="button" class="btn ghost" data-mx>${B('إغلاق', 'Close')}</button></div>`);
-    m.querySelector('#aiCopy').onclick = async e => { try { await navigator.clipboard.writeText(draftPrompt()); e.currentTarget.textContent = '✓ ' + T('نُسخت؛ الصقها في المساعد', 'Copied; paste it into the assistant'); } catch (er) { toast(B('تعذّر النسخ.', 'Could not copy.'), 1); } };
+    m.querySelector('#aiCopy').onclick = async e => { try { await navigator.clipboard.writeText(draftPrompt()); e.currentTarget.textContent = '✓ ' + T('تم النسخ؛ الصقها في المساعد', 'Copied; paste it into the assistant'); } catch (er) { toast(B('تعذّر النسخ.', 'Could not copy.'), 1); } };
     m.querySelector('#aiAdd').onclick = () => {
       const got = parseDraft(m.querySelector('#aiR').value);
       M.aiNotes = got.notes || [];
@@ -946,7 +946,7 @@ html:has(.mp-paper){scroll-padding-bottom:110px;scroll-padding-top:80px}
         if (g.basis) it.basis = g.basis; if (g.vote !== undefined && g.vote !== 'all') it.vote = g.vote;
         if (g.dis.length && !it.dis.length) it.dis = g.dis; if (g.tasks.length && !it.tasks.length) it.tasks = g.tasks; });
       const ck = root.querySelector('#mpChk'); if (ck && M.aiNotes.length) ck.dataset.open = '1';
-      m.remove(); paint(); later(); toast(M.aiNotes.length ? B(`حُدّثت البنود، ووصلت ${M.aiNotes.length} ملاحظات جودة في «ملاحظات قبل الاعتماد».`, `Items updated, with ${M.aiNotes.length} quality notes.`) : B('حُدّثت البنود. راجع كل قرار قبل الاعتماد.', 'Items updated. Check each decision before approving.'));
+      m.remove(); paint(); later(); toast(M.aiNotes.length ? B(`حُدّثت البنود، ووصلت ${M.aiNotes.length} ملاحظات جودة في «ملاحظات قبل الاعتماد».`, `Items updated, with ${M.aiNotes.length} quality notes.`) : B('تم تحديث البنود. راجع كل قرار قبل الاعتماد.', 'Items updated. Check each decision before approving.'));
     };
   }
   function draftPrompt() {

@@ -540,7 +540,7 @@ window.MDLive = (function () {
       G.el.appendChild(d);
       d.querySelector('[data-x]').onclick = () => d.remove();
       const sh = d.querySelector('[data-sh]'); if (sh) sh.onclick = () => navigator.share({ title: G.quiz.title || 'ميدان', text, url }).catch(() => {});
-      d.querySelector('[data-cp]').onclick = async e => { const b = e.currentTarget; try { await navigator.clipboard.writeText(text); } catch (er) { const t = document.createElement('textarea'); t.value = text; document.body.appendChild(t); t.select(); try { document.execCommand('copy'); } catch (x) {} t.remove(); } b.innerHTML = B('✓ نُسخ', '✓ Copied'); };
+      d.querySelector('[data-cp]').onclick = async e => { const b = e.currentTarget; try { await navigator.clipboard.writeText(text); } catch (er) { const t = document.createElement('textarea'); t.value = text; document.body.appendChild(t); t.select(); try { document.execCommand('copy'); } catch (x) {} t.remove(); } b.innerHTML = B('✓ تم النسخ', '✓ Copied'); };
     };
     const names = q('#mdNames'), go = q('[data-go]'), set = q('#mdSet'), tp = q('#mdTeamP'), mv = q('#mdMove');
     // each player as their own figure, with a speech bubble above it when they react or write
@@ -1094,7 +1094,7 @@ window.MDLive = (function () {
       q('[data-rep]').onclick = () => MDX.report(G.el, D);
       q('[data-cert]').onclick = () => MDX.certs(G.el, D);
       if (q('[data-bb]')) q('[data-bb]').onclick = () => MDX.blackboard(G.el, D);
-      if (G.league && !G.leagueSaved) { G.leagueSaved = true; const lg = MDX.record(G.league, D); if (lg) { const n = document.createElement('p'); n.className = 'md-lgsaved'; n.innerHTML = B(`أُضيفت النتيجة إلى دوري «${esc(lg.name)}»`, `Added to the league “${esc(lg.name)}”`); const e2 = G.el.querySelector('.md-end'); if (e2) e2.appendChild(n); } }
+      if (G.league && !G.leagueSaved) { G.leagueSaved = true; const lg = MDX.record(G.league, D); if (lg) { const n = document.createElement('p'); n.className = 'md-lgsaved'; n.innerHTML = B(`تمت إضافة النتيجة إلى دوري «${esc(lg.name)}»`, `Added to the league “${esc(lg.name)}”`); const e2 = G.el.querySelector('.md-end'); if (e2) e2.appendChild(n); } }
     }
     q('[data-csv]').onclick = () => {
       // an optional grade: in proportion to the points, so speed still counts and the top player gets full marks

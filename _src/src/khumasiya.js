@@ -142,7 +142,7 @@
       <button type="button" class="btn ghost" id="khShare">${B('أرسل رابط الدخول', 'Send the join link')}</button></div><div class="kh-qr">${qr}</div></div>
       <div class="kh-teams" id="khTeams"></div><p class="kh-note">${B('انقر اسم أي لاعب لنقله إلى فريق آخر. ومن أراد المتابعة فقط يدخل بالرمز نفسه ويختار «شاهد فقط»، ولو بعد بدء اللعب.', 'Tap a player’s name to move them. Anyone who only wants to follow enters the same code and picks “Just watch”, even after the start.')}</p>
       <div class="kh-row"><button type="button" class="btn solid" id="khStart" disabled>${B('ابدأ اللعب ▶', 'Start ▶')}</button><button type="button" class="btn ghost" id="khEnd">${B('إلغاء', 'Cancel')}</button></div></div>`;
-    root.querySelector('#khShare').onclick = async e => { const text = T('تعال العب تسلسل: ', 'Come and play Tasalsul: ') + url; try { if (navigator.share && /iP(hone|ad)|Android/i.test(navigator.userAgent)) await navigator.share({ text }); else { await navigator.clipboard.writeText(text); e.currentTarget.textContent = '✓ ' + T('نُسخ', 'Copied'); } } catch (er) {} };
+    root.querySelector('#khShare').onclick = async e => { const text = T('تعال العب تسلسل: ', 'Come and play Tasalsul: ') + url; try { if (navigator.share && /iP(hone|ad)|Android/i.test(navigator.userAgent)) await navigator.share({ text }); else { await navigator.clipboard.writeText(text); e.currentTarget.textContent = '✓ ' + T('تم النسخ', 'Copied'); } } catch (er) {} };
     root.querySelector('#khEnd').onclick = async () => { await wipe(G.pin); store.del('run'); home(); };
     const draw = () => {
       const ids = Object.keys(G.names), box = root.querySelector('#khTeams'); if (!box) return;

@@ -663,7 +663,7 @@
     if(t.matches('[data-act="restore"]')){var fl=t.files[0];if(!fl)return;fl.text().then(function(x){var o=JSON.parse(x);if(o&&o.v===1&&o.d){S=o;save();notice='';render()}}).catch(function(){alertless(L('تعذّرت قراءة الملف.','Could not read the file.'))});return}
     if(mode==='work'&&S&&t.closest('[data-f]')&&(t.type==='checkbox'||t.type==='radio'))setVal(t)});
   function alertless(msg){notice=esc(msg);render()}
-  function copyLink(btn){var i=host.querySelector('[data-link]');if(!i)return;i.select();var ok=L('نُسخ','Copied');(navigator.clipboard?navigator.clipboard.writeText(i.value):Promise.reject()).then(function(){btn.textContent=ok}).catch(function(){try{document.execCommand('copy');btn.textContent=ok}catch(e){}})}
+  function copyLink(btn){var i=host.querySelector('[data-link]');if(!i)return;i.select();var ok=L('تم النسخ','Copied');(navigator.clipboard?navigator.clipboard.writeText(i.value):Promise.reject()).then(function(){btn.textContent=ok}).catch(function(){try{document.execCommand('copy');btn.textContent=ok}catch(e){}})}
   host.addEventListener('click',function(e){var b=e.target.closest('[data-act]');if(!b||b.tagName==='INPUT')return;var a=b.getAttribute('data-act');
     if(a==='start'){S=blank();readMeta(host,S.meta);S.cur=scope()[0].id;save();render();return}
     if(a==='go'&&VIEW==='doc'){e.preventDefault();notice='';showRep=false;var gs=b.getAttribute('data-s'),fsec=null;SECS.forEach(function(x){if(!fsec&&x.stage===gs&&secOn(x))fsec=x});if(!fsec){VIEW='step';S.cur=gs;save();render();return}if(!openFor(fsec.id))render();var be=host.querySelector('[data-sec="'+fsec.id+'"]');setActive(fsec.id,true);if(be)be.scrollIntoView({behavior:'smooth',block:'start'});return}

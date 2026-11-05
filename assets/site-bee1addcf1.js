@@ -43,7 +43,7 @@
   document.querySelectorAll('.sharebar').forEach(sb=>{
     const url=sb.dataset.url,title=sb.dataset.title;
     const n=sb.querySelector('.native');if(navigator.share&&n){n.hidden=false;n.onclick=()=>navigator.share({title,url}).catch(()=>{})}
-    const c=sb.querySelector('.copylink');if(c)c.onclick=()=>{const done=()=>{c.innerHTML='<span class="ar">نُسخ الرابط</span><span class="en">Link copied</span>'};
+    const c=sb.querySelector('.copylink');if(c)c.onclick=()=>{const done=()=>{c.innerHTML='<span class="ar">تم نسخ الرابط</span><span class="en">Link copied</span>'};
       if(navigator.clipboard)navigator.clipboard.writeText(url).then(done).catch(()=>{});else done()};
   });
   // contact form
@@ -266,8 +266,8 @@ requestAnimationFrame(function(){requestAnimationFrame(function(){s.split('').fo
       '<p class="tl-source">'+esc(src)+'</p><div class="tl-out"><button type="button" class="btn solid" id="tlShare">'+L('مشاركة النتيجة','Share the result')+'</button><button type="button" class="btn" id="tlCopy">'+L('نسخ النص','Copy as text')+'</button><button type="button" class="btn" onclick="print()">'+L('طباعة أو PDF','Print or PDF')+'</button>'+(shared?'':'<button type="button" class="btn" id="tlEdit">'+L('عدّل إجاباتك','Edit answers')+'</button>')+'</div>';
     out.hidden=false;form.hidden=true;intro.hidden=true;var rd=document.querySelector('.tl-read');if(rd)rd.hidden=true;out.classList.remove('in');void out.offsetWidth;out.classList.add('in');
     var cp=function(t,b,ok){(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){b.textContent=ok}).catch(function(){var a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy');b.textContent=ok}catch(e){}a.remove()})};
-    document.getElementById('tlCopy').onclick=function(){cp(plain.join('\n')+'\n'+link,this,L('نُسخ','Copied'))};
-    document.getElementById('tlShare').onclick=function(){var b=this;if(navigator.share)navigator.share({title:L(T.t_ar,T.t_en)+' | alsamani.com',text:L('نتيجتي في أداة «'+T.t_ar+'» من كتاب «إدارة الابتكار» للدكتور عمر عبدالله الصمعاني','My result on “'+T.t_en+'”, a tool from Innovation Management by Dr. Omar A. Alsamani'),url:link}).catch(function(){});else cp(link,b,L('نُسخ الرابط','Link copied'))};
+    document.getElementById('tlCopy').onclick=function(){cp(plain.join('\n')+'\n'+link,this,L('تم النسخ','Copied'))};
+    document.getElementById('tlShare').onclick=function(){var b=this;if(navigator.share)navigator.share({title:L(T.t_ar,T.t_en)+' | alsamani.com',text:L('نتيجتي في أداة «'+T.t_ar+'» من كتاب «إدارة الابتكار» للدكتور عمر عبدالله الصمعاني','My result on “'+T.t_en+'”, a tool from Innovation Management by Dr. Omar A. Alsamani'),url:link}).catch(function(){});else cp(link,b,L('تم نسخ الرابط','Link copied'))};
     var ed=document.getElementById('tlEdit');if(ed)ed.onclick=function(){out.hidden=true;form.hidden=false;show(0);form.scrollIntoView({behavior:'smooth'})};
     var mn=document.getElementById('tlMine');if(mn)mn.onclick=function(){history.replaceState(null,'',location.pathname);out.hidden=true;intro.hidden=false;write({});form.hidden=true;intro.scrollIntoView({behavior:'smooth'})};
     if(!shared)out.scrollIntoView({behavior:'smooth',block:'start'})}
@@ -943,7 +943,7 @@ requestAnimationFrame(function(){requestAnimationFrame(function(){s.split('').fo
     if(t.matches('[data-act="restore"]')){var fl=t.files[0];if(!fl)return;fl.text().then(function(x){var o=JSON.parse(x);if(o&&o.v===1&&o.d){S=o;save();notice='';render()}}).catch(function(){alertless(L('تعذّرت قراءة الملف.','Could not read the file.'))});return}
     if(mode==='work'&&S&&t.closest('[data-f]')&&(t.type==='checkbox'||t.type==='radio'))setVal(t)});
   function alertless(msg){notice=esc(msg);render()}
-  function copyLink(btn){var i=host.querySelector('[data-link]');if(!i)return;i.select();var ok=L('نُسخ','Copied');(navigator.clipboard?navigator.clipboard.writeText(i.value):Promise.reject()).then(function(){btn.textContent=ok}).catch(function(){try{document.execCommand('copy');btn.textContent=ok}catch(e){}})}
+  function copyLink(btn){var i=host.querySelector('[data-link]');if(!i)return;i.select();var ok=L('تم النسخ','Copied');(navigator.clipboard?navigator.clipboard.writeText(i.value):Promise.reject()).then(function(){btn.textContent=ok}).catch(function(){try{document.execCommand('copy');btn.textContent=ok}catch(e){}})}
   host.addEventListener('click',function(e){var b=e.target.closest('[data-act]');if(!b||b.tagName==='INPUT')return;var a=b.getAttribute('data-act');
     if(a==='start'){S=blank();readMeta(host,S.meta);S.cur=scope()[0].id;save();render();return}
     if(a==='go'&&VIEW==='doc'){e.preventDefault();notice='';showRep=false;var gs=b.getAttribute('data-s'),fsec=null;SECS.forEach(function(x){if(!fsec&&x.stage===gs&&secOn(x))fsec=x});if(!fsec){VIEW='step';S.cur=gs;save();render();return}if(!openFor(fsec.id))render();var be=host.querySelector('[data-sec="'+fsec.id+'"]');setActive(fsec.id,true);if(be)be.scrollIntoView({behavior:'smooth',block:'start'});return}

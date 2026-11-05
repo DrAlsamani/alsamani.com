@@ -210,7 +210,7 @@
       <button type="button" class="btn ghost" id="blShare">🔗 ${B('أرسل رابط الدخول', 'Send the join link')}</button></div><div class="bl-qr">${qr}</div></div>
       <div id="blWho"></div><p class="bl-note">${B('من لم يحضر يكمّله الجهاز. ومن أراد المتابعة فقط يدخل بالرمز ويختار «شاهد فقط».', 'The computer fills any empty seat. To only watch, join with the code and choose “Just watch”.')}</p>
       <div class="bl-row"><button type="button" class="btn solid" id="blSeat">${G.o.seat === 'jack' ? '🃏 ' + B('طق الولد', 'Draw the jacks') : B('ابدأ ▶', 'Start ▶')}</button><button type="button" class="btn ghost" id="blEnd">${B('إلغاء', 'Cancel')}</button></div></div>`;
-    root.querySelector('#blShare').onclick = async e => { const text = T('تعال العب بلوت: ', 'Come and play Baloot: ') + url; try { if (navigator.share && /iP(hone|ad)|Android/i.test(navigator.userAgent)) await navigator.share({ text }); else { await navigator.clipboard.writeText(text); toast(B('نُسخ الرابط.', 'Link copied.')); } } catch (er) {} };
+    root.querySelector('#blShare').onclick = async e => { const text = T('تعال العب بلوت: ', 'Come and play Baloot: ') + url; try { if (navigator.share && /iP(hone|ad)|Android/i.test(navigator.userAgent)) await navigator.share({ text }); else { await navigator.clipboard.writeText(text); toast(B('تم نسخ الرابط.', 'Link copied.')); } } catch (er) {} };
     root.querySelector('#blEnd').onclick = async () => { await wipe(G.pin); store.del('run'); home(); };
     const draw = () => {
       const ids = Object.keys(G.names), box = root.querySelector('#blWho'); if (!box) return;
@@ -360,7 +360,7 @@
       <div class="bl-advc">${CUES().map((t, i) => `<button type="button" data-cue="${i}"${left ? '' : ' disabled'}>${t}</button>`).join('')}</div></div>`;
   }
   function bindAdv(P) {
-    root.querySelectorAll('[data-adv]').forEach(b => b.onclick = () => { rxRaw('@a:' + b.dataset.adv); toast(B('أُرسل الطلب، انتظر موافقته.', 'Request sent; wait for the player.')); });
+    root.querySelectorAll('[data-adv]').forEach(b => b.onclick = () => { rxRaw('@a:' + b.dataset.adv); toast(B('تم إرسال الطلب، انتظر موافقته.', 'Request sent; wait for the player.')); });
     const spend = () => { G.advUsed = G.advUsed && G.advUsed.n === P.n ? G.advUsed : { n: P.n, k: 0 }; G.advUsed.k++; };
     root.querySelectorAll('[data-cue]').forEach(b => b.onclick = () => { spend(); rxRaw('@c:' + b.dataset.cue); view(P, null, -1, null); });
     root.querySelectorAll('[data-hint]').forEach(b => b.onclick = () => { spend(); rxRaw('@p:' + b.dataset.hint); view(P, null, -1, null); });

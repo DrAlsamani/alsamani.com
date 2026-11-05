@@ -236,7 +236,7 @@
       if (k === 'rep') { q.deleteText(replace.index, replace.length, 'user'); q.insertText(replace.index, t, 'user'); }
       else if (bare) { const at = k === 'here' ? at0 : q.getLength() - 1; q.insertText(at, (k === 'end' && q.getLength() > 1 ? '\n' : '') + t + (k === 'here' ? ' ' : '\n'), 'user'); }
       else { const at = k === 'here' ? at0 : q.getLength() - 1, pre = k === 'end' ? '\n' : ''; q.insertText(at, pre + title + '\n', { bold: true }, 'user'); q.insertText(at + pre.length + title.length + 1, t + '\n', { bold: false }, 'user'); }
-      d.remove(); toast(T('أُضيف إلى المستند', 'Added to the document'));
+      d.remove(); toast(T('تمت الإضافة إلى المستند', 'Added to the document'));
     });
   }
 
@@ -286,7 +286,7 @@
     el.innerHTML = `<div class="tb-vh"><b>${v.open ? T('تصويت', 'Vote') : T('نتيجة التصويت', 'The result')}</b><span>${T(`صوّت ${NUM(tot)} من ${NUM(here)}`, `${tot} of ${here} voted`)}</span>${W.host ? `<span class="tb-vk">${v.open ? `<button type="button" class="tb-b" data-v="close">${T('إغلاق التصويت', 'Close the vote')}</button>` : `<button type="button" class="tb-b" data-v="add">${T('إضافة النتيجة إلى المستند', 'Add the result to the document')}</button><button type="button" class="tb-b" data-v="new">${T('تصويت جديد', 'Another vote')}</button>`}<button type="button" class="tb-b" data-v="end" aria-label="${T('إخفاء', 'Hide')}">${IC.x}</button></span>` : ''}</div>
       <p class="tb-vq" dir="auto">${esc(v.q)}</p>
       <div class="tb-vo">${v.o.map((o, j) => `<button type="button" data-o="${j}" aria-pressed="${mine === j}"${v.open ? '' : ' disabled'} class="${win === j ? 'win' : ''}"><span class="tb-vb" style="width:${Math.round(100 * n[j].length / max)}%"></span><b dir="auto">${esc(o)}</b><i>${NUM(n[j].length)}</i>${!v.open && v.names && n[j].length ? `<small dir="auto">${n[j].map(u => esc((W.on[u] || {}).n || (W.vn || {})[u] || '')).filter(Boolean).join(T('، ', ', '))}</small>` : ''}</button>`).join('')}</div>
-      ${v.open ? `<p class="tb-hint">${mine != null ? T('سُجّل صوتك، ويمكن تعديله حتى إغلاق التصويت', 'Your vote is in; you can change it until the vote closes') : T('اختر أحد الخيارات', 'Choose your answer')}</p>` : ''}`;
+      ${v.open ? `<p class="tb-hint">${mine != null ? T('تم تسجيل صوتك، ويمكن تعديله حتى إغلاق التصويت', 'Your vote is in; you can change it until the vote closes') : T('اختر أحد الخيارات', 'Choose your answer')}</p>` : ''}`;
     el.querySelectorAll('[data-o]').forEach(b => b.onclick = () => { W.ref.child('vv/' + uid).set(+b.dataset.o).catch(() => toast(T('تعذّر تسجيل الصوت', 'Could not vote'), 1)); });
     el.querySelectorAll('[data-v]').forEach(b => b.onclick = () => {
       const k = b.dataset.v;
@@ -296,8 +296,8 @@
       if (k === 'add') { const q = W.quill, names = v.vn || {}, line = v.o.map((o, j) => `${o}: ${n[j].length}${v.names && n[j].length ? ' (' + n[j].map(u => names[u] || (W.on[u] || {}).n || '').filter(Boolean).join(T('، ', ', ')) + ')' : ''}`).join(T('، ', ', '));
         const nm = j => n[j].map(u => names[u] || (W.on[u] || {}).n || '').filter(Boolean).join(T('، ', ', '));
         const at = q.getLength() - 1, h = T('التصويت: ', 'Vote: ') + v.q, r = (win >= 0 ? T('النتيجة: ', 'Result: ') + v.o[win] : T('النتيجة: تعادل', 'Result: a tie')) + ' (' + v.o.map((o, j) => `${o} ${NUM(n[j].length)}`).join(T('، ', ', ')) + ')' + (v.names ? '. ' + v.o.map((o, j) => n[j].length ? `${o}: ${nm(j)}` : '').filter(Boolean).join(T('؛ ', '; ')) : '');
-        if (v.item != null && W.ag[v.item]) { W.ref.child('ag/' + v.item + '/vote').set(r); toast(T('سُجّلت النتيجة مع البند', 'The result is recorded with the item')); return; }
-        q.insertText(at, '\n' + h + '\n', { bold: true }, 'user'); q.insertText(at + h.length + 2, r + '\n', { bold: false }, 'user'); toast(T('أُضيفت النتيجة إلى المستند', 'The result is in the document')); }
+        if (v.item != null && W.ag[v.item]) { W.ref.child('ag/' + v.item + '/vote').set(r); toast(T('تم تسجيل النتيجة مع البند', 'The result is recorded with the item')); return; }
+        q.insertText(at, '\n' + h + '\n', { bold: true }, 'user'); q.insertText(at + h.length + 2, r + '\n', { bold: false }, 'user'); toast(T('تمت إضافة النتيجة إلى المستند', 'The result is in the document')); }
     });
   }
 
@@ -419,7 +419,7 @@
     d.querySelectorAll('[data-n]').forEach(b => b.onclick = () => {
       const Delta = Quill.import('delta'), q = W.quill, at = b.dataset.n === 'top' ? 0 : q.getLength() - 1; let dl = new Delta().retain(at); if (at) dl = dl.insert('\n');
       lines.forEach(([t, f]) => { dl = dl.insert(t, { au: W.me }).insert('\n', Object.assign({ direction: isAr() ? 'rtl' : null, align: isAr() ? 'right' : null }, f)); });
-      q.updateContents(dl, 'api'); d.remove(); toast(T('أُضيف المحضر', 'The minutes are in'));
+      q.updateContents(dl, 'api'); d.remove(); toast(T('تمت إضافة المحضر', 'The minutes are in'));
     });
   }
 
@@ -428,7 +428,7 @@
     sug: () => sugSheet(),
     vote: () => W.vote && W.vote.open ? toast(T('يلزم إغلاق التصويت الحالي أولًا', 'Close the current vote first'), 1) : voteNew(),
     share: async () => { const url = location.origin + location.pathname + '?t=' + W.id, text = T(`دعوة للمشاركة في: ${W.meta.t}\n`, `Join the table: ${W.meta.t}\n`) + url; try { if (navigator.share && /iP(hone|ad)|Android/i.test(navigator.userAgent)) await navigator.share({ text }); else { await navigator.clipboard.writeText(url); toast(T('تم نسخ رابط الدعوة', 'Invite link copied')); } } catch (e) {} },
-    ppl: () => pplSheet(), ask: b => { W.ref.child('on/' + uid + '/req').set(1); b.disabled = true; b.textContent = T('أُرسل الطلب إلى المضيف', 'Sent to the host'); },
+    ppl: () => pplSheet(), ask: b => { W.ref.child('on/' + uid + '/req').set(1); b.disabled = true; b.textContent = T('تم إرسال الطلب إلى المضيف', 'Sent to the host'); },
     dict: dictate, rec: record, ai: aiSheet, imp: () => root.querySelector('#tbF').click(), exp: expSheet
   };
 

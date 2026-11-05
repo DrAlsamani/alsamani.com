@@ -43,7 +43,7 @@
   document.querySelectorAll('.sharebar').forEach(sb=>{
     const url=sb.dataset.url,title=sb.dataset.title;
     const n=sb.querySelector('.native');if(navigator.share&&n){n.hidden=false;n.onclick=()=>navigator.share({title,url}).catch(()=>{})}
-    const c=sb.querySelector('.copylink');if(c)c.onclick=()=>{const done=()=>{c.innerHTML='<span class="ar">نُسخ الرابط</span><span class="en">Link copied</span>'};
+    const c=sb.querySelector('.copylink');if(c)c.onclick=()=>{const done=()=>{c.innerHTML='<span class="ar">تم نسخ الرابط</span><span class="en">Link copied</span>'};
       if(navigator.clipboard)navigator.clipboard.writeText(url).then(done).catch(()=>{});else done()};
   });
   // contact form

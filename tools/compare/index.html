@@ -538,7 +538,7 @@ ${full}
       <div class="sn-two"><button type="button" class="btn solid" id="cmCopy">${B('انسخ التعليمات', 'Copy the instructions')}</button><a class="btn ghost" target="_blank" rel="noopener" href="https://chatgpt.com/">ChatGPT</a><a class="btn ghost" target="_blank" rel="noopener" href="https://claude.ai/new">Claude</a><button type="button" class="btn ghost" data-mx>${B('إغلاق', 'Close')}</button></div></div>`;
     document.body.appendChild(m);
     m.addEventListener('click', e => { if (e.target === m || e.target.closest('[data-mx]')) m.remove(); });
-    m.querySelector('#cmCopy').onclick = async e => { try { await navigator.clipboard.writeText(p); e.currentTarget.textContent = '✓ ' + T('نُسخت؛ الصقها في المساعد', 'Copied; paste it into the assistant'); } catch (er) { toast(B('تعذّر النسخ.', 'Could not copy.'), 1); } };
+    m.querySelector('#cmCopy').onclick = async e => { try { await navigator.clipboard.writeText(p); e.currentTarget.textContent = '✓ ' + T('تم النسخ؛ الصقها في المساعد', 'Copied; paste it into the assistant'); } catch (er) { toast(B('تعذّر النسخ.', 'Could not copy.'), 1); } };
   }
 })();
 </script>

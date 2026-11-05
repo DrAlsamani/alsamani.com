@@ -189,7 +189,7 @@
       const id = b.dataset.del, z = list.find(x => x.id === id), li = b.closest('li'); if (!z) return;
       li.classList.add('qz-ask'); li.innerHTML = `<p>${B(`تحذف «${esc(z.title || T('بلا عنوان', 'Untitled'))}» نهائيًا؟`, `Delete “${esc(z.title || T('بلا عنوان', 'Untitled'))}” for good?`)}</p><span><button type="button" class="btn solid qz-yes">${B('احذف', 'Delete')}</button><button type="button" class="btn ghost qz-no">${B('تراجع', 'Keep it')}</button></span>`;
       li.querySelector('.qz-no').onclick = home;
-      li.querySelector('.qz-yes').onclick = () => { list = list.filter(x => x.id !== id); store.set('list', list); Cloud.del(id); home(); toast(B('حُذفت المسابقة.', 'Quiz deleted.')); };
+      li.querySelector('.qz-yes').onclick = () => { list = list.filter(x => x.id !== id); store.set('list', list); Cloud.del(id); home(); toast(B('تم حذف المسابقة.', 'Quiz deleted.')); };
     });
     const all = root.querySelector('#qzAll'); if (all) all.onclick = () => save(new Blob([JSON.stringify({ all: list.map(z => ({ title: z.title, qs: z.qs.map(({ id, timeSet, ...r }) => r) })) }, null, 1)], { type: 'application/json' }), T('مسابقاتي', 'my-quizzes') + '-' + new Date().toISOString().slice(0, 10) + '.json');
     root.querySelector('#qzImp').onchange = async e => {
@@ -543,7 +543,7 @@
     a('dup').onclick = () => { const c = norm(JSON.parse(JSON.stringify(Object.assign({}, x, { id: uid() })))); c.timeSet = x.timeSet; Q.qs.splice(Q.qs.indexOf(x) + 1, 0, c); draw(); later(); };
     a('del').onclick = () => {
       const i = Q.qs.indexOf(x); Q.qs.splice(i, 1); draw(); later();
-      toast(B('حُذف السؤال. <button type="button" class="sn-lnk" id="qzUndo">تراجع</button>', 'Question deleted. <button type="button" class="sn-lnk" id="qzUndo">Undo</button>'));
+      toast(B('تم حذف السؤال. <button type="button" class="sn-lnk" id="qzUndo">تراجع</button>', 'Question deleted. <button type="button" class="sn-lnk" id="qzUndo">Undo</button>'));
       const u = document.getElementById('qzUndo'); if (u) u.onclick = () => { Q.qs.splice(i, 0, x); draw(); later(); document.getElementById('qzToast').classList.remove('on'); };
     };
     // an image pasted while writing this question is attached to it
@@ -587,7 +587,7 @@
       : `<span class="qz-good">✓ ${B(`الأسئلة جاهزة (${Q.qs.length})`, `${Q.qs.length} question${Q.qs.length > 1 ? 's' : ''} ready`)}</span>`;
     if (bias) box.innerHTML += `<button type="button" class="sn-lnk" id="qzShuf">${B('الإجابة الصحيحة في نفس الموضع كثيرًا — اخلط الخيارات', 'The right answer is often in the same place — shuffle options')}</button>`;
     const g = box.querySelector('[data-go]'); if (g) g.onclick = () => { const i = W.find(i => true); const el = root.querySelectorAll('.qz-q')[i]; el.scrollIntoView({ block: 'center', behavior: 'smooth' }); el.classList.add('flash'); setTimeout(() => el.classList.remove('flash'), 1200); };
-    const s = box.querySelector('#qzShuf'); if (s) s.onclick = () => { Q.qs.forEach(x => { if (x.type !== 'mc') return; const idx = x.opts.map((_, j) => j); for (let j = idx.length - 1; j > 0; j--) { const r = Math.floor(Math.random() * (j + 1)); [idx[j], idx[r]] = [idx[r], idx[j]]; } x.ok = x.ok.map(k => idx.indexOf(k)).sort(); x.opts = idx.map(j => x.opts[j]); }); draw(); later(); toast(B('خُلطت الخيارات.', 'Options shuffled.')); };
+    const s = box.querySelector('#qzShuf'); if (s) s.onclick = () => { Q.qs.forEach(x => { if (x.type !== 'mc') return; const idx = x.opts.map((_, j) => j); for (let j = idx.length - 1; j > 0; j--) { const r = Math.floor(Math.random() * (j + 1)); [idx[j], idx[r]] = [idx[r], idx[j]]; } x.ok = x.ok.map(k => idx.indexOf(k)).sort(); x.opts = idx.map(j => x.opts[j]); }); draw(); later(); toast(B('تم خلط الخيارات.', 'Options shuffled.')); };
     return W.length;
   }
 
@@ -715,7 +715,7 @@
       const rec = { j: JSON.stringify({ title: Q.title, qs: strip(Q.qs) }), title: (Q.title || '').slice(0, 120), by: n, who: g('#qpW').value.trim(), desc: g('#qpD').value.trim(), n: Q.qs.length, em: Cloud.user.email || '', st: 'new', at: Date.now() };
       const b = g('#qpGo'); b.disabled = true; b.textContent = T('جارٍ الإرسال…', 'Sending…');
       try { await firebase.database().ref('sub/' + Cloud.user.uid + '/' + Q.id).set(rec); Cloud.subs[Q.id] = rec;
-        d.remove(); toast(B('شكرًا! وصلت مسابقتك وستُراجع قبل نشرها. تابع حالتها في قائمة مسابقاتك.', 'Thank you! It arrived and will be reviewed. Follow it in your list.'));
+        d.remove(); toast(B('شكرًا لك. تم استلام مسابقتك، وستُراجع قبل نشرها. تابع حالتها في قائمة مسابقاتك.', 'Thank you! It arrived and will be reviewed. Follow it in your list.'));
         // a short note to the owner's inbox, with the way to the review page
         fetch('https://formsubmit.co/ajax/o.alsamani@uoh.edu.sa', { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify({ _subject: '[مكتبة ميدان] مسابقة للمراجعة: ' + (Q.title || 'بلا عنوان') + ' — ' + n, _template: 'table', _captcha: 'false', name: n, title: Q.title || '—', count: String(Q.qs.length), who: rec.who || '—', review: 'https://alsamani.com/play/maydan/#review' }) }).catch(() => {}); }
       catch (e) { console.error(e); b.disabled = false; b.textContent = T('أرسل للمراجعة', 'Send for review'); toast(B('تعذّر الإرسال الآن. حاول لاحقًا.', 'Could not send now. Try later.'), 1); }
@@ -753,9 +753,9 @@
       if (a === 'ok') return approve(z, j);
       if (a === 'no') { const d = modal(`<h3>${B('أعدها لصاحبها بملاحظة', 'Return it with a note')}</h3><p class="pt-fine">${B('تظهر الملاحظة لصاحب المسابقة في قائمة مسابقاته، فيعدّلها ويرسلها من جديد.', 'The author sees the note in their list, fixes the quiz and sends it again.')}</p><label class="sn-lbl">${B('الملاحظة', 'Note')}<input id="rvN" maxlength="160" dir="auto" placeholder="${T('مثال: راجع إجابة السؤال ٤', 'e.g. check the answer to question 4')}"></label><div class="sn-two"><button type="button" class="btn solid" id="rvGo">${B('أرسل الملاحظة', 'Send the note')}</button><button type="button" class="btn ghost" id="rvX">${B('إلغاء', 'Cancel')}</button></div>`);
         d.querySelector('#rvX').onclick = () => d.remove();
-        d.querySelector('#rvGo').onclick = async () => { const note = d.querySelector('#rvN').value.trim(); try { await firebase.database().ref('sub/' + z.u + '/' + z.id).update({ st: 'no', note }); z.st = 'no'; z.note = note; d.remove(); paint(); toast(B('أُعيدت لصاحبها.', 'Returned to the author.')); } catch (e) { toast(B('تعذّر الحفظ.', 'Could not save.'), 1); } };
+        d.querySelector('#rvGo').onclick = async () => { const note = d.querySelector('#rvN').value.trim(); try { await firebase.database().ref('sub/' + z.u + '/' + z.id).update({ st: 'no', note }); z.st = 'no'; z.note = note; d.remove(); paint(); toast(B('تمت إعادتها لصاحبها.', 'Returned to the author.')); } catch (e) { toast(B('تعذّر الحفظ.', 'Could not save.'), 1); } };
         return; }
-      if (a === 'off') { try { await firebase.database().ref().update({ ['pub/' + (z.pk || z.id)]: null, ['sub/' + z.u + '/' + z.id + '/st']: 'off' }); z.st = 'off'; PUB = PUB.filter(x => x.id !== 'pub-' + (z.pk || z.id)); paint(); toast(B('أُوقف نشرها وخرجت من المكتبة.', 'Taken out of the library.')); } catch (e) { toast(B('تعذّر الحفظ.', 'Could not save.'), 1); } }
+      if (a === 'off') { try { await firebase.database().ref().update({ ['pub/' + (z.pk || z.id)]: null, ['sub/' + z.u + '/' + z.id + '/st']: 'off' }); z.st = 'off'; PUB = PUB.filter(x => x.id !== 'pub-' + (z.pk || z.id)); paint(); toast(B('تم إيقاف نشرها وإخراجها من المكتبة.', 'Taken out of the library.')); } catch (e) { toast(B('تعذّر الحفظ.', 'Could not save.'), 1); } }
     };
     paint();
   }

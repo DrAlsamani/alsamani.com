@@ -125,8 +125,8 @@
     busy: B('بلغت الخدمة حدّها اليومي. حاول مرة أخرى غدًا.', 'The service has reached its daily limit. Please try again tomorrow.'),
     full: B('اكتمل العدد المسموح في هذا الرابط.', 'This link has reached its limit.'),
     taken: B('سبقك أحد إلى التوقيع في هذه الخانة. حدّث الصفحة وتأكد من خانتك.', 'Someone has already signed in this box. Refresh and check your box.'),
-    locked: B('أُقفل المحضر، ولم يعد التوقيع متاحًا.', 'The minutes are locked; signing is closed.'),
-    not_found: B('لم يُعثر على المحضر. ربما حُذف أو انتهت مدته.', 'These minutes were not found. They may have been deleted or expired.'),
+    locked: B('تم إقفال المحضر، ولم يعد التوقيع متاحًا.', 'The minutes are locked; signing is closed.'),
+    not_found: B('لم يُعثر على المحضر. ربما تم حذفه أو انتهت مدته.', 'These minutes were not found. They may have been deleted or expired.'),
     bad_pdf: B('الملف غير صالح أو أكبر من ١٠ ميجابايت.', 'The file is invalid or larger than 10 MB.'),
     bad_sig: B('صورة التوقيع غير صالحة. ارسم توقيعك، أو استخدم صورة توقيع على ورقة بيضاء.', 'The signature image is not valid. Draw your signature, or use a photo of it on white paper.'),
     net: B('تعذّر الاتصال. تحقق من الإنترنت وحاول مرة أخرى.', 'Could not connect. Check your connection and try again.')
@@ -334,7 +334,7 @@ ${JSON.stringify(uniq)}`);
         const sh = sheet(`<h3>${B('تصحيح مقترح للأسماء', 'Suggested corrections')}</h3><ul class="sn-fixl">${Object.keys(fix).map(n => `<li><s dir="auto">${esc(n)}</s><b dir="auto">${esc(fix[n])}</b></li>`).join('')}</ul>
           <div class="sn-sb"><button type="button" class="btn solid" data-act="ok">${B('اعتمد التصحيح', 'Apply')}</button><button type="button" class="btn ghost" data-act="x">${B('إلغاء', 'Cancel')}</button></div>`);
         sh.querySelector('[data-act=x]').onclick = close;
-        sh.querySelector('[data-act=ok]').onclick = () => { slots.forEach((x, i) => { const v = fix[(x.n || '').trim()]; if (v) { x.n = v; setName(i); } }); drawList(); close(); toast(B('صُحّحت الأسماء.', 'Names corrected.')); };
+        sh.querySelector('[data-act=ok]').onclick = () => { slots.forEach((x, i) => { const v = fix[(x.n || '').trim()]; if (v) { x.n = v; setName(i); } }); drawList(); close(); toast(B('تم تصحيح الأسماء.', 'Names corrected.')); };
       } catch (e) { console.error(e); btn.innerHTML = was; btn.disabled = false; toast(B('تعذّر التدقيق الآن؛ يُرجى المحاولة بعد قليل.', 'Could not check now; try again shortly.'), 1); }
     };
     function place() {
@@ -419,7 +419,7 @@ ${JSON.stringify(uniq)}`);
       try {
         const j = await call({ a: 'create', title: ed.querySelector('#snTitle').value.trim() || title, pdf: b64(buf), slots: slots.map(s => ({ p: s.p, n: s.n.trim(), r: s.r || '', x: s.x, y: s.y, w: s.w, h: s.h })) });
         const keys = store.get('keys', {}); keys[j.id] = j.k; store.set('keys', keys); ekSet(j.id, j.e);
-        if (dt) { try { const nm = (ed.querySelector('#snTitle').value.trim() || title || 'minutes').replace(/[\\/:*?"<>|]+/g, ' ').slice(0, 120) + '.pdf'; drvSet(j.id, { f: await Drv.put(dt, nm, new Uint8Array(buf)), n: 0 }); } catch (e) { console.error(e); toast(B('أُنشئ الرابط، لكن تعذّر الحفظ في Drive الآن.', 'The link is ready, but saving to Drive failed for now.'), 1); } }
+        if (dt) { try { const nm = (ed.querySelector('#snTitle').value.trim() || title || 'minutes').replace(/[\\/:*?"<>|]+/g, ' ').slice(0, 120) + '.pdf'; drvSet(j.id, { f: await Drv.put(dt, nm, new Uint8Array(buf)), n: 0 }); } catch (e) { console.error(e); toast(B('تم إنشاء الرابط، لكن تعذّر الحفظ في Drive الآن.', 'The link is ready, but saving to Drive failed for now.'), 1); } }
         if (slots.length) {
           const t = { title: ed.querySelector('#snTitle').value.trim() || title, pages: doc.numPages, slots: slots.map(s => ({ pe: doc.numPages - 1 - s.p, n: s.n.trim(), r: s.r || '', x: s.x, y: s.y, w: s.w, h: s.h })) };
           const key = JSON.stringify(t.slots.map(s => [s.pe, Math.round(s.x), Math.round(s.y)]));
@@ -474,8 +474,8 @@ ${JSON.stringify(uniq)}`);
     let views = [];
     const copy = async (txt, okMsg) => { try { await navigator.clipboard.writeText(txt); toast(okMsg); } catch (e) { prompt('', txt); } };
     if (root.querySelector('#snCopy')) {
-      root.querySelector('#snCopy').onclick = () => copy(link, B('نُسخ الرابط.', 'Link copied.'));
-      root.querySelector('#snAdminCopy').onclick = () => copy(base + '#k=' + key + (E ? '&e=' + E : ''), B('نُسخ رابط الإدارة. لا تُرسله إلى المجموعة.', 'Management link copied. Do not share it with the group.'));
+      root.querySelector('#snCopy').onclick = () => copy(link, B('تم نسخ الرابط.', 'Link copied.'));
+      root.querySelector('#snAdminCopy').onclick = () => copy(base + '#k=' + key + (E ? '&e=' + E : ''), B('تم نسخ رابط الإدارة. لا تُرسله إلى المجموعة.', 'Management link copied. Do not share it with the group.'));
       root.querySelector('#snWa').href = 'https://wa.me/?text=' + encodeURIComponent((S.title ? S.title + '\n' : '') + (isAr() ? 'رابط توقيع المحضر: ' : 'Sign the minutes here: ') + link);
     }
     // a member who signed before on this device: offer their own box straight away
@@ -624,7 +624,7 @@ ${JSON.stringify(uniq)}`);
         const wp = Math.min(170, v.wrap.clientWidth * .32) / v.vp.scale, hp = wp * im.height / im.width, pt = v.vp.convertToPdfPoint(x, y);
         startAdjust({ pi: v.pi, rect: { x: pt[0] - wp / 2, y: pt[1] - hp / 2, w: wp, h: hp }, png, cls: 'free', ratio: true }, async r => {
           const j = await call(Object.assign({ a: 'place', id, p: v.pi, png: await fitSig(png), n: store.get('me', '') }, r)); mine[j.i] = j.tok; store.set('mine.' + id, mine);
-          S = j; endMode(); draw(); toast(B('أُضيف توقيعك.', 'Your signature was added.'));
+          S = j; endMode(); draw(); toast(B('تمت إضافة توقيعك.', 'Your signature was added.'));
         });
       };
       im.src = png;
@@ -646,7 +646,7 @@ ${JSON.stringify(uniq)}`);
     function moveBox(i) {
       const s = S.slots[i];
       startAdjust({ pi: s.p, rect: { x: s.x, y: s.y, w: s.w, h: s.h }, png: s.sig, cls: s.free ? 'free' : 'slot', ratio: !!s.free, hide: i }, async r => {
-        S = await call(Object.assign({ a: 'move', id, i, k: key, tok: mine[i] }, r)); endMode(); draw(); toast(B('حُفظ الموضع.', 'Position saved.'));
+        S = await call(Object.assign({ a: 'move', id, i, k: key, tok: mine[i] }, r)); endMode(); draw(); toast(B('تم حفظ الموضع.', 'Position saved.'));
       });
     }
     // the minutes with every signature in place
@@ -699,7 +699,7 @@ ${JSON.stringify(uniq)}`);
       root.querySelector('#snRemind').onclick = () => {
         const left = S.slots.filter(s => !s.sig && !s.free && !s.gone).map(s => '• ' + (s.n || ''));
         const t = isAr() ? `نأمل التكرم بتوقيع ${S.title || 'المحضر'}:\n${link}\n\nلم يوقّع بعد:\n${left.join('\n')}` : `Please sign ${S.title || 'the minutes'}:\n${link}\n\nNot yet signed:\n${left.join('\n')}`;
-        copy(t, B('نُسخت رسالة التذكير.', 'Reminder copied.'));
+        copy(t, B('تم نسخ رسالة التذكير.', 'Reminder copied.'));
       };
       root.querySelector('#snLock').onclick = async () => { try { S = await call({ a: 'lock', id, k: key, on: !S.locked }); draw(); } catch (e) { toast(errMsg(e), 1); } };
       root.querySelector('#snDelete').onclick = () => {

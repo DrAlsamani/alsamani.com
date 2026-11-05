@@ -423,9 +423,9 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
   const ERR = {
     busy: B('بلغت الخدمة حدّها اليومي. حاول مرة أخرى غدًا.', 'The service has reached its daily limit. Please try again tomorrow.'),
     full: B('اكتمل العدد المسموح في هذا الرابط.', 'This link has reached its limit.'),
-    voted: B('سُجّل هذا الاسم من جهاز آخر. إن كان خطأ فاطلب من المنسق حذفه.', 'This name was recorded from another device. If this is a mistake, ask the coordinator to remove it.'),
-    locked: B('أُغلق الرابط.', 'This link is closed.'),
-    not_found: B('لم يُعثر على الرابط. ربما حُذف أو انتهت مدته.', 'Not found. It may have been deleted or expired.'),
+    voted: B('تم تسجيل هذا الاسم من جهاز آخر. إن كان خطأ فاطلب من المنسق حذفه.', 'This name was recorded from another device. If this is a mistake, ask the coordinator to remove it.'),
+    locked: B('تم إغلاق الرابط.', 'This link is closed.'),
+    not_found: B('لم يُعثر على الرابط. ربما تم حذفه أو انتهت مدته.', 'Not found. It may have been deleted or expired.'),
     bad_name: B('اختر اسمك من القائمة أو اكتبه.', 'Choose or write your name.'),
     bad_ans: B('اختر إجابة لكل بند.', 'Choose an answer for every item.'),
     net: B('تعذّر الاتصال. تحقق من الإنترنت وحاول مرة أخرى.', 'Could not connect. Check your connection and try again.')
@@ -510,7 +510,7 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
         <p>${MODE === 'att' ? B('اعرض رمز QR ليمسحه الحاضرون، أو أرسل الرابط:', 'Show the QR code for attendees to scan, or send the link:') : B('أرسله إلى مجموعة المجلس أو اللجنة:', 'Send it to the board or committee group:')}</p>
         <div class="sn-link"><input type="text" readonly value="${link}" id="psLink"><button type="button" class="btn solid" id="psCopy">${B('نسخ', 'Copy')}</button><a class="btn ghost" id="psWa" target="_blank" rel="noopener">${B('واتساب', 'WhatsApp')}</a></div>
         <p class="sn-fine">${B('النتيجة تظهر لك في هذا الجهاز. لمتابعتها من جهاز آخر احفظ رابط الإدارة:', 'Results appear on this device. To follow them from another device, keep the management link:')} <button type="button" class="sn-lnk" id="psAdm">${B('نسخ رابط الإدارة', 'Copy management link')}</button></p></div>` : '';
-      const head = `<div class="sn-card"><h2>${esc(title())}</h2>${S.locked ? `<p class="ps-closed">${B('أُغلق الرابط.', 'This link is closed.')}</p>` : ''}${admin && MODE === 'att' ? `<div class="sn-two"><button type="button" class="btn ghost" id="psQr">${B('رمز QR', 'QR code')}</button></div>` : ''}</div>`;
+      const head = `<div class="sn-card"><h2>${esc(title())}</h2>${S.locked ? `<p class="ps-closed">${B('تم إغلاق الرابط.', 'This link is closed.')}</p>` : ''}${admin && MODE === 'att' ? `<div class="sn-two"><button type="button" class="btn ghost" id="psQr">${B('رمز QR', 'QR code')}</button></div>` : ''}</div>`;
       let form = '';
       if (!S.locked && (editing || !S.mine)) {
         const inList = n => S.names.some(x => x === n);
@@ -525,7 +525,7 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
           <div class="sn-two"><button type="button" class="btn solid" id="psSend">${MODE === 'att' ? B('تسجيل حضوري', 'Record my attendance') : B('إرسال', 'Send')}</button>${S.mine ? `<button type="button" class="btn ghost" id="psCancel">${B('إلغاء', 'Cancel')}</button>` : ''}</div></div>`;
       }
       const mineCard = S.mine && !(editing && !S.locked) ? `<div class="sn-card ps-mine"><h3>${B(C.mine[0], C.mine[1])} · <bdi>${esc(S.mine.name)}</bdi></h3>
-        ${MODE === 'att' ? `<p>✓ ${B('سُجّل حضورك الساعة', 'Recorded at')} ${when(S.mine.t)}</p>` : S.items.map((t, i) => `<p><span class="ps-tag ps-${C.opts[S.mine.ans[i]][2]}">${optT(S.mine.ans[i])}</span> ${MODE === 'time' ? esc(t) : S.items.length > 1 ? T('القرار ', 'Decision ') + (i + 1) : ''}${S.mine.notes[i] ? ` — <i>${esc(S.mine.notes[i])}</i>` : ''}</p>`).join('')}
+        ${MODE === 'att' ? `<p>✓ ${B('تم تسجيل حضورك الساعة', 'Recorded at')} ${when(S.mine.t)}</p>` : S.items.map((t, i) => `<p><span class="ps-tag ps-${C.opts[S.mine.ans[i]][2]}">${optT(S.mine.ans[i])}</span> ${MODE === 'time' ? esc(t) : S.items.length > 1 ? T('القرار ', 'Decision ') + (i + 1) : ''}${S.mine.notes[i] ? ` — <i>${esc(S.mine.notes[i])}</i>` : ''}</p>`).join('')}
         ${S.locked || MODE === 'att' ? '' : `<button type="button" class="sn-lnk" id="psEdit">${B('تعديل', 'Change')}</button>`}</div>` : '';
       if (admin && form && MODE !== 'att') form = `<details class="sn-card ps-asme"><summary>${B('الإجابة بصفتك عضوًا', 'Answer as a member')}</summary>${form.replace(/^<div class="sn-card">/, '<div>')}</details>`;
       if (admin && form && MODE === 'att') form = `<details class="sn-card ps-asme"><summary>${B('تسجيل حضورك أنت', 'Record your own attendance')}</summary>${form.replace(/^<div class="sn-card">/, '<div>')}</details>`;
@@ -570,8 +570,8 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
     function bind(ans) {
       const q = s => root.querySelector(s);
       if (q('#psCopy')) {
-        q('#psCopy').onclick = () => copy(link, B('نُسخ الرابط.', 'Link copied.'));
-        q('#psAdm').onclick = () => copy(link + '#k=' + key, B('نُسخ رابط الإدارة. لا تُرسله إلى المجموعة.', 'Management link copied. Do not share it with the group.'));
+        q('#psCopy').onclick = () => copy(link, B('تم نسخ الرابط.', 'Link copied.'));
+        q('#psAdm').onclick = () => copy(link + '#k=' + key, B('تم نسخ رابط الإدارة. لا تُرسله إلى المجموعة.', 'Management link copied. Do not share it with the group.'));
         q('#psWa').href = 'https://wa.me/?text=' + encodeURIComponent((S.title ? S.title + '\n' : '') + T(C.link[0], C.link[1]) + link);
       }
       if (q('#psQr')) q('#psQr').onclick = qr;
@@ -596,8 +596,8 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
       if (q('#psCancel')) q('#psCancel').onclick = () => { editing = false; render(); };
       if (q('#psEdit')) q('#psEdit').onclick = () => { editing = true; render(); };
       if (!admin || !q('#psText')) return;
-      q('#psText').onclick = () => copy(asText(), B('نُسخت النتيجة.', 'Copied.'));
-      if (q('#psRemind')) q('#psRemind').onclick = () => copy(`${T(C.remind[0], C.remind[1])} ${title()}:\n${link}\n\n${MODE === 'att' ? T('لم يسجّل بعد:', 'Not recorded yet:') : T('لم يُجب بعد:', 'Not answered yet:')}\n` + missing().map(n => '• ' + n).join('\n'), B('نُسخت رسالة التذكير.', 'Reminder copied.'));
+      q('#psText').onclick = () => copy(asText(), B('تم نسخ النتيجة.', 'Copied.'));
+      if (q('#psRemind')) q('#psRemind').onclick = () => copy(`${T(C.remind[0], C.remind[1])} ${title()}:\n${link}\n\n${MODE === 'att' ? T('لم يسجّل بعد:', 'Not recorded yet:') : T('لم يُجب بعد:', 'Not answered yet:')}\n` + missing().map(n => '• ' + n).join('\n'), B('تم نسخ رسالة التذكير.', 'Reminder copied.'));
       q('#psLock').onclick = async () => { try { S = await call({ a: 'plock', id, k: key, on: !S.locked }); render(); } catch (e) { toast(errMsg(e), 1); } };
       q('#psDel').onclick = async ev => {
         const b = ev.currentTarget;

@@ -396,7 +396,7 @@ window.Dawwara = (function () {
     };
     const score = () => { st.again = score; if (st.sc === 'judge') { st.locked = true; clearInterval(tick); const x = el.querySelector('#dwX'); if (st.extra.answer) x.innerHTML = st.extra.answer;
       return judgeBox(st, m => { let best = -1; m.forEach((v, k) => { D.groups[k].score += v; if (best < 0 || v > m[best]) best = k; }); if (best >= 0 && m[best] > 0) D.groups[best].chal = (D.groups[best].chal || 0) + 1; SND.ok();
-        after(`<p>${T('أُضيفت الدرجات', 'Marks added')}${best >= 0 && m[best] > 0 ? ` · ${T('الأعلى', 'Top')}: <span dir="auto">${esc(D.groups[best].name)}</span> <b>+${NUM(m[best])}</b>` : ''}</p>`); }); }
+        after(`<p>${T('تمت إضافة الدرجات', 'Marks added')}${best >= 0 && m[best] > 0 ? ` · ${T('الأعلى', 'Top')}: <span dir="auto">${esc(D.groups[best].name)}</span> <b>+${NUM(m[best])}</b>` : ''}</p>`); }); }
       rank(); };
     const rank = () => {
       st.locked = true; clearInterval(tick); const f = el.querySelector('#dwFoot'), x = el.querySelector('#dwX'); if (st.extra.answer) x.innerHTML = st.extra.answer;
@@ -642,7 +642,7 @@ window.Dawwara = (function () {
     z.qs = (z.qs || []).filter(x => KINDS.includes(x.type)).map(x => Object.assign({ cat: '', lv: 2 }, x, x.type === 'mc' ? { opts: (x.opts || []).concat(['', '', '', '']).slice(0, Math.max(4, (x.opts || []).length)) } : {}));
     z.ch = z.ch || [];
     let tab = 'q', filt = '', tSave = null;
-    const later = () => { clearTimeout(tSave); tSave = setTimeout(() => { saveQuiz(z); const s = root.querySelector('#deSaved'); if (s) s.textContent = T('حُفظت', 'Saved'); }, 500); };
+    const later = () => { clearTimeout(tSave); tSave = setTimeout(() => { saveQuiz(z); const s = root.querySelector('#deSaved'); if (s) s.textContent = T('تم الحفظ', 'Saved'); }, 500); };
     const cats = () => [...new Set(z.qs.map(x => (x.cat || '').trim()).filter(Boolean))];
     const ok = x => usable(x);
     const qCard = (x, i) => `<div class="de-q${ok(x) ? '' : ' bad'}" data-i="${i}">

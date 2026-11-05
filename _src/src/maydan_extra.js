@@ -224,7 +224,7 @@ window.MDX = (function () {
       <p class="md-xnote">${RULE()}</p>
       <div class="md-xact"><button type="button" class="btn solid" data-sh>${B('رابط الترتيب للمجموعة', 'Standings link for the group')}</button><button type="button" class="btn ghost" data-ex>${B('نسخة احتياطية', 'Back up')}</button><button type="button" class="btn ghost" data-del>${B('حذف الدوري', 'Delete the league')}</button></div><p class="md-xnote" data-msg></p>`);
     const msg = t => { d.querySelector('[data-msg]').textContent = t; };
-    d.querySelector('[data-sh]').onclick = async () => { msg(T('جارٍ النشر…', 'Publishing…')); const ok = await publish(lg); if (!ok) return msg(T('تعذّر النشر من هذا الجهاز.', 'Could not publish from this device.')); const u = shareUrl(lg.id); try { await navigator.clipboard.writeText(u); } catch (e) {} msg(T('نُسخ الرابط: ', 'Link copied: ') + u); };
+    d.querySelector('[data-sh]').onclick = async () => { msg(T('جارٍ النشر…', 'Publishing…')); const ok = await publish(lg); if (!ok) return msg(T('تعذّر النشر من هذا الجهاز.', 'Could not publish from this device.')); const u = shareUrl(lg.id); try { await navigator.clipboard.writeText(u); } catch (e) {} msg(T('تم نسخ الرابط: ', 'Link copied: ') + u); };
     d.querySelector('[data-ex]').onclick = () => download(`league-${lg.name}.json`, JSON.stringify(lg), 'application/json');
     d.querySelector('[data-del]').onclick = () => { if (!confirm(T(`حذف دوري «${lg.name}»؟`, `Delete the league “${lg.name}”?`))) return; try { const g = JSON.parse(localStorage.getItem('md-lg-gone') || '[]'); g.push(id); localStorage.setItem('md-lg-gone', JSON.stringify(g.slice(-100))); } catch (e) {} save(all().filter(z => z.id !== id)); d.remove(); if (onChange) onChange(); };
   }

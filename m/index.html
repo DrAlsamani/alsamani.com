@@ -1779,7 +1779,7 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
         const mine = (await within(R.child('pl/' + uid).once('value'))).val();
         if (REMOTE) { if (!mine) await within(R.child('pl/' + uid).set({ n: T('جوال المضيف', 'Host phone'), at: TS, w: 1 })); FAN = true; me = ''; R.child('rx/' + uid).set({ e: '@' + REMOTE, t: TS }).catch(() => {}); return play(); }
         if (mine) { me = mine.n; return play(); }
-        if (s.val().lock) return codeScreen(T('أُقفل الدخول إلى هذه المسابقة.', 'This quiz is closed to new players.'));
+        if (s.val().lock) return codeScreen(T('تم إقفال الدخول إلى هذه المسابقة.', 'This quiz is closed to new players.'));
         R.child('tmode').on('value', t => { TMODE = t.val() || 'pick'; const box = root.querySelector('#mpTeams'); if (box) teamPick(box); });
         R.child('teams').on('value', t => { TEAMS = t.val(); const box = root.querySelector('#mpTeams'); if (box) teamPick(box); });
         nameScreen();
@@ -1807,7 +1807,7 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
       <button type="button" class="btn solid mp-go" id="mpGo">${B('ادخل الميدان', 'Join')}</button>
       <button type="button" class="btn ghost mp-go" id="mpFan">${B('ادخل متفرجًا', 'Just watch')}</button></div>`;
     const inp = root.querySelector('#mpName'), go = root.querySelector('#mpGo');
-    root.querySelector('#mpFan').onclick = async () => { const n = inp.value.trim().replace(/\s+/g, ' ').slice(0, 24) || T('مشجّع', 'A fan'); try { await within(R.child('pl/' + uid).set({ n, at: TS, w: 1 })); FAN = true; me = n; store.set('name', n); play(); } catch (e) { nameScreen(T('تعذّر الدخول؛ ربما أُقفلت المسابقة.', 'Could not join; the quiz may be closed.')); } };
+    root.querySelector('#mpFan').onclick = async () => { const n = inp.value.trim().replace(/\s+/g, ' ').slice(0, 24) || T('مشجّع', 'A fan'); try { await within(R.child('pl/' + uid).set({ n, at: TS, w: 1 })); FAN = true; me = n; store.set('name', n); play(); } catch (e) { nameScreen(T('تعذّر الدخول؛ ربما تم إقفال المسابقة.', 'Could not join; the quiz may be closed.')); } };
     teamPick(root.querySelector('#mpTeams')); avPick(root.querySelector('#mpAv'), inp);
     inp.focus(); inp.onkeydown = e => { if (e.key === 'Enter') go.click(); };
     go.onclick = async () => {
@@ -1818,7 +1818,7 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
       go.disabled = true;
       go.textContent = T('لحظة…', 'One moment…');
       try { await within(R.child('pl/' + uid).set(Object.assign({ n, at: TS }, TEAMS && myTeam != null ? { t: myTeam } : {}))); me = n; store.set('name', n); play(); }
-      catch (e) { nameScreen(e && e.message === 'slow' ? T('الاتصال بطيء؛ اضغط «ادخل الميدان» مرة أخرى.', 'The connection is slow; press Join again.') : T('تعذّر الدخول؛ ربما أُقفلت المسابقة.', 'Could not join; the quiz may be closed.')); }
+      catch (e) { nameScreen(e && e.message === 'slow' ? T('الاتصال بطيء؛ اضغط «ادخل الميدان» مرة أخرى.', 'The connection is slow; press Join again.') : T('تعذّر الدخول؛ ربما تم إقفال المسابقة.', 'Could not join; the quiz may be closed.')); }
     };
   }
 
