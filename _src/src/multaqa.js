@@ -458,17 +458,17 @@
   function stageClose() { if (!St.on) return; clearInterval(St.tick); St.on = false; if (St.el) St.el.remove(); document.body.classList.remove('ml-on'); }
   function stageRender() {
     const el = St.el; if (!el) return; const st = E.stage || {}; el.className = '';
-    const ctl = extra => canRun() ? `<div class="st-ctl">${extra}</div>` : '';
+    const out = `<button class="ml-b" data-out="1">${IC.out}${T('خروج', 'Exit')}</button>`, ctl = extra => canRun() ? `<div class="st-ctl">${out}${extra}</div>` : '';
     if (st.mode === 'res' && St.res && St.res.top) {
       el.className = 'res';
       el.innerHTML = `<h1>${T('النتائج', 'Results')}</h1><div class="st-rank">${St.res.top.slice().sort((a, b) => a.rank - b.rank).map(x => `<div><i>${num(x.rank)}</i><span><b dir="auto">${esc(x.t)}</b><br><small dir="auto">${esc(x.a)}</small></span></div>`).join('')}</div>` + ctl(`<button class="ml-b" data-m="show">${T('العودة إلى العرض', 'Back to the show')}</button>`);
-      $$('[data-m]', el).forEach(b => b.onclick = () => R('stage/mode').set('show')); return;
+      $$('[data-m]', el).forEach(b => b.onclick = () => R('stage/mode').set('show')); stageBind(); return;
     }
     const p = st.cur, it = p && E.items[p];
     if (!it) { el.innerHTML = `<div class="st-img"><div style="text-align:center"><h1 dir="auto">${esc(E.meta.t)}</h1><p class="st-fin">${T(`${num(E.order.length)} مشاركة`, `${E.order.length} entries`)}</p></div></div><div class="st-side"><div id="stQr" style="width:220px;background:#fff;border-radius:10px"></div><code dir="ltr" style="word-break:break-all;font-size:.75em">${esc(linkFor(''))}</code></div>` + ctl(`<button class="ml-b main" data-go="0">${T('بدء العرض', 'Start')}</button>`); stageBind(); script('https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js').then(() => { const b = $('#stQr', el); if (b && window.qrcode) { const q = qrcode(0, 'M'); q.addData(linkFor('')); q.make(); b.innerHTML = q.createSvgTag({ scalable: true, margin: 2 }); } }).catch(() => {}); return; }
     const jn = Object.keys(St.judges).length, sn = Object.values(St.scores).filter(js => js && js[p] && (js[p].coi || crit().every((_, i) => js[p].c && js[p].c[i] >= 1))).length, i = E.order.indexOf(p);
-    el.innerHTML = `<div class="st-img"><img id="stImg" alt=""></div><div class="st-side"><div class="st-num">${num(E.numOf[p])}</div><h1 dir="auto">${esc(it.t)}</h1>${it.fi ? `<p class="st-fin" dir="auto">${esc(it.fi)}</p>` : ''}${it.s ? `<p class="st-fin" dir="auto" style="font-size:.9em">${esc(it.s)}</p>` : ''}<p class="st-au" dir="auto">${esc(it.a || '')}</p><div class="st-state"><div class="st-big" id="stClock">${st.until ? clock(Math.max(0, st.until - Date.now())) : ''}</div><div>${st.open ? (isHost() ? T(`أنجز التقييم ${num(sn)} من ${num(jn)}`, `${sn} of ${jn} judges done`) : T('التقييم مفتوح', 'Judging is open')) : T('التقييم مغلق', 'Judging is closed')}</div></div></div>` +
-      ctl(`<button class="ml-b" data-go="${i - 1}" ${i < 1 ? 'disabled' : ''}>${T('السابق', 'Previous')}</button><button class="ml-b" data-tog="1">${st.open ? T('إغلاق التقييم', 'Close judging') : T('فتح التقييم', 'Open judging')}</button><button class="ml-b" data-voice="1">${IC.mic}${T('الصوت', 'Sound')}</button><button class="ml-b main" data-go="${i + 1}" ${i >= E.order.length - 1 ? 'disabled' : ''}>${T('التالي', 'Next')}</button>`);
+    el.innerHTML = `<div class="st-img"><img id="stImg" alt=""></div><div class="st-side"><div class="st-num">${num(E.numOf[p])}</div><h1 dir="auto">${esc(it.t)}</h1>${it.fi ? `<p class="st-fin" dir="auto">${esc(it.fi)}</p>` : ''}${it.s ? `<p class="st-fin" dir="auto" style="font-size:.9em">${esc(it.s)}</p>` : ''}<p class="st-au" dir="auto">${esc(it.a || '')}</p><div class="st-state"><div class="st-big" id="stClock">${st.until ? clock(Math.max(0, st.until - Date.now())) : ''}</div><div>${st.open ? (isHost() ? (jn ? T(`أنجز التقييم ${num(sn)} من ${num(jn)} محكّمين`, `${sn} of ${jn} judges done`) : T('لم ينضم محكّمون بعد', 'No judges have joined yet')) : T('التقييم مفتوح', 'Judging is open')) : T('التقييم مغلق', 'Judging is closed')}</div></div></div>` +
+      ctl(`<button class="ml-b" data-go="${i - 1}" ${i < 1 ? 'disabled' : ''}>${T('السابق', 'Previous')}</button><button class="ml-b" data-tog="1">${st.open ? T('إغلاق التقييم', 'Close judging') : T('فتح التقييم', 'Open judging')}</button><button class="ml-b" data-voice="1">${IC.mic}${T('الصوت', 'Sound')}</button>${i >= E.order.length - 1 ? (isHost() ? `<button class="ml-b main" data-res="1">${T('إعلان النتائج', 'Announce the results')}</button>` : '') : `<button class="ml-b main" data-go="${i + 1}">${T('المشاركة التالية', 'Next entry')}</button>`}`);
     const img = $('#stImg', el), set = u => { if (img.isConnected) img.src = u; };
     if (St.img[p]) set(St.img[p]); else R('full/' + p).once('value').then(s => { if (s.val()) { St.img = { [p]: s.val() }; set(s.val()); } }).catch(() => {});
     stageBind();
@@ -476,6 +476,8 @@
   function stageBind() {
     const el = St.el;
     $$('[data-go]', el).forEach(b => b.onclick = () => { const p = E.order[+b.dataset.go]; if (p) R('stage').update({ cur: p, open: true, mode: 'show', until: Date.now() + (+E.cfg.stageSec || 180) * 1000 }); });
+    $$('[data-out]', el).forEach(b => b.onclick = () => { location.hash = 'e=' + E.id; });
+    $$('[data-res]', el).forEach(b => b.onclick = () => { const r = computeResults(E.items, St.scores, crit()), top = r.rows.filter(x => x.rank && x.rank <= 3).slice(0, 5).map(x => ({ rank: x.rank, n: E.numOf[x.p], t: E.items[x.p].t, a: E.items[x.p].a || '' })); if (!top.length) return toast(T('لا توجد درجات بعد', 'No scores yet')); R().update({ results: { top, at: TS() }, 'stage/mode': 'res', 'stage/open': false }); });
     $$('[data-tog]', el).forEach(b => b.onclick = () => R('stage/open').set(!E.stage.open));
     $$('[data-voice]', el).forEach(b => b.onclick = () => { if (!name()) store.set('name', T('المسؤول', 'Organizer')); joinRoom('stage'); });
   }
@@ -925,7 +927,7 @@
   }
 
   /* ---------- route ---------- */
-  function route() { const h = parseHash(); if (h.e && /^\d{6}$/.test(h.e)) { if (E.id !== h.e || !E.meta || h.j || h.p || h.stage) enter(h); } else { teardown(); E.id = null; E.meta = null; home(); } }
+  function route() { const h = parseHash(); if (h.e && /^\d{6}$/.test(h.e)) { if (E.id !== h.e || !E.meta || h.j || h.p || h.m || h.stage || St.on) enter(h); } else { teardown(); E.id = null; E.meta = null; home(); } }
   addEventListener('hashchange', route);
   finishEmailLink().catch(() => {}).then(route);
 })();
