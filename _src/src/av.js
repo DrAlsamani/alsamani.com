@@ -78,7 +78,7 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
     const tune = (t, enc) => { try { const pr = t.sender.getParameters(); if (!pr.encodings || !pr.encodings.length) pr.encodings = [{}]; Object.assign(pr.encodings[0], enc); t.sender.setParameters(pr).catch(() => {}); } catch (e) {} };
     if (ta) { ta.direction = 'sendrecv'; ta.sender.replaceTrack(A.aT || null).catch(() => {}); tune(ta, { priority: 'high', networkPriority: 'high', maxBitrate: 40000 }); }
     // each phone sends its camera once per person, so the picture gets lighter as the room grows and the voice stays clear
-    if (tv) { tv.direction = 'sendrecv'; tv.sender.replaceTrack(A.vT || null).catch(() => {}); tune(tv, { priority: 'low', networkPriority: 'low', maxBitrate: n <= 2 ? 240000 : n <= 4 ? 150000 : 100000, maxFramerate: n <= 3 ? 15 : 10 }); }
+    if (tv) { tv.direction = 'sendrecv'; tv.sender.replaceTrack(A.vT || null).catch(() => {}); tune(tv, A.sc ? { priority: 'medium', networkPriority: 'medium', maxBitrate: n <= 3 ? 700000 : 400000, maxFramerate: 5 } : { priority: 'low', networkPriority: 'low', maxBitrate: n <= 2 ? 240000 : n <= 4 ? 150000 : 100000, maxFramerate: n <= 3 ? 15 : 10 }); }
   }
   function retune() { if (A) Object.values(A.P).forEach(feed); }
   function peer(u, first) {
@@ -146,7 +146,13 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
     else A.mic = !A.mic;
     A.ref.child('in/' + A.uid + '/a').set(A.mic ? 1 : 0).catch(() => {}); apply(); paint();
   }
+  async function toggleScreen() {
+    const say = () => { A.ref.child('in/' + A.uid + '/v').set(A.cam ? 1 : 0).catch(() => {}); paint(); };
+    if (A.sc) { A.sc = false; A.cam = false; if (A.vT) A.vT.stop(); A.vT = null; Object.values(A.P).forEach(feed); return say(); }
+    try { const s = await navigator.mediaDevices.getDisplayMedia({ video: { frameRate: { ideal: 5, max: 8 } } }), t = s.getVideoTracks()[0]; if (A.vT) A.vT.stop(); t.contentHint = 'detail'; A.vT = t; A.cam = true; A.sc = true; t.onended = () => { if (A && A.sc && A.vT === t) { A.sc = false; A.cam = false; A.vT = null; Object.values(A.P).forEach(feed); say(); } }; Object.values(A.P).forEach(feed); say(); } catch (e) { /* the person closed the picker */ }
+  }
   async function toggleCam() {
+    if (A.sc) A.sc = false;
     if (A.cam) { A.cam = false; if (A.vT) A.vT.stop(); A.vT = null; Object.values(A.P).forEach(feed); }
     else { try { const s = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: { ideal: 320 }, height: { ideal: 240 }, frameRate: { ideal: 15, max: 20 } } }); A.vT = s.getVideoTracks()[0]; A.cam = true; Object.values(A.P).forEach(feed); }
       catch (e) { return note(T('المتصفح لم يسمح بالكاميرا.', 'The browser did not allow the camera.')); } }
@@ -275,6 +281,6 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
     const v = { o: (p && p.o || []).map(u => u.slice(0, 10)), c: (p && p.c || []).map(u => u.slice(0, 10)), m: (p && p.m || []).map(u => u.slice(0, 10)), w: p && p.w || '' };
     const k = JSON.stringify(v); if (k === A.polK) return; A.polK = k; A.ref.child('pol').set(v).catch(() => {});
   }
-  return { attach, detach, policy, join() { return A ? join() : null; }, toggleMic() { return A ? toggleMic() : null; }, toggleCam() { return A ? toggleCam() : null; }, leave() { if (A) leave(); },
+  return { attach, detach, policy, join() { return A ? join() : null; }, toggleMic() { return A ? toggleMic() : null; }, toggleCam() { return A ? toggleCam() : null; }, toggleScreen() { return A ? toggleScreen() : null; }, sharing() { return !!(A && A.sc); }, leave() { if (A) leave(); },
     view() { return A ? { joined: A.joined, mic: A.mic, cam: A.cam, note: A.note, me: A.vT, n: Object.keys(A.in).length, talk: A.talk || {}, people: Object.keys(A.in).filter(u => u !== A.uid).map(u => ({ u, n: A.in[u].n, a: A.in[u].a, v: A.in[u].v, track: A.in[u].v && A.P[u] ? A.P[u].vt : null, audio: A.P[u] && A.P[u].au && A.P[u].au.srcObject ? A.P[u].au.srcObject.getAudioTracks()[0] : null })) } : null; }, state() { return A ? { on: A.on, joined: A.joined, mic: A.mic, can: canTalk(A.uid), n: Object.keys(A.in).length, peers: Object.keys(A.P).map(u => A.P[u].pc.connectionState), pol: A.pol } : null; }, setHost(u) { if (A) { A.hostU = u; apply(); } } };
 })();
