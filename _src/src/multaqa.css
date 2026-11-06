@@ -257,3 +257,15 @@ body.ml-on.ml-ses:not(.ml-view) #mlCall{bottom:calc(10px + env(safe-area-inset-b
 body.sh-auto #mlCall,body.sh-auto #mlTiles,body.sh-q #mlTiles{display:none!important}
 .sh-src .ml-b{white-space:nowrap;padding-inline:6px;border-radius:12px}
 details.ml-card:not([open]){gap:0}details.ml-card>summary{cursor:pointer;margin:0}
+
+.sh-mic{display:grid;gap:8px;margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}.sh-live{background:var(--bg,#f4f4f2);border-radius:10px;padding:6px 10px}
+.sh-pr{flex-wrap:wrap}.sh-pr .ml-t{flex:1 1 40%;min-width:120px}
+.sh-mic-rm{margin-top:8px;background:var(--surface);color:var(--ink);border-radius:12px;padding:0 12px 10px}
+#mlMicP{position:fixed;z-index:60;bottom:calc(84px + env(safe-area-inset-bottom));inset-inline-start:12px;box-shadow:0 6px 20px rgba(0,0,0,.25);background:var(--surface);color:var(--ink)}#mlMicP.main{background:#0B66D0;color:#fff}
+#mlMicS{position:fixed;inset:0;z-index:90;background:#0E1322;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px;text-align:center}#mlMicS h2{color:#fff;margin:0}#mlMicS small{color:#C8CEDB}#mlMicS .ml-b{min-width:220px;justify-content:center;min-height:48px}#mlMicS .ml-b:not(.main):not(.bad){background:transparent;color:#fff;border-color:#3a4566}
+.mic-big{width:112px;height:112px;border-radius:50%;display:grid;place-items:center;background:#262F47}.mic-big svg{width:48px;height:48px}.mic-big.on{background:#2F7D5B;box-shadow:0 0 0 10px rgba(47,125,91,.25)}
+body.mic-q #mlCall,body.mic-q #mlTiles,body.mic-q #hlRoomV{display:none!important}
+#stMicB{position:fixed;z-index:50;top:2vh;left:50%;transform:translateX(-50%);background:rgba(14,19,34,.92);color:#fff;border:1px solid #E3A55A;border-radius:999px;padding:1vh 3vw;font-size:3vh;font-weight:600}
+#stSnd{position:fixed;z-index:51;top:10vh;left:50%;transform:translateX(-50%)}
+#mlShPill,#mlMicP{z-index:2147}#mlShBar{z-index:2146}#mlShS{z-index:2148}#mlShV{z-index:2149}#mlMicS{z-index:2150}
+#mlMicS .ml-b.bad{background:#B23A2E;color:#fff;border:0}#stMicB{z-index:2145}#stSnd{z-index:2146}
