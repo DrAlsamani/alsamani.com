@@ -1147,11 +1147,11 @@ window.Dawwara = (function () {
       <div class="dw-wq"><b>${T('وش نوع الأسئلة؟', 'What kind of questions?')}</b><div class="dw-chips">${TYPES().map((t, i) => chip('wzT', t, t, i === 0 || i === 1 || i === 8, true)).join('')}</div><input id="wzX" dir="auto" placeholder="${T('أو اكتب نوعًا آخر أو موضوعًا (اختياري)', 'Or write another kind or topic (optional)')}"></div>
       <div class="dw-wq"><b>${T('شكل المسابقة', 'The shape')}</b><div class="dw-chips">${TPL().map(([v, l], i) => chip('wzS', v, l, i === 0)).join('')}</div></div>
       <div class="dw-aig"><label>${T('الجمهور', 'Audience')}<select id="dwAiA">${AUD().map(a => `<option value="${a[0]}">${a[1]}</option>`).join('')}</select></label><label>${T('المناسبة', 'The occasion')}<select id="wzP">${PACK().map(([v, l]) => `<option value="${v}">${v ? l : T('عامة', 'General')}</option>`).join('')}</select></label></div>
-      <button type="button" class="dw-btn" id="dwAiGo">${T('جهّزها', 'Prepare it')}</button><p class="dw-found" id="dwAiS" aria-live="polite"></p></div>`;
+      <div class="dw-gor"><button type="button" class="dw-btn" id="dwAiGo">${T('جهّزها', 'Prepare it')}</button><button type="button" class="dw-own" id="dwAiOwn">${T('أو بمساعدك: ChatGPT أو Claude', 'Or with your assistant: ChatGPT or Claude')}</button></div><p class="dw-found" id="dwAiS" aria-live="polite"></p></div>`;
   }
   function aiBind(root) {
     const q = s => root.querySelector(s), b = q('#dwAiGo'); if (!b) return;
-    b.onclick = async () => {
+    const go = async own => {
       const dur = +(root.querySelector('[name=wzD]:checked') || {}).value || 60, kind = (root.querySelector('[name=wzS]:checked') || {}).value || 'mix', extra = q('#wzX').value.trim();
       const cats = [...root.querySelectorAll('[name=wzT]:checked')].map(i => i.value).concat(extra && extra.length < 30 ? [extra] : []).slice(0, 6);
       if (!cats.length) { q('#dwAiS').textContent = T('اختر نوعًا واحدًا على الأقل.', 'Choose at least one kind.'); return; }
@@ -1159,12 +1159,13 @@ window.Dawwara = (function () {
       const o = { topic: extra.length >= 30 ? extra : '', aud: q('#dwAiA').value, per: Math.max(2, Math.ceil(sz.nq / cats.length)), nch: sz.nch, cats, kinds, mat: true };
       b.disabled = true; q('#dwAiS').textContent = '';
       try {
-        const r = fromAI(await OwnAI.auto(aiPrompt(o), 'dw.ai', 5, p => gemini(p))); if (r.qs.length < 2 && !r.ch.length) throw new Error('empty');
+        const r = fromAI(await (own ? OwnAI.ask(aiPrompt(o)) : OwnAI.auto(aiPrompt(o), 'dw.ai', 5, p => gemini(p)))); if (r.qs.length < 2 && !r.ch.length) throw new Error('empty');
         const quiz = { id: Math.random().toString(36).slice(2, 10), title: r.title || cats.join(T(' و', ' & ')), at: Date.now(), qs: r.qs, ch: r.ch, src: 'dw', tpl: { kind, dur, pack } };
         saveQuiz(quiz); b.disabled = false; q('#dwAiS').textContent = '';
         editor(root, quiz, () => home(root));
       } catch (e) { console.error(e); b.disabled = false; q('#dwAiS').textContent = OwnAI.msg(e); }
     };
+    b.onclick = () => go(false); q('#dwAiOwn').onclick = () => go(true);
   }
   /* ---------- «من درسك»: questions written only from the teacher's own lesson — pasted text, PDF, page photos or a Word file ---------- */
   const LS_MAX = 14e6, LS_TXT = 60000;
@@ -1178,7 +1179,7 @@ window.Dawwara = (function () {
       <div class="dw-wq"><b>${T('أنواع الأسئلة', 'Kinds of questions')}</b><div class="dw-chips">${LS_KINDS().map(([v, l], i) => chip('lsK', v, l, i < 2, true)).join('')}</div></div>
       <div class="dw-aig"><label>${T('المرحلة', 'The stage')}<select id="lsA">${AUD().filter(a => a[0] !== 'fam').map(a => `<option value="${a[0]}"${a[0] === 'mid' ? ' selected' : ''}>${a[1]}</option>`).join('')}</select></label><label>${T('ركّز على (اختياري)', 'Focus on (optional)')}<input id="lsX" dir="auto" placeholder="${T('مثل: الدرس الثاني، أو المفاهيم فقط', 'e.g. lesson two, or the key terms only')}"></label></div>
       <label class="dw-lsc"><input type="checkbox" id="lsC"> ${T('أضف تحديات صفية قصيرة من الدرس', 'Add short class challenges from the lesson')}</label>
-      <button type="button" class="dw-btn" id="lsGo">${T('اكتب الأسئلة', 'Write the questions')}</button><p class="dw-found" id="lsS" aria-live="polite"></p></div>`;
+      <div class="dw-gor"><button type="button" class="dw-btn" id="lsGo">${T('اكتب الأسئلة', 'Write the questions')}</button><button type="button" class="dw-own" id="lsOwn">${T('أو بمساعدك: ChatGPT أو Claude', 'Or with your assistant: ChatGPT or Claude')}</button></div><p class="dw-found" id="lsS" aria-live="polite"></p></div>`;
   }
   const b64 = f => new Promise((ok, no) => { const r = new FileReader(); r.onload = () => ok(String(r.result).split(',')[1]); r.onerror = no; r.readAsDataURL(f); });
   // a photo of a page is shrunk to a readable size before it is sent
@@ -1221,7 +1222,7 @@ ${o.nch ? `- أضف ${o.nch} تحديات صفية قصيرة مرتبطة با�
     const q = s => root.querySelector(s), b = q('#lsGo'); if (!b) return; let files = [];
     const list = () => { q('#lsL').innerHTML = files.map((f, i) => `<span class="dw-lsi"><bdi>${esc(f.name)}</bdi><button type="button" data-lsx="${i}" aria-label="${T('إزالة', 'Remove')}">×</button></span>`).join(''); q('#lsL').querySelectorAll('[data-lsx]').forEach(x => x.onclick = () => { files.splice(+x.dataset.lsx, 1); list(); }); };
     q('#lsF').onchange = e => { files = files.concat([...e.target.files]).slice(0, 8); e.target.value = ''; list(); q('#lsS').textContent = ''; };
-    b.onclick = async () => {
+    const go = async own => {
       const S = q('#lsS'), text = q('#lsT').value.trim(), kinds = [...root.querySelectorAll('[name=lsK]:checked')].map(i => i.value);
       if (!text && !files.length) { S.textContent = T('الصق نص الدرس أو ارفع ملفاته أولًا.', 'Paste the lesson or upload its files first.'); return; }
       if (!kinds.length) { S.textContent = T('اختر نوعًا واحدًا على الأقل.', 'Choose at least one kind.'); return; }
@@ -1233,14 +1234,15 @@ ${o.nch ? `- أضف ${o.nch} تحديات صفية قصيرة مرتبطة با�
         if (!txt && !parts.length) throw Object.assign(new Error('empty'), { ls: T('لم أجد نصًا في الملف.', 'No text was found in the file.') });
         const o = { n: +(root.querySelector('[name=lsN]:checked') || {}).value || 20, kinds, aud: q('#lsA').value, focus: q('#lsX').value.trim(), nch: q('#lsC').checked ? 3 : 0 };
         const head = lsPrompt(o), body = (txt ? `\n\nمحتوى الدرس:\n"""\n${txt}\n"""` : '') + (parts.length ? `\n\n${txt ? 'وبقية الدرس' : 'محتوى الدرس'} في الملفات المرفقة: ${parts.map(x => x.name).join('، ')}.` : '');
-        S.textContent = T('تُكتب الأسئلة من الدرس…', 'Writing the questions from the lesson…');
-        const r = fromAI(await OwnAI.auto(head + body, 'dw.ai', 5, p => gemini(parts.length ? [p].concat(parts.map(x => ({ inlineData: { mimeType: x.mime, data: x.data } }))) : p)));
+        S.textContent = own ? '' : T('تُكتب الأسئلة من الدرس…', 'Writing the questions from the lesson…');
+        const r = fromAI(await (own ? OwnAI.ask(head + body) : OwnAI.auto(head + body, 'dw.ai', 5, p => gemini(parts.length ? [p].concat(parts.map(x => ({ inlineData: { mimeType: x.mime, data: x.data } }))) : p))));
         r.qs = r.qs.filter(x => kinds.includes(x.type)); if (r.qs.length < 2) throw new Error('empty');
         const quiz = { id: Math.random().toString(36).slice(2, 10), title: r.title || T('مراجعة الدرس', 'Lesson review'), at: Date.now(), qs: r.qs, ch: r.ch, src: 'dw', lesson: 1, tpl: { kind: r.ch.length ? 'mix' : 'q', dur: 45 } };
         saveQuiz(quiz); b.disabled = false; S.textContent = '';
         editor(root, quiz, () => home(root));
       } catch (e) { console.error(e); b.disabled = false; S.textContent = e.ls || OwnAI.msg(e); }
     };
+    b.onclick = () => go(false); q('#lsOwn').onclick = () => go(true);
   }
   // the shape chosen in «جهّزها لي» decides the rounds
   function applyTpl(c, n, P, mc, catQ) {
