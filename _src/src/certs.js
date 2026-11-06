@@ -87,6 +87,7 @@
     ready(); await draw();
   };
   /* ---------- names ---------- */
+  setTimeout(() => { try { const v = localStorage.getItem('ct.names'); if (v) { localStorage.removeItem('ct.names'); const t = q('#ctNames'); t.value = v; t.oninput(); } } catch (e) {} }, 0);
   q('#ctNames').oninput = () => {
     rows = q('#ctNames').value.split(/\r?\n/).map(l => l.split('\t').map(x => x.trim())).filter(r => r.some(Boolean));
     cur = Math.min(cur, Math.max(0, rows.length - 1));
