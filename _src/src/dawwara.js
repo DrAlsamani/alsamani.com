@@ -328,10 +328,10 @@ window.Dawwara = (function () {
 
   /* the phone race: the first team to answer right takes the points; a wrong pick is struck out on the screen with the team's name and the rest go on */
   function askRace(s) {
-    const x = s.x, dur = D.cfg.time || x.time || 30, st = D.q = { x, dur, left: dur, out: [], no: [], tags: {}, sel: null, locked: false };
+    const x = s.x, dur = D.cfg.time || x.time || 30, st = D.q = { x, dur, left: dur, out: [], no: [], tags: {}, sel: null, locked: false, fk: [] };
     shell(`${board(-1)}<div class="dw-q dw-race"><div class="dw-qh"><span class="dw-who" id="dwWho">${T('سباق: أول إجابة صحيحة تفوز', 'Race: the first right answer wins')}</span>${ring(dur)}</div>${qBody(x, true)}<p class="dw-say" id="dwRf" aria-live="polite"></p><div class="dw-foot" id="dwFoot"></div></div>`, 'dw-ask');
     const pts = () => st.out.length ? 50 : 100;
-    const send = () => pub({ ph: 'race', n: x.opts.length, tf: x.type === 'tf' ? 1 : 0, out: st.out, no: st.no, i: D.t });
+    const send = () => pub({ ph: 'race', n: x.opts.length, tf: x.type === 'tf' ? 1 : 0, out: st.out, no: st.no, i: D.t, fa: D.groups.map(g => g.fk === 0 ? 0 : 1), lean: st.fk.map(f => `${D.groups[f.k].name} ${T('تميل إلى', 'leans to')} ${LET()[f.j]}`).join(' · ') });
     const open = () => el.querySelectorAll('[data-j]').forEach(b => { b.disabled = st.locked || st.no.includes(+b.dataset.j); });
     // teams without a phone: the host taps the team, then its answer
     const foot = () => {
@@ -340,7 +340,10 @@ window.Dawwara = (function () {
       f.querySelectorAll('[data-rt]').forEach(b => b.onclick = () => { st.sel = st.sel === +b.dataset.rt ? null : +b.dataset.rt; foot(); });
       f.querySelector('[data-stop]').onclick = () => end(null);
     };
-    const tag = (j, k, ok) => { const b = el.querySelector(`[data-j="${j}"]`); if (!b) return; let t = b.querySelector('.dw-tags'); if (!t) { t = document.createElement('em'); t.className = 'dw-tags'; b.appendChild(t); } t.insertAdjacentHTML('beforeend', `<b style="--c:${D.groups[k].col}" class="${ok ? 'y' : 'n'}" dir="auto">${esc(D.groups[k].name)}</b>`); };
+    const tag = (j, k, ok) => { const b = el.querySelector(`[data-j="${j}"]`); if (!b) return; let t = b.querySelector('.dw-tags'); if (!t) { t = document.createElement('em'); t.className = 'dw-tags'; b.appendChild(t); } t.insertAdjacentHTML('beforeend', `<b style="--c:${D.groups[k].col}" class="${ok == null ? 'f' : ok ? 'y' : 'n'}" dir="auto">${esc(D.groups[k].name)}</b>`); };
+    // a decoy, once an evening per group: its name appears on an option as if it leaned there; the real answer comes after
+    st.onFake = (k, j) => { const g = D.groups[k]; if (st.locked || st.out.includes(k) || st.no.includes(j) || g.fk === 0 || !(j >= 0 && j < x.opts.length)) return;
+      g.fk = 0; st.fk.push({ k, j }); tag(j, k, null); SND.tick(); say(`<b style="color:${g.col}" dir="auto">${esc(g.name)}</b> ${T('تميل إلى', 'leans to')} ${LET()[j]}`); send(); };
     const say = h => { const f = el.querySelector('#dwRf'); if (f) { f.innerHTML = h; f.classList.remove('on'); void f.offsetWidth; f.classList.add('on'); } };
     st.onAns = (k, j) => {
       if (st.locked || st.out.includes(k) || st.no.includes(j) || !(j >= 0 && j < x.opts.length)) return;
@@ -354,7 +357,8 @@ window.Dawwara = (function () {
     };
     el.querySelectorAll('[data-j]').forEach(b => b.onclick = () => { if (st.sel == null) { say(T('اختر الفريق أولًا من الأسفل', 'Pick the team first, below')); return; } const k = st.sel; st.sel = null; st.onAns(k, +b.dataset.j); if (!st.locked) foot(); });
     const end = (k, p) => { st.locked = true; clearInterval(tick); markRight(x); k != null ? SND.ok() : SND.no(); pub({ ph: 'wait', i: D.t, won: k == null ? -1 : k });
-      after(`<p>${k != null ? `<b>+${NUM(p)}</b> ${T('لمجموعة ', 'to ')}<span dir="auto">${esc(D.groups[k].name)}</span> · ` : ''}${T('الإجابة', 'The answer')}: <b dir="auto">${esc(answerOf(x))}</b></p>`); };
+      el.querySelectorAll('.dw-tags b.f').forEach(b => b.classList.add('rv'));
+      after(`${st.fk.length ? `<p class="dw-fkr">${st.fk.map(f => `<span dir="auto">${esc(D.groups[f.k].name)}</span>`).join(T(' و', ' & '))}: ${T('كان ذلك تمويهًا', 'that was a decoy')}</p>` : ''}<p>${k != null ? `<b>+${NUM(p)}</b> ${T('لمجموعة ', 'to ')}<span dir="auto">${esc(D.groups[k].name)}</span> · ` : ''}${T('الإجابة', 'The answer')}: <b dir="auto">${esc(answerOf(x))}</b></p>`); };
     open(); foot(); send(); clock(st, () => end(null)); SND.go();
   }
 
@@ -882,6 +886,7 @@ window.Dawwara = (function () {
     if (v.k === 'b' && D.q && D.q.onBuzz) D.q.onBuzz(km, v.t);
     const k = kl; if (k < 0) return;
     if (v.k === 'u') { ROOM.auto[k] = !!v.x; return pub(); }
+    if (v.k === 'f' && D.q && D.q.onFake) return D.q.onFake(k, +v.x);
     if (v.k === 'a' && D.q && D.q.onAns) D.q.onAns(k, +v.c);
     if (v.k === 'c') useChance(k, String(v.c), v.x >= 0 ? v.x : -1);
     if (v.k === 'p' && D.pickCb) D.pickCb(k, v.x);
@@ -999,7 +1004,7 @@ window.Dawwara = (function () {
       const col = g.cols[k], chs = isLead ? (g.ch && g.ch[k]) || '' : '', CN = CHN(), hlp = hl => isLead ? helpUI(hl) : '';
       let body = '';
       if (multi && !isLead && ['hrl', 'hrn', 'pick', 'hro', 'word', 'num'].includes(ph)) body = `<p class="dwp-big">${T('يتولى قائد المجموعة هذه الخطوة', 'The group’s leader takes this step')}</p><p class="dwp-h">${T('تابعها على الشاشة', 'Follow it on the screen')}</p>`;
-      else if (ph === 'race') body = (g.out || []).includes(k) ? `<p class="dwp-big">${T('إجابتكم خاطئة', 'Your answer was wrong')}</p><p class="dwp-h">${T('انتظروا السؤال التالي', 'Wait for the next question')}</p>` : `<p class="dwp-h">${T('سباق! أول إجابة صحيحة تفوز', 'Race! The first right answer wins')}</p>${opts(g.n, g.tf, g.no)}`;
+      else if (ph === 'race') body = (g.out || []).includes(k) ? `<p class="dwp-big">${T('إجابتكم خاطئة', 'Your answer was wrong')}</p><p class="dwp-h">${T('انتظروا السؤال التالي', 'Wait for the next question')}</p>` : `<p class="dwp-h">${T('سباق! أول إجابة صحيحة تفوز', 'Race! The first right answer wins')}</p>${g.lean ? `<p class="dwp-lean" dir="auto">${esc(g.lean)}</p>` : ''}${opts(g.n, g.tf, g.no)}${isLead && (g.fa || [])[k] && ans == null ? `<button type="button" class="dwp-fake" data-fake>${T('تمويه: أظهر اختيارًا وهميًا', 'Decoy: show a false lean')} <small>${T('مرة واحدة في الأمسية', 'once an evening')}</small></button>` : ''}`;
       else if (ph === 'all') body = `<p class="dwp-h">${T('سؤال للجميع: اختاروا الإجابة', 'Everyone answers: choose')}</p>${opts(g.n, g.tf)}`;
       else if (ph === 'buzz') body = (g.out || []).includes(k) ? `<p class="dwp-big">${T('خرجتم من هذا السؤال', 'You are out of this one')}</p>` : g.who === k ? (g.say ? `<p class="dwp-big">${T('سبقتم! قولوا الإجابة للمدير', 'First! Say the answer to the host')}</p>${sayUI()}` : `<p class="dwp-h">${T('دوركم: اختاروا الإجابة', 'Your turn: choose')}</p>${opts(g.n, g.tf)}`) : g.who != null ? `<p class="dwp-big">${T('يجاوب الآن', 'Now answering')}: ${esc(g.names[g.who])}</p>` : `<button type="button" class="dwp-buzz" data-bz${buzzed ? ' disabled' : ''}>${buzzed ? T('ضغطت!', 'Pressed!') : T('اضغط!', 'Press!')}</button>`;
       else if (ph === 'turn') body = g.team === k ? (g.text ? `<p class="dwp-big">${T('قل الإجابة للمدير', 'Say the answer to the host')}</p>${sayUI()}` : `<p class="dwp-h">${T('سؤالكم: اختاروا الإجابة', 'Your question: choose')}</p>${opts(g.n, g.tf)}`) : `<p class="dwp-big">${T('دور', 'Turn:')} ${esc(g.names[g.team] || '')}</p>`;
@@ -1022,6 +1027,9 @@ window.Dawwara = (function () {
         ${chs ? `<div class="dwp-ch"><p>${T('فرصكم', 'Your chances')}</p>${chs.split('').map(c => `<button type="button" data-ch="${c}">${CN[c]}</button>`).join('')}</div>` : ''}</div>`;
       root.querySelectorAll('[data-a]').forEach(b => b.onclick = () => { ans = +b.dataset.a; if (g.rem || (g.pa && !isLead)) { send('s', '', k, { a: ans }); said = g.rem ? T('تم إرسال اختيارك إلى المدير', 'Your choice was sent to the host') : T('تم إرسال صوتك إلى قائد المجموعة', 'Your vote was sent to the group’s leader'); } else send('a', ans, 0); buzz(25); paint(); });
       if (multi && root.querySelector('.dwp-opts')) root.querySelector('.dwp-opts').insertAdjacentHTML(g.pa && isLead ? 'beforebegin' : 'afterend', `${(g.tv || [])[k] ? `<p class="dwp-tv${g.pa && isLead ? ' lead' : ''}">${g.pa && isLead ? T('أصوات مجموعتك', 'Your group’s votes') : T('اختيارات مجموعتك', 'Your group leans')}: ${esc(g.tv[k])}${(g.tn || [])[k] ? `<small dir="auto">${esc(g.tn[k])}</small>` : ''}</p>` : g.pa && !isLead ? `<p class="dwp-h">${T('صوّت، والقائد يعتمد الإجابة', 'Vote; the leader gives the answer')}${(g.au || [])[k] ? ` · ${T('الإجابة التلقائية برأي الأغلبية مفعّلة', 'the majority answers automatically')}` : ''}</p>` : ''}${g.pa && isLead ? `<button type="button" class="dwp-auto${(g.au || [])[k] ? ' on' : ''}" data-auto>${(g.au || [])[k] ? T('الإجابة التلقائية برأي الأغلبية: مفعّلة', 'Majority answers automatically: on') : T('فعّل الإجابة التلقائية برأي الأغلبية', 'Let the majority answer automatically')}</button>` : ''}${said && !root.querySelector('.dwp-say') ? `<p class="dwp-ok">${said}</p>` : ''}`);
+      const fkb = root.querySelector('[data-fake]'); if (fkb) fkb.onclick = () => { const d = document.createElement('div'); d.className = 'dwp-sheet';
+        d.innerHTML = `<div><p>${T('أي خيار يظهر للمنافسين أنكم تميلون إليه؟ لا يُحتسب لكم ولا عليكم.', 'Which option should rivals think you lean to? It does not count.')}</p>${Array.from({ length: g.n || 4 }, (_, j) => (g.no || []).includes(j) ? '' : `<button type="button" data-fj="${j}" style="--c:${g.cols[k]}">${g.tf ? [T('صح', 'True'), T('خطأ', 'False')][j] : LET()[j]}</button>`).join('')}<button type="button" class="x">${T('إلغاء', 'Cancel')}</button></div>`; root.appendChild(d);
+        d.querySelectorAll('[data-fj]').forEach(t => t.onclick = () => { send('f', '', +t.dataset.fj); d.remove(); buzz(25); }); d.querySelector('.x').onclick = () => d.remove(); };
       const atb = root.querySelector('[data-auto]'); if (atb) atb.onclick = () => { send('u', '', (g.au || [])[k] ? 0 : 1); buzz(20); };
       const txi = root.querySelector('#dwpTx'); if (txi) { txi.oninput = () => { tx = txi.value; }; txi.onblur = () => setTimeout(() => { if (pend) paint(); }, 50);
         const go1 = () => { const v = txi.value.trim(); if (!v) return; send('s', '', k, { s: v }); tx = ''; said = T('تم إرسال إجابتك إلى المدير', 'Your answer was sent to the host'); txi.blur(); buzz(25); paint(); };

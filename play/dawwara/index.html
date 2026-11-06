@@ -511,6 +511,11 @@ html.dw-phone .tl-crumb,html.dw-phone .dw-head,html.dw-phone .dw-lead{display:no
 .dw-q:has(.dw-imgw.zoom) .dw-qt{font-size:clamp(20px,2.4vw,34px);padding-block:10px}
 .dw-q:has(.dw-imgw.zoom) .dw-opts button{min-height:clamp(48px,7vh,80px);font-size:clamp(16px,1.8vw,26px);padding:10px 14px}
 @media (min-width:900px){.dw-q:has(.dw-imgw.zoom) .dw-opts{grid-template-columns:repeat(4,minmax(0,1fr))}}
+/* the decoy */
+.dw-tags b.f{border-style:dashed}.dw-tags b.f.rv{opacity:.6}.dw-tags b.f.rv::after{content:' ·  تمويه';color:#c9822b}
+.dw-fkr{margin:0 0 6px;color:#e9a54a;font-weight:700}
+.dwp-lean{margin:0;text-align:center;font-weight:700;color:#c9822b}
+.dwp-fake{font:inherit;font-weight:700;border:1.5px dashed #c9822b;background:transparent;color:var(--ink);border-radius:12px;padding:10px;display:grid;gap:2px}.dwp-fake small{font-weight:400;color:var(--muted)}
 </style>
 <div id="dw" class="dw-page"><noscript><span class="ar">تعمل هذه اللعبة مع تفعيل JavaScript.</span><span class="en">This game needs JavaScript.</span></noscript></div>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script>window.MD_CFG={"apiKey": "AIzaSyA50i75DT1Is1a6Yn6snW1_JVObc8S3F0Y", "authDomain": "maydan-705ae.firebaseapp.com", "databaseURL": "https://maydan-705ae-default-rtdb.europe-west1.firebasedatabase.app", "projectId": "maydan-705ae", "appId": "1:342187013133:web:d5c2396f0db413f3c51144"};window.MD_MARK="<svg class=\"md-mark\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><rect x=\"4\" y=\"4\" width=\"40\" height=\"40\" rx=\"12\" fill=\"#23336F\"/><path d=\"M24 9l4.2 6.8 7.8-1.8-1.8 7.8L41 24l-6.8 4.2 1.8 7.8-7.8-1.8L24 39l-4.2-6.8-7.8 1.8 1.8-7.8L7 24l6.8-4.2-1.8-7.8 7.8 1.8z\" fill=\"#C9822B\"/><circle cx=\"24\" cy=\"24\" r=\"6.5\" fill=\"#23336F\"/><circle cx=\"24\" cy=\"24\" r=\"3\" fill=\"#F3E3C7\"/></svg>";</script><script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script><script>/* Maydan library: ready quizzes to start at once or open and edit. Written in the editor's own format. */
@@ -1277,10 +1282,10 @@ window.Dawwara = (function () {
 
   /* the phone race: the first team to answer right takes the points; a wrong pick is struck out on the screen with the team's name and the rest go on */
   function askRace(s) {
-    const x = s.x, dur = D.cfg.time || x.time || 30, st = D.q = { x, dur, left: dur, out: [], no: [], tags: {}, sel: null, locked: false };
+    const x = s.x, dur = D.cfg.time || x.time || 30, st = D.q = { x, dur, left: dur, out: [], no: [], tags: {}, sel: null, locked: false, fk: [] };
     shell(`${board(-1)}<div class="dw-q dw-race"><div class="dw-qh"><span class="dw-who" id="dwWho">${T('سباق: أول إجابة صحيحة تفوز', 'Race: the first right answer wins')}</span>${ring(dur)}</div>${qBody(x, true)}<p class="dw-say" id="dwRf" aria-live="polite"></p><div class="dw-foot" id="dwFoot"></div></div>`, 'dw-ask');
     const pts = () => st.out.length ? 50 : 100;
-    const send = () => pub({ ph: 'race', n: x.opts.length, tf: x.type === 'tf' ? 1 : 0, out: st.out, no: st.no, i: D.t });
+    const send = () => pub({ ph: 'race', n: x.opts.length, tf: x.type === 'tf' ? 1 : 0, out: st.out, no: st.no, i: D.t, fa: D.groups.map(g => g.fk === 0 ? 0 : 1), lean: st.fk.map(f => `${D.groups[f.k].name} ${T('تميل إلى', 'leans to')} ${LET()[f.j]}`).join(' · ') });
     const open = () => el.querySelectorAll('[data-j]').forEach(b => { b.disabled = st.locked || st.no.includes(+b.dataset.j); });
     // teams without a phone: the host taps the team, then its answer
     const foot = () => {
@@ -1289,7 +1294,10 @@ window.Dawwara = (function () {
       f.querySelectorAll('[data-rt]').forEach(b => b.onclick = () => { st.sel = st.sel === +b.dataset.rt ? null : +b.dataset.rt; foot(); });
       f.querySelector('[data-stop]').onclick = () => end(null);
     };
-    const tag = (j, k, ok) => { const b = el.querySelector(`[data-j="${j}"]`); if (!b) return; let t = b.querySelector('.dw-tags'); if (!t) { t = document.createElement('em'); t.className = 'dw-tags'; b.appendChild(t); } t.insertAdjacentHTML('beforeend', `<b style="--c:${D.groups[k].col}" class="${ok ? 'y' : 'n'}" dir="auto">${esc(D.groups[k].name)}</b>`); };
+    const tag = (j, k, ok) => { const b = el.querySelector(`[data-j="${j}"]`); if (!b) return; let t = b.querySelector('.dw-tags'); if (!t) { t = document.createElement('em'); t.className = 'dw-tags'; b.appendChild(t); } t.insertAdjacentHTML('beforeend', `<b style="--c:${D.groups[k].col}" class="${ok == null ? 'f' : ok ? 'y' : 'n'}" dir="auto">${esc(D.groups[k].name)}</b>`); };
+    // a decoy, once an evening per group: its name appears on an option as if it leaned there; the real answer comes after
+    st.onFake = (k, j) => { const g = D.groups[k]; if (st.locked || st.out.includes(k) || st.no.includes(j) || g.fk === 0 || !(j >= 0 && j < x.opts.length)) return;
+      g.fk = 0; st.fk.push({ k, j }); tag(j, k, null); SND.tick(); say(`<b style="color:${g.col}" dir="auto">${esc(g.name)}</b> ${T('تميل إلى', 'leans to')} ${LET()[j]}`); send(); };
     const say = h => { const f = el.querySelector('#dwRf'); if (f) { f.innerHTML = h; f.classList.remove('on'); void f.offsetWidth; f.classList.add('on'); } };
     st.onAns = (k, j) => {
       if (st.locked || st.out.includes(k) || st.no.includes(j) || !(j >= 0 && j < x.opts.length)) return;
@@ -1303,7 +1311,8 @@ window.Dawwara = (function () {
     };
     el.querySelectorAll('[data-j]').forEach(b => b.onclick = () => { if (st.sel == null) { say(T('اختر الفريق أولًا من الأسفل', 'Pick the team first, below')); return; } const k = st.sel; st.sel = null; st.onAns(k, +b.dataset.j); if (!st.locked) foot(); });
     const end = (k, p) => { st.locked = true; clearInterval(tick); markRight(x); k != null ? SND.ok() : SND.no(); pub({ ph: 'wait', i: D.t, won: k == null ? -1 : k });
-      after(`<p>${k != null ? `<b>+${NUM(p)}</b> ${T('لمجموعة ', 'to ')}<span dir="auto">${esc(D.groups[k].name)}</span> · ` : ''}${T('الإجابة', 'The answer')}: <b dir="auto">${esc(answerOf(x))}</b></p>`); };
+      el.querySelectorAll('.dw-tags b.f').forEach(b => b.classList.add('rv'));
+      after(`${st.fk.length ? `<p class="dw-fkr">${st.fk.map(f => `<span dir="auto">${esc(D.groups[f.k].name)}</span>`).join(T(' و', ' & '))}: ${T('كان ذلك تمويهًا', 'that was a decoy')}</p>` : ''}<p>${k != null ? `<b>+${NUM(p)}</b> ${T('لمجموعة ', 'to ')}<span dir="auto">${esc(D.groups[k].name)}</span> · ` : ''}${T('الإجابة', 'The answer')}: <b dir="auto">${esc(answerOf(x))}</b></p>`); };
     open(); foot(); send(); clock(st, () => end(null)); SND.go();
   }
 
@@ -1831,6 +1840,7 @@ window.Dawwara = (function () {
     if (v.k === 'b' && D.q && D.q.onBuzz) D.q.onBuzz(km, v.t);
     const k = kl; if (k < 0) return;
     if (v.k === 'u') { ROOM.auto[k] = !!v.x; return pub(); }
+    if (v.k === 'f' && D.q && D.q.onFake) return D.q.onFake(k, +v.x);
     if (v.k === 'a' && D.q && D.q.onAns) D.q.onAns(k, +v.c);
     if (v.k === 'c') useChance(k, String(v.c), v.x >= 0 ? v.x : -1);
     if (v.k === 'p' && D.pickCb) D.pickCb(k, v.x);
@@ -1948,7 +1958,7 @@ window.Dawwara = (function () {
       const col = g.cols[k], chs = isLead ? (g.ch && g.ch[k]) || '' : '', CN = CHN(), hlp = hl => isLead ? helpUI(hl) : '';
       let body = '';
       if (multi && !isLead && ['hrl', 'hrn', 'pick', 'hro', 'word', 'num'].includes(ph)) body = `<p class="dwp-big">${T('يتولى قائد المجموعة هذه الخطوة', 'The group’s leader takes this step')}</p><p class="dwp-h">${T('تابعها على الشاشة', 'Follow it on the screen')}</p>`;
-      else if (ph === 'race') body = (g.out || []).includes(k) ? `<p class="dwp-big">${T('إجابتكم خاطئة', 'Your answer was wrong')}</p><p class="dwp-h">${T('انتظروا السؤال التالي', 'Wait for the next question')}</p>` : `<p class="dwp-h">${T('سباق! أول إجابة صحيحة تفوز', 'Race! The first right answer wins')}</p>${opts(g.n, g.tf, g.no)}`;
+      else if (ph === 'race') body = (g.out || []).includes(k) ? `<p class="dwp-big">${T('إجابتكم خاطئة', 'Your answer was wrong')}</p><p class="dwp-h">${T('انتظروا السؤال التالي', 'Wait for the next question')}</p>` : `<p class="dwp-h">${T('سباق! أول إجابة صحيحة تفوز', 'Race! The first right answer wins')}</p>${g.lean ? `<p class="dwp-lean" dir="auto">${esc(g.lean)}</p>` : ''}${opts(g.n, g.tf, g.no)}${isLead && (g.fa || [])[k] && ans == null ? `<button type="button" class="dwp-fake" data-fake>${T('تمويه: أظهر اختيارًا وهميًا', 'Decoy: show a false lean')} <small>${T('مرة واحدة في الأمسية', 'once an evening')}</small></button>` : ''}`;
       else if (ph === 'all') body = `<p class="dwp-h">${T('سؤال للجميع: اختاروا الإجابة', 'Everyone answers: choose')}</p>${opts(g.n, g.tf)}`;
       else if (ph === 'buzz') body = (g.out || []).includes(k) ? `<p class="dwp-big">${T('خرجتم من هذا السؤال', 'You are out of this one')}</p>` : g.who === k ? (g.say ? `<p class="dwp-big">${T('سبقتم! قولوا الإجابة للمدير', 'First! Say the answer to the host')}</p>${sayUI()}` : `<p class="dwp-h">${T('دوركم: اختاروا الإجابة', 'Your turn: choose')}</p>${opts(g.n, g.tf)}`) : g.who != null ? `<p class="dwp-big">${T('يجاوب الآن', 'Now answering')}: ${esc(g.names[g.who])}</p>` : `<button type="button" class="dwp-buzz" data-bz${buzzed ? ' disabled' : ''}>${buzzed ? T('ضغطت!', 'Pressed!') : T('اضغط!', 'Press!')}</button>`;
       else if (ph === 'turn') body = g.team === k ? (g.text ? `<p class="dwp-big">${T('قل الإجابة للمدير', 'Say the answer to the host')}</p>${sayUI()}` : `<p class="dwp-h">${T('سؤالكم: اختاروا الإجابة', 'Your question: choose')}</p>${opts(g.n, g.tf)}`) : `<p class="dwp-big">${T('دور', 'Turn:')} ${esc(g.names[g.team] || '')}</p>`;
@@ -1971,6 +1981,9 @@ window.Dawwara = (function () {
         ${chs ? `<div class="dwp-ch"><p>${T('فرصكم', 'Your chances')}</p>${chs.split('').map(c => `<button type="button" data-ch="${c}">${CN[c]}</button>`).join('')}</div>` : ''}</div>`;
       root.querySelectorAll('[data-a]').forEach(b => b.onclick = () => { ans = +b.dataset.a; if (g.rem || (g.pa && !isLead)) { send('s', '', k, { a: ans }); said = g.rem ? T('تم إرسال اختيارك إلى المدير', 'Your choice was sent to the host') : T('تم إرسال صوتك إلى قائد المجموعة', 'Your vote was sent to the group’s leader'); } else send('a', ans, 0); buzz(25); paint(); });
       if (multi && root.querySelector('.dwp-opts')) root.querySelector('.dwp-opts').insertAdjacentHTML(g.pa && isLead ? 'beforebegin' : 'afterend', `${(g.tv || [])[k] ? `<p class="dwp-tv${g.pa && isLead ? ' lead' : ''}">${g.pa && isLead ? T('أصوات مجموعتك', 'Your group’s votes') : T('اختيارات مجموعتك', 'Your group leans')}: ${esc(g.tv[k])}${(g.tn || [])[k] ? `<small dir="auto">${esc(g.tn[k])}</small>` : ''}</p>` : g.pa && !isLead ? `<p class="dwp-h">${T('صوّت، والقائد يعتمد الإجابة', 'Vote; the leader gives the answer')}${(g.au || [])[k] ? ` · ${T('الإجابة التلقائية برأي الأغلبية مفعّلة', 'the majority answers automatically')}` : ''}</p>` : ''}${g.pa && isLead ? `<button type="button" class="dwp-auto${(g.au || [])[k] ? ' on' : ''}" data-auto>${(g.au || [])[k] ? T('الإجابة التلقائية برأي الأغلبية: مفعّلة', 'Majority answers automatically: on') : T('فعّل الإجابة التلقائية برأي الأغلبية', 'Let the majority answer automatically')}</button>` : ''}${said && !root.querySelector('.dwp-say') ? `<p class="dwp-ok">${said}</p>` : ''}`);
+      const fkb = root.querySelector('[data-fake]'); if (fkb) fkb.onclick = () => { const d = document.createElement('div'); d.className = 'dwp-sheet';
+        d.innerHTML = `<div><p>${T('أي خيار يظهر للمنافسين أنكم تميلون إليه؟ لا يُحتسب لكم ولا عليكم.', 'Which option should rivals think you lean to? It does not count.')}</p>${Array.from({ length: g.n || 4 }, (_, j) => (g.no || []).includes(j) ? '' : `<button type="button" data-fj="${j}" style="--c:${g.cols[k]}">${g.tf ? [T('صح', 'True'), T('خطأ', 'False')][j] : LET()[j]}</button>`).join('')}<button type="button" class="x">${T('إلغاء', 'Cancel')}</button></div>`; root.appendChild(d);
+        d.querySelectorAll('[data-fj]').forEach(t => t.onclick = () => { send('f', '', +t.dataset.fj); d.remove(); buzz(25); }); d.querySelector('.x').onclick = () => d.remove(); };
       const atb = root.querySelector('[data-auto]'); if (atb) atb.onclick = () => { send('u', '', (g.au || [])[k] ? 0 : 1); buzz(20); };
       const txi = root.querySelector('#dwpTx'); if (txi) { txi.oninput = () => { tx = txi.value; }; txi.onblur = () => setTimeout(() => { if (pend) paint(); }, 50);
         const go1 = () => { const v = txi.value.trim(); if (!v) return; send('s', '', k, { s: v }); tx = ''; said = T('تم إرسال إجابتك إلى المدير', 'Your answer was sent to the host'); txi.blur(); buzz(25); paint(); };
