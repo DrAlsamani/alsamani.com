@@ -282,3 +282,39 @@ html.dw-phone .tl-crumb,html.dw-phone .dw-head,html.dw-phone .dw-lead{display:no
 .dw-flash.on{animation:dwFl .5s ease-out}@keyframes dwFl{from{transform:scale(1.15);opacity:.3}to{transform:none;opacity:1}}
 .dw-steal button[aria-pressed=true]{box-shadow:0 0 0 3px #fff inset}
 .dwp-opts button:disabled{opacity:.3;text-decoration:line-through}
+/* «حروف» ready game */
+.dw-ready{margin:0 0 26px}
+.dw-readyc{all:unset;box-sizing:border-box;cursor:pointer;width:100%;display:flex;align-items:center;gap:16px;padding:18px 20px;border-radius:18px;background:linear-gradient(135deg,#23336f,#14204a);color:#fff;box-shadow:0 10px 26px rgba(20,32,74,.25);transition:transform .15s}
+.dw-readyc:hover{transform:translateY(-2px)}
+.dw-readyc b{display:block;font-size:1.25rem;margin-bottom:4px}.dw-readyc small{display:block;font-size:.88rem;line-height:1.7;opacity:.85}
+.dw-readyc>span:nth-child(2){flex:1}
+.dw-readyc em{font-style:normal;font-weight:700;background:#e9a54a;color:#1d1b3a;border-radius:999px;padding:8px 18px;white-space:nowrap}
+.dw-hrL{display:inline-grid;place-items:center;width:58px;height:58px;flex:none;border-radius:50%;background:#e9a54a;color:#1d1b3a;font-weight:800;font-size:30px}
+.dw-hrL.sm{width:30px;height:30px;font-size:17px;vertical-align:middle}
+.dw-hr2 h2 .dw-hrL{width:clamp(70px,9vw,110px);height:clamp(70px,9vw,110px);font-size:clamp(40px,5.5vw,66px)}
+.dw-hrset{max-width:720px}.dw-hrrule{line-height:1.8;opacity:.9;max-width:640px;margin:0 auto 10px}
+.dw-hrnames{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:4px 0 6px}
+.dw-hrnames label{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);border-inline-start:4px solid var(--c);border-radius:10px;padding:6px 10px}
+.dw-hrnames i{width:10px;height:10px;border-radius:50%;background:var(--c);flex:none}
+.dw-hrnames input{all:unset;flex:1;min-width:0;color:#fff;font-weight:600}
+.dw-hrleft{font-size:.9rem;opacity:.75}.dw-lnk{all:unset;cursor:pointer;color:#e9a54a;text-decoration:underline;margin-inline-start:6px}
+.dw-hrg{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:clamp(6px,1vw,12px);width:min(980px,96vw);margin:6px auto 0}
+.dw-hrg{grid-auto-rows:clamp(50px,calc((100vh - 400px) / 4),112px)}
+.dw-hr2 h2{margin:0 0 4px}.dw-hr2>p{margin:0 0 6px}.dw-hr2{justify-content:flex-start;padding-top:clamp(56px,8vh,90px)}
+.dw-hrg button{all:unset;cursor:pointer;display:grid;place-items:center;align-content:center;gap:2px;border-radius:14px;background:#23336f;border:2px solid rgba(255,255,255,.16);transition:transform .12s,border-color .12s}
+.dw-hrg button:hover:not(:disabled){transform:scale(1.06);border-color:#e9a54a}
+.dw-hrg b{font-size:clamp(24px,min(3.4vw,5.5vh),48px);color:#e9a54a;line-height:1.2}.dw-hrg small{font-size:clamp(11px,1vw,14px);opacity:.6}
+.dw-hrg button:disabled{opacity:.25;cursor:default}
+.dw-hrn{display:grid;grid-template-columns:repeat(auto-fill,minmax(clamp(52px,6vw,78px),1fr));gap:clamp(6px,.9vw,12px);width:min(980px,96vw);margin:8px auto 0}
+.dw-hrn{grid-auto-rows:clamp(40px,calc((100vh - 420px) / 5),74px);grid-template-columns:repeat(auto-fill,minmax(clamp(40px,calc((100vh - 420px) / 5),74px),1fr))}
+.dw-hrn button{all:unset;cursor:pointer;display:grid;place-items:center;border-radius:50%;background:#e9a54a;color:#1d1b3a;font-weight:800;font-size:clamp(18px,2.2vw,30px);transition:transform .12s}
+.dw-hrn button:hover:not(:disabled){transform:scale(1.08)}
+.dw-hrn button.used{background:transparent;border:2px solid rgba(255,255,255,.2);color:rgba(255,255,255,.35);text-decoration:line-through;cursor:default}
+.dw-hrf{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px}
+.dw-hrq .dw-qt{font-size:clamp(26px,3.6vw,52px)}
+.dw-hrhint{text-align:center;opacity:.7;margin:6px 0 0}
+.dw-hrans{font-size:clamp(28px,4vw,56px);font-weight:800;color:#e9a54a;text-align:center;margin:4px 0 12px}
+.dw-hrjudge{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}.dw-hrjudge small{opacity:.75;margin-inline-start:4px}
+.dw-hrsteal{text-align:center;margin:0 0 10px;opacity:.85}
+.dw-hrg1{border-color:var(--c)!important}
+@media (max-width:640px){.dw-hrg{grid-template-columns:repeat(5,minmax(0,1fr))}.dw-readyc{flex-wrap:wrap}.dw-readyc em{margin-inline-start:auto}}
