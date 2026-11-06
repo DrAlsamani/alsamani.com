@@ -461,6 +461,8 @@ html .bp-tool-live a{background:var(--accent);color:var(--paper)!important;font-
   .callout{padding:16px 16px 14px}
   html .checks{grid-template-columns:repeat(3,minmax(0,1fr))}
   .checks b{overflow-wrap:anywhere}
+  .checks>div{min-width:0}
+  html[lang=en] .checks{grid-template-columns:repeat(2,minmax(0,1fr))}
   .fig-frame{padding:14px}
   .fig-frame,figure{overflow-x:auto}
   .pager{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
