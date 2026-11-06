@@ -649,7 +649,7 @@ def seo(name, title):
         d = _SEO[name[6:]]
         ld.append({"@context": "https://schema.org", "@type": "WebApplication", "name": d['title'][0], "alternateName": d['title'][1], "url": url, "applicationCategory": "BusinessApplication", "operatingSystem": "Any (web browser)", "inLanguage": ["ar", "en"], "isAccessibleForFree": True, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "SAR"}, "description": desc, "author": {"@id": SITE + "#person"}})
         ld.append({"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, _, a, _ in d['faq']]})
-        ld.append({"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "الأدوات", "item": SITE + "tools/"}, {"@type": "ListItem", "position": 2, "name": "أدوات الاجتماعات والملفات", "item": SITE + "tools/work/"}, {"@type": "ListItem", "position": 3, "name": d['title'][0], "item": url}]})
+        ld.append({"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "الأدوات", "item": SITE + "tools/"}, {"@type": "ListItem", "position": 2, "name": ("أدوات الملفات" if name[6:] in ("pdf", "certificates", "qr", "compare") else "أدوات الاجتماعات"), "item": SITE + ("tools/files/" if name[6:] in ("pdf", "certificates", "qr", "compare") else "tools/work/")}, {"@type": "ListItem", "position": 3, "name": d['title'][0], "item": url}]})
     elif name in ('index', 'about'):
         ld.append({"@context": "https://schema.org", **PERSON})
         if name == 'index':
@@ -686,7 +686,8 @@ for _t in _tp.TOOLS:
     PAGES.append((f"tools/{_t['slug']}", 2, f"{_t['t_ar']} | {_t['t_en']} | Dr. Omar A. Alsamani", (lambda tt: (lambda: _tp.tool_body(tt)))(_t)))
 for _g, _a, _b, _da, _db in _tp.GROUPS:
     PAGES.append((f"tools/{_tp.GPAGE[_g]}", 2, " | ".join(_tp.gtitle(_g)) + " | Dr. Omar A. Alsamani", (lambda gg: (lambda: _tp.group_body(gg)))(_g)))
-DESCS['tools/work'] = 'Free tools for committees, boards and office work: sign meeting minutes together, pass a decision by circulation, find a meeting time, record attendance, merge and arrange PDF pages, and make QR codes. أدوات مجانية للجان والمجالس والأعمال المكتبية.'
+DESCS['tools/work'] = 'Free tools for committees and boards: sign meeting minutes together, find a meeting time, record attendance, run a meeting, build the minutes and pass a decision by circulation. أدوات مجانية للجان والمجالس.'
+DESCS['tools/files'] = 'Free file tools: edit, fill and merge PDF files, make certificates for a list of names, and create QR codes. أدوات مجانية للملفات.'
 DESCS['tools/students'] = 'Tools for graduate student researchers: a guided research journey from the first idea to the defence, and a reference guide to research approaches and designs. أدوات للطالب الباحث.'
 DESCS['tools/leaders'] = 'Diagnostic tools for leaders and organizations from the book Innovation Management: initiative classification, leader\'s mirror, system health, scale readiness and university innovation ecosystem. أدوات تشخيص للقادة والمؤسسات.'
 PAGES.append(('tools/research-journey', 2, 'رحلة البحث | The research journey | Dr. Omar A. Alsamani', _tp.journey_body))

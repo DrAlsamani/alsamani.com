@@ -46,13 +46,14 @@ def tool_body(t):
 <script>window.TOOL={json.dumps(t, ensure_ascii=False)}</script>
 </section>'''
 
-GROUPS = [('work', 'الاجتماعات والملفات', 'Meetings and files', 'أدوات للجان والمجالس والأعمال المكتبية، تعمل من الجوال ولا تتطلب التسجيل.', 'Tools for committees, boards and office work; they run on a phone and need no sign-up.'),
+GROUPS = [('work', 'الاجتماعات', 'Meetings', 'أدوات للجان والمجالس، تعمل من الجوال ولا تتطلب التسجيل.', 'Tools for committees and boards; they run on a phone and need no sign-up.'),
+          ('files', 'الملفات', 'Files', 'أدوات لتحرير الملفات وإعدادها، تعمل من الجوال ولا تتطلب التسجيل.', 'Tools for editing and preparing files; they run on a phone and need no sign-up.'),
           ('research', 'للطالب الباحث', 'For student researchers', 'أدوات ترافق الباحث من الفكرة الأولى إلى المناقشة.', 'Tools that accompany the researcher from the first idea to the defence.'),
           ('leaders', 'للقادة والمؤسسات', 'For leaders and organizations', 'أدوات تشخيصية مستمدة من كتاب «إدارة الابتكار».', 'Diagnostic tools from <i>Innovation Management</i>.')]
-GPAGE = {'work': 'work', 'research': 'students', 'leaders': 'leaders'}
+GPAGE = {'work': 'work', 'files': 'files', 'research': 'students', 'leaders': 'leaders'}
 def gname(g):
     x = next(r for r in GROUPS if r[0] == g); return x[1], x[2]
-GTITLE = {'work': ('أدوات الاجتماعات والملفات', 'Meeting and file tools'), 'research': ('أدوات للطالب الباحث', 'Tools for student researchers'), 'leaders': ('أدوات للقادة والمؤسسات', 'Tools for leaders and organizations')}
+GTITLE = {'work': ('أدوات الاجتماعات', 'Meeting tools'), 'files': ('أدوات الملفات', 'File tools'), 'research': ('أدوات للطالب الباحث', 'Tools for student researchers'), 'leaders': ('أدوات للقادة والمؤسسات', 'Tools for leaders and organizations')}
 def gtitle(g):
     return GTITLE[g]
 def crumb(j, g):
@@ -79,7 +80,7 @@ def _icon(slug):
     return f'<span class="tl-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">{ICONS.get(slug, "")}</svg></span>'
 def group_items(g):
     ts = [t for t in TOOLS if t.get('group') == g]
-    extra = [JOURNEY, METHODS] if g == 'research' else [TABLE, MINUTES] + ([SIGN] if sign_ready() else []) + [PDFT] + ([PASS, MEET, ATTEND] if poll_ready() else []) + [CERT, QRT] if g == 'work' else []
+    extra = [JOURNEY, METHODS] if g == 'research' else [PDFT, CERT, QRT] if g == 'files' else ([SIGN] if sign_ready() else []) + ([MEET, ATTEND] if poll_ready() else []) + [TABLE, MINUTES] + ([PASS] if poll_ready() else []) if g == 'work' else []
     return extra + ts
 def _tag(t):
     # a label only where it tells something the title does not
@@ -216,10 +217,10 @@ def about_html(slug):
     faq = ''.join(f'<details class="tl-faq"><summary>{bi(e(qa), e(qe))}</summary><p>{bi(e(aa), e(ae))}</p></details>' for qa, qe, aa, ae in d['faq'])
     return f'''<section class="tl-about"><h2>{bi('كيف تعمل؟', 'How it works')}</h2><ol class="tl-steps">{steps}</ol>
 <h2>{bi('أسئلة شائعة', 'Common questions')}</h2>{faq}
-<p class="tl-also"><a href="../work/index.html">{bi('أدوات الاجتماعات والملفات الأخرى', 'More meeting and file tools')}</a></p></section>'''
+<p class="tl-also"><a href="../{'files' if j['slug'] in ('pdf', 'certificates', 'qr', 'compare') else 'work'}/index.html">{bi('أدوات أخرى', 'More tools')}</a></p></section>'''
 def _tool_page(j, eyebrow, inner, css, scripts):
     src = lambda f: open(os.path.join(ROOT, 'src', f)).read()
-    return f'''<section class="first tl-page sn-page-wrap">{crumb(j, 'work')}
+    return f'''<section class="first tl-page sn-page-wrap">{crumb(j, 'files' if j['slug'] in ('pdf', 'certificates', 'qr', 'compare') else 'work')}
 <header class="tl-head"><h1>{bi(j["t_ar"], j["t_en"])}</h1></header>
 <style>{''.join(src(c) for c in css)}</style>
 {inner}
