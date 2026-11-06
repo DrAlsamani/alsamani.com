@@ -285,3 +285,4 @@ body.mic-q #mlCall,body.mic-q #mlTiles,body.mic-q #hlRoomV{display:none!importan
 .st-mapR{width:100%;justify-content:center}.st-mapR button{flex:1 1 0;min-width:0;max-width:24px;width:auto;height:auto;aspect-ratio:1}.st-mapR i{flex:none;width:8px}
 .st-mapR em{flex:none;width:14px;text-align:center;font-style:normal;font-size:.62rem;color:var(--muted)}.st-mapN span{flex:1 1 0;min-width:0;max-width:24px;text-align:center;font-size:.55rem;color:var(--muted);overflow:hidden}
 .ml-pubw{margin:0;font-weight:600}
+.ml-acc3{margin:0;display:flex;gap:10px;align-items:center;justify-content:space-between;font-size:.8rem;color:var(--muted)}.ml-acc3 b{font-weight:500;overflow-wrap:anywhere}.ml-lnk{all:unset;cursor:pointer;color:var(--accent);padding:6px 2px}.ml-lnk:focus-visible{outline:2px solid var(--accent)}
