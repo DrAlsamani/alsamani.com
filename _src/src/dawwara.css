@@ -410,3 +410,10 @@ html.dw-phone .tl-crumb,html.dw-phone .dw-head,html.dw-phone .dw-lead{display:no
 .dwp-rb button.on{background:#e9a54a;color:#1d1b3a;border-color:#e9a54a}
 .dwp-rm .dwp-top{background:#14204a}
 .dwp-rb button.main{grid-column:1/-1;background:#e9a54a;border-color:#e9a54a;color:#1d1b3a;font-size:1.25rem;min-height:72px}
+/* playing alone */
+.dw-soloc{background:linear-gradient(135deg,#2f7d5b,#1d5a40)}
+.dw-sologs{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:10px}
+.dw-sologs button{all:unset;box-sizing:border-box;cursor:pointer;display:grid;gap:4px;padding:16px;border-radius:14px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18)}
+.dw-sologs button:hover{border-color:#e9a54a}.dw-sologs b{font-size:1.125rem}.dw-sologs small{opacity:.7}
+@media (max-width:640px){.dw-q .dw-qh{padding-inline-end:50px}.dw-soloq .dw-opts button{min-height:56px;font-size:18px}.dw-soloq .dw-imgw.zoom .dw-img{max-height:30vh}}
+.dw-soloq .dw-opts{flex:none}

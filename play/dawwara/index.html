@@ -461,6 +461,13 @@ html.dw-phone .tl-crumb,html.dw-phone .dw-head,html.dw-phone .dw-lead{display:no
 .dwp-rb button.on{background:#e9a54a;color:#1d1b3a;border-color:#e9a54a}
 .dwp-rm .dwp-top{background:#14204a}
 .dwp-rb button.main{grid-column:1/-1;background:#e9a54a;border-color:#e9a54a;color:#1d1b3a;font-size:1.25rem;min-height:72px}
+/* playing alone */
+.dw-soloc{background:linear-gradient(135deg,#2f7d5b,#1d5a40)}
+.dw-sologs{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:10px}
+.dw-sologs button{all:unset;box-sizing:border-box;cursor:pointer;display:grid;gap:4px;padding:16px;border-radius:14px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18)}
+.dw-sologs button:hover{border-color:#e9a54a}.dw-sologs b{font-size:1.125rem}.dw-sologs small{opacity:.7}
+@media (max-width:640px){.dw-q .dw-qh{padding-inline-end:50px}.dw-soloq .dw-opts button{min-height:56px;font-size:18px}.dw-soloq .dw-imgw.zoom .dw-img{max-height:30vh}}
+.dw-soloq .dw-opts{flex:none}
 </style>
 <div id="dw" class="dw-page"><noscript><span class="ar">تعمل هذه اللعبة مع تفعيل JavaScript.</span><span class="en">This game needs JavaScript.</span></noscript></div>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script>window.MD_CFG={"apiKey": "AIzaSyA50i75DT1Is1a6Yn6snW1_JVObc8S3F0Y", "authDomain": "maydan-705ae.firebaseapp.com", "databaseURL": "https://maydan-705ae-default-rtdb.europe-west1.firebasedatabase.app", "projectId": "maydan-705ae", "appId": "1:342187013133:web:d5c2396f0db413f3c51144"};window.MD_MARK="<svg class=\"md-mark\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><rect x=\"4\" y=\"4\" width=\"40\" height=\"40\" rx=\"12\" fill=\"#23336F\"/><path d=\"M24 9l4.2 6.8 7.8-1.8-1.8 7.8L41 24l-6.8 4.2 1.8 7.8-7.8-1.8L24 39l-4.2-6.8-7.8 1.8 1.8-7.8L7 24l6.8-4.2-1.8-7.8 7.8 1.8z\" fill=\"#C9822B\"/><circle cx=\"24\" cy=\"24\" r=\"6.5\" fill=\"#23336F\"/><circle cx=\"24\" cy=\"24\" r=\"3\" fill=\"#F3E3C7\"/></svg>";</script><script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script><script>/* Maydan library: ready quizzes to start at once or open and edit. Written in the editor's own format. */
@@ -2297,8 +2304,60 @@ window.Dawwara = (function () {
       D.hr = { B, used: hrUsed(s.rk), turn: (D.hr && D.hr.turn) || 0, n: 0, pend: {}, RD, lim: s.n }; D.cfg.hrt = D.cfg.hrt || 30; hrLetters();
     };
   }
+  /* ---------- playing alone: ten questions with options against the clock, the best score kept on the device ---------- */
+  const SOLO = ['hr', 'mt', 'ay', 'qa', 'im'];
+  const soloBest = rk => { try { return +localStorage.getItem('dw.solo.' + rk) || 0; } catch (e) { return 0; } };
+  function soloHome() {
+    D = { mode: 'solo', rk: 'solo', title: T('العب وحدك', 'Play alone'), cfg: cfgGet(), steps: [] };
+    shell(`<div class="dw-set dw-hrset dw-solo"><p class="dw-sub">${T('تحدٍّ فردي', 'A solo challenge')}</p><h2>${T('العب وحدك', 'Play alone')}</h2>
+      <p class="dw-hrrule">${T('عشرة أسئلة بخيارات ووقت محدود. الإجابة الصحيحة ٥٠ نقطة، ويُضاف إليها حتى ٥٠ نقطة بحسب السرعة، وتُحفظ أفضل نتيجة لكل مسابقة على هذا الجهاز.', 'Ten questions with options against the clock. A right answer is 50, plus up to 50 for speed; the best score for each game is kept on this device.')}</p>
+      <div class="dw-sologs">${SOLO.map(k => `<button type="button" data-sg="${k}"><b>${esc(READY()[k].t)}</b><small>${soloBest(k) ? T(`أفضل نتيجة: ${NUM(soloBest(k))}`, `Best: ${soloBest(k)}`) : T('لم تُلعب بعد', 'Not played yet')}</small></button>`).join('')}</div></div>`, 'dw-in');
+    el.querySelectorAll('[data-sg]').forEach(b => b.onclick = () => soloStart(b.dataset.sg));
+  }
+  async function soloStart(rk) {
+    const RD = READY()[rk]; let B; shell(`<div class="dw-mid"><p class="dw-sub">${T('لحظة…', 'One moment…')}</p></div>`, 'dw-in');
+    try { B = await hrLoad(rk); } catch (e) { alert(T('تعذّر التحميل. يُرجى التحقق من الاتصال.', 'Could not load.')); return soloHome(); }
+    D = { mode: 'solo', rk, title: RD.t, cfg: cfgGet(), steps: [] };
+    const used = hrUsed(rk); let pool = []; Object.keys(B).forEach(L => B[L].forEach((_, i) => { if (!used.has(L + ':' + i)) pool.push([L, i]); }));
+    if (pool.length < 20) { hrSave(new Set()); pool = []; Object.keys(B).forEach(L => B[L].forEach((_, i) => pool.push([L, i]))); }
+    const S = D.solo = { rk, n: 10, i: 0, score: 0, right: 0, run: 0, best: soloBest(rk), xs: [] };
+    if (rk === 'im') {
+      D.wr = { B, used: hrUsed(rk), list: shuf(pool).slice(0, 40), i: 0 }; D.cfg.wrn = S.n; D.cfg.imt = 15;
+      // imStart builds the questions and calls run(); catch them before it does
+      const r0 = D; await imStart.call(null, true); if (D !== r0) return; S.xs = D.steps.map(s => s.x); D.steps = []; if (!S.xs.length) return soloHome();
+    } else {
+      D.hr = { B, used: hrUsed(rk), pend: {}, RD, turn: 0, n: 0 };
+      const pick = shuf(pool).slice(0, S.n);
+      S.xs = await Promise.all(pick.map(async ([L, i]) => { const [q, a] = B[L][i]; let w = []; try { w = await hrWrong(L, i); } catch (e) {} const opts = shuf([a, ...w.slice(0, 3)]); D.hr.used.add(L + ':' + i);
+        return { type: 'mc', q: RD.q(L, q), hint: RD.hint(L), opts, ok: [opts.indexOf(a)], full: RD.full(q, a), cat: RD.cats ? L : '' }; }));
+      hrSave(D.hr.used);
+    }
+    soloQ();
+  }
+  function soloQ() {
+    const S = D.solo; if (S.i >= S.xs.length) return soloEnd();
+    const x = S.xs[S.i], dur = S.rk === 'im' ? 15 : 20, st = D.q = { dur, left: dur, locked: false };
+    shell(`<div class="dw-q dw-soloq"><div class="dw-qh"><span class="dw-who">${esc(READY()[S.rk].t)} · ${T('السؤال', 'Question')} ${NUM(S.i + 1)} ${T('من', 'of')} ${NUM(S.xs.length)} · <b>${NUM(S.score)}</b> ${T('نقطة', 'points')}${S.run >= 2 ? ` · ${T('متتالية', 'streak')} ${NUM(S.run)}` : ''}</span>${ring(dur)}</div>
+      ${qBody(Object.assign({}, x, { zd: Math.round(dur * .85) }), true)}${x.hint ? `<p class="dw-hrhint">${x.hint}</p>` : ''}<div class="dw-foot" id="dwFoot"></div></div>`, 'dw-ask');
+    el.querySelectorAll('[data-j]').forEach(b => { b.disabled = false; b.onclick = () => done(+b.dataset.j); });
+    const done = j => { if (st.locked) return; st.locked = true; clearInterval(tick); markRight(x); const ok = j != null && x.ok.includes(j);
+      if (j != null && !ok) el.querySelector(`[data-j="${j}"]`).classList.add('no');
+      const p = ok ? 50 + Math.round(50 * st.left / dur) : 0; S.score += p; if (ok) { S.right++; S.run++; SND.ok(); } else { S.run = 0; SND.no(); }
+      el.querySelector('#dwFoot').innerHTML = `<div class="dw-res"><p>${ok ? `<b>+${NUM(p)}</b> ${T('نقطة', 'points')}` : j == null ? T('انتهى الوقت', 'Time is up') : T('إجابة خاطئة', 'Wrong')}${x.full ? ` · <span dir="auto">${esc(x.full)}</span>` : ''}</p><button type="button" class="dw-btn" data-main>${S.i === S.xs.length - 1 ? T('النتيجة', 'The result') : T('السؤال التالي', 'Next question')}</button></div>`;
+      el.querySelector('[data-main]').onclick = () => { S.i++; soloQ(); }; };
+    clock(st, () => done(null));
+  }
+  function soloEnd() {
+    const S = D.solo, nb = S.score > S.best; if (nb) { try { localStorage.setItem('dw.solo.' + S.rk, S.score); } catch (e) {} } SND.win();
+    const txt = T(`حققتُ ${NUM(S.score)} نقطة (${NUM(S.right)} من ${NUM(S.xs.length)}) في «${READY()[S.rk].t}» على دوّارة: alsamani.com/play/dawwara`, `I scored ${S.score} (${S.right}/${S.xs.length}) in ${READY()[S.rk].t} on Dawwara: alsamani.com/play/dawwara`);
+    shell(`<div class="dw-mid dw-fin"><p class="dw-sub">${esc(READY()[S.rk].t)}</p><h2>${nb && S.best ? T('نتيجة جديدة هي الأفضل!', 'A new best!') : T('النتيجة', 'The result')}</h2><p class="dw-winner" style="--c:#e9a54a">${NUM(S.score)}</p>
+      <p>${T(`${NUM(S.right)} إجابات صحيحة من ${NUM(S.xs.length)}`, `${S.right} right of ${S.xs.length}`)}${S.best && !nb ? ` · ${T('أفضل نتيجة', 'Best')} ${NUM(S.best)}` : ''}</p>
+      <div class="dw-acts"><button type="button" class="dw-btn" data-main>${T('العب مرة ثانية', 'Play again')}</button><button type="button" class="dw-btn ghost" data-oth>${T('مسابقة أخرى', 'Another game')}</button><button type="button" class="dw-btn ghost" data-cp>${T('انسخ النتيجة', 'Copy the result')}</button></div></div>`, 'dw-in');
+    el.querySelector('[data-main]').onclick = () => soloStart(S.rk); el.querySelector('[data-oth]').onclick = soloHome;
+    el.querySelector('[data-cp]').onclick = e => { try { navigator.clipboard.writeText(txt); e.target.textContent = T('تم نسخ النتيجة', 'Copied'); } catch (er) {} };
+  }
   /* ---------- guess the picture: flags from flagcdn, landmarks and animals from Wikipedia's lead images; played as speed questions ---------- */
-  async function imStart() {
+  async function imStart(solo) {
     const W = D.wr, n = D.cfg.wrn, RD = READY().im, key = t => String(t).replace(/_/g, ' ');
     shell(`<div class="dw-mid"><p class="dw-sub">${T('تُجهَّز الصور…', 'Preparing the pictures…')}</p></div>`, 'dw-in');
     const wk = [...new Set(W.list.map(([L, j]) => W.B[L][j][0]).filter(k => k.startsWith('w:')).map(k => k.slice(2)))], img = {};
@@ -2315,9 +2374,9 @@ window.Dawwara = (function () {
       xs.push({ type: 'mc', q: RD.q[L] || T('ما هذا؟', 'What is this?'), opts, ok: [opts.indexOf(name)], img: src, zoom: 1, zd: Math.round((D.cfg.imt || 20) * .85), ox: 25 + Math.round(Math.random() * 50), oy: 25 + Math.round(Math.random() * 50), cr: k.startsWith('w:') ? T('الصورة من ويكيبيديا', 'Image: Wikipedia') : '' });
       W.used.add(L + ':' + j); }
     hrSave(W.used);
-    if (!xs.length) { alert(T('تعذّر تحميل الصور. يُرجى التحقق من الاتصال.', 'Could not load the pictures.')); return wrSetup('im'); }
+    if (!xs.length) { alert(T('تعذّر تحميل الصور. يُرجى التحقق من الاتصال.', 'Could not load the pictures.')); if (solo === true) return; return wrSetup('im'); }
     xs.forEach(x => { const i = new Image(); i.referrerPolicy = 'no-referrer'; i.src = x.img; });
-    D.cfg.time = D.cfg.imt || 20; D.steps = xs.map(x => ({ k: 'buzz', x })); D.t = 0; run();
+    D.steps = xs.map(x => ({ k: 'buzz', x })); if (solo === true) return; D.cfg.time = D.cfg.imt || 20; D.t = 0; run();
   }
   /* ---------- estimate it: a number for an answer; each leader types an estimate, the closest wins ---------- */
   const fmtN = v => NUM(Number(v).toLocaleString('en-US', { maximumFractionDigits: 2 })).replace(/,/g, T('٬', ','));
@@ -2358,7 +2417,7 @@ window.Dawwara = (function () {
     mine = mine.map(z => ({ z, n: (z.qs || []).filter(usable).length })).filter(o => o.n >= 2 || (o.z.ch || []).length);
     const lib = (window.MDLib || []).map(z => ({ z, n: (z.qs || []).filter(usable).length })).filter(o => o.n >= 4);
     const item = (o, k, src) => `<button type="button" class="dw-pick" data-src="${src}" data-k="${k}"><b dir="auto">${esc(o.z.title || T('بلا عنوان', 'Untitled'))}</b><small>${T(`${NUM(o.n)} سؤالًا صالحًا`, `${o.n} usable questions`)}${o.z.who ? ' · ' + esc(o.z.who) : ''}</small></button>`;
-    root.innerHTML = `<div class="dw-start"><div class="dw-ready"><button type="button" class="dw-readyc dw-mixc" id="dwMix"><span class="dw-hrL">${T('م', 'M')}</span><span><b>${T('أمسية منوعة', 'A mixed evening')}</b><small>${T('عدة مسابقات جاهزة متتالية بالمجموعات نفسها، وتُجمع النقاط إلى النهاية: صور، وحروف، وتقدير، وأمثال، وسباق كلمات.', 'Several ready games in a row with the same groups; the points add up: pictures, letters, estimates, proverbs, a word race.')}</small></span><em>${T('جهّز الأمسية', 'Set it up')}</em></button><button type="button" class="dw-readyc" id="dwHr"><span class="dw-hrL">${T('ح', 'H')}</span><span><b>${T('حروف', 'Huroof')}</b><small>${T('مسابقة جاهزة للمجموعات: أسئلة في حروف الهجاء الثمانية والعشرين، تختار المجموعة الحرف ثم رقم السؤال.', 'A ready team quiz: questions across the 28 letters; the group picks a letter, then a question number.')}</small></span><em>${T('العب الآن', 'Play now')}</em></button><button type="button" class="dw-readyc" id="dwMt"><span class="dw-hrL">${T('م', 'P')}</span><span><b>${T('أكمل المثل', 'Finish the proverb')}</b><small>${T('أمثال فصيحة وشعبية وحِكم: يظهر أول المثل وتكمله المجموعة.', 'Classical and popular proverbs and sayings: the start appears and the group finishes it.')}</small></span><em>${T('العب الآن', 'Play now')}</em></button><button type="button" class="dw-readyc" id="dwAy"><span class="dw-hrL">${T('أ', 'W')}</span><span><b>${T('أين تقع؟', 'Where is it?')}</b><small>${T('مدن ومحافظات ومعالم في المملكة والعالم: في أي منطقة أو مدينة أو دولة تقع؟', 'Cities, governorates and landmarks at home and abroad: which region, city or country?')}</small></span><em>${T('العب الآن', 'Play now')}</em></button><button type="button" class="dw-readyc" id="dwQa"><span class="dw-hrL">${T('ق', 'Q')}</span><span><b>${T('من القائل؟', 'Who said it?')}</b><small>${T('أبيات مشهورة وأقوال مأثورة ومؤلفو كتب: من القائل أو المؤلف؟', 'Famous verses, sayings and book authors: who said or wrote it?')}</small></span><em>${T('العب الآن', 'Play now')}</em></button><button type="button" class="dw-readyc" id="dwRo"><span class="dw-hrL">${T('ر', 'O')}</span><span><b>${T('رتّب الأحداث', 'Put them in order')}</b><small>${T('أحداث من السيرة والتاريخ الإسلامي وتاريخ المملكة والاختراعات، ترتّبها المجموعة زمنيًا.', 'Events from the Seerah, Islamic and Saudi history and inventions, put in time order.')}</small></span><em>${T('العب الآن', 'Play now')}</em></button><button type="button" class="dw-readyc" id="dwIm"><span class="dw-hrL">${T('ص', 'P')}</span><span><b>${T('خمّن الصورة', 'Guess the picture')}</b><small>${T('أعلام الدول ومعالم وحيوانات: صورة مقرّبة ومشوشة تتضح شيئًا فشيئًا، والأسرع يفوز.', 'Flags, landmarks and animals: a close, blurred picture that clears bit by bit; the fastest wins.')}</small></span><em>${T('العب الآن', 'Play now')}</em></button><button type="button" class="dw-readyc dw-readyph" id="dwQd"><span class="dw-hrL">${T('ق', 'E')}</span><span><b>${T('قدّرها', 'Estimate it')}</b><small>${T('أسئلة جوابها رقم: يكتب كل قائد تقديره على جواله، والأقرب إلى الجواب يفوز.', 'Questions with a number for an answer: each leader types an estimate; the closest wins.')}</small></span><em>${T('العب الآن', 'Play now')}</em></button><button type="button" class="dw-readyc dw-readyph" id="dwWr"><span class="dw-hrL">${T('ك', 'W')}</span><span><b>${T('سباق الكلمات', 'Word race')}</b><small>${T('كلمات مثل أو بيت مبعثرة، يرتّبها قادة المجموعات على جوالاتهم، وتظهر محاولاتهم على الشاشة مباشرة.', 'The shuffled words of a proverb or a verse; the leaders order them on their phones, live on the screen.')}</small></span><em>${T('العب الآن', 'Play now')}</em></button></div>
+    root.innerHTML = `<div class="dw-start"><div class="dw-ready"><button type="button" class="dw-readyc dw-mixc" id="dwMix"><span class="dw-hrL">${T('م', 'M')}</span><span><b>${T('أمسية منوعة', 'A mixed evening')}</b><small>${T('عدة مسابقات جاهزة متتالية بالمجموعات نفسها، وتُجمع النقاط إلى النهاية: صور، وحروف، وتقدير، وأمثال، وسباق كلمات.', 'Several ready games in a row with the same groups; the points add up: pictures, letters, estimates, proverbs, a word race.')}</small></span><em>${T('جهّز الأمسية', 'Set it up')}</em></button><button type="button" class="dw-readyc dw-soloc" id="dwSolo"><span class="dw-hrL">${T('١', '1')}</span><span><b>${T('العب وحدك', 'Play alone')}</b><small>${T('تحدٍّ فردي من عشرة أسئلة بخيارات ووقت محدود، وتُحفظ أفضل نتيجة.', 'A solo challenge of ten timed questions with options; your best is kept.')}</small></span><em>${T('ابدأ', 'Start')}</em></button><button type="button" class="dw-readyc" id="dwHr"><span class="dw-hrL">${T('ح', 'H')}</span><span><b>${T('حروف', 'Huroof')}</b><small>${T('مسابقة جاهزة للمجموعات: أسئلة في حروف الهجاء الثمانية والعشرين، تختار المجموعة الحرف ثم رقم السؤال.', 'A ready team quiz: questions across the 28 letters; the group picks a letter, then a question number.')}</small></span><em>${T('العب الآن', 'Play now')}</em></button><button type="button" class="dw-readyc" id="dwMt"><span class="dw-hrL">${T('م', 'P')}</span><span><b>${T('أكمل المثل', 'Finish the proverb')}</b><small>${T('أمثال فصيحة وشعبية وحِكم: يظهر أول المثل وتكمله المجموعة.', 'Classical and popular proverbs and sayings: the start appears and the group finishes it.')}</small></span><em>${T('العب الآن', 'Play now')}</em></button><button type="button" class="dw-readyc" id="dwAy"><span class="dw-hrL">${T('أ', 'W')}</span><span><b>${T('أين تقع؟', 'Where is it?')}</b><small>${T('مدن ومحافظات ومعالم في المملكة والعالم: في أي منطقة أو مدينة أو دولة تقع؟', 'Cities, governorates and landmarks at home and abroad: which region, city or country?')}</small></span><em>${T('العب الآن', 'Play now')}</em></button><button type="button" class="dw-readyc" id="dwQa"><span class="dw-hrL">${T('ق', 'Q')}</span><span><b>${T('من القائل؟', 'Who said it?')}</b><small>${T('أبيات مشهورة وأقوال مأثورة ومؤلفو كتب: من القائل أو المؤلف؟', 'Famous verses, sayings and book authors: who said or wrote it?')}</small></span><em>${T('العب الآن', 'Play now')}</em></button><button type="button" class="dw-readyc" id="dwRo"><span class="dw-hrL">${T('ر', 'O')}</span><span><b>${T('رتّب الأحداث', 'Put them in order')}</b><small>${T('أحداث من السيرة والتاريخ الإسلامي وتاريخ المملكة والاختراعات، ترتّبها المجموعة زمنيًا.', 'Events from the Seerah, Islamic and Saudi history and inventions, put in time order.')}</small></span><em>${T('العب الآن', 'Play now')}</em></button><button type="button" class="dw-readyc" id="dwIm"><span class="dw-hrL">${T('ص', 'P')}</span><span><b>${T('خمّن الصورة', 'Guess the picture')}</b><small>${T('أعلام الدول ومعالم وحيوانات: صورة مقرّبة ومشوشة تتضح شيئًا فشيئًا، والأسرع يفوز.', 'Flags, landmarks and animals: a close, blurred picture that clears bit by bit; the fastest wins.')}</small></span><em>${T('العب الآن', 'Play now')}</em></button><button type="button" class="dw-readyc dw-readyph" id="dwQd"><span class="dw-hrL">${T('ق', 'E')}</span><span><b>${T('قدّرها', 'Estimate it')}</b><small>${T('أسئلة جوابها رقم: يكتب كل قائد تقديره على جواله، والأقرب إلى الجواب يفوز.', 'Questions with a number for an answer: each leader types an estimate; the closest wins.')}</small></span><em>${T('العب الآن', 'Play now')}</em></button><button type="button" class="dw-readyc dw-readyph" id="dwWr"><span class="dw-hrL">${T('ك', 'W')}</span><span><b>${T('سباق الكلمات', 'Word race')}</b><small>${T('كلمات مثل أو بيت مبعثرة، يرتّبها قادة المجموعات على جوالاتهم، وتظهر محاولاتهم على الشاشة مباشرة.', 'The shuffled words of a proverb or a verse; the leaders order them on their phones, live on the screen.')}</small></span><em>${T('العب الآن', 'Play now')}</em></button></div>
       <h2>${T('أو أعدّ مسابقتك', 'Or prepare your own quiz')}</h2>
       <div class="dw-tabs" role="tablist"><button type="button" role="tab" data-tab="ready" aria-selected="true">${T('مسابقة جاهزة', 'A ready quiz')}</button><button type="button" role="tab" data-tab="ai" aria-selected="false">${T('جهّزها لي', 'Prepare it for me')}</button><button type="button" role="tab" data-tab="own" aria-selected="false">${T('اكتبها بنفسك', 'Write it yourself')}</button></div>
       <div data-pane="ai" hidden><p class="dw-pane-h">${T('ثلاثة اختيارات، وتُجهَّز لك فعالية كاملة تراجعها أو تبدأ بها مباشرة.', 'Three choices, and a whole event is prepared; review it or start straight away.')}</p>${aiBox()}</div>
@@ -2374,6 +2433,7 @@ window.Dawwara = (function () {
     root.querySelector('#dwOwn').onclick = () => editor(root, null, () => home(root));
     root.querySelector('#dwHr').onclick = () => hrSetup('hr');
     root.querySelector('#dwMix').onclick = mixSetup;
+    root.querySelector('#dwSolo').onclick = soloHome;
     root.querySelector('#dwMt').onclick = () => hrSetup('mt');
     root.querySelector('#dwAy').onclick = () => hrSetup('ay');
     root.querySelector('#dwQa').onclick = () => hrSetup('qa');
