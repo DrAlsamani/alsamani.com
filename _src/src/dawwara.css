@@ -455,3 +455,8 @@ html.dw-phone .tl-crumb,html.dw-phone .dw-head,html.dw-phone .dw-lead{display:no
 .dw-imgw:not(.zoom) .dw-imf{display:contents}
 .dwv.fit .dwv-in{height:auto!important;min-height:0!important;max-height:none!important;overflow:visible}
 .dwv.fit .dwv-in .dw-q,.dwv.fit .dwv-in .dw-mid{flex:none}
+.dw-rqc{display:inline-flex;flex-wrap:wrap;align-items:center;gap:6px;border:1px dashed var(--c)}.dw-rqc button{all:unset;cursor:pointer;padding:3px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.35);font-size:.85rem}.dw-rqc [data-rqa]{background:#e9a54a;color:#1d1b3a;border-color:#e9a54a;font-weight:700}
+/* picture questions: compact question and options, so the picture gets the room */
+.dw-q:has(.dw-imgw.zoom) .dw-qt{font-size:clamp(20px,2.4vw,34px);padding-block:10px}
+.dw-q:has(.dw-imgw.zoom) .dw-opts button{min-height:clamp(48px,7vh,80px);font-size:clamp(16px,1.8vw,26px);padding:10px 14px}
+@media (min-width:900px){.dw-q:has(.dw-imgw.zoom) .dw-opts{grid-template-columns:repeat(4,minmax(0,1fr))}}
