@@ -146,10 +146,10 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
     else A.mic = !A.mic;
     A.ref.child('in/' + A.uid + '/a').set(A.mic ? 1 : 0).catch(() => {}); apply(); paint();
   }
-  async function toggleScreen() {
+  async function toggleScreen(given) {
     const say = () => { A.ref.child('in/' + A.uid + '/v').set(A.cam ? 1 : 0).catch(() => {}); paint(); };
     if (A.sc) { A.sc = false; A.cam = false; if (A.vT) A.vT.stop(); A.vT = null; Object.values(A.P).forEach(feed); return say(); }
-    try { const s = await navigator.mediaDevices.getDisplayMedia({ video: { frameRate: { ideal: 5, max: 8 } } }), t = s.getVideoTracks()[0]; if (A.vT) A.vT.stop(); t.contentHint = 'detail'; A.vT = t; A.cam = true; A.sc = true; t.onended = () => { if (A && A.sc && A.vT === t) { A.sc = false; A.cam = false; A.vT = null; Object.values(A.P).forEach(feed); say(); } }; Object.values(A.P).forEach(feed); say(); } catch (e) { /* the person closed the picker */ }
+    try { const s = given || await navigator.mediaDevices.getDisplayMedia({ video: { frameRate: { ideal: 5, max: 8 } } }), t = s.getVideoTracks()[0]; if (A.vT) A.vT.stop(); t.contentHint = 'detail'; A.vT = t; A.cam = true; A.sc = true; t.onended = () => { if (A && A.sc && A.vT === t) { A.sc = false; A.cam = false; A.vT = null; Object.values(A.P).forEach(feed); say(); } }; Object.values(A.P).forEach(feed); say(); } catch (e) { /* the person closed the picker */ }
   }
   async function toggleCam() {
     if (A.sc) A.sc = false;
@@ -281,6 +281,6 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
     const v = { o: (p && p.o || []).map(u => u.slice(0, 10)), c: (p && p.c || []).map(u => u.slice(0, 10)), m: (p && p.m || []).map(u => u.slice(0, 10)), w: p && p.w || '' };
     const k = JSON.stringify(v); if (k === A.polK) return; A.polK = k; A.ref.child('pol').set(v).catch(() => {});
   }
-  return { attach, detach, policy, join(o) { return A ? join(o) : null; }, toggleMic() { return A ? toggleMic() : null; }, toggleCam() { return A ? toggleCam() : null; }, toggleScreen() { return A ? toggleScreen() : null; }, sharing() { return !!(A && A.sc); }, leave() { if (A) leave(); },
+  return { attach, detach, policy, join(o) { return A ? join(o) : null; }, toggleMic() { return A ? toggleMic() : null; }, toggleCam() { return A ? toggleCam() : null; }, toggleScreen(g) { return A ? toggleScreen(g) : null; }, sharing() { return !!(A && A.sc); }, leave() { if (A) leave(); },
     view() { return A ? { joined: A.joined, mic: A.mic, cam: A.cam, note: A.note, me: A.vT, n: Object.keys(A.in).length, talk: A.talk || {}, people: Object.keys(A.in).filter(u => u !== A.uid).map(u => ({ u, n: A.in[u].n, a: A.in[u].a, v: A.in[u].v, track: A.in[u].v && A.P[u] ? A.P[u].vt : null, audio: A.P[u] && A.P[u].au && A.P[u].au.srcObject ? A.P[u].au.srcObject.getAudioTracks()[0] : null })) } : null; }, state() { return A ? { on: A.on, joined: A.joined, mic: A.mic, can: canTalk(A.uid), n: Object.keys(A.in).length, peers: Object.keys(A.P).map(u => A.P[u].pc.connectionState), pol: A.pol } : null; }, setHost(u) { if (A) { A.hostU = u; apply(); } } };
 })();
