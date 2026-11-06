@@ -627,6 +627,8 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
   }
   q('#ctOne').onclick = e => run(e.currentTarget, false);
   q('#ctZip').onclick = e => run(e.currentTarget, true);
+  // names sent from the attendance tool, through this browser only
+  if (location.hash === '#names') { try { const n = JSON.parse(localStorage.getItem('ct.names') || '[]'); localStorage.removeItem('ct.names'); history.replaceState(null, '', location.pathname + location.search); if (n.length) { q('#ctNames').value = n.join('\n'); q('#ctNames').oninput(); } } catch (e) {} }
 })();
 </script>
 <section class="tl-about"><h2><span class="ar">كيف تعمل؟</span><span class="en">How it works</span></h2><ol class="tl-steps"><li><span class="ar">ارفع تصميم الشهادة فارغًا من الأسماء، بصيغة PDF أو صورة.</span><span class="en">Upload the certificate design without names, as a PDF or an image.</span></li><li><span class="ar">الصق الأسماء، أو الصق جدولًا من إكسل فيه الاسم والدورة وغيرهما.</span><span class="en">Paste the names, or an Excel table with name, course and more.</span></li><li><span class="ar">ضع الحقول على الشهادة واختر الخط والحجم واللون، وأضف التوقيع أو الختم.</span><span class="en">Place the fields, choose font, size and colour, and add a signature or stamp.</span></li><li><span class="ar">حمّل ملف PDF واحدًا للجميع، أو ملفًا لكل اسم.</span><span class="en">Download one PDF for everyone, or a file per name.</span></li></ol>

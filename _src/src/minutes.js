@@ -150,7 +150,10 @@
       <p class="sn-fine">${B('ارفع محضرًا سابقًا (Word أو PDF)، فيُبنى المحضر الجديد على نمطه: عناصره وعناوينه وخانات بياناته وأعضاؤه.', 'Upload an earlier minutes (Word or PDF) and the new one follows its pattern: sections, headings, detail rows and members.')}</p>
       ${coms.length ? `<h2 class="mn-h">${B('محضر جديد للجنة سابقة', 'New minutes for a past committee')}</h2><p class="sn-fine">${B('تُنقل البيانات والأعضاء، ويُرفع رقم الجلسة، وتنتقل مهام آخر محضر إلى «متابعة القرارات».', 'Details and members carry over, the number goes up, and the last tasks move to the follow-up.')}</p><div class="mn-coms">${coms.map(c => `<button type="button" class="mn-com" data-com="${c.id}"><b>${esc(c.committee || c.org || T('لجنة', 'Committee'))}</b><small>${esc(c.org || '')} · ${c.members.length} ${T('أعضاء', 'members')}</small></button>`).join('')}</div>` : ''}
       ${list.length ? `<h2 class="mn-h">${B('محاضرك', 'Your minutes')}</h2><ul class="mn-list">${list.map(x => `<li><button type="button" data-open="${x.id}"><b>${esc(x.committee || T('بلا عنوان', 'Untitled'))} ${x.no ? '(' + esc(x.no) + ')' : ''}</b><small>${esc(x.date || '')} · ${x.status === 'final' ? T('معتمد', 'Approved') : T('مسودة', 'Draft')}</small></button><button type="button" class="mn-x" data-del="${x.id}" aria-label="delete">✕</button></li>`).join('')}</ul>` : ''}
-      <p class="sn-fine">${B('تُحفظ المحاضر في هذا المتصفح فقط، ولا تُرفع إلى أي خادم.', 'Minutes are kept in this browser only and are never uploaded.')}</p></div>`;
+      <p class="sn-fine">${B('تُحفظ المحاضر في هذا المتصفح فقط، ولا تُرفع إلى أي خادم.', 'Minutes are kept in this browser only and are never uploaded.')}</p>
+      <div class="sn-two"><button type="button" class="btn ghost" id="mnBk">${B('حفظ نسخة في ملف', 'Save a copy to a file')}</button><button type="button" class="btn ghost" id="mnRs">${B('استعادة من ملف', 'Restore from a file')}</button></div></div>`;
+    root.querySelector('#mnBk').onclick = () => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify({ v: 1, app: 'alsamani-minutes', list, coms: store.get('coms', []) })], { type: 'application/json' })); a.download = 'minutes-' + today() + '.json'; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 4000); };
+    root.querySelector('#mnRs').onclick = () => { const f = document.createElement('input'); f.type = 'file'; f.accept = '.json,application/json'; f.onchange = async () => { try { const d = JSON.parse(await f.files[0].text()); if (d.app !== 'alsamani-minutes' || !Array.isArray(d.list)) throw 0; const merge = (a, b) => b.concat(a.filter(x => !b.some(y => y.id === x.id))); list = merge(d.list, list); store.set('list', list.slice(0, 40)); store.set('coms', merge(d.coms || [], store.get('coms', []))); home(); toast(B('تمت استعادة المحاضر.', 'The minutes were restored.')); } catch (e) { toast(B('تعذّرت قراءة الملف.', 'The file could not be read.'), 1); } }; f.click(); };
     root.querySelector('#mnNew').onclick = () => { M = blank(); editor(); };
     root.querySelector('#mnMimic').onclick = () => { const f = document.createElement('input'); f.type = 'file'; f.accept = '.docx,.pdf,.txt'; f.onchange = () => f.files[0] && mimicFile(f.files[0]); f.click(); };
     root.querySelectorAll('[data-open]').forEach(b => b.onclick = () => { const x = JSON.parse(JSON.stringify(list.find(x => x.id === b.dataset.open))); M = normM(Object.assign(blank(), x, { show: x.show, heads: x.heads, info: x.info })); editor(); });
@@ -165,12 +168,12 @@
     if (!d) return false;
     const hm = t => { const x = new Date(t); return String(x.getHours()).padStart(2, '0') + ':' + String(x.getMinutes()).padStart(2, '0'); };
     M = blank();
-    Object.assign(M, { committee: (d.t || '').replace(/^\s*اجتماع\s+/, ''), mode: 'remote', stage: 'after', from: d.from ? hm(d.from) : '', to: d.to ? hm(d.to) : '', prev: { on: false, note: '' } });
-    M.members = (d.att || []).map(n => ({ id: uid(), n, r: 'عضو', st: 'r' }));
+    Object.assign(M, { committee: (d.t || '').replace(/^\s*اجتماع\s+/, ''), mode: d.inPerson ? 'in' : 'remote', stage: d.inPerson ? 'during' : 'after', from: d.from ? hm(d.from) : '', to: d.to ? hm(d.to) : '', prev: { on: false, note: '' } });
+    M.members = (d.att || []).map(n => ({ id: uid(), n, r: 'عضو', st: d.inPerson ? 'p' : 'r' }));
     for (let i = M.members.length; i < (d.need || 0); i++) M.members.push({ id: uid(), n: '', r: 'عضو', st: 'a' });
     if (!M.members.length) M.members = blank().members;
     if ((d.items || []).length) M.items = d.items.map(it => Object.assign(newItem(), { title: it.t || '', kind: 'free', vote: '', text: [it.dec, it.vote].filter(Boolean).join('\n') }));
-    persist(); editor(); toast(B('تم نقل بيانات الاجتماع من «طاولة». راجعها وأكمل صفات الأعضاء.', 'The meeting record was brought over from Table. Review it and complete the members’ roles.'));
+    persist(); editor(); toast(B('تم نقل بيانات الاجتماع. راجعها وأكمل صفات الأعضاء.', 'The meeting record was brought over. Review it and complete the members’ roles.'));
     return true;
   }
   function fromCommittee(c) {

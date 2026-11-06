@@ -219,7 +219,7 @@
       }
       return `<div class="sn-card ps-result"><h3>${MODE === 'att' ? B('الحاضرون', 'Present') : B('النتيجة', 'Results')} <span class="ps-n">${V.length}${S.names.length ? ' / ' + (S.names.length + V.filter(v => !S.names.includes(v.name)).length) : ''}</span></h3>${body}
         ${miss.length ? `<p class="ps-miss"><b>${MODE === 'att' ? B('لم يسجّل بعد:', 'Not recorded yet:') : B('لم يُجب بعد:', 'Not answered yet:')}</b> ${miss.map(esc).join('، ')}</p>` : ''}
-        ${admin ? `<div class="sn-acts"><button type="button" class="btn solid" id="psPrint">${B('طباعة أو حفظ PDF', 'Print or save as PDF')}</button><button type="button" class="btn ghost" id="psText">${B('نسخ النتيجة نصًا', 'Copy as text')}</button>${miss.length && !S.locked ? `<button type="button" class="btn ghost" id="psRemind">${B('نسخ رسالة تذكير', 'Copy a reminder')}</button>` : ''}<button type="button" class="btn ghost" id="psLock">${S.locked ? B('فتح الرابط', 'Reopen') : B('إغلاق الرابط', 'Close')}</button><button type="button" class="btn ghost sn-danger" id="psDel">${B('حذف', 'Delete')}</button></div>` : ''}
+        ${admin ? `<div class="sn-acts">${MODE === 'att' && V.length ? `<button type="button" class="btn ghost" id="psToMin">${B('إعداد المحضر', 'Write the minutes')}</button><button type="button" class="btn ghost" id="psToCert">${B('إعداد الشهادات', 'Make certificates')}</button>` : ''}<button type="button" class="btn solid" id="psPrint">${B('طباعة أو حفظ PDF', 'Print or save as PDF')}</button><button type="button" class="btn ghost" id="psText">${B('نسخ النتيجة نصًا', 'Copy as text')}</button>${miss.length && !S.locked ? `<button type="button" class="btn ghost" id="psRemind">${B('نسخ رسالة تذكير', 'Copy a reminder')}</button>` : ''}<button type="button" class="btn ghost" id="psLock">${S.locked ? B('فتح الرابط', 'Reopen') : B('إغلاق الرابط', 'Close')}</button><button type="button" class="btn ghost sn-danger" id="psDel">${B('حذف', 'Delete')}</button></div>` : ''}
       </div>`;
     }
     function asText() {
@@ -271,6 +271,10 @@
         try { await call({ a: 'pdelete', id, k: key }); delete keys[id]; store.set('ps.keys', keys); location.href = './'; } catch (e) { toast(errMsg(e), 1); }
       };
       q('#psPrint').onclick = printView;
+      // the list travels to the next tool through this browser only
+      const attList = () => S.votes.slice().sort((a, b) => a.t < b.t ? -1 : 1);
+      if (q('#psToMin')) q('#psToMin').onclick = () => { const L = attList(), from = new Date(L[0].t).getTime(); localStorage.setItem('mn.fromTable', JSON.stringify({ t: S.title || '', from, att: L.map(v => v.name), need: S.names.length, inPerson: true, items: [] })); window.open('../minutes/index.html#table', '_blank') || (location.href = '../minutes/index.html#table'); };
+      if (q('#psToCert')) q('#psToCert').onclick = () => { localStorage.setItem('ct.names', JSON.stringify(attList().map(v => v.name))); window.open('../certificates/index.html#names', '_blank') || (location.href = '../certificates/index.html#names'); };
     }
     function qr() {
       const q = qrcode(0, 'M'); q.addData(link); q.make();

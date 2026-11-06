@@ -285,4 +285,6 @@
   }
   q('#ctOne').onclick = e => run(e.currentTarget, false);
   q('#ctZip').onclick = e => run(e.currentTarget, true);
+  // names sent from the attendance tool, through this browser only
+  if (location.hash === '#names') { try { const n = JSON.parse(localStorage.getItem('ct.names') || '[]'); localStorage.removeItem('ct.names'); history.replaceState(null, '', location.pathname + location.search); if (n.length) { q('#ctNames').value = n.join('\n'); q('#ctNames').oninput(); } } catch (e) {} }
 })();
