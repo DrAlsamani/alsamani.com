@@ -557,9 +557,11 @@ html.dw-phone .site-foot,html.dw-phone .ribbons-foot{display:none}
 .dw-ls .dw-aig{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
 .dw-ls .dw-aig input,.dw-ls .dw-aig select{font:inherit;border:1px solid var(--line,#d6d9e4);border-radius:10px;padding:8px 10px;background:var(--surface,#fff);color:var(--ink)}
 @media (prefers-color-scheme:dark){:root:not([data-theme=light]) .dw-lsup span{color:#cdd6f6;border-color:#cdd6f6}:root:not([data-theme=light]) .dw-lsi{background:#2a3150;color:#eef}}
-.dw-gor{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px}.dw-wiz .dw-gor .dw-btn{min-height:48px;font-size:1.0625rem}
-.dw-own{font:inherit;font-size:.9375rem;border:1px solid var(--line,#d6d9e4);background:transparent;color:var(--ink);border-radius:999px;padding:9px 16px;cursor:pointer}
-.dw-own:hover{border-color:#1d2a5e}.dw-own:disabled{opacity:.5}
+.dw-gor{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px}
+.dw-goc{font:inherit;text-align:start;display:grid;gap:4px;border:1px solid var(--line,#d6d9e4);background:var(--surface,#fff);color:var(--ink);border-radius:14px;padding:12px 16px;cursor:pointer}
+.dw-goc b{font-size:1.0625rem}.dw-goc small{color:var(--muted);line-height:1.6;font-size:.875rem}
+.dw-goc.main{background:#e9a54a;border-color:#e9a54a;color:#1d1b3a}.dw-goc.main small{color:#3d3420}
+.dw-goc:hover{border-color:#1d2a5e}.dw-goc:disabled{opacity:.55;cursor:default}.dw-goc:focus-visible{outline:2px solid #1d2a5e;outline-offset:2px}
 </style>
 <div id="dw" class="dw-page"><noscript><span class="ar">تعمل هذه اللعبة مع تفعيل JavaScript.</span><span class="en">This game needs JavaScript.</span></noscript></div>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script>window.MD_CFG={"apiKey": "AIzaSyA50i75DT1Is1a6Yn6snW1_JVObc8S3F0Y", "authDomain": "maydan-705ae.firebaseapp.com", "databaseURL": "https://maydan-705ae-default-rtdb.europe-west1.firebasedatabase.app", "projectId": "maydan-705ae", "appId": "1:342187013133:web:d5c2396f0db413f3c51144"};window.MD_MARK="<svg class=\"md-mark\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><rect x=\"4\" y=\"4\" width=\"40\" height=\"40\" rx=\"12\" fill=\"#23336F\"/><path d=\"M24 9l4.2 6.8 7.8-1.8-1.8 7.8L41 24l-6.8 4.2 1.8 7.8-7.8-1.8L24 39l-4.2-6.8-7.8 1.8 1.8-7.8L7 24l6.8-4.2-1.8-7.8 7.8 1.8z\" fill=\"#C9822B\"/><circle cx=\"24\" cy=\"24\" r=\"6.5\" fill=\"#23336F\"/><circle cx=\"24\" cy=\"24\" r=\"3\" fill=\"#F3E3C7\"/></svg>";</script><script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script><script>/* Maydan library: ready quizzes to start at once or open and edit. Written in the editor's own format. */
@@ -967,17 +969,20 @@ window.OwnAI = (function () {
   const ar = () => document.documentElement.lang === 'ar', T = (a, e) => ar() ? a : e;
   function style() {
     if (document.getElementById('oaCss')) return; const s = document.createElement('style'); s.id = 'oaCss';
-    s.textContent = '.oa{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.5);display:grid;place-items:center;padding:16px;overflow:auto}.oa>div{background:var(--bg,#fff);color:var(--ink,#1d1d1f);width:min(480px,100%);border-radius:16px;padding:20px;box-sizing:border-box}.oa h3{margin:0 0 14px;font-size:1.05rem}.oa ol{margin:0;padding:0;list-style:none}.oa li{margin:0 0 16px}.oa li>b{display:block;margin-bottom:8px;font-weight:600}.oa .oa-r{display:flex;flex-wrap:wrap;gap:8px}.oa .oa-b{font:inherit;min-height:42px;padding:8px 16px;border-radius:21px;border:1px solid #bbb;background:transparent;color:inherit;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center}.oa .oa-p{background:#0071e3;border-color:#0071e3;color:#fff}.oa textarea{width:100%;box-sizing:border-box;min-height:120px;font:inherit;padding:10px;border:1px solid #bbb;border-radius:10px;background:transparent;color:inherit}.oa .oa-e{color:#b3261e;margin:8px 0 0;min-height:1em;font-size:.875rem}@media(prefers-color-scheme:dark){:root:not([data-theme=light]) .oa>div{--bg:#1c1c1e;--ink:#f5f5f7}}';
+    s.textContent = '.oa{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.5);display:grid;place-items:center;padding:16px;overflow:auto}.oa>div{background:var(--bg,#fff);color:var(--ink,#1d1d1f);width:min(480px,100%);border-radius:16px;padding:20px;box-sizing:border-box}.oa h3{margin:0 0 14px;font-size:1.05rem}.oa ol{margin:0;padding:0;list-style:none}.oa li{margin:0 0 16px}.oa li>b{display:block;margin-bottom:8px;font-weight:600}.oa .oa-r{display:flex;flex-wrap:wrap;gap:8px}.oa .oa-b{font:inherit;min-height:42px;padding:8px 16px;border-radius:21px;border:1px solid #bbb;background:transparent;color:inherit;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center}.oa .oa-p{background:#0071e3;border-color:#0071e3;color:#fff}.oa textarea{width:100%;box-sizing:border-box;min-height:120px;font:inherit;padding:10px;border:1px solid #bbb;border-radius:10px;background:transparent;color:inherit}.oa .oa-w{margin:-6px 0 14px;padding:10px 12px;border-radius:10px;background:rgba(233,165,74,.15);line-height:1.7;font-size:.9375rem}.oa .oa-f{display:flex;flex-wrap:wrap;gap:6px}.oa .oa-f span{border:1px solid #bbb;border-radius:999px;padding:4px 12px;font-size:.875rem}.oa .oa-e{color:#b3261e;margin:8px 0 0;min-height:1em;font-size:.875rem}@media(prefers-color-scheme:dark){:root:not([data-theme=light]) .oa>div{--bg:#1c1c1e;--ink:#f5f5f7}}';
     document.head.appendChild(s);
   }
   const web = (base, p) => base + (encodeURIComponent(p).length <= 6000 ? '?q=' + encodeURIComponent(p) : '');
-  function ask(prompt) {
-    style();
+  // o.why: a line saying why the assistant is used; o.files: names of files the host must attach there
+  function ask(prompt, o) {
+    o = o || {}; style();
+    const n = o.files && o.files.length ? 1 : 0, N = i => T('١٢٣'[i - 1], String(i));
     return new Promise((ok, no) => {
       const d = document.createElement('div'); d.className = 'oa'; d.dir = ar() ? 'rtl' : 'ltr';
-      d.innerHTML = `<div role="dialog" aria-modal="true"><h3>${T('إعداد المحتوى بالذكاء الاصطناعي', 'Prepare the content with AI')}</h3><ol>
-        <li><b>${T('١. انسخ التعليمات والصقها في مساعدك', '1. Copy the instructions into your assistant')}</b><div class="oa-r"><button type="button" class="oa-b oa-p" data-c>${T('نسخ التعليمات', 'Copy the instructions')}</button><a class="oa-b" target="_blank" rel="noopener" data-a href="${web('https://chatgpt.com/', prompt)}">ChatGPT</a><a class="oa-b" target="_blank" rel="noopener" data-a href="${web('https://claude.ai/new', prompt)}">Claude</a></div></li>
-        <li><b>${T('٢. الصق رده كاملًا هنا', '2. Paste its whole reply here')}</b><textarea dir="auto" data-t></textarea><p class="oa-e" data-e aria-live="polite"></p></li></ol>
+      d.innerHTML = `<div role="dialog" aria-modal="true"><h3>${T('إعداد المحتوى بمساعدك الذكي', 'Prepare the content with your AI assistant')}</h3>${o.why ? `<p class="oa-w">${o.why}</p>` : ''}<ol>
+        <li><b>${T('١. انسخ التعليمات، ثم افتح مساعدك والصقها في محادثة جديدة', '1. Copy the instructions, then open your assistant and paste them into a new chat')}</b><div class="oa-r"><button type="button" class="oa-b oa-p" data-c>${T('نسخ التعليمات', 'Copy the instructions')}</button><a class="oa-b" target="_blank" rel="noopener" data-a href="${web('https://chatgpt.com/', prompt)}">ChatGPT</a><a class="oa-b" target="_blank" rel="noopener" data-a href="${web('https://claude.ai/new', prompt)}">Claude</a></div></li>
+        ${n ? `<li><b>${T('٢. أرفق ملفات الدرس في المحادثة نفسها', '2. Attach the lesson files in the same chat')}</b><div class="oa-f">${o.files.map(f => `<span>${String(f).replace(/[&<>"]/g, '')}</span>`).join('')}</div></li>` : ''}
+        <li><b>${T(`${N(2 + n)}. انتظر رده، ثم انسخه كاملًا والصقه هنا`, `${2 + n}. Wait for its reply, then copy all of it and paste it here`)}</b><textarea dir="auto" data-t></textarea><p class="oa-e" data-e aria-live="polite"></p></li></ol>
         <div class="oa-r"><button type="button" class="oa-b oa-p" data-ok>${T('اعتماد', 'Use this')}</button><button type="button" class="oa-b" data-x>${T('إلغاء', 'Cancel')}</button></div></div>`;
       (document.fullscreenElement || document.body).appendChild(d);
       const q = s => d.querySelector(s), copy = async () => { try { await navigator.clipboard.writeText(prompt); q('[data-c]').textContent = T('تم النسخ', 'Copied'); } catch (e) { const t = q('[data-t]'), v = t.value; t.value = prompt; t.select(); try { document.execCommand('copy'); q('[data-c]').textContent = T('تم النسخ', 'Copied'); } catch (x) {} t.value = v; } };
@@ -987,14 +992,16 @@ window.OwnAI = (function () {
     });
   }
   // the site's AI while the device's daily allowance lasts; past it, or if the service fails, the host's own assistant
-  async function auto(prompt, key, limit, site) {
+  async function auto(prompt, key, limit, site, o) {
     const day = new Date().toISOString().slice(0, 10); let u = {}; try { u = JSON.parse(localStorage.getItem(key) || '{}'); } catch (e) {}
     const n = u.d === day ? u.n : 0;
     if (n < limit) { try { const t = await site(prompt); try { localStorage.setItem(key, JSON.stringify({ d: day, n: n + 1 })); } catch (e) {} return t; } catch (e) { console.error(e); } }
-    return ask(prompt);
+    return ask(prompt, Object.assign({ why: n >= limit ? T('انتهى استعمال الموقع لهذا اليوم على هذا الجهاز، ويمكنك الإكمال بمساعدك الآن.', 'The site’s allowance for today on this device is used up; you can carry on with your own assistant now.') : T('تعذّر الاتصال بخدمة الموقع الآن، ويمكنك الإكمال بمساعدك.', 'The site’s service could not be reached; you can carry on with your own assistant.') }, o));
   }
+  // how many site uses are left today on this device
+  const left = (key, limit) => { try { const u = JSON.parse(localStorage.getItem(key) || '{}'); return Math.max(0, limit - (u.d === new Date().toISOString().slice(0, 10) ? u.n : 0)); } catch (e) { return limit; } };
   const msg = e => e && e.message === 'cancel' ? '' : T('تعذّرت قراءة الرد. انسخ رد المساعد كاملًا وحاول مرة أخرى.', 'The reply could not be read. Copy the assistant’s whole reply and try again.');
-  return { ask, auto, msg };
+  return { ask, auto, msg, left };
 })();
 </script><script>/* alsamani.com — Dawwara: a team quiz that needs one device only, the host's.
    Groups take turns; each turn one group gets its own question. The group's leader says the answer,
@@ -2138,6 +2145,11 @@ window.Dawwara = (function () {
   const TYPES = () => [T('دينية', 'Religion'), T('تاريخ إسلامي', 'Islamic history'), T('السيرة النبوية', 'The Prophet’s life'), T('تاريخ السعودية', 'Saudi history'), T('جغرافيا', 'Geography'), T('علوم', 'Science'), T('لغة عربية وأدب', 'Arabic and literature'), T('رياضة', 'Sport'), T('ثقافة عامة', 'General knowledge'), T('أمثال وتراث', 'Proverbs and heritage')];
   const TPL = () => [['mix', T('أسئلة وتحديات', 'Questions and challenges')], ['q', T('أسئلة بلا تحديات', 'Questions, no challenges')], ['c', T('تحديات أكثر', 'More challenges')]];
   const sizeOf = (kind, dur) => { const rate = { mix: .5, h: .75, q: .8, c: .3 }[kind] || .5, ch = { mix: Math.round(dur / 15), h: 0, q: 0, c: Math.min(10, Math.round(dur / 8)) }[kind]; return { nq: Math.max(8, Math.min(60, Math.round(dur * rate))), nch: ch }; };
+  // two plain ways to write: the site now (a few times a day per device), or the host's own assistant by copy and paste
+  const AI_N = 5, aiLeft = () => OwnAI.left('dw.ai', AI_N);
+  const goSub = () => { const n = aiLeft(); return n ? T(`يكتبها الموقع الآن خلال دقيقة | متبقٍّ اليوم: ${NUM(n)}`, `The site writes them now, in about a minute | left today: ${n}`) : T('انتهى استعمال الموقع لهذا اليوم، فاستعمل مساعدك', 'The site’s allowance for today is used up; use your assistant'); };
+  const goRow = (id, lab) => `<div class="dw-gor" role="group" aria-label="${T('طريقة الكتابة', 'How to write them')}"><button type="button" class="dw-goc main" id="${id}Go"><b>${lab}</b><small data-left>${goSub()}</small></button><button type="button" class="dw-goc" id="${id}Own"><b>${T('بمساعدك الذكي', 'With your AI assistant')}</b><small>${T('تنسخ التعليمات إلى ChatGPT أو Claude، ثم تلصق رده هنا', 'Copy the instructions into ChatGPT or Claude, then paste its reply here')}</small></button></div>`;
+  const goLeft = root => root.querySelectorAll('[data-left]').forEach(x => { x.textContent = goSub(); });
   function aiBox() {
     const chip = (name, v, l, on, multi) => `<label class="dw-chip"><input type="${multi ? 'checkbox' : 'radio'}" name="${name}" value="${esc(v)}"${on ? ' checked' : ''}><span>${l}</span></label>`;
     return `<div class="dw-ai dw-wiz">
@@ -2145,7 +2157,7 @@ window.Dawwara = (function () {
       <div class="dw-wq"><b>${T('وش نوع الأسئلة؟', 'What kind of questions?')}</b><div class="dw-chips">${TYPES().map((t, i) => chip('wzT', t, t, i === 0 || i === 1 || i === 8, true)).join('')}</div><input id="wzX" dir="auto" placeholder="${T('أو اكتب نوعًا آخر أو موضوعًا (اختياري)', 'Or write another kind or topic (optional)')}"></div>
       <div class="dw-wq"><b>${T('شكل المسابقة', 'The shape')}</b><div class="dw-chips">${TPL().map(([v, l], i) => chip('wzS', v, l, i === 0)).join('')}</div></div>
       <div class="dw-aig"><label>${T('الجمهور', 'Audience')}<select id="dwAiA">${AUD().map(a => `<option value="${a[0]}">${a[1]}</option>`).join('')}</select></label><label>${T('المناسبة', 'The occasion')}<select id="wzP">${PACK().map(([v, l]) => `<option value="${v}">${v ? l : T('عامة', 'General')}</option>`).join('')}</select></label></div>
-      <div class="dw-gor"><button type="button" class="dw-btn" id="dwAiGo">${T('جهّزها', 'Prepare it')}</button><button type="button" class="dw-own" id="dwAiOwn">${T('أو بمساعدك: ChatGPT أو Claude', 'Or with your assistant: ChatGPT or Claude')}</button></div><p class="dw-found" id="dwAiS" aria-live="polite"></p></div>`;
+      ${goRow('dwAi', T('جهّزها', 'Prepare it'))}<p class="dw-found" id="dwAiS" aria-live="polite"></p></div>`;
   }
   function aiBind(root) {
     const q = s => root.querySelector(s), b = q('#dwAiGo'); if (!b) return;
@@ -2155,13 +2167,13 @@ window.Dawwara = (function () {
       if (!cats.length) { q('#dwAiS').textContent = T('اختر نوعًا واحدًا على الأقل.', 'Choose at least one kind.'); return; }
       const sz = sizeOf(kind, dur), pack = q('#wzP').value, kinds = { cls: [T('ذكاء وسرعة بديهة', 'Quick wits'), T('تعاون', 'Teamwork')], maj: [T('تمثيل', 'Acting'), T('ذكاء وسرعة بديهة', 'Quick wits')], bar: [T('حركية', 'Moving'), T('تعاون', 'Teamwork')], wrk: [T('تعاون', 'Teamwork'), T('إبداع ورسم', 'Creative')] }[pack] || [T('حركية', 'Moving'), T('تمثيل', 'Acting'), T('ذكاء وسرعة بديهة', 'Quick wits')];
       const o = { topic: extra.length >= 30 ? extra : '', aud: q('#dwAiA').value, per: Math.max(2, Math.ceil(sz.nq / cats.length)), nch: sz.nch, cats, kinds, mat: true };
-      b.disabled = true; q('#dwAiS').textContent = '';
+      b.disabled = q('#dwAiOwn').disabled = true; q('#dwAiS').textContent = '';
       try {
-        const r = fromAI(await (own ? OwnAI.ask(aiPrompt(o)) : OwnAI.auto(aiPrompt(o), 'dw.ai', 5, p => gemini(p)))); if (r.qs.length < 2 && !r.ch.length) throw new Error('empty');
+        const r = fromAI(await (own ? OwnAI.ask(aiPrompt(o)) : OwnAI.auto(aiPrompt(o), 'dw.ai', AI_N, p => gemini(p)))); if (r.qs.length < 2 && !r.ch.length) throw new Error('empty');
         const quiz = { id: Math.random().toString(36).slice(2, 10), title: r.title || cats.join(T(' و', ' & ')), at: Date.now(), qs: r.qs, ch: r.ch, src: 'dw', tpl: { kind, dur, pack } };
-        saveQuiz(quiz); b.disabled = false; q('#dwAiS').textContent = '';
+        saveQuiz(quiz); b.disabled = q('#dwAiOwn').disabled = false; q('#dwAiS').textContent = ''; goLeft(root);
         editor(root, quiz, () => home(root));
-      } catch (e) { console.error(e); b.disabled = false; q('#dwAiS').textContent = OwnAI.msg(e); }
+      } catch (e) { console.error(e); b.disabled = q('#dwAiOwn').disabled = false; q('#dwAiS').textContent = OwnAI.msg(e); goLeft(root); }
     };
     b.onclick = () => go(false); q('#dwAiOwn').onclick = () => go(true);
   }
@@ -2177,7 +2189,7 @@ window.Dawwara = (function () {
       <div class="dw-wq"><b>${T('أنواع الأسئلة', 'Kinds of questions')}</b><div class="dw-chips">${LS_KINDS().map(([v, l], i) => chip('lsK', v, l, i < 2, true)).join('')}</div></div>
       <div class="dw-aig"><label>${T('المرحلة', 'The stage')}<select id="lsA">${AUD().filter(a => a[0] !== 'fam').map(a => `<option value="${a[0]}"${a[0] === 'mid' ? ' selected' : ''}>${a[1]}</option>`).join('')}</select></label><label>${T('ركّز على (اختياري)', 'Focus on (optional)')}<input id="lsX" dir="auto" placeholder="${T('مثل: الدرس الثاني، أو المفاهيم فقط', 'e.g. lesson two, or the key terms only')}"></label></div>
       <label class="dw-lsc"><input type="checkbox" id="lsC"> ${T('أضف تحديات صفية قصيرة من الدرس', 'Add short class challenges from the lesson')}</label>
-      <div class="dw-gor"><button type="button" class="dw-btn" id="lsGo">${T('اكتب الأسئلة', 'Write the questions')}</button><button type="button" class="dw-own" id="lsOwn">${T('أو بمساعدك: ChatGPT أو Claude', 'Or with your assistant: ChatGPT or Claude')}</button></div><p class="dw-found" id="lsS" aria-live="polite"></p></div>`;
+      ${goRow('ls', T('اكتب الأسئلة', 'Write the questions'))}<p class="dw-found" id="lsS" aria-live="polite"></p></div>`;
   }
   const b64 = f => new Promise((ok, no) => { const r = new FileReader(); r.onload = () => ok(String(r.result).split(',')[1]); r.onerror = no; r.readAsDataURL(f); });
   // a photo of a page is shrunk to a readable size before it is sent
@@ -2224,7 +2236,7 @@ ${o.nch ? `- أضف ${o.nch} تحديات صفية قصيرة مرتبطة با�
       const S = q('#lsS'), text = q('#lsT').value.trim(), kinds = [...root.querySelectorAll('[name=lsK]:checked')].map(i => i.value);
       if (!text && !files.length) { S.textContent = T('الصق نص الدرس أو ارفع ملفاته أولًا.', 'Paste the lesson or upload its files first.'); return; }
       if (!kinds.length) { S.textContent = T('اختر نوعًا واحدًا على الأقل.', 'Choose at least one kind.'); return; }
-      b.disabled = true; S.textContent = T('تُقرأ ملفات الدرس…', 'Reading the lesson files…');
+      b.disabled = q('#lsOwn').disabled = true; S.textContent = T('تُقرأ ملفات الدرس…', 'Reading the lesson files…');
       try {
         let got; try { got = await Promise.all(files.map(lsRead)); } catch (e) { throw Object.assign(new Error('file'), { ls: e.message === 'type' ? T('نوع ملف غير مدعوم. المدعوم: PDF وWord والصور والنص.', 'Unsupported file. Use PDF, Word, images or text.') : T('تعذّرت قراءة أحد الملفات.', 'One of the files could not be read.') }); }
         const parts = got.filter(x => x.data), txt = [text].concat(got.filter(x => x.text).map(x => x.text)).filter(Boolean).join('\n\n').slice(0, LS_TXT);
@@ -2233,12 +2245,12 @@ ${o.nch ? `- أضف ${o.nch} تحديات صفية قصيرة مرتبطة با�
         const o = { n: +(root.querySelector('[name=lsN]:checked') || {}).value || 20, kinds, aud: q('#lsA').value, focus: q('#lsX').value.trim(), nch: q('#lsC').checked ? 3 : 0 };
         const head = lsPrompt(o), body = (txt ? `\n\nمحتوى الدرس:\n"""\n${txt}\n"""` : '') + (parts.length ? `\n\n${txt ? 'وبقية الدرس' : 'محتوى الدرس'} في الملفات المرفقة: ${parts.map(x => x.name).join('، ')}.` : '');
         S.textContent = own ? '' : T('تُكتب الأسئلة من الدرس…', 'Writing the questions from the lesson…');
-        const r = fromAI(await (own ? OwnAI.ask(head + body) : OwnAI.auto(head + body, 'dw.ai', 5, p => gemini(parts.length ? [p].concat(parts.map(x => ({ inlineData: { mimeType: x.mime, data: x.data } }))) : p))));
+        const r = fromAI(await (own ? OwnAI.ask(head + body, { files: parts.map(x => x.name) }) : OwnAI.auto(head + body, 'dw.ai', AI_N, p => gemini(parts.length ? [p].concat(parts.map(x => ({ inlineData: { mimeType: x.mime, data: x.data } }))) : p), { files: parts.map(x => x.name) })));
         r.qs = r.qs.filter(x => kinds.includes(x.type)); if (r.qs.length < 2) throw new Error('empty');
         const quiz = { id: Math.random().toString(36).slice(2, 10), title: r.title || T('مراجعة الدرس', 'Lesson review'), at: Date.now(), qs: r.qs, ch: r.ch, src: 'dw', lesson: 1, tpl: { kind: r.ch.length ? 'mix' : 'q', dur: 45 } };
-        saveQuiz(quiz); b.disabled = false; S.textContent = '';
+        saveQuiz(quiz); b.disabled = q('#lsOwn').disabled = false; S.textContent = ''; goLeft(root);
         editor(root, quiz, () => home(root));
-      } catch (e) { console.error(e); b.disabled = false; S.textContent = e.ls || OwnAI.msg(e); }
+      } catch (e) { console.error(e); b.disabled = q('#lsOwn').disabled = false; S.textContent = e.ls || OwnAI.msg(e); goLeft(root); }
     };
     b.onclick = () => go(false); q('#lsOwn').onclick = () => go(true);
   }
