@@ -75,7 +75,7 @@ window.Dawwara = (function () {
       <section><h3>${T('المجموعات', 'The groups')}</h3><div class="dw-seg">${[2, 3, 4, 5, 6, 7, 8].map(k => `<button type="button" data-n="${k}" aria-pressed="${k === n}"${k > Math.max(2, P) && k > 2 ? ' disabled' : ''}>${NUM(k)}</button>`).join('')}</div>
         <div class="dw-hrnames">${Array.from({ length: n }, (_, k) => `<label style="--c:${COL[k]}"><i></i><input data-name="${k}" maxlength="18" dir="auto" value="${esc(c.names[k] || NAMES()[k])}" aria-label="${T('اسم المجموعة', 'Group name')}"></label>`).join('')}</div></section>
       <section><h3>${T('المدة', 'Length')}</h3><div class="dw-seg" data-dur>${DUR.map(([v, l]) => `<button type="button" data-v="${v}" aria-pressed="${c.dur === v}">${l}</button>`).join('')}</div></section>
-      <section><h3>${T('مع كل فريق جوال؟', 'Does each team have a phone?')}</h3><div class="dw-seg" data-ph><button type="button" data-v="0" aria-pressed="${!c.ph}">${T('لا، أسجّل أنا الإجابات', 'No, I record the answers')}</button><button type="button" data-v="1" aria-pressed="${!!c.ph}">${T('نعم، يجيبون من جوالاتهم', 'Yes, they answer on their phones')}</button></div><div id="dwPh"></div></section>
+      <section><h3>${T('الجوالات', 'Phones')}</h3><div class="dw-seg" data-ph><button type="button" data-v="0" aria-pressed="${!c.ph}">${T('بلا جوالات: أسجّل الإجابات', 'No phones: I record the answers')}</button><button type="button" data-v="1" aria-pressed="${!!c.ph}">${T('بالجوالات', 'With phones')}</button></div><div id="dwPh"></div></section>
       <section><h3>${T('خطة الأمسية', 'The evening')} <small id="dwEst"></small></h3><div class="dw-plan">
         ${max.turn ? row('turn', T('لكل مجموعة', 'per group'), T('لكل مجموعة سؤالها | ١٠٠ نقطة، والمنقول ٥٠', 'A question per group | 100, passed on 50')) : ''}
         ${max.buzz ? row('buzz', T('أسئلة', 'questions'), c.ph ? T('أول إجابة صحيحة من الجوالات | ١٠٠ نقطة', 'First right answer on the phones | 100') : T('أول يد ترتفع تجيب | ١٠٠ نقطة', 'First hand up answers | 100')) : ''}
@@ -1245,7 +1245,73 @@ window.Dawwara = (function () {
   const HRB = {}, rkOf = () => (D && D.rk) || 'hr';
   const hrUsed = rk => { try { return new Set(JSON.parse(localStorage.getItem(`dw.${rk || rkOf()}.used`) || '[]')); } catch (e) { return new Set(); } };
   const hrSave = u => { try { localStorage.setItem(`dw.${rkOf()}.used`, JSON.stringify([...u])); } catch (e) {} };
-  const hrLoad = rk => HRB[rk] ? Promise.resolve(HRB[rk]) : fetch(new URL(READY()[rk].file, location.href.split('?')[0].replace(/[^/]*$/, '')).href).then(r => r.json()).then(j => (HRB[rk] = j.L));
+  const hrLoad = rk => (HRB[rk] ? Promise.resolve(HRB[rk]) : fetch(new URL(READY()[rk].file, location.href.split('?')[0].replace(/[^/]*$/, '')).href).then(r => r.json()).then(j => (HRB[rk] = j.L))).then(raw => mineApply(raw, mineGet(rk)));
+  /* ---------- the host's own version of a ready game: categories off, questions deleted, edited or added, kept on this device ---------- */
+  const mineGet = rk => { const z = { off: [], del: {}, add: {}, ed: {} }; try { return Object.assign(z, JSON.parse(localStorage.getItem('dw.mine.' + rk) || '{}')); } catch (e) { return z; } };
+  const mineSet = (rk, m) => { try { localStorage.setItem('dw.mine.' + rk, JSON.stringify(m)); } catch (e) {} };
+  const mineOn = m => !!(m.off.length || Object.values(m.del).some(a => a.length) || Object.values(m.add).some(a => a.length) || Object.values(m.ed).some(o => Object.keys(o).length));
+  const mineApply = (raw, m) => { const B = {};
+    Object.keys(raw).forEach(L => { if (m.off.includes(L)) return; const del = new Set(m.del[L] || []), ed = m.ed[L] || {}; const v = raw[L].map((x, i) => del.has(i) ? null : ed[i] || x).filter(Boolean).concat(m.add[L] || []); if (v.length) B[L] = v; });
+    Object.keys(m.add).forEach(L => { if (!raw[L] && !m.off.includes(L) && (m.add[L] || []).length) B[L] = m.add[L].slice(); });
+    return B; };
+  const qId = x => Array.isArray(x) ? String(x[0]) : JSON.stringify((x.e || [])[0] || x);
+  // keep the played-questions marks on the same questions when the bank changes under them
+  const usedRemap = (rk, oldB, newB) => { let u; try { u = JSON.parse(localStorage.getItem(`dw.${rk}.used`) || '[]'); } catch (e) { u = []; } const out = [];
+    u.forEach(key => { const c = key.lastIndexOf(':'), L = key.slice(0, c), i = +key.slice(c + 1), x = (oldB[L] || [])[i]; if (!x) return; const j = (newB[L] || []).findIndex(y => qId(y) === qId(x)); if (j >= 0) out.push(L + ':' + j); });
+    try { localStorage.setItem(`dw.${rk}.used`, JSON.stringify(out)); } catch (e) {} };
+  const QF = rk => { const w = ['w', T('خيارات خاطئة، اختيارية: ثلاث بينها فواصل', 'Wrong options, optional: three, comma-separated')];
+    return ({ hr: [['q', T('السؤال', 'Question')], ['a', T('الإجابة', 'Answer')], w], ay: [['q', T('السؤال', 'Question')], ['a', T('الإجابة', 'Answer')], w], qa: [['q', T('البيت أو القول أو الكتاب', 'Verse, saying or book')], ['a', T('القائل أو المؤلف', 'Who said or wrote it')], w],
+      mt: [['q', T('أول المثل', 'Start of the proverb')], ['a', T('تكملته', 'Its ending')], w], wr: [['q', T('الجملة', 'Sentence')], ['a', T('القائل أو المصدر، اختياري', 'Source, optional')]], qd: [['q', T('السؤال', 'Question')], ['a', T('الجواب رقمًا', 'Answer, a number')], ['u', T('الوحدة، اختيارية', 'Unit, optional')]] })[rk] || null; };
+  const qFrom = (rk, x) => rk === 'qd' ? { q: x[0], a: String(x[1]), u: x[2] || '' } : { q: x[0], a: x[1] || '', w: (x[2] || []).join('، ') };
+  const qTo = (rk, f) => { const q = (f.q || '').trim(), a = (f.a || '').trim();
+    if (!q) return [null, T('اكتب السؤال', 'Write the question')];
+    if (rk === 'wr') { const n = q.split(/\s+/).length; return n < 3 || n > 12 ? [null, T('الجملة من ٣ إلى ١٢ كلمة', 'The sentence needs 3 to 12 words')] : [[q, a]]; }
+    if (!a) return [null, T('اكتب الإجابة', 'Write the answer')];
+    if (rk === 'qd') { const v = numIn(a); return v == null ? [null, T('الجواب رقم', 'The answer must be a number')] : [[q, v, (f.u || '').trim()]]; }
+    const w = (f.w || '').split(/[،,]/).map(s => s.trim()).filter(Boolean); if (w.length && w.length < 3) return [null, T('الخيارات الخاطئة ثلاث، أو اتركها فارغة', 'Three wrong options, or none')];
+    return [w.length ? [q, a, w.slice(0, 3)] : [q, a]]; };
+  const qShow = (rk, x) => !Array.isArray(x) ? `${x.q ? x.q + ': ' : ''}${(x.e || []).map(e => e[0]).join('، ')}` : rk === 'mt' ? `${x[0]} … ${x[1]}` : rk === 'qd' ? `${x[0]} = ${fmtN(x[1])} ${x[2] || ''}` : rk === 'im' ? x[1] : rk === 'wr' ? x[0] + (x[1] ? ` (${x[1]})` : '') : `${x[0]} ← ${x[1]}`;
+  async function qEdit(rk, back) {
+    const RD = READY()[rk], F = QF(rk); try { await hrLoad(rk); } catch (e) { return back(); } const raw = HRB[rk];
+    let m = mineGet(rk), cur = null, find = '', open = null, msg = '';
+    const cats = () => [...new Set(Object.keys(raw).concat(Object.keys(m.add)))];
+    const save = fn => { const nm = JSON.parse(JSON.stringify(m)); fn(nm); Object.keys(nm.del).forEach(L => { if (!nm.del[L].length) delete nm.del[L]; }); usedRemap(rk, mineApply(raw, m), mineApply(raw, nm)); m = nm; mineSet(rk, m); paint(); };
+    const form = (id, f) => `<form class="dw-qef" data-f="${id}">${F.map(([k, l]) => `<label><span>${l}</span><input name="${k}" dir="auto" value="${esc(f[k] || '')}" autocomplete="off"></label>`).join('')}<div><button type="submit" class="dw-btn">${T('حفظ', 'Save')}</button><button type="button" class="dw-btn ghost" data-fx>${T('إلغاء', 'Cancel')}</button></div><p class="dw-qem" data-fm></p></form>`;
+    const paint = () => {
+      const C = cats(); if (!cur || !C.includes(cur)) cur = C[0]; const B = mineApply(raw, m), tot = Object.values(B).reduce((n, v) => n + v.length, 0);
+      const del = new Set(m.del[cur] || []), ed = m.ed[cur] || {}, rows = [];
+      (raw[cur] || []).forEach((x, i) => rows.push({ id: 'o' + i, x: ed[i] || x, gone: del.has(i), mod: !!ed[i] }));
+      (m.add[cur] || []).forEach((x, j) => rows.push({ id: 'a' + j, x, add: true }));
+      const nz = t => String(t).replace(/[\u064B-\u0652\u0640]/g, '').replace(/[أإآ]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي'), fq = nz(find.trim()), shown = rows.filter(r => !fq || nz(qShow(rk, r.x)).includes(fq));
+      shell(`<div class="dw-set dw-qe"><p class="dw-sub">${T('تعديل الأسئلة', 'Edit the questions')}</p><h2>${esc(RD.t)}</h2>
+        <p class="dw-hrrule">${T(`نسختك تُحفظ على هذا الجهاز وتُلعب بها هذه المسابقة في كل مكان، ومنه «أمسية منوعة» و«العب وحدك». فيها الآن ${NUM(tot)} سؤالًا.`, `Your version is kept on this device and used wherever this game is played. It now has ${tot} items.`)}</p>
+        <div class="dw-qec">${C.map(L => { const off = m.off.includes(L), n = (B[L] || []).length; return `<button type="button" data-c="${esc(L)}" class="${L === cur ? 'on' : ''}${off ? ' off' : ''}" dir="auto">${esc(L)} <small>${off ? T('موقوفة', 'off') : NUM(n)}</small></button>`; }).join('')}${RD.cats ? `<button type="button" class="dw-qen" data-newc>${T('فئة جديدة', 'New category')}</button>` : ''}</div>
+        <div class="dw-qeh"><b dir="auto">${esc(cur)}</b><button type="button" class="dw-lnk" data-tog>${m.off.includes(cur) ? T('أعد تشغيل هذه الفئة', 'Turn this category back on') : T('أوقف هذه الفئة', 'Turn this category off')}</button><input type="search" data-find dir="auto" placeholder="${T('ابحث في الأسئلة', 'Search')}" value="${esc(find)}"></div>
+        ${F && !m.off.includes(cur) ? (open === 'new' ? form('new', {}) : `<button type="button" class="dw-btn ghost dw-qeadd" data-add>${T('أضف سؤالًا إلى هذه الفئة', 'Add an item here')}</button>`) : ''}
+        <ol class="dw-qel">${shown.slice(0, 300).map(r => open === r.id ? `<li>${form(r.id, qFrom(rk, r.x))}</li>` : `<li class="${r.gone ? 'gone' : ''}${r.add ? ' new' : ''}${r.mod ? ' mod' : ''}"><span dir="auto">${esc(qShow(rk, r.x))}</span><span class="dw-qeb">${r.gone ? `<button type="button" data-back="${r.id}">${T('إرجاع', 'Restore')}</button>` : `${F ? `<button type="button" data-ed="${r.id}">${T('تعديل', 'Edit')}</button>` : ''}<button type="button" data-del="${r.id}">${T('حذف', 'Delete')}</button>`}</span></li>`).join('')}</ol>
+        ${shown.length > 300 ? `<p class="dw-hint">${T('تظهر أول ٣٠٠ نتيجة؛ ابحث لتضييقها.', 'The first 300 are shown; search to narrow.')}</p>` : ''}
+        <div class="dw-acts"><button type="button" class="dw-btn" data-done>${T('تم', 'Done')}</button><button type="button" class="dw-btn ghost" data-exp>${T('احفظ نسختك في ملف', 'Save your version to a file')}</button><button type="button" class="dw-btn ghost" data-imp>${T('افتح نسخة من ملف', 'Open a version from a file')}</button>${mineOn(m) ? `<button type="button" class="dw-btn ghost" data-reset>${T('ارجع إلى الأصل', 'Back to the original')}</button>` : ''}</div>${msg ? `<p class="dw-qem">${msg}</p>` : ''}</div>`, 'dw-in');
+      msg = '';
+      const $ = s => el.querySelector(s), $$ = s => el.querySelectorAll(s);
+      $$('[data-c]').forEach(b => b.onclick = () => { cur = b.dataset.c; open = null; paint(); });
+      const fi = $('[data-find]'); fi.oninput = () => { find = fi.value; const p = fi.selectionStart; paint(); const f2 = $('[data-find]'); f2.focus(); try { f2.setSelectionRange(p, p); } catch (e) {} };
+      $('[data-tog]').onclick = () => save(nm => { nm.off = nm.off.includes(cur) ? nm.off.filter(x => x !== cur) : nm.off.concat(cur); });
+      const nc = $('[data-newc]'); if (nc) nc.onclick = () => { const n = (prompt(T('اسم الفئة الجديدة', 'Name of the new category')) || '').trim().slice(0, 30); if (!n) return; if (cats().includes(n)) { cur = n; return paint(); } save(nm => { nm.add[n] = []; }); cur = n; open = 'new'; paint(); };
+      const ad = $('[data-add]'); if (ad) ad.onclick = () => { open = 'new'; paint(); };
+      $$('[data-ed]').forEach(b => b.onclick = () => { open = b.dataset.ed; paint(); });
+      $$('[data-del]').forEach(b => b.onclick = () => { const id = b.dataset.del, i = +id.slice(1); save(nm => { if (id[0] === 'a') nm.add[cur].splice(i, 1); else nm.del[cur] = [...new Set((nm.del[cur] || []).concat(i))]; }); });
+      $$('[data-back]').forEach(b => b.onclick = () => { const i = +b.dataset.back.slice(1); save(nm => { nm.del[cur] = (nm.del[cur] || []).filter(x => x !== i); }); });
+      $$('[data-fx]').forEach(b => b.onclick = () => { open = null; paint(); });
+      $$('[data-f]').forEach(f => { const q = f.querySelector('input'); if (q && f.dataset.f === open) q.focus(); f.onsubmit = e => { e.preventDefault(); const v = {}; F.forEach(([k]) => { v[k] = f.elements[k].value; }); const [x, err] = qTo(rk, v); if (!x) { f.querySelector('[data-fm]').textContent = err; return; }
+        const id = f.dataset.f; open = null; save(nm => { if (id === 'new') (nm.add[cur] = nm.add[cur] || []).push(x); else if (id[0] === 'a') nm.add[cur][+id.slice(1)] = x; else { (nm.ed[cur] = nm.ed[cur] || {})[+id.slice(1)] = x; } }); msg = T('تم الحفظ', 'Saved'); paint(); }; });
+      $('[data-done]').onclick = back;
+      $('[data-exp]').onclick = () => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify({ dawwara: rk, v: 1, mine: m })], { type: 'application/json' })); a.download = `dawwara-${rk}.json`; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000); };
+      $('[data-imp]').onclick = () => { const i = document.createElement('input'); i.type = 'file'; i.accept = '.json,application/json'; i.onchange = async () => { try { const j = JSON.parse(await i.files[0].text()); if (j.dawwara !== rk || !j.mine) throw 0; const z = j.mine; save(nm => { nm.off = Array.isArray(z.off) ? z.off : []; nm.del = z.del || {}; nm.add = z.add || {}; nm.ed = z.ed || {}; }); msg = T('تم فتح النسخة', 'Version opened'); paint(); } catch (e) { alert(T('هذا الملف ليس نسخة من هذه المسابقة.', 'This file is not a version of this game.')); } }; i.click(); };
+      const rs = $('[data-reset]'); if (rs) rs.onclick = () => { if (!confirm(T('تعود المسابقة إلى أسئلتها الأصلية، وتُحذف تعديلاتك. هل تريد المتابعة؟', 'Back to the original questions; your changes are removed. Continue?'))) return; save(nm => { nm.off = []; nm.del = {}; nm.add = {}; nm.ed = {}; }); };
+    };
+    paint();
+  }
+
   async function hrSetup(rk) {
     rk = rk || rkOf(); const RD = READY()[rk];
     let B; try { B = await hrLoad(rk); } catch (e) { alert(T(`تعذّر تحميل أسئلة «${RD.t}». يُرجى التحقق من الاتصال.`, 'Could not load the questions.')); return; }
@@ -1261,6 +1327,7 @@ window.Dawwara = (function () {
         <div class="dw-row"><span>${T('وسائل المساعدة لكل مجموعة', 'Help for each group')}<small>${T('احذف إجابتين، وغيّر السؤال، ووقت إضافي، واسأل الخصم: عدد مرات كل منها', 'Remove two, change the question, extra time, ask a rival: uses of each')}</small></span><div class="dw-seg" data-h>${[0, 1, 2, 3].map(n => `<button type="button" data-v="${n}" aria-pressed="${c.hrh === n}">${n ? NUM(n) : T('بلا', 'None')}</button>`).join('')}</div></div>
         <details class="dw-wrph"${ROOM.ref ? ' open' : ''}><summary>${T('الجوالات', 'Phones')} <small>${T('اختياري: يختار القائد ويجيب ويستخدم وسائل المساعدة من جواله', 'Optional: the leader picks, answers and uses help from the phone')}</small></summary><div id="dwPh"></div></details>
         <p class="dw-hrleft">${T(`${NUM(left)} سؤالًا لم تُلعب بعد على هذا الجهاز، من ${NUM(all)}.`, `${left} of ${all} questions not yet played on this device.`)}${left < all ? ` <button type="button" class="dw-lnk" data-reset>${T('إعادة الأسئلة كلها', 'Bring all questions back')}</button>` : ''}</p>
+        <p class="dw-hrleft"><button type="button" class="dw-lnk" data-qedit>${T('عدّل الأسئلة', 'Edit the questions')}</button>${mineOn(mineGet(rk)) ? ` <span class="dw-mine">${T('تُلعب بنسختك المعدّلة', 'Playing your edited version')}</span>` : ''}</p>
         <div class="dw-acts"><button type="button" class="dw-btn" data-main>${T('ابدأ', 'Start')}</button></div></div>`, 'dw-in');
       const read = () => { el.querySelectorAll('[data-name]').forEach(i => { c.names[+i.dataset.name] = i.value.trim(); }); };
       el.querySelectorAll('[data-name]').forEach(i => i.oninput = () => { read(); leadPaint(); pub(); });
@@ -1268,6 +1335,7 @@ window.Dawwara = (function () {
       el.querySelectorAll('[data-n] [data-v]').forEach(b => b.onclick = () => { read(); c.n = +b.dataset.v; cfgSet(c); paint(); });
       el.querySelectorAll('[data-t] [data-v]').forEach(b => b.onclick = () => { read(); c.hrt = +b.dataset.v; cfgSet(c); paint(); });
       el.querySelectorAll('[data-h] [data-v]').forEach(b => b.onclick = () => { read(); c.hrh = +b.dataset.v; cfgSet(c); paint(); });
+      el.querySelector('[data-qedit]').onclick = () => { read(); cfgSet(c); qEdit(rk, () => hrSetup(rk)); };
       const rs = el.querySelector('[data-reset]'); if (rs) rs.onclick = () => { if (!confirm(T('تعود كل الأسئلة متاحة، ومنها ما لُعب سابقًا. هل تريد المتابعة؟', 'All questions become available again. Continue?'))) return; hrSave(new Set()); hrSetup(rk); };
       el.querySelector('[data-main]').onclick = () => { read(); cfgSet(c);
         D.groups = Array.from({ length: c.n }, (_, k) => ({ name: c.names[k] || NAMES()[k], col: COL[k], score: 0, right: 0, steals: 0, chal: 0, chances: '', h: { d: c.hrh, s: c.hrh, t: c.hrh, x: c.hrh } }));
@@ -1436,6 +1504,7 @@ window.Dawwara = (function () {
         <div class="dw-row"><span>${T('الوقت', 'Time')}</span><div class="dw-seg" data-t>${TM.map(n => `<button type="button" data-v="${n}" aria-pressed="${c[tk] === n}">${NUM(n)} ${T('ث', 's')}</button>`).join('')}</div></div>
         <div class="dw-wrph"><h3>${T('الجوالات', 'Phones')}</h3><div id="dwPh"></div></div>
         <p class="dw-hrleft">${T(`${NUM(left)} ${RD.nw} لم يُلعب بعد على هذا الجهاز.`, `${left} not yet played on this device.`)}${left < c.wrn ? ` <button type="button" class="dw-lnk" data-reset>${T('إعادة المحتوى كله', 'Bring all back')}</button>` : ''}</p>
+        <p class="dw-hrleft"><button type="button" class="dw-lnk" data-qedit>${T('عدّل المحتوى', 'Edit the content')}</button>${mineOn(mineGet(rk)) ? ` <span class="dw-mine">${T('تُلعب بنسختك المعدّلة', 'Playing your edited version')}</span>` : ''}</p>
         <div class="dw-acts"><button type="button" class="dw-btn" data-main>${T('ابدأ', 'Start')}</button></div></div>`, 'dw-in');
       el.querySelectorAll('[data-n] [data-v]').forEach(b => b.onclick = () => { read(); c.n = +b.dataset.v; cfgSet(c); paint(); });
       el.querySelectorAll('[data-q] [data-v]').forEach(b => b.onclick = () => { read(); c.wrn = +b.dataset.v; cfgSet(c); paint(); });
@@ -1443,6 +1512,7 @@ window.Dawwara = (function () {
       el.querySelectorAll('[data-cat]').forEach(b => b.onclick = () => { read(); const L = b.dataset.cat, on = c[ck].includes(L); if (on && c[ck].length === 1) return; c[ck] = on ? c[ck].filter(x => x !== L) : c[ck].concat(L); cfgSet(c); paint(); });
       el.querySelectorAll('[data-name]').forEach(i => i.oninput = () => { read(); leadPaint(); pub(); });
       const rs = el.querySelector('[data-reset]'); if (rs) rs.onclick = () => { try { localStorage.removeItem(`dw.${rk}.used`); } catch (e) {} paint(); };
+      el.querySelector('[data-qedit]').onclick = () => { read(); cfgSet(c); qEdit(rk, () => wrSetup(rk)); };
       el.querySelector('[data-main]').onclick = () => { read(); cfgSet(c);
         const on = Array.from({ length: c.n }, (_, k) => k).filter(k => ROOM.lead[k] != null);
         if (rk === 'wr' && on.length < 2) return alert(T('يلزم ربط جوالين على الأقل: يمسح كل قائد مجموعة الرمز من جواله.', 'Link at least two phones: each leader scans the code.'));

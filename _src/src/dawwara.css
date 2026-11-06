@@ -474,3 +474,16 @@ html.dw-phone .tl-crumb,html.dw-phone .dw-head,html.dw-phone .dw-lead{display:no
 .dw-wrph summary small{color:rgba(255,255,255,.65)}
 html.dw-phone .site-foot,html.dw-phone .ribbons-foot{display:none}
 .dwp-grid.cats{grid-template-columns:repeat(2,1fr)}.dwp-grid.cats button{font-size:1.05rem;padding:14px 8px}
+/* the question editor */
+.dw-qe{max-width:900px}.dw-mine{color:#e9a54a;font-weight:700;margin-inline-start:8px}
+.dw-qec{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 12px}.dw-qec button{all:unset;cursor:pointer;padding:6px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.25);font-weight:700}
+.dw-qec button small{font-weight:400;opacity:.7;margin-inline-start:4px}.dw-qec button.on{background:#e9a54a;color:#1d1b3a;border-color:#e9a54a}.dw-qec button.off:not(.on){opacity:.45;text-decoration:line-through}.dw-qec .dw-qen{border-style:dashed}
+.dw-qeh{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-bottom:10px}.dw-qeh b{font-size:1.25rem}.dw-qeh input{flex:1;min-width:180px;font:inherit;border:0;border-radius:10px;padding:9px 12px}
+.dw-qeadd{margin-bottom:10px}
+.dw-qel{list-style:none;margin:0;padding:0;display:grid;gap:6px;max-height:52vh;overflow:auto;padding-inline-end:4px}
+.dw-qel li{display:flex;justify-content:space-between;align-items:center;gap:12px;background:rgba(255,255,255,.07);border-radius:10px;padding:9px 12px;line-height:1.6}
+.dw-qel li.gone span:first-child{opacity:.4;text-decoration:line-through}.dw-qel li.new{border-inline-start:4px solid #3fa874}.dw-qel li.mod{border-inline-start:4px solid #e9a54a}
+.dw-qeb{display:flex;gap:6px;flex:none}.dw-qeb button{all:unset;cursor:pointer;font-size:.85rem;padding:4px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.3)}.dw-qeb [data-del]:hover{border-color:#e07a5f;color:#ffb4a2}
+.dw-qef{display:grid;gap:8px;width:100%;background:rgba(0,0,0,.2);border-radius:12px;padding:12px;margin-bottom:10px}.dw-qef label{display:grid;gap:4px}.dw-qef label span{font-size:.85rem;opacity:.75}
+.dw-qef input{font:inherit;border:0;border-radius:10px;padding:9px 12px}.dw-qef>div{display:flex;gap:8px}.dw-qem{margin:4px 0 0;color:#f3c27e;font-weight:700}
+.dw-qel li:has(.dw-qef){display:block;background:none;padding:0}
