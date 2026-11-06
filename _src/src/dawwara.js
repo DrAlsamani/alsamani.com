@@ -921,6 +921,7 @@ window.Dawwara = (function () {
   async function phonesBox() {
     const box = el.querySelector('#dwPh'); if (!box) return; box.innerHTML = `<p class="dw-hint">${T('لحظة…', 'One moment…')}</p>`;
     try { await openRoom(); } catch (e) { box.innerHTML = `<p class="dw-hint">${T('تعذّر الاتصال. ', 'Could not connect. ')}<button type="button" class="dw-btn ghost" data-retry>${T('حاول مرة أخرى', 'Try again')}</button></p>`; box.querySelector('[data-retry]').onclick = phonesBox; return; }
+    if (!D || !el || !el.contains(box)) return; // the setup was closed while connecting
     const url = 'https://alsamani.com/play/dawwara/?k=' + ROOM.pin; let svg = '';
     try { const qr = qrcode(0, 'M'); qr.addData(url); qr.make(); svg = qr.createSvgTag({ cellSize: 4, margin: 1, scalable: true }); } catch (e) {}
     const rem = !!D.cfg.remote, pm = rem ? 'r' : D.cfg.pall ? 'a' : 'l';
@@ -936,11 +937,14 @@ window.Dawwara = (function () {
     const top = document.createElement('div'); top.className = 'dwpv'; top.hidden = true; const body0 = document.createElement('div'); root.innerHTML = ''; root.append(top, body0); root = body0;
     let me = null, g = null, lead = {}, ans = null, buzzed = false, lastKey = '', rsent = false, mb = {}, watch = false, said = '', tx = '', REC = null, MV = null, lastV = null, mirOn = false, pend = false;
     // the host's screen, scaled to the phone, its clock counted down here
-    const mirror = v => { lastV = v; if (!v || !v.h) return; const w = v.w || 1280, hh = v.hh || 720, big = top.classList.contains('big'), cw = top.clientWidth || 360, ch = big ? innerHeight : 1e9, sc = Math.min(cw / w, ch / hh);
-      top.innerHTML = `<div class="dwv" style="height:${Math.round(hh * sc)}px;width:${Math.round(w * sc)}px"><div class="${esc(v.c || 'dw')} dwv-in" style="width:${w}px;height:${hh}px;transform:scale(${sc})">${v.h}</div></div>`;
+    // on the phone the screen is laid out again at a narrow width, so its words stay readable; enlarged, it keeps the host's shape
+    const mirror = v => { lastV = v; if (!v || !v.h) return; const big = top.classList.contains('big'), cw = top.clientWidth || 360, w = big ? v.w || 1280 : 560, hh = big ? v.hh || 720 : 0, sc = big ? Math.min(cw / w, innerHeight / hh) : cw / w;
+      top.innerHTML = `<div class="dwv${big ? '' : ' fit'}" style="width:${Math.round(w * sc)}px"><div class="${esc(v.c || 'dw')} dwv-in" style="width:${w}px;${hh ? `height:${hh}px;` : ''}transform:scale(${sc})">${v.h}</div></div>`;
+      const box = top.firstChild, inn = box.firstChild; box.style.height = Math.round((hh || Math.min(inn.scrollHeight, 1400)) * sc) + 'px';
       MV = { tl: v.tl || 0, td: v.td || 0, at: Date.now(), run: !!v.lk }; };
     setInterval(() => { if (!MV || !MV.run) return; const t = top.querySelector('#dwT'), arc = top.querySelector('#dwArc'), left = Math.max(0, MV.tl - (Date.now() - MV.at) / 1000); if (t) t.textContent = NUM(Math.ceil(left)); if (arc && MV.td) { const C = 2 * Math.PI * 44; arc.style.strokeDasharray = C; arc.style.strokeDashoffset = C * (1 - left / MV.td); } }, 250);
-    top.onclick = () => { top.classList.toggle('big'); mirror(lastV); };
+    // enlarged, the screen leaves the page for the body, so no transformed parent can hold it back
+    const home0 = root.parentNode; top.onclick = () => { const big = !top.classList.contains('big'); top.classList.toggle('big', big); if (big) document.body.appendChild(top); else home0.insertBefore(top, root); document.documentElement.style.overflow = big ? 'hidden' : ''; mirror(lastV); };
     addEventListener('resize', () => mirror(lastV));
     const mirStart = () => { if (mirOn) return; mirOn = true; top.hidden = false; db.ref('kh/' + pin + '/v').on('value', s => mirror(s.val())); };
     const recToggle = async k => { if (REC) { REC.stop(); return; }
@@ -1370,7 +1374,7 @@ window.Dawwara = (function () {
       o.querySelectorAll('[data-j]').forEach(b => b.onclick = () => pickOpt(+b.dataset.j)); };
     const help = async k => {
       if (k === 'o') { const hb = el.querySelector('[data-h="o"]'); if (hb) { hb.disabled = true; hb.innerHTML = T('لحظة…', 'One moment…'); }
-        const w = await wrongP; if (D.q !== st || st.locked || st.opts) return; st.opts = shuf([a, ...w]); val(50); paintOpts(); helps(); el.querySelector('#dwFoot').innerHTML = `<p class="dw-hrsteal">${T('اضغط إجابة المجموعة', 'Tap the group’s answer')}</p>`; return; }
+        const w = await wrongP; if (!D || D.q !== st || st.locked || st.opts) return; st.opts = shuf([a, ...w]); val(50); paintOpts(); helps(); el.querySelector('#dwFoot').innerHTML = `<p class="dw-hrsteal">${T('اضغط إجابة المجموعة', 'Tap the group’s answer')}</p>`; return; }
       if (k === 'x') { const h = el.querySelector('#dwHelp'); h.innerHTML = `<span class="dw-hrsteal">${T('على أي مجموعة؟', 'Which group?')}</span>${D.groups.map((o, t) => t === H.turn ? '' : `<button type="button" class="dw-hb" data-ax="${t}" style="border-color:${o.col}" dir="auto">${esc(o.name)}</button>`).join('')}<button type="button" class="dw-hb" data-ax="-1">${T('إلغاء', 'Cancel')}</button>`;
         h.querySelectorAll('[data-ax]').forEach(b => b.onclick = () => +b.dataset.ax < 0 ? helps() : rival(+b.dataset.ax)); return; }
       if (!(g.h[k] > 0)) return; g.h[k]--; SND.tick();
@@ -1515,7 +1519,8 @@ window.Dawwara = (function () {
   async function mixNext() {
     const s = D.seq[D.si++]; if (!s) { D.seq = null; return final(); }
     const RD = READY()[s.rk], no = D.si, all = D.seq.length; let B;
-    try { B = await hrLoad(s.rk); } catch (e) { flash(T('تعذّر تحميل المسابقة التالية', 'Could not load the next game')); return mixNext(); }
+    try { B = await hrLoad(s.rk); } catch (e) { if (D) { flash(T('تعذّر تحميل المسابقة التالية', 'Could not load the next game')); return mixNext(); } return; }
+    if (!D || !D.groups) return;
     D.rk = s.rk; clearInterval(tick); D.q = null; D.pickCb = null; pub({ ph: 'round', i: 'M' + no });
     shell(`${board(-1)}<div class="dw-mid dw-rcard"><p class="dw-sub">${T(`الجولة ${NUM(no)} من ${NUM(all)}`, `Round ${no} of ${all}`)}</p><h2>${esc(RD.t)}</h2><p>${RD.rule}</p>
       <div class="dw-acts"><button type="button" class="dw-btn" data-main>${T('ابدأ الجولة', 'Start the round')}</button></div></div>`, 'dw-in');
@@ -1553,7 +1558,7 @@ window.Dawwara = (function () {
       const pick = shuf(pool).slice(0, S.n);
       S.xs = await Promise.all(pick.map(async ([L, i]) => { const [q, a] = B[L][i]; let w = []; try { w = await hrWrong(L, i); } catch (e) {} const opts = shuf([a, ...w.slice(0, 3)]); D.hr.used.add(L + ':' + i);
         return { type: 'mc', q: RD.q(L, q), hint: RD.hint(L), opts, ok: [opts.indexOf(a)], full: RD.full(q, a), cat: RD.cats ? L : '' }; }));
-      hrSave(D.hr.used);
+      if (!D || D.solo !== S) return; hrSave(D.hr.used);
     }
     soloQ();
   }
@@ -1590,6 +1595,7 @@ window.Dawwara = (function () {
         Object.values(q.pages || {}).forEach(p => { if (!p.thumbnail) return; let t = p.title; for (let g = 0; g < 4 && back[t]; g++) t = back[t]; img[key(t)] = p.thumbnail.source; });
       } catch (e) {}
     }
+    if (!D || D.wr !== W) return; // closed while the pictures were loading
     const xs = [];
     for (const [L, j] of W.list) { if (xs.length >= n) break;
       const [k, name] = W.B[L][j], src = k.startsWith('f:') ? `https://flagcdn.com/w640/${k.slice(2)}.png` : img[key(k.slice(2))]; if (!src) continue;

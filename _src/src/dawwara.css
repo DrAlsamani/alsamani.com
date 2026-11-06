@@ -453,3 +453,5 @@ html.dw-phone .tl-crumb,html.dw-phone .dw-head,html.dw-phone .dw-lead{display:no
 .dw-imgw.zoom .dw-imf{display:block;height:100%;overflow:hidden;border-radius:14px;line-height:0}
 .dw-imgw.zoom .dw-img{height:100%;max-height:none;width:auto;max-width:100%;object-fit:contain}
 .dw-imgw:not(.zoom) .dw-imf{display:contents}
+.dwv.fit .dwv-in{height:auto!important;min-height:0!important;max-height:none!important;overflow:visible}
+.dwv.fit .dwv-in .dw-q,.dwv.fit .dwv-in .dw-mid{flex:none}
