@@ -125,7 +125,7 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
     if ((A.ctl.ban || {})[A.uid]) return note(T('أوقف المشرف صوتك في هذه الجلسة.', 'The host has turned your voice off for this session.'));
     if (o && o.listen) { A.aT = null; A.mic = false; } else try { A.ms = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true } }); A.aT = A.ms.getAudioTracks()[0]; A.mic = true; }
     catch (e) { A.aT = null; A.mic = false; note(T('لم يُسمح باستخدام الميكروفون، فالمشاركة بالاستماع فقط. ويمكن السماح به من إعدادات المتصفح.', 'No microphone allowed, so you can only listen. Allow it in the browser settings.')); }
-    A.joined = true; const me = A.ref.child('in/' + A.uid);
+    A.joined = true; A.left = 0; const me = A.ref.child('in/' + A.uid);
     me.onDisconnect().remove(); A.ref.child('sig/' + A.uid).onDisconnect().remove();
     await me.set({ n: A.name.slice(0, 24), a: A.mic ? 1 : 0, v: 0, t: firebase.database.ServerValue.TIMESTAMP }).catch(() => { A.joined = false; });
     if (!A.joined) { stopTracks(); return note(T('تعذّر الدخول للصوت الآن.', 'Could not join the voice now.')); }
@@ -134,9 +134,10 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
     clearInterval(A.tp); A.tp = setInterval(talkPoll, 900);
     apply(); paint();
   }
+  function rejoin() { const me = A.ref.child('in/' + A.uid); me.onDisconnect().remove(); A.ref.child('sig/' + A.uid).onDisconnect().remove(); me.set({ n: A.name.slice(0, 24), a: A.mic ? 1 : 0, v: A.cam ? 1 : 0, t: firebase.database.ServerValue.TIMESTAMP }).catch(() => {}); Object.keys(A.P).forEach(drop); Object.keys(A.in).forEach(u => { if (u !== A.uid && A.uid < u && !A.P[u]) call(u); }); }
   function stopTracks() { [A.aT, A.vT].forEach(t => { if (t) t.stop(); }); A.aT = A.vT = null; A.mic = A.cam = false; }
   function leave(msg) {
-    if (!A || !A.joined) return; A.joined = false; if (A.sigRef) A.sigRef.off();
+    if (!A || !A.joined) return; A.left = 1; A.joined = false; if (A.sigRef) A.sigRef.off();
     Object.keys(A.P).forEach(drop); stopTracks(); clearInterval(A.tp);
     A.ref.child('in/' + A.uid).remove().catch(() => {}); A.ref.child('sig/' + A.uid).remove().catch(() => {});
     A.ref.child('in/' + A.uid).onDisconnect().cancel(); paint(); if (msg) note(msg);
@@ -268,9 +269,11 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
     sub(R.child('on'), 'value', s => { A.on = !!s.val(); if (!A.on && A.joined) leave(T('أوقف المشرف الصوت.', 'The host turned voice off.')); paint(); });
     sub(R.child('ctl'), 'value', s => { A.ctl = s.val() || {}; if (A.joined && (A.ctl.ban || {})[A.uid]) leave(T('أوقف المشرف صوتك في هذه الجلسة.', 'The host has turned your voice off for this session.')); apply(); paint(); });
     sub(R.child('pol'), 'value', s => { const was = A.pol; A.pol = s.val() || {}; apply(); paint();  });
+    // a phone that lost its connection comes back into the room by itself
+    sub(R.root.child('.info/connected'), 'value', s => { if (!A) return; if (s.val() !== true) { A.off = 1; return; } if (A.off && A.joined) rejoin(); A.off = 0; });
     sub(R.child('in'), 'child_added', s => { A.in[s.key] = s.val() || {}; if (A.joined && s.key !== A.uid && A.uid < s.key && !A.P[s.key]) call(s.key); paint(); });
     sub(R.child('in'), 'child_changed', s => { A.in[s.key] = s.val() || {}; paint(); });
-    sub(R.child('in'), 'child_removed', s => { delete A.in[s.key]; drop(s.key); if (s.key === A.uid && A.joined) leave(); paint(); });
+    sub(R.child('in'), 'child_removed', s => { delete A.in[s.key]; drop(s.key); if (s.key === A.uid && A.joined && !A.left) rejoin(); paint(); });
     paint();
   }
   document.addEventListener('fullscreenchange', () => { if (A) paint(); });

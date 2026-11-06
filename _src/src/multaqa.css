@@ -270,3 +270,9 @@ body.mic-q #mlCall,body.mic-q #mlTiles,body.mic-q #hlRoomV{display:none!importan
 #mlShPill,#mlMicP{z-index:2147}#mlShBar{z-index:2146}#mlShS{z-index:2148}#mlShV{z-index:2149}#mlMicS{z-index:2150}
 #mlMicS .ml-b.bad{background:#B23A2E;color:#fff;border:0}#stMicB{z-index:2145}#stSnd{z-index:2146}
 .sh-pr[hidden],#stLL li[hidden]{display:none!important}.sh-none[hidden]{display:none}.sh-qb{display:grid;gap:4px}
+/* long unbroken titles and narrow phones */
+.ml-t,.ml-t b,.ml-grow,.ml-stack h2,.ml-card h2,.sh-now b{overflow-wrap:anywhere}.ml-stack,.ml-card,#hBody,#mBody{min-width:0;max-width:100%}.ml-list li{min-width:0}
+@media (max-width:560px){.ml-tabs{flex-wrap:wrap;overflow-x:visible;row-gap:2px;gap:2px 14px}}
+.ml-more>summary{min-height:40px;display:flex;align-items:center;gap:6px}
+.hl-seg button{min-height:38px}.ml-stack summary{min-height:40px;display:flex;align-items:center;gap:6px}
+.ml-card.ml-bare{background:none;border:0;padding:0}
