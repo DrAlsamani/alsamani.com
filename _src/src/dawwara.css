@@ -437,3 +437,9 @@ html.dw-phone .tl-crumb,html.dw-phone .dw-head,html.dw-phone .dw-lead{display:no
 .dwp-tv{margin:0;text-align:center;font-weight:700;color:var(--muted)}
 .dw-remseg{flex-wrap:wrap}.dw-pmh{margin:0 0 8px;font-size:.85rem;line-height:1.7}
 .dwp-tv.lead{background:#fff4e2;color:#1d1b3a;border-radius:12px;padding:10px;font-size:1.1rem}
+.dw-leads.multi{display:grid;gap:8px}.dw-ldh{margin:0;font-size:.85rem;opacity:.8}
+.dw-ldt{display:flex;flex-wrap:wrap;align-items:center;gap:6px;border-inline-start:4px solid var(--c);padding-inline-start:8px}.dw-ldt>b{margin-inline-end:4px}.dw-ldt>small{opacity:.6}
+.dw-ldt button{all:unset;cursor:pointer;padding:4px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.3);font-size:.9rem}.dw-ldt button.on{background:var(--c);border-color:var(--c);color:#fff;font-weight:700}.dw-ldt button small{opacity:.85}
+.dw-ldt button.sel{outline:2px solid #e9a54a;outline-offset:2px}
+.dw-ldm{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:2px 0 4px;padding:8px;border-radius:10px;background:rgba(0,0,0,.2);font-size:.85rem}
+.dw-ldm button{all:unset;cursor:pointer;padding:5px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.3)}.dw-ldm [data-mmv]{border-color:var(--c)}.dw-ldm [data-mlead]{background:#e9a54a;color:#1d1b3a;border-color:#e9a54a;font-weight:700}
