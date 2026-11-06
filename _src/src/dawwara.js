@@ -219,7 +219,7 @@ window.Dawwara = (function () {
     if (['num', 'word'].includes(st.x.type) && !el.querySelector('.dw-ans')) { const s = el.querySelector('.dw-say'); if (s) s.innerHTML = `<p class="dw-ans">${T('الإجابة', 'The answer')}: <b dir="auto">${esc(st.x.ans)}${st.x.unit ? ' ' + esc(st.x.unit) : ''}</b></p>`; }
     const s2 = el.querySelector('.dw-say .dw-yn'); if (s2) s2.remove();
     const f = el.querySelector('#dwFoot');
-    f.innerHTML = `<div class="dw-res ${right ? 'ok' : 'no'}"><p>${right ? `<b>+${NUM(pts)}</b> ${T('لـ', 'to')}<span dir="auto">${esc(who.name)}</span>` : T('لم تُحتسب نقاط في هذا السؤال', 'No points for this one')}</p><button type="button" class="dw-btn" data-main>${nextLabel()}</button></div>`;
+    f.innerHTML = `<div class="dw-res ${right ? 'ok' : 'no'}"><p>${right ? `<b>+${NUM(pts)}</b> ${T('لمجموعة ', 'to ')}<span dir="auto">${esc(who.name)}</span>` : T('لم تُحتسب نقاط في هذا السؤال', 'No points for this one')}</p><button type="button" class="dw-btn" data-main>${nextLabel()}</button></div>`;
     el.querySelector('.dw-board').outerHTML = board(D.groups.indexOf(st.g));
     f.querySelector('[data-main]').onclick = go;
   }
@@ -286,9 +286,9 @@ window.Dawwara = (function () {
     }, 100);
   }
   const ring = dur => `<div class="dw-ring"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="44"/><circle cx="50" cy="50" r="44" id="dwArc"/></svg><b id="dwT">${NUM(dur)}</b></div>`;
-  const qBody = (x, live) => `<h2 class="dw-qt" dir="auto">${esc(x.q)}</h2>${x.img ? `<img class="dw-img" src="${x.img}" alt="">` : ''}${isMC(x) ? `<div class="dw-opts n${x.opts.length}${live ? '' : ' dw-view'}">${x.opts.map((o, j) => `<button type="button" ${live ? 'data-j' : 'data-v'}="${j}" style="--o:var(--dwo${j})"${live ? ' disabled' : ''}><i>${LET()[j]}</i><span dir="auto">${esc(o)}</span></button>`).join('')}</div>` : ''}`;
+  const qBody = (x, live) => `<h2 class="dw-qt" dir="auto">${esc(x.q)}</h2>${x.img ? `<div class="dw-imgw${x.zoom ? ' zoom' : ''}" style="--d:${x.zd || 20}s;--ox:${x.ox || 50}%;--oy:${x.oy || 50}%"><img class="dw-img" src="${x.img}" alt="" referrerpolicy="no-referrer"></div>${x.cr ? `<small class="dw-imcr">${esc(x.cr)}</small>` : ''}` : ''}${isMC(x) ? `<div class="dw-opts n${x.opts.length}${live ? '' : ' dw-view'}">${x.opts.map((o, j) => `<button type="button" ${live ? 'data-j' : 'data-v'}="${j}" style="--o:var(--dwo${j})"${live ? ' disabled' : ''}><i>${LET()[j]}</i><span dir="auto">${esc(o)}</span></button>`).join('')}</div>` : ''}`;
   const answerOf = x => isMC(x) ? x.ok.map(j => `${LET()[j]}) ${x.opts[j]}`).join(T(' و', ' & ')) : `${x.ans}${x.unit ? ' ' + x.unit : ''}`;
-  const markRight = x => el.querySelectorAll('[data-j],[data-v]').forEach(b => { const j = +(b.dataset.j || b.dataset.v); b.disabled = true; if (x.ok && x.ok.includes(j)) b.classList.add('ok'); });
+  const markRight = x => (el.querySelector('.dw-imgw') || { classList: { add() {} } }).classList.add('done') || el.querySelectorAll('[data-j],[data-v]').forEach(b => { const j = +(b.dataset.j || b.dataset.v); b.disabled = true; if (x.ok && x.ok.includes(j)) b.classList.add('ok'); });
   const after = (html) => { const f = el.querySelector('#dwFoot'); f.innerHTML = `<div class="dw-res">${html}<button type="button" class="dw-btn" data-main>${nextLabel()}</button></div>`; f.querySelector('[data-main]').onclick = go; el.querySelector('.dw-board').outerHTML = board(-1); };
 
   /* everyone answers: each group raises its card or writes; the host records them, then reveals */
@@ -351,7 +351,7 @@ window.Dawwara = (function () {
     };
     el.querySelectorAll('[data-j]').forEach(b => b.onclick = () => { if (st.sel == null) { say(T('اختر الفريق أولًا من الأسفل', 'Pick the team first, below')); return; } const k = st.sel; st.sel = null; st.onAns(k, +b.dataset.j); if (!st.locked) foot(); });
     const end = (k, p) => { st.locked = true; clearInterval(tick); markRight(x); k != null ? SND.ok() : SND.no(); pub({ ph: 'wait', i: D.t, won: k == null ? -1 : k });
-      after(`<p>${k != null ? `<b>+${NUM(p)}</b> ${T('لـ', 'to')}<span dir="auto">${esc(D.groups[k].name)}</span> · ` : ''}${T('الإجابة', 'The answer')}: <b dir="auto">${esc(answerOf(x))}</b></p>`); };
+      after(`<p>${k != null ? `<b>+${NUM(p)}</b> ${T('لمجموعة ', 'to ')}<span dir="auto">${esc(D.groups[k].name)}</span> · ` : ''}${T('الإجابة', 'The answer')}: <b dir="auto">${esc(answerOf(x))}</b></p>`); };
     open(); foot(); send(); clock(st, () => end(null)); SND.go();
   }
 
@@ -384,7 +384,7 @@ window.Dawwara = (function () {
       if (st.out.length >= D.groups.length || open <= 1) return end(null); nextInLine();
     });
     const end = (k, pts) => { st.locked = true; clearInterval(tick); markRight(x); k != null ? SND.ok() : SND.no(); pub({ ph: 'wait', i: D.t });
-      after(`<p>${k != null ? `<b>+${NUM(pts)}</b> ${T('لـ', 'to')}<span dir="auto">${esc(D.groups[k].name)}</span>` : `${T('الإجابة', 'The answer')}: <b dir="auto">${esc(answerOf(x))}</b>`}</p>`); };
+      after(`<p>${k != null ? `<b>+${NUM(pts)}</b> ${T('لمجموعة ', 'to ')}<span dir="auto">${esc(D.groups[k].name)}</span>` : `${T('الإجابة', 'The answer')}: <b dir="auto">${esc(answerOf(x))}</b>`}</p>`); };
     hands(); clock(st, () => end(null)); SND.go();
   }
 
@@ -903,7 +903,7 @@ window.Dawwara = (function () {
           : `${g.ask >= 0 ? `<p class="dwp-h">${T('سؤال محوّل إليكم من', 'A question passed to you by')} ${esc(g.names[g.team] || '')}</p>` : ''}${g.n ? `<p class="dwp-h">${T('اختاروا الإجابة', 'Choose the answer')}</p>${opts(g.n, 0, g.gone)}` : `<p class="dwp-big">${T('قولوا الإجابة للمدير', 'Say the answer to the host')}</p>`}${helpUI(g.hl)}`; }
       else if (ph === 'hro') body = g.team !== k ? `<p class="dwp-big">${T('ترتّب الآن', 'Now ordering')}: ${esc(g.names[g.team] || '')}</p>` : roUI() + helpUI(g.hl);
       else if (ph === 'intro') body = `<p class="dwp-big">${g.team === k ? T('دوركم! استعدوا', 'Your turn! Get ready') : T('دور', 'Turn:') + ' ' + esc(g.names[g.team] || '')}</p>`;
-      else if (ph === 'wait' && g.won != null) body = `<p class="dwp-big">${g.won === k ? T('أصبتم! النقاط لكم', 'Right! The points are yours') : g.won >= 0 ? `${g.pt ? T('النقاط لـ', 'Points to') : T('سبقكم', 'Beaten by')} ${esc(g.names[g.won] || '')}` : T('لم يُصب أحد', 'Nobody got it')}</p>`;
+      else if (ph === 'wait' && g.won != null) body = `<p class="dwp-big">${g.won === k ? T('أصبتم! النقاط لكم', 'Right! The points are yours') : g.won >= 0 ? `${g.pt ? T('النقاط لمجموعة', 'Points to') : T('سبقكم', 'Beaten by')} ${esc(g.names[g.won] || '')}` : T('لم يُصب أحد', 'Nobody got it')}</p>`;
       else body = `<p class="dwp-big">${ph === 'end' ? T('انتهت الأمسية', 'The evening is over') : ph === 'chal' ? T('تحدٍّ على الشاشة', 'A challenge on the screen') : T('انتبه للشاشة', 'Watch the screen')}</p>`;
       root.innerHTML = `<div class="dwp" style="--c:${col}"><div class="dwp-top"><b dir="auto">${esc(g.names[k])}</b><span>${NUM((g.sc || [])[k] || 0)}${g.dbl && g.dbl[k] ? ' ×٢' : ''}</span></div>${body}
         ${chs ? `<div class="dwp-ch"><p>${T('فرصكم', 'Your chances')}</p>${chs.split('').map(c => `<button type="button" data-ch="${c}">${CN[c]}</button>`).join('')}</div>` : ''}</div>`;
@@ -1064,7 +1064,7 @@ window.Dawwara = (function () {
       <div class="dw-pod">${R.slice(0, 3).map((g, k) => `<div class="p${k + 1}" style="--c:${g.col}"><span dir="auto">${esc(g.name)}</span><b>${NUM(g.score)}</b><i>${NUM(k + 1)}</i></div>`).join('')}</div>
       <table class="dw-tab"><tr><th>${T('المجموعة', 'Group')}</th><th>${T('النقاط', 'Points')}</th><th>${T('إجابات صحيحة', 'Right')}</th><th>${T('سرقات', 'Steals')}</th><th>${T('تحديات فازت بها', 'Challenges won')}</th></tr>${R.map(g => `<tr><td dir="auto"><i style="background:${g.col}"></i>${esc(g.name)}</td><td>${NUM(g.score)}</td><td>${NUM(g.right)}</td><td>${NUM(g.steals)}</td><td>${NUM(g.chal || 0)}</td></tr>`).join('')}</table>
       <div class="dw-acts"><button type="button" class="dw-btn" data-main>${T('العب مرة ثانية', 'Play again')}</button><button type="button" class="dw-btn ghost" data-cert>${IC.print}${T('اطبع شهادة الفائز', 'Print the winner’s certificate')}</button></div></div>`, 'dw-in');
-    el.querySelector('[data-main]').onclick = () => { if (D.mode === 'wr' || D.mode === 'qd') return wrSetup(D.mode); if (D.mode === 'hr') return hrSetup(D.rk); D.steps = null; setup(); };
+    el.querySelector('[data-main]').onclick = () => { if (['wr', 'qd', 'im'].includes(D.mode)) return wrSetup(D.mode); if (D.mode === 'hr') return hrSetup(D.rk); D.steps = null; setup(); };
     el.querySelector('[data-cert]').onclick = () => cert(tie ? R.filter(g => g.score === w.score) : [w]);
   }
 
@@ -1105,6 +1105,9 @@ window.Dawwara = (function () {
       rule: T('تختار المجموعة صاحبة الدور فئة ثم رقمًا، فيظهر أول المثل وتكمله. التكملة دون خيارات ١٠٠ نقطة، ومع عرض الخيارات ٥٠، وإن أخطأت فلأول مجموعة أخرى تكمله نصف النقاط.', 'The group on turn picks a category, then a number; the start of a proverb appears and they finish it. Without options 100, with the options 50; after a miss, the first other group gets half.'),
       q: (L, q) => `${q} …`, full: (q, a) => `${q} ${a}`,
       ai: (L, q, a) => `مثل أو قول عربي مشهور أوله: «${q}» وتكملته الصحيحة: «${a}».\nاكتب ثلاث تكملات خاطئة مقنعة بطول التكملة الصحيحة وأسلوبها، يظن السامع أنها قد تكون صحيحة، ولا تكون تكملة صحيحة لهذا المثل. أعد JSON فقط بالشكل: {"wrong":["","",""]}` },
+    im: { file: 'suwar.json', t: T('خمّن الصورة', 'Guess the picture'), cats: true, nl: T('عدد الصور', 'Pictures'), nw: T('صورة', 'pictures'),
+      q: { 'أعلام الدول': T('علم أي دولة؟', 'Which country’s flag?'), 'معالم': T('ما هذا المَعلم؟', 'Which landmark?'), 'حيوانات': T('ما هذا الحيوان؟', 'Which animal?') },
+      rule: T('تظهر صورة مقرّبة ومشوشة تتضح شيئًا فشيئًا، مع أربعة خيارات. مع الجوالات: أول إجابة صحيحة ١٠٠ نقطة، و٥٠ بعد أي خطأ، ومن يخطئ يخرج من السؤال. بلا جوالات: ترفع المجموعة يدها ويسجّل المدير إجابتها.', 'A close, blurred picture that clears bit by bit, with four options. With phones: first right answer 100, 50 after a miss; a wrong answer is out. Without phones: groups raise hands and the host records.') },
     qd: { file: 'qadir.json', t: T('قدّرها', 'Estimate it'), cats: true, nl: T('عدد الأسئلة', 'Questions'), nw: T('سؤالًا', 'questions'),
       rule: T('يظهر سؤال جوابه رقم، فيكتب قائد كل مجموعة تقديره على جواله، ويكتب المدير تقدير المجموعة التي ليس معها جوال. عند انتهاء الوقت يظهر الجواب على خط الأرقام مع تقديرات المجموعات: الأقرب ١٠٠ نقطة، والذي يليه ٥٠.', 'A question with a number for an answer; each leader types an estimate on the phone. At the end the answer shows on a number line with every estimate: the closest 100, the next 50.') },
     wr: { file: 'kalimat.json', t: T('سباق الكلمات', 'Word race'), cats: true, nl: T('عدد الجمل', 'Sentences'), nw: T('جملة', 'sentences'),
@@ -1288,7 +1291,7 @@ window.Dawwara = (function () {
   /* ---------- the game's own page: where the questions come from ---------- */
   /* ---------- word race: a proverb or a verse in shuffled words; each leader orders them on the phone, and the screen shows every attempt ---------- */
   async function wrSetup(rk) {
-    rk = rk === 'qd' ? 'qd' : 'wr'; const RD = READY()[rk], ck = rk + 'c', tk = rk + 't', TM = rk === 'qd' ? [20, 30, 45] : [45, 60, 90]; let B; try { B = await hrLoad(rk); } catch (e) { alert(T(`تعذّر تحميل «${RD.t}». يُرجى التحقق من الاتصال.`, 'Could not load the sentences.')); return; }
+    rk = ['qd', 'im'].includes(rk) ? rk : 'wr'; const RD = READY()[rk], ck = rk + 'c', tk = rk + 't', TM = rk === 'qd' ? [20, 30, 45] : rk === 'im' ? [15, 20, 30] : [45, 60, 90]; let B; try { B = await hrLoad(rk); } catch (e) { alert(T(`تعذّر تحميل «${RD.t}». يُرجى التحقق من الاتصال.`, 'Could not load the sentences.')); return; }
     const c = cfgGet(), cats = Object.keys(B); c.wrn = c.wrn || 8; if (!TM.includes(c[tk])) c[tk] = TM[1]; if (!Array.isArray(c[ck]) || !c[ck].some(x => cats.includes(x))) c[ck] = cats.slice();
     D = { mode: rk, rk, title: RD.t, cfg: Object.assign(c, { chn: false, ph: true }), steps: [] };
     const read = () => { el.querySelectorAll('[data-name]').forEach(i => { c.names[+i.dataset.name] = i.value.trim(); }); };
@@ -1317,7 +1320,7 @@ window.Dawwara = (function () {
         const used = hrUsed(rk); let pool = []; c[ck].forEach(L => B[L].forEach((_, i) => { if (!used.has(L + ':' + i)) pool.push([L, i]); }));
         if (pool.length < c.wrn) { try { localStorage.removeItem(`dw.${rk}.used`); } catch (e) {} pool = []; c[ck].forEach(L => B[L].forEach((_, i) => pool.push([L, i]))); }
         D.groups = Array.from({ length: c.n }, (_, k) => ({ name: c.names[k] || NAMES()[k], col: COL[k], score: 0, right: 0, steals: 0, chal: 0, chances: '' }));
-        D.wr = { B, used: hrUsed(rk), list: shuf(pool).slice(0, c.wrn), i: 0 }; SND.go(); rk === 'qd' ? qdQ() : wrQ(); };
+        D.wr = { B, used: hrUsed(rk), list: shuf(pool).slice(0, rk === 'im' ? c.wrn + 15 : c.wrn), i: 0 }; SND.go(); rk === 'im' ? imStart() : rk === 'qd' ? qdQ() : wrQ(); };
       phonesBox();
     };
     paint();
@@ -1361,6 +1364,29 @@ window.Dawwara = (function () {
       rows(); send(); foot(); };
     rows(); foot(); send(); clock(st, end); SND.go();
   }
+
+  /* ---------- guess the picture: flags from flagcdn, landmarks and animals from Wikipedia's lead images; played as speed questions ---------- */
+  async function imStart() {
+    const W = D.wr, n = D.cfg.wrn, RD = READY().im, key = t => String(t).replace(/_/g, ' ');
+    shell(`<div class="dw-mid"><p class="dw-sub">${T('تُجهَّز الصور…', 'Preparing the pictures…')}</p></div>`, 'dw-in');
+    const wk = [...new Set(W.list.map(([L, j]) => W.B[L][j][0]).filter(k => k.startsWith('w:')).map(k => k.slice(2)))], img = {};
+    for (let i = 0; i < wk.length; i += 40) {
+      try { const j = await (await fetch('https://en.wikipedia.org/w/api.php?action=query&prop=pageimages&piprop=thumbnail&pithumbsize=900&redirects=1&format=json&origin=*&titles=' + encodeURIComponent(wk.slice(i, i + 40).join('|')))).json();
+        const q = j.query || {}, back = {}; [...(q.normalized || []), ...(q.redirects || [])].forEach(r => { back[r.to] = r.from; });
+        Object.values(q.pages || {}).forEach(p => { if (!p.thumbnail) return; let t = p.title; for (let g = 0; g < 4 && back[t]; g++) t = back[t]; img[key(t)] = p.thumbnail.source; });
+      } catch (e) {}
+    }
+    const xs = [];
+    for (const [L, j] of W.list) { if (xs.length >= n) break;
+      const [k, name] = W.B[L][j], src = k.startsWith('f:') ? `https://flagcdn.com/w640/${k.slice(2)}.png` : img[key(k.slice(2))]; if (!src) continue;
+      const wrong = shuf(W.B[L].map(x => x[1]).filter(x => x !== name)).slice(0, 3), opts = shuf([name, ...wrong]);
+      xs.push({ type: 'mc', q: RD.q[L] || T('ما هذا؟', 'What is this?'), opts, ok: [opts.indexOf(name)], img: src, zoom: 1, zd: Math.round((D.cfg.imt || 20) * .85), ox: 25 + Math.round(Math.random() * 50), oy: 25 + Math.round(Math.random() * 50), cr: k.startsWith('w:') ? T('الصورة من ويكيبيديا', 'Image: Wikipedia') : '' });
+      W.used.add(L + ':' + j); }
+    hrSave(W.used);
+    if (!xs.length) { alert(T('تعذّر تحميل الصور. يُرجى التحقق من الاتصال.', 'Could not load the pictures.')); return wrSetup('im'); }
+    xs.forEach(x => { const i = new Image(); i.referrerPolicy = 'no-referrer'; i.src = x.img; });
+    D.cfg.time = D.cfg.imt || 20; D.steps = xs.map(x => ({ k: 'buzz', x })); D.t = 0; run();
+  }
   /* ---------- estimate it: a number for an answer; each leader types an estimate, the closest wins ---------- */
   const fmtN = v => NUM(Number(v).toLocaleString('en-US', { maximumFractionDigits: 2 })).replace(/,/g, T('٬', ','));
   const numIn = t => { const v = parseFloat(String(t).replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[٫]/g, '.').replace(/[,٬\s]/g, '')); return isFinite(v) && v >= 0 ? v : null; };
@@ -1400,7 +1426,7 @@ window.Dawwara = (function () {
     mine = mine.map(z => ({ z, n: (z.qs || []).filter(usable).length })).filter(o => o.n >= 2 || (o.z.ch || []).length);
     const lib = (window.MDLib || []).map(z => ({ z, n: (z.qs || []).filter(usable).length })).filter(o => o.n >= 4);
     const item = (o, k, src) => `<button type="button" class="dw-pick" data-src="${src}" data-k="${k}"><b dir="auto">${esc(o.z.title || T('بلا عنوان', 'Untitled'))}</b><small>${T(`${NUM(o.n)} سؤالًا صالحًا`, `${o.n} usable questions`)}${o.z.who ? ' · ' + esc(o.z.who) : ''}</small></button>`;
-    root.innerHTML = `<div class="dw-start"><div class="dw-ready"><button type="button" class="dw-readyc" id="dwHr"><span class="dw-hrL">${T('ح', 'H')}</span><span><b>${T('حروف', 'Huroof')}</b><small>${T('مسابقة جاهزة للمجموعات: أسئلة في حروف الهجاء الثمانية والعشرين، تختار المجموعة الحرف ثم رقم السؤال.', 'A ready team quiz: questions across the 28 letters; the group picks a letter, then a question number.')}</small></span><em>${T('العب الآن', 'Play now')}</em></button><button type="button" class="dw-readyc" id="dwMt"><span class="dw-hrL">${T('م', 'P')}</span><span><b>${T('أكمل المثل', 'Finish the proverb')}</b><small>${T('أمثال فصيحة وشعبية وحِكم: يظهر أول المثل وتكمله المجموعة.', 'Classical and popular proverbs and sayings: the start appears and the group finishes it.')}</small></span><em>${T('العب الآن', 'Play now')}</em></button><button type="button" class="dw-readyc" id="dwAy"><span class="dw-hrL">${T('أ', 'W')}</span><span><b>${T('أين تقع؟', 'Where is it?')}</b><small>${T('مدن ومحافظات ومعالم في المملكة والعالم: في أي منطقة أو مدينة أو دولة تقع؟', 'Cities, governorates and landmarks at home and abroad: which region, city or country?')}</small></span><em>${T('العب الآن', 'Play now')}</em></button><button type="button" class="dw-readyc" id="dwQa"><span class="dw-hrL">${T('ق', 'Q')}</span><span><b>${T('من القائل؟', 'Who said it?')}</b><small>${T('أبيات مشهورة وأقوال مأثورة ومؤلفو كتب: من القائل أو المؤلف؟', 'Famous verses, sayings and book authors: who said or wrote it?')}</small></span><em>${T('العب الآن', 'Play now')}</em></button><button type="button" class="dw-readyc" id="dwRo"><span class="dw-hrL">${T('ر', 'O')}</span><span><b>${T('رتّب الأحداث', 'Put them in order')}</b><small>${T('أحداث من السيرة والتاريخ الإسلامي وتاريخ المملكة والاختراعات، ترتّبها المجموعة زمنيًا.', 'Events from the Seerah, Islamic and Saudi history and inventions, put in time order.')}</small></span><em>${T('العب الآن', 'Play now')}</em></button><button type="button" class="dw-readyc dw-readyph" id="dwQd"><span class="dw-hrL">${T('ق', 'E')}</span><span><b>${T('قدّرها', 'Estimate it')}</b><small>${T('أسئلة جوابها رقم: يكتب كل قائد تقديره على جواله، والأقرب إلى الجواب يفوز.', 'Questions with a number for an answer: each leader types an estimate; the closest wins.')}</small></span><em>${T('العب الآن', 'Play now')}</em></button><button type="button" class="dw-readyc dw-readyph" id="dwWr"><span class="dw-hrL">${T('ك', 'W')}</span><span><b>${T('سباق الكلمات', 'Word race')}</b><small>${T('كلمات مثل أو بيت مبعثرة، يرتّبها قادة المجموعات على جوالاتهم، وتظهر محاولاتهم على الشاشة مباشرة.', 'The shuffled words of a proverb or a verse; the leaders order them on their phones, live on the screen.')}</small></span><em>${T('العب الآن', 'Play now')}</em></button></div>
+    root.innerHTML = `<div class="dw-start"><div class="dw-ready"><button type="button" class="dw-readyc" id="dwHr"><span class="dw-hrL">${T('ح', 'H')}</span><span><b>${T('حروف', 'Huroof')}</b><small>${T('مسابقة جاهزة للمجموعات: أسئلة في حروف الهجاء الثمانية والعشرين، تختار المجموعة الحرف ثم رقم السؤال.', 'A ready team quiz: questions across the 28 letters; the group picks a letter, then a question number.')}</small></span><em>${T('العب الآن', 'Play now')}</em></button><button type="button" class="dw-readyc" id="dwMt"><span class="dw-hrL">${T('م', 'P')}</span><span><b>${T('أكمل المثل', 'Finish the proverb')}</b><small>${T('أمثال فصيحة وشعبية وحِكم: يظهر أول المثل وتكمله المجموعة.', 'Classical and popular proverbs and sayings: the start appears and the group finishes it.')}</small></span><em>${T('العب الآن', 'Play now')}</em></button><button type="button" class="dw-readyc" id="dwAy"><span class="dw-hrL">${T('أ', 'W')}</span><span><b>${T('أين تقع؟', 'Where is it?')}</b><small>${T('مدن ومحافظات ومعالم في المملكة والعالم: في أي منطقة أو مدينة أو دولة تقع؟', 'Cities, governorates and landmarks at home and abroad: which region, city or country?')}</small></span><em>${T('العب الآن', 'Play now')}</em></button><button type="button" class="dw-readyc" id="dwQa"><span class="dw-hrL">${T('ق', 'Q')}</span><span><b>${T('من القائل؟', 'Who said it?')}</b><small>${T('أبيات مشهورة وأقوال مأثورة ومؤلفو كتب: من القائل أو المؤلف؟', 'Famous verses, sayings and book authors: who said or wrote it?')}</small></span><em>${T('العب الآن', 'Play now')}</em></button><button type="button" class="dw-readyc" id="dwRo"><span class="dw-hrL">${T('ر', 'O')}</span><span><b>${T('رتّب الأحداث', 'Put them in order')}</b><small>${T('أحداث من السيرة والتاريخ الإسلامي وتاريخ المملكة والاختراعات، ترتّبها المجموعة زمنيًا.', 'Events from the Seerah, Islamic and Saudi history and inventions, put in time order.')}</small></span><em>${T('العب الآن', 'Play now')}</em></button><button type="button" class="dw-readyc" id="dwIm"><span class="dw-hrL">${T('ص', 'P')}</span><span><b>${T('خمّن الصورة', 'Guess the picture')}</b><small>${T('أعلام الدول ومعالم وحيوانات: صورة مقرّبة ومشوشة تتضح شيئًا فشيئًا، والأسرع يفوز.', 'Flags, landmarks and animals: a close, blurred picture that clears bit by bit; the fastest wins.')}</small></span><em>${T('العب الآن', 'Play now')}</em></button><button type="button" class="dw-readyc dw-readyph" id="dwQd"><span class="dw-hrL">${T('ق', 'E')}</span><span><b>${T('قدّرها', 'Estimate it')}</b><small>${T('أسئلة جوابها رقم: يكتب كل قائد تقديره على جواله، والأقرب إلى الجواب يفوز.', 'Questions with a number for an answer: each leader types an estimate; the closest wins.')}</small></span><em>${T('العب الآن', 'Play now')}</em></button><button type="button" class="dw-readyc dw-readyph" id="dwWr"><span class="dw-hrL">${T('ك', 'W')}</span><span><b>${T('سباق الكلمات', 'Word race')}</b><small>${T('كلمات مثل أو بيت مبعثرة، يرتّبها قادة المجموعات على جوالاتهم، وتظهر محاولاتهم على الشاشة مباشرة.', 'The shuffled words of a proverb or a verse; the leaders order them on their phones, live on the screen.')}</small></span><em>${T('العب الآن', 'Play now')}</em></button></div>
       <h2>${T('أو أعدّ مسابقتك', 'Or prepare your own quiz')}</h2>
       <div class="dw-tabs" role="tablist"><button type="button" role="tab" data-tab="ready" aria-selected="true">${T('مسابقة جاهزة', 'A ready quiz')}</button><button type="button" role="tab" data-tab="ai" aria-selected="false">${T('جهّزها لي', 'Prepare it for me')}</button><button type="button" role="tab" data-tab="own" aria-selected="false">${T('اكتبها بنفسك', 'Write it yourself')}</button></div>
       <div data-pane="ai" hidden><p class="dw-pane-h">${T('ثلاثة اختيارات، وتُجهَّز لك فعالية كاملة تراجعها أو تبدأ بها مباشرة.', 'Three choices, and a whole event is prepared; review it or start straight away.')}</p>${aiBox()}</div>
@@ -1421,6 +1447,7 @@ window.Dawwara = (function () {
     root.querySelector('#dwRo').onclick = () => hrSetup('ro');
     root.querySelector('#dwWr').onclick = () => wrSetup('wr');
     root.querySelector('#dwQd').onclick = () => wrSetup('qd');
+    root.querySelector('#dwIm').onclick = () => wrSetup('im');
     root.querySelectorAll('[data-ed]').forEach(b => b.onclick = () => editor(root, mine[+b.dataset.ed].z, () => home(root)));
     root.querySelectorAll('[data-tab]').forEach(b => b.onclick = () => { root.querySelectorAll('[data-tab]').forEach(x => x.setAttribute('aria-selected', x === b)); root.querySelectorAll('[data-pane]').forEach(p => { p.hidden = p.dataset.pane !== b.dataset.tab; }); });
     aiBind(root);

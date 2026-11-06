@@ -393,3 +393,9 @@ html.dw-phone .tl-crumb,html.dw-phone .dw-head,html.dw-phone .dw-lead{display:no
 .dw-qdpt i{width:18px;height:18px;border-radius:50%;background:var(--c);border:3px solid #fff}.dw-qdpt span{font-size:.9rem;font-weight:700;white-space:nowrap}
 .dw-qdpt.lo span{margin-top:22px}
 .dwp-num{font-size:2rem!important;text-align:center;font-weight:800}
+/* guess the picture */
+.dw-imgw{align-self:center;max-width:100%;border-radius:14px;overflow:hidden;line-height:0}
+.dw-imgw.zoom .dw-img{max-height:40vh;border-radius:0;transform-origin:var(--ox) var(--oy);animation:dwImz var(--d) cubic-bezier(.55,0,.85,.45) forwards}
+.dw-imgw.done .dw-img{animation:none;transform:none;filter:none;transition:transform .6s,filter .6s}
+@keyframes dwImz{from{transform:scale(4);filter:blur(16px)}60%{filter:blur(4px)}to{transform:scale(1);filter:blur(0)}}
+.dw-imcr{align-self:center;opacity:.55;font-size:.75rem;margin-top:-4px}
