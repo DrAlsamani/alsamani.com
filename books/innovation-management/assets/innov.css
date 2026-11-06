@@ -65,7 +65,7 @@ html[lang=ar] .refs li:not([dir=rtl]) i{font-style:italic}
 :where(html[lang=ar]) :is(th,b,strong,dt,h1,h2,h3,h4,h5) .en{font-weight:inherit}
 .bp-lic bdi{white-space:nowrap}
 /* الاستشهاد لا ينقسم بين سطرين فتختلط أقواسه */
-:where(html[lang=ar]) :is(p,li,dd)>.en.nb{white-space:nowrap}
+:where(html[lang=ar]) :is(p,li,dd)>.en.nb,:where(html[lang=ar]) .h2t>.en.nb{white-space:nowrap}
 .bp-el b .en{font-size:1em;font-weight:inherit}
 
 /* النسخة الإنجليزية: لا يُفرّق المصطلح عن النص المحيط به */
