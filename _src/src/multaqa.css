@@ -333,3 +333,4 @@ body:not(.ml-on) #mlShBar{top:auto;bottom:calc(90px + env(safe-area-inset-bottom
 .zb-t{position:absolute;z-index:3;bottom:14px;inset-inline-start:14px;display:flex;gap:8px}.zb-t .ml-b{background:#fff;color:#16214d;min-width:44px;font-size:1.2rem}
 #mlFlP .zb-t{bottom:76px}
 #svB{position:relative}
+#mlStage .st-open{display:flex;align-items:center;justify-content:center;gap:4vw;height:100%;text-align:center;padding:0 3vw;box-sizing:border-box}#mlStage .st-open .ml-pubimg{position:static;width:auto;height:auto;max-width:42%;max-height:78vh;margin:0;border-radius:12px;object-fit:contain}#mlStage .st-open h1{line-height:1.3}
