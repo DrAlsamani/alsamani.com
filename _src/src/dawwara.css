@@ -336,3 +336,7 @@ html.dw-phone .tl-crumb,html.dw-phone .dw-head,html.dw-phone .dw-lead{display:no
 .dw-step span{display:grid;justify-items:center;min-width:56px}.dw-step span b{font-size:1.3rem;color:#e9a54a}.dw-step span small{font-size:.72rem}
 .dw-pnote{margin:2px 4px;opacity:.75;font-size:.88rem}
 .dw-chonly{margin-top:14px;width:100%}
+.dw-ready{display:grid;gap:12px}
+.dw-hrg.cats{grid-template-columns:repeat(auto-fit,minmax(220px,1fr));grid-auto-rows:clamp(90px,22vh,170px);width:min(900px,96vw)}
+.dw-hrg.cats b{font-size:clamp(22px,2.6vw,34px)}
+.dw-hrC{display:inline-block;background:#e9a54a;color:#1d1b3a;border-radius:999px;padding:6px 26px;font-size:clamp(24px,3vw,40px);font-weight:800}
