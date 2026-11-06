@@ -79,7 +79,7 @@ def _icon(slug):
     return f'<span class="tl-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">{ICONS.get(slug, "")}</svg></span>'
 def group_items(g):
     ts = [t for t in TOOLS if t.get('group') == g]
-    extra = [JOURNEY, METHODS] if g == 'research' else [TABLE, MINUTES] + ([SIGN] if sign_ready() else []) + [PDFT, COMPARE] + ([PASS, MEET, ATTEND] if poll_ready() else []) + [CERT, QRT] if g == 'work' else []
+    extra = [JOURNEY, METHODS] if g == 'research' else [TABLE, MINUTES] + ([SIGN] if sign_ready() else []) + [PDFT] + ([PASS, MEET, ATTEND] if poll_ready() else []) + [CERT, QRT] if g == 'work' else []
     return extra + ts
 def _tag(t):
     # a label only where it tells something the title does not
