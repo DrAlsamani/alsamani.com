@@ -1726,7 +1726,7 @@ window.Dawwara = (function () {
   let db = null, uid = null;
   async function fb() { if (db) return; if (!window.firebase || !window.MD_CFG) throw new Error('nofb'); if (!firebase.apps.length) firebase.initializeApp(MD_CFG); const u = (await new Promise(r => { const o = firebase.auth().onAuthStateChanged(x => { o(); r(x); }); })) || (await firebase.auth().signInAnonymously()).user; uid = u.uid; db = firebase.database(); }
   const TS = () => firebase.database.ServerValue.TIMESTAMP;
-  const ROOM = { lead: {}, mem: {}, auto: {}, autoQ: {}, sg: [], sgQ: null, star: {}, sgCred: null, names: {}, seen: {}, mirSig: '', rc: String(100000 + Math.floor(Math.random() * 900000)), rmt: '', rbEls: [], rbSig: '' };
+  const ROOM = { lead: {}, req: {}, mem: {}, auto: {}, autoQ: {}, sg: [], sgQ: null, star: {}, sgCred: null, names: {}, seen: {}, mirSig: '', rc: String(100000 + Math.floor(Math.random() * 900000)), rmt: '', rbEls: [], rbSig: '' };
   // the host's phone as a remote: it sees the buttons on the screen and presses them
   const rcList = () => !el ? [] : [...el.querySelectorAll('button')].filter(b => !b.disabled && b.offsetParent && !b.closest('.dw-board,[data-close],[data-end],[data-reset],.dw-join')).sort((a, b) => (b.matches('[data-main]') ? 1 : 0) - (a.matches('[data-main]') ? 1 : 0)).slice(0, 60);
   const rcLabel = b => ([...b.childNodes].map(n => (n.textContent || '').trim()).filter(Boolean).join(' · ') || b.title || b.getAttribute('aria-label') || '').replace(/\s+/g, ' ').slice(0, 40);
@@ -1790,7 +1790,7 @@ window.Dawwara = (function () {
     if (v.k === 'j') {
       if (MULTI()) { const was = teamOfU(u); ROOM.mem[u] = +v.x; if (was >= 0 && was !== +v.x) { delete ROOM.lead[was]; const nx = Object.keys(ROOM.mem).find(m => ROOM.mem[m] === was && m !== u); if (nx) ROOM.lead[was] = nx; }
         if (ROOM.lead[v.x] == null) ROOM.lead[v.x] = u; ROOM.ref.child('mb').set(ROOM.mem); }
-      else { Object.keys(ROOM.lead).forEach(t => { if (ROOM.lead[t] === u) delete ROOM.lead[t]; }); ROOM.lead[v.x] = u; }
+      else { if (ROOM.lead[v.x] != null && ROOM.lead[v.x] !== u) { ROOM.req[u] = +v.x; leadPaint(); return; } delete ROOM.req[u]; Object.keys(ROOM.lead).forEach(t => { if (ROOM.lead[t] === u) delete ROOM.lead[t]; }); ROOM.lead[v.x] = u; }
       ROOM.ref.child('ld').set(ROOM.lead); leadPaint(); return pub(); }
     const kl = teamOfU(u), km = kl >= 0 ? kl : ROOM.mem[u] != null ? +ROOM.mem[u] : -1; if (km < 0 || !D || !D.groups) return;
     if (v.k === 's') return sugAdd(u, km, v);
@@ -1831,7 +1831,11 @@ window.Dawwara = (function () {
       const mx = box.querySelector('[data-mx]'); if (mx) mx.onclick = () => { ROOM.selU = null; leadPaint(); };
       return; }
     box.classList.remove('multi');
-    box.innerHTML = names.map((n, k) => `<span style="--c:${COL[k]}" class="${ROOM.lead[k] ? 'on' : ''}" dir="auto">${esc(n)}: ${ROOM.lead[k] ? esc(ROOM.names[ROOM.lead[k]] || T('متصل', 'connected')) : T('بلا جوال', 'no phone')}</span>`).join('') + (ROOM.rmt ? `<span class="on" style="--c:#e9a54a">${T('جوال المدير متصل', 'Host’s phone connected')}</span>` : '');
+    // a phone asking to lead a group that already has a leader waits for the host
+    const rq = Object.keys(ROOM.req).filter(u => names[ROOM.req[u]] != null && ROOM.lead[ROOM.req[u]] !== u);
+    box.innerHTML = names.map((n, k) => `<span style="--c:${COL[k]}" class="${ROOM.lead[k] ? 'on' : ''}" dir="auto">${esc(n)}: ${ROOM.lead[k] ? esc(ROOM.names[ROOM.lead[k]] || T('متصل', 'connected')) : T('بلا جوال', 'no phone')}</span>`).join('') + rq.map(u => `<span class="dw-rqc" style="--c:${COL[ROOM.req[u]]}" dir="auto">${esc(ROOM.names[u] || T('جوال', 'A phone'))} ${T('يطلب قيادة', 'asks to lead')} ${esc(names[ROOM.req[u]])} <button type="button" data-rqa="${u}">${T('اجعله القائد', 'Make leader')}</button><button type="button" data-rqx="${u}">${T('رفض', 'Decline')}</button></span>`).join('') + (ROOM.rmt ? `<span class="on" style="--c:#e9a54a">${T('جوال المدير متصل', 'Host’s phone connected')}</span>` : '');
+    box.querySelectorAll('[data-rqa]').forEach(b => b.onclick = () => { const u = b.dataset.rqa, t = ROOM.req[u]; delete ROOM.req[u]; Object.keys(ROOM.lead).forEach(x => { if (ROOM.lead[x] === u) delete ROOM.lead[x]; }); ROOM.lead[t] = u; ROOM.ref.child('ld').set(ROOM.lead); leadPaint(); pub(); });
+    box.querySelectorAll('[data-rqx]').forEach(b => b.onclick = () => { delete ROOM.req[b.dataset.rqx]; leadPaint(); });
   }
   async function phonesBox() {
     const box = el.querySelector('#dwPh'); if (!box) return; box.innerHTML = `<p class="dw-hint">${T('لحظة…', 'One moment…')}</p>`;
@@ -1850,7 +1854,7 @@ window.Dawwara = (function () {
   // the phone itself
   function phone(root, pin) {
     const top = document.createElement('div'); top.className = 'dwpv'; top.hidden = true; const body0 = document.createElement('div'); root.innerHTML = ''; root.append(top, body0); root = body0;
-    let me = null, g = null, lead = {}, ans = null, buzzed = false, lastKey = '', rsent = false, mb = {}, watch = false, said = '', tx = '', REC = null, MV = null, lastV = null, mirOn = false, pend = false;
+    let reqT = null, me = null, g = null, lead = {}, ans = null, buzzed = false, lastKey = '', rsent = false, mb = {}, watch = false, said = '', tx = '', REC = null, MV = null, lastV = null, mirOn = false, pend = false;
     // the host's screen, scaled to the phone, its clock counted down here
     // on the phone the screen is laid out again at a narrow width, so its words stay readable; enlarged, it keeps the host's shape
     const mirror = v => { lastV = v; if (!v || !v.h) return; const big = top.classList.contains('big'), cw = top.clientWidth || 360, w = big ? v.w || 1280 : 560, hh = big ? v.hh || 720 : 0, sc = big ? Math.min(cw / w, innerHeight / hh) : cw / w;
@@ -1901,8 +1905,9 @@ window.Dawwara = (function () {
       if (g.rem) mirStart();
       const team = Object.keys(lead).find(t => lead[t] === uid), isLead = team != null; let k = isLead ? +team : -1; const multi = g.rem || g.pa; if (k < 0 && multi && mb[uid] != null) k = +mb[uid];
       if (k < 0 && watch && g.rem) { root.innerHTML = `<div class="dwp"><p class="dwp-h">${T('تشاهد المسابقة. اضغط الشاشة لتكبيرها.', 'Watching. Tap the screen to enlarge it.')}</p><button type="button" class="dwp-back" data-unw>${T('انضم إلى مجموعة', 'Join a group')}</button></div>`; root.querySelector('[data-unw]').onclick = () => { watch = false; paint(); }; return; }
-      if (k < 0) { root.innerHTML = `<div class="dwp"><p class="dwp-big">${multi ? T('اختر مجموعتك', 'Choose your group') : T('أي فريق تقود؟', 'Which team do you lead?')}</p><div class="dwp-teams">${(g.names || []).map((n, i) => `<button type="button" data-tm="${i}" style="--c:${g.cols[i]}" dir="auto">${esc(n)}${lead[i] && !multi ? ` <small>${T('(له قائد)', '(taken)')}</small>` : ''}</button>`).join('')}${g.rem ? `<button type="button" class="dwp-back" data-watch>${T('مشاهدة فقط', 'Just watch')}</button>` : ''}</div></div>`;
-        root.querySelectorAll('[data-tm]').forEach(b => b.onclick = () => { send('j', '', +b.dataset.tm); buzz(30); }); const wb = root.querySelector('[data-watch]'); if (wb) wb.onclick = () => { watch = true; paint(); }; return; }
+      if (k < 0 && !multi && reqT != null && lead[reqT] && lead[reqT] !== uid) { root.innerHTML = `<div class="dwp"><p class="dwp-big">${T('لهذه المجموعة قائد', 'This group has a leader')}</p><p class="dwp-h">${T(`تم إرسال طلبك إلى المدير ليجعلك قائد ${g.names[reqT] || ''}`, `Your request to lead ${g.names[reqT] || ''} was sent to the host`)}</p><button type="button" class="dwp-back" data-rqb>${T('اختر مجموعة أخرى', 'Choose another group')}</button></div>`; root.querySelector('[data-rqb]').onclick = () => { reqT = null; paint(); }; return; }
+      if (k < 0) { root.innerHTML = `<div class="dwp"><p class="dwp-big">${multi ? T('اختر مجموعتك', 'Choose your group') : T('أي فريق تقود؟', 'Which team do you lead?')}</p><div class="dwp-teams">${(g.names || []).map((n, i) => `<button type="button" data-tm="${i}" style="--c:${g.cols[i]}" dir="auto">${esc(n)}${lead[i] && !multi ? ` <small>${T('(لها قائد)', '(has a leader)')}</small>` : ''}</button>`).join('')}${g.rem ? `<button type="button" class="dwp-back" data-watch>${T('مشاهدة فقط', 'Just watch')}</button>` : ''}</div></div>`;
+        root.querySelectorAll('[data-tm]').forEach(b => b.onclick = () => { reqT = +b.dataset.tm; send('j', '', +b.dataset.tm); buzz(30); paint(); }); const wb = root.querySelector('[data-watch]'); if (wb) wb.onclick = () => { watch = true; paint(); }; return; }
       const ph = g.ph || 'lobby', key = ph + ':' + (g.i || 0) + ':' + (g.team == null ? '' : g.team); if (key !== lastKey) { lastKey = key; ans = null; buzzed = false; said = ''; tx = ''; }
       if (ph === 'race' && ans != null && (g.no || []).includes(ans) && !(g.out || []).includes(k)) ans = null;
       if (ph === 'num' && !g.done && N.i === g.i && root.querySelector('#dwpNum')) { const o = root.querySelector('#dwpOk'); if (o) o.textContent = (g.s || [])[k] ? T('تم إرسال التقدير، ويمكن تعديله قبل انتهاء الوقت', 'Sent; you may change it before time is up') : ''; return; }
