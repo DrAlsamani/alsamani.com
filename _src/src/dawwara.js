@@ -1198,7 +1198,8 @@ window.Dawwara = (function () {
     for (let i = 1; i <= x.length; i++) { let p = d[0]; d[0] = i; for (let j = 1; j <= y.length; j++) { const t = d[j]; d[j] = Math.min(d[j] + 1, d[j - 1] + 1, p + (x[i - 1] === y[j - 1] ? 0 : 1)); p = t; } } return d[y.length] <= 2; };
   const hrCache = () => { try { return JSON.parse(localStorage.getItem(`dw.${rkOf()}.opts`) || '{}'); } catch (e) { return {}; } };
   function hrWrong(L, i) {
-    const H = D.hr, key = L + ':' + i, c = hrCache(); if (c[key]) return Promise.resolve(c[key]);
+    const H = D.hr, key = L + ':' + i, fx = H.B[L][i][2]; if (Array.isArray(fx) && fx.length >= 3) return Promise.resolve(fx.slice(0, 3));
+    const c = hrCache(); if (c[key]) return Promise.resolve(c[key]);
     if (H.pend[key]) return H.pend[key];
     const [q, a] = H.B[L][i], k = hrKind(q), pool = H.B[L].filter((x, j) => j !== i), same = pool.filter(x => hrKind(x[0]) === k).map(x => x[1]), other = pool.filter(x => hrKind(x[0]) !== k).map(x => x[1]);
     // same kind under the same pick first, then the same kind elsewhere in the bank (for letters, only answers that start with the letter)
@@ -1479,7 +1480,7 @@ window.Dawwara = (function () {
     const S = D.solo, nb = S.score > S.best; if (nb) { try { localStorage.setItem('dw.solo.' + S.rk, S.score); } catch (e) {} } SND.win();
     const txt = T(`حققتُ ${NUM(S.score)} نقطة (${NUM(S.right)} من ${NUM(S.xs.length)}) في «${READY()[S.rk].t}» على دوّارة: alsamani.com/play/dawwara`, `I scored ${S.score} (${S.right}/${S.xs.length}) in ${READY()[S.rk].t} on Dawwara: alsamani.com/play/dawwara`);
     shell(`<div class="dw-mid dw-fin"><p class="dw-sub">${esc(READY()[S.rk].t)}</p><h2>${nb && S.best ? T('نتيجة جديدة هي الأفضل!', 'A new best!') : T('النتيجة', 'The result')}</h2><p class="dw-winner" style="--c:#e9a54a">${NUM(S.score)}</p>
-      <p>${T(`${NUM(S.right)} إجابات صحيحة من ${NUM(S.xs.length)}`, `${S.right} right of ${S.xs.length}`)}${S.best && !nb ? ` · ${T('أفضل نتيجة', 'Best')} ${NUM(S.best)}` : ''}</p>
+      <p>${T(`الإجابات الصحيحة: ${NUM(S.right)} من ${NUM(S.xs.length)}`, `${S.right} right of ${S.xs.length}`)}${S.best && !nb ? ` · ${T('أفضل نتيجة', 'Best')} ${NUM(S.best)}` : ''}</p>
       <div class="dw-acts"><button type="button" class="dw-btn" data-main>${T('العب مرة ثانية', 'Play again')}</button><button type="button" class="dw-btn ghost" data-oth>${T('مسابقة أخرى', 'Another game')}</button><button type="button" class="dw-btn ghost" data-cp>${T('انسخ النتيجة', 'Copy the result')}</button></div></div>`, 'dw-in');
     el.querySelector('[data-main]').onclick = () => soloStart(S.rk); el.querySelector('[data-oth]').onclick = soloHome;
     el.querySelector('[data-cp]').onclick = e => { try { navigator.clipboard.writeText(txt); e.target.textContent = T('تم نسخ النتيجة', 'Copied'); } catch (er) {} };
