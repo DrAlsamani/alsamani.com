@@ -276,3 +276,4 @@ body.mic-q #mlCall,body.mic-q #mlTiles,body.mic-q #hlRoomV{display:none!importan
 .ml-more>summary{min-height:40px;display:flex;align-items:center;gap:6px}
 .hl-seg button{min-height:38px}.ml-stack summary{min-height:40px;display:flex;align-items:center;gap:6px}
 .ml-card.ml-bare{background:none;border:0;padding:0}
+.ml-acc>summary{font-size:.85rem;color:var(--muted)}.ml-acc[open]{display:grid;gap:8px}
