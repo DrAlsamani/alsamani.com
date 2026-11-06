@@ -322,3 +322,5 @@ body.mic-q #mlCall,body.mic-q #mlTiles,body.mic-q #hlRoomV{display:none!importan
 .hl-sheet>.rm-chat{margin:6px 16px 14px}
 body.ml-on #mlShPill{bottom:calc(190px + env(safe-area-inset-bottom,0px))}
 .ml-pubimg{display:block;width:100%;max-width:420px;margin:2px auto 6px;border-radius:12px;background:#fff}
+#mlFlP{position:fixed;inset:0;z-index:99990;background:#0E1322;color:#fff;display:flex;flex-direction:column;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}#fpB{flex:1;min-height:0;position:relative;touch-action:none;overflow:hidden}#fpI{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;user-select:none;-webkit-user-drag:none}#mlFlP .lz-f .ml-b.main{background:#E3A857;color:#16214d;border-color:transparent}#fpB{touch-action:none}
+#stMir{cursor:move;touch-action:none}
