@@ -47,7 +47,7 @@
           <span class="pe-drw">${[1, 2, 3].map(w => `<button type="button" data-dw="${w}" aria-pressed="${w === 2}"><i style="height:${w * 1.6}px"></i></button>`).join('')}</span></span></span>
         <button type="button" data-tool="cover"><i class="pe-cv"></i>${B('إخفاء', 'Cover')}</button>
         <button type="button" data-tool="img"><b>▣</b>${B('صورة', 'Image')}</button>
-        <button type="button" data-tool="sig"><b>✍</b>${B('توقيع', 'Signature')}</button>
+        <button type="button" data-tool="sig"><b><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h16"/><path d="M14.5 4.5l5 5L9 20H4v-5z"/></svg></b>${B('توقيع', 'Signature')}</button>
         <span class="pe-fill"></span><button type="button" class="pe-save" id="peSave">${B('حفظ PDF', 'Save PDF')}</button>
       </div>
       <p class="pe-hint" id="peHint" hidden></p>
@@ -402,7 +402,7 @@
       sh.querySelector('#peAll').onchange = e => boxes.forEach(b => b.checked = e.target.checked);
       sh.querySelector('#peNo').onclick = close;
       sh.querySelector('#peOk').onclick = () => { const ids = boxes.filter(b => b.checked).map(b => +b.value); close(); ids.forEach(id => dup(it, 0, 0, id)); select(it);
-        if (ids.length) toast(B(`نُسخ إلى ${ids.length} صفحة.`, `Copied to ${ids.length} page${ids.length > 1 ? 's' : ''}.`)); };
+        if (ids.length) toast(B(`تم النسخ إلى ${ids.length} صفحة.`, `Copied to ${ids.length} page${ids.length > 1 ? 's' : ''}.`)); };
     }
     const onDoc = e => { if (sel && !e.target.closest('.pe-it') && !e.target.closest('.pe-sheet')) select(null); if (!e.target.closest('.pe-mk')) { mkPop.hidden = true; drPop.hidden = true; } };
     document.addEventListener('pointerdown', onDoc);

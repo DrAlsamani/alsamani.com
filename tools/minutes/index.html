@@ -456,11 +456,11 @@ html:has(.mp-paper){scroll-padding-bottom:110px;scroll-padding-top:80px}
     M = null;
     const coms = store.get('coms', []);
     root.innerHTML = `<div class="sn-card mn-home">
-      <div class="sn-two"><button type="button" class="btn solid" id="mnNew">${B('محضر جديد', 'New minutes')}</button><button type="button" class="btn ghost" id="mnMimic">📄 ${B('محضر على نمط محضر سابق', 'New minutes in the style of an old one')}</button></div>
+      <div class="sn-two"><button type="button" class="btn solid" id="mnNew">${B('محضر جديد', 'New minutes')}</button><button type="button" class="btn ghost" id="mnMimic">${B('محضر على نمط محضر سابق', 'New minutes in the style of an old one')}</button></div>
       <p class="sn-fine">${B('ارفع محضرًا سابقًا (Word أو PDF)، فيُبنى المحضر الجديد على نمطه: عناصره وعناوينه وخانات بياناته وأعضاؤه.', 'Upload an earlier minutes (Word or PDF) and the new one follows its pattern: sections, headings, detail rows and members.')}</p>
       ${coms.length ? `<h2 class="mn-h">${B('محضر جديد للجنة سابقة', 'New minutes for a past committee')}</h2><p class="sn-fine">${B('تُنقل البيانات والأعضاء، ويُرفع رقم الجلسة، وتنتقل مهام آخر محضر إلى «متابعة القرارات».', 'Details and members carry over, the number goes up, and the last tasks move to the follow-up.')}</p><div class="mn-coms">${coms.map(c => `<button type="button" class="mn-com" data-com="${c.id}"><b>${esc(c.committee || c.org || T('لجنة', 'Committee'))}</b><small>${esc(c.org || '')} · ${c.members.length} ${T('أعضاء', 'members')}</small></button>`).join('')}</div>` : ''}
       ${list.length ? `<h2 class="mn-h">${B('محاضرك', 'Your minutes')}</h2><ul class="mn-list">${list.map(x => `<li><button type="button" data-open="${x.id}"><b>${esc(x.committee || T('بلا عنوان', 'Untitled'))} ${x.no ? '(' + esc(x.no) + ')' : ''}</b><small>${esc(x.date || '')} · ${x.status === 'final' ? T('معتمد', 'Approved') : T('مسودة', 'Draft')}</small></button><button type="button" class="mn-x" data-del="${x.id}" aria-label="delete">✕</button></li>`).join('')}</ul>` : ''}
-      <p class="sn-fine">🔒 ${B('تُحفظ المحاضر في هذا المتصفح فقط، ولا تُرفع إلى أي خادم.', 'Minutes are kept in this browser only and are never uploaded.')}</p></div>`;
+      <p class="sn-fine">${B('تُحفظ المحاضر في هذا المتصفح فقط، ولا تُرفع إلى أي خادم.', 'Minutes are kept in this browser only and are never uploaded.')}</p></div>`;
     root.querySelector('#mnNew').onclick = () => { M = blank(); editor(); };
     root.querySelector('#mnMimic').onclick = () => { const f = document.createElement('input'); f.type = 'file'; f.accept = '.docx,.pdf,.txt'; f.onchange = () => f.files[0] && mimicFile(f.files[0]); f.click(); };
     root.querySelectorAll('[data-open]').forEach(b => b.onclick = () => { const x = JSON.parse(JSON.stringify(list.find(x => x.id === b.dataset.open))); M = normM(Object.assign(blank(), x, { show: x.show, heads: x.heads, info: x.info })); editor(); });
@@ -650,11 +650,11 @@ html:has(.mp-paper){scroll-padding-bottom:110px;scroll-padding-top:80px}
     applySty();
     root.innerHTML = `<div class="mp-top"><button type="button" class="sn-lnk" id="mpBack">${isAr() ? '→' : '←'} ${B('محاضري', 'My minutes')}</button>
         <nav class="mp-steps">${STAGES.map(([k, a, e], i) => `<button type="button" data-st="${k}"><b>${i + 1}</b>${B(a, e)}</button>`).join('')}</nav>
-        <button type="button" class="btn ghost mp-pvb" id="mpPv">👁 ${B('معاينة', 'Preview')}</button>
-        <button type="button" class="mp-gear" id="mpSet" title="${T('إعدادات المحضر', 'Settings')}" aria-label="${T('إعدادات المحضر', 'Settings')}">⚙</button></div>
+        <button type="button" class="btn ghost mp-pvb" id="mpPv">${B('معاينة', 'Preview')}</button>
+        <button type="button" class="mp-gear" id="mpSet" title="${T('إعدادات المحضر', 'Settings')}" aria-label="${T('إعدادات المحضر', 'Settings')}"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-3px"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/></svg></button></div>
       <p class="mp-hint" id="mpHint"></p>
-      <details class="mp-els" id="mpEls"><summary>☰ ${B('عناصر المحضر', 'What the minutes include')}</summary><div class="mp-elsb">${SECS.map(([k, l]) => `<label><input type="checkbox" data-sh="${k}"${M.show[k] ? ' checked' : ''}> ${l}</label>`).join('')}</div><p class="mp-elsn">${B('ألغِ علامة أي عنصر فلا يظهر في المحضر. وتستطيع تعديل أي عنوان أو خانة بالضغط عليها في الصفحة.', 'Untick anything to leave it out. Tap any heading or row on the page to change it.')}</p></details>
-      <details class="mp-els" id="mpSty"><summary>🎨 ${B('التنسيق', 'Formatting')}</summary><div id="mpStyB"></div></details>
+      <details class="mp-els" id="mpEls"><summary>${B('عناصر المحضر', 'What the minutes include')}</summary><div class="mp-elsb">${SECS.map(([k, l]) => `<label><input type="checkbox" data-sh="${k}"${M.show[k] ? ' checked' : ''}> ${l}</label>`).join('')}</div><p class="mp-elsn">${B('ألغِ علامة أي عنصر فلا يظهر في المحضر. وتستطيع تعديل أي عنوان أو خانة بالضغط عليها في الصفحة.', 'Untick anything to leave it out. Tap any heading or row on the page to change it.')}</p></details>
+      <details class="mp-els" id="mpSty"><summary>${B('التنسيق', 'Formatting')}</summary><div id="mpStyB"></div></details>
       <div id="mpChk"></div>
       <div class="mp-paper" id="mpPaper"></div><div class="mn-bar" id="mpBar"></div>`;
     root.querySelector('#mpBack').onclick = () => { persist(); saveCommittee(); home(); };
@@ -731,7 +731,7 @@ html:has(.mp-paper){scroll-padding-bottom:110px;scroll-padding-top:80px}
         ${it.dis.map((x, j) => `<p class="mo-dis mp-row"><b><button type="button" class="mp-link" data-act="disk" data-id="${id}" data-j="${j}">${x.k === 'no' ? 'رأي مخالف' : 'تحفظ'}</button>:</b> <select class="mp-sel" data-p="${P}dis:${j}:n"><option value="">${T('العضو', 'Member')}</option>${named().map(m => `<option${m.n === x.n ? ' selected' : ''}>${esc(m.n)}</option>`).join('')}</select> — ${E(P + 'dis:' + j + ':note', T('السبب كما أبداه', 'The reason given'))} ${ico('rmDis', T('حذف', 'Remove'), '✕', ` data-id="${id}" data-j="${j}"`)}</p>`).join('')}
         ${it.tasks.map((t, j) => `<p class="mp-row"><b>التكليف:</b> ${E(P + 'tasks:' + j + ':t', T('المهمة', 'Task'))} — ${E(P + 'tasks:' + j + ':who', T('المسؤول', 'Owner'))} (${E(P + 'tasks:' + j + ':due', T('الموعد', 'Due'))}) ${ico('rmTask', T('حذف', 'Remove'), '✕', ` data-id="${id}" data-j="${j}"`)}</p>`).join('')}
         <div class="mp-opt">${show(it, 'ref') ? '' : add('open', T('المرجع', 'Reference'), ` data-id="${id}" data-f="ref"`)}${add('addTask', T('تكليف', 'Task'), ` data-id="${id}"`)}${add('addDis', T('تحفظ', 'Reservation'), ` data-id="${id}"`)}${show(it, 'basis') ? '' : add('open', T('الاستناد النظامي', 'Rule relied on'), ` data-id="${id}" data-f="basis"`)}${!V.vote || vote ? '' : add('vote', T('التصويت', 'Vote'), ` data-id="${id}"`)}
-          <span class="mp-sp"></span>${i ? ico('upItem', T('إلى الأعلى', 'Move up'), '↑', ` data-id="${id}"`) : ''}${ico('rmItem', T('حذف البند', 'Remove item'), '🗑', ` data-id="${id}"`)}</div></div>`;
+          <span class="mp-sp"></span>${i ? ico('upItem', T('إلى الأعلى', 'Move up'), '↑', ` data-id="${id}"`) : ''}${ico('rmItem', T('حذف البند', 'Remove item'), '<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-3px"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v5M14 11v5"/></svg>', ` data-id="${id}"`)}</div></div>`;
     }).join('');
     // before the meeting the agenda is where the items are written
     const agendaEdit = `<table class="mo-t"><tr><th>م</th><th>الموضوع</th><th class="mp-tc"></th></tr>
@@ -812,7 +812,7 @@ html:has(.mp-paper){scroll-padding-bottom:110px;scroll-padding-top:80px}
     if (!it.basis.trim() || !M.reg.trim()) return ['', ''];
     const n = articleNo(it.basis); if (!n) return ['', ''];
     const a = articles()[n];
-    if (!a) return ['bad', '⚠ ' + T(`لم أجد المادة (${n}) في اللائحة الملصقة؛ تحقّق من رقمها.`, `Article ${n} is not in the pasted regulations; check its number.`)];
+    if (!a) return ['bad', T(`لم أجد المادة (${n}) في اللائحة الملصقة؛ تحقّق من رقمها.`, `Article ${n} is not in the pasted regulations; check its number.`)];
     const body = artBody(a), has = normA(it.basis).includes(normA(body).slice(0, 40));
     return ['ok', `✓ ${T(`نص المادة (${n})`, `Article ${n}`)}: «${esc(body.length > 260 ? body.slice(0, 260) + '…' : body)}»${has ? '' : ` <button type="button" class="mp-add" data-act="insArt" data-id="${it.id}">${T('أدرج نصها', 'Insert its text')}</button>`}`];
   }
@@ -857,9 +857,9 @@ html:has(.mp-paper){scroll-padding-bottom:110px;scroll-padding-top:80px}
   /* ---------- the bar under the page, for the stage you are in ---------- */
   function bar() {
     const el = root.querySelector('#mpBar'), S = stage, nx = (st, a, e) => `<button type="button" class="btn ghost" data-go="${st}">${B(a, e)} ${isAr() ? '←' : '→'}</button>`;
-    if (S === 'before') el.innerHTML = `<button type="button" class="btn ghost" id="mpInv">✉️ ${B('الدعوة وجدول الأعمال', 'Invitation and agenda')}</button><button type="button" class="btn ghost" id="mpPack">📦 ${B('رزمة الاجتماع', 'Meeting pack')}</button>${nx('during', 'أثناء الاجتماع', 'During the meeting')}`;
-    else if (S === 'during') el.innerHTML = `${!M.from ? `<button type="button" class="btn solid" id="mpStart">▶ ${B('بدأ الاجتماع الآن', 'The meeting starts now')}</button>` : !M.to ? `<button type="button" class="btn solid" id="mpEnd">⏹ ${B('انتهى الاجتماع الآن', 'The meeting ends now')}</button>` : ''}${nx('after', 'بعد الاجتماع', 'After the meeting')}`;
-    else el.innerHTML = `<button type="button" class="btn ghost" id="mpAI">✨ ${B('مراجعة وتحسين', 'Review and polish')}</button><button type="button" class="btn ghost" id="mnWord">Word</button><button type="button" class="btn ghost" id="mnPrint">PDF</button><button type="button" class="btn solid" id="mnSign">✍️ ${B('أرسله للتوقيع', 'Send for signing')}</button>${M.items.some(it => it.tasks.some(t => t.who.trim())) ? `<button type="button" class="btn ghost" id="mpNote">📨 ${B('إبلاغ المكلّفين', 'Notify owners')}</button>` : ''}`;
+    if (S === 'before') el.innerHTML = `<button type="button" class="btn ghost" id="mpInv">${B('الدعوة وجدول الأعمال', 'Invitation and agenda')}</button><button type="button" class="btn ghost" id="mpPack">${B('رزمة الاجتماع', 'Meeting pack')}</button>${nx('during', 'أثناء الاجتماع', 'During the meeting')}`;
+    else if (S === 'during') el.innerHTML = `${!M.from ? `<button type="button" class="btn solid" id="mpStart">${B('بدأ الاجتماع الآن', 'The meeting starts now')}</button>` : !M.to ? `<button type="button" class="btn solid" id="mpEnd">${B('انتهى الاجتماع الآن', 'The meeting ends now')}</button>` : ''}${nx('after', 'بعد الاجتماع', 'After the meeting')}`;
+    else el.innerHTML = `<button type="button" class="btn ghost" id="mpAI">${B('مراجعة وتحسين', 'Review and polish')}</button><button type="button" class="btn ghost" id="mnWord">Word</button><button type="button" class="btn ghost" id="mnPrint">PDF</button><button type="button" class="btn solid" id="mnSign">${B('أرسله للتوقيع', 'Send for signing')}</button>${M.items.some(it => it.tasks.some(t => t.who.trim())) ? `<button type="button" class="btn ghost" id="mpNote">${B('إبلاغ المكلّفين', 'Notify owners')}</button>` : ''}`;
     const q = s => el.querySelector(s), now = () => { const d = new Date(); return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'); };
     el.querySelectorAll('[data-go]').forEach(b => b.onclick = () => go(b.dataset.go));
     if (q('#mpInv')) { q('#mpInv').onclick = () => invite(); q('#mpPack').onclick = pack; }
@@ -886,9 +886,9 @@ html:has(.mp-paper){scroll-padding-bottom:110px;scroll-padding-top:80px}
       it.tasks.forEach(t => { if (t.t.trim() && (!t.who.trim() || !t.due.trim())) w.push(T(`البند ${n}: تكليف بلا مسؤول أو موعد.`, `Item ${n}: a task without owner or date.`)); });
       if (basisState(it)[0] === 'bad') w.push(T(`البند ${n}: المادة المستند إليها غير موجودة في اللائحة.`, `Item ${n}: the cited article is not in the regulations.`));
       selfCheck(it, n).forEach(x => w.push(x)); });
-    (M.aiNotes || []).forEach(x => w.push('🔎 ' + x));
+    (M.aiNotes || []).forEach(x => w.push(x));
     const open = box.dataset.open === '1';
-    box.innerHTML = `<div class="mp-checks">${w.length ? `<button type="button" class="mp-ck-b" id="mpCk">⚠ ${w.length} ${B('ملاحظات قبل الاعتماد', 'notes before approval')} <i>${open ? '▴' : '▾'}</i></button>${open ? `<ul>${w.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : ''}` : `<span class="mp-ok">✓ ${B('المحضر مكتمل', 'Nothing missing')}</span>`}
+    box.innerHTML = `<div class="mp-checks">${w.length ? `<button type="button" class="mp-ck-b" id="mpCk">${w.length} ${B('ملاحظات قبل الاعتماد', 'notes before approval')} <i>${open ? '▴' : '▾'}</i></button>${open ? `<ul>${w.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : ''}` : `<span class="mp-ok">✓ ${B('المحضر مكتمل', 'Nothing missing')}</span>`}
       <label class="mp-status">${B('الحالة', 'Status')} <select id="mpStatus"><option value="draft"${M.status === 'draft' ? ' selected' : ''}>${T('مسودة', 'Draft')}</option><option value="final"${M.status === 'final' ? ' selected' : ''}>${T('معتمد', 'Approved')}</option></select></label></div>`;
     if (box.querySelector('#mpCk')) box.querySelector('#mpCk').onclick = () => { box.dataset.open = open ? '' : '1'; paintChecks(); };
     box.querySelector('#mpStatus').onchange = e => { M.status = e.target.value; root.querySelector('.mp-doc').classList.toggle('draft', M.status === 'draft'); later(); };
@@ -909,7 +909,7 @@ html:has(.mp-paper){scroll-padding-bottom:110px;scroll-padding-top:80px}
 
   /* ---------- settings: the things set once ---------- */
   function settings() {
-    const m = sheet(`<h3>⚙ ${B('إعدادات المحضر', 'Settings')}</h3>
+    const m = sheet(`<h3>${B('إعدادات المحضر', 'Settings')}</h3>
       <label class="sn-lbl">${B('الجهة', 'Body')}<select id="sT"><option value="council"${M.type === 'council' ? ' selected' : ''}>مجلس («قرر المجلس»)</option><option value="committee"${M.type === 'committee' ? ' selected' : ''}>لجنة («قررت اللجنة»)</option></select></label>
       <label class="sn-lbl">${B('صيغة رقم القرار: {n} رقم الاجتماع، {i} رقم البند، {y} العام', 'Decision number: {n} meeting, {i} item, {y} year')}<input id="sN" dir="ltr" value="${esc(M.numFmt)}"></label>
       <label class="sn-lbl">${B('التوقيعات', 'Signatures')}<select id="sG"><option value="table"${M.sigL === 'table' ? ' selected' : ''}>${T('جدول', 'Table')}</option><option value="grid"${M.sigL === 'grid' ? ' selected' : ''}>${T('بطاقات', 'Cards')}</option></select></label>
@@ -923,12 +923,12 @@ html:has(.mp-paper){scroll-padding-bottom:110px;scroll-padding-top:80px}
 
   /* ---------- the AI: polishing what was written into formal minutes ---------- */
   function sheet(html) { const m = document.createElement('div'); m.className = 'mn-modal'; m.innerHTML = `<div class="mn-mbox">${html}</div>`; document.body.appendChild(m); m.addEventListener('click', e => { if (e.target === m || e.target.closest('[data-mx]')) m.remove(); }); return m; }
-  const PRIV = () => `<p class="mn-priv">🔒 ${B('ما تلصقه في ChatGPT أو Claude يُرسل إلى خدمتهما. لا تلصق ما لا يجوز إطلاع غير الأعضاء عليه.', 'What you paste into ChatGPT or Claude goes to their service. Do not paste what must stay within the members.')}</p>`;
+  const PRIV = () => `<p class="mn-priv">${B('ما تلصقه في ChatGPT أو Claude يُرسل إلى خدمتهما. لا تلصق ما لا يجوز إطلاع غير الأعضاء عليه.', 'What you paste into ChatGPT or Claude goes to their service. Do not paste what must stay within the members.')}</p>`;
   function aiDraft() {
     persist();
-    const m = sheet(`<h3>✨ ${B('مراجعة وتحسين', 'Review and polish')}</h3>
+    const m = sheet(`<h3>${B('مراجعة وتحسين', 'Review and polish')}</h3>
       <p>${B('تُجهَّز تعليمات فيها بيانات الجهة وبنود المحضر وما كتبته فيها، تلصقها في المساعد، ثم تلصق ردّه هنا: فتُحدَّث صياغة البنود، وتظهر ملاحظات الجودة في «ملاحظات قبل الاعتماد».', 'Instructions are prepared with your organisation’s details and the items; paste them into the assistant, then paste its reply here: the wording is updated and its quality notes appear in “notes before approval”.')}</p>
-      <p class="sn-fine">${M.reg.trim() ? B('✓ نص اللائحة مضمَّن.', '✓ Regulations included.') : B('لم تلصق نص اللائحة في ⚙؛ سيُطلب من المساعد البحث بنفسه مع ذكر المصدر.', 'No regulations pasted in ⚙; the assistant is asked to search, citing its sources.')} ${(M.rules || '').trim() ? B('✓ تعليمات جهتك مضمَّنة.', '✓ Your rules included.') : ''}</p>
+      <p class="sn-fine">${M.reg.trim() ? B('✓ نص اللائحة مضمَّن.', '✓ Regulations included.') : B('لم تلصق نص اللائحة في الإعدادات؛ سيُطلب من المساعد البحث بنفسه مع ذكر المصدر.', 'No regulations pasted in Settings; the assistant is asked to search, citing its sources.')} ${(M.rules || '').trim() ? B('✓ تعليمات جهتك مضمَّنة.', '✓ Your rules included.') : ''}</p>
       ${PRIV()}
       <div class="sn-two"><button type="button" class="btn solid" id="aiCopy">${B('١. انسخ التعليمات', '1. Copy the instructions')}</button><a class="btn ghost" target="_blank" rel="noopener" href="https://chatgpt.com/">ChatGPT</a><a class="btn ghost" target="_blank" rel="noopener" href="https://claude.ai/new">Claude</a></div>
       <label class="sn-lbl">${B('٢. الصق الرد هنا', '2. Paste the reply here')}<textarea id="aiR" rows="6"></textarea></label>
@@ -1124,7 +1124,7 @@ ${rules ? `\nتعليمات الجهة لمحاضرها (التزم بها في 
       await handoff({ pdf: bytes, slots: slots.map(s => Object.assign(s, { x: +s.x.toFixed(1), y: +s.y.toFixed(1), w: +s.w.toFixed(1), h: +s.h.toFixed(1) })), title: fname(), at: Date.now() });
       location.href = '../sign/index.html#minutes';
     } catch (e) { toast(B('تعذّر تجهيز الملف للتوقيع. نزّله PDF وارفعه في أداة التوقيع.', 'Could not prepare it. Save a PDF and upload it to the signing tool.'), 1); }
-    btn.disabled = false; btn.innerHTML = '✍️ ' + B('أرسله للتوقيع', 'Send for signing');
+    btn.disabled = false; btn.innerHTML = B('أرسله للتوقيع', 'Send for signing');
   }
   const loading = {}, need = src => loading[src] || (loading[src] = new Promise((ok, no) => { const s = document.createElement('script'); s.src = src; s.onload = ok; s.onerror = () => { delete loading[src]; no(); }; document.head.appendChild(s); }));
   function handoff(v) { return new Promise((ok, no) => { const r = indexedDB.open('alsamani', 1); r.onupgradeneeded = () => r.result.createObjectStore('hand'); r.onerror = () => no(r.error); r.onsuccess = () => { const tx = r.result.transaction('hand', 'readwrite'); tx.objectStore('hand').put(v, 'minutes'); tx.oncomplete = ok; tx.onerror = () => no(tx.error); }; }); }

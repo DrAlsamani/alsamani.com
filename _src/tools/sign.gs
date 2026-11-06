@@ -10,6 +10,8 @@ const MAX_SIG = 250 * 1024;             // one signature image (data URL)
 const MAX_SLOTS = 80;
 // whole-service daily ceiling, so nobody can fill the Drive: new sessions/polls per day, and megabytes written per day
 const DAY_MAX_NEW = 300, DAY_MAX_MB = 1000, MAX_VOTES = 300, MAX_ATT = 3000;
+// a poll sealed on the coordinator's device: the title, items and names travel as one parcel the service cannot read
+const MAX_SEALED = 700 * 1024;
 
 // permanent delete (Drive advanced service); falls back to the trash if the service is off
 function del_(f) {
@@ -197,7 +199,7 @@ function pload_(id) {
 function nk_(s) { return String(s || '').replace(/[\u064B-\u0652\u0640]/g, '').replace(/[أإآ]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي').replace(/^(د|أ|ا|م)\.?\s*/, '').replace(/\s+/g, ' ').trim(); }
 function ppub_(s, admin, mine) {
   const votes = Object.keys(s.votes).map(k => s.votes[k]);
-  const o = { ok: true, id: s.id, mode: s.mode || 'pass', title: s.title, body: s.body, items: s.items, names: s.names, locked: !!s.locked, showAll: !!s.showAll, created: s.created, voted: votes.map(v => v.name), admin: !!admin };
+  const o = { ok: true, id: s.id, mode: s.mode || 'pass', title: s.title, body: s.body, items: s.items, names: s.names, sealed: s.sealed || undefined, locked: !!s.locked, showAll: !!s.showAll, created: s.created, voted: votes.map(v => v.name), admin: !!admin };
   if (admin || s.showAll) o.votes = votes.map(v => ({ name: v.name, ans: v.ans, notes: v.notes, t: v.t }));
   if (mine) o.mine = { name: mine.name, ans: mine.ans, notes: mine.notes, t: mine.t };
   return o;
@@ -206,12 +208,15 @@ function poll_(d) {
   const a = d.a;
   if (a === 'pcreate') {
     const mode = ['pass', 'time', 'att'].indexOf(d.mode) >= 0 ? d.mode : 'pass';
-    const items = mode === 'att' ? [] : (Array.isArray(d.items) ? d.items : []).map(x => clean_(x, 2000)).filter(x => x.trim()).slice(0, 30);
+    const sealed = typeof d.sealed === 'string' ? d.sealed.replace(/[^A-Za-z0-9_-]/g, '') : '';
+    if (sealed.length > MAX_SEALED) return err_('full');
+    // a sealed poll keeps only how many items it has, so answers can still be checked
+    const items = mode === 'att' ? [] : sealed ? new Array(Math.max(0, Math.min(30, Number(d.n) || 0))).fill('.') : (Array.isArray(d.items) ? d.items : []).map(x => clean_(x, 2000)).filter(x => x.trim()).slice(0, 30);
     if (!items.length && mode !== 'att') return err_('bad_items');
-    const names = (Array.isArray(d.names) ? d.names : []).map(x => clean_(x, 120).trim()).filter(Boolean).slice(0, mode === 'att' ? 3000 : 300);
-    if (!quota_(20000, true)) return err_('busy');
+    const names = sealed ? [] : (Array.isArray(d.names) ? d.names : []).map(x => clean_(x, 120).trim()).filter(Boolean).slice(0, mode === 'att' ? 3000 : 300);
+    if (!quota_(Math.max(20000, sealed.length), true)) return err_('busy');
     const id = rid_(20), key = rid_(24);
-    const s = { id: id, key: hash_(key), mode: mode, title: clean_(d.title, 200), body: clean_(d.body, 3000), items: items, names: names, showAll: !!d.showAll, locked: false, created: new Date().toISOString(), votes: {} };
+    const s = { id: id, key: hash_(key), mode: mode, title: sealed ? '' : clean_(d.title, 200), body: sealed ? '' : clean_(d.body, 3000), items: items, names: names, sealed: sealed || undefined, showAll: !!d.showAll, locked: false, created: new Date().toISOString(), votes: {} };
     folder_().createFile('p_' + id + '.json', JSON.stringify(s), 'application/json');
     return out_({ ok: true, id: id, k: key });
   }
@@ -232,9 +237,9 @@ function poll_(d) {
       if (!prev && Object.keys(s.votes).length >= (s.mode === 'att' ? MAX_ATT : MAX_VOTES)) return err_('full');
       const ans = (Array.isArray(d.ans) ? d.ans : []).slice(0, s.items.length).map(x => [0, 1, 2].indexOf(Number(x)) >= 0 ? Number(x) : null);
       if (ans.length !== s.items.length || ans.some(x => x === null)) return err_('bad_ans');
-      const notes = s.items.map((_, i) => clean_((d.notes || [])[i], 500));
+      const notes = s.items.map((_, i) => clean_((d.notes || [])[i], s.sealed ? 3000 : 500));
       const tok = prev ? String(d.tok) : rid_(24);
-      s.votes[key] = { name: prev ? prev.name : (s.names.find(n => nk_(n) === key) || name), ans: ans, notes: notes, t: new Date().toISOString(), tok: hash_(tok) };
+      s.votes[key] = { name: prev ? prev.name : s.sealed ? clean_(d.sn, 800) : (s.names.find(n => nk_(n) === key) || name), ans: ans, notes: notes, t: new Date().toISOString(), tok: hash_(tok) };
       save_(r);
       return out_(Object.assign(ppub_(s, admin, s.votes[key]), { tok: tok }));
     }

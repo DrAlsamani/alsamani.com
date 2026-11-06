@@ -359,7 +359,7 @@ html:has(.mp-paper){scroll-padding-bottom:110px;scroll-padding-top:80px}
     </div>`).join('')}</div>
     <div class="cm-go"><button type="button" class="btn solid" id="cmRun">${B('قارن', 'Compare')}</button>
       <label class="mn-ck"><input type="checkbox" id="cmLoose" checked> ${B('تجاهل التشكيل والمسافات وعلامات الترقيم', 'Ignore diacritics, spacing and punctuation')}</label></div>
-    <p class="sn-fine cm-priv">🔒 ${B('تُقرأ الملفات على جهازك فقط ولا تُرفع إلى أي خادم.', 'Files are read on your device only and never uploaded.')}</p>
+    <p class="sn-fine cm-priv">${B('تُقرأ الملفات على جهازك فقط ولا تُرفع إلى أي خادم.', 'Files are read on your device only and never uploaded.')}</p>
     <div id="cmOut"></div>`;
 
   root.querySelectorAll('.cm-in').forEach(box => {
@@ -484,7 +484,7 @@ html:has(.mp-paper){scroll-padding-bottom:110px;scroll-padding-top:80px}
         return s.t === 'add' ? `<ins>${esc(s.s)}</ins>` : `<del>${esc(s.s)}</del>`;
       }).join(' ');
       if (num) nums.push(k);
-      return `<p class="cm-p cm-ch${num ? ' cm-num' : ''}" data-ch="${k}">${body}${num ? `<i class="cm-tag cm-tn">🔢 ${T('رقم أو تاريخ تغيّر', 'A number or date changed')}</i>` : ''}</p>`;
+      return `<p class="cm-p cm-ch${num ? ' cm-num' : ''}" data-ch="${k}">${body}${num ? `<i class="cm-tag cm-tn">${T('رقم أو تاريخ تغيّر', 'A number or date changed')}</i>` : ''}</p>`;
     });
     const out = root.querySelector('#cmOut');
     if (!nPar) { out.innerHTML = `<div class="sn-card cm-same-all"><h2>✓ ${B('النسختان متطابقتان', 'The two versions match')}</h2><p>${opt.loose ? B('لا فرق في الكلمات (مع تجاهل التشكيل والمسافات وعلامات الترقيم).', 'No difference in the words (ignoring diacritics, spacing and punctuation).') : B('لا فرق في النص.', 'No difference in the text.')}</p></div>`; return; }
@@ -492,7 +492,7 @@ html:has(.mp-paper){scroll-padding-bottom:110px;scroll-padding-top:80px}
       <div class="cm-stats"><span><b>${nPar}</b> ${B('موضع تغيّر', 'places changed')}</span><span class="cm-sa"><b>${nAdd}</b> ${B('كلمة أضيفت', 'words added')}</span><span class="cm-sd"><b>${nDel}</b> ${B('كلمة حُذفت', 'words removed')}</span>${nums.length ? `<span class="cm-sn"><b>${nums.length}</b> ${B('تغيير في رقم أو تاريخ', 'number or date changes')}</span>` : ''}</div>
       <div class="cm-tools"><label class="mn-ck"><input type="checkbox" id="cmOnly"${opt.only ? ' checked' : ''}> ${B('التغييرات فقط', 'Changes only')}</label>
         <span class="cm-nav"><button type="button" class="mn-x" id="cmPrev" title="${T('السابق', 'Previous')}">↑</button><b id="cmPos">–</b><button type="button" class="mn-x" id="cmNext" title="${T('التالي', 'Next')}">↓</button></span>
-        <button type="button" class="btn ghost" id="cmPrint">${B('طباعة التقرير', 'Print the report')}</button><button type="button" class="btn ghost" id="cmAI">✨ ${B('مراجعة بالذكاء الاصطناعي', 'Review with AI')}</button></div>
+        <button type="button" class="btn ghost" id="cmPrint">${B('طباعة التقرير', 'Print the report')}</button><button type="button" class="btn ghost" id="cmAI">${B('مراجعة بالذكاء الاصطناعي', 'Review with AI')}</button></div>
       <p class="cm-key"><ins>${B('مضاف', 'added')}</ins> <del>${B('محذوف', 'removed')}</del></p>
       <div class="cm-doc${opt.only ? ' only' : ''}" dir="auto">${html.join('')}</div></div>`;
     const docEl = out.querySelector('.cm-doc'), chs = [...docEl.querySelectorAll('.cm-ch')]; let pos = -1;
@@ -532,9 +532,9 @@ ${full}
 ٣. اذكر الأخطاء اللغوية والإملائية في النسخة المعدّلة.
 اكتب النتيجة في جدول: الموضع | الملاحظة | الأهمية (عالية، متوسطة، منخفضة) | المقترح. لا تعِد كتابة الوثيقة، ولا تفترض معلومات غير مكتوبة.`;
     const m = document.createElement('div'); m.className = 'mn-modal';
-    m.innerHTML = `<div class="mn-mbox"><h3>✨ ${B('مراجعة الفروقات بالذكاء الاصطناعي', 'Review the changes with AI')}</h3>
+    m.innerHTML = `<div class="mn-mbox"><h3>${B('مراجعة الفروقات بالذكاء الاصطناعي', 'Review the changes with AI')}</h3>
       <p>${B('تُجهَّز تعليمات فيها التغييرات ونص النسخة المعدّلة، تلصقها في المساعد فيعطيك جدولًا بما يغيّر المعنى، والتعارضات، والأخطاء اللغوية.', 'Instructions are prepared with the changes and the revised text; paste them into the assistant for a table of meaning changes, inconsistencies and language errors.')}</p>
-      <p class="mn-priv">🔒 ${B('ما تلصقه في ChatGPT أو Claude يُرسل إلى خدمتهما. لا تلصق ما لا يجوز إطلاع غيرك عليه.', 'What you paste into ChatGPT or Claude goes to their service. Do not paste what must stay private.')}</p>
+      <p class="mn-priv">${B('ما تلصقه في ChatGPT أو Claude يُرسل إلى خدمتهما. لا تلصق ما لا يجوز إطلاع غيرك عليه.', 'What you paste into ChatGPT or Claude goes to their service. Do not paste what must stay private.')}</p>
       <div class="sn-two"><button type="button" class="btn solid" id="cmCopy">${B('انسخ التعليمات', 'Copy the instructions')}</button><a class="btn ghost" target="_blank" rel="noopener" href="https://chatgpt.com/">ChatGPT</a><a class="btn ghost" target="_blank" rel="noopener" href="https://claude.ai/new">Claude</a><button type="button" class="btn ghost" data-mx>${B('إغلاق', 'Close')}</button></div></div>`;
     document.body.appendChild(m);
     m.addEventListener('click', e => { if (e.target === m || e.target.closest('[data-mx]')) m.remove(); });

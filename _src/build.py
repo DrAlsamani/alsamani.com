@@ -687,7 +687,7 @@ for _t in _tp.TOOLS:
 for _g, _a, _b, _da, _db in _tp.GROUPS:
     PAGES.append((f"tools/{_tp.GPAGE[_g]}", 2, " | ".join(_tp.gtitle(_g)) + " | Dr. Omar A. Alsamani", (lambda gg: (lambda: _tp.group_body(gg)))(_g)))
 DESCS['tools/work'] = 'Free tools for committees, boards and office work: sign meeting minutes together, pass a decision by circulation, find a meeting time, record attendance, merge and arrange PDF pages, and make QR codes. أدوات مجانية للجان والمجالس والأعمال المكتبية.'
-DESCS['tools/students'] = 'Tools for graduate student researchers: a guided research journey from the first idea to the approach, and a reference guide to research approaches and designs. أدوات للطالب الباحث.'
+DESCS['tools/students'] = 'Tools for graduate student researchers: a guided research journey from the first idea to the defence, and a reference guide to research approaches and designs. أدوات للطالب الباحث.'
 DESCS['tools/leaders'] = 'Diagnostic tools for leaders and organizations from the book Innovation Management: initiative classification, leader\'s mirror, system health, scale readiness and university innovation ecosystem. أدوات تشخيص للقادة والمؤسسات.'
 PAGES.append(('tools/research-journey', 2, 'رحلة البحث | The research journey | Dr. Omar A. Alsamani', _tp.journey_body))
 if _tp.poll_ready(): PAGES.append(('tools/pass', 2, 'تمرير قرار | Decision by circulation | Dr. Omar A. Alsamani', _tp.pass_body))
@@ -728,7 +728,7 @@ if _tp.sign_ready(): PAGES.append(('tools/sign', 2, 'توقيع المحاضر |
 DESCS['tools/sign'] = 'Sign meeting minutes together: upload the PDF once, share one link, and each member signs in their own box from their phone. توقيع المحاضر: نسخة واحدة وكل عضو يوقّع في خانته.'
 PAGES.append(('tools/research-methods', 2, 'مناهج البحث وتصاميمها | Research approaches and designs | Dr. Omar A. Alsamani', _tp.methods_body))
 DESCS['tools/research-methods'] = 'A reference guide to research approaches and designs for graduate students: descriptive, correlational, causal-comparative, experimental, single-case, qualitative (phenomenology, case study, grounded theory, ethnography, narrative), mixed methods, systematic and scoping reviews. مناهج البحث وتصاميمها.'
-DESCS['tools/research-journey'] = 'A guided research journey for graduate students: from the first idea to the problem, questions and approach, with quality checks, a live Chapter One draft and supervisor review. رحلة البحث للطالب الباحث.'
+DESCS['tools/research-journey'] = 'A guided research journey for graduate students: from the first idea to the defence, with quality checks, a live Chapter One draft and supervisor review. رحلة البحث للطالب الباحث.'
 DESCS['tools'] = "Free interactive tools by Dr. Omar A. Alsamani: for everyday work (signing minutes, decisions by circulation, meeting times, attendance, PDF files, QR codes), for student researchers, and for leaders and organizations. أدوات تفاعلية مجانية."
 for _t in _tp.TOOLS:
     DESCS['tools/' + _t['slug']] = _t['q_en'] + ' ' + _t['q_ar'] + ' — ' + _t['intro_en']

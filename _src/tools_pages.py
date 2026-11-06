@@ -47,7 +47,7 @@ def tool_body(t):
 </section>'''
 
 GROUPS = [('work', 'الاجتماعات والملفات', 'Meetings and files', 'أدوات للجان والمجالس والأعمال المكتبية، تعمل من الجوال ولا تتطلب التسجيل.', 'Tools for committees, boards and office work; they run on a phone and need no sign-up.'),
-          ('research', 'للطالب الباحث', 'For student researchers', 'أدوات ترافق الباحث من الفكرة الأولى إلى اختيار المنهج والتصميم.', 'Tools that accompany the researcher from the first idea to the choice of approach and design.'),
+          ('research', 'للطالب الباحث', 'For student researchers', 'أدوات ترافق الباحث من الفكرة الأولى إلى المناقشة.', 'Tools that accompany the researcher from the first idea to the defence.'),
           ('leaders', 'للقادة والمؤسسات', 'For leaders and organizations', 'أدوات تشخيصية مستمدة من كتاب «إدارة الابتكار».', 'Diagnostic tools from <i>Innovation Management</i>.')]
 GPAGE = {'work': 'work', 'research': 'students', 'leaders': 'leaders'}
 def gname(g):
@@ -203,8 +203,8 @@ CERT = {'slug': 'certificates', 't_ar': 'الشهادات', 't_en': 'Certificate
         'q_ar': 'خدمة لإصدار الشهادات دفعة واحدة: يُرفع تصميم الشهادة وقائمة الأسماء، فتصدر شهادة مستقلة لكل اسم.',
         'q_en': 'Issue certificates in one batch: upload the design and the list of names, and a separate certificate is produced for each name.'}
 QRT = {'slug': 'qr', 't_ar': 'رمز QR', 't_en': 'QR code',
-       'q_ar': 'خدمة لتحويل الروابط إلى رموز QR جاهزة للعروض والمطبوعات، وتشمل إنشاء رابط مجلد يجمع عدة ملفات.',
-       'q_en': 'Turn links into QR codes ready for slides and print, including a folder link that gathers several files.'}
+       'q_ar': 'خدمة لتحويل الروابط إلى رموز QR جاهزة للعروض والمطبوعات.',
+       'q_en': 'Turn links into QR codes ready for slides and print.'}
 QUIZ = {'slug': 'quiz', 't_ar': 'المسابقة التفاعلية', 't_en': 'Live quiz',
         'q_ar': 'محرر لإعداد أسئلة المسابقات التفاعلية بلصقها أو رفع ملفها أو توليدها بالذكاء الاصطناعي.',
         'q_en': 'An editor for preparing live quiz questions by pasting them, uploading a file or generating them with AI.'}

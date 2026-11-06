@@ -400,23 +400,69 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
     pass: { opts: [['موافق', 'Agree', 'ok'], ['متحفظ', 'Reservation', 'res'], ['غير موافق', 'Disagree', 'no']], item: ['القرار', 'Decision'], add: ['+ إضافة قرار آخر', '+ Add another decision'],
       def: ['تمرير قرار', 'Decision by circulation'], ph: ['مثال: تمرير قرار لجنة الدراسات العليا', 'e.g. Committee decision by circulation'], input: 'textarea', itemPh: ['', ''],
       notes: true, show: ['إظهار النتيجة للأعضاء بعد تصويتهم', 'Show the results to members after they answer'], link: ['رابط التصويت على القرار: ', 'Answer the decision here: '],
-      remind: ['نأمل التكرم بالتصويت على', 'Please answer'], done: ['سُجّل رأيك. شكرًا لك.', 'Your answer was recorded. Thank you.'], mine: ['تصويتك', 'Your answer'] },
+      remind: ['نأمل التكرم بالتصويت على', 'Please answer'], done: ['تم تسجيل رأيك. شكرًا لك.', 'Your answer was recorded. Thank you.'], mine: ['تصويتك', 'Your answer'] },
     time: { opts: [['يناسبني', 'Works', 'ok'], ['ربما', 'Maybe', 'res'], ['لا يناسبني', 'Does not work', 'no']], item: ['الموعد', 'Option'], add: ['+ إضافة موعد آخر', '+ Add another time'],
       def: ['تحديد موعد الاجتماع', 'Meeting time'], ph: ['مثال: الاجتماع الثالث لمجلس القسم', 'e.g. Third department council meeting'], input: 'input', itemPh: ['مثال: الأحد ١٠ نوفمبر · ١٠ صباحًا', 'e.g. Sunday 10 November · 10 am'],
       notes: false, show: ['إظهار الاختيارات للأعضاء بعد تصويتهم', 'Show everyone’s choices to members after they answer'], link: ['اختر المواعيد المناسبة لك: ', 'Choose the times that work for you: '],
-      remind: ['نأمل التكرم بتحديد المواعيد المناسبة لـ', 'Please choose your times for'], done: ['سُجّلت اختياراتك. شكرًا لك.', 'Your choices were recorded. Thank you.'], mine: ['اختياراتك', 'Your choices'] },
+      remind: ['نأمل التكرم بتحديد المواعيد المناسبة لـ', 'Please choose your times for'], done: ['تم تسجيل اختياراتك. شكرًا لك.', 'Your choices were recorded. Thank you.'], mine: ['اختياراتك', 'Your choices'] },
     att: { opts: [], def: ['تسجيل الحضور', 'Attendance'], ph: ['مثال: الاجتماع الثالث لمجلس القسم', 'e.g. Third department council meeting'],
       show: ['إظهار قائمة الحاضرين للجميع', 'Show the attendance list to everyone'], link: ['سجّل حضورك: ', 'Record your attendance: '],
-      remind: ['نأمل تسجيل الحضور في', 'Please record your attendance for'], done: ['سُجّل حضورك. شكرًا لك.', 'Your attendance was recorded. Thank you.'], mine: ['حضورك', 'Your attendance'] }
+      remind: ['نأمل تسجيل الحضور في', 'Please record your attendance for'], done: ['تم تسجيل حضورك. شكرًا لك.', 'Your attendance was recorded. Thank you.'], mine: ['حضورك', 'Your attendance'] }
   }[MODE];
   const optT = k => T(C.opts[k][0], C.opts[k][1]);
-  async function call(body, tries) {
+  /* ---------- sealed on the device (as in the signing tool). The key stays in the link after #, which browsers
+     never send to a server: the service holds the answers' count and times, and cannot read the title, items or names.
+     Links made before this keep working as they were. ---------- */
+  const u8 = s => new TextEncoder().encode(s), str = b => new TextDecoder().decode(b);
+  const b64u = b => btoa(String.fromCharCode(...b)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  const unb64u = s => Uint8Array.from(atob(s.replace(/-/g, '+').replace(/_/g, '/') + '==='.slice((s.length + 3) % 4)), c => c.charCodeAt(0));
+  const bigB64u = b => { let o = ''; for (let i = 0; i < b.length; i += 24576) o += b64u(b.subarray(i, i + 24576)); return o; };
+  const ekRaw = id => (store.get('ps.ek', {}))[id] || null;
+  const ekSet = (id, k) => { const m = store.get('ps.ek', {}); m[id] = k; store.set('ps.ek', m); };
+  const KS = {}, OPENED = {};
+  async function keysOf(id) { const r = ekRaw(id); if (!r) return null; if (KS[id]) return KS[id]; const raw = unb64u(r);
+    return KS[id] = { aes: await crypto.subtle.importKey('raw', raw, 'AES-GCM', false, ['encrypt', 'decrypt']), mac: await crypto.subtle.importKey('raw', raw, { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']) }; }
+  async function sealS(aes, text) { const iv = crypto.getRandomValues(new Uint8Array(12)), ct = new Uint8Array(await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, aes, u8(text))), o = new Uint8Array(12 + ct.length); o.set(iv); o.set(ct, 12); return bigB64u(o); }
+  async function openS(aes, s) { if (!s) return ''; if (OPENED[s] != null) return OPENED[s]; const b = unb64u(s); return OPENED[s] = str(await crypto.subtle.decrypt({ name: 'AES-GCM', iv: b.slice(0, 12) }, aes, b.slice(12))); }
+  // the same name always gives the same mark, so a member still has one answer; the service cannot tell whose it is
+  const nk = s => String(s || '').replace(/[\u064B-\u0652\u0640]/g, '').replace(/[أإآ]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي').replace(/^(د|أ|ا|م)\.?\s*/, '').replace(/\s+/g, ' ').trim();
+  async function nameMark(mac, name) { return 'N' + b64u(new Uint8Array(await crypto.subtle.sign('HMAC', mac, u8(nk(name)))).slice(0, 18)); }
+  async function sealBody(body) {
+    if (body.a === 'pcreate') {
+      const raw = crypto.getRandomValues(new Uint8Array(32)), aes = await crypto.subtle.importKey('raw', raw, 'AES-GCM', false, ['encrypt', 'decrypt']);
+      const sealed = await sealS(aes, JSON.stringify({ title: body.title, items: body.items, names: body.names }));
+      return { sent: { a: 'pcreate', mode: body.mode, showAll: body.showAll, n: body.items.length, sealed }, e: b64u(raw) };
+    }
+    const K = body.id && await keysOf(body.id); if (!K) return { sent: body };
+    const o = Object.assign({}, body);
+    if (o.a === 'pvote') { o.sn = await sealS(K.aes, o.name); o.notes = await Promise.all((o.notes || []).map(n => n ? sealS(K.aes, n) : '')); }
+    if (o.name) o.name = await nameMark(K.mac, o.name);
+    return { sent: o };
+  }
+  async function openReply(j, id) {
+    if (!j.sealed) return j;
+    const K = await keysOf(id); if (!K) { const e = new Error('no_key'); e.code = 'no_key'; throw e; }
+    const one = async v => { v.name = await openS(K.aes, v.name); v.notes = await Promise.all((v.notes || []).map(n => openS(K.aes, n))); return v; };
+    try {
+      const P = JSON.parse(await openS(K.aes, j.sealed)); j.title = P.title; j.items = P.items; j.names = P.names;
+      j.voted = await Promise.all((j.voted || []).map(n => openS(K.aes, n)));
+      if (j.votes) await Promise.all(j.votes.map(one));
+      if (j.mine) await one(j.mine);
+    } catch (x) { const e = new Error('no_key'); e.code = 'no_key'; throw e; }
+    return j;
+  }
+  async function call(body) {
+    const { sent, e } = await sealBody(body), j = await post(sent);
+    if (e && j.id) ekSet(j.id, e);
+    return j.ok && j.deleted ? j : j.id && (j.sealed || !e) ? openReply(j, j.id) : j;
+  }
+  async function post(body, tries) {
     let j;
     try {
       const ac = new AbortController(), to = setTimeout(() => ac.abort(), 45000);
       const r = await fetch(API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body), signal: ac.signal });
       j = await r.json(); clearTimeout(to);
-    } catch (e) { if (body.a === 'pget' && !tries) return call(body, 1); throw e; }
+    } catch (e) { if (body.a === 'pget' && !tries) return post(body, 1); throw e; }
     if (!j.ok) { const e = new Error(j.error); e.code = j.error; throw e; }
     return j;
   }
@@ -425,6 +471,7 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
     full: B('اكتمل العدد المسموح في هذا الرابط.', 'This link has reached its limit.'),
     voted: B('تم تسجيل هذا الاسم من جهاز آخر. إن كان خطأ فاطلب من المنسق حذفه.', 'This name was recorded from another device. If this is a mistake, ask the coordinator to remove it.'),
     locked: B('تم إغلاق الرابط.', 'This link is closed.'),
+    no_key: B('الرابط غير مكتمل. اطلب من المنسق إرساله مرة أخرى كاملًا.', 'This link is incomplete. Ask the coordinator to send it again in full.'),
     not_found: B('لم يُعثر على الرابط. ربما تم حذفه أو انتهت مدته.', 'Not found. It may have been deleted or expired.'),
     bad_name: B('اختر اسمك من القائمة أو اكتبه.', 'Choose or write your name.'),
     bad_ans: B('اختر إجابة لكل بند.', 'Choose an answer for every item.'),
@@ -450,7 +497,7 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
       <textarea id="psN" rows="5" placeholder="${T('اسم في كل سطر', 'One name per line')}">${esc(last)}</textarea></details>
       <label class="sn-keep"><input type="checkbox" id="psShow"${MODE === 'time' ? ' checked' : ''}> ${B(C.show[0], C.show[1])}</label>
       <div class="sn-two"><button type="button" class="btn solid" id="psGo">${B('إنشاء الرابط', 'Create the link')}</button></div>
-      <p class="pt-fine">${B('تُحذف البيانات تلقائيًا بعد ٧ أيام، ويستطيع المنسق حذفها فورًا.', 'Data is deleted automatically after 7 days; the coordinator can delete it at once.')}</p>
+      <p class="pt-fine">${B('تُشفَّر البيانات والأسماء في جهازك قبل أن تخرج منه، ومفتاحها في الرابط وحده؛ فلا يقرؤها أحد غير من معه الرابط، ولا حتى الموقع. وتُحذف تلقائيًا بعد ٧ أيام، ويستطيع المنسق حذفها فورًا.', 'Data and names are encrypted on your device before they leave it, and the key is only in the link, so only those with the link can read them, not even this site. Data is deleted automatically after 7 days; the coordinator can delete it at once.')}</p>
     </div>`;
     const box = root.querySelector('#psItems');
     // meeting time: optional date and time pickers that write the option text, which stays editable
@@ -487,7 +534,7 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
         const j = await call({ a: 'pcreate', mode: MODE, title: root.querySelector('#psT').value.trim(), items, names, showAll: root.querySelector('#psShow').checked });
         store.set('ps.names', raw.trim());
         const keys = store.get('ps.keys', {}); keys[j.id] = j.k; store.set('ps.keys', keys);
-        location.href = '?d=' + j.id + '&new=1#k=' + j.k;
+        location.href = '?d=' + j.id + '&new=1#k=' + j.k + '&e=' + ekRaw(j.id);
       } catch (e) { btn.disabled = false; toast(errMsg(e), 1); }
     };
   }
@@ -496,12 +543,13 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
   async function view(id) {
     const hk = (location.hash.match(/k=([a-f0-9]+)/) || [])[1], keys = store.get('ps.keys', {});
     if (hk) { keys[id] = hk; store.set('ps.keys', keys); }
+    const he = (location.hash.match(/[#&]e=([\w-]+)/) || [])[1]; if (he) ekSet(id, he);
     const key = keys[id], mineAll = store.get('ps.mine', {}); let mine = mineAll[id];
     root.innerHTML = `<div class="sn-card sn-load">${B('جارٍ الفتح…', 'Opening…')}</div>`;
     let S;
     try { S = await call({ a: 'pget', id, k: key, name: mine && mine.name, tok: mine && mine.tok }); }
     catch (e) { root.innerHTML = `<div class="sn-card"><p>${errMsg(e)}</p></div>`; return; }
-    const admin = !!S.admin, link = location.origin + location.pathname + '?d=' + id, me = store.get('sn.me', '') || '';
+    const E = ekRaw(id), base = location.origin + location.pathname + '?d=' + id, admin = !!S.admin, link = base + (E ? '#e=' + E : ''), me = store.get('sn.me', '') || '';
     let editing = !S.mine;
     const title = () => S.title || T(C.def[0], C.def[1]);
     function render() {
@@ -571,7 +619,7 @@ html:has(.sn-sheet) .sn-fab,html:has(.sn-mode) .sn-fab{display:none}
       const q = s => root.querySelector(s);
       if (q('#psCopy')) {
         q('#psCopy').onclick = () => copy(link, B('تم نسخ الرابط.', 'Link copied.'));
-        q('#psAdm').onclick = () => copy(link + '#k=' + key, B('تم نسخ رابط الإدارة. لا تُرسله إلى المجموعة.', 'Management link copied. Do not share it with the group.'));
+        q('#psAdm').onclick = () => copy(base + '#k=' + key + (E ? '&e=' + E : ''), B('تم نسخ رابط الإدارة. لا تُرسله إلى المجموعة.', 'Management link copied. Do not share it with the group.'));
         q('#psWa').href = 'https://wa.me/?text=' + encodeURIComponent((S.title ? S.title + '\n' : '') + T(C.link[0], C.link[1]) + link);
       }
       if (q('#psQr')) q('#psQr').onclick = qr;
