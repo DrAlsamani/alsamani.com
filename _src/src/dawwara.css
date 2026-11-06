@@ -487,3 +487,7 @@ html.dw-phone .site-foot,html.dw-phone .ribbons-foot{display:none}
 .dw-qef{display:grid;gap:8px;width:100%;background:rgba(0,0,0,.2);border-radius:12px;padding:12px;margin-bottom:10px}.dw-qef label{display:grid;gap:4px}.dw-qef label span{font-size:.85rem;opacity:.75}
 .dw-qef input{font:inherit;border:0;border-radius:10px;padding:9px 12px}.dw-qef>div{display:flex;gap:8px}.dw-qem{margin:4px 0 0;color:#f3c27e;font-weight:700}
 .dw-qel li:has(.dw-qef){display:block;background:none;padding:0}
+/* your quizzes: the edit link sits inside the card */
+.dw-pickw{position:relative;display:block}.dw-pickw .dw-pick{display:grid;width:100%;box-sizing:border-box;padding-inline-end:64px}
+.dw-pickw .dw-edb{position:absolute;inset-inline-end:10px;top:50%;transform:translateY(-50%);border:0;background:none;padding:4px 6px;text-decoration:underline;text-underline-offset:3px}
+.dw-tags b.f.rv:lang(en)::after{content:' | decoy'}
