@@ -454,6 +454,13 @@ html.dw-phone .tl-crumb,html.dw-phone .dw-head,html.dw-phone .dw-lead{display:no
 .dw-mixc{grid-column:1/-1;background:linear-gradient(135deg,#c9822b,#8a4f1c)}.dw-mixc em{background:#fff}
 @media (min-width:641px){.dw-mixc{flex-direction:row;align-items:center}}
 .dw-mixl{display:grid;gap:8px}.dw-mixl .dw-pr.off{opacity:.55}
+/* the host's phone as a remote */
+.dw-rcb{margin-top:8px;font-size:.85rem}.dw-rcq{display:flex;gap:12px;align-items:center;margin-top:8px}.dw-rcq .dw-qr{width:110px;flex:none}.dw-rcq p{margin:0;font-size:.85rem;opacity:.85;line-height:1.7}
+.dwp-rb{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.dwp-rb button{font:inherit;font-weight:700;border:1px solid var(--line,#d6d9e4);background:var(--surface,#fff);color:var(--ink);border-radius:12px;padding:14px 10px;line-height:1.5;min-height:56px}
+.dwp-rb button.on{background:#e9a54a;color:#1d1b3a;border-color:#e9a54a}
+.dwp-rm .dwp-top{background:#14204a}
+.dwp-rb button.main{grid-column:1/-1;background:#e9a54a;border-color:#e9a54a;color:#1d1b3a;font-size:1.25rem;min-height:72px}
 </style>
 <div id="dw" class="dw-page"><noscript><span class="ar">تعمل هذه اللعبة مع تفعيل JavaScript.</span><span class="en">This game needs JavaScript.</span></noscript></div>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script>window.MD_CFG={"apiKey": "AIzaSyA50i75DT1Is1a6Yn6snW1_JVObc8S3F0Y", "authDomain": "maydan-705ae.firebaseapp.com", "databaseURL": "https://maydan-705ae-default-rtdb.europe-west1.firebasedatabase.app", "projectId": "maydan-705ae", "appId": "1:342187013133:web:d5c2396f0db413f3c51144"};window.MD_MARK="<svg class=\"md-mark\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><rect x=\"4\" y=\"4\" width=\"40\" height=\"40\" rx=\"12\" fill=\"#23336F\"/><path d=\"M24 9l4.2 6.8 7.8-1.8-1.8 7.8L41 24l-6.8 4.2 1.8 7.8-7.8-1.8L24 39l-4.2-6.8-7.8 1.8 1.8-7.8L7 24l6.8-4.2-1.8-7.8 7.8 1.8z\" fill=\"#C9822B\"/><circle cx=\"24\" cy=\"24\" r=\"6.5\" fill=\"#23336F\"/><circle cx=\"24\" cy=\"24\" r=\"3\" fill=\"#F3E3C7\"/></svg>";</script><script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script><script>/* Maydan library: ready quizzes to start at once or open and edit. Written in the editor's own format. */
@@ -893,7 +900,7 @@ window.Dawwara = (function () {
   const clean = x => { if (['num', 'word'].includes(x.type)) return Object.assign({}, x); const keep = x.opts.map((o, j) => String(o).trim() ? j : -1).filter(j => j >= 0); return Object.assign({}, x, { opts: keep.map(j => x.opts[j]), ok: x.ok.map(j => keep.indexOf(j)).filter(j => j >= 0) }); };
 
   function shell(html, cls) {
-    if (!el) { el = document.createElement('div'); el.className = 'dw'; el.setAttribute('role', 'dialog'); document.body.appendChild(el); document.documentElement.classList.add('dw-on'); document.addEventListener('keydown', keys); el.addEventListener('click', e => { const c = e.target.closest && e.target.closest('.dw-board [data-tm]'); if (c && D && D.groups) chanceSheet(+c.dataset.tm); }); }
+    if (!el) { el = document.createElement('div'); el.className = 'dw'; el.setAttribute('role', 'dialog'); document.body.appendChild(el); document.documentElement.classList.add('dw-on'); document.addEventListener('keydown', keys); el.addEventListener('click', e => { const c = e.target.closest && e.target.closest('.dw-board [data-tm]'); if (c && D && D.groups) chanceSheet(+c.dataset.tm); }); rcWatch(); }
     el.className = 'dw ' + (cls || ''); el.innerHTML = `<button type="button" class="dw-close" data-close title="${T('إنهاء', 'End')}">${IC.x}</button>${html}`;
     el.querySelector('[data-close]').onclick = () => { if (!D || !D.steps || D.done || confirm(T('تنهي دوّارة؟', 'End Dawwara?'))) close(); };
   }
@@ -1666,7 +1673,13 @@ window.Dawwara = (function () {
   let db = null, uid = null;
   async function fb() { if (db) return; if (!window.firebase || !window.MD_CFG) throw new Error('nofb'); if (!firebase.apps.length) firebase.initializeApp(MD_CFG); const u = (await new Promise(r => { const o = firebase.auth().onAuthStateChanged(x => { o(); r(x); }); })) || (await firebase.auth().signInAnonymously()).user; uid = u.uid; db = firebase.database(); }
   const TS = () => firebase.database.ServerValue.TIMESTAMP;
-  const ROOM = { lead: {}, names: {}, seen: {} };
+  const ROOM = { lead: {}, names: {}, seen: {}, rc: String(100000 + Math.floor(Math.random() * 900000)), rmt: '', rbEls: [], rbSig: '' };
+  // the host's phone as a remote: it sees the buttons on the screen and presses them
+  const rcList = () => !el ? [] : [...el.querySelectorAll('button')].filter(b => !b.disabled && b.offsetParent && !b.closest('.dw-board,[data-close],[data-end],[data-reset],.dw-join')).sort((a, b) => (b.matches('[data-main]') ? 1 : 0) - (a.matches('[data-main]') ? 1 : 0)).slice(0, 60);
+  const rcLabel = b => ([...b.childNodes].map(n => (n.textContent || '').trim()).filter(Boolean).join(' · ') || b.title || b.getAttribute('aria-label') || '').replace(/\s+/g, ' ').slice(0, 40);
+  let rcT = null;
+  function rcWatch() { if (!el || el.__rc) return; el.__rc = 1; new MutationObserver(() => { if (!rcT) rcT = setTimeout(() => { rcT = null; rcPush(); }, 250); }).observe(el, { childList: true, subtree: true, attributes: true, attributeFilter: ['disabled', 'hidden', 'class'] }); }
+  function rcPush() { if (!ROOM.rmt || !ROOM.ref || !D) return; const bs = rcList(), sig = bs.map(rcLabel).join('|') + '#' + ((el.querySelector('h2') || {}).textContent || ''); if (sig === ROOM.rbSig) return; ROOM.rbSig = sig; ROOM.rbEls = bs; pub(); }
   async function openRoom() {
     await fb(); if (ROOM.ref) return ROOM;
     for (let t = 0; t < 6 && !ROOM.pin; t++) { const p = String(100000 + Math.floor(Math.random() * 900000)); try { await db.ref('kh/' + p).set({ host: uid, at: TS(), st: 'lobby', dw: 1 }); ROOM.pin = p; } catch (e) {} }
@@ -1679,6 +1692,9 @@ window.Dawwara = (function () {
   }
   const teamOfU = u => { const k = Object.keys(ROOM.lead).find(t => ROOM.lead[t] === u); return k == null ? -1 : +k; };
   function onMove(u, v) {
+    if (v.k === 'r') { if (v.c === 'j' && String(v.x) === ROOM.rc) { ROOM.rmt = u; ROOM.rbSig = ''; ROOM.rbEls = rcList(); leadPaint(); return pub(); }
+      if (u === ROOM.rmt && v.c === 'b') { const b = ROOM.rbEls[v.x]; if (b && b.isConnected && !b.disabled) b.click(); } return; }
+    if (u === ROOM.rmt) return;
     if (v.k === 'j') { Object.keys(ROOM.lead).forEach(t => { if (ROOM.lead[t] === u) delete ROOM.lead[t]; }); ROOM.lead[v.x] = u; ROOM.ref.child('ld').set(ROOM.lead); leadPaint(); return pub(); }
     const k = teamOfU(u); if (k < 0 || !D || !D.groups) return;
     if (v.k === 'b' && D.q && D.q.onBuzz) D.q.onBuzz(k, v.t);
@@ -1693,25 +1709,28 @@ window.Dawwara = (function () {
   function pub(o) {
     if (!ROOM.ref) return; const G = D && D.groups;
     const base = G ? { names: G.map(g => g.name), cols: G.map(g => g.col), sc: G.map(g => g.score), ch: G.map(g => D.cfg.chn !== false ? g.chances || '' : ''), dbl: G.map(g => g.dbl ? 1 : 0) } : { names: (D.cfg.names || []).slice(0, D.cfg.n).map((n, k) => n || NAMES()[k]), cols: COL.slice(0, D.cfg.n) };
-    if (o) D.lastPub = o; ROOM.ref.child('g').set(Object.assign(base, D.lastPub || { ph: 'lobby' }, { t: TS() })).catch(() => {});
+    if (o) D.lastPub = o; if (ROOM.rmt) { if (!ROOM.rbSig) { ROOM.rbEls = rcList(); } Object.assign(base, { rmt: ROOM.rmt, rb: ROOM.rbEls.map(rcLabel).concat(['']).slice(0, 61), rbm: ROOM.rbEls[0] && ROOM.rbEls[0].matches('[data-main]') ? 1 : 0, rt: ((el && el.querySelector('h2')) || {}).textContent || '' }); }
+    ROOM.ref.child('g').set(Object.assign(base, D.lastPub || { ph: 'lobby' }, { t: TS() })).catch(() => {});
   }
   function leadPaint() {
     const box = el && el.querySelector('#dwLeads'); if (!box) return;
     const names = (D.groups ? D.groups.map(g => g.name) : [...el.querySelectorAll('[data-name]')].map((i, k) => i.value.trim() || NAMES()[k]));
-    box.innerHTML = names.map((n, k) => `<span style="--c:${COL[k]}" class="${ROOM.lead[k] ? 'on' : ''}" dir="auto">${esc(n)}: ${ROOM.lead[k] ? esc(ROOM.names[ROOM.lead[k]] || T('متصل', 'connected')) : T('بلا جوال', 'no phone')}</span>`).join('');
+    box.innerHTML = names.map((n, k) => `<span style="--c:${COL[k]}" class="${ROOM.lead[k] ? 'on' : ''}" dir="auto">${esc(n)}: ${ROOM.lead[k] ? esc(ROOM.names[ROOM.lead[k]] || T('متصل', 'connected')) : T('بلا جوال', 'no phone')}</span>`).join('') + (ROOM.rmt ? `<span class="on" style="--c:#e9a54a">${T('جوال المدير متصل', 'Host’s phone connected')}</span>` : '');
   }
   async function phonesBox() {
     const box = el.querySelector('#dwPh'); if (!box) return; box.innerHTML = `<p class="dw-hint">${T('لحظة…', 'One moment…')}</p>`;
     try { await openRoom(); } catch (e) { box.innerHTML = `<p class="dw-hint">${T('تعذّر الاتصال. ', 'Could not connect. ')}<button type="button" class="dw-btn ghost" data-retry>${T('حاول مرة أخرى', 'Try again')}</button></p>`; box.querySelector('[data-retry]').onclick = phonesBox; return; }
     const url = 'https://alsamani.com/play/dawwara/?k=' + ROOM.pin; let svg = '';
     try { const qr = qrcode(0, 'M'); qr.addData(url); qr.make(); svg = qr.createSvgTag({ cellSize: 4, margin: 1, scalable: true }); } catch (e) {}
-    box.innerHTML = `<div class="dw-join"><div class="dw-qr">${svg}</div><div><p>${T('يفتح كل قائد فريق الكاميرا ويمسح الرمز، أو يدخل', 'Each team leader scans the code, or goes to')} <b dir="ltr">alsamani.com/play/dawwara</b> ${T('ويكتب الرمز', 'and enters')}</p><p class="dw-pin" dir="ltr">${ROOM.pin.slice(0, 3)} ${ROOM.pin.slice(3)}</p><div class="dw-leads" id="dwLeads"></div></div></div>`;
+    box.innerHTML = `<div class="dw-join"><div class="dw-qr">${svg}</div><div><p>${T('يفتح كل قائد فريق الكاميرا ويمسح الرمز، أو يدخل', 'Each team leader scans the code, or goes to')} <b dir="ltr">alsamani.com/play/dawwara</b> ${T('ويكتب الرمز', 'and enters')}</p><p class="dw-pin" dir="ltr">${ROOM.pin.slice(0, 3)} ${ROOM.pin.slice(3)}</p><div class="dw-leads" id="dwLeads"></div><button type="button" class="dw-lnk dw-rcb" data-rcq>${T('التحكم بالشاشة من جوال المدير', 'Control the screen from the host’s phone')}</button><div class="dw-rcq" hidden></div></div></div>`;
+    const rq = box.querySelector('[data-rcq]'); if (rq) rq.onclick = () => { const d = box.querySelector('.dw-rcq'); if (!d.hidden) { d.hidden = true; return; } let sv = ''; try { const q = qrcode(0, 'M'); q.addData(url + '&r=' + ROOM.rc); q.make(); sv = q.createSvgTag({ cellSize: 4, margin: 1, scalable: true }); } catch (e) {} d.innerHTML = `<div class="dw-qr">${sv}</div><p>${T('يمسحه المدير بجواله، فتظهر عليه أزرار الشاشة ويتحكم بها من أي مكان في القاعة. لا تعرضه على الحضور.', 'The host scans it; the screen’s buttons appear on the phone to press from anywhere in the hall. Do not show it to the audience.')}</p>`; d.hidden = false; };
     leadPaint(); pub();
   }
 
   // the phone itself
   function phone(root, pin) {
-    let me = null, g = null, lead = {}, ans = null, buzzed = false, lastKey = '';
+    let me = null, g = null, lead = {}, ans = null, buzzed = false, lastKey = '', rsent = false;
+    const rc = (new URLSearchParams(location.search).get('r') || '').replace(/\D/g, '');
     let W = { i: null, sl: [], lock: [], a: -1, cool: 0 }, RO = { i: null, p: [] }, N = { i: null, v: '' };
     const HL = () => ({ o: T('اعرض الخيارات', 'Show the options'), d: T('احذف إجابتين', 'Remove two'), s: T('غيّر السؤال', 'Change the question'), t: T('وقت إضافي', 'Extra time'), x: T('اسأل الخصم', 'Ask a rival'), f: T('اكشف الحدث الأول', 'Reveal the first') });
     const helpUI = hl => hl ? `<div class="dwp-help">${hl.split('').map(c => `<button type="button" data-hp="${c}">${HL()[c] || c}</button>`).join('')}</div>` : '';
@@ -1736,6 +1755,10 @@ window.Dawwara = (function () {
     const buzz = p => { try { navigator.vibrate && navigator.vibrate(p); } catch (e) {} };
     const paint = () => {
       if (!g) { root.innerHTML = `<div class="dwp"><p class="dwp-big">${T('بانتظار المدير…', 'Waiting for the host…')}</p></div>`; return; }
+      if (rc && g.rmt !== uid) { if (!rsent) { rsent = true; send('r', 'j', +rc); setTimeout(() => { rsent = false; }, 4000); } root.innerHTML = `<div class="dwp"><p class="dwp-big">${T('لحظة…', 'One moment…')}</p></div>`; return; }
+      if (g.rmt === uid) { const rb = (g.rb || []).filter(Boolean);
+        root.innerHTML = `<div class="dwp dwp-rm"><div class="dwp-top"><b>${T('التحكم بالشاشة', 'Screen control')}</b><span>${(g.sc || []).map(n => NUM(n)).join(' · ')}</span></div>${g.rt ? `<p class="dwp-h" dir="auto">${esc(g.rt)}</p>` : ''}<div class="dwp-rb">${rb.map((l, i) => `<button type="button" data-rb="${i}" dir="auto"${!i && g.rbm ? ' class="main"' : ''}>${esc(l)}</button>`).join('') || `<p class="dwp-h">${T('لا أزرار على الشاشة الآن', 'No buttons on the screen now')}</p>`}</div></div>`;
+        root.querySelectorAll('[data-rb]').forEach(b => b.onclick = () => { send('r', 'b', +b.dataset.rb); buzz(20); b.classList.add('on'); }); return; }
       const team = Object.keys(lead).find(t => lead[t] === uid), k = team == null ? -1 : +team;
       if (k < 0) { root.innerHTML = `<div class="dwp"><p class="dwp-big">${T('أي فريق تقود؟', 'Which team do you lead?')}</p><div class="dwp-teams">${(g.names || []).map((n, i) => `<button type="button" data-tm="${i}" style="--c:${g.cols[i]}" dir="auto">${esc(n)}${lead[i] ? ` <small>${T('(له قائد)', '(taken)')}</small>` : ''}</button>`).join('')}</div></div>`;
         root.querySelectorAll('[data-tm]').forEach(b => b.onclick = () => { send('j', '', +b.dataset.tm); buzz(30); }); return; }

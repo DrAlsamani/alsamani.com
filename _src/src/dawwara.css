@@ -403,3 +403,10 @@ html.dw-phone .tl-crumb,html.dw-phone .dw-head,html.dw-phone .dw-lead{display:no
 .dw-mixc{grid-column:1/-1;background:linear-gradient(135deg,#c9822b,#8a4f1c)}.dw-mixc em{background:#fff}
 @media (min-width:641px){.dw-mixc{flex-direction:row;align-items:center}}
 .dw-mixl{display:grid;gap:8px}.dw-mixl .dw-pr.off{opacity:.55}
+/* the host's phone as a remote */
+.dw-rcb{margin-top:8px;font-size:.85rem}.dw-rcq{display:flex;gap:12px;align-items:center;margin-top:8px}.dw-rcq .dw-qr{width:110px;flex:none}.dw-rcq p{margin:0;font-size:.85rem;opacity:.85;line-height:1.7}
+.dwp-rb{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.dwp-rb button{font:inherit;font-weight:700;border:1px solid var(--line,#d6d9e4);background:var(--surface,#fff);color:var(--ink);border-radius:12px;padding:14px 10px;line-height:1.5;min-height:56px}
+.dwp-rb button.on{background:#e9a54a;color:#1d1b3a;border-color:#e9a54a}
+.dwp-rm .dwp-top{background:#14204a}
+.dwp-rb button.main{grid-column:1/-1;background:#e9a54a;border-color:#e9a54a;color:#1d1b3a;font-size:1.25rem;min-height:72px}
