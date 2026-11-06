@@ -1201,7 +1201,7 @@ window.Dawwara = (function () {
     return `أنت معلم خبير تُعدّ أسئلة مراجعة صفية من درس محدد، تُلعب مسابقةً بين مجموعات الطلاب.
 المرحلة: ${aud}
 عدد الأسئلة: ${o.n} تقريبًا.
-أنواعها: ${o.kinds.map(k => K[k]).join('، ')}.${o.focus ? `\nركّز على: ${o.focus}` : ''}
+أنواعها: ${o.kinds.map(k => K[k]).join('، ')} فقط، ولا تستعمل غيرها (type: ${o.kinds.join(' أو ')}).${o.focus ? `\nركّز على: ${o.focus}` : ''}
 
 القواعد:
 - اكتب الأسئلة من محتوى الدرس المعطى فقط، ولا تضف معلومة ليست فيه. إن كان المحتوى قليلًا فاكتب أقل من العدد المطلوب.
@@ -1235,7 +1235,7 @@ ${o.nch ? `- أضف ${o.nch} تحديات صفية قصيرة مرتبطة با�
         const head = lsPrompt(o), body = (txt ? `\n\nمحتوى الدرس:\n"""\n${txt}\n"""` : '') + (parts.length ? `\n\n${txt ? 'وبقية الدرس' : 'محتوى الدرس'} في الملفات المرفقة: ${parts.map(x => x.name).join('، ')}.` : '');
         S.textContent = T('تُكتب الأسئلة من الدرس…', 'Writing the questions from the lesson…');
         const r = fromAI(await OwnAI.auto(head + body, 'dw.ai', 5, p => gemini(parts.length ? [p].concat(parts.map(x => ({ inlineData: { mimeType: x.mime, data: x.data } }))) : p)));
-        if (r.qs.length < 2) throw new Error('empty');
+        r.qs = r.qs.filter(x => kinds.includes(x.type)); if (r.qs.length < 2) throw new Error('empty');
         const quiz = { id: Math.random().toString(36).slice(2, 10), title: r.title || T('مراجعة الدرس', 'Lesson review'), at: Date.now(), qs: r.qs, ch: r.ch, src: 'dw', lesson: 1, tpl: { kind: r.ch.length ? 'mix' : 'q', dur: 45 } };
         saveQuiz(quiz); b.disabled = false; S.textContent = '';
         editor(root, quiz, () => home(root));
