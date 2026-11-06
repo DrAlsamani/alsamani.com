@@ -744,7 +744,7 @@ window.Dawwara = (function () {
       const o = { topic: g('#amT').value.trim(), aud: g('#amA').value, per: +g('#amN').value, nch: 0, cats: g('#amK').value.split(/[،,]/).map(s => s.trim()).filter(Boolean).slice(0, 6), kinds: [], mat: false };
       if (!o.cats.length) o.cats = [T('عامة', 'General')];
       const b = g('#amGo'); b.disabled = true; g('#amS').textContent = '';
-      try { const r = fromAI(await OwnAI.ask(aiPrompt(o) + (z.qs.length ? `\n\nلا تكرر هذه الأسئلة الموجودة:\n${z.qs.slice(0, 60).map(x => '- ' + x.q).join('\n')}` : ''))); r.qs.forEach(x => z.qs.push(Object.assign({ cat: '', lv: 2 }, x, x.type === 'mc' ? { opts: x.opts.concat(['', '', '', '']).slice(0, Math.max(4, x.opts.length)) } : {}))); d.remove(); done(); }
+      try { const r = fromAI(await OwnAI.auto(aiPrompt(o) + (z.qs.length ? `\n\nلا تكرر هذه الأسئلة الموجودة:\n${z.qs.slice(0, 60).map(x => '- ' + x.q).join('\n')}` : ''), 'dw.ai', 5, p => gemini(p))); r.qs.forEach(x => z.qs.push(Object.assign({ cat: '', lv: 2 }, x, x.type === 'mc' ? { opts: x.opts.concat(['', '', '', '']).slice(0, Math.max(4, x.opts.length)) } : {}))); d.remove(); done(); }
       catch (e) { console.error(e); b.disabled = false; g('#amS').textContent = OwnAI.msg(e); }
     };
   }
@@ -1073,9 +1073,10 @@ window.Dawwara = (function () {
   }
 
   /* ---------- writing the evening with AI: questions in categories and levels, and challenges to suit ---------- */
-  const AI_V = '11.10.0', AI_KEY = '6Le4gQsuAAAAAE3jS1mLgG9B2XT8AucvEecF6Kp4', AI_MODELS = ['gemini-3.1-flash-lite', 'gemini-3.5-flash-lite', 'gemini-3.6-flash', 'gemini-flash-latest'];
-  let aiMk = null, aiModel = null;
-  async function gemini(p) {
+  const AI_V = '11.10.0', AI_KEY = '6Le4gQsuAAAAAE3jS1mLgG9B2XT8AucvEecF6Kp4', AI_FLASH = ['gemini-3.6-flash', 'gemini-3.8-flash', 'gemini-flash-latest'], AI_LITE = ['gemini-3.1-flash-lite', 'gemini-3.5-flash-lite', 'gemini-3.6-flash', 'gemini-flash-latest'];
+  let aiMk = null;
+  // short = a small answer on the cheapest model; otherwise writing a quiz
+  async function gemini(p, short) {
     if (window.__dwAI) return window.__dwAI(p);
     if (!window.MD_CFG) throw new Error('no-config');
     if (!aiMk) {
@@ -1084,11 +1085,11 @@ window.Dawwara = (function () {
       const app = getApps().find(a => a.name === 'mdai') || initializeApp(window.MD_CFG, 'mdai');
       try { initializeAppCheck(app, { provider: new ReCaptchaEnterpriseProvider(AI_KEY), isTokenAutoRefreshEnabled: false }); } catch (e) {}
       const ai = getAI(app, { backend: new VertexAIBackend('global') });
-      aiMk = m => getGenerativeModel(ai, { model: m, generationConfig: { temperature: 0.8, maxOutputTokens: 1024, responseMimeType: 'application/json', thinkingConfig: { thinkingBudget: 256 } } });
+      aiMk = (m, sh) => getGenerativeModel(ai, { model: m, generationConfig: { temperature: 0.8, maxOutputTokens: sh ? 1024 : 8192, responseMimeType: 'application/json', thinkingConfig: { thinkingBudget: sh ? 256 : 1024 } } });
     }
-    for (let k = aiModel ? aiModel.k : 0; k < AI_MODELS.length; k++) {
-      try { const m = aiModel && aiModel.k === k ? aiModel.m : aiMk(AI_MODELS[k]); const r = await m.generateContent(p); aiModel = { k, m }; return r.response.text(); }
-      catch (e) { if (!/not.?found|404|400|invalid|not supported/i.test(String(e && e.message))) throw e; aiModel = null; }
+    for (const m of short ? AI_LITE : AI_FLASH) {
+      try { return (await aiMk(m, short).generateContent(p)).response.text(); }
+      catch (e) { if (!/not.?found|404|400|invalid|not supported/i.test(String(e && e.message))) throw e; }
     }
     throw new Error('no model');
   }
@@ -1150,7 +1151,7 @@ window.Dawwara = (function () {
       const o = { topic: extra.length >= 30 ? extra : '', aud: q('#dwAiA').value, per: Math.max(2, Math.ceil(sz.nq / cats.length)), nch: sz.nch, cats, kinds, mat: true };
       b.disabled = true; q('#dwAiS').textContent = '';
       try {
-        const r = fromAI(await OwnAI.ask(aiPrompt(o))); if (r.qs.length < 2 && !r.ch.length) throw new Error('empty');
+        const r = fromAI(await OwnAI.auto(aiPrompt(o), 'dw.ai', 5, p => gemini(p))); if (r.qs.length < 2 && !r.ch.length) throw new Error('empty');
         const quiz = { id: Math.random().toString(36).slice(2, 10), title: r.title || cats.join(T(' و', ' & ')), at: Date.now(), qs: r.qs, ch: r.ch, src: 'dw', tpl: { kind, dur, pack } };
         saveQuiz(quiz); b.disabled = false; q('#dwAiS').textContent = '';
         editor(root, quiz, () => home(root));
@@ -1306,7 +1307,7 @@ window.Dawwara = (function () {
     const far = k === 'other' ? [] : Object.entries(H.B).filter(([M]) => M !== L).flatMap(([, v]) => v.filter(x => hrKind(x[0]) === k).map(x => x[1])).filter(x => H.RD.cats || String(x).replace(/^ال/, '').startsWith(L.replace(/^ال/, '')) || String(x).startsWith(L));
     if (k === 'capital') far.push(...CAPS.filter(x => H.RD.cats || x.startsWith(L)));
     const local = () => { const o = []; [...shuf(same), ...shuf(far), ...shuf(other)].forEach(x => { if (o.length < 3 && x !== a && !near(x, a) && !o.some(y => near(x, y))) o.push(x); }); return o; };
-    const ai = gemini(H.RD.ai(L, q, a))
+    const ai = gemini(H.RD.ai(L, q, a), true)
       .then(t => { const w = [...new Set((JSON.parse(String(t).replace(/^```json|```$/g, '')).wrong || []).map(x => String(x).trim()))].filter(x => x && x !== a).slice(0, 3); if (w.length < 3) throw 0; const cc = hrCache(); cc[key] = w; try { localStorage.setItem(`dw.${rkOf()}.opts`, JSON.stringify(cc)); } catch (e) {} return w; })
       .catch(() => local());
     H.pend[key] = Promise.race([ai, new Promise(r => setTimeout(() => r(null), 9000))]).then(w => w || local());

@@ -162,6 +162,21 @@
   function remember(n, pin) { try { const L = sweep(pin).filter(r => r.pin !== pin); L.push({ n, pin, at: Date.now() }); localStorage.setItem('fbRooms', JSON.stringify(L.slice(-40))); } catch (e) {} }
 
 
+  /* ---------- Gemini through the project's Firebase AI Logic, with App Check (reCAPTCHA Enterprise) ---------- */
+  let gm = null;
+  async function gemini(p) {
+    if (!gm) {
+      const u = n => `https://www.gstatic.com/firebasejs/11.10.0/firebase-${n}.js`;
+      const [{ initializeApp, getApps }, { initializeAppCheck, ReCaptchaEnterpriseProvider }, { getAI, getGenerativeModel, VertexAIBackend }] = await Promise.all([import(u('app')), import(u('app-check')), import(u('ai'))]);
+      const app = getApps().find(a => a.name === 'smai') || initializeApp(window.MD_CFG, 'smai');
+      try { initializeAppCheck(app, { provider: new ReCaptchaEnterpriseProvider('6Le4gQsuAAAAAE3jS1mLgG9B2XT8AucvEecF6Kp4'), isTokenAutoRefreshEnabled: false }); } catch (e) {}
+      const ai = getAI(app, { backend: new VertexAIBackend('global') });
+      gm = ['gemini-3.6-flash', 'gemini-3.8-flash', 'gemini-3-flash-preview', 'gemini-flash-latest'].map(m => getGenerativeModel(ai, { model: m, generationConfig: { temperature: 0.9, maxOutputTokens: 4096, thinkingConfig: { thinkingBudget: 512 } } }));
+    }
+    for (const m of gm) { try { return (await m.generateContent(p)).response.text(); } catch (e) { if (!/not.?found|404/i.test(String(e && e.message))) throw e; } }
+    throw new Error('no model');
+  }
+
   /* ---------- usage: anonymous counts (no names), added to the same record Maydan keeps ---------- */
   async function stat(add) {
     try { const k = 's' + uid, r = db.ref('rooms/' + k), INC = firebase.database.ServerValue.increment, up = {};
@@ -349,7 +364,7 @@
       const ask = isAr() ? `المناسبة: ${t}\nاكتب محتوى لسهرة ألعاب جماعية مرحة ومحترمة عن هذه المناسبة، بلهجة سعودية خفيفة، وبعبارات قصيرة واضحة، تناسب المجتمع السعودي وأجواء الاستراحة والعائلة والأصدقاء، بلا مناسبات أو عادات غربية، وبلا أي إساءة أو سخرية من شخص بعينه. أعد JSON فقط بهذا الشكل:\n{"scene":[10 مواقف يمثّلها شخص واحد، كل موقف جملة قصيرة تبدأ بفعل مثل «تقنع…» أو «تشرح…»],"charge":[8 تهم طريفة بريئة في جملة قصيرة مثل «أكل آخر قطعة من الكيكة وأنكر»],"herd":[8 أسئلة بسيطة جوابها كلمة أو كلمتان ويتوقع الناس جوابًا مشتركًا]}\nبلا أي شرح خارج JSON.`
         : `The occasion: ${t}\nWrite content for a fun, kind party game evening about this occasion, in short clear phrases. Return JSON only:\n{"scene":[10 scenes one person can act, each a short sentence starting with a verb like «Convince…» or «Explain…»],"charge":[8 harmless funny charges, short, like «Ate the last slice of cake and denied it»],"herd":[8 simple questions with a one- or two-word answer most people would share]}\nNo text outside the JSON.`;
       try {
-        const raw = await OwnAI.ask(ask), j = JSON.parse(raw.slice(raw.indexOf('{'), raw.lastIndexOf('}') + 1)), cl = a => (Array.isArray(a) ? a : []).map(x => String(x).replace(/\*\*/g, '').trim()).filter(x => x && x.length <= 140);
+        const raw = await OwnAI.auto(ask, 'sm.ai', 5, gemini), j = JSON.parse(raw.slice(raw.indexOf('{'), raw.lastIndexOf('}') + 1)), cl = a => (Array.isArray(a) ? a : []).map(x => String(x).replace(/\*\*/g, '').trim()).filter(x => x && x.length <= 140);
         const P = { topic: t, on: true, scene: cl(j.scene), charge: cl(j.charge), herd: cl(j.herd) }; if (!P.scene.length && !P.charge.length && !P.herd.length) throw new Error('empty');
         store.set('pack', P); d.remove(); settings();
       } catch (er) { btn.disabled = false; btn.innerHTML = was; if (OwnAI.msg(er)) { btn.textContent = OwnAI.msg(er); setTimeout(() => { btn.innerHTML = was; }, 3500); } }
@@ -358,7 +373,7 @@
     const aiFill = async (btn, sel, ask) => {
       const t = d.querySelector('[data-aitopic]').value.trim(); if (!t) { d.querySelector('[data-aitopic]').focus(); return; }
       const was = btn.innerHTML; btn.disabled = true; 
-      try { const out = (await OwnAI.ask(ask(t))).split('\n').map(w => w.replace(/^[\s\-*•\d.)]+/, '').replace(/\*\*/g, '').trim()).filter(w => w && w.length <= 120);
+      try { const out = (await OwnAI.auto(ask(t), 'sm.ai', 5, gemini)).split('\n').map(w => w.replace(/^[\s\-*•\d.)]+/, '').replace(/\*\*/g, '').trim()).filter(w => w && w.length <= 120);
         if (!out.length) throw new Error('empty'); d.querySelector(sel).value = out.join('\n'); }
       catch (e) { btn.disabled = false; btn.innerHTML = was; if (OwnAI.msg(e)) { btn.textContent = OwnAI.msg(e); setTimeout(() => { btn.innerHTML = was; }, 3500); } return; }
       btn.innerHTML = was; btn.disabled = false;

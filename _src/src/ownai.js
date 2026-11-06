@@ -1,4 +1,4 @@
-/* alsamani.com — the host's own AI assistant writes game content: copy the instructions, paste the reply. No cost to the site. */
+/* alsamani.com — game content from the site's AI within a daily allowance, or from the host's own assistant: copy the instructions, paste the reply. */
 window.OwnAI = (function () {
   const ar = () => document.documentElement.lang === 'ar', T = (a, e) => ar() ? a : e;
   function style() {
@@ -22,6 +22,13 @@ window.OwnAI = (function () {
       q('[data-ok]').onclick = () => { const v = q('[data-t]').value.trim(); if (!v) { q('[data-e]').textContent = T('الصق رد المساعد أولًا.', 'Paste the assistant’s reply first.'); return; } d.remove(); ok(v); };
     });
   }
+  // the site's AI while the device's daily allowance lasts; past it, or if the service fails, the host's own assistant
+  async function auto(prompt, key, limit, site) {
+    const day = new Date().toISOString().slice(0, 10); let u = {}; try { u = JSON.parse(localStorage.getItem(key) || '{}'); } catch (e) {}
+    const n = u.d === day ? u.n : 0;
+    if (n < limit) { try { const t = await site(prompt); try { localStorage.setItem(key, JSON.stringify({ d: day, n: n + 1 })); } catch (e) {} return t; } catch (e) { console.error(e); } }
+    return ask(prompt);
+  }
   const msg = e => e && e.message === 'cancel' ? '' : T('تعذّرت قراءة الرد. انسخ رد المساعد كاملًا وحاول مرة أخرى.', 'The reply could not be read. Copy the assistant’s whole reply and try again.');
-  return { ask, msg };
+  return { ask, auto, msg };
 })();

@@ -230,6 +230,8 @@
             <label class="sn-lbl">${B('المستوى', 'Level')}<select id="qzLv"><option value="mixed">${T('متنوع', 'Mixed')}</option><option value="easy">${T('سهل', 'Easy')}</option><option value="mid">${T('متوسط', 'Medium')}</option><option value="hard">${T('صعب', 'Hard')}</option></select></label>
             <label class="sn-lbl">${B('النوع', 'Type')}<select id="qzTy"><option value="mc">${T('اختيار من متعدد', 'Multiple choice')}</option><option value="all" selected>${T('منوّعة: كل أنواع الأسئلة', 'Varied: every question kind')}</option><option value="mix">${T('مزيج مع صح وخطأ', 'Mixed with true/false')}</option><option value="tf">${T('صح وخطأ', 'True/false')}</option></select></label>
             <label class="sn-lbl">${B('اللغة', 'Language')}<select id="qzLg"><option value="ar">العربية</option><option value="en">English</option></select></label></div>
+          <div class="qz-gen"><button type="button" class="btn solid" id="qzGen">${IC.spark || ''}${B('اصنع الأسئلة الآن', 'Make the questions now')}</button><p id="qzGenS" class="qz-gens" aria-live="polite">${B('يكتبها الذكاء الاصطناعي هنا مباشرة في ثوانٍ، وتراجعها قبل البدء.', 'The AI writes them right here in seconds; you review them before you start.')}</p></div>
+          <p class="qz-ais qz-or">${B('أو استعمل مساعدك المفضل:', 'Or use your own assistant:')}</p>
           <p class="qz-ais"><i>${B('٣', '3')}</i>${B('انسخ الطلب والصقه في الذكاء الاصطناعي', 'Copy the request into the AI')}</p>
           <div class="sn-two"><button type="button" class="btn solid" id="qzCopy">${B('نسخ الطلب', 'Copy the request')}</button><a class="btn ghost" id="qzGpt" target="_blank" rel="noopener">${B('افتح في ChatGPT', 'Open in ChatGPT')}</a><a class="btn ghost" id="qzCl" target="_blank" rel="noopener">${B('افتح في Claude', 'Open in Claude')}</a></div>
           <div class="qz-step2"><b>${B('٤', '4')}</b><p>${B('حين يكتب الأسئلة، انسخ رده كاملًا ثم اضغط:', 'When it has written them, copy its whole reply, then tap:')}</p><button type="button" class="btn solid" id="qzBack2">${B('لصق رد الذكاء الاصطناعي', 'Paste the AI’s reply')}</button></div></div>
@@ -276,6 +278,22 @@
       const t = q('#qzTopic').value.trim(), w = t ? t.split(/\s+/).length : 0; q('#qzLen').textContent = w > 60 ? T(`نص من ${w} كلمة: تُبنى الأسئلة منه وحده.`, `A text of ${w} words: the questions come from it alone.`) : ''; };
     ['#qzGpt', '#qzCl'].forEach(s2 => q(s2).addEventListener('click', () => { if (q(s2).dataset.long) { try { navigator.clipboard.writeText(prompt()); toast(B('النص طويل، فنسخنا الطلب: الصقه في المحادثة الجديدة.', 'The text is long, so the request was copied: paste it into the new chat.')); } catch (e) {} } }));
     ['#qzTopic', '#qzGuide', '#qzAud', '#qzTone', '#qzN', '#qzLv', '#qzTy', '#qzLg'].forEach(s => { q(s).oninput = q(s).onchange = links; }); links();
+    // in place: Gemini through the site's own Firebase project, guarded by App Check
+    q('#qzGen').onclick = async () => {
+      const b = q('#qzGen'), st = q('#qzGenS'), was = b.innerHTML;
+      if (!q('#qzTopic').value.trim() && !q('#qzGuide').value.trim()) { toast(B('اكتب أولًا ماذا تريد، أو الصق المحتوى.', 'First say what you want, or paste the content.'), 1); q('#qzGuide').focus(); return; }
+      b.disabled = true; b.innerHTML = B('جارٍ كتابة الأسئلة…', 'Writing the questions…'); st.textContent = T('عادةً أقل من دقيقة، حسب العدد.', 'Usually under a minute, depending on the number.');
+      try {
+        const text = await OwnAI.auto(prompt(), 'qzGen', +q('#qzN').value > 30 ? 0 : 5, geminiWrite);
+        const got = QZParse.fromText(text.replace(/\*\*([^*\n]+)\*\*/g, '$1').replace(/^#+\s*/gm, '')).filter(usable);
+        if (!got.length) throw new Error('empty');
+        add(got);
+        st.textContent = T(`كتب ${got.length} سؤالًا. راجعها وعدّل ما تريد.`, `It wrote ${got.length} questions. Review and edit as you like.`);
+      } catch (e) {
+        console.error(e);
+        st.textContent = OwnAI.msg(e);
+      } finally { b.disabled = false; b.innerHTML = was; }
+    };
     // step 2: bring the AI's reply into the paste box (straight from the clipboard where the browser allows it)
     q('#qzBack2').onclick = async () => {
       root.querySelector('[data-tab=paste]').click();
@@ -788,7 +806,7 @@
         const out = [];
         for (let k = 0; k < list.length; k += 20) {
           const part = list.slice(k, k + 20); if (list.length > 20) g('#imSt').textContent = T(`الأسئلة ${k + 1}–${k + part.length} من ${list.length}…`, `Questions ${k + 1}–${k + part.length} of ${list.length}…`);
-          const text = await geminiWrite(impPrompt(part, ps, note)); const m = text.match(/\[[\s\S]*\]/); if (!m) continue; let arr = []; try { arr = JSON.parse(m[0]); } catch (e) { continue; }
+          const text = await OwnAI.auto(impPrompt(part, ps, note), 'qzImp', 10, geminiWrite); const m = text.match(/\[[\s\S]*\]/); if (!m) continue; let arr = []; try { arr = JSON.parse(m[0]); } catch (e) { continue; }
           arr.forEach(r => {
             const x = part[r && r.i]; if (!x || typeof r.q !== 'string') return;
             const cur = x.opts.filter(o => o.trim()), multi = ['mc', 'poll'].includes(x.type), opts = multi && Array.isArray(r.opts) ? r.opts.map(o => String(o).trim()) : null;
@@ -840,7 +858,27 @@
     };
     paint(); document.body.appendChild(d);
   }
-  const geminiWrite = p => window.__qzAI ? window.__qzAI(p) : OwnAI.ask(p);
+  // Gemini, loaded only when asked for: Firebase's modular SDK, with App Check (reCAPTCHA Enterprise) in front of it
+  const AI_V = '11.10.0', AI_KEY = '6Le4gQsuAAAAAE3jS1mLgG9B2XT8AucvEecF6Kp4';
+  let aiModel = null, aiMk = null;
+  const AI_MODELS = ['gemini-3.6-flash', 'gemini-3.8-flash', 'gemini-3-flash-preview', 'gemini-flash-latest'];
+  async function geminiWrite(p) {
+    if (window.__qzAI) return window.__qzAI(p);   // a stand-in for tests
+    if (!aiMk) {
+      const u = n => `https://www.gstatic.com/firebasejs/${AI_V}/firebase-${n}.js`;
+      const [{ initializeApp, getApps }, { initializeAppCheck, ReCaptchaEnterpriseProvider }, { getAI, getGenerativeModel, VertexAIBackend }] = await Promise.all([import(u('app')), import(u('app-check')), import(u('ai'))]);
+      const app = getApps().find(a => a.name === 'mdai') || initializeApp(window.MD_CFG, 'mdai');
+      try { initializeAppCheck(app, { provider: new ReCaptchaEnterpriseProvider(AI_KEY), isTokenAutoRefreshEnabled: false }); } catch (e) {}
+      const ai = getAI(app, { backend: new VertexAIBackend('global') });
+      aiMk = m => getGenerativeModel(ai, { model: m, generationConfig: { temperature: 0.7, maxOutputTokens: 8192, thinkingConfig: { thinkingBudget: 1024 } } });
+    }
+    // a retired model name moves on to the next one
+    for (let k = aiModel ? aiModel.k : 0; k < AI_MODELS.length; k++) {
+      try { const m = aiModel && aiModel.k === k ? aiModel.m : aiMk(AI_MODELS[k]); const r = await m.generateContent(p); aiModel = { k, m }; return r.response.text(); }
+      catch (e) { if (!/not.?found|404|not supported/i.test(String(e && e.message))) throw e; aiModel = null; }
+    }
+    throw new Error('no model');
+  }
   function aiPrompt(topic, n, lv, ty, lg, x) {
     const ar = lg === 'ar', all = ty === 'all'; x = x || {};
     const AUD = { kids: ['تناسب الأطفال بلغة بسيطة جدًا', 'suitable for young children, in very simple words'], prim: ['تناسب طلاب المرحلة الابتدائية', 'suitable for primary school pupils'], mid: ['تناسب طلاب المرحلة المتوسطة', 'suitable for middle school students'], sec: ['تناسب طلاب المرحلة الثانوية', 'suitable for secondary school students'], uni: ['تناسب طلاب الجامعة', 'suitable for university students'], pro: ['تناسب الموظفين والمختصين', 'suitable for staff and specialists'], fam: ['تناسب العائلة بكل أعمارها', 'suitable for a family of all ages'] }[x.aud];
