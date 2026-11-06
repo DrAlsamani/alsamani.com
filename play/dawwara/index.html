@@ -899,8 +899,11 @@ window.Dawwara = (function () {
   // the options without the empty ones, and the right ones mapped to the new places
   const clean = x => { if (['num', 'word'].includes(x.type)) return Object.assign({}, x); const keep = x.opts.map((o, j) => String(o).trim() ? j : -1).filter(j => j >= 0); return Object.assign({}, x, { opts: keep.map(j => x.opts[j]), ok: x.ok.map(j => keep.indexOf(j)).filter(j => j >= 0) }); };
 
+  // keep the screen awake while a game runs, on the host's screen and on the phones
+  let wl = null; const wake = async () => { try { if ('wakeLock' in navigator && document.visibilityState === 'visible' && !wl) { wl = await navigator.wakeLock.request('screen'); wl.addEventListener('release', () => { wl = null; }); } } catch (e) {} };
+  document.addEventListener('visibilitychange', () => { if (document.documentElement.classList.contains('dw-on') || document.documentElement.classList.contains('dw-phone')) wake(); });
   function shell(html, cls) {
-    if (!el) { el = document.createElement('div'); el.className = 'dw'; el.setAttribute('role', 'dialog'); document.body.appendChild(el); document.documentElement.classList.add('dw-on'); document.addEventListener('keydown', keys); el.addEventListener('click', e => { const c = e.target.closest && e.target.closest('.dw-board [data-tm]'); if (c && D && D.groups) chanceSheet(+c.dataset.tm); }); rcWatch(); }
+    if (!el) { el = document.createElement('div'); el.className = 'dw'; el.setAttribute('role', 'dialog'); document.body.appendChild(el); document.documentElement.classList.add('dw-on'); document.addEventListener('keydown', keys); wake(); el.addEventListener('click', e => { const c = e.target.closest && e.target.closest('.dw-board [data-tm]'); if (c && D && D.groups) chanceSheet(+c.dataset.tm); }); rcWatch(); }
     el.className = 'dw ' + (cls || ''); el.innerHTML = `<button type="button" class="dw-close" data-close title="${T('إنهاء', 'End')}">${IC.x}</button>${html}`;
     el.querySelector('[data-close]').onclick = () => { if (!D || !D.steps || D.done || confirm(T('تنهي دوّارة؟', 'End Dawwara?'))) close(); };
   }
@@ -1815,13 +1818,13 @@ window.Dawwara = (function () {
       catch (e) { root.innerHTML = `<div class="dwp"><p class="dwp-big">${T('تعذّر الاتصال', 'Could not connect')}</p></div>`; return; }
       const mine = await db.ref('kh/' + pin + '/pl/' + uid).once('value');
       if (!mine.exists()) {
-        root.innerHTML = `<div class="dwp"><p class="dwp-big">${T('قائد فريق', 'Team leader')}</p><input id="dwpN" maxlength="20" dir="auto" placeholder="${T('اسمك', 'Your name')}"><button type="button" class="dwp-go" id="dwpGo">${T('ادخل', 'Join')}</button></div>`;
-        await new Promise(r => { root.querySelector('#dwpGo').onclick = async () => { const n = root.querySelector('#dwpN').value.trim().slice(0, 20); if (!n) return; try { await db.ref('kh/' + pin + '/pl/' + uid).set({ n, at: TS() }); r(); } catch (e) { alert(T('تعذّر الدخول', 'Could not join')); } }; });
+        root.innerHTML = `<div class="dwp"><p class="dwp-big">${T('قائد فريق', 'Team leader')}</p><input id="dwpN" maxlength="20" dir="auto" placeholder="${T('اسمك', 'Your name')}" value="${esc((() => { try { return localStorage.getItem('dw.pname') || ''; } catch (e) { return ''; } })())}"><button type="button" class="dwp-go" id="dwpGo">${T('ادخل', 'Join')}</button></div>`;
+        await new Promise(r => { const ni = root.querySelector('#dwpN'); ni.onkeydown = e => { if (e.key === 'Enter') root.querySelector('#dwpGo').click(); }; root.querySelector('#dwpGo').onclick = async () => { wake(); const n = root.querySelector('#dwpN').value.trim().slice(0, 20); if (!n) return; try { localStorage.setItem('dw.pname', n); } catch (e) {} try { await db.ref('kh/' + pin + '/pl/' + uid).set({ n, at: TS() }); r(); } catch (e) { alert(T('تعذّر الدخول', 'Could not join')); } }; });
       }
       db.ref('kh/' + pin + '/g').on('value', s => { g = s.val(); paint(); });
       db.ref('kh/' + pin + '/ld').on('value', s => { lead = s.val() || {}; paint(); });
     };
-    go();
+    wake(); go();
   }
 
   /* ---------- the teams' path: tokens that move along the road as the points come in ---------- */
