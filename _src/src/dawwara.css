@@ -322,3 +322,17 @@ html.dw-phone .tl-crumb,html.dw-phone .dw-head,html.dw-phone .dw-lead{display:no
 .dw-hb{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:999px;border:1.5px solid rgba(233,165,74,.7);color:#fff;font-weight:600;font-size:clamp(13px,1.2vw,16px);background:rgba(233,165,74,.08)}
 .dw-hb:hover:not(:disabled){background:rgba(233,165,74,.22)}.dw-hb small{opacity:.75;font-weight:500}.dw-hb:disabled{opacity:.5;cursor:default}
 .dw-hrq .dw-opts{margin-top:12px}.dw-hrq .dw-opts button.gone{opacity:.15}
+/* the simpler setup */
+.dw-set2{max-width:760px;gap:14px}
+.dw-set2 section{background:rgba(255,255,255,.06);border-radius:14px;padding:14px 16px;display:grid;gap:10px}
+.dw-set2 h3{margin:0;font-size:1rem;color:#e9a54a}.dw-set2 h3 small{color:#fff;opacity:.7;font-weight:500;font-size:.85rem}
+.dw-set2 .dw-seg{flex-wrap:wrap}
+.dw-plan{display:grid;gap:8px}
+.dw-pr{display:flex;align-items:center;justify-content:space-between;gap:12px;background:rgba(0,0,0,.14);border-radius:12px;padding:10px 12px}
+.dw-pr>div:first-child{display:grid;gap:2px}.dw-pr b{font-size:1rem}.dw-pr small{opacity:.72;font-size:.82rem;line-height:1.5}
+.dw-step{display:flex;align-items:center;gap:8px;flex:none}
+.dw-step button{all:unset;cursor:pointer;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;border:1.5px solid rgba(255,255,255,.3);font-size:20px;line-height:1}
+.dw-step button:hover{border-color:#e9a54a;color:#e9a54a}
+.dw-step span{display:grid;justify-items:center;min-width:56px}.dw-step span b{font-size:1.3rem;color:#e9a54a}.dw-step span small{font-size:.72rem}
+.dw-pnote{margin:2px 4px;opacity:.75;font-size:.88rem}
+.dw-chonly{margin-top:14px;width:100%}
