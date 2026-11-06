@@ -468,6 +468,24 @@ html.dw-phone .tl-crumb,html.dw-phone .dw-head,html.dw-phone .dw-lead{display:no
 .dw-sologs button:hover{border-color:#e9a54a}.dw-sologs b{font-size:1.125rem}.dw-sologs small{opacity:.7}
 @media (max-width:640px){.dw-q .dw-qh{padding-inline-end:50px}.dw-soloq .dw-opts button{min-height:56px;font-size:18px}.dw-soloq .dw-imgw.zoom .dw-img{max-height:30vh}}
 .dw-soloq .dw-opts{flex:none}
+/* playing apart */
+.dw-remseg{margin-bottom:10px}.dw-inv{margin-top:6px}
+.dw-sgp{position:fixed;z-index:10050;inset-block:70px 16px;inset-inline-end:12px;width:min(320px,40vw);display:flex;flex-direction:column;background:#0f1838;color:#fff;border:1px solid rgba(255,255,255,.18);border-radius:16px;box-shadow:0 12px 30px rgba(0,0,0,.4);overflow:hidden}
+.dw-sgp header{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.12)}.dw-sgp header button{all:unset;cursor:pointer;width:28px;height:28px;display:grid;place-items:center}
+.dw-sgp>div:last-child{overflow:auto;padding:8px;display:grid;gap:8px;align-content:start}
+.dw-sgt{padding:8px 14px;border-bottom:1px solid rgba(255,255,255,.12);display:grid;gap:4px;font-size:.9rem}.dw-sgt p{margin:0;border-inline-start:4px solid var(--c);padding-inline-start:8px}
+.dw-sgi{border-inline-start:5px solid var(--c);background:rgba(255,255,255,.06);border-radius:10px;padding:8px 10px;display:grid;gap:6px}.dw-sgi.done{opacity:.45}
+.dw-sgi p{margin:0;font-size:.9rem}.dw-sgi .dw-sga{font-size:1.05rem;font-weight:700}.dw-sgi audio{width:100%;height:34px}
+.dw-sgb{display:flex;gap:6px;flex-wrap:wrap}.dw-sgb .dw-btn{padding:6px 12px;font-size:.85rem}
+.dw-star{margin:6px auto 0;padding:8px 16px;border-radius:999px;background:rgba(233,165,74,.18);border:1px solid #e9a54a}
+.dwpv{margin:0 auto 10px;max-width:480px;cursor:zoom-in}.dwpv.big{position:fixed;inset:0;z-index:70;max-width:none;margin:0;background:#000;display:grid;place-items:center;cursor:zoom-out}
+.dwv{position:relative;overflow:hidden;border-radius:12px;margin:0 auto;background:#14204a}
+.dwv .dwv-in{position:absolute!important;top:0;left:0;right:auto;bottom:auto;transform-origin:0 0;pointer-events:none;overflow:hidden}
+.dwv [data-close]{display:none}
+.dwp-say{display:grid;gap:8px;border-top:1px dashed var(--line,#d6d9e4);padding-top:10px}.dwp-say>div{display:flex;gap:6px}.dwp-say input{flex:1;min-width:0}
+.dwp-say [data-txs]{font:inherit;font-weight:800;border:0;border-radius:12px;padding:0 16px;background:var(--c);color:#fff}
+.dwp-rec{font:inherit;font-weight:700;border:2px solid var(--c);background:transparent;color:var(--ink);border-radius:12px;padding:12px}.dwp-rec.on{background:#b0533a;border-color:#b0533a;color:#fff}
+.dwp-tv{margin:0;text-align:center;font-weight:700;color:var(--muted)}
 </style>
 <div id="dw" class="dw-page"><noscript><span class="ar">تعمل هذه اللعبة مع تفعيل JavaScript.</span><span class="en">This game needs JavaScript.</span></noscript></div>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script>window.MD_CFG={"apiKey": "AIzaSyA50i75DT1Is1a6Yn6snW1_JVObc8S3F0Y", "authDomain": "maydan-705ae.firebaseapp.com", "databaseURL": "https://maydan-705ae-default-rtdb.europe-west1.firebasedatabase.app", "projectId": "maydan-705ae", "appId": "1:342187013133:web:d5c2396f0db413f3c51144"};window.MD_MARK="<svg class=\"md-mark\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><rect x=\"4\" y=\"4\" width=\"40\" height=\"40\" rx=\"12\" fill=\"#23336F\"/><path d=\"M24 9l4.2 6.8 7.8-1.8-1.8 7.8L41 24l-6.8 4.2 1.8 7.8-7.8-1.8L24 39l-4.2-6.8-7.8 1.8 1.8-7.8L7 24l6.8-4.2-1.8-7.8 7.8 1.8z\" fill=\"#C9822B\"/><circle cx=\"24\" cy=\"24\" r=\"6.5\" fill=\"#23336F\"/><circle cx=\"24\" cy=\"24\" r=\"3\" fill=\"#F3E3C7\"/></svg>";</script><script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script><script>/* Maydan library: ready quizzes to start at once or open and edit. Written in the editor's own format. */
@@ -914,7 +932,7 @@ window.Dawwara = (function () {
     el.className = 'dw ' + (cls || ''); el.innerHTML = `<button type="button" class="dw-close" data-close title="${T('إنهاء', 'End')}">${IC.x}</button>${html}`;
     el.querySelector('[data-close]').onclick = () => { if (!D || !D.steps || D.done || confirm(T('تنهي دوّارة؟', 'End Dawwara?'))) close(); };
   }
-  function close() { clearInterval(tick); if (el) el.remove(); el = null; D = null; document.documentElement.classList.remove('dw-on'); document.removeEventListener('keydown', keys); }
+  function close() { clearInterval(tick); const sp = document.getElementById('dwSgP'); if (sp) sp.remove(); ROOM.sg = []; if (el) el.remove(); el = null; D = null; document.documentElement.classList.remove('dw-on'); document.removeEventListener('keydown', keys); }
   // the host's keyboard: 1–6 to answer, space or enter for the main button
   function keys(e) {
     if (!el || /input|textarea|select/i.test((e.target || {}).tagName || '')) return;
@@ -1683,12 +1701,43 @@ window.Dawwara = (function () {
   let db = null, uid = null;
   async function fb() { if (db) return; if (!window.firebase || !window.MD_CFG) throw new Error('nofb'); if (!firebase.apps.length) firebase.initializeApp(MD_CFG); const u = (await new Promise(r => { const o = firebase.auth().onAuthStateChanged(x => { o(); r(x); }); })) || (await firebase.auth().signInAnonymously()).user; uid = u.uid; db = firebase.database(); }
   const TS = () => firebase.database.ServerValue.TIMESTAMP;
-  const ROOM = { lead: {}, names: {}, seen: {}, rc: String(100000 + Math.floor(Math.random() * 900000)), rmt: '', rbEls: [], rbSig: '' };
+  const ROOM = { lead: {}, mem: {}, sg: [], sgQ: null, star: {}, sgCred: null, names: {}, seen: {}, mirSig: '', rc: String(100000 + Math.floor(Math.random() * 900000)), rmt: '', rbEls: [], rbSig: '' };
   // the host's phone as a remote: it sees the buttons on the screen and presses them
   const rcList = () => !el ? [] : [...el.querySelectorAll('button')].filter(b => !b.disabled && b.offsetParent && !b.closest('.dw-board,[data-close],[data-end],[data-reset],.dw-join')).sort((a, b) => (b.matches('[data-main]') ? 1 : 0) - (a.matches('[data-main]') ? 1 : 0)).slice(0, 60);
   const rcLabel = b => ([...b.childNodes].map(n => (n.textContent || '').trim()).filter(Boolean).join(' · ') || b.title || b.getAttribute('aria-label') || '').replace(/\s+/g, ' ').slice(0, 40);
   let rcT = null;
-  function rcWatch() { if (!el || el.__rc) return; el.__rc = 1; new MutationObserver(() => { if (!rcT) rcT = setTimeout(() => { rcT = null; rcPush(); }, 250); }).observe(el, { childList: true, subtree: true, attributes: true, attributeFilter: ['disabled', 'hidden', 'class'] }); }
+  function rcWatch() { if (!el || el.__rc) return; el.__rc = 1; new MutationObserver(() => { if (!rcT) rcT = setTimeout(() => { rcT = null; rcPush(); mirPush(); sgCheck(); }, 300); }).observe(el, { childList: true, subtree: true, attributes: true, attributeFilter: ['disabled', 'hidden', 'class'] }); }
+  // playing apart: the screen mirrored to every phone, timers counted down on the phone itself
+  function mirPush() {
+    if (!D || !D.cfg || !D.cfg.remote || !ROOM.ref || !el) return;
+    const h = el.innerHTML, sig = h.replace(/<b id="dwT">[^<]*<\/b>/, '').replace(/stroke-dash(offset|array):[^;"]*;?/g, '');
+    if (sig === ROOM.mirSig) return; ROOM.mirSig = sig; const q = D.q || {};
+    ROOM.ref.child('v').set({ h, c: el.className, w: innerWidth, hh: innerHeight, tl: q.left || 0, td: q.dur || 0, lk: q.dur && !q.locked ? 1 : 0, t: TS() }).catch(() => {});
+  }
+  // what members send: a chosen option, a written answer or a short recording; the host decides
+  function sugAdd(u, k, v) {
+    if (ROOM.sgQ !== D.q) { ROOM.sgQ = D.q; ROOM.sg = []; }
+    const it = { u, k, n: ROOM.names[u] || '', a: v.a != null && v.a >= 0 ? +v.a : null, s: typeof v.s === 'string' ? v.s.slice(0, 160) : '', au: typeof v.au === 'string' && /^data:audio\//.test(v.au) && v.au.length < 500000 ? v.au : '' };
+    if (it.a == null && !it.s && !it.au) return;
+    const kind = it.a != null ? 'a' : it.s ? 's' : 'au'; ROOM.sg = ROOM.sg.filter(x => !(x.u === u && (x.a != null ? 'a' : x.s ? 's' : 'au') === kind)); ROOM.sg.push(it); SND.tick(); sgPaint(); pub();
+  }
+  const tally = k => { const c = {}; ROOM.sg.filter(x => x.k === k && x.a != null).forEach(x => { c[x.a] = (c[x.a] || 0) + 1; }); return Object.entries(c).sort((a, b) => b[1] - a[1]).map(([a, n]) => `${LET()[a] || ''} ${NUM(n)}`).join(' · '); };
+  // the members whose own pick was the right one, counted for the star of the evening
+  function sgCredit() { if (!ROOM.sg.length || ROOM.sgCred === D.q || !el) return; const ok = el.querySelector('[data-j].ok'); if (!ok) return; const j = +ok.dataset.j; ROOM.sgCred = D.q;
+    ROOM.sg.filter(x => x.a === j).forEach(x => { const r = ROOM.star[x.u] || (ROOM.star[x.u] = { n: x.n, k: x.k, c: 0 }); r.c++; }); }
+  function sgCheck() { if (D && D.q) sgCredit(); if (ROOM.sg.length && ROOM.sgQ !== (D && D.q)) { ROOM.sg = []; sgPaint(); } }
+  function sgPaint() {
+    let P = document.getElementById('dwSgP'); if (!ROOM.sg.length || !D || !D.groups) { if (P) P.remove(); return; }
+    if (!P) { P = document.createElement('aside'); P.id = 'dwSgP'; P.className = 'dw-sgp'; document.body.appendChild(P); }
+    const lab = a => { const b = el && el.querySelector(`[data-j="${a}"] span`); return `${LET()[a] || ''}${b ? ') ' + b.textContent : ''}`; };
+    const tl = D.groups.map((g, k) => [g, tally(k)]).filter(x => x[1]);
+    P.innerHTML = `<header><b>${T('إجابات المشاركين', 'Members’ answers')}</b><button type="button" data-sgx aria-label="${T('إخفاء', 'Hide')}">${IC.x || '×'}</button></header>${tl.length ? `<div class="dw-sgt">${tl.map(([g, t]) => `<p style="--c:${g.col}"><b dir="auto">${esc(g.name)}</b> ${t}</p>`).join('')}</div>` : ''}<div>${ROOM.sg.slice().reverse().map(x => { const i = ROOM.sg.indexOf(x), g = D.groups[x.k] || {};
+      return `<div class="dw-sgi${x.done ? ' done' : ''}" style="--c:${g.col}"><p><b dir="auto">${esc(g.name || '')}</b> <span dir="auto">${esc(x.n)}</span></p>${x.a != null ? `<p class="dw-sga" dir="auto">${esc(lab(x.a))}</p>` : ''}${x.s ? `<p class="dw-sga" dir="auto">${esc(x.s)}</p>` : ''}${x.au ? `<audio controls preload="none" src="${x.au}"></audio>` : ''}
+        <div class="dw-sgb">${x.a != null && D.q && D.q.onAns && !x.done ? `<button type="button" class="dw-btn" data-sga="${i}">${T('اعتمد الإجابة', 'Accept')}</button>` : ''}${x.done ? '' : `<button type="button" class="dw-btn ghost" data-sgd="${i}">${T('تمت المراجعة', 'Reviewed')}</button>`}</div></div>`; }).join('')}</div>`;
+    P.querySelector('[data-sgx]').onclick = () => { ROOM.sg = []; sgPaint(); };
+    P.querySelectorAll('[data-sga]').forEach(b => b.onclick = () => { const x = ROOM.sg[+b.dataset.sga]; if (!x || !D.q || !D.q.onAns) return; ROOM.sg.filter(y => y.k === x.k).forEach(y => { y.done = true; }); D.q.onAns(x.k, x.a); sgPaint(); });
+    P.querySelectorAll('[data-sgd]').forEach(b => b.onclick = () => { const x = ROOM.sg[+b.dataset.sgd]; if (x) x.done = true; sgPaint(); });
+  }
   function rcPush() { if (!ROOM.rmt || !ROOM.ref || !D) return; const bs = rcList(), sig = bs.map(rcLabel).join('|') + '#' + ((el.querySelector('h2') || {}).textContent || ''); if (sig === ROOM.rbSig) return; ROOM.rbSig = sig; ROOM.rbEls = bs; pub(); }
   async function openRoom() {
     await fb(); if (ROOM.ref) return ROOM;
@@ -1705,9 +1754,15 @@ window.Dawwara = (function () {
     if (v.k === 'r') { if (v.c === 'j' && String(v.x) === ROOM.rc) { ROOM.rmt = u; ROOM.rbSig = ''; ROOM.rbEls = rcList(); leadPaint(); return pub(); }
       if (u === ROOM.rmt && v.c === 'b') { const b = ROOM.rbEls[v.x]; if (b && b.isConnected && !b.disabled) b.click(); } return; }
     if (u === ROOM.rmt) return;
-    if (v.k === 'j') { Object.keys(ROOM.lead).forEach(t => { if (ROOM.lead[t] === u) delete ROOM.lead[t]; }); ROOM.lead[v.x] = u; ROOM.ref.child('ld').set(ROOM.lead); leadPaint(); return pub(); }
-    const k = teamOfU(u); if (k < 0 || !D || !D.groups) return;
-    if (v.k === 'b' && D.q && D.q.onBuzz) D.q.onBuzz(k, v.t);
+    if (v.k === 'j') {
+      if (D && D.cfg && D.cfg.remote) { const was = teamOfU(u); ROOM.mem[u] = +v.x; if (was >= 0 && was !== +v.x) { delete ROOM.lead[was]; const nx = Object.keys(ROOM.mem).find(m => ROOM.mem[m] === was && m !== u); if (nx) ROOM.lead[was] = nx; }
+        if (ROOM.lead[v.x] == null) ROOM.lead[v.x] = u; ROOM.ref.child('mb').set(ROOM.mem); }
+      else { Object.keys(ROOM.lead).forEach(t => { if (ROOM.lead[t] === u) delete ROOM.lead[t]; }); ROOM.lead[v.x] = u; }
+      ROOM.ref.child('ld').set(ROOM.lead); leadPaint(); return pub(); }
+    const kl = teamOfU(u), km = kl >= 0 ? kl : ROOM.mem[u] != null ? +ROOM.mem[u] : -1; if (km < 0 || !D || !D.groups) return;
+    if (v.k === 's') return sugAdd(u, km, v);
+    if (v.k === 'b' && D.q && D.q.onBuzz) D.q.onBuzz(km, v.t);
+    const k = kl; if (k < 0) return;
     if (v.k === 'a' && D.q && D.q.onAns) D.q.onAns(k, +v.c);
     if (v.k === 'c') useChance(k, String(v.c), v.x >= 0 ? v.x : -1);
     if (v.k === 'p' && D.pickCb) D.pickCb(k, v.x);
@@ -1719,27 +1774,46 @@ window.Dawwara = (function () {
   function pub(o) {
     if (!ROOM.ref) return; const G = D && D.groups;
     const base = G ? { names: G.map(g => g.name), cols: G.map(g => g.col), sc: G.map(g => g.score), ch: G.map(g => D.cfg.chn !== false ? g.chances || '' : ''), dbl: G.map(g => g.dbl ? 1 : 0) } : { names: (D.cfg.names || []).slice(0, D.cfg.n).map((n, k) => n || NAMES()[k]), cols: COL.slice(0, D.cfg.n) };
+    base.rem = D && D.cfg && D.cfg.remote ? 1 : 0; if (base.rem && G) base.tv = G.map((g, k) => ROOM.sgQ === D.q ? tally(k) : '');
     if (o) D.lastPub = o; if (ROOM.rmt) { if (!ROOM.rbSig) { ROOM.rbEls = rcList(); } Object.assign(base, { rmt: ROOM.rmt, rb: ROOM.rbEls.map(rcLabel).concat(['']).slice(0, 61), rbm: ROOM.rbEls[0] && ROOM.rbEls[0].matches('[data-main]') ? 1 : 0, rt: ((el && el.querySelector('h2')) || {}).textContent || '' }); }
     ROOM.ref.child('g').set(Object.assign(base, D.lastPub || { ph: 'lobby' }, { t: TS() })).catch(() => {});
   }
   function leadPaint() {
     const box = el && el.querySelector('#dwLeads'); if (!box) return;
     const names = (D.groups ? D.groups.map(g => g.name) : [...el.querySelectorAll('[data-name]')].map((i, k) => i.value.trim() || NAMES()[k]));
-    box.innerHTML = names.map((n, k) => `<span style="--c:${COL[k]}" class="${ROOM.lead[k] ? 'on' : ''}" dir="auto">${esc(n)}: ${ROOM.lead[k] ? esc(ROOM.names[ROOM.lead[k]] || T('متصل', 'connected')) : T('بلا جوال', 'no phone')}</span>`).join('') + (ROOM.rmt ? `<span class="on" style="--c:#e9a54a">${T('جوال المدير متصل', 'Host’s phone connected')}</span>` : '');
+    box.innerHTML = names.map((n, k) => `<span style="--c:${COL[k]}" class="${ROOM.lead[k] ? 'on' : ''}" dir="auto">${esc(n)}: ${ROOM.lead[k] ? esc(ROOM.names[ROOM.lead[k]] || T('متصل', 'connected')) : T('بلا جوال', 'no phone')}${D && D.cfg && D.cfg.remote ? ` · ${NUM(Object.values(ROOM.mem).filter(x => x === k).length)}` : ''}</span>`).join('') + (ROOM.rmt ? `<span class="on" style="--c:#e9a54a">${T('جوال المدير متصل', 'Host’s phone connected')}</span>` : '');
   }
   async function phonesBox() {
     const box = el.querySelector('#dwPh'); if (!box) return; box.innerHTML = `<p class="dw-hint">${T('لحظة…', 'One moment…')}</p>`;
     try { await openRoom(); } catch (e) { box.innerHTML = `<p class="dw-hint">${T('تعذّر الاتصال. ', 'Could not connect. ')}<button type="button" class="dw-btn ghost" data-retry>${T('حاول مرة أخرى', 'Try again')}</button></p>`; box.querySelector('[data-retry]').onclick = phonesBox; return; }
     const url = 'https://alsamani.com/play/dawwara/?k=' + ROOM.pin; let svg = '';
     try { const qr = qrcode(0, 'M'); qr.addData(url); qr.make(); svg = qr.createSvgTag({ cellSize: 4, margin: 1, scalable: true }); } catch (e) {}
-    box.innerHTML = `<div class="dw-join"><div class="dw-qr">${svg}</div><div><p>${T('يفتح كل قائد فريق الكاميرا ويمسح الرمز، أو يدخل', 'Each team leader scans the code, or goes to')} <b dir="ltr">alsamani.com/play/dawwara</b> ${T('ويكتب الرمز', 'and enters')}</p><p class="dw-pin" dir="ltr">${ROOM.pin.slice(0, 3)} ${ROOM.pin.slice(3)}</p><div class="dw-leads" id="dwLeads"></div><button type="button" class="dw-lnk dw-rcb" data-rcq>${T('التحكم بالشاشة من جوال المدير', 'Control the screen from the host’s phone')}</button><div class="dw-rcq" hidden></div></div></div>`;
+    const rem = !!D.cfg.remote;
+    box.innerHTML = `<div class="dw-seg dw-remseg">${[[0, T('في مكان واحد', 'In one place')], [1, T('عن بُعد', 'Apart')]].map(([v, l]) => `<button type="button" data-rem="${v}" aria-pressed="${+rem === v}">${l}</button>`).join('')}</div><div class="dw-join"><div class="dw-qr">${svg}</div><div><p>${rem ? T('يدخل جميع المشاركين من جوالاتهم بمسح الرمز أو من الرابط، ويختار كل منهم مجموعته، فتظهر له الشاشة على جواله، وتصل إجاباته المكتوبة أو المسجّلة إلى المدير ليعتمدها. الصوت عبر مكالمة جماعية.', 'Everyone joins from a phone with the code or the link and picks a group; the screen shows on the phone, and written or recorded answers reach the host to accept. Voice through a group call.') : T('يفتح كل قائد فريق الكاميرا ويمسح الرمز، أو يدخل', 'Each team leader scans the code, or goes to')} ${rem ? '' : `<b dir="ltr">alsamani.com/play/dawwara</b> ${T('ويكتب الرمز', 'and enters')}`}</p>${rem ? `<button type="button" class="dw-btn ghost dw-inv" data-inv>${T('انسخ رابط الدعوة', 'Copy the invitation link')}</button>` : ''}<p class="dw-pin" dir="ltr">${ROOM.pin.slice(0, 3)} ${ROOM.pin.slice(3)}</p><div class="dw-leads" id="dwLeads"></div><button type="button" class="dw-lnk dw-rcb" data-rcq>${T('التحكم بالشاشة من جوال المدير', 'Control the screen from the host’s phone')}</button><div class="dw-rcq" hidden></div></div></div>`;
+    box.querySelectorAll('[data-rem]').forEach(b => b.onclick = () => { D.cfg.remote = b.dataset.rem === '1'; cfgSet(D.cfg); ROOM.mirSig = ''; phonesBox(); });
+    const inv = box.querySelector('[data-inv]'); if (inv) inv.onclick = () => { try { navigator.clipboard.writeText(T(`انضم إلى مسابقة دوّارة من جوالك: ${url}`, `Join the Dawwara quiz from your phone: ${url}`)); inv.textContent = T('تم نسخ رابط الدعوة', 'Link copied'); } catch (e) {} };
     const rq = box.querySelector('[data-rcq]'); if (rq) rq.onclick = () => { const d = box.querySelector('.dw-rcq'); if (!d.hidden) { d.hidden = true; return; } let sv = ''; try { const q = qrcode(0, 'M'); q.addData(url + '&r=' + ROOM.rc); q.make(); sv = q.createSvgTag({ cellSize: 4, margin: 1, scalable: true }); } catch (e) {} d.innerHTML = `<div class="dw-qr">${sv}</div><p>${T('يمسحه المدير بجواله، فتظهر عليه أزرار الشاشة ويتحكم بها من أي مكان في القاعة. لا تعرضه على الحضور.', 'The host scans it; the screen’s buttons appear on the phone to press from anywhere in the hall. Do not show it to the audience.')}</p>`; d.hidden = false; };
     leadPaint(); pub();
   }
 
   // the phone itself
   function phone(root, pin) {
-    let me = null, g = null, lead = {}, ans = null, buzzed = false, lastKey = '', rsent = false;
+    const top = document.createElement('div'); top.className = 'dwpv'; top.hidden = true; const body0 = document.createElement('div'); root.innerHTML = ''; root.append(top, body0); root = body0;
+    let me = null, g = null, lead = {}, ans = null, buzzed = false, lastKey = '', rsent = false, mb = {}, watch = false, said = '', tx = '', REC = null, MV = null, lastV = null, mirOn = false, pend = false;
+    // the host's screen, scaled to the phone, its clock counted down here
+    const mirror = v => { lastV = v; if (!v || !v.h) return; const w = v.w || 1280, hh = v.hh || 720, big = top.classList.contains('big'), cw = top.clientWidth || 360, ch = big ? innerHeight : 1e9, sc = Math.min(cw / w, ch / hh);
+      top.innerHTML = `<div class="dwv" style="height:${Math.round(hh * sc)}px;width:${Math.round(w * sc)}px"><div class="${esc(v.c || 'dw')} dwv-in" style="width:${w}px;height:${hh}px;transform:scale(${sc})">${v.h}</div></div>`;
+      MV = { tl: v.tl || 0, td: v.td || 0, at: Date.now(), run: !!v.lk }; };
+    setInterval(() => { if (!MV || !MV.run) return; const t = top.querySelector('#dwT'), arc = top.querySelector('#dwArc'), left = Math.max(0, MV.tl - (Date.now() - MV.at) / 1000); if (t) t.textContent = NUM(Math.ceil(left)); if (arc && MV.td) { const C = 2 * Math.PI * 44; arc.style.strokeDasharray = C; arc.style.strokeDashoffset = C * (1 - left / MV.td); } }, 250);
+    top.onclick = () => { top.classList.toggle('big'); mirror(lastV); };
+    addEventListener('resize', () => mirror(lastV));
+    const mirStart = () => { if (mirOn) return; mirOn = true; top.hidden = false; db.ref('kh/' + pin + '/v').on('value', s => mirror(s.val())); };
+    const recToggle = async k => { if (REC) { REC.stop(); return; }
+      try { const st = await navigator.mediaDevices.getUserMedia({ audio: true }), mt = ['audio/webm;codecs=opus', 'audio/mp4', 'audio/webm'].find(t => window.MediaRecorder && MediaRecorder.isTypeSupported(t)) || '';
+        const r = new MediaRecorder(st, mt ? { mimeType: mt, audioBitsPerSecond: 24000 } : undefined), parts = []; r.ondataavailable = e => parts.push(e.data);
+        r.onstop = () => { st.getTracks().forEach(t => t.stop()); clearTimeout(r.to); REC = null; const fr = new FileReader(); fr.onload = () => { send('s', '', k, { au: fr.result }); said = T('تم إرسال تسجيلك إلى المدير', 'Your recording was sent to the host'); paint(); }; fr.readAsDataURL(new Blob(parts, { type: r.mimeType || 'audio/webm' })); };
+        r.start(); REC = r; r.to = setTimeout(() => { if (r.state === 'recording') r.stop(); }, 12000); paint(); } catch (e) { said = T('تعذّر الوصول إلى الميكروفون', 'The microphone could not be reached'); paint(); } };
+    const sayUI = () => g && g.rem ? `<div class="dwp-say"><div><input id="dwpTx" dir="auto" maxlength="120" autocomplete="off" placeholder="${T('اكتب إجابتك', 'Type your answer')}" value="${esc(tx)}"><button type="button" data-txs>${T('أرسل', 'Send')}</button></div><button type="button" class="dwp-rec${REC ? ' on' : ''}" data-rec>${REC ? T('أوقف التسجيل وأرسله', 'Stop and send') : T('سجّل إجابتك بصوتك', 'Record your answer')}</button>${said ? `<p class="dwp-ok">${said}</p>` : ''}</div>` : '';
     const rc = (new URLSearchParams(location.search).get('r') || '').replace(/\D/g, '');
     let W = { i: null, sl: [], lock: [], a: -1, cool: 0 }, RO = { i: null, p: [] }, N = { i: null, v: '' };
     const HL = () => ({ o: T('اعرض الخيارات', 'Show the options'), d: T('احذف إجابتين', 'Remove two'), s: T('غيّر السؤال', 'Change the question'), t: T('وقت إضافي', 'Extra time'), x: T('اسأل الخصم', 'Ask a rival'), f: T('اكشف الحدث الأول', 'Reveal the first') });
@@ -1761,26 +1835,30 @@ window.Dawwara = (function () {
         <button type="button" class="dwp-go" data-wsend${full && !cool ? '' : ' disabled'}>${cool ? T('لحظة…', 'One moment…') : T('أرسل الترتيب', 'Send the order')}</button>`;
     };
     const ph0 = () => (g && g.ph) || '';
-    const send = (k, c, x) => db.ref('kh/' + pin + '/mv/' + uid).set({ k, c: String(c == null ? '' : c).slice(0, 3), x: +x || 0, t: TS() }).catch(() => {});
+    const send = (k, c, x, ex) => db.ref('kh/' + pin + '/mv/' + uid).set(Object.assign({ k, c: String(c == null ? '' : c).slice(0, 3), x: +x || 0, t: TS() }, ex || {})).catch(() => {});
     const buzz = p => { try { navigator.vibrate && navigator.vibrate(p); } catch (e) {} };
     const paint = () => {
+      const ae = document.activeElement; if (ae && ae.id === 'dwpTx' && root.contains(ae)) { pend = true; return; } pend = false;
       if (!g) { root.innerHTML = `<div class="dwp"><p class="dwp-big">${T('بانتظار المدير…', 'Waiting for the host…')}</p></div>`; return; }
       if (rc && g.rmt !== uid) { if (!rsent) { rsent = true; send('r', 'j', +rc); setTimeout(() => { rsent = false; }, 4000); } root.innerHTML = `<div class="dwp"><p class="dwp-big">${T('لحظة…', 'One moment…')}</p></div>`; return; }
       if (g.rmt === uid) { const rb = (g.rb || []).filter(Boolean);
         root.innerHTML = `<div class="dwp dwp-rm"><div class="dwp-top"><b>${T('التحكم بالشاشة', 'Screen control')}</b><span>${(g.sc || []).map(n => NUM(n)).join(' · ')}</span></div>${g.rt ? `<p class="dwp-h" dir="auto">${esc(g.rt)}</p>` : ''}<div class="dwp-rb">${rb.map((l, i) => `<button type="button" data-rb="${i}" dir="auto"${!i && g.rbm ? ' class="main"' : ''}>${esc(l)}</button>`).join('') || `<p class="dwp-h">${T('لا أزرار على الشاشة الآن', 'No buttons on the screen now')}</p>`}</div></div>`;
         root.querySelectorAll('[data-rb]').forEach(b => b.onclick = () => { send('r', 'b', +b.dataset.rb); buzz(20); b.classList.add('on'); }); return; }
-      const team = Object.keys(lead).find(t => lead[t] === uid), k = team == null ? -1 : +team;
-      if (k < 0) { root.innerHTML = `<div class="dwp"><p class="dwp-big">${T('أي فريق تقود؟', 'Which team do you lead?')}</p><div class="dwp-teams">${(g.names || []).map((n, i) => `<button type="button" data-tm="${i}" style="--c:${g.cols[i]}" dir="auto">${esc(n)}${lead[i] ? ` <small>${T('(له قائد)', '(taken)')}</small>` : ''}</button>`).join('')}</div></div>`;
-        root.querySelectorAll('[data-tm]').forEach(b => b.onclick = () => { send('j', '', +b.dataset.tm); buzz(30); }); return; }
-      const ph = g.ph || 'lobby', key = ph + ':' + (g.i || 0) + ':' + (g.team == null ? '' : g.team); if (key !== lastKey) { lastKey = key; ans = null; buzzed = false; }
+      if (g.rem) mirStart();
+      const team = Object.keys(lead).find(t => lead[t] === uid), isLead = team != null; let k = isLead ? +team : -1; if (k < 0 && g.rem && mb[uid] != null) k = +mb[uid];
+      if (k < 0 && watch && g.rem) { root.innerHTML = `<div class="dwp"><p class="dwp-h">${T('تشاهد المسابقة. اضغط الشاشة لتكبيرها.', 'Watching. Tap the screen to enlarge it.')}</p><button type="button" class="dwp-back" data-unw>${T('انضم إلى مجموعة', 'Join a group')}</button></div>`; root.querySelector('[data-unw]').onclick = () => { watch = false; paint(); }; return; }
+      if (k < 0) { root.innerHTML = `<div class="dwp"><p class="dwp-big">${g.rem ? T('اختر مجموعتك', 'Choose your group') : T('أي فريق تقود؟', 'Which team do you lead?')}</p><div class="dwp-teams">${(g.names || []).map((n, i) => `<button type="button" data-tm="${i}" style="--c:${g.cols[i]}" dir="auto">${esc(n)}${lead[i] && !g.rem ? ` <small>${T('(له قائد)', '(taken)')}</small>` : ''}</button>`).join('')}${g.rem ? `<button type="button" class="dwp-back" data-watch>${T('مشاهدة فقط', 'Just watch')}</button>` : ''}</div></div>`;
+        root.querySelectorAll('[data-tm]').forEach(b => b.onclick = () => { send('j', '', +b.dataset.tm); buzz(30); }); const wb = root.querySelector('[data-watch]'); if (wb) wb.onclick = () => { watch = true; paint(); }; return; }
+      const ph = g.ph || 'lobby', key = ph + ':' + (g.i || 0) + ':' + (g.team == null ? '' : g.team); if (key !== lastKey) { lastKey = key; ans = null; buzzed = false; said = ''; tx = ''; }
       if (ph === 'race' && ans != null && (g.no || []).includes(ans) && !(g.out || []).includes(k)) ans = null;
       if (ph === 'num' && !g.done && N.i === g.i && root.querySelector('#dwpNum')) { const o = root.querySelector('#dwpOk'); if (o) o.textContent = (g.s || [])[k] ? T('تم إرسال التقدير، ويمكن تعديله قبل انتهاء الوقت', 'Sent; you may change it before time is up') : ''; return; }
-      const col = g.cols[k], chs = (g.ch && g.ch[k]) || '', CN = CHN();
+      const col = g.cols[k], chs = isLead ? (g.ch && g.ch[k]) || '' : '', CN = CHN(), hlp = hl => isLead ? helpUI(hl) : '';
       let body = '';
-      if (ph === 'race') body = (g.out || []).includes(k) ? `<p class="dwp-big">${T('إجابتكم خاطئة', 'Your answer was wrong')}</p><p class="dwp-h">${T('انتظروا السؤال التالي', 'Wait for the next question')}</p>` : `<p class="dwp-h">${T('سباق! أول إجابة صحيحة تفوز', 'Race! The first right answer wins')}</p>${opts(g.n, g.tf, g.no)}`;
+      if (g.rem && !isLead && ['hrl', 'hrn', 'pick', 'hro', 'word', 'num'].includes(ph)) body = `<p class="dwp-big">${T('يتولى قائد المجموعة هذه الخطوة', 'The group’s leader takes this step')}</p><p class="dwp-h">${T('تابعها على الشاشة', 'Follow it on the screen')}</p>`;
+      else if (ph === 'race') body = (g.out || []).includes(k) ? `<p class="dwp-big">${T('إجابتكم خاطئة', 'Your answer was wrong')}</p><p class="dwp-h">${T('انتظروا السؤال التالي', 'Wait for the next question')}</p>` : `<p class="dwp-h">${T('سباق! أول إجابة صحيحة تفوز', 'Race! The first right answer wins')}</p>${opts(g.n, g.tf, g.no)}`;
       else if (ph === 'all') body = `<p class="dwp-h">${T('سؤال للجميع: اختاروا الإجابة', 'Everyone answers: choose')}</p>${opts(g.n, g.tf)}`;
-      else if (ph === 'buzz') body = (g.out || []).includes(k) ? `<p class="dwp-big">${T('خرجتم من هذا السؤال', 'You are out of this one')}</p>` : g.who === k ? (g.say ? `<p class="dwp-big">${T('سبقتم! قولوا الإجابة للمدير', 'First! Say the answer to the host')}</p>` : `<p class="dwp-h">${T('دوركم: اختاروا الإجابة', 'Your turn: choose')}</p>${opts(g.n, g.tf)}`) : g.who != null ? `<p class="dwp-big">${T('يجاوب الآن', 'Now answering')}: ${esc(g.names[g.who])}</p>` : `<button type="button" class="dwp-buzz" data-bz${buzzed ? ' disabled' : ''}>${buzzed ? T('ضغطت!', 'Pressed!') : T('اضغط!', 'Press!')}</button>`;
-      else if (ph === 'turn') body = g.team === k ? (g.text ? `<p class="dwp-big">${T('قل الإجابة للمدير', 'Say the answer to the host')}</p>` : `<p class="dwp-h">${T('سؤالكم: اختاروا الإجابة', 'Your question: choose')}</p>${opts(g.n, g.tf)}`) : `<p class="dwp-big">${T('دور', 'Turn:')} ${esc(g.names[g.team] || '')}</p>`;
+      else if (ph === 'buzz') body = (g.out || []).includes(k) ? `<p class="dwp-big">${T('خرجتم من هذا السؤال', 'You are out of this one')}</p>` : g.who === k ? (g.say ? `<p class="dwp-big">${T('سبقتم! قولوا الإجابة للمدير', 'First! Say the answer to the host')}</p>${sayUI()}` : `<p class="dwp-h">${T('دوركم: اختاروا الإجابة', 'Your turn: choose')}</p>${opts(g.n, g.tf)}`) : g.who != null ? `<p class="dwp-big">${T('يجاوب الآن', 'Now answering')}: ${esc(g.names[g.who])}</p>` : `<button type="button" class="dwp-buzz" data-bz${buzzed ? ' disabled' : ''}>${buzzed ? T('ضغطت!', 'Pressed!') : T('اضغط!', 'Press!')}</button>`;
+      else if (ph === 'turn') body = g.team === k ? (g.text ? `<p class="dwp-big">${T('قل الإجابة للمدير', 'Say the answer to the host')}</p>${sayUI()}` : `<p class="dwp-h">${T('سؤالكم: اختاروا الإجابة', 'Your question: choose')}</p>${opts(g.n, g.tf)}`) : `<p class="dwp-big">${T('دور', 'Turn:')} ${esc(g.names[g.team] || '')}</p>`;
       else if (ph === 'pick') body = g.by === k ? `<p class="dwp-h">${T(`اختاروا سؤال ${g.names[g.for]}: الأصعب عليهم`, `Choose ${g.names[g.for]}’s question: the hardest`)}</p><div class="dwp-pick">${(g.opts || []).map((o, i) => `<button type="button" data-pk="${i}"><small>${esc(o.cat)}</small>${esc(o.q)}</button>`).join('')}</div>` : `<p class="dwp-big">${esc(g.names[g.by] || '')} ${T('تختار سؤالًا', 'is choosing a question')}</p>`;
       else if (ph === 'word') body = wordUI(k);
       else if (ph === 'num') { if (N.i !== g.i) N = { i: g.i, v: '' }; const v = (g.v || [])[k], p = (g.pl || [])[k];
@@ -1791,14 +1869,19 @@ window.Dawwara = (function () {
         : `<p class="dwp-h"><b dir="auto">${esc(g.L)}</b>: ${T('اختاروا رقم السؤال', 'pick a question number')}</p><div class="dwp-grid n">${(g.u || '').split('').map((u, j) => `<button type="button" data-pk="${j}"${u === '1' ? ' disabled' : ''}>${NUM(j + 1)}</button>`).join('')}</div><button type="button" class="dwp-back" data-pk="-1">${g.cats ? T('فئة أخرى', 'Another category') : T('حرف آخر', 'Another letter')}</button>`;
       else if (ph === 'hra') { const who = g.ask >= 0 ? g.ask : g.team;
         body = who !== k ? `<p class="dwp-big">${T('يجيب', 'Answering')}: ${esc(g.names[who] || '')}</p>${g.team === k ? `<p class="dwp-h">${T('إن أخطأت فالنقاط لكم', 'If they miss, the points are yours')}</p>` : ''}`
-          : `${g.ask >= 0 ? `<p class="dwp-h">${T('سؤال محوّل إليكم من', 'A question passed to you by')} ${esc(g.names[g.team] || '')}</p>` : ''}${g.n ? `<p class="dwp-h">${T('اختاروا الإجابة', 'Choose the answer')}</p>${opts(g.n, 0, g.gone)}` : `<p class="dwp-big">${T('قولوا الإجابة للمدير', 'Say the answer to the host')}</p>`}${helpUI(g.hl)}`; }
-      else if (ph === 'hro') body = g.team !== k ? `<p class="dwp-big">${T('ترتّب الآن', 'Now ordering')}: ${esc(g.names[g.team] || '')}</p>` : roUI() + helpUI(g.hl);
+          : `${g.ask >= 0 ? `<p class="dwp-h">${T('سؤال محوّل إليكم من', 'A question passed to you by')} ${esc(g.names[g.team] || '')}</p>` : ''}${g.n ? `<p class="dwp-h">${T('اختاروا الإجابة', 'Choose the answer')}</p>${opts(g.n, 0, g.gone)}` : `<p class="dwp-big">${T('قولوا الإجابة للمدير', 'Say the answer to the host')}</p>${sayUI()}`}${hlp(g.hl)}`; }
+      else if (ph === 'hro') body = g.team !== k ? `<p class="dwp-big">${T('ترتّب الآن', 'Now ordering')}: ${esc(g.names[g.team] || '')}</p>` : roUI() + hlp(g.hl);
       else if (ph === 'intro') body = `<p class="dwp-big">${g.team === k ? T('دوركم! استعدوا', 'Your turn! Get ready') : T('دور', 'Turn:') + ' ' + esc(g.names[g.team] || '')}</p>`;
       else if (ph === 'wait' && g.won != null) body = `<p class="dwp-big">${g.won === k ? T('أصبتم! النقاط لكم', 'Right! The points are yours') : g.won >= 0 ? `${g.pt ? T('النقاط لمجموعة', 'Points to') : T('سبقكم', 'Beaten by')} ${esc(g.names[g.won] || '')}` : T('لم يُصب أحد', 'Nobody got it')}</p>`;
-      else body = `<p class="dwp-big">${ph === 'end' ? T('انتهت الأمسية', 'The evening is over') : ph === 'chal' ? T('تحدٍّ على الشاشة', 'A challenge on the screen') : T('انتبه للشاشة', 'Watch the screen')}</p>`;
+      else body = `<p class="dwp-big">${ph === 'end' ? T('انتهت الأمسية', 'The evening is over') + (g.star ? `<br><small>${T('نجم الأمسية', 'Star of the evening')}: ${esc(g.star)}</small>` : '') : ph === 'chal' ? T('تحدٍّ على الشاشة', 'A challenge on the screen') : T('انتبه للشاشة', 'Watch the screen')}</p>`;
       root.innerHTML = `<div class="dwp" style="--c:${col}"><div class="dwp-top"><b dir="auto">${esc(g.names[k])}</b><span>${NUM((g.sc || [])[k] || 0)}${g.dbl && g.dbl[k] ? ' ×٢' : ''}</span></div>${body}
         ${chs ? `<div class="dwp-ch"><p>${T('فرصكم', 'Your chances')}</p>${chs.split('').map(c => `<button type="button" data-ch="${c}">${CN[c]}</button>`).join('')}</div>` : ''}</div>`;
-      root.querySelectorAll('[data-a]').forEach(b => b.onclick = () => { ans = +b.dataset.a; send('a', ans, 0); buzz(25); paint(); });
+      root.querySelectorAll('[data-a]').forEach(b => b.onclick = () => { ans = +b.dataset.a; if (g.rem) { send('s', '', k, { a: ans }); said = T('تم إرسال اختيارك إلى المدير', 'Your choice was sent to the host'); } else send('a', ans, 0); buzz(25); paint(); });
+      if (g.rem && root.querySelector('.dwp-opts')) root.querySelector('.dwp-opts').insertAdjacentHTML('afterend', `${(g.tv || [])[k] ? `<p class="dwp-tv">${T('اختيارات مجموعتك', 'Your group leans')}: ${esc(g.tv[k])}</p>` : ''}${said && !root.querySelector('.dwp-say') ? `<p class="dwp-ok">${said}</p>` : ''}`);
+      const txi = root.querySelector('#dwpTx'); if (txi) { txi.oninput = () => { tx = txi.value; }; txi.onblur = () => setTimeout(() => { if (pend) paint(); }, 50);
+        const go1 = () => { const v = txi.value.trim(); if (!v) return; send('s', '', k, { s: v }); tx = ''; said = T('تم إرسال إجابتك إلى المدير', 'Your answer was sent to the host'); txi.blur(); buzz(25); paint(); };
+        root.querySelector('[data-txs]').onclick = go1; txi.onkeydown = e => { if (e.key === 'Enter') go1(); }; }
+      const rcb = root.querySelector('[data-rec]'); if (rcb) rcb.onclick = () => recToggle(k);
       const ni = root.querySelector('#dwpNum'); if (ni) { ni.oninput = () => { N.v = ni.value; }; root.querySelector('[data-nsend]').onclick = () => { const v = numIn(ni.value); if (v == null) { ni.focus(); return; } ni.value = N.v = fmtN(v); send('n', '', v); buzz(30); const o = root.querySelector('#dwpOk'); if (o) o.textContent = T('تم إرسال التقدير', 'Estimate sent'); }; }
       root.querySelectorAll('[data-ro]').forEach(b => b.onclick = () => { const t = +b.dataset.ro, p = RO.p.indexOf(t); if (p >= 0) { if (p === RO.p.length - 1 && !(g.fx >= 0 && p === 0)) RO.p.pop(); } else RO.p.push(t); buzz(15); paint(); });
       const rsd = root.querySelector('[data-rsend]'); if (rsd) rsd.onclick = () => { send('w', '', RO.p.reduce((x, t, p) => x + t * Math.pow(16, p), 0)); rsd.disabled = true; buzz(30); };
@@ -1830,6 +1913,7 @@ window.Dawwara = (function () {
       }
       db.ref('kh/' + pin + '/g').on('value', s => { g = s.val(); paint(); });
       db.ref('kh/' + pin + '/ld').on('value', s => { lead = s.val() || {}; paint(); });
+      db.ref('kh/' + pin + '/mb').on('value', s => { mb = s.val() || {}; paint(); });
     };
     wake(); go();
   }
@@ -1950,10 +2034,12 @@ window.Dawwara = (function () {
   }
   function final() {
     if (D.seq) { if (D.si < D.seq.length) return mixNext(); D.seq = null; }
-    pub({ ph: 'end' }); D.done = true; const R = ranked(), w = R[0], tie = R[1] && R[1].score === w.score; SND.win();
+    if (D.q) sgCredit(); const stars = Object.values(ROOM.star).sort((a, b) => b.c - a.c), star = stars[0] && stars[0].c ? stars[0] : null; ROOM.sg = []; ROOM.star = {}; sgPaint();
+    pub({ ph: 'end', star: star ? star.n : '' }); D.done = true; const R = ranked(), w = R[0], tie = R[1] && R[1].score === w.score; SND.win();
     shell(`<div class="dw-mid dw-fin"><div class="dw-conf" aria-hidden="true">${Array.from({ length: 36 }, (_, k) => `<i style="--x:${Math.random() * 100}%;--d:${(Math.random() * 1.6).toFixed(2)}s;--c:${COL[k % COL.length]}"></i>`).join('')}</div>
       <p class="dw-sub">${esc(D.title)}</p><h2>${tie ? T('تعادل في القمة!', 'A tie at the top!') : T('الفائز', 'The winner')}</h2><p class="dw-winner" style="--c:${w.col}" dir="auto">${esc(tie ? R.filter(g => g.score === w.score).map(g => g.name).join(T(' و', ' & ')) : w.name)}</p>
       <div class="dw-pod">${R.slice(0, 3).map((g, k) => `<div class="p${k + 1}" style="--c:${g.col}"><span dir="auto">${esc(g.name)}</span><b>${NUM(g.score)}</b><i>${NUM(k + 1)}</i></div>`).join('')}</div>
+      ${star ? `<p class="dw-star" style="--c:${(D.groups[star.k] || {}).col}">${T('نجم الأمسية', 'Star of the evening')}: <b dir="auto">${esc(star.n)}</b> <span dir="auto">(${esc((D.groups[star.k] || {}).name || '')})</span> · ${T(`${NUM(star.c)} من اختياراته كانت صحيحة`, `${star.c} right picks`)}</p>` : ''}
       <table class="dw-tab"><tr><th>${T('المجموعة', 'Group')}</th><th>${T('النقاط', 'Points')}</th><th>${T('إجابات صحيحة', 'Right')}</th>${R.some(g => g.steals) ? `<th>${T('سرقات', 'Steals')}</th>` : ''}${R.some(g => g.chal) ? `<th>${T('تحديات فازت بها', 'Challenges won')}</th>` : ''}</tr>${R.map(g => `<tr><td dir="auto"><i style="background:${g.col}"></i>${esc(g.name)}</td><td>${NUM(g.score)}</td><td>${NUM(g.right)}</td>${R.some(x => x.steals) ? `<td>${NUM(g.steals)}</td>` : ''}${R.some(x => x.chal) ? `<td>${NUM(g.chal || 0)}</td>` : ''}</tr>`).join('')}</table>
       <div class="dw-acts"><button type="button" class="dw-btn" data-main>${T('العب مرة ثانية', 'Play again')}</button><button type="button" class="dw-btn ghost" data-cert>${IC.print}${T('اطبع شهادة الفائز', 'Print the winner’s certificate')}</button></div></div>`, 'dw-in');
     el.querySelector('[data-main]').onclick = () => { if (D.mode === 'mix') return mixSetup(); if (['wr', 'qd', 'im'].includes(D.mode)) return wrSetup(D.mode); if (D.mode === 'hr') return hrSetup(D.rk); D.steps = null; setup(); };
