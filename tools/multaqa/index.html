@@ -2016,6 +2016,7 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
   }
   function sitAt(i) {
     const st = H.seats[i]; if (!st) return; if (st.r < (+E.cfg.res || 0) && E.role === 'guest' && !E.vip) return toast(T('هذا الصف محجوز', 'This row is reserved')); const taken = Object.keys(E.here).find(u => u !== uid && E.here[u].st === i); if (taken) return openPerson(taken); { const hv = vips().find(v => v.seat === i); if (hv && hv.id !== E.vipId && !isHost() && E.role !== 'mod') return toast(T(`هذا المقعد محجوز لـ ${hv.n}`, `This seat is reserved for ${hv.n}`)); }
+    if (Math.hypot(H.pos.x, H.pos.z - st.z) > 6) return fly(0, st.z + .9, 0, () => seatDown(i));
     H.route = path(H.pos, { x: 0, z: st.z + .9 }); H.route.push({ x: st.x > 0 ? 1.3 : -1.3, z: st.z + .9 }); H.goal = { seat: i }; drawRoute();
   }
   function seatDown(i) { const st = H.seats[i]; H.seat = i; store.set('sat.' + E.id, true); H.pos.x = st.x; H.pos.z = st.z; const dist = st.z - H.L.th.z0; H.yaw = Math.atan2(st.x, dist); H.pitch = .72 * Math.atan((4.6 - (1.22 + st.y)) / Math.hypot(st.x, dist)); H.slowT = performance.now() / 1000 + 1.6; H.el.classList.add('hl-seated'); hallResize(); H.drawn = 0; R('here/' + uid).update({ x: +st.x.toFixed(1), z: +st.z.toFixed(1), r: 0, st: i }).catch(() => {}); seatBar(); }
