@@ -1028,22 +1028,24 @@ window.Dawwara = (function () {
     let B; try { B = await hrLoad(); } catch (e) { alert(T('تعذّر تحميل أسئلة «حروف». يُرجى التحقق من الاتصال.', 'Could not load the Huroof questions.')); return; }
     const c = cfgGet(), used = hrUsed(), all = Object.values(B).reduce((n, v) => n + v.length, 0), left = Object.entries(B).reduce((n, [L, v]) => n + v.filter((_, i) => !used.has(L + ':' + i)).length, 0);
     D = { mode: 'hr', title: T('حروف', 'Huroof'), cfg: Object.assign(c, { chn: false }), steps: [] };
-    c.hrt = c.hrt || 30;
+    c.hrt = c.hrt || 30; if (c.hrh == null) c.hrh = 1;
     const paint = () => {
       shell(`<div class="dw-set dw-hrset"><p class="dw-sub">${T('مسابقة جاهزة', 'Ready to play')}</p><h2>${T('حروف', 'Huroof')}</h2>
-        <p class="dw-hrrule">${T('تختار المجموعة صاحبة الدور حرفًا ثم رقم سؤال، وتبدأ إجابته بذلك الحرف. الإجابة الصحيحة ١٠٠ نقطة، وإن أخطأت فلمن يسبقها من المجموعات الأخرى ٥٠.', 'The group on turn picks a letter, then a question number; the answer starts with that letter. A right answer is 100; if they miss, the first other group to answer gets 50.')}</p>
+        <p class="dw-hrrule">${T('تختار المجموعة صاحبة الدور حرفًا ثم رقم سؤال، وتبدأ إجابته بذلك الحرف. الإجابة دون خيارات ١٠٠ نقطة، ومع عرض الخيارات ٥٠، وإن أخطأت فلأول مجموعة أخرى تجيب نصف النقاط.', 'The group on turn picks a letter, then a question number; the answer starts with that letter. Without options it is worth 100, with the options 50; if they miss, the first other group to answer gets half.')}</p>
         <div class="dw-row"><span>${T('عدد المجموعات', 'Groups')}</span><div class="dw-seg" data-n>${[2, 3, 4, 5, 6].map(n => `<button type="button" data-v="${n}" aria-pressed="${c.n === n}">${NUM(n)}</button>`).join('')}</div></div>
         <div class="dw-hrnames">${Array.from({ length: c.n }, (_, k) => `<label style="--c:${COL[k]}"><i></i><input data-nm="${k}" maxlength="20" dir="auto" value="${esc(c.names[k] || NAMES()[k])}"></label>`).join('')}</div>
         <div class="dw-row"><span>${T('وقت السؤال', 'Time per question')}</span><div class="dw-seg" data-t>${[20, 30, 45, 60].map(n => `<button type="button" data-v="${n}" aria-pressed="${c.hrt === n}">${NUM(n)} ${T('ث', 's')}</button>`).join('')}</div></div>
+        <div class="dw-row"><span>${T('وسائل المساعدة لكل مجموعة', 'Help for each group')}<small>${T('احذف إجابتين، وغيّر السؤال، ووقت إضافي: عدد مرات كل منها', 'Remove two, change the question, extra time: uses of each')}</small></span><div class="dw-seg" data-h>${[0, 1, 2, 3].map(n => `<button type="button" data-v="${n}" aria-pressed="${c.hrh === n}">${n ? NUM(n) : T('بلا', 'None')}</button>`).join('')}</div></div>
         <p class="dw-hrleft">${T(`${NUM(left)} سؤالًا لم تُلعب بعد على هذا الجهاز، من ${NUM(all)}.`, `${left} of ${all} questions not yet played on this device.`)}${left < all ? ` <button type="button" class="dw-lnk" data-reset>${T('إعادة الأسئلة كلها', 'Bring all questions back')}</button>` : ''}</p>
         <div class="dw-acts"><button type="button" class="dw-btn" data-main>${T('ابدأ', 'Start')}</button></div></div>`, 'dw-in');
       const read = () => { el.querySelectorAll('[data-nm]').forEach(i => { c.names[+i.dataset.nm] = i.value.trim(); }); };
       el.querySelectorAll('[data-n] [data-v]').forEach(b => b.onclick = () => { read(); c.n = +b.dataset.v; cfgSet(c); paint(); });
       el.querySelectorAll('[data-t] [data-v]').forEach(b => b.onclick = () => { read(); c.hrt = +b.dataset.v; cfgSet(c); paint(); });
+      el.querySelectorAll('[data-h] [data-v]').forEach(b => b.onclick = () => { read(); c.hrh = +b.dataset.v; cfgSet(c); paint(); });
       const rs = el.querySelector('[data-reset]'); if (rs) rs.onclick = () => { if (!confirm(T('تعود كل الأسئلة متاحة، ومنها ما لُعب سابقًا. هل تريد المتابعة؟', 'All questions become available again. Continue?'))) return; hrSave(new Set()); hrSetup(); };
       el.querySelector('[data-main]').onclick = () => { read(); cfgSet(c);
-        D.groups = Array.from({ length: c.n }, (_, k) => ({ name: c.names[k] || NAMES()[k], col: COL[k], score: 0, right: 0, steals: 0, chal: 0, chances: '' }));
-        D.hr = { B, used: hrUsed(), turn: 0, n: 0 }; SND.go(); hrLetters(); };
+        D.groups = Array.from({ length: c.n }, (_, k) => ({ name: c.names[k] || NAMES()[k], col: COL[k], score: 0, right: 0, steals: 0, chal: 0, chances: '', h: { d: c.hrh, s: c.hrh, t: c.hrh } }));
+        D.hr = { B, used: hrUsed(), turn: 0, n: 0, pend: {} }; SND.go(); hrLetters(); };
     };
     paint();
   }
@@ -1066,23 +1068,63 @@ window.Dawwara = (function () {
     el.querySelectorAll('[data-i]').forEach(b => b.onclick = () => { SND.go(); hrAsk(L, +b.dataset.i); });
     el.querySelector('[data-back]').onclick = hrLetters;
   }
+  // wrong answers that look right: from the assistant when it can be reached, else from answers of the same kind under the same letter
+  const hrKind = q => [[/عاصمة|المدينة|المحافظة|المنطقة|مدينة|جزيرة|بلدة|قرية/, 'place'], [/الدولة|دولة|البلد/, 'country'], [/النبي|نبي/, 'prophet'], [/الصحابي|صحابي|الصحابية|أم المؤمنين|الخليف|زوج النبي|ابنة النبي|عم النبي/, 'sahabi'], [/الحيوان|الطائر|الحشرة|الزاحف|السمك|حيوان|طائر|حشرة/, 'animal'], [/الفاكهة|الثمرة|النبات|الخضار|الشجرة|الطعام|الحبوب|العشبة|التابل|المشروب|نبات|شجرة|طعام/, 'food'], [/سورة|السورة/, 'sura'], [/الغزوة|المعركة|معركة|غزوة/, 'battle'], [/الشاعر|العالم|القائد|مؤلف|من القائل|الملك|الفيلسوف|المخترع|من هو|الإمام|شاعر|عالم/, 'person'], [/الشهر/, 'month'], [/العضو|الجسم|جسم الإنسان/, 'body'], [/العلم الذي|علم /, 'science'], [/الجهاز|الآلة|الأداة|جهاز|آلة|أداة/, 'tool'], [/المعدن|العنصر|الغاز|المادة|معدن|مادة/, 'matter']].reduce((k, [r, v]) => k || (r.test(q) ? v : ''), '') || 'other';
+  const hrCache = () => { try { return JSON.parse(localStorage.getItem('dw.hr.opts') || '{}'); } catch (e) { return {}; } };
+  function hrWrong(L, i) {
+    const H = D.hr, key = L + ':' + i, c = hrCache(); if (c[key]) return Promise.resolve(c[key]);
+    if (H.pend[key]) return H.pend[key];
+    const [q, a] = H.B[L][i], k = hrKind(q), pool = H.B[L].filter((x, j) => j !== i), same = pool.filter(x => hrKind(x[0]) === k).map(x => x[1]), other = pool.filter(x => hrKind(x[0]) !== k).map(x => x[1]);
+    const local = () => { const r = shuf(same).concat(shuf(other)).filter(x => x !== a).slice(0, 3); return r; };
+    const ai = gemini(`سؤال من مسابقة «حروف» العربية: تبدأ الإجابة بحرف «${L}».\nالسؤال: ${q}\nالإجابة الصحيحة: ${a}\nاكتب ثلاث إجابات خاطئة مقنعة من نوع الإجابة الصحيحة نفسه (إن كانت دولة فدول، وإن كان صحابيًا فصحابة، وهكذا)، وكل واحدة تبدأ بحرف «${L}» (تُهمل «ال» التعريف)، ولا تكون صحيحة أيضًا، ولا تكرر الإجابة الصحيحة، وبطولها تقريبًا. أعد JSON فقط بالشكل: {"wrong":["","",""]}`)
+      .then(t => { const w = (JSON.parse(String(t).replace(/^```json|```$/g, '')).wrong || []).map(x => String(x).trim()).filter(x => x && x !== a).slice(0, 3); if (w.length < 3) throw 0; const cc = hrCache(); cc[key] = w; try { localStorage.setItem('dw.hr.opts', JSON.stringify(cc)); } catch (e) {} return w; })
+      .catch(() => local());
+    H.pend[key] = Promise.race([ai, new Promise(r => setTimeout(() => r(null), 9000))]).then(w => w || local());
+    return H.pend[key];
+  }
+  const HELP = () => ({ d: [T('احذف إجابتين', 'Remove two'), IC.x || ''], s: [T('غيّر السؤال', 'Change the question'), ''], t: [T('وقت إضافي', 'Extra time'), ''] });
   function hrAsk(L, i) {
-    const H = D.hr, g = D.groups[H.turn], [q, a] = H.B[L][i], dur = D.cfg.hrt || 30, st = D.q = { dur, left: dur, locked: false };
-    H.used.add(L + ':' + i); hrSave(H.used);
-    shell(`${board(H.turn)}<div class="dw-q dw-hrq" style="--c:${g.col}"><div class="dw-qh"><span class="dw-who"><b class="dw-hrL sm">${L}</b> · ${T('السؤال', 'Question')} ${NUM(i + 1)} · <span dir="auto" style="color:${g.col}">${esc(g.name)}</span></span>${ring(dur)}</div>
-      <h2 class="dw-qt" dir="auto">${esc(q)}</h2><p class="dw-hrhint">${T(`الإجابة تبدأ بحرف «${L}»`, `The answer starts with «${L}»`)}</p><div class="dw-foot" id="dwFoot"><button type="button" class="dw-btn" data-main>${T('أظهر الإجابة', 'Show the answer')}</button></div></div>`, 'dw-ask');
-    const show = () => { if (st.shown) return; st.shown = true; st.locked = true; clearInterval(tick);
-      const f = el.querySelector('#dwFoot'), others = D.groups.map((x, k) => k).filter(k => k !== H.turn);
-      f.innerHTML = `<p class="dw-hrans" dir="auto">${esc(a)}</p><div class="dw-hrjudge"><button type="button" class="dw-btn" data-ok>${T('إجابة صحيحة', 'Right')} <small dir="ltr">+${NUM(100)}</small></button><button type="button" class="dw-btn ghost" data-no>${T('إجابة خاطئة', 'Wrong')}</button></div>`;
-      f.querySelector('[data-ok]').onclick = () => { const p = award(g, 100); g.right++; SND.ok(); flash(`${g.name}: ${NUM(p)} ${T('نقطة', 'points')}`); next(); };
-      f.querySelector('[data-no]').onclick = () => { SND.no();
-        f.innerHTML = `<p class="dw-hrans" dir="auto">${esc(a)}</p><p class="dw-hrsteal">${T('هل أجابت مجموعة أخرى قبل غيرها؟', 'Did another group answer first?')}</p><div class="dw-hrjudge">${others.map(k => `<button type="button" class="dw-btn ghost dw-hrg1" data-st="${k}" style="--c:${D.groups[k].col}" dir="auto">${esc(D.groups[k].name)} <small dir="ltr">+${NUM(50)}</small></button>`).join('')}<button type="button" class="dw-btn ghost" data-none>${T('لم تُصب أي مجموعة', 'Nobody')}</button></div>`;
-        f.querySelectorAll('[data-st]').forEach(b => b.onclick = () => { const o = D.groups[+b.dataset.st], p = award(o, 50); o.steals++; SND.ok(); flash(`${o.name}: ${NUM(p)} ${T('نقطة', 'points')}`); next(); });
-        f.querySelector('[data-none]').onclick = next; };
+    const H = D.hr, g = D.groups[H.turn], [q, a] = H.B[L][i], dur = D.cfg.hrt || 30, st = D.q = { dur, left: dur, locked: false, val: 100, opts: null, gone: [] };
+    H.used.add(L + ':' + i); hrSave(H.used); const wrongP = hrWrong(L, i);
+    shell(`${board(H.turn)}<div class="dw-q dw-hrq" style="--c:${g.col}"><div class="dw-qh"><span class="dw-who"><b class="dw-hrL sm">${L}</b> · ${T('السؤال', 'Question')} ${NUM(i + 1)} · <span dir="auto" style="color:${g.col}">${esc(g.name)}</span> · <span id="dwVal">${NUM(100)} ${T('نقطة', 'points')}</span></span>${ring(dur)}</div>
+      <h2 class="dw-qt" dir="auto">${esc(q)}</h2><p class="dw-hrhint">${T(`الإجابة تبدأ بحرف «${L}»`, `The answer starts with «${L}»`)}</p><div id="dwOpts"></div>
+      <div class="dw-hrhelp" id="dwHelp"></div><div class="dw-foot" id="dwFoot"><button type="button" class="dw-btn" data-main>${T('أظهر الإجابة', 'Show the answer')}</button></div></div>`, 'dw-ask');
+    const val = v => { st.val = v; const e = el.querySelector('#dwVal'); if (e) e.textContent = `${NUM(v)} ${T('نقطة', 'points')}`; };
+    const helps = () => { const h = el.querySelector('#dwHelp'); if (!h || st.locked) { if (h) h.innerHTML = ''; return; }
+      h.innerHTML = `${!st.opts ? `<button type="button" class="dw-hb" data-h="o">${T('اعرض الخيارات', 'Show the options')} <small>${T('النقاط تصبح', 'worth')} ${NUM(50)}</small></button>` : ''}${Object.entries(HELP()).map(([k, [t]]) => (g.h[k] > 0 && (k !== 'd' || (st.opts && !st.gone.length))) ? `<button type="button" class="dw-hb" data-h="${k}">${t} <small>×${NUM(g.h[k])}</small></button>` : '').join('')}`;
+      h.querySelectorAll('[data-h]').forEach(b => b.onclick = () => help(b.dataset.h)); };
+    const paintOpts = () => { const o = el.querySelector('#dwOpts');
+      o.innerHTML = `<div class="dw-opts n4">${st.opts.map((x, j) => `<button type="button" data-j="${j}" style="--o:var(--dwo${j})"${st.gone.includes(j) ? ' disabled class="gone"' : ''}><i>${LET()[j]}</i><span dir="auto">${esc(x)}</span></button>`).join('')}</div>`;
+      o.querySelectorAll('[data-j]').forEach(b => b.onclick = () => pickOpt(+b.dataset.j)); };
+    const help = async k => {
+      if (k === 'o') { const hb = el.querySelector('[data-h="o"]'); if (hb) { hb.disabled = true; hb.innerHTML = T('لحظة…', 'One moment…'); }
+        const w = await wrongP; if (D.q !== st || st.locked) return; st.opts = shuf([a, ...w]); val(50); paintOpts(); helps(); el.querySelector('#dwFoot').innerHTML = `<p class="dw-hrsteal">${T('اضغط إجابة المجموعة', 'Tap the group’s answer')}</p>`; return; }
+      if (!(g.h[k] > 0)) return; g.h[k]--; SND.tick();
+      if (k === 't') { st.left = Math.min(st.left + 15, 999); st.dur = Math.max(st.dur, st.left); clock(st, () => { SND.no(); timeUp(); }); flash(T('+١٥ ثانية', '+15 seconds')); }
+      if (k === 'd') { const wrongs = st.opts.map((x, j) => j).filter(j => st.opts[j] !== a); st.gone = shuf(wrongs).slice(0, 2); paintOpts(); }
+      if (k === 's') { const free = H.B[L].map((_, j) => j).filter(j => !H.used.has(L + ':' + j)); if (!free.length) { g.h[k]++; return flash(T('لا أسئلة أخرى في هذا الحرف', 'No other questions under this letter')); } clearInterval(tick); return hrAsk(L, free[Math.floor(Math.random() * free.length)]); }
+      helps();
     };
-    const next = () => { H.turn = (H.turn + 1) % D.groups.length; H.n++; setTimeout(hrLetters, 700); };
+    const steal = (pts, html) => { const f = el.querySelector('#dwFoot'), others = D.groups.map((x, k) => k).filter(k => k !== H.turn);
+      f.innerHTML = `${html}<p class="dw-hrsteal">${T('هل أجابت مجموعة أخرى قبل غيرها؟', 'Did another group answer first?')}</p><div class="dw-hrjudge">${others.map(k => `<button type="button" class="dw-btn ghost dw-hrg1" data-st="${k}" style="--c:${D.groups[k].col}" dir="auto">${esc(D.groups[k].name)} <small>${NUM(pts)} ${T('نقطة', 'pts')}</small></button>`).join('')}<button type="button" class="dw-btn ghost" data-none>${T('لم تُصب أي مجموعة', 'Nobody')}</button></div>`;
+      f.querySelectorAll('[data-st]').forEach(b => b.onclick = () => { const o = D.groups[+b.dataset.st], p = award(o, pts); o.steals++; SND.ok(); flash(`${o.name}: ${NUM(p)} ${T('نقطة', 'points')}`); next(); });
+      f.querySelector('[data-none]').onclick = next; };
+    const win = () => { const p = award(g, st.val); g.right++; SND.ok(); flash(`${g.name}: ${NUM(p)} ${T('نقطة', 'points')}`); next(); };
+    const ans = `<p class="dw-hrans" dir="auto">${esc(a)}</p>`;
+    const pickOpt = j => { if (st.locked) return; st.locked = true; clearInterval(tick); helps(); const ok = st.opts[j] === a;
+      el.querySelectorAll('[data-j]').forEach(b => { b.disabled = true; if (st.opts[+b.dataset.j] === a) b.classList.add('ok'); }); if (!ok) el.querySelector(`[data-j="${j}"]`).classList.add('no');
+      if (ok) { el.querySelector('#dwFoot').innerHTML = ''; return win(); } SND.no(); steal(Math.round(st.val / 2), ''); };
+    const show = () => { if (st.shown) return; st.shown = true; st.locked = true; clearInterval(tick); helps();
+      if (st.opts) { el.querySelectorAll('[data-j]').forEach(b => { b.disabled = true; if (st.opts[+b.dataset.j] === a) b.classList.add('ok'); }); return steal(Math.round(st.val / 2), ''); }
+      const f = el.querySelector('#dwFoot');
+      f.innerHTML = `${ans}<div class="dw-hrjudge"><button type="button" class="dw-btn" data-ok>${T('إجابة صحيحة', 'Right')} <small>${NUM(st.val)} ${T('نقطة', 'pts')}</small></button><button type="button" class="dw-btn ghost" data-no>${T('إجابة خاطئة', 'Wrong')}</button></div>`;
+      f.querySelector('[data-ok]').onclick = win;
+      f.querySelector('[data-no]').onclick = () => { SND.no(); steal(Math.round(st.val / 2), ans); };
+    };
+    const timeUp = () => { SND.no(); show(); };
+    const next = () => { H.turn = (H.turn + 1) % D.groups.length; H.n++; setTimeout(hrLetters, 900); };
     el.querySelector('[data-main]').onclick = show;
-    clock(st, () => { SND.no(); show(); });
+    helps(); clock(st, timeUp);
   }
 
   /* ---------- the game's own page: where the questions come from ---------- */

@@ -318,3 +318,7 @@ html.dw-phone .tl-crumb,html.dw-phone .dw-head,html.dw-phone .dw-lead{display:no
 .dw-hrsteal{text-align:center;margin:0 0 10px;opacity:.85}
 .dw-hrg1{border-color:var(--c)!important}
 @media (max-width:640px){.dw-hrg{grid-template-columns:repeat(5,minmax(0,1fr))}.dw-readyc{flex-wrap:wrap}.dw-readyc em{margin-inline-start:auto}}
+.dw-hrhelp{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:10px 0 4px;min-height:8px}
+.dw-hb{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:999px;border:1.5px solid rgba(233,165,74,.7);color:#fff;font-weight:600;font-size:clamp(13px,1.2vw,16px);background:rgba(233,165,74,.08)}
+.dw-hb:hover:not(:disabled){background:rgba(233,165,74,.22)}.dw-hb small{opacity:.75;font-weight:500}.dw-hb:disabled{opacity:.5;cursor:default}
+.dw-hrq .dw-opts{margin-top:12px}.dw-hrq .dw-opts button.gone{opacity:.15}
