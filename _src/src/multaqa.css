@@ -290,4 +290,21 @@ body.mic-q #mlCall,body.mic-q #mlTiles,body.mic-q #hlRoomV{display:none!importan
 #mlStage.shw .st-aw,#mlStage .st-aw{grid-column:1/-1;height:100vh;height:100dvh;display:grid;place-content:center;justify-items:center;text-align:center;gap:2vh;padding:6vh 6vw;box-sizing:border-box;background:#0E1322}#mlStage .st-aw small{font-size:2.6vh;color:#9CA6BA}#mlStage .st-aw p{margin:2vh 0 0;font-size:5.5vh;font-weight:600;color:#E3A55A}#mlStage .st-aw h1{margin:0;font-size:12vh;line-height:1.15;color:#fff}#mlStage .st-aw h2{margin:1vh 0 0;font-size:3.6vh;font-weight:400;color:#D9DEEA;max-width:80vw}
 .pg-e input[data-f=chair],.pg-e input[data-f=u]{flex:1 1 100%;min-width:100%}
 .ml-in-bad{border-color:var(--ml-bad)!important}.ml-ferr{color:var(--ml-bad);font-size:.8rem}#mlGg{justify-content:center;width:100%;min-height:46px}.ml-att{display:grid;gap:6px}
-#mlRoles{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:0 auto 10px;max-width:760px;font-size:.85rem}#mlRoles .hl-seg{flex:1;min-width:200px}
+#mlRoles{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:0 auto 10px;max-width:760px;font-size:.85rem}#mlRoles .hl-seg{flex:0 1 auto;display:inline-flex;width:auto;min-width:0}#mlRoles .hl-seg button{flex:0 0 auto;min-width:64px;padding-inline:14px}
+/* the event's face, in the family of Maydan and Dawwara */
+.ml-hero{position:relative;border:0;border-radius:18px;padding:22px 18px 18px;color:#fff;display:grid;gap:8px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 56 56'%3E%3Cpath d='M28 14l4 7.5 8-2-2 8 7.5 4.5-7.5 4 2 8-8-2-4 7.5-4-7.5-8 2 2-8L10.5 32 18 27.5l-2-8 8 2z' fill='none' stroke='%23ffffff' stroke-opacity='.07' stroke-width='1.2'/%3E%3C/svg%3E"),radial-gradient(120% 90% at 50% 0%,#2c3f86,#16214d)}
+.ml-hero h2{margin:0;color:#fff;font-size:1.4rem;line-height:1.35;padding-inline-end:64px}.ml-hero p{margin:0;color:#D6DCF0;font-size:.9rem;line-height:1.6}
+.ml-hero .ml-mut,.ml-hero small{color:#C6CEE8}.ml-hero a{color:#F0C27B}
+.ml-hero .ml-hph b{color:#F0C27B;font-weight:600;margin-inline-end:6px}
+.ml-hero .ml-b{background:transparent;color:#fff;border-color:rgba(255,255,255,.4)}
+.ml-hero .ml-b.main,.ml-hero .ml-hgo{background:#E3A857;color:#16214d;border-color:transparent;font-weight:600}
+.ml-hero .ml-hgo{justify-content:flex-start;text-align:start;padding-block:9px;line-height:1.4;min-height:44px}.ml-hero .ml-hgo .ml-dot{background:#16214d}
+.ml-hero .ml-in{background:#fff;color:#16214d;border-color:transparent}.ml-hero .ml-in::placeholder{color:#5b6580}
+.ml-row.ml-hero{display:flex;flex-wrap:wrap;align-items:center}.ml-row.ml-hero .ml-grow{flex:1 1 100%}.ml-row.ml-hero .ml-b{flex:0 1 auto}
+.ml-hero[class*=ml-card]{gap:10px}
+.ml-lang{all:unset;cursor:pointer;position:absolute;inset-block-start:12px;inset-inline-end:12px;color:#D6DCF0;font-size:.78rem;padding:6px 8px;border-radius:8px}.ml-lang:hover{color:#fff}.ml-lang:focus-visible{outline:2px solid #fff}
+.ml-gate{padding:0;overflow:hidden}.ml-gate>.ml-hero{border-radius:0}.ml-gate>:not(.ml-hero){margin-inline:16px}.ml-gate>:last-child{margin-block-end:16px}
+.ml-back{display:flex;flex-wrap:wrap;align-items:center;gap:10px;border-color:#E3A857;padding-block:12px}.ml-back .ml-t{flex:1 1 160px}.ml-back small{display:block;color:var(--muted)}
+.ml-acc>summary{color:var(--accent);flex-wrap:wrap;list-style:none;font-weight:600;min-height:44px}.ml-acc>summary::-webkit-details-marker{display:none}.ml-acc>summary small{font-weight:400;color:var(--muted);flex:1 1 180px}.ml-acc>summary .chev{margin-inline-start:auto}
+#mlRoles{margin:18px auto 0;justify-content:center}
+.ml-b{min-height:44px}
