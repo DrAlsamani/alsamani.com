@@ -119,11 +119,11 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
     if (ch) paintTalk();
   }
   /* ---------- this phone: mic, camera, joining and leaving ---------- */
-  async function join() {
+  async function join(o) {
     if (A.joined) return; const n = Object.keys(A.in).length;
     if (n >= MAX) return note(T(`الغرفة الصوتية ممتلئة (${MAX}). تقدر تتابع اللعب بدونها.`, `The voice room is full (${MAX}). You can keep playing without it.`));
     if ((A.ctl.ban || {})[A.uid]) return note(T('أوقف المشرف صوتك في هذه الجلسة.', 'The host has turned your voice off for this session.'));
-    try { A.ms = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true } }); A.aT = A.ms.getAudioTracks()[0]; A.mic = true; }
+    if (o && o.listen) { A.aT = null; A.mic = false; } else try { A.ms = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true } }); A.aT = A.ms.getAudioTracks()[0]; A.mic = true; }
     catch (e) { A.aT = null; A.mic = false; note(T('لم يُسمح باستخدام الميكروفون، فالمشاركة بالاستماع فقط. ويمكن السماح به من إعدادات المتصفح.', 'No microphone allowed, so you can only listen. Allow it in the browser settings.')); }
     A.joined = true; const me = A.ref.child('in/' + A.uid);
     me.onDisconnect().remove(); A.ref.child('sig/' + A.uid).onDisconnect().remove();
@@ -281,6 +281,6 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
     const v = { o: (p && p.o || []).map(u => u.slice(0, 10)), c: (p && p.c || []).map(u => u.slice(0, 10)), m: (p && p.m || []).map(u => u.slice(0, 10)), w: p && p.w || '' };
     const k = JSON.stringify(v); if (k === A.polK) return; A.polK = k; A.ref.child('pol').set(v).catch(() => {});
   }
-  return { attach, detach, policy, join() { return A ? join() : null; }, toggleMic() { return A ? toggleMic() : null; }, toggleCam() { return A ? toggleCam() : null; }, toggleScreen() { return A ? toggleScreen() : null; }, sharing() { return !!(A && A.sc); }, leave() { if (A) leave(); },
+  return { attach, detach, policy, join(o) { return A ? join(o) : null; }, toggleMic() { return A ? toggleMic() : null; }, toggleCam() { return A ? toggleCam() : null; }, toggleScreen() { return A ? toggleScreen() : null; }, sharing() { return !!(A && A.sc); }, leave() { if (A) leave(); },
     view() { return A ? { joined: A.joined, mic: A.mic, cam: A.cam, note: A.note, me: A.vT, n: Object.keys(A.in).length, talk: A.talk || {}, people: Object.keys(A.in).filter(u => u !== A.uid).map(u => ({ u, n: A.in[u].n, a: A.in[u].a, v: A.in[u].v, track: A.in[u].v && A.P[u] ? A.P[u].vt : null, audio: A.P[u] && A.P[u].au && A.P[u].au.srcObject ? A.P[u].au.srcObject.getAudioTracks()[0] : null })) } : null; }, state() { return A ? { on: A.on, joined: A.joined, mic: A.mic, can: canTalk(A.uid), n: Object.keys(A.in).length, peers: Object.keys(A.P).map(u => A.P[u].pc.connectionState), pol: A.pol } : null; }, setHost(u) { if (A) { A.hostU = u; apply(); } } };
 })();
