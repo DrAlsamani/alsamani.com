@@ -1166,6 +1166,82 @@ window.Dawwara = (function () {
       } catch (e) { console.error(e); b.disabled = false; q('#dwAiS').textContent = OwnAI.msg(e); }
     };
   }
+  /* ---------- «من درسك»: questions written only from the teacher's own lesson — pasted text, PDF, page photos or a Word file ---------- */
+  const LS_MAX = 14e6, LS_TXT = 60000;
+  const LS_KINDS = () => [['mc', T('اختيار من متعدد', 'Multiple choice')], ['tf', T('صح أو خطأ', 'True or false')], ['word', T('مصطلح أو كلمة', 'A term or word')], ['num', T('جوابه رقم', 'A number')]];
+  function lsBox() {
+    const chip = (name, v, l, on, multi) => `<label class="dw-chip"><input type="${multi ? 'checkbox' : 'radio'}" name="${name}" value="${esc(v)}"${on ? ' checked' : ''}><span>${l}</span></label>`;
+    return `<div class="dw-wiz dw-ls">
+      <div class="dw-wq"><b>${T('محتوى الدرس', 'The lesson')}</b><textarea id="lsT" rows="6" dir="auto" placeholder="${T('الصق نص الدرس أو الوحدة هنا', 'Paste the lesson or unit text here')}"></textarea>
+        <div class="dw-lsf"><label class="dw-lsup"><input type="file" id="lsF" multiple accept=".pdf,.docx,.txt,image/*"><span>${T('أو ارفع ملفات الدرس', 'Or upload the lesson files')}</span></label><small>${T('PDF أو Word أو صور صفحات الكتاب', 'PDF, Word or photos of the pages')}</small></div><div class="dw-lsl" id="lsL"></div></div>
+      <div class="dw-wq"><b>${T('عدد الأسئلة', 'How many questions')}</b><div class="dw-chips">${[10, 20, 30, 40].map(v => chip('lsN', v, NUM(v), v === 20)).join('')}</div></div>
+      <div class="dw-wq"><b>${T('أنواع الأسئلة', 'Kinds of questions')}</b><div class="dw-chips">${LS_KINDS().map(([v, l], i) => chip('lsK', v, l, i < 2, true)).join('')}</div></div>
+      <div class="dw-aig"><label>${T('المرحلة', 'The stage')}<select id="lsA">${AUD().filter(a => a[0] !== 'fam').map(a => `<option value="${a[0]}"${a[0] === 'mid' ? ' selected' : ''}>${a[1]}</option>`).join('')}</select></label><label>${T('ركّز على (اختياري)', 'Focus on (optional)')}<input id="lsX" dir="auto" placeholder="${T('مثل: الدرس الثاني، أو المفاهيم فقط', 'e.g. lesson two, or the key terms only')}"></label></div>
+      <label class="dw-lsc"><input type="checkbox" id="lsC"> ${T('أضف تحديات صفية قصيرة من الدرس', 'Add short class challenges from the lesson')}</label>
+      <button type="button" class="dw-btn" id="lsGo">${T('اكتب الأسئلة', 'Write the questions')}</button><p class="dw-found" id="lsS" aria-live="polite"></p></div>`;
+  }
+  const b64 = f => new Promise((ok, no) => { const r = new FileReader(); r.onload = () => ok(String(r.result).split(',')[1]); r.onerror = no; r.readAsDataURL(f); });
+  // a photo of a page is shrunk to a readable size before it is sent
+  function shrink(f) {
+    return new Promise(ok => { const u = URL.createObjectURL(f), im = new Image(); im.onload = () => { const s = Math.min(1, 1800 / Math.max(im.width, im.height)), c = document.createElement('canvas'); c.width = Math.round(im.width * s); c.height = Math.round(im.height * s); c.getContext('2d').drawImage(im, 0, 0, c.width, c.height); URL.revokeObjectURL(u); ok(c.toDataURL('image/jpeg', .85).split(',')[1]); }; im.onerror = () => { URL.revokeObjectURL(u); ok(null); }; im.src = u; });
+  }
+  let mamP = null;
+  const mammoth = () => mamP || (mamP = new Promise((ok, no) => { if (window.mammoth) return ok(window.mammoth); const s = document.createElement('script'); s.src = 'https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.8.0/mammoth.browser.min.js'; s.onload = () => ok(window.mammoth); s.onerror = () => { mamP = null; no(new Error('mammoth')); }; document.head.appendChild(s); }));
+  // each file becomes text for the prompt (Word, plain text) or a part the AI reads itself (PDF, photos)
+  async function lsRead(f) {
+    const n = f.name.toLowerCase();
+    if (/\.txt$/.test(n) || f.type === 'text/plain') return { name: f.name, text: (await f.text()).trim() };
+    if (/\.docx$/.test(n)) { const m = await mammoth(); return { name: f.name, text: (await m.extractRawText({ arrayBuffer: await f.arrayBuffer() })).value.trim() }; }
+    if (/\.pdf$/.test(n) || f.type === 'application/pdf') return { name: f.name, mime: 'application/pdf', data: await b64(f), size: f.size };
+    if (/^image\//.test(f.type)) { const d = await shrink(f); if (!d) throw new Error('img'); return { name: f.name, mime: 'image/jpeg', data: d, size: d.length * .75 }; }
+    throw new Error('type');
+  }
+  function lsPrompt(o) {
+    const aud = (AUD().find(a => a[0] === o.aud) || AUD()[2])[1], K = { mc: 'اختيار من متعدد بأربعة خيارات قريبة ومقنعة', tf: 'صح أو خطأ', word: 'جوابه مصطلح أو كلمة واحدة من الدرس', num: 'جوابه رقم ورد في الدرس' };
+    return `أنت معلم خبير تُعدّ أسئلة مراجعة صفية من درس محدد، تُلعب مسابقةً بين مجموعات الطلاب.
+المرحلة: ${aud}
+عدد الأسئلة: ${o.n} تقريبًا.
+أنواعها: ${o.kinds.map(k => K[k]).join('، ')}.${o.focus ? `\nركّز على: ${o.focus}` : ''}
+
+القواعد:
+- اكتب الأسئلة من محتوى الدرس المعطى فقط، ولا تضف معلومة ليست فيه. إن كان المحتوى قليلًا فاكتب أقل من العدد المطلوب.
+- قسّم الأسئلة إلى فئات من ٢ إلى ٥ حسب موضوعات الدرس أو أقسامه، واسم الفئة كلمة أو كلمتان.
+- المستوى: lv 1 تذكّر، و lv 2 فهم، و lv 3 تطبيق أو تحليل، بتوزيع متقارب.
+- لغة السؤال مناسبة للمرحلة، قصيرة وواضحة تُقرأ على الشاشة.
+- الخيارات الخاطئة من مفاهيم الدرس نفسه ومقنعة، ولا تجعل الإجابة الصحيحة أطول الخيارات دائمًا، ولا تستعمل «جميع ما سبق».
+- تحقق من صحة كل إجابة من نص الدرس، واحذف أي سؤال فيه شك.
+- لكل سؤال اختيار من متعدد أو كلمة، اكتب في "letter" أول حرف من الإجابة الصحيحة دون «ال» التعريف.
+- اكتب بلغة الدرس نفسها.
+${o.nch ? `- أضف ${o.nch} تحديات صفية قصيرة مرتبطة بالدرس تؤديها المجموعات كلها في وقت واحد داخل الفصل بلا أدوات (مثل: رتّب، اذكر أكبر عدد، اشرح بمثال)، ووقتها بالثواني، و"sc": "rank" لما له فائز واضح و"judge" لما يقدّره المعلم.` : '- لا تكتب تحديات: "challenges": [].'}
+
+أعد JSON فقط بهذا الشكل:
+{"title":"عنوان الدرس باختصار","questions":[{"cat":"الفئة","lv":1,"type":"mc","q":"السؤال","opts":["","","",""],"ok":0,"letter":"ر"},{"cat":"الفئة","lv":2,"type":"tf","q":"عبارة","ok":true},{"cat":"الفئة","lv":2,"type":"word","q":"تعريف أو تلميح","ans":"المصطلح"},{"cat":"الفئة","lv":1,"type":"num","q":"السؤال","ans":12,"unit":""}],"challenges":[{"t":"العنوان","d":"التعليمات","s":90,"sc":"rank","mat":"","alt":""}]}`;
+  }
+  function lsBind(root) {
+    const q = s => root.querySelector(s), b = q('#lsGo'); if (!b) return; let files = [];
+    const list = () => { q('#lsL').innerHTML = files.map((f, i) => `<span class="dw-lsi"><bdi>${esc(f.name)}</bdi><button type="button" data-lsx="${i}" aria-label="${T('إزالة', 'Remove')}">×</button></span>`).join(''); q('#lsL').querySelectorAll('[data-lsx]').forEach(x => x.onclick = () => { files.splice(+x.dataset.lsx, 1); list(); }); };
+    q('#lsF').onchange = e => { files = files.concat([...e.target.files]).slice(0, 8); e.target.value = ''; list(); q('#lsS').textContent = ''; };
+    b.onclick = async () => {
+      const S = q('#lsS'), text = q('#lsT').value.trim(), kinds = [...root.querySelectorAll('[name=lsK]:checked')].map(i => i.value);
+      if (!text && !files.length) { S.textContent = T('الصق نص الدرس أو ارفع ملفاته أولًا.', 'Paste the lesson or upload its files first.'); return; }
+      if (!kinds.length) { S.textContent = T('اختر نوعًا واحدًا على الأقل.', 'Choose at least one kind.'); return; }
+      b.disabled = true; S.textContent = T('تُقرأ ملفات الدرس…', 'Reading the lesson files…');
+      try {
+        let got; try { got = await Promise.all(files.map(lsRead)); } catch (e) { throw Object.assign(new Error('file'), { ls: e.message === 'type' ? T('نوع ملف غير مدعوم. المدعوم: PDF وWord والصور والنص.', 'Unsupported file. Use PDF, Word, images or text.') : T('تعذّرت قراءة أحد الملفات.', 'One of the files could not be read.') }); }
+        const parts = got.filter(x => x.data), txt = [text].concat(got.filter(x => x.text).map(x => x.text)).filter(Boolean).join('\n\n').slice(0, LS_TXT);
+        if (parts.reduce((s, x) => s + x.size, 0) > LS_MAX) throw Object.assign(new Error('big'), { ls: T('الملفات كبيرة. ارفع الصفحات المطلوبة فقط أو صورًا لها.', 'The files are too large. Upload only the pages you need, or photos of them.') });
+        if (!txt && !parts.length) throw Object.assign(new Error('empty'), { ls: T('لم أجد نصًا في الملف.', 'No text was found in the file.') });
+        const o = { n: +(root.querySelector('[name=lsN]:checked') || {}).value || 20, kinds, aud: q('#lsA').value, focus: q('#lsX').value.trim(), nch: q('#lsC').checked ? 3 : 0 };
+        const head = lsPrompt(o), body = (txt ? `\n\nمحتوى الدرس:\n"""\n${txt}\n"""` : '') + (parts.length ? `\n\n${txt ? 'وبقية الدرس' : 'محتوى الدرس'} في الملفات المرفقة: ${parts.map(x => x.name).join('، ')}.` : '');
+        S.textContent = T('تُكتب الأسئلة من الدرس…', 'Writing the questions from the lesson…');
+        const r = fromAI(await OwnAI.auto(head + body, 'dw.ai', 5, p => gemini(parts.length ? [p].concat(parts.map(x => ({ inlineData: { mimeType: x.mime, data: x.data } }))) : p)));
+        if (r.qs.length < 2) throw new Error('empty');
+        const quiz = { id: Math.random().toString(36).slice(2, 10), title: r.title || T('مراجعة الدرس', 'Lesson review'), at: Date.now(), qs: r.qs, ch: r.ch, src: 'dw', lesson: 1, tpl: { kind: r.ch.length ? 'mix' : 'q', dur: 45 } };
+        saveQuiz(quiz); b.disabled = false; S.textContent = '';
+        editor(root, quiz, () => home(root));
+      } catch (e) { console.error(e); b.disabled = false; S.textContent = e.ls || OwnAI.msg(e); }
+    };
+  }
   // the shape chosen in «جهّزها لي» decides the rounds
   function applyTpl(c, n, P, mc, catQ) {
     const t = c.tpl, W = c.wager && P > 2 ? 1 : 0;
@@ -1729,8 +1805,9 @@ window.Dawwara = (function () {
     const item = (o, k, src) => `<button type="button" class="dw-pick" data-src="${src}" data-k="${k}"><b dir="auto">${esc(o.z.title || T('بلا عنوان', 'Untitled'))}</b><small>${T(`${NUM(o.n)} سؤالًا صالحًا`, `${o.n} usable questions`)}${o.z.who ? ' | ' + esc(o.z.who) : ''}</small></button>`;
     root.innerHTML = `<div class="dw-start"><div class="dw-ready"><button type="button" class="dw-readyc dw-mixc" id="dwMix"><span class="dw-hrL">${T('م', 'M')}</span><span><b>${T('أمسية منوعة', 'A mixed evening')}</b><small>${T('عدة مسابقات متتالية بالمجموعات نفسها، والنقاط تُجمع إلى النهاية.', 'Several ready games in a row; the points add up.')}</small></span><em>${T('جهّز الأمسية', 'Set it up')}</em></button><button type="button" class="dw-readyc dw-soloc" id="dwSolo"><span class="dw-hrL">${T('١', '1')}</span><span><b>${T('العب وحدك', 'Play alone')}</b><small>${T('عشرة أسئلة بخيارات ووقت محدود، وتُحفظ أفضل نتيجة.', 'Ten timed questions with options; your best is kept.')}</small></span><em>${T('ابدأ', 'Start')}</em></button><button type="button" class="dw-readyc" id="dwHr"><span class="dw-hrL">${T('ح', 'H')}</span><span><b>${T('حروف', 'Huroof')}</b><small>${T('تختار المجموعة حرفًا ثم رقم سؤال تبدأ إجابته به.', 'Pick a letter, then a question whose answer starts with it.')}</small></span><em>${T('العب الآن', 'Play now')}</em></button><button type="button" class="dw-readyc" id="dwMt"><span class="dw-hrL">${T('م', 'P')}</span><span><b>${T('أكمل المثل', 'Finish the proverb')}</b><small>${T('يظهر أول المثل وتكمله المجموعة.', 'The start of a proverb; the group finishes it.')}</small></span><em>${T('العب الآن', 'Play now')}</em></button><button type="button" class="dw-readyc" id="dwAy"><span class="dw-hrL">${T('أ', 'W')}</span><span><b>${T('أين تقع؟', 'Where is it?')}</b><small>${T('مدن ومعالم: في أي منطقة أو دولة تقع؟', 'Cities and landmarks: which region or country?')}</small></span><em>${T('العب الآن', 'Play now')}</em></button><button type="button" class="dw-readyc" id="dwQa"><span class="dw-hrL">${T('ق', 'Q')}</span><span><b>${T('من القائل؟', 'Who said it?')}</b><small>${T('أبيات وأقوال وكتب: من قائلها أو مؤلفها؟', 'Verses, sayings and books: who said or wrote them?')}</small></span><em>${T('العب الآن', 'Play now')}</em></button><button type="button" class="dw-readyc" id="dwRo"><span class="dw-hrL">${T('ر', 'O')}</span><span><b>${T('رتّب الأحداث', 'Put them in order')}</b><small>${T('أحداث مبعثرة ترتّبها المجموعة من الأقدم إلى الأحدث.', 'Scattered events to put in time order.')}</small></span><em>${T('العب الآن', 'Play now')}</em></button><button type="button" class="dw-readyc" id="dwIm"><span class="dw-hrL">${T('ص', 'P')}</span><span><b>${T('خمّن الصورة', 'Guess the picture')}</b><small>${T('صورة مقرّبة مشوشة تتضح شيئًا فشيئًا، والأسرع يفوز.', 'A blurred close-up that clears; the fastest wins.')}</small></span><em>${T('العب الآن', 'Play now')}</em></button><button type="button" class="dw-readyc dw-readyph" id="dwQd"><span class="dw-hrL">${T('ت', 'E')}</span><span><b>${T('قدّرها', 'Estimate it')}</b><small>${T('سؤال جوابه رقم، والتقدير الأقرب يفوز.', 'A number for an answer; the closest estimate wins.')}</small></span><em>${T('العب الآن', 'Play now')}</em></button><button type="button" class="dw-readyc dw-readyph" id="dwWr"><span class="dw-hrL">${T('ك', 'W')}</span><span><b>${T('سباق الكلمات', 'Word race')}</b><small>${T('كلمات مبعثرة يرتّبها القادة على جوالاتهم.', 'Shuffled words the leaders order on their phones.')}</small></span><em>${T('العب الآن', 'Play now')}</em></button></div>
       <h2>${T('أو أعدّ مسابقتك', 'Or prepare your own quiz')}</h2>
-      <div class="dw-tabs" role="tablist"><button type="button" role="tab" data-tab="ready" aria-selected="true">${T('من المكتبة', 'From the library')}</button><button type="button" role="tab" data-tab="ai" aria-selected="false">${T('جهّزها لي', 'Prepare it for me')}</button><button type="button" role="tab" data-tab="own" aria-selected="false">${T('اكتبها بنفسك', 'Write it yourself')}</button></div>
+      <div class="dw-tabs" role="tablist"><button type="button" role="tab" data-tab="ready" aria-selected="true">${T('من المكتبة', 'From the library')}</button><button type="button" role="tab" data-tab="ai" aria-selected="false">${T('جهّزها لي', 'Prepare it for me')}</button><button type="button" role="tab" data-tab="ls" aria-selected="false">${T('من درسك', 'From your lesson')}</button><button type="button" role="tab" data-tab="own" aria-selected="false">${T('اكتبها بنفسك', 'Write it yourself')}</button></div>
       <div data-pane="ai" hidden><p class="dw-pane-h">${T('ثلاثة اختيارات، وتُجهَّز لك فعالية كاملة تراجعها أو تبدأ بها مباشرة.', 'Three choices, and a whole event is prepared; review it or start straight away.')}</p>${aiBox()}</div>
+      <div data-pane="ls" hidden><p class="dw-pane-h">${T('للمعلم: الصق الدرس أو ارفع صفحاته، وتُكتب الأسئلة منه وحده بفئات ومستويات، تراجعها وتعدّلها ثم تلعبها مع الطلاب.', 'For teachers: paste the lesson or upload its pages; questions are written from it alone, by section and level, for you to review, edit and play with the class.')}</p>${lsBox()}</div>
       <div data-pane="ready">
         ${mine.length ? `<h3>${T('مسابقاتك', 'Your quizzes')}</h3><div class="dw-picks">${mine.map((o, k) => `<div class="dw-pickw">${item(o, k, 'm')}<button type="button" class="dw-edb" data-ed="${k}">${T('عدّل', 'Edit')}</button></div>`).join('')}</div>` : ''}
         ${lib.length ? `<h3>${T('من المكتبة', 'From the library')}</h3><div class="dw-picks">${lib.map((o, k) => item(o, k, 'l')).join('')}</div>` : ''}
@@ -1753,7 +1830,7 @@ window.Dawwara = (function () {
     root.querySelector('#dwIm').onclick = () => wrSetup('im');
     root.querySelectorAll('[data-ed]').forEach(b => b.onclick = () => editor(root, mine[+b.dataset.ed].z, () => home(root)));
     root.querySelectorAll('[data-tab]').forEach(b => b.onclick = () => { root.querySelectorAll('[data-tab]').forEach(x => x.setAttribute('aria-selected', x === b)); root.querySelectorAll('[data-pane]').forEach(p => { p.hidden = p.dataset.pane !== b.dataset.tab; }); });
-    aiBind(root);
+    aiBind(root); lsBind(root);
     root.querySelectorAll('.dw-pick').forEach(b => b.onclick = () => { const o = (b.dataset.src === 'm' ? mine : lib)[+b.dataset.k]; start({ title: o.z.title, qs: JSON.parse(JSON.stringify(o.z.qs)), ch: o.z.ch || [], tpl: o.z.tpl }); });
     const ta = root.querySelector('#dwPaste'), go = root.querySelector('#dwGo'), fd = root.querySelector('#dwFound'); let got = [];
     ta.oninput = () => { got = window.QZParse ? QZParse.fromText(ta.value).filter(usable) : []; go.disabled = got.length < 2; fd.textContent = ta.value.trim() ? T(`وجدتُ ${NUM(got.length)} سؤالًا`, `Found ${got.length} questions`) : ''; };

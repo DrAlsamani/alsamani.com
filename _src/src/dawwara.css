@@ -491,3 +491,18 @@ html.dw-phone .site-foot,html.dw-phone .ribbons-foot{display:none}
 .dw-pickw{position:relative;display:block}.dw-pickw .dw-pick{display:grid;width:100%;box-sizing:border-box;padding-inline-end:64px}
 .dw-pickw .dw-edb{position:absolute;inset-inline-end:10px;top:50%;transform:translateY(-50%);border:0;background:none;padding:4px 6px;text-decoration:underline;text-underline-offset:3px}
 .dw-tags b.f.rv:lang(en)::after{content:' | decoy'}
+/* «من درسك» */
+.dw-ls textarea{font:inherit;border:1px solid var(--line,#d6d9e4);border-radius:10px;padding:10px;min-height:120px;resize:vertical;background:var(--surface,#fff);color:var(--ink)}
+.dw-lsf{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px}.dw-lsf small{color:var(--muted)}
+.dw-lsup{cursor:pointer}.dw-lsup input{position:absolute;opacity:0;width:1px;height:1px}
+.dw-lsup span{display:inline-flex;align-items:center;gap:6px;border:1px dashed #1d2a5e;color:#1d2a5e;border-radius:999px;padding:8px 16px;font-weight:700}
+.dw-lsup span::before{content:'';width:14px;height:14px;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M12 16V4m-5 5 5-5 5 5M5 20h14'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M12 16V4m-5 5 5-5 5 5M5 20h14'/%3E%3C/svg%3E") center/contain no-repeat}
+.dw-lsup input:focus-visible+span{outline:2px solid #e9a54a;outline-offset:2px}
+.dw-lsl{display:flex;flex-wrap:wrap;gap:6px}.dw-lsl:empty{display:none}
+.dw-lsi{display:inline-flex;align-items:center;gap:4px;background:#eef1f8;color:#14204a;border-radius:999px;padding:4px 6px 4px 12px;font-size:.875rem;max-width:100%}
+.dw-lsi bdi{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:220px}
+.dw-lsi button{font:inherit;border:0;background:transparent;color:inherit;cursor:pointer;width:26px;height:26px;border-radius:50%}
+.dw-ls .dw-lsc{display:flex!important;align-items:center;justify-content:flex-start;gap:8px;width:auto;font-size:.9375rem}.dw-ls .dw-lsc input{width:20px;height:20px;margin:0;flex:none;accent-color:#1d2a5e}
+.dw-ls .dw-aig{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.dw-ls .dw-aig input,.dw-ls .dw-aig select{font:inherit;border:1px solid var(--line,#d6d9e4);border-radius:10px;padding:8px 10px;background:var(--surface,#fff);color:var(--ink)}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]) .dw-lsup span{color:#cdd6f6;border-color:#cdd6f6}:root:not([data-theme=light]) .dw-lsi{background:#2a3150;color:#eef}}
