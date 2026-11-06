@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>طاولة: مساحة عمل للاجتماعات والتحرير المشترك | Table: a workspace for meetings and shared editing | Dr. Omar A. Alsamani</title>
-<meta name="description" content="A shared workspace for meetings and collaborative editing: agenda, the floor, votes and decisions, voice and video, Word import and export, and minutes ready for signing. طاولة: مساحة عمل للاجتماعات والتحرير المشترك.">
+<meta name="description" content="A shared workspace for meetings and collaborative editing: agenda, the floor, votes and decisions, voice and video, Word import and export. طاولة: مساحة عمل للاجتماعات والتحرير المشترك.">
 <link rel="canonical" href="https://alsamani.com/tools/table/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Dr. Omar A. Alsamani">
 <meta property="og:title" content="طاولة: مساحة عمل للاجتماعات والتحرير المشترك | Table: a workspace for meetings and shared editing | Dr. Omar A. Alsamani">
-<meta property="og:description" content="A shared workspace for meetings and collaborative editing: agenda, the floor, votes and decisions, voice and video, Word import and export, and minutes ready for signing. طاولة: مساحة عمل للاجتماعات والتحرير المشترك.">
+<meta property="og:description" content="A shared workspace for meetings and collaborative editing: agenda, the floor, votes and decisions, voice and video, Word import and export. طاولة: مساحة عمل للاجتماعات والتحرير المشترك.">
 <meta property="og:url" content="https://alsamani.com/tools/table/">
 <meta property="og:image" content="https://alsamani.com/img/og/site.jpg">
 <meta name="twitter:card" content="summary_large_image">
@@ -461,10 +461,10 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
   /* ---------- the start: a new table, or the tables opened before on this device ---------- */
   function home() {
     const mine = store.get('list', []);
-    root.innerHTML = `<div class="tb-start"><div class="tb-new"><div class="tb-kind" role="radiogroup"><button type="button" data-kind="meet" aria-pressed="true"><b>${T('اجتماع', 'A meeting')}</b><small>${T('جدول أعمال، وطلب الكلمة، وقرار أو تصويت لكل بند، ومحضر يُعدّ تلقائيًا', 'An agenda, the floor, a decision or vote per item, and minutes prepared automatically')}</small></button><button type="button" data-kind="edit" aria-pressed="false"><b>${T('جلسة تحرير', 'A writing session')}</b><small>${T('تحرير مستند واحد بصورة مشتركة', 'Editing one document together')}</small></button></div><label><span>${T('العنوان', 'Title')}</span><input id="tbT" maxlength="80" dir="auto" placeholder="${T('مثال: اجتماع مجلس القسم', 'e.g. Department council meeting')}"></label>
+    root.innerHTML = `<div class="tb-start"><div class="tb-new"><div class="tb-kind" role="radiogroup"><button type="button" data-kind="meet" aria-pressed="true"><b>${T('اجتماع', 'A meeting')}</b><small>${T('جدول أعمال، وطلب الكلمة، وقرار أو تصويت لكل بند، ثم تُنقل نتيجته إلى «بناء المحضر»', 'An agenda, the floor, a decision or vote per item, then its record goes to the minutes builder')}</small></button><button type="button" data-kind="edit" aria-pressed="false"><b>${T('جلسة تحرير', 'A writing session')}</b><small>${T('تحرير مستند واحد بصورة مشتركة', 'Editing one document together')}</small></button></div><label><span>${T('العنوان', 'Title')}</span><input id="tbT" maxlength="80" dir="auto" placeholder="${T('مثال: اجتماع مجلس القسم', 'e.g. Department council meeting')}"></label>
       <label><span>${T('اسمك', 'Your name')}</span><input id="tbN" maxlength="30" dir="auto" value="${esc(store.get('name', ''))}"></label>
       <button type="button" class="btn solid" id="tbGo">${T('ابدأ', 'Start')}</button></div>
-      <ul class="tb-feat"><li>${IC.ppl}${T('تحرير جماعي متزامن، مع بيان كاتب كل نص ووضع للاقتراحات يعتمدها المضيف', 'Simultaneous editing, showing who wrote each part, with suggestions the host approves')}</li><li>${IC.vote}${T('إدارة الاجتماع: جدول الأعمال، وطلب الكلمة، والتصويت، والحضور والنصاب', 'Running the meeting: agenda, the floor, votes, attendance and quorum')}</li><li>${IC.mic}${T('الصوت والفيديو، والإملاء، وتحويل التسجيل الصوتي إلى نص', 'Voice and video, dictation, and recordings turned into text')}</li><li>${IC.down}${T('استيراد ملفات وورد وتصديرها وورد أو PDF، ومساعد يُعدّ الملخص والمحضر والمهام', 'Word import, Word or PDF export, and an assistant for the summary, minutes and tasks')}</li></ul>
+      <ul class="tb-feat"><li>${IC.ppl}${T('تحرير جماعي متزامن، مع بيان كاتب كل نص ووضع للاقتراحات يعتمدها المضيف', 'Simultaneous editing, showing who wrote each part, with suggestions the host approves')}</li><li>${IC.vote}${T('إدارة الاجتماع: جدول الأعمال، وطلب الكلمة، والتصويت، والحضور والنصاب', 'Running the meeting: agenda, the floor, votes, attendance and quorum')}</li><li>${IC.mic}${T('الصوت والفيديو، والإملاء، وتحويل التسجيل الصوتي إلى نص', 'Voice and video, dictation, and recordings turned into text')}</li><li>${IC.down}${T('استيراد ملفات وورد وتصديرها وورد أو PDF، ومساعد يُعدّ الملخص والمهام', 'Word import, Word or PDF export, and an assistant for the summary and tasks')}</li></ul>
       ${mine.length ? `<h3>${T('الطاولات السابقة', 'Your tables')}</h3><div class="tb-list">${mine.slice(0, 12).map(m => `<a href="?t=${esc(m.id)}" dir="auto">${esc(m.t || T('بلا عنوان', 'Untitled'))}<small>${new Date(m.at).toLocaleDateString(isAr() ? 'ar-SA-u-ca-gregory' : 'en-GB')}</small></a>`).join('')}</div>` : ''}</div>`;
     let kind = 'meet'; root.querySelectorAll('[data-kind]').forEach(b => b.onclick = () => { kind = b.dataset.kind; root.querySelectorAll('[data-kind]').forEach(x => x.setAttribute('aria-pressed', x === b)); });
     root.querySelector('#tbGo').onclick = async e => {
@@ -629,7 +629,6 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
   }
   const ASK = () => [
     ['sum', T('ملخص', 'Summary'), T('لخّص المستند في نقاط قصيرة واضحة تشمل أهم ما فيه.', 'Summarise the document in short clear points.')],
-    ['min', T('محضر اجتماع', 'Meeting minutes'), T('حوّل المستند إلى محضر اجتماع رسمي: الموضوع، النقاط التي نوقشت، القرارات، ثم التوصيات. لا تخترع أسماء أو تواريخ غير موجودة.', 'Turn the document into formal minutes: subject, points discussed, decisions, recommendations. Do not invent names or dates.')],
     ['task', T('المهام', 'Tasks'), T('استخرج المهام المطلوبة في قائمة مرقمة: المهمة، ومن يتولاها إن ذُكر، والموعد إن ذُكر.', 'List the tasks: the task, who takes it if named, and the date if given.')],
     ['fix', T('حسّن الصياغة', 'Polish the wording'), T('حسّن صياغة النص لغويًا وأسلوبيًا مع الحفاظ على المعنى وصوت الكاتب، وأعد النص المحسّن فقط.', 'Polish the wording, keeping the meaning and the writer’s voice; return only the text.')]
   ];
@@ -827,22 +826,13 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
       save(ag); d.remove(); if (W.meta.cur == null && ag.length) W.ref.child('meta').update({ cur: 0, curAt: Date.now() }); };
     if (it) { d.querySelector('#tbItDel').onclick = () => { const ag = W.ag.slice(); ag.splice(i, 1); save(ag); d.remove(); }; d.querySelector('#tbItUp').onclick = () => { const ag = W.ag.slice(); [ag[i - 1], ag[i]] = [ag[i], ag[i - 1]]; save(ag); d.remove(); }; }
   }
-  // the minutes, built from the agenda, the decisions, the votes and who attended
+  // the minutes are written in the minutes builder: the meeting's record travels there through this browser only
   function minutes() {
-    const m = W.meta, now = new Date(), L = isAr() ? 'ar-SA' : 'en-GB';
-    const hij = new Intl.DateTimeFormat(L + '-u-ca-islamic-umalqura', { day: 'numeric', month: 'long', year: 'numeric' }).format(now), gre = new Intl.DateTimeFormat(L + '-u-ca-gregory', { day: 'numeric', month: 'long', year: 'numeric' }).format(now);
-    const att = Object.values(W.att).map(a => a.n), need = m.need || 0;
-    const lines = [[m.t, { header: 1 }], [`${T('التاريخ', 'Date')}: ${hij} ${T('الموافق', '—')} ${gre}`, {}], [`${T('الحضور', 'Present')} (${NUM(att.length)}${need ? T(' من ', ' of ') + NUM(need) : ''}): ${att.join(T('، ', ', '))}`, {}]];
-    if (need) lines.push([att.length > need / 2 ? T('النصاب مكتمل.', 'Quorum met.') : T('النصاب غير مكتمل.', 'No quorum.'), {}]);
-    lines.push([T('البنود والقرارات', 'Items and decisions'), { header: 2 }]);
-    W.ag.forEach((it, i) => { lines.push([`${NUM(i + 1)}. ${it.t}`, { header: 3 }]); lines.push([`${T('القرار', 'Decision')}: ${it.dec || T('—', '—')}`, {}]); if (it.vote) lines.push([it.vote, {}]); });
-    const d = sheet('mn', `<button type="button" class="tb-xb" data-x aria-label="${T('إغلاق', 'Close')}">${IC.x}</button><h3>${T('المحضر', 'The minutes')}</h3><div class="tb-out">${lines.map(([t, f]) => f.header ? `<b>${esc(t)}</b>` : esc(t)).join('<br>')}</div>
-      <div class="tb-row"><button type="button" class="btn solid" data-n="end">${T('إضافة في آخر المستند', 'Add at the end')}</button><button type="button" class="btn ghost" data-n="top">${T('إضافة في أول المستند', 'Add at the top')}</button><a class="btn ghost" href="../sign/index.html" target="_blank" rel="noopener">${T('توقيع المحضر', 'Sign the minutes')}</a></div><p class="tb-hint">${T('بعد إضافة المحضر يُصدَّر بصيغة PDF من «تصدير»، ثم يُرفع إلى خدمة «توقيع المحاضر».', 'Once added, export it as PDF and upload it to “Signing the minutes”.')}</p>`);
-    d.querySelectorAll('[data-n]').forEach(b => b.onclick = () => {
-      const Delta = Quill.import('delta'), q = W.quill, at = b.dataset.n === 'top' ? 0 : q.getLength() - 1; let dl = new Delta().retain(at); if (at) dl = dl.insert('\n');
-      lines.forEach(([t, f]) => { dl = dl.insert(t, { au: W.me }).insert('\n', Object.assign({ direction: isAr() ? 'rtl' : null, align: isAr() ? 'right' : null }, f)); });
-      q.updateContents(dl, 'api'); d.remove(); toast(T('تمت إضافة المحضر', 'The minutes are in'));
-    });
+    const m = W.meta, att = Object.entries(W.att).sort((x, y) => (x[0] === m.host ? -1 : y[0] === m.host ? 1 : (x[1].at || 0) - (y[1].at || 0))).map(([, a]) => a);
+    const from = att.reduce((t, a) => a.at && (!t || a.at < t) ? a.at : t, 0);
+    try { localStorage.setItem('mn.fromTable', JSON.stringify({ t: m.t || '', from, to: Date.now(), need: m.need || 0, att: att.map(a => a.n), items: W.ag.map(it => ({ t: it.t, dec: it.dec || '', vote: it.vote || '' })) })); }
+    catch (e) { return toast(T('تعذّر نقل البيانات إلى «بناء المحضر».', 'Could not pass the record to the minutes builder.'), 1); }
+    window.open('../minutes/index.html#table', '_blank') || (location.href = '../minutes/index.html#table');
   }
 
   const ACT = {

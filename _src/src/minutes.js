@@ -142,6 +142,7 @@
 
   /* ---------- home: the saved minutes and committees ---------- */
   function home() {
+    if (fromTable()) return;
     M = null;
     const coms = store.get('coms', []);
     root.innerHTML = `<div class="sn-card mn-home">
@@ -155,6 +156,22 @@
     root.querySelectorAll('[data-open]').forEach(b => b.onclick = () => { const x = JSON.parse(JSON.stringify(list.find(x => x.id === b.dataset.open))); M = normM(Object.assign(blank(), x, { show: x.show, heads: x.heads, info: x.info })); editor(); });
     root.querySelectorAll('[data-del]').forEach(b => b.onclick = () => { if (!confirm(T('حذف هذا المحضر؟', 'Delete these minutes?'))) return; list = list.filter(x => x.id !== b.dataset.del); store.set('list', list); home(); });
     root.querySelectorAll('[data-com]').forEach(b => b.onclick = () => fromCommittee(coms.find(c => c.id === b.dataset.com)));
+  }
+  // a meeting run in «طاولة»: its record arrives filled in, for the secretary to complete; nothing is decided here that the meeting did not decide
+  function fromTable() {
+    if (location.hash !== '#table') return false;
+    let d = null; try { d = JSON.parse(localStorage.getItem('mn.fromTable')); localStorage.removeItem('mn.fromTable'); } catch (e) {}
+    history.replaceState(null, '', location.pathname + location.search);
+    if (!d) return false;
+    const hm = t => { const x = new Date(t); return String(x.getHours()).padStart(2, '0') + ':' + String(x.getMinutes()).padStart(2, '0'); };
+    M = blank();
+    Object.assign(M, { committee: d.t || '', mode: 'remote', stage: 'after', from: d.from ? hm(d.from) : '', to: d.to ? hm(d.to) : '', prev: { on: false, note: '' } });
+    M.members = (d.att || []).map(n => ({ id: uid(), n, r: 'عضو', st: 'r' }));
+    for (let i = M.members.length; i < (d.need || 0); i++) M.members.push({ id: uid(), n: '', r: 'عضو', st: 'a' });
+    if (!M.members.length) M.members = blank().members;
+    if ((d.items || []).length) M.items = d.items.map(it => Object.assign(newItem(), { title: it.t || '', kind: 'free', vote: '', text: [it.dec, it.vote].filter(Boolean).join('\n') }));
+    persist(); editor(); toast(B('تم نقل بيانات الاجتماع من «طاولة». راجعها وأكمل صفات الأعضاء.', 'The meeting record was brought over from Table. Review it and complete the members’ roles.'));
+    return true;
   }
   function fromCommittee(c) {
     M = blank();

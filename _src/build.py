@@ -719,7 +719,7 @@ DESCS['tools/pdf'] = 'A free PDF editor in the browser: write Arabic or English 
 PAGES.append(('tools/compare', 2, 'مقارنة ملفين | Compare two files | Dr. Omar A. Alsamani', _tp.compare_body))
 DESCS['tools/compare'] = 'Compare two versions of minutes, a decision or a letter (Word, PDF or text): additions, removals and every changed number or date, on your device. مقارنة ملفين وإظهار الفروق.'
 PAGES.append(('tools/table', 2, 'طاولة: مساحة عمل للاجتماعات والتحرير المشترك | Table: a workspace for meetings and shared editing | Dr. Omar A. Alsamani', _tp.table_body))
-DESCS['tools/table'] = 'A shared workspace for meetings and collaborative editing: agenda, the floor, votes and decisions, voice and video, Word import and export, and minutes ready for signing. طاولة: مساحة عمل للاجتماعات والتحرير المشترك.'
+DESCS['tools/table'] = 'A shared workspace for meetings and collaborative editing: agenda, the floor, votes and decisions, voice and video, Word import and export. طاولة: مساحة عمل للاجتماعات والتحرير المشترك.'
 PAGES.append(('tools/multaqa', 2, 'ملتقى: يوم بحث وملتقى علمي على الجوال | Multaqa | Dr. Omar A. Alsamani', _tp.multaqa_body))
 DESCS['tools/multaqa'] = 'A research forum on a phone: walk a numbered poster hall with real people, talk by voice, and judge remotely or on stage. ملتقى علمي على الجوال: قاعة بوسترات وحضور وتحكيم.'
 PAGES.append(('tools/minutes', 2, 'بناء المحضر | Minutes builder | Dr. Omar A. Alsamani', _tp.minutes_body))

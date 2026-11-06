@@ -247,8 +247,8 @@ def minutes_body():
         f'<div id="mn" class="sn mn"><noscript>{bi("تعمل هذه الأداة مع تفعيل JavaScript.", "This tool needs JavaScript.")}</noscript></div>',
         ['sign.css', 'minutes.css'], ['minutes.js'])
 TABLE = {'slug': 'table', 't_ar': 'طاولة', 't_en': 'Table',
-        'q_ar': 'مساحة عمل مشتركة لإدارة الاجتماعات وتحرير المستندات جماعيًا، تشمل جدول الأعمال وطلب الكلمة والتصويت وتوثيق القرارات، مع الصوت والفيديو، ويُعدّ منها المحضر جاهزًا للتوقيع.',
-        'q_en': 'A shared workspace for running meetings and editing documents together, with the agenda, the floor, votes and recorded decisions, voice and video, and minutes ready for signing.'}
+        'q_ar': 'مساحة عمل مشتركة لإدارة الاجتماعات وتحرير المستندات جماعيًا، تشمل جدول الأعمال وطلب الكلمة والتصويت وتوثيق القرارات، مع الصوت والفيديو، وتُنقل نتيجته إلى «بناء المحضر».',
+        'q_en': 'A shared workspace for running meetings and editing documents together, with the agenda, the floor, votes and recorded decisions, voice and video, with the record passed to the minutes builder.'}
 def table_body():
     return _tool_page(TABLE, '',
         f'<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css"><div id="tb"><noscript>{bi("تعمل هذه الأداة مع تفعيل JavaScript.", "This tool needs JavaScript.")}</noscript></div>{MD_SCRIPTS()}',
