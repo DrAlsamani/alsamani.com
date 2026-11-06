@@ -334,3 +334,6 @@ body:not(.ml-on) #mlShBar{top:auto;bottom:calc(90px + env(safe-area-inset-bottom
 #mlFlP .zb-t{bottom:76px}
 #svB{position:relative}
 #mlStage .st-open{display:flex;align-items:center;justify-content:center;gap:4vw;height:100%;text-align:center;padding:0 3vw;box-sizing:border-box}#mlStage .st-open .ml-pubimg{position:static;width:auto;height:auto;max-width:42%;max-height:78vh;margin:0;border-radius:12px;object-fit:contain}#mlStage .st-open h1{line-height:1.3}
+#mlStage .st-big.over{color:#E3A857;font-size:.6em}
+.ml-shut .ml-sc button{opacity:.45;pointer-events:none}
+.sh-stat{margin:0 0 10px;padding:8px 12px;border-radius:10px;display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.85rem}.sh-stat.on{background:color-mix(in srgb,#2f7d5b 12%,transparent)}.sh-stat.off{background:color-mix(in srgb,#C9822B 16%,transparent)}
