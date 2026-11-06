@@ -395,9 +395,9 @@ html.dw-phone .tl-crumb,html.dw-phone .dw-head,html.dw-phone .dw-lead{display:no
 .dwp-num{font-size:2rem!important;text-align:center;font-weight:800}
 /* guess the picture */
 .dw-imgw{align-self:center;max-width:100%;border-radius:14px;overflow:hidden;line-height:0}
-.dw-imgw.zoom .dw-img{max-height:40vh;border-radius:0;transform-origin:var(--ox) var(--oy);animation:dwImz var(--d) cubic-bezier(.55,0,.85,.45) forwards}
+.dw-imgw.zoom .dw-img{max-height:max(130px,calc(100vh - 470px));border-radius:0;transform-origin:var(--ox) var(--oy);animation:dwImz var(--d) cubic-bezier(.55,0,.85,.45) forwards}
 .dw-imgw.done .dw-img{animation:none;transform:none;filter:none;transition:transform .6s,filter .6s}
-@keyframes dwImz{from{transform:scale(4);filter:blur(16px)}60%{filter:blur(4px)}to{transform:scale(1);filter:blur(0)}}
+@keyframes dwImz{from{transform:scale(var(--z,3.5));filter:blur(14px)}60%{filter:blur(4px)}to{transform:scale(1);filter:blur(0)}}
 .dw-imcr{align-self:center;opacity:.55;font-size:.75rem;margin-top:-4px}
 /* mixed evening */
 .dw-mixc{grid-column:1/-1;background:linear-gradient(135deg,#c9822b,#8a4f1c)}.dw-mixc em{background:#fff}
@@ -443,3 +443,13 @@ html.dw-phone .tl-crumb,html.dw-phone .dw-head,html.dw-phone .dw-lead{display:no
 .dw-ldt button.sel{outline:2px solid #e9a54a;outline-offset:2px}
 .dw-ldm{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:2px 0 4px;padding:8px;border-radius:10px;background:rgba(0,0,0,.2);font-size:.85rem}
 .dw-ldm button{all:unset;cursor:pointer;padding:5px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.3)}.dw-ldm [data-mmv]{border-color:var(--c)}.dw-ldm [data-mlead]{background:#e9a54a;color:#1d1b3a;border-color:#e9a54a;font-weight:700}
+
+.dw-imgw{flex:none}.dw-q:has(.dw-imgw) .dw-opts{flex:none}.dw-q:has(.dw-imgw) .dw-opts button{min-height:clamp(48px,8vh,96px)}
+.dwp-tv small{display:block;font-size:.85rem;font-weight:500;margin-top:4px;opacity:.85}
+.dwp-auto{font:inherit;font-weight:700;border:1.5px dashed var(--c);background:transparent;color:var(--ink);border-radius:12px;padding:10px}.dwp-auto.on{border-style:solid;background:var(--c);color:#fff}
+
+/* the picture takes only the room left, so the options below always show */
+.dw-imgw.zoom{flex:1 1 0;min-height:110px;display:flex;justify-content:center;overflow:visible;border-radius:0}
+.dw-imgw.zoom .dw-imf{display:block;height:100%;overflow:hidden;border-radius:14px;line-height:0}
+.dw-imgw.zoom .dw-img{height:100%;max-height:none;width:auto;max-width:100%;object-fit:contain}
+.dw-imgw:not(.zoom) .dw-imf{display:contents}

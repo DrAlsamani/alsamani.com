@@ -446,9 +446,9 @@ html.dw-phone .tl-crumb,html.dw-phone .dw-head,html.dw-phone .dw-lead{display:no
 .dwp-num{font-size:2rem!important;text-align:center;font-weight:800}
 /* guess the picture */
 .dw-imgw{align-self:center;max-width:100%;border-radius:14px;overflow:hidden;line-height:0}
-.dw-imgw.zoom .dw-img{max-height:40vh;border-radius:0;transform-origin:var(--ox) var(--oy);animation:dwImz var(--d) cubic-bezier(.55,0,.85,.45) forwards}
+.dw-imgw.zoom .dw-img{max-height:max(130px,calc(100vh - 470px));border-radius:0;transform-origin:var(--ox) var(--oy);animation:dwImz var(--d) cubic-bezier(.55,0,.85,.45) forwards}
 .dw-imgw.done .dw-img{animation:none;transform:none;filter:none;transition:transform .6s,filter .6s}
-@keyframes dwImz{from{transform:scale(4);filter:blur(16px)}60%{filter:blur(4px)}to{transform:scale(1);filter:blur(0)}}
+@keyframes dwImz{from{transform:scale(var(--z,3.5));filter:blur(14px)}60%{filter:blur(4px)}to{transform:scale(1);filter:blur(0)}}
 .dw-imcr{align-self:center;opacity:.55;font-size:.75rem;margin-top:-4px}
 /* mixed evening */
 .dw-mixc{grid-column:1/-1;background:linear-gradient(135deg,#c9822b,#8a4f1c)}.dw-mixc em{background:#fff}
@@ -494,6 +494,16 @@ html.dw-phone .tl-crumb,html.dw-phone .dw-head,html.dw-phone .dw-lead{display:no
 .dw-ldt button.sel{outline:2px solid #e9a54a;outline-offset:2px}
 .dw-ldm{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:2px 0 4px;padding:8px;border-radius:10px;background:rgba(0,0,0,.2);font-size:.85rem}
 .dw-ldm button{all:unset;cursor:pointer;padding:5px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.3)}.dw-ldm [data-mmv]{border-color:var(--c)}.dw-ldm [data-mlead]{background:#e9a54a;color:#1d1b3a;border-color:#e9a54a;font-weight:700}
+
+.dw-imgw{flex:none}.dw-q:has(.dw-imgw) .dw-opts{flex:none}.dw-q:has(.dw-imgw) .dw-opts button{min-height:clamp(48px,8vh,96px)}
+.dwp-tv small{display:block;font-size:.85rem;font-weight:500;margin-top:4px;opacity:.85}
+.dwp-auto{font:inherit;font-weight:700;border:1.5px dashed var(--c);background:transparent;color:var(--ink);border-radius:12px;padding:10px}.dwp-auto.on{border-style:solid;background:var(--c);color:#fff}
+
+/* the picture takes only the room left, so the options below always show */
+.dw-imgw.zoom{flex:1 1 0;min-height:110px;display:flex;justify-content:center;overflow:visible;border-radius:0}
+.dw-imgw.zoom .dw-imf{display:block;height:100%;overflow:hidden;border-radius:14px;line-height:0}
+.dw-imgw.zoom .dw-img{height:100%;max-height:none;width:auto;max-width:100%;object-fit:contain}
+.dw-imgw:not(.zoom) .dw-imf{display:contents}
 </style>
 <div id="dw" class="dw-page"><noscript><span class="ar">تعمل هذه اللعبة مع تفعيل JavaScript.</span><span class="en">This game needs JavaScript.</span></noscript></div>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script>window.MD_CFG={"apiKey": "AIzaSyA50i75DT1Is1a6Yn6snW1_JVObc8S3F0Y", "authDomain": "maydan-705ae.firebaseapp.com", "databaseURL": "https://maydan-705ae-default-rtdb.europe-west1.firebasedatabase.app", "projectId": "maydan-705ae", "appId": "1:342187013133:web:d5c2396f0db413f3c51144"};window.MD_MARK="<svg class=\"md-mark\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><rect x=\"4\" y=\"4\" width=\"40\" height=\"40\" rx=\"12\" fill=\"#23336F\"/><path d=\"M24 9l4.2 6.8 7.8-1.8-1.8 7.8L41 24l-6.8 4.2 1.8 7.8-7.8-1.8L24 39l-4.2-6.8-7.8 1.8 1.8-7.8L7 24l6.8-4.2-1.8-7.8 7.8 1.8z\" fill=\"#C9822B\"/><circle cx=\"24\" cy=\"24\" r=\"6.5\" fill=\"#23336F\"/><circle cx=\"24\" cy=\"24\" r=\"3\" fill=\"#F3E3C7\"/></svg>";</script><script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script><script>/* Maydan library: ready quizzes to start at once or open and edit. Written in the editor's own format. */
@@ -1187,7 +1197,7 @@ window.Dawwara = (function () {
     }, 100);
   }
   const ring = dur => `<div class="dw-ring"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="44"/><circle cx="50" cy="50" r="44" id="dwArc"/></svg><b id="dwT">${NUM(dur)}</b></div>`;
-  const qBody = (x, live) => `<h2 class="dw-qt" dir="auto">${esc(x.q)}</h2>${x.img ? `<div class="dw-imgw${x.zoom ? ' zoom' : ''}" style="--d:${x.zd || 20}s;--ox:${x.ox || 50}%;--oy:${x.oy || 50}%"><img class="dw-img" src="${x.img}" alt="" referrerpolicy="no-referrer"></div>${x.cr ? `<small class="dw-imcr">${esc(x.cr)}</small>` : ''}` : ''}${isMC(x) ? `<div class="dw-opts n${x.opts.length}${live ? '' : ' dw-view'}">${x.opts.map((o, j) => `<button type="button" ${live ? 'data-j' : 'data-v'}="${j}" style="--o:var(--dwo${j})"${live ? ' disabled' : ''}><i>${LET()[j]}</i><span dir="auto">${esc(o)}</span></button>`).join('')}</div>` : ''}`;
+  const qBody = (x, live) => `<h2 class="dw-qt" dir="auto">${esc(x.q)}</h2>${x.img ? `<div class="dw-imgw${x.zoom ? ' zoom' : ''}" style="--d:${x.zd || 20}s;--ox:${x.ox || 50}%;--oy:${x.oy || 50}%;--z:${x.zs || 3.5}"><span class="dw-imf"><img class="dw-img" src="${x.img}" alt="" referrerpolicy="no-referrer"></span></div>${x.cr ? `<small class="dw-imcr">${esc(x.cr)}</small>` : ''}` : ''}${isMC(x) ? `<div class="dw-opts n${x.opts.length}${live ? '' : ' dw-view'}">${x.opts.map((o, j) => `<button type="button" ${live ? 'data-j' : 'data-v'}="${j}" style="--o:var(--dwo${j})"${live ? ' disabled' : ''}><i>${LET()[j]}</i><span dir="auto">${esc(o)}</span></button>`).join('')}</div>` : ''}`;
   const answerOf = x => isMC(x) ? x.ok.map(j => `${LET()[j]}) ${x.opts[j]}`).join(T(' و', ' & ')) : `${x.ans}${x.unit ? ' ' + x.unit : ''}`;
   const markRight = x => (el.querySelector('.dw-imgw') || { classList: { add() {} } }).classList.add('done') || el.querySelectorAll('[data-j],[data-v]').forEach(b => { const j = +(b.dataset.j || b.dataset.v); b.disabled = true; if (x.ok && x.ok.includes(j)) b.classList.add('ok'); });
   const after = (html) => { const f = el.querySelector('#dwFoot'); f.innerHTML = `<div class="dw-res">${html}<button type="button" class="dw-btn" data-main>${nextLabel()}</button></div>`; f.querySelector('[data-main]').onclick = go; el.querySelector('.dw-board').outerHTML = board(-1); };
@@ -1709,7 +1719,7 @@ window.Dawwara = (function () {
   let db = null, uid = null;
   async function fb() { if (db) return; if (!window.firebase || !window.MD_CFG) throw new Error('nofb'); if (!firebase.apps.length) firebase.initializeApp(MD_CFG); const u = (await new Promise(r => { const o = firebase.auth().onAuthStateChanged(x => { o(); r(x); }); })) || (await firebase.auth().signInAnonymously()).user; uid = u.uid; db = firebase.database(); }
   const TS = () => firebase.database.ServerValue.TIMESTAMP;
-  const ROOM = { lead: {}, mem: {}, sg: [], sgQ: null, star: {}, sgCred: null, names: {}, seen: {}, mirSig: '', rc: String(100000 + Math.floor(Math.random() * 900000)), rmt: '', rbEls: [], rbSig: '' };
+  const ROOM = { lead: {}, mem: {}, auto: {}, autoQ: {}, sg: [], sgQ: null, star: {}, sgCred: null, names: {}, seen: {}, mirSig: '', rc: String(100000 + Math.floor(Math.random() * 900000)), rmt: '', rbEls: [], rbSig: '' };
   // the host's phone as a remote: it sees the buttons on the screen and presses them
   const rcList = () => !el ? [] : [...el.querySelectorAll('button')].filter(b => !b.disabled && b.offsetParent && !b.closest('.dw-board,[data-close],[data-end],[data-reset],.dw-join')).sort((a, b) => (b.matches('[data-main]') ? 1 : 0) - (a.matches('[data-main]') ? 1 : 0)).slice(0, 60);
   const rcLabel = b => ([...b.childNodes].map(n => (n.textContent || '').trim()).filter(Boolean).join(' · ') || b.title || b.getAttribute('aria-label') || '').replace(/\s+/g, ' ').slice(0, 40);
@@ -1731,6 +1741,13 @@ window.Dawwara = (function () {
     const kind = it.a != null ? 'a' : it.s ? 's' : 'au'; ROOM.sg = ROOM.sg.filter(x => !(x.u === u && (x.a != null ? 'a' : x.s ? 's' : 'au') === kind)); ROOM.sg.push(it); if (D.cfg.remote) { SND.tick(); sgPaint(); } pub();
   }
   const tally = k => { const c = {}; ROOM.sg.filter(x => x.k === k && x.a != null).forEach(x => { c[x.a] = (c[x.a] || 0) + 1; }); return Object.entries(c).sort((a, b) => b[1] - a[1]).map(([a, n]) => `${LET()[a] || ''} ${NUM(n)}`).join(' · '); };
+  const tnames = k => ROOM.sgQ === D.q ? ROOM.sg.filter(x => x.k === k && x.a != null).map(x => `${x.n}: ${LET()[x.a] || ''}`).join(' · ') : '';
+  // a leader may let the group's majority answer by itself: once every member has voted, or in the last five seconds
+  setInterval(() => { if (!D || !D.q || !D.groups || !D.cfg || !D.cfg.pall || D.q.locked || !D.q.onAns || ROOM.sgQ !== D.q) return;
+    D.groups.forEach((g, k) => { if (!ROOM.auto[k] || ROOM.autoQ[k] === D.q) return; const vs = ROOM.sg.filter(x => x.k === k && x.a != null); if (!vs.length) return;
+      const mem = Object.keys(ROOM.mem).filter(u => ROOM.mem[u] === k && u !== ROOM.lead[k]).length, near = D.q.left != null && D.q.left <= 5;
+      if (vs.length < mem && !near) return; const c = {}; vs.forEach(x => { c[x.a] = (c[x.a] || 0) + 1; }); const best = Object.keys(c).sort((a, b) => c[b] - c[a])[0];
+      ROOM.autoQ[k] = D.q; D.q.onAns(k, +best); }); }, 400);
   // the members whose own pick was the right one, counted for the star of the evening
   function sgCredit() { if (!ROOM.sg.length || ROOM.sgCred === D.q || !el) return; const ok = el.querySelector('[data-j].ok'); if (!ok) return; const j = +ok.dataset.j; ROOM.sgCred = D.q;
     ROOM.sg.filter(x => x.a === j).forEach(x => { const r = ROOM.star[x.u] || (ROOM.star[x.u] = { n: x.n, k: x.k, c: 0 }); r.c++; }); }
@@ -1772,6 +1789,7 @@ window.Dawwara = (function () {
     if (v.k === 's') return sugAdd(u, km, v);
     if (v.k === 'b' && D.q && D.q.onBuzz) D.q.onBuzz(km, v.t);
     const k = kl; if (k < 0) return;
+    if (v.k === 'u') { ROOM.auto[k] = !!v.x; return pub(); }
     if (v.k === 'a' && D.q && D.q.onAns) D.q.onAns(k, +v.c);
     if (v.k === 'c') useChance(k, String(v.c), v.x >= 0 ? v.x : -1);
     if (v.k === 'p' && D.pickCb) D.pickCb(k, v.x);
@@ -1783,7 +1801,7 @@ window.Dawwara = (function () {
   function pub(o) {
     if (!ROOM.ref) return; const G = D && D.groups;
     const base = G ? { names: G.map(g => g.name), cols: G.map(g => g.col), sc: G.map(g => g.score), ch: G.map(g => D.cfg.chn !== false ? g.chances || '' : ''), dbl: G.map(g => g.dbl ? 1 : 0) } : { names: (D.cfg.names || []).slice(0, D.cfg.n).map((n, k) => n || NAMES()[k]), cols: COL.slice(0, D.cfg.n) };
-    base.rem = D && D.cfg && D.cfg.remote ? 1 : 0; base.pa = !base.rem && MULTI() ? 1 : 0; if ((base.rem || base.pa) && G) base.tv = G.map((g, k) => ROOM.sgQ === D.q ? tally(k) : '');
+    base.rem = D && D.cfg && D.cfg.remote ? 1 : 0; base.pa = !base.rem && MULTI() ? 1 : 0; if ((base.rem || base.pa) && G) { base.tv = G.map((g, k) => ROOM.sgQ === D.q ? tally(k) : ''); base.tn = G.map((g, k) => tnames(k)); base.au = G.map((g, k) => ROOM.auto[k] ? 1 : 0); }
     if (o) D.lastPub = o; if (ROOM.rmt) { if (!ROOM.rbSig) { ROOM.rbEls = rcList(); } Object.assign(base, { rmt: ROOM.rmt, rb: ROOM.rbEls.map(rcLabel).concat(['']).slice(0, 61), rbm: ROOM.rbEls[0] && ROOM.rbEls[0].matches('[data-main]') ? 1 : 0, rt: ((el && el.querySelector('h2')) || {}).textContent || '' }); }
     ROOM.ref.child('g').set(Object.assign(base, D.lastPub || { ph: 'lobby' }, { t: TS() })).catch(() => {});
   }
@@ -1902,7 +1920,8 @@ window.Dawwara = (function () {
       root.innerHTML = `<div class="dwp" style="--c:${col}"><div class="dwp-top"><b dir="auto">${esc(g.names[k])}</b><span>${NUM((g.sc || [])[k] || 0)}${g.dbl && g.dbl[k] ? ' ×٢' : ''}</span></div>${body}
         ${chs ? `<div class="dwp-ch"><p>${T('فرصكم', 'Your chances')}</p>${chs.split('').map(c => `<button type="button" data-ch="${c}">${CN[c]}</button>`).join('')}</div>` : ''}</div>`;
       root.querySelectorAll('[data-a]').forEach(b => b.onclick = () => { ans = +b.dataset.a; if (g.rem || (g.pa && !isLead)) { send('s', '', k, { a: ans }); said = g.rem ? T('تم إرسال اختيارك إلى المدير', 'Your choice was sent to the host') : T('تم إرسال صوتك إلى قائد المجموعة', 'Your vote was sent to the group’s leader'); } else send('a', ans, 0); buzz(25); paint(); });
-      if (multi && root.querySelector('.dwp-opts')) root.querySelector('.dwp-opts').insertAdjacentHTML(g.pa && isLead ? 'beforebegin' : 'afterend', `${(g.tv || [])[k] ? `<p class="dwp-tv${g.pa && isLead ? ' lead' : ''}">${g.pa && isLead ? T('أصوات مجموعتك', 'Your group’s votes') : T('اختيارات مجموعتك', 'Your group leans')}: ${esc(g.tv[k])}</p>` : g.pa && !isLead ? `<p class="dwp-h">${T('صوّت، والقائد يعتمد الإجابة', 'Vote; the leader gives the answer')}</p>` : ''}${said && !root.querySelector('.dwp-say') ? `<p class="dwp-ok">${said}</p>` : ''}`);
+      if (multi && root.querySelector('.dwp-opts')) root.querySelector('.dwp-opts').insertAdjacentHTML(g.pa && isLead ? 'beforebegin' : 'afterend', `${(g.tv || [])[k] ? `<p class="dwp-tv${g.pa && isLead ? ' lead' : ''}">${g.pa && isLead ? T('أصوات مجموعتك', 'Your group’s votes') : T('اختيارات مجموعتك', 'Your group leans')}: ${esc(g.tv[k])}${(g.tn || [])[k] ? `<small dir="auto">${esc(g.tn[k])}</small>` : ''}</p>` : g.pa && !isLead ? `<p class="dwp-h">${T('صوّت، والقائد يعتمد الإجابة', 'Vote; the leader gives the answer')}${(g.au || [])[k] ? ` · ${T('الإجابة التلقائية برأي الأغلبية مفعّلة', 'the majority answers automatically')}` : ''}</p>` : ''}${g.pa && isLead ? `<button type="button" class="dwp-auto${(g.au || [])[k] ? ' on' : ''}" data-auto>${(g.au || [])[k] ? T('الإجابة التلقائية برأي الأغلبية: مفعّلة', 'Majority answers automatically: on') : T('فعّل الإجابة التلقائية برأي الأغلبية', 'Let the majority answer automatically')}</button>` : ''}${said && !root.querySelector('.dwp-say') ? `<p class="dwp-ok">${said}</p>` : ''}`);
+      const atb = root.querySelector('[data-auto]'); if (atb) atb.onclick = () => { send('u', '', (g.au || [])[k] ? 0 : 1); buzz(20); };
       const txi = root.querySelector('#dwpTx'); if (txi) { txi.oninput = () => { tx = txi.value; }; txi.onblur = () => setTimeout(() => { if (pend) paint(); }, 50);
         const go1 = () => { const v = txi.value.trim(); if (!v) return; send('s', '', k, { s: v }); tx = ''; said = T('تم إرسال إجابتك إلى المدير', 'Your answer was sent to the host'); txi.blur(); buzz(25); paint(); };
         root.querySelector('[data-txs]').onclick = go1; txi.onkeydown = e => { if (e.key === 'Enter') go1(); }; }
@@ -2483,7 +2502,7 @@ window.Dawwara = (function () {
     for (const [L, j] of W.list) { if (xs.length >= n) break;
       const [k, name] = W.B[L][j], src = k.startsWith('f:') ? `https://flagcdn.com/w640/${k.slice(2)}.png` : img[key(k.slice(2))]; if (!src) continue;
       const wrong = shuf(W.B[L].map(x => x[1]).filter(x => x !== name)).slice(0, 3), opts = shuf([name, ...wrong]);
-      xs.push({ type: 'mc', q: RD.q[L] || T('ما هذا؟', 'What is this?'), opts, ok: [opts.indexOf(name)], img: src, zoom: 1, zd: Math.round((D.cfg.imt || 20) * .85), ox: 25 + Math.round(Math.random() * 50), oy: 25 + Math.round(Math.random() * 50), cr: k.startsWith('w:') ? T('الصورة من ويكيبيديا', 'Image: Wikipedia') : '' });
+      xs.push({ type: 'mc', q: RD.q[L] || T('ما هذا؟', 'What is this?'), opts, ok: [opts.indexOf(name)], img: src, zoom: 1, zd: Math.round((D.cfg.imt || 20) * .85), ox: 25 + Math.round(Math.random() * 50), oy: 25 + Math.round(Math.random() * 50), zs: k.startsWith('f:') ? 2.2 : 3.5, cr: k.startsWith('w:') ? T('الصورة من ويكيبيديا', 'Image: Wikipedia') : '' });
       W.used.add(L + ':' + j); }
     hrSave(W.used);
     if (!xs.length) { alert(T('تعذّر تحميل الصور. يُرجى التحقق من الاتصال.', 'Could not load the pictures.')); if (solo === true) return; return wrSetup('im'); }
