@@ -278,8 +278,8 @@ html.dw-phone .tl-crumb,html.dw-phone .dw-head,html.dw-phone .dw-lead{display:no
 .dw-tags b{font-size:clamp(11px,1.1vw,15px);font-weight:600;background:#fff;color:#14204a;border-inline-start:4px solid var(--c);border-radius:99px;padding:2px 9px;text-decoration:none}
 .dw-tags b.n::after{content:' ✗';color:#b0533a}.dw-tags b.y::after{content:' ✓';color:#2f7d5b}
 .dw-opts button.no .dw-tags{text-decoration:none}
-.dw-flash{min-height:1.4em;margin:6px 0 0;text-align:center;font-size:clamp(15px,1.6vw,22px);color:#fff}
-.dw-flash.on{animation:dwFl .5s ease-out}@keyframes dwFl{from{transform:scale(1.15);opacity:.3}to{transform:none;opacity:1}}
+.dw-say{min-height:1.4em;margin:6px 0 0;text-align:center;font-size:clamp(15px,1.6vw,22px);color:#fff}
+.dw-say.on{animation:dwFl .5s ease-out}@keyframes dwFl{from{transform:scale(1.15);opacity:.3}to{transform:none;opacity:1}}
 .dw-steal button[aria-pressed=true]{box-shadow:0 0 0 3px #fff inset}
 .dwp-opts button:disabled{opacity:.3;text-decoration:line-through}
 /* «حروف» ready game */
@@ -352,3 +352,33 @@ html.dw-phone .tl-crumb,html.dw-phone .dw-head,html.dw-phone .dw-lead{display:no
 .dw-rol button.on i{background:#e9a54a}.dw-rol small{font-size:.7em;font-weight:500;color:#5b6282}
 .dw-rol button.ok{border-color:#2f7d5b}.dw-rol button.ok i{background:#2f7d5b;color:#fff}.dw-rol button.no{border-color:#b0533a}.dw-rol button.no i{background:#b0533a;color:#fff}
 .dw-rol button:disabled{cursor:default}
+/* word race */
+.dw-wrw{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;width:min(980px,94vw);margin:6px auto 0}
+.dw-wrw span{background:#fff;color:#14204a;border-radius:12px;padding:10px 16px;font-size:clamp(18px,2vw,30px);font-weight:700;box-shadow:0 4px 0 rgba(0,0,0,.15)}
+.dw-wrw.done span{background:#2f7d5b;color:#fff}
+.dw-wrt{display:grid;gap:8px;width:min(980px,94vw);margin:14px auto 0}
+.dw-wrrow{display:grid;grid-template-columns:minmax(110px,180px) 1fr auto;align-items:center;gap:14px;background:rgba(255,255,255,.08);border-inline-start:6px solid var(--c);border-radius:12px;padding:10px 14px}
+.dw-wrrow b{font-size:clamp(16px,1.6vw,22px)}.dw-wrrow small{opacity:.85;white-space:nowrap}
+.dw-wrrow.won{background:rgba(47,125,91,.35)}.dw-wrrow.off{opacity:.45}
+.dw-wrc{display:flex;gap:6px;flex-wrap:wrap}.dw-wrc i{width:clamp(22px,2.4vw,34px);aspect-ratio:1;border-radius:6px;background:rgba(255,255,255,.18);transition:background .3s}
+.dw-wrc i.ok{background:#3fa874}.dw-wrc i.no{background:#8d93a8}
+.dw-wrans{font-size:clamp(20px,2.2vw,32px);font-weight:800;margin:0 0 10px}.dw-wrans small{display:block;font-size:.6em;font-weight:500;opacity:.8}
+.dw-wrph{border:1px dashed var(--line,#d6d9e4);border-radius:14px;padding:12px 14px}.dw-wrph h3{margin:0 0 8px;font-size:1rem}
+.dw-wrcats{flex-wrap:wrap}
+.dwp-slots{display:flex;flex-wrap:wrap;gap:8px;min-height:60px;padding:10px;border-radius:14px;background:var(--surface,#f4f5f9)}
+.dwp-slots button{font:inherit;font-weight:800;font-size:1.125rem;border:2px solid var(--c);background:#fff;color:#14204a;border-radius:10px;padding:10px 12px;min-width:44px}
+.dwp-slots button.e{border-style:dashed;color:#9aa0b5;font-weight:500}.dwp-slots button.ok{background:#2f7d5b;border-color:#2f7d5b;color:#fff}
+.dwp-pool{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.dwp-pool button{font:inherit;font-weight:800;font-size:1.125rem;border:0;background:var(--c);color:#fff;border-radius:10px;padding:12px 14px;box-shadow:0 4px 0 rgba(0,0,0,.2)}
+.dwp-go:disabled{opacity:.45}
+.dwp-wans{margin:0;text-align:center;font-size:1.25rem;font-weight:700;line-height:1.8}.dwp-wans small{display:block;color:var(--muted);font-size:.875rem}
+.dwp-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.dwp-grid.n{grid-template-columns:repeat(5,1fr)}
+.dwp-grid button{font:inherit;font-weight:800;font-size:1.25rem;border:0;border-radius:12px;padding:12px 4px;background:var(--c);color:#fff;display:grid;gap:2px;line-height:1.3}
+.dwp-grid button small{font-size:.7rem;font-weight:500;opacity:.8}.dwp-grid button:disabled{opacity:.25}
+.dwp-back{font:inherit;font-weight:700;border:1px solid var(--line,#d6d9e4);background:transparent;color:var(--ink);border-radius:12px;padding:12px}
+.dwp-help{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;border-top:1px dashed var(--line,#d6d9e4);padding-top:12px}
+.dwp-help button{font:inherit;font-weight:700;border:2px solid #e9a54a;background:transparent;color:var(--ink);border-radius:999px;padding:9px 14px}.dwp-help button:disabled{opacity:.4}
+.dwp-ro{display:grid;gap:8px}.dwp-ro button{font:inherit;font-weight:600;text-align:start;display:flex;gap:10px;align-items:center;border:2px solid var(--line,#d6d9e4);background:#fff;color:#14204a;border-radius:12px;padding:12px;line-height:1.6}
+.dwp-ro i{flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-weight:800;background:#eef0f6}.dwp-ro button.on{border-color:var(--c)}.dwp-ro button.on i{background:var(--c);color:#fff}
+.dw-hrjudge .first{outline:4px solid #e9a54a;outline-offset:2px}
+.dw-wrph summary{cursor:pointer;font-weight:700}.dw-wrph summary small{display:block;font-weight:400;color:var(--muted);font-size:.85rem}

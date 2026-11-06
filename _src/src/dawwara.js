@@ -326,7 +326,7 @@ window.Dawwara = (function () {
   /* the phone race: the first team to answer right takes the points; a wrong pick is struck out on the screen with the team's name and the rest go on */
   function askRace(s) {
     const x = s.x, dur = D.cfg.time || x.time || 30, st = D.q = { x, dur, left: dur, out: [], no: [], tags: {}, sel: null, locked: false };
-    shell(`${board(-1)}<div class="dw-q dw-race"><div class="dw-qh"><span class="dw-who" id="dwWho">${T('سباق: أول إجابة صحيحة تفوز', 'Race: the first right answer wins')}</span>${ring(dur)}</div>${qBody(x, true)}<p class="dw-flash" id="dwRf" aria-live="polite"></p><div class="dw-foot" id="dwFoot"></div></div>`, 'dw-ask');
+    shell(`${board(-1)}<div class="dw-q dw-race"><div class="dw-qh"><span class="dw-who" id="dwWho">${T('سباق: أول إجابة صحيحة تفوز', 'Race: the first right answer wins')}</span>${ring(dur)}</div>${qBody(x, true)}<p class="dw-say" id="dwRf" aria-live="polite"></p><div class="dw-foot" id="dwFoot"></div></div>`, 'dw-ask');
     const pts = () => st.out.length ? 50 : 100;
     const send = () => pub({ ph: 'race', n: x.opts.length, tf: x.type === 'tf' ? 1 : 0, out: st.out, no: st.no, i: D.t });
     const open = () => el.querySelectorAll('[data-j]').forEach(b => { b.disabled = st.locked || st.no.includes(+b.dataset.j); });
@@ -827,6 +827,8 @@ window.Dawwara = (function () {
     if (v.k === 'a' && D.q && D.q.onAns) D.q.onAns(k, +v.c);
     if (v.k === 'c') useChance(k, String(v.c), v.x >= 0 ? v.x : -1);
     if (v.k === 'p' && D.pickCb) D.pickCb(k, v.x);
+    if (v.k === 'w' && D.q && D.q.onWord) D.q.onWord(k, +v.x || 0);
+    if (v.k === 'h' && D.q && D.q.onHelp) D.q.onHelp(k, String(v.c), +v.x);
   }
   // what the phones see: the phase, the scores, each team's chances
   function pub(o) {
@@ -851,6 +853,25 @@ window.Dawwara = (function () {
   // the phone itself
   function phone(root, pin) {
     let me = null, g = null, lead = {}, ans = null, buzzed = false, lastKey = '';
+    let W = { i: null, sl: [], lock: [], a: -1, cool: 0 }, RO = { i: null, p: [] };
+    const HL = () => ({ o: T('اعرض الخيارات', 'Show the options'), d: T('احذف إجابتين', 'Remove two'), s: T('غيّر السؤال', 'Change the question'), t: T('وقت إضافي', 'Extra time'), x: T('اسأل الخصم', 'Ask a rival'), f: T('اكشف الحدث الأول', 'Reveal the first') });
+    const helpUI = hl => hl ? `<div class="dwp-help">${hl.split('').map(c => `<button type="button" data-hp="${c}">${HL()[c] || c}</button>`).join('')}</div>` : '';
+    const roUI = () => { if (RO.i !== g.i) RO = { i: g.i, p: [] }; if (g.fx >= 0 && RO.p[0] !== g.fx) RO.p = [g.fx].concat(RO.p.filter(x => x !== g.fx));
+      return `<p class="dwp-h">${T('اضغطوا الأحداث بالترتيب: الأقدم أولًا', 'Tap them in order, earliest first')}</p><div class="dwp-ro">${(g.ev || []).map((e, t) => { const p = RO.p.indexOf(t); return `<button type="button" data-ro="${t}" class="${p >= 0 ? 'on' : ''}" dir="auto"><i>${p >= 0 ? NUM(p + 1) : ''}</i>${esc(e)}</button>`; }).join('')}</div>
+        <button type="button" class="dwp-go" data-rsend${RO.p.length === (g.ev || []).length ? '' : ' disabled'}>${T('أرسل الترتيب', 'Send the order')}</button>`; };
+    // word race: slots to fill in order; after each answer the right words stay and the rest go back
+    const wordUI = k => {
+      const n = (g.w || []).length; if (W.i !== g.i || W.sl.length !== n) W = { i: g.i, sl: Array(n).fill(null), lock: Array(n).fill(false), a: (g.a || [])[k] || 0, cool: 0 };
+      const a = (g.a || [])[k] || 0, r = (g.r || [])[k] || '';
+      if (a !== W.a) { W.a = a; if (r && r !== '-') r.split('').forEach((c, p) => { if (c === '1') W.lock[p] = true; else { W.lock[p] = false; W.sl[p] = null; } }); }
+      const won = (g.won || []).indexOf(k);
+      if (won >= 0 || g.done) return `<p class="dwp-big">${won >= 0 ? T(won ? 'رتّبتموها ثانيًا' : 'رتّبتموها أولًا!', won ? 'You got it second' : 'You got it first!') : T('انتهت الجملة', 'Time is up')}</p>${g.ans ? `<p class="dwp-wans" dir="auto">${esc(g.ans)}${g.by ? `<small>${esc(g.by)}</small>` : ''}</p>` : `<p class="dwp-h">${T('انتظروا البقية', 'Wait for the others')}</p>`}`;
+      const full = W.sl.every(x => x != null), cool = Date.now() < W.cool;
+      return `<p class="dwp-h">${a ? T('الأخضر في مكانه. أكملوا الباقي', 'Green is in place. Fix the rest') : T('اضغطوا الكلمات بالترتيب', 'Tap the words in order')}</p>
+        <div class="dwp-slots">${W.sl.map((t, p) => `<button type="button" data-sl="${p}" class="${W.lock[p] ? 'ok' : t == null ? 'e' : ''}"${W.lock[p] ? ' disabled' : ''} dir="auto">${t == null ? NUM(p + 1) : esc(g.w[t])}</button>`).join('')}</div>
+        <div class="dwp-pool">${g.w.map((w, t) => W.sl.includes(t) ? '' : `<button type="button" data-wt="${t}" dir="auto">${esc(w)}</button>`).join('')}</div>
+        <button type="button" class="dwp-go" data-wsend${full && !cool ? '' : ' disabled'}>${cool ? T('لحظة…', 'One moment…') : T('أرسل الترتيب', 'Send the order')}</button>`;
+    };
     const ph0 = () => (g && g.ph) || '';
     const send = (k, c, x) => db.ref('kh/' + pin + '/mv/' + uid).set({ k, c: String(c == null ? '' : c).slice(0, 3), x: +x || 0, t: TS() }).catch(() => {});
     const buzz = p => { try { navigator.vibrate && navigator.vibrate(p); } catch (e) {} };
@@ -865,15 +886,33 @@ window.Dawwara = (function () {
       let body = '';
       if (ph === 'race') body = (g.out || []).includes(k) ? `<p class="dwp-big">${T('إجابتكم خاطئة', 'Your answer was wrong')}</p><p class="dwp-h">${T('انتظروا السؤال التالي', 'Wait for the next question')}</p>` : `<p class="dwp-h">${T('سباق! أول إجابة صحيحة تفوز', 'Race! The first right answer wins')}</p>${opts(g.n, g.tf, g.no)}`;
       else if (ph === 'all') body = `<p class="dwp-h">${T('سؤال للجميع: اختاروا الإجابة', 'Everyone answers: choose')}</p>${opts(g.n, g.tf)}`;
-      else if (ph === 'buzz') body = (g.out || []).includes(k) ? `<p class="dwp-big">${T('خرجتم من هذا السؤال', 'You are out of this one')}</p>` : g.who === k ? `<p class="dwp-h">${T('دوركم: اختاروا الإجابة', 'Your turn: choose')}</p>${opts(g.n, g.tf)}` : g.who != null ? `<p class="dwp-big">${T('يجاوب الآن', 'Now answering')}: ${esc(g.names[g.who])}</p>` : `<button type="button" class="dwp-buzz" data-bz${buzzed ? ' disabled' : ''}>${buzzed ? T('ضغطت!', 'Pressed!') : T('اضغط!', 'Press!')}</button>`;
+      else if (ph === 'buzz') body = (g.out || []).includes(k) ? `<p class="dwp-big">${T('خرجتم من هذا السؤال', 'You are out of this one')}</p>` : g.who === k ? (g.say ? `<p class="dwp-big">${T('سبقتم! قولوا الإجابة للمدير', 'First! Say the answer to the host')}</p>` : `<p class="dwp-h">${T('دوركم: اختاروا الإجابة', 'Your turn: choose')}</p>${opts(g.n, g.tf)}`) : g.who != null ? `<p class="dwp-big">${T('يجاوب الآن', 'Now answering')}: ${esc(g.names[g.who])}</p>` : `<button type="button" class="dwp-buzz" data-bz${buzzed ? ' disabled' : ''}>${buzzed ? T('ضغطت!', 'Pressed!') : T('اضغط!', 'Press!')}</button>`;
       else if (ph === 'turn') body = g.team === k ? (g.text ? `<p class="dwp-big">${T('قل الإجابة للمدير', 'Say the answer to the host')}</p>` : `<p class="dwp-h">${T('سؤالكم: اختاروا الإجابة', 'Your question: choose')}</p>${opts(g.n, g.tf)}`) : `<p class="dwp-big">${T('دور', 'Turn:')} ${esc(g.names[g.team] || '')}</p>`;
       else if (ph === 'pick') body = g.by === k ? `<p class="dwp-h">${T(`اختاروا سؤال ${g.names[g.for]}: الأصعب عليهم`, `Choose ${g.names[g.for]}’s question: the hardest`)}</p><div class="dwp-pick">${(g.opts || []).map((o, i) => `<button type="button" data-pk="${i}"><small>${esc(o.cat)}</small>${esc(o.q)}</button>`).join('')}</div>` : `<p class="dwp-big">${esc(g.names[g.by] || '')} ${T('تختار سؤالًا', 'is choosing a question')}</p>`;
+      else if (ph === 'word') body = wordUI(k);
+      else if (ph === 'hrl' || ph === 'hrn') body = g.team !== k ? `<p class="dwp-big">${esc(g.names[g.team] || '')} ${T('تختار', 'is choosing')}</p>` : ph === 'hrl'
+        ? `<p class="dwp-h">${esc(g.pk || '')}</p><div class="dwp-grid">${(g.lk || []).map((L, j) => `<button type="button" data-pk="${j}"${(g.ls || [])[j] ? '' : ' disabled'} dir="auto">${esc(L)}<small>${NUM((g.ls || [])[j] || 0)}</small></button>`).join('')}</div>`
+        : `<p class="dwp-h"><b dir="auto">${esc(g.L)}</b>: ${T('اختاروا رقم السؤال', 'pick a question number')}</p><div class="dwp-grid n">${(g.u || '').split('').map((u, j) => `<button type="button" data-pk="${j}"${u === '1' ? ' disabled' : ''}>${NUM(j + 1)}</button>`).join('')}</div><button type="button" class="dwp-back" data-pk="-1">${g.cats ? T('فئة أخرى', 'Another category') : T('حرف آخر', 'Another letter')}</button>`;
+      else if (ph === 'hra') { const who = g.ask >= 0 ? g.ask : g.team;
+        body = who !== k ? `<p class="dwp-big">${T('يجيب', 'Answering')}: ${esc(g.names[who] || '')}</p>${g.team === k ? `<p class="dwp-h">${T('إن أخطأت فالنقاط لكم', 'If they miss, the points are yours')}</p>` : ''}`
+          : `${g.ask >= 0 ? `<p class="dwp-h">${T('سؤال محوّل إليكم من', 'A question passed to you by')} ${esc(g.names[g.team] || '')}</p>` : ''}${g.n ? `<p class="dwp-h">${T('اختاروا الإجابة', 'Choose the answer')}</p>${opts(g.n, 0, g.gone)}` : `<p class="dwp-big">${T('قولوا الإجابة للمدير', 'Say the answer to the host')}</p>`}${helpUI(g.hl)}`; }
+      else if (ph === 'hro') body = g.team !== k ? `<p class="dwp-big">${T('ترتّب الآن', 'Now ordering')}: ${esc(g.names[g.team] || '')}</p>` : roUI() + helpUI(g.hl);
       else if (ph === 'intro') body = `<p class="dwp-big">${g.team === k ? T('دوركم! استعدوا', 'Your turn! Get ready') : T('دور', 'Turn:') + ' ' + esc(g.names[g.team] || '')}</p>`;
-      else if (ph === 'wait' && g.won != null) body = `<p class="dwp-big">${g.won === k ? T('أصبتم! النقاط لكم', 'Right! The points are yours') : g.won >= 0 ? `${T('سبقكم', 'Beaten by')} ${esc(g.names[g.won] || '')}` : T('لم يُصب أحد', 'Nobody got it')}</p>`;
+      else if (ph === 'wait' && g.won != null) body = `<p class="dwp-big">${g.won === k ? T('أصبتم! النقاط لكم', 'Right! The points are yours') : g.won >= 0 ? `${g.pt ? T('النقاط لـ', 'Points to') : T('سبقكم', 'Beaten by')} ${esc(g.names[g.won] || '')}` : T('لم يُصب أحد', 'Nobody got it')}</p>`;
       else body = `<p class="dwp-big">${ph === 'end' ? T('انتهت الأمسية', 'The evening is over') : ph === 'chal' ? T('تحدٍّ على الشاشة', 'A challenge on the screen') : T('انتبه للشاشة', 'Watch the screen')}</p>`;
       root.innerHTML = `<div class="dwp" style="--c:${col}"><div class="dwp-top"><b dir="auto">${esc(g.names[k])}</b><span>${NUM((g.sc || [])[k] || 0)}${g.dbl && g.dbl[k] ? ' ×٢' : ''}</span></div>${body}
         ${chs ? `<div class="dwp-ch"><p>${T('فرصكم', 'Your chances')}</p>${chs.split('').map(c => `<button type="button" data-ch="${c}">${CN[c]}</button>`).join('')}</div>` : ''}</div>`;
       root.querySelectorAll('[data-a]').forEach(b => b.onclick = () => { ans = +b.dataset.a; send('a', ans, 0); buzz(25); paint(); });
+      root.querySelectorAll('[data-ro]').forEach(b => b.onclick = () => { const t = +b.dataset.ro, p = RO.p.indexOf(t); if (p >= 0) { if (p === RO.p.length - 1 && !(g.fx >= 0 && p === 0)) RO.p.pop(); } else RO.p.push(t); buzz(15); paint(); });
+      const rsd = root.querySelector('[data-rsend]'); if (rsd) rsd.onclick = () => { send('w', '', RO.p.reduce((x, t, p) => x + t * Math.pow(16, p), 0)); rsd.disabled = true; buzz(30); };
+      root.querySelectorAll('[data-hp]').forEach(b => b.onclick = () => { const c = b.dataset.hp;
+        if (c === 'x') { const others = (g.names || []).map((n, i) => i).filter(i => i !== k);
+          const d = document.createElement('div'); d.className = 'dwp-sheet'; d.innerHTML = `<div><p>${HL().x}: ${T('أي مجموعة؟', 'which group?')}</p>${others.map(i => `<button type="button" data-t="${i}" style="--c:${g.cols[i]}" dir="auto">${esc(g.names[i])}</button>`).join('')}<button type="button" class="x">${T('إلغاء', 'Cancel')}</button></div>`; root.appendChild(d);
+          d.querySelectorAll('[data-t]').forEach(t => t.onclick = () => { send('h', 'x', +t.dataset.t); d.remove(); }); d.querySelector('.x').onclick = () => d.remove(); return; }
+        send('h', c, -1); b.disabled = true; buzz(25); });
+      root.querySelectorAll('[data-wt]').forEach(b => b.onclick = () => { const p = W.sl.indexOf(null); if (p < 0) return; W.sl[p] = +b.dataset.wt; buzz(15); paint(); });
+      root.querySelectorAll('[data-sl]').forEach(b => b.onclick = () => { const p = +b.dataset.sl; if (W.lock[p] || W.sl[p] == null) return; W.sl[p] = null; paint(); });
+      const ws = root.querySelector('[data-wsend]'); if (ws) ws.onclick = () => { if (W.sl.some(x => x == null)) return; send('w', String(((g.a || [])[k] || 0) + 1), W.sl.reduce((x, t, p) => x + t * Math.pow(16, p), 0)); W.cool = Date.now() + 2600; buzz(30); paint(); setTimeout(paint, 2700); };
       const bz = root.querySelector('[data-bz]'); if (bz) bz.onclick = () => { buzzed = true; send('b', '', 0); buzz([40, 30, 40]); paint(); };
       root.querySelectorAll('[data-pk]').forEach(b => b.onclick = () => { send('p', '', +b.dataset.pk); buzz(30); });
       root.querySelectorAll('[data-ch]').forEach(b => b.onclick = () => {
@@ -1019,7 +1058,7 @@ window.Dawwara = (function () {
       <div class="dw-pod">${R.slice(0, 3).map((g, k) => `<div class="p${k + 1}" style="--c:${g.col}"><span dir="auto">${esc(g.name)}</span><b>${NUM(g.score)}</b><i>${NUM(k + 1)}</i></div>`).join('')}</div>
       <table class="dw-tab"><tr><th>${T('المجموعة', 'Group')}</th><th>${T('النقاط', 'Points')}</th><th>${T('إجابات صحيحة', 'Right')}</th><th>${T('سرقات', 'Steals')}</th><th>${T('تحديات فازت بها', 'Challenges won')}</th></tr>${R.map(g => `<tr><td dir="auto"><i style="background:${g.col}"></i>${esc(g.name)}</td><td>${NUM(g.score)}</td><td>${NUM(g.right)}</td><td>${NUM(g.steals)}</td><td>${NUM(g.chal || 0)}</td></tr>`).join('')}</table>
       <div class="dw-acts"><button type="button" class="dw-btn" data-main>${T('العب مرة ثانية', 'Play again')}</button><button type="button" class="dw-btn ghost" data-cert>${IC.print}${T('اطبع شهادة الفائز', 'Print the winner’s certificate')}</button></div></div>`, 'dw-in');
-    el.querySelector('[data-main]').onclick = () => { if (D.mode === 'hr') return hrSetup(D.rk); D.steps = null; setup(); };
+    el.querySelector('[data-main]').onclick = () => { if (D.mode === 'wr') return wrSetup(); if (D.mode === 'hr') return hrSetup(D.rk); D.steps = null; setup(); };
     el.querySelector('[data-cert]').onclick = () => cert(tie ? R.filter(g => g.score === w.score) : [w]);
   }
 
@@ -1059,7 +1098,9 @@ window.Dawwara = (function () {
     mt: { file: 'amthal.json', t: T('أكمل المثل', 'Finish the proverb'), cats: true, pick: T('اختاروا الفئة', 'Pick a category'), hint: () => T('أكملوا المثل', 'Finish the proverb'),
       rule: T('تختار المجموعة صاحبة الدور فئة ثم رقمًا، فيظهر أول المثل وتكمله. التكملة دون خيارات ١٠٠ نقطة، ومع عرض الخيارات ٥٠، وإن أخطأت فلأول مجموعة أخرى تكمله نصف النقاط.', 'The group on turn picks a category, then a number; the start of a proverb appears and they finish it. Without options 100, with the options 50; after a miss, the first other group gets half.'),
       q: (L, q) => `${q} …`, full: (q, a) => `${q} ${a}`,
-      ai: (L, q, a) => `مثل أو قول عربي مشهور أوله: «${q}» وتكملته الصحيحة: «${a}».\nاكتب ثلاث تكملات خاطئة مقنعة بطول التكملة الصحيحة وأسلوبها، يظن السامع أنها قد تكون صحيحة، ولا تكون تكملة صحيحة لهذا المثل. أعد JSON فقط بالشكل: {"wrong":["","",""]}` }
+      ai: (L, q, a) => `مثل أو قول عربي مشهور أوله: «${q}» وتكملته الصحيحة: «${a}».\nاكتب ثلاث تكملات خاطئة مقنعة بطول التكملة الصحيحة وأسلوبها، يظن السامع أنها قد تكون صحيحة، ولا تكون تكملة صحيحة لهذا المثل. أعد JSON فقط بالشكل: {"wrong":["","",""]}` },
+    wr: { file: 'kalimat.json', t: T('سباق الكلمات', 'Word race'), cats: true,
+      rule: T('تظهر كلمات مثل أو بيت أو قول مأثور مبعثرة، ويرتّبها قائد كل مجموعة على جواله ثم يرسل. تظهر محاولات المجموعات على الشاشة مباشرة، والمربع الأخضر كلمة في مكانها الصحيح. الأول ١٠٠ نقطة، والثاني ٥٠.', 'The words of a proverb, a verse or a saying appear shuffled; each leader orders them on the phone and sends. Every attempt shows live on the screen; a green square is a word in its place. First 100, second 50.') },
   });
   const HRB = {}, rkOf = () => (D && D.rk) || 'hr';
   const hrUsed = rk => { try { return new Set(JSON.parse(localStorage.getItem(`dw.${rk || rkOf()}.used`) || '[]')); } catch (e) { return new Set(); } };
@@ -1075,18 +1116,21 @@ window.Dawwara = (function () {
       shell(`<div class="dw-set dw-hrset"><p class="dw-sub">${T('مسابقة جاهزة', 'Ready to play')}</p><h2>${esc(RD.t)}</h2>
         <p class="dw-hrrule">${RD.rule}</p>
         <div class="dw-row"><span>${T('عدد المجموعات', 'Groups')}</span><div class="dw-seg" data-n>${[2, 3, 4, 5, 6].map(n => `<button type="button" data-v="${n}" aria-pressed="${c.n === n}">${NUM(n)}</button>`).join('')}</div></div>
-        <div class="dw-hrnames">${Array.from({ length: c.n }, (_, k) => `<label style="--c:${COL[k]}"><i></i><input data-nm="${k}" maxlength="20" dir="auto" value="${esc(c.names[k] || NAMES()[k])}"></label>`).join('')}</div>
+        <div class="dw-hrnames">${Array.from({ length: c.n }, (_, k) => `<label style="--c:${COL[k]}"><i></i><input data-name="${k}" maxlength="20" dir="auto" value="${esc(c.names[k] || NAMES()[k])}"></label>`).join('')}</div>
         <div class="dw-row"><span>${T('وقت السؤال', 'Time per question')}</span><div class="dw-seg" data-t>${[20, 30, 45, 60].map(n => `<button type="button" data-v="${n}" aria-pressed="${c.hrt === n}">${NUM(n)} ${T('ث', 's')}</button>`).join('')}</div></div>
-        <div class="dw-row"><span>${T('وسائل المساعدة لكل مجموعة', 'Help for each group')}<small>${T('احذف إجابتين، وغيّر السؤال، ووقت إضافي: عدد مرات كل منها', 'Remove two, change the question, extra time: uses of each')}</small></span><div class="dw-seg" data-h>${[0, 1, 2, 3].map(n => `<button type="button" data-v="${n}" aria-pressed="${c.hrh === n}">${n ? NUM(n) : T('بلا', 'None')}</button>`).join('')}</div></div>
+        <div class="dw-row"><span>${T('وسائل المساعدة لكل مجموعة', 'Help for each group')}<small>${T('احذف إجابتين، وغيّر السؤال، ووقت إضافي، واسأل الخصم: عدد مرات كل منها', 'Remove two, change the question, extra time, ask a rival: uses of each')}</small></span><div class="dw-seg" data-h>${[0, 1, 2, 3].map(n => `<button type="button" data-v="${n}" aria-pressed="${c.hrh === n}">${n ? NUM(n) : T('بلا', 'None')}</button>`).join('')}</div></div>
+        <details class="dw-wrph"${ROOM.ref ? ' open' : ''}><summary>${T('جوالات قادة المجموعات', 'The leaders’ phones')} <small>${T('اختياري: يختار القائد ويجيب ويستخدم وسائل المساعدة من جواله', 'Optional: the leader picks, answers and uses help from the phone')}</small></summary><div id="dwPh"></div></details>
         <p class="dw-hrleft">${T(`${NUM(left)} سؤالًا لم تُلعب بعد على هذا الجهاز، من ${NUM(all)}.`, `${left} of ${all} questions not yet played on this device.`)}${left < all ? ` <button type="button" class="dw-lnk" data-reset>${T('إعادة الأسئلة كلها', 'Bring all questions back')}</button>` : ''}</p>
         <div class="dw-acts"><button type="button" class="dw-btn" data-main>${T('ابدأ', 'Start')}</button></div></div>`, 'dw-in');
-      const read = () => { el.querySelectorAll('[data-nm]').forEach(i => { c.names[+i.dataset.nm] = i.value.trim(); }); };
+      const read = () => { el.querySelectorAll('[data-name]').forEach(i => { c.names[+i.dataset.name] = i.value.trim(); }); };
+      el.querySelectorAll('[data-name]').forEach(i => i.oninput = () => { read(); leadPaint(); pub(); });
+      const pd = el.querySelector('details.dw-wrph'); pd.ontoggle = () => { if (pd.open) phonesBox(); }; if (pd.open) phonesBox();
       el.querySelectorAll('[data-n] [data-v]').forEach(b => b.onclick = () => { read(); c.n = +b.dataset.v; cfgSet(c); paint(); });
       el.querySelectorAll('[data-t] [data-v]').forEach(b => b.onclick = () => { read(); c.hrt = +b.dataset.v; cfgSet(c); paint(); });
       el.querySelectorAll('[data-h] [data-v]').forEach(b => b.onclick = () => { read(); c.hrh = +b.dataset.v; cfgSet(c); paint(); });
       const rs = el.querySelector('[data-reset]'); if (rs) rs.onclick = () => { if (!confirm(T('تعود كل الأسئلة متاحة، ومنها ما لُعب سابقًا. هل تريد المتابعة؟', 'All questions become available again. Continue?'))) return; hrSave(new Set()); hrSetup(rk); };
       el.querySelector('[data-main]').onclick = () => { read(); cfgSet(c);
-        D.groups = Array.from({ length: c.n }, (_, k) => ({ name: c.names[k] || NAMES()[k], col: COL[k], score: 0, right: 0, steals: 0, chal: 0, chances: '', h: { d: c.hrh, s: c.hrh, t: c.hrh } }));
+        D.groups = Array.from({ length: c.n }, (_, k) => ({ name: c.names[k] || NAMES()[k], col: COL[k], score: 0, right: 0, steals: 0, chal: 0, chances: '', h: { d: c.hrh, s: c.hrh, t: c.hrh, x: c.hrh } }));
         D.hr = { B, used: hrUsed(rk), turn: 0, n: 0, pend: {}, RD }; SND.go(); hrLetters(); };
     };
     paint();
@@ -1099,6 +1143,9 @@ window.Dawwara = (function () {
       <div class="dw-hrg${H.RD.cats ? ' cats' : ''}" style="--n:${Math.min(4, Object.keys(H.B).length)}">${Object.keys(H.B).map(L => { const n = hrLeft(L); return `<button type="button" data-l="${L}"${n ? '' : ' disabled'}><b>${L}</b><small>${NUM(n)}</small></button>`; }).join('')}</div>
       <div class="dw-hrf"><button type="button" class="dw-btn ghost" data-skip>${T('تخطّي الدور', 'Skip turn')}</button><button type="button" class="dw-btn ghost" data-end>${T('إنهاء وإعلان النتيجة', 'End and show the result')}</button></div></div>`, 'dw-in');
     el.querySelectorAll('[data-l]').forEach(b => b.onclick = () => { SND.tick(); hrNumbers(b.dataset.l); });
+    const ks = Object.keys(H.B); D.q = null;
+    D.pickCb = (k, x) => { if (k !== H.turn || !ks[x] || !hrLeft(ks[x])) return; SND.tick(); hrNumbers(ks[x]); };
+    pub({ ph: 'hrl', team: H.turn, i: 'L' + H.n, lk: ks, ls: ks.map(hrLeft), pk: H.RD.pick });
     el.querySelector('[data-skip]').onclick = () => { H.turn = (H.turn + 1) % D.groups.length; hrLetters(); };
     el.querySelector('[data-end]').onclick = () => { if (confirm(T('إنهاء المسابقة وإعلان النتيجة؟', 'End and show the result?'))) final(); };
   }
@@ -1109,6 +1156,8 @@ window.Dawwara = (function () {
       <div class="dw-hrf"><button type="button" class="dw-btn ghost" data-back>${T('حرف آخر', 'Another letter')}</button></div></div>`, 'dw-in');
     el.querySelectorAll('[data-i]').forEach(b => b.onclick = () => { SND.go(); hrAsk(L, +b.dataset.i); });
     el.querySelector('[data-back]').onclick = hrLetters;
+    D.pickCb = (k, x) => { if (k !== H.turn) return; if (x < 0) return hrLetters(); if (H.B[L][x] && !H.used.has(L + ':' + x)) { SND.go(); hrAsk(L, x); } };
+    pub({ ph: 'hrn', team: H.turn, i: 'N' + H.n, L, cats: H.RD.cats ? 1 : 0, u: H.B[L].map((_, i) => H.used.has(L + ':' + i) ? '1' : '0').join('') });
   }
   // wrong answers that look right: from the assistant when it can be reached, else from answers of the same kind under the same letter
   const hrKind = q => [[/عاصمة|المدينة|المحافظة|المنطقة|مدينة|جزيرة|بلدة|قرية/, 'place'], [/الدولة|دولة|البلد/, 'country'], [/النبي|نبي/, 'prophet'], [/الصحابي|صحابي|الصحابية|أم المؤمنين|الخليف|زوج النبي|ابنة النبي|عم النبي/, 'sahabi'], [/الحيوان|الطائر|الحشرة|الزاحف|السمك|حيوان|طائر|حشرة/, 'animal'], [/الفاكهة|الثمرة|النبات|الخضار|الشجرة|الطعام|الحبوب|العشبة|التابل|المشروب|نبات|شجرة|طعام/, 'food'], [/سورة|السورة/, 'sura'], [/الغزوة|المعركة|معركة|غزوة/, 'battle'], [/الشاعر|العالم|القائد|مؤلف|من القائل|الملك|الفيلسوف|المخترع|من هو|الإمام|شاعر|عالم/, 'person'], [/الشهر/, 'month'], [/العضو|الجسم|جسم الإنسان/, 'body'], [/العلم الذي|علم /, 'science'], [/الجهاز|الآلة|الأداة|جهاز|آلة|أداة/, 'tool'], [/المعدن|العنصر|الغاز|المادة|معدن|مادة/, 'matter']].reduce((k, [r, v]) => k || (r.test(q) ? v : ''), '') || 'other';
@@ -1124,10 +1173,14 @@ window.Dawwara = (function () {
     H.pend[key] = Promise.race([ai, new Promise(r => setTimeout(() => r(null), 9000))]).then(w => w || local());
     return H.pend[key];
   }
-  const HELP = () => ({ d: [T('احذف إجابتين', 'Remove two'), IC.x || ''], s: [T('غيّر السؤال', 'Change the question'), ''], t: [T('وقت إضافي', 'Extra time'), ''] });
+  // after a miss the others race on their phones; the first to press is marked for the host to hear
+  const hrStealPh = (st, turn) => { st.who = null; const i = 'S' + D.hr.n;
+    st.onBuzz = k => { if (k === turn || st.who != null) return; st.who = k; SND.tick(); const b = el.querySelector(`[data-st="${k}"]`); if (b) { b.classList.add('first'); b.parentNode.prepend(b); } pub({ ph: 'buzz', i, out: [turn], who: k, say: 1 }); };
+    pub({ ph: 'buzz', i, out: [turn], say: 1 }); };
+  const HLB = () => ({ o: T('اعرض الخيارات', 'Show the options'), d: T('احذف إجابتين', 'Remove two'), s: T('غيّر السؤال', 'Change the question'), t: T('وقت إضافي', 'Extra time'), x: T('اسأل الخصم', 'Ask a rival'), f: T('اكشف الحدث الأول', 'Reveal the first') });
   function hrOrder(L, i) {
     const H = D.hr, g = D.groups[H.turn], set = H.B[L][i], E = set.e, dur = Math.max(45, D.cfg.hrt || 30), st = D.q = { dur, left: dur, locked: false, val: 100, pick: [], fixed: false };
-    H.used.add(L + ':' + i); hrSave(H.used);
+    H.used.add(L + ':' + i); hrSave(H.used); D.pickCb = null;
     const sh = shuf(E.map((_, k) => k)); if (sh.every((v, k) => v === k)) sh.reverse();
     shell(`${board(H.turn)}<div class="dw-q dw-hrq dw-ro" style="--c:${g.col}"><div class="dw-qh"><span class="dw-who"><b dir="auto">${esc(L)}</b> · ${T('السؤال', 'Question')} ${NUM(i + 1)} · <span dir="auto" style="color:${g.col}">${esc(g.name)}</span> · <span id="dwVal">${NUM(100)} ${T('نقطة', 'points')}</span></span>${ring(dur)}</div>
       <h2 class="dw-qt" dir="auto">${esc(set.q || T('رتّبوا الأحداث من الأقدم إلى الأحدث', 'Put the events in order, earliest first'))}</h2><p class="dw-hrhint">${T('اضغطوا الأحداث بالترتيب: الأقدم أولًا', 'Tap them in order, earliest first')}</p>
@@ -1137,41 +1190,56 @@ window.Dawwara = (function () {
       box.innerHTML = sh.map(k => { const p = st.pick.indexOf(k); return `<button type="button" data-e="${k}"${st.locked ? ' disabled' : ''} class="${p >= 0 ? 'on' : ''}${done ? (p === k ? ' ok' : ' no') : ''}"><i>${p >= 0 ? NUM(p + 1) : ''}</i><span dir="auto">${esc(E[k][0])}</span>${done ? `<small>${NUM(k + 1)} · ${esc(E[k][1])}</small>` : ''}</button>`; }).join('');
       box.querySelectorAll('[data-e]').forEach(b => b.onclick = () => { const k = +b.dataset.e, p = st.pick.indexOf(k); if (p >= 0) { if (p === st.pick.length - 1 && !(st.fixed && p === 0)) st.pick.pop(); } else st.pick.push(k); SND.tick(); paint(); foot(); }); };
     const foot = () => { const f = el.querySelector('#dwFoot'); if (st.locked) return; f.innerHTML = `<button type="button" class="dw-btn" data-main${st.pick.length === E.length ? '' : ' disabled'}>${T('تحقّق من الترتيب', 'Check the order')}</button>`; f.querySelector('[data-main]').onclick = check; };
+    const avail = () => st.locked ? [] : [...(!st.fixed ? ['f'] : []), ...['s', 't'].filter(k => g.h[k] > 0)];
+    const hpub = () => { if (!st.locked) pub({ ph: 'hro', team: H.turn, i: 'O' + H.n + ':' + L + ':' + i, ev: sh.map(k => E[k][0]), fx: st.fixed ? sh.indexOf(0) : -1, hl: avail().join('') }); };
+    st.onHelp = (k, c) => { if (k === H.turn && avail().includes(c)) doHelp(c); };
+    st.onWord = (k, x) => { if (k !== H.turn || st.locked) return; const n = E.length, perm = Array.from({ length: n }, (_, p) => Math.floor(x / Math.pow(16, p)) % 16);
+      if (new Set(perm).size !== n || perm.some(t => t >= n)) return; st.pick = perm.map(t => sh[t]); paint(); check(); };
     const helps = () => { const h = el.querySelector('#dwHelp'); if (st.locked) { h.innerHTML = ''; return; }
       h.innerHTML = `${!st.fixed ? `<button type="button" class="dw-hb" data-h="f">${T('اكشف الحدث الأول', 'Reveal the first')} <small>${T('النقاط تصبح', 'worth')} ${NUM(50)}</small></button>` : ''}${g.h.s > 0 ? `<button type="button" class="dw-hb" data-h="s">${T('غيّر السؤال', 'Change the question')} <small>×${NUM(g.h.s)}</small></button>` : ''}${g.h.t > 0 ? `<button type="button" class="dw-hb" data-h="t">${T('وقت إضافي', 'Extra time')} <small>×${NUM(g.h.t)}</small></button>` : ''}`;
-      h.querySelectorAll('[data-h]').forEach(b => b.onclick = () => { const k = b.dataset.h;
+      h.querySelectorAll('[data-h]').forEach(b => b.onclick = () => doHelp(b.dataset.h)); hpub(); };
+    const doHelp = k => {
         if (k === 'f') { st.fixed = true; st.pick = [0].concat(st.pick.filter(x => x !== 0)); val(50); paint(); foot(); }
         if (k === 't') { g.h.t--; st.left = Math.min(st.left + 15, 999); st.dur = Math.max(st.dur, st.left); clock(st, timeUp); flash(T('+١٥ ثانية', '+15 seconds')); }
         if (k === 's') { const free = H.B[L].map((_, j) => j).filter(j => !H.used.has(L + ':' + j)); if (!free.length) return flash(T('لا أسئلة أخرى في هذه الفئة', 'No other questions here')); g.h.s--; clearInterval(tick); return hrOrder(L, free[Math.floor(Math.random() * free.length)]); }
-        helps(); }); };
+        helps(); };
     const next = () => { H.turn = (H.turn + 1) % D.groups.length; H.n++; setTimeout(hrLetters, 900); };
     const check = () => { st.locked = true; clearInterval(tick); helps(); const ok = st.pick.length === E.length && st.pick.every((k, p) => k === p); paint(true);
       const f = el.querySelector('#dwFoot');
-      if (ok) { const p = award(g, st.val); g.right++; SND.ok(); flash(`${g.name}: ${NUM(p)} ${T('نقطة', 'points')}`); f.innerHTML = ''; return next(); }
+      if (ok) { const p = award(g, st.val); g.right++; SND.ok(); flash(`${g.name}: ${NUM(p)} ${T('نقطة', 'points')}`); f.innerHTML = ''; pub({ ph: 'wait', pt: 1, i: 'W' + H.n, won: H.turn }); return next(); }
       SND.no(); const pts = Math.round(st.val / 2), others = D.groups.map((x, k) => k).filter(k => k !== H.turn);
       f.innerHTML = `<p class="dw-hrsteal">${T('الترتيب الصحيح ظاهر بالأرقام. هل رتّبتها مجموعة أخرى قبل غيرها؟', 'The right order is shown. Did another group get it first?')}</p><div class="dw-hrjudge">${others.map(k => `<button type="button" class="dw-btn ghost dw-hrg1" data-st="${k}" style="--c:${D.groups[k].col}" dir="auto">${esc(D.groups[k].name)} <small>${NUM(pts)} ${T('نقطة', 'pts')}</small></button>`).join('')}<button type="button" class="dw-btn ghost" data-none>${T('لم تُصب أي مجموعة', 'Nobody')}</button></div>`;
       f.querySelectorAll('[data-st]').forEach(b => b.onclick = () => { const o = D.groups[+b.dataset.st], p = award(o, pts); o.steals++; SND.ok(); flash(`${o.name}: ${NUM(p)} ${T('نقطة', 'points')}`); next(); });
-      f.querySelector('[data-none]').onclick = next; };
+      f.querySelector('[data-none]').onclick = next; hrStealPh(st, H.turn); };
     const timeUp = () => { if (st.locked) return; SND.no(); st.pick = st.pick.length === E.length ? st.pick : st.pick.concat(E.map((_, k) => k).filter(k => !st.pick.includes(k))); check(); };
     paint(); foot(); helps(); clock(st, timeUp);
   }
   function hrAsk(L, i) {
     if (D.hr.RD.order) return hrOrder(L, i);
-    const H = D.hr, g = D.groups[H.turn], [q, a] = H.B[L][i], dur = D.cfg.hrt || 30, st = D.q = { dur, left: dur, locked: false, val: 100, opts: null, gone: [] };
-    H.used.add(L + ':' + i); hrSave(H.used); const wrongP = hrWrong(L, i);
-    shell(`${board(H.turn)}<div class="dw-q dw-hrq" style="--c:${g.col}"><div class="dw-qh"><span class="dw-who">${H.RD.cats ? `<b dir="auto">${esc(L)}</b>` : `<b class="dw-hrL sm">${L}</b>`} · ${T('السؤال', 'Question')} ${NUM(i + 1)} · <span dir="auto" style="color:${g.col}">${esc(g.name)}</span> · <span id="dwVal">${NUM(100)} ${T('نقطة', 'points')}</span></span>${ring(dur)}</div>
+    const H = D.hr, g = D.groups[H.turn], [q, a] = H.B[L][i], dur = D.cfg.hrt || 30, st = D.q = { dur, left: dur, locked: false, val: 100, opts: null, gone: [], ask: null };
+    H.used.add(L + ':' + i); hrSave(H.used); const wrongP = hrWrong(L, i); D.pickCb = null;
+    shell(`${board(H.turn)}<div class="dw-q dw-hrq" style="--c:${g.col}"><div class="dw-qh"><span class="dw-who">${H.RD.cats ? `<b dir="auto">${esc(L)}</b>` : `<b class="dw-hrL sm">${L}</b>`} · ${T('السؤال', 'Question')} ${NUM(i + 1)} · <span dir="auto" style="color:${g.col}">${esc(g.name)}</span><span id="dwAsk"></span> · <span id="dwVal">${NUM(100)} ${T('نقطة', 'points')}</span></span>${ring(dur)}</div>
       <h2 class="dw-qt" dir="auto">${esc(H.RD.q(L, q))}</h2><p class="dw-hrhint">${H.RD.hint(L)}</p><div id="dwOpts"></div>
       <div class="dw-hrhelp" id="dwHelp"></div><div class="dw-foot" id="dwFoot"><button type="button" class="dw-btn" data-main>${T('أظهر الإجابة', 'Show the answer')}</button></div></div>`, 'dw-ask');
     const val = v => { st.val = v; const e = el.querySelector('#dwVal'); if (e) e.textContent = `${NUM(v)} ${T('نقطة', 'points')}`; };
+    const avail = () => st.locked ? [] : st.ask != null ? (!st.opts ? ['o'] : []) : [...(!st.opts ? ['o'] : []), ...['d', 's', 't'].filter(k => g.h[k] > 0 && (k !== 'd' || (st.opts && !st.gone.length))), ...(g.h.x > 0 && D.groups.length > 1 ? ['x'] : [])];
+    const hpub = () => { if (!st.locked) pub({ ph: 'hra', team: H.turn, ask: st.ask == null ? -1 : st.ask, i: 'A' + H.n + ':' + L + ':' + i, n: st.opts ? st.opts.length : 0, gone: st.gone.length ? st.gone : [-1], hl: avail().join('') }); };
     const helps = () => { const h = el.querySelector('#dwHelp'); if (!h || st.locked) { if (h) h.innerHTML = ''; return; }
-      h.innerHTML = `${!st.opts ? `<button type="button" class="dw-hb" data-h="o">${T('اعرض الخيارات', 'Show the options')} <small>${T('النقاط تصبح', 'worth')} ${NUM(50)}</small></button>` : ''}${Object.entries(HELP()).map(([k, [t]]) => (g.h[k] > 0 && (k !== 'd' || (st.opts && !st.gone.length))) ? `<button type="button" class="dw-hb" data-h="${k}">${t} <small>×${NUM(g.h[k])}</small></button>` : '').join('')}`;
-      h.querySelectorAll('[data-h]').forEach(b => b.onclick = () => help(b.dataset.h)); };
+      h.innerHTML = avail().map(k => `<button type="button" class="dw-hb" data-h="${k}">${HLB()[k]} <small>${k === 'o' ? `${T('النقاط تصبح', 'worth')} ${NUM(50)}` : '×' + NUM(g.h[k])}</small></button>`).join('');
+      h.querySelectorAll('[data-h]').forEach(b => b.onclick = () => help(b.dataset.h)); hpub(); };
+    const rival = t => { if (st.locked || st.ask != null || !(g.h.x > 0) || t === H.turn || !D.groups[t]) return; g.h.x--; st.ask = t; SND.tick();
+      el.querySelector('#dwAsk').innerHTML = ` ← <span dir="auto" style="color:${D.groups[t].col}">${esc(D.groups[t].name)}</span>`;
+      flash(T(`السؤال الآن عند مجموعة ${D.groups[t].name}`, `Now for ${D.groups[t].name}`)); el.querySelector('.dw-hrhint').textContent = T(`إن أصابت فالنقاط لها، وإن أخطأت فهي لمجموعة ${g.name}`, `Right: theirs. Wrong: ${g.name}’s`); helps(); };
+    st.onHelp = (k, c, x) => { if (k !== (c === 'o' && st.ask != null ? st.ask : H.turn) || !avail().includes(c)) return; if (c === 'x') rival(+x); else help(c); };
+    st.onAns = (k, j) => { if (st.locked || !st.opts || k !== (st.ask == null ? H.turn : st.ask) || st.gone.includes(j) || !(j >= 0 && j < st.opts.length)) return; pickOpt(j); };
     const paintOpts = () => { const o = el.querySelector('#dwOpts');
       o.innerHTML = `<div class="dw-opts n4">${st.opts.map((x, j) => `<button type="button" data-j="${j}" style="--o:var(--dwo${j})"${st.gone.includes(j) ? ' disabled class="gone"' : ''}><i>${LET()[j]}</i><span dir="auto">${esc(x)}</span></button>`).join('')}</div>`;
       o.querySelectorAll('[data-j]').forEach(b => b.onclick = () => pickOpt(+b.dataset.j)); };
     const help = async k => {
       if (k === 'o') { const hb = el.querySelector('[data-h="o"]'); if (hb) { hb.disabled = true; hb.innerHTML = T('لحظة…', 'One moment…'); }
-        const w = await wrongP; if (D.q !== st || st.locked) return; st.opts = shuf([a, ...w]); val(50); paintOpts(); helps(); el.querySelector('#dwFoot').innerHTML = `<p class="dw-hrsteal">${T('اضغط إجابة المجموعة', 'Tap the group’s answer')}</p>`; return; }
+        const w = await wrongP; if (D.q !== st || st.locked || st.opts) return; st.opts = shuf([a, ...w]); val(50); paintOpts(); helps(); el.querySelector('#dwFoot').innerHTML = `<p class="dw-hrsteal">${T('اضغط إجابة المجموعة', 'Tap the group’s answer')}</p>`; return; }
+      if (k === 'x') { const h = el.querySelector('#dwHelp'); h.innerHTML = `<span class="dw-hrsteal">${T('على أي مجموعة؟', 'Which group?')}</span>${D.groups.map((o, t) => t === H.turn ? '' : `<button type="button" class="dw-hb" data-ax="${t}" style="border-color:${o.col}" dir="auto">${esc(o.name)}</button>`).join('')}<button type="button" class="dw-hb" data-ax="-1">${T('إلغاء', 'Cancel')}</button>`;
+        h.querySelectorAll('[data-ax]').forEach(b => b.onclick = () => +b.dataset.ax < 0 ? helps() : rival(+b.dataset.ax)); return; }
       if (!(g.h[k] > 0)) return; g.h[k]--; SND.tick();
       if (k === 't') { st.left = Math.min(st.left + 15, 999); st.dur = Math.max(st.dur, st.left); clock(st, () => { SND.no(); timeUp(); }); flash(T('+١٥ ثانية', '+15 seconds')); }
       if (k === 'd') { const wrongs = st.opts.map((x, j) => j).filter(j => st.opts[j] !== a); st.gone = shuf(wrongs).slice(0, 2); paintOpts(); }
@@ -1181,18 +1249,20 @@ window.Dawwara = (function () {
     const steal = (pts, html) => { const f = el.querySelector('#dwFoot'), others = D.groups.map((x, k) => k).filter(k => k !== H.turn);
       f.innerHTML = `${html}<p class="dw-hrsteal">${T('هل أجابت مجموعة أخرى قبل غيرها؟', 'Did another group answer first?')}</p><div class="dw-hrjudge">${others.map(k => `<button type="button" class="dw-btn ghost dw-hrg1" data-st="${k}" style="--c:${D.groups[k].col}" dir="auto">${esc(D.groups[k].name)} <small>${NUM(pts)} ${T('نقطة', 'pts')}</small></button>`).join('')}<button type="button" class="dw-btn ghost" data-none>${T('لم تُصب أي مجموعة', 'Nobody')}</button></div>`;
       f.querySelectorAll('[data-st]').forEach(b => b.onclick = () => { const o = D.groups[+b.dataset.st], p = award(o, pts); o.steals++; SND.ok(); flash(`${o.name}: ${NUM(p)} ${T('نقطة', 'points')}`); next(); });
-      f.querySelector('[data-none]').onclick = next; };
-    const win = () => { const p = award(g, st.val); g.right++; SND.ok(); flash(`${g.name}: ${NUM(p)} ${T('نقطة', 'points')}`); next(); };
+      f.querySelector('[data-none]').onclick = next; hrStealPh(st, H.turn); };
+    const win = () => { const w = st.ask != null ? D.groups[st.ask] : g, p = award(w, st.val); w.right++; SND.ok(); flash(`${w.name}: ${NUM(p)} ${T('نقطة', 'points')}`); pub({ ph: 'wait', pt: 1, i: 'W' + H.n, won: D.groups.indexOf(w) }); next(); };
+    // the rival missed: the points go to the group that asked
+    const miss = () => { SND.no(); const o = D.groups[st.ask], p = award(g, st.val); el.querySelector('#dwFoot').innerHTML = ans; flash(`${o.name} ${T('أخطأت', 'missed')} · ${g.name}: ${NUM(p)} ${T('نقطة', 'points')}`); pub({ ph: 'wait', pt: 1, i: 'W' + H.n, won: H.turn }); H.turn = (H.turn + 1) % D.groups.length; H.n++; setTimeout(hrLetters, 2600); };
     const ans = `<p class="dw-hrans" dir="auto">${esc(H.RD.full(q, a))}</p>`;
     const pickOpt = j => { if (st.locked) return; st.locked = true; clearInterval(tick); helps(); const ok = st.opts[j] === a;
       el.querySelectorAll('[data-j]').forEach(b => { b.disabled = true; if (st.opts[+b.dataset.j] === a) b.classList.add('ok'); }); if (!ok) el.querySelector(`[data-j="${j}"]`).classList.add('no');
-      if (ok) { el.querySelector('#dwFoot').innerHTML = ''; return win(); } SND.no(); steal(Math.round(st.val / 2), ''); };
+      if (ok) { el.querySelector('#dwFoot').innerHTML = ''; return win(); } if (st.ask != null) return miss(); SND.no(); steal(Math.round(st.val / 2), ''); };
     const show = () => { if (st.shown) return; st.shown = true; st.locked = true; clearInterval(tick); helps();
-      if (st.opts) { el.querySelectorAll('[data-j]').forEach(b => { b.disabled = true; if (st.opts[+b.dataset.j] === a) b.classList.add('ok'); }); return steal(Math.round(st.val / 2), ''); }
+      if (st.opts) { el.querySelectorAll('[data-j]').forEach(b => { b.disabled = true; if (st.opts[+b.dataset.j] === a) b.classList.add('ok'); }); return st.ask != null ? miss() : steal(Math.round(st.val / 2), ''); }
       const f = el.querySelector('#dwFoot');
       f.innerHTML = `${ans}<div class="dw-hrjudge"><button type="button" class="dw-btn" data-ok>${T('إجابة صحيحة', 'Right')} <small>${NUM(st.val)} ${T('نقطة', 'pts')}</small></button><button type="button" class="dw-btn ghost" data-no>${T('إجابة خاطئة', 'Wrong')}</button></div>`;
       f.querySelector('[data-ok]').onclick = win;
-      f.querySelector('[data-no]').onclick = () => { SND.no(); steal(Math.round(st.val / 2), ans); };
+      f.querySelector('[data-no]').onclick = () => { if (st.ask != null) return miss(); SND.no(); steal(Math.round(st.val / 2), ans); };
     };
     const timeUp = () => { SND.no(); show(); };
     const next = () => { H.turn = (H.turn + 1) % D.groups.length; H.n++; setTimeout(hrLetters, 900); };
@@ -1201,12 +1271,87 @@ window.Dawwara = (function () {
   }
 
   /* ---------- the game's own page: where the questions come from ---------- */
+  /* ---------- word race: a proverb or a verse in shuffled words; each leader orders them on the phone, and the screen shows every attempt ---------- */
+  async function wrSetup() {
+    const rk = 'wr', RD = READY().wr; let B; try { B = await hrLoad(rk); } catch (e) { alert(T(`تعذّر تحميل «${RD.t}». يُرجى التحقق من الاتصال.`, 'Could not load the sentences.')); return; }
+    const c = cfgGet(), cats = Object.keys(B); c.wrn = c.wrn || 8; c.wrt = c.wrt || 60; if (!Array.isArray(c.wrc) || !c.wrc.some(x => cats.includes(x))) c.wrc = cats.slice();
+    D = { mode: 'wr', rk, title: RD.t, cfg: Object.assign(c, { chn: false, ph: true }), steps: [] };
+    const read = () => { el.querySelectorAll('[data-name]').forEach(i => { c.names[+i.dataset.name] = i.value.trim(); }); };
+    const paint = () => {
+      const used = hrUsed(rk), left = cats.filter(L => c.wrc.includes(L)).reduce((n, L) => n + B[L].filter((_, i) => !used.has(L + ':' + i)).length, 0);
+      shell(`<div class="dw-set dw-hrset"><p class="dw-sub">${T('مسابقة جاهزة على الجوالات', 'A ready game on the phones')}</p><h2>${esc(RD.t)}</h2>
+        <p class="dw-hrrule">${RD.rule}</p>
+        <div class="dw-row"><span>${T('عدد المجموعات', 'Groups')}</span><div class="dw-seg" data-n>${[2, 3, 4, 5, 6].map(n => `<button type="button" data-v="${n}" aria-pressed="${c.n === n}">${NUM(n)}</button>`).join('')}</div></div>
+        <div class="dw-hrnames">${Array.from({ length: c.n }, (_, k) => `<label style="--c:${COL[k]}"><i></i><input data-name="${k}" maxlength="20" dir="auto" value="${esc(c.names[k] || NAMES()[k])}"></label>`).join('')}</div>
+        <div class="dw-row"><span>${T('المحتوى', 'Content')}</span><div class="dw-seg dw-wrcats">${cats.map(L => `<button type="button" data-cat="${esc(L)}" aria-pressed="${c.wrc.includes(L)}">${esc(L)}</button>`).join('')}</div></div>
+        <div class="dw-row"><span>${T('عدد الجمل', 'Sentences')}</span><div class="dw-seg" data-q>${[5, 8, 10, 15].map(n => `<button type="button" data-v="${n}" aria-pressed="${c.wrn === n}">${NUM(n)}</button>`).join('')}</div></div>
+        <div class="dw-row"><span>${T('وقت الجملة', 'Time per sentence')}</span><div class="dw-seg" data-t>${[45, 60, 90].map(n => `<button type="button" data-v="${n}" aria-pressed="${c.wrt === n}">${NUM(n)} ${T('ث', 's')}</button>`).join('')}</div></div>
+        <div class="dw-wrph"><h3>${T('جوالات قادة المجموعات', 'The leaders’ phones')}</h3><div id="dwPh"></div></div>
+        <p class="dw-hrleft">${T(`${NUM(left)} جملة لم تُلعب بعد على هذا الجهاز.`, `${left} sentences not yet played on this device.`)}${left < c.wrn ? ` <button type="button" class="dw-lnk" data-reset>${T('أعد كل الجمل', 'Make all available again')}</button>` : ''}</p>
+        <div class="dw-acts"><button type="button" class="dw-btn" data-main>${T('ابدأ', 'Start')}</button></div></div>`, 'dw-in');
+      el.querySelectorAll('[data-n] [data-v]').forEach(b => b.onclick = () => { read(); c.n = +b.dataset.v; cfgSet(c); paint(); });
+      el.querySelectorAll('[data-q] [data-v]').forEach(b => b.onclick = () => { read(); c.wrn = +b.dataset.v; cfgSet(c); paint(); });
+      el.querySelectorAll('[data-t] [data-v]').forEach(b => b.onclick = () => { read(); c.wrt = +b.dataset.v; cfgSet(c); paint(); });
+      el.querySelectorAll('[data-cat]').forEach(b => b.onclick = () => { read(); const L = b.dataset.cat, on = c.wrc.includes(L); if (on && c.wrc.length === 1) return; c.wrc = on ? c.wrc.filter(x => x !== L) : c.wrc.concat(L); cfgSet(c); paint(); });
+      el.querySelectorAll('[data-name]').forEach(i => i.oninput = () => { read(); leadPaint(); pub(); });
+      const rs = el.querySelector('[data-reset]'); if (rs) rs.onclick = () => { try { localStorage.removeItem('dw.wr.used'); } catch (e) {} paint(); };
+      el.querySelector('[data-main]').onclick = () => { read(); cfgSet(c);
+        const on = Array.from({ length: c.n }, (_, k) => k).filter(k => ROOM.lead[k] != null);
+        if (on.length < 2) return alert(T('يلزم ربط جوالين على الأقل: يمسح كل قائد مجموعة الرمز من جواله.', 'Link at least two phones: each leader scans the code.'));
+        if (on.length < c.n && !confirm(T('بعض المجموعات بلا جوال ولن تشارك في الترتيب. هل تريد البدء؟', 'Some groups have no phone and cannot play. Start anyway?'))) return;
+        const used = hrUsed(rk); let pool = []; c.wrc.forEach(L => B[L].forEach((_, i) => { if (!used.has(L + ':' + i)) pool.push([L, i]); }));
+        if (pool.length < c.wrn) { try { localStorage.removeItem('dw.wr.used'); } catch (e) {} pool = []; c.wrc.forEach(L => B[L].forEach((_, i) => pool.push([L, i]))); }
+        D.groups = Array.from({ length: c.n }, (_, k) => ({ name: c.names[k] || NAMES()[k], col: COL[k], score: 0, right: 0, steals: 0, chal: 0, chances: '' }));
+        D.wr = { B, used: hrUsed(rk), list: shuf(pool).slice(0, c.wrn), i: 0 }; SND.go(); wrQ(); };
+      phonesBox();
+    };
+    paint();
+  }
+  function wrQ() {
+    const W = D.wr, G = D.groups; if (W.i >= W.list.length) return final();
+    const [L, j] = W.list[W.i], [text, by] = W.B[L][j], words = text.split(/\s+/).filter(Boolean), n = words.length;
+    W.used.add(L + ':' + j); hrSave(W.used);
+    const sh = shuf(words.map((_, k) => k)); if (n > 1 && sh.every((v, k) => v === k)) sh.reverse();
+    const dur = D.cfg.wrt || 60, st = D.q = { dur, left: dur, locked: false, att: G.map(() => 0), last: G.map(() => ''), at: G.map(() => 0), won: [] };
+    const last = W.i === W.list.length - 1;
+    shell(`${board(-1)}<div class="dw-q dw-wr"><div class="dw-qh"><span class="dw-who"><b dir="auto">${esc(L)}</b> · ${T('الجملة', 'Sentence')} ${NUM(W.i + 1)} ${T('من', 'of')} ${NUM(W.list.length)}</span>${ring(dur)}</div>
+      <h2 class="dw-qt">${T('رتّبوا الكلمات على جوالاتكم', 'Put the words in order on your phones')}</h2>
+      <div class="dw-wrw" id="dwWrw">${sh.map(k => `<span dir="auto">${esc(words[k])}</span>`).join('')}</div>
+      <p class="dw-say" id="dwRf" aria-live="polite"></p>
+      <div class="dw-wrt" id="dwWrt"></div><div class="dw-foot" id="dwFoot"></div></div>`, 'dw-ask');
+    const rows = () => { el.querySelector('#dwWrt').innerHTML = G.map((g, k) => { const r = st.last[k], p = st.won.indexOf(k);
+      return `<div class="dw-wrrow${p >= 0 ? ' won' : ''}${ROOM.lead[k] == null ? ' off' : ''}" style="--c:${g.col}"><b dir="auto">${esc(g.name)}</b><span class="dw-wrc">${words.map((_, q) => `<i class="${r ? (r[q] === '1' ? 'ok' : 'no') : ''}"></i>`).join('')}</span><small>${ROOM.lead[k] == null ? T('بلا جوال', 'no phone') : p >= 0 ? `${T(p ? 'الثاني' : 'الأول', p ? 'Second' : 'First')} · ${NUM(PLACE[p])} ${T('نقطة', 'points')}` : st.att[k] ? T(`${NUM(st.att[k])} ${st.att[k] === 1 ? 'محاولة' : st.att[k] === 2 ? 'محاولتان' : 'محاولات'}`, `${st.att[k]} tries`) : T('لم يرسل بعد', 'Not yet')}</small></div>`; }).join(''); };
+    const send = () => pub({ ph: 'word', i: W.i, w: sh.map(k => words[k]), r: st.last.map(x => x || '-'), a: st.att, won: st.won.length ? st.won : [-1], done: st.locked ? 1 : 0, ans: st.locked ? text : '', by: st.locked ? by || '' : '' });
+    const say = h => { const f = el.querySelector('#dwRf'); if (f) { f.innerHTML = h; f.classList.remove('on'); void f.offsetWidth; f.classList.add('on'); } };
+    const foot = () => { const f = el.querySelector('#dwFoot');
+      if (!st.locked) { f.innerHTML = `<p class="dw-hint">${T(`الأول ${NUM(PLACE[0])} نقطة، والثاني ${NUM(PLACE[1])}. المربعات الخضراء كلمات في مكانها الصحيح.`, `First ${PLACE[0]}, second ${PLACE[1]}. Green squares are words in the right place.`)}</p><button type="button" class="dw-btn ghost" data-stop>${T('أنهِ الجملة', 'End this sentence')}</button>`; f.querySelector('[data-stop]').onclick = end; return; }
+      f.innerHTML = `<div class="dw-res"><p class="dw-wrans" dir="auto">${esc(text)}${by ? ` <small>${esc(by)}</small>` : ''}</p><button type="button" class="dw-btn" data-main>${last ? T('النتيجة النهائية', 'Final result') : T('الجملة التالية', 'Next sentence')}</button></div>`;
+      f.querySelector('[data-main]').onclick = () => { W.i++; wrQ(); }; };
+    const players = () => G.map((g, k) => k).filter(k => ROOM.lead[k] != null);
+    st.onWord = (k, x) => {
+      if (st.locked || st.won.includes(k) || Date.now() - st.at[k] < 2500) return;
+      const perm = Array.from({ length: n }, (_, p) => Math.floor(x / Math.pow(16, p)) % 16);
+      if (new Set(perm).size !== n || perm.some(t => t >= n)) return;
+      st.at[k] = Date.now(); st.att[k]++;
+      const res = perm.map((t, p) => words[sh[t]] === words[p] ? '1' : '0').join(''); st.last[k] = res;
+      if (!res.includes('0')) { st.won.push(k); const p = award(G[k], PLACE[st.won.length - 1]); G[k].right++; SND.ok();
+        say(`<b style="color:${G[k].col}" dir="auto">${esc(G[k].name)}</b> ${T(st.won.length === 1 ? 'رتّبتها أولًا' : 'رتّبتها ثانيًا', st.won.length === 1 ? 'got it first' : 'got it second')} · ${NUM(p)} ${T('نقطة', 'points')}`);
+        el.querySelector('.dw-board').outerHTML = board(-1);
+        if (st.won.length >= Math.min(PLACE.length, players().length)) return end(); }
+      else SND.tick();
+      rows(); send();
+    };
+    const end = () => { if (st.locked) return; st.locked = true; clearInterval(tick); if (!st.won.length) SND.no();
+      el.querySelector('#dwWrw').classList.add('done'); el.querySelector('#dwWrw').innerHTML = words.map(w => `<span dir="auto">${esc(w)}</span>`).join('');
+      rows(); send(); foot(); };
+    rows(); foot(); send(); clock(st, end); SND.go();
+  }
   function home(root) {
     let mine = []; try { mine = JSON.parse(localStorage.getItem('qz.list') || '[]'); } catch (e) {}
     mine = mine.map(z => ({ z, n: (z.qs || []).filter(usable).length })).filter(o => o.n >= 2 || (o.z.ch || []).length);
     const lib = (window.MDLib || []).map(z => ({ z, n: (z.qs || []).filter(usable).length })).filter(o => o.n >= 4);
     const item = (o, k, src) => `<button type="button" class="dw-pick" data-src="${src}" data-k="${k}"><b dir="auto">${esc(o.z.title || T('بلا عنوان', 'Untitled'))}</b><small>${T(`${NUM(o.n)} سؤالًا صالحًا`, `${o.n} usable questions`)}${o.z.who ? ' · ' + esc(o.z.who) : ''}</small></button>`;
-    root.innerHTML = `<div class="dw-start"><div class="dw-ready"><button type="button" class="dw-readyc" id="dwHr"><span class="dw-hrL">${T('ح', 'H')}</span><span><b>${T('حروف', 'Huroof')}</b><small>${T('مسابقة جاهزة للمجموعات: أسئلة في حروف الهجاء الثمانية والعشرين، تختار المجموعة الحرف ثم رقم السؤال.', 'A ready team quiz: questions across the 28 letters; the group picks a letter, then a question number.')}</small></span><em>${T('العب الآن', 'Play now')}</em></button><button type="button" class="dw-readyc" id="dwMt"><span class="dw-hrL">${T('م', 'P')}</span><span><b>${T('أكمل المثل', 'Finish the proverb')}</b><small>${T('أمثال فصيحة وشعبية وحِكم: يظهر أول المثل وتكمله المجموعة.', 'Classical and popular proverbs and sayings: the start appears and the group finishes it.')}</small></span><em>${T('العب الآن', 'Play now')}</em></button><button type="button" class="dw-readyc" id="dwAy"><span class="dw-hrL">${T('أ', 'W')}</span><span><b>${T('أين تقع؟', 'Where is it?')}</b><small>${T('مدن ومحافظات ومعالم في المملكة والعالم: في أي منطقة أو مدينة أو دولة تقع؟', 'Cities, governorates and landmarks at home and abroad: which region, city or country?')}</small></span><em>${T('العب الآن', 'Play now')}</em></button><button type="button" class="dw-readyc" id="dwQa"><span class="dw-hrL">${T('ق', 'Q')}</span><span><b>${T('من القائل؟', 'Who said it?')}</b><small>${T('أبيات مشهورة وأقوال مأثورة ومؤلفو كتب: من القائل أو المؤلف؟', 'Famous verses, sayings and book authors: who said or wrote it?')}</small></span><em>${T('العب الآن', 'Play now')}</em></button><button type="button" class="dw-readyc" id="dwRo"><span class="dw-hrL">${T('ر', 'O')}</span><span><b>${T('رتّب الأحداث', 'Put them in order')}</b><small>${T('أحداث من السيرة والتاريخ الإسلامي وتاريخ المملكة والاختراعات، ترتّبها المجموعة زمنيًا.', 'Events from the Seerah, Islamic and Saudi history and inventions, put in time order.')}</small></span><em>${T('العب الآن', 'Play now')}</em></button></div>
+    root.innerHTML = `<div class="dw-start"><div class="dw-ready"><button type="button" class="dw-readyc" id="dwHr"><span class="dw-hrL">${T('ح', 'H')}</span><span><b>${T('حروف', 'Huroof')}</b><small>${T('مسابقة جاهزة للمجموعات: أسئلة في حروف الهجاء الثمانية والعشرين، تختار المجموعة الحرف ثم رقم السؤال.', 'A ready team quiz: questions across the 28 letters; the group picks a letter, then a question number.')}</small></span><em>${T('العب الآن', 'Play now')}</em></button><button type="button" class="dw-readyc" id="dwMt"><span class="dw-hrL">${T('م', 'P')}</span><span><b>${T('أكمل المثل', 'Finish the proverb')}</b><small>${T('أمثال فصيحة وشعبية وحِكم: يظهر أول المثل وتكمله المجموعة.', 'Classical and popular proverbs and sayings: the start appears and the group finishes it.')}</small></span><em>${T('العب الآن', 'Play now')}</em></button><button type="button" class="dw-readyc" id="dwAy"><span class="dw-hrL">${T('أ', 'W')}</span><span><b>${T('أين تقع؟', 'Where is it?')}</b><small>${T('مدن ومحافظات ومعالم في المملكة والعالم: في أي منطقة أو مدينة أو دولة تقع؟', 'Cities, governorates and landmarks at home and abroad: which region, city or country?')}</small></span><em>${T('العب الآن', 'Play now')}</em></button><button type="button" class="dw-readyc" id="dwQa"><span class="dw-hrL">${T('ق', 'Q')}</span><span><b>${T('من القائل؟', 'Who said it?')}</b><small>${T('أبيات مشهورة وأقوال مأثورة ومؤلفو كتب: من القائل أو المؤلف؟', 'Famous verses, sayings and book authors: who said or wrote it?')}</small></span><em>${T('العب الآن', 'Play now')}</em></button><button type="button" class="dw-readyc" id="dwRo"><span class="dw-hrL">${T('ر', 'O')}</span><span><b>${T('رتّب الأحداث', 'Put them in order')}</b><small>${T('أحداث من السيرة والتاريخ الإسلامي وتاريخ المملكة والاختراعات، ترتّبها المجموعة زمنيًا.', 'Events from the Seerah, Islamic and Saudi history and inventions, put in time order.')}</small></span><em>${T('العب الآن', 'Play now')}</em></button><button type="button" class="dw-readyc dw-readyph" id="dwWr"><span class="dw-hrL">${T('ك', 'W')}</span><span><b>${T('سباق الكلمات', 'Word race')}</b><small>${T('كلمات مثل أو بيت مبعثرة، يرتّبها قادة المجموعات على جوالاتهم، وتظهر محاولاتهم على الشاشة مباشرة.', 'The shuffled words of a proverb or a verse; the leaders order them on their phones, live on the screen.')}</small></span><em>${T('العب الآن', 'Play now')}</em></button></div>
       <h2>${T('أو أعدّ مسابقتك', 'Or prepare your own quiz')}</h2>
       <div class="dw-tabs" role="tablist"><button type="button" role="tab" data-tab="ready" aria-selected="true">${T('مسابقة جاهزة', 'A ready quiz')}</button><button type="button" role="tab" data-tab="ai" aria-selected="false">${T('جهّزها لي', 'Prepare it for me')}</button><button type="button" role="tab" data-tab="own" aria-selected="false">${T('اكتبها بنفسك', 'Write it yourself')}</button></div>
       <div data-pane="ai" hidden><p class="dw-pane-h">${T('ثلاثة اختيارات، وتُجهَّز لك فعالية كاملة تراجعها أو تبدأ بها مباشرة.', 'Three choices, and a whole event is prepared; review it or start straight away.')}</p>${aiBox()}</div>
@@ -1225,6 +1370,7 @@ window.Dawwara = (function () {
     root.querySelector('#dwAy').onclick = () => hrSetup('ay');
     root.querySelector('#dwQa').onclick = () => hrSetup('qa');
     root.querySelector('#dwRo').onclick = () => hrSetup('ro');
+    root.querySelector('#dwWr').onclick = wrSetup;
     root.querySelectorAll('[data-ed]').forEach(b => b.onclick = () => editor(root, mine[+b.dataset.ed].z, () => home(root)));
     root.querySelectorAll('[data-tab]').forEach(b => b.onclick = () => { root.querySelectorAll('[data-tab]').forEach(x => x.setAttribute('aria-selected', x === b)); root.querySelectorAll('[data-pane]').forEach(p => { p.hidden = p.dataset.pane !== b.dataset.tab; }); });
     aiBind(root);
