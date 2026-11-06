@@ -165,7 +165,7 @@
     if (!d) return false;
     const hm = t => { const x = new Date(t); return String(x.getHours()).padStart(2, '0') + ':' + String(x.getMinutes()).padStart(2, '0'); };
     M = blank();
-    Object.assign(M, { committee: d.t || '', mode: 'remote', stage: 'after', from: d.from ? hm(d.from) : '', to: d.to ? hm(d.to) : '', prev: { on: false, note: '' } });
+    Object.assign(M, { committee: (d.t || '').replace(/^\s*اجتماع\s+/, ''), mode: 'remote', stage: 'after', from: d.from ? hm(d.from) : '', to: d.to ? hm(d.to) : '', prev: { on: false, note: '' } });
     M.members = (d.att || []).map(n => ({ id: uid(), n, r: 'عضو', st: 'r' }));
     for (let i = M.members.length; i < (d.need || 0); i++) M.members.push({ id: uid(), n: '', r: 'عضو', st: 'a' });
     if (!M.members.length) M.members = blank().members;
