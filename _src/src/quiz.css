@@ -239,3 +239,13 @@
 .qz-imp del{color:#9a3b22;opacity:.75;font-size:.875rem}.qz-imp i{font-style:normal}
 .qz-iop{list-style:none;margin:4px 0 0;padding:0;display:grid;gap:3px;font-size:.875rem}.qz-iop li{border:0;padding:0}.qz-iop li.ok i{color:#2f7d5b;font-weight:700}
 .qz-in{font-style:normal;font-size:.75rem;color:var(--muted)}
+
+/* lesson files in the AI pane */
+.qz-lsf{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;margin:-4px 0 10px}.qz-lsf small{color:var(--muted);font-size:.8125rem;line-height:1.6;flex:1 1 220px}
+.qz-lsup{cursor:pointer}.qz-lsup input{position:absolute;opacity:0;width:1px;height:1px}
+.qz-lsup span{display:inline-flex;align-items:center;border:1px dashed #23336F;color:#23336F;border-radius:999px;padding:7px 16px;font-weight:700;font-size:.9375rem}
+.qz-lsup input:focus-visible+span{outline:2px solid #23336F;outline-offset:2px}
+.qz-lsl{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:0 0 10px}.qz-lsl:empty{display:none}.qz-lsl small{flex-basis:100%;color:var(--muted);font-size:.8125rem}
+.qz-lsi{display:inline-flex;align-items:center;gap:4px;background:#eef1f8;color:#14204a;border-radius:999px;padding:3px 6px 3px 12px;font-size:.875rem;max-width:100%}
+.qz-lsi bdi{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:220px}.qz-lsi button{font:inherit;border:0;background:transparent;color:inherit;cursor:pointer;width:26px;height:26px;border-radius:50%}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]) .qz-lsup span{color:#cdd6f6;border-color:#cdd6f6}:root:not([data-theme=light]) .qz-lsi{background:#2a3150;color:#eef}}

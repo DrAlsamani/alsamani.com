@@ -511,3 +511,4 @@ html.dw-phone .site-foot,html.dw-phone .ribbons-foot{display:none}
 .dw-goc b{font-size:1.0625rem}.dw-goc small{color:var(--muted);line-height:1.6;font-size:.875rem}
 .dw-goc.main{background:#e9a54a;border-color:#e9a54a;color:#1d1b3a}.dw-goc.main small{color:#3d3420}
 .dw-goc:hover{border-color:#1d2a5e}.dw-goc:disabled{opacity:.55;cursor:default}.dw-goc:focus-visible{outline:2px solid #1d2a5e;outline-offset:2px}
+.dw-both{margin:-2px 0 4px;color:var(--muted);font-size:.875rem}.dw-both a{color:inherit;font-weight:700}
