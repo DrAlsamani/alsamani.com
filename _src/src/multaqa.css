@@ -341,3 +341,4 @@ body:not(.ml-on) #mlShBar{top:auto;bottom:calc(90px + env(safe-area-inset-bottom
 .ml-f input[type=file]{padding:8px;cursor:pointer}.ml-f input[type=file]::file-selector-button{font:inherit;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:8px 16px;margin-inline-end:10px;cursor:pointer}
 .ml-flag{display:block;color:#A0601A;font-size:.74rem;font-weight:600}
 @media (min-width:1100px){body.ml-wide #ml{max-width:1240px}#hBody.st2{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);align-items:start;gap:16px}#hBody.st2>.sh-card{grid-column:1;grid-row:1 / span 20;position:sticky;top:12px;max-height:calc(100vh - 24px);overflow-y:auto}#hBody.st2>:not(.sh-card){grid-column:2}}
+#mlStage .st-rank>.wait{opacity:.35}#mlStage .st-rank>.in{animation:stIn .7s ease}@keyframes stIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
