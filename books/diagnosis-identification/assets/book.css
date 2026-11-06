@@ -400,3 +400,94 @@ span span.en,b span.en,li div span.en{display:inline!important}
 /* case: evidence that would change the decision */
 .case p.shift,p.shift{margin-top:.8em;padding:.55em .9em;border-inline-start:3px solid var(--accent);background:color-mix(in srgb,var(--accent) 7%,transparent);border-radius:4px;font-size:.95em}
 .case p.shift strong,p.shift strong{color:var(--accent)}
+
+/* ===== مراجعة الخط والتنسيق — نوفمبر ٢٠٢٦ ===== */
+/* هامش القراءة: platform.css كان يلغي هامش book.css فتلتصق النصوص بحافة الشاشة */
+html body{margin:0;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+.bp-bar{margin-inline:-20px}
+h2 .bp-anchor{flex:none}
+h2{overflow-wrap:break-word}
+h2>*{min-width:0}
+
+/* الميل الآلي يشوّه الحرف العربي: يبقى للمراجع اللاتينية فقط */
+html[lang=ar] em,html[lang=ar] i,html[lang=ar] cite,html[lang=ar] .toc li.u a{font-style:normal}
+html[lang=ar] em,html[lang=ar] .bp-ref i,html[lang=ar] .bp-lic i{font-weight:700}
+html[lang=ar] .refs li:not([dir=rtl]) i{font-style:italic}
+.refs li{overflow-wrap:anywhere}
+.refs li[dir=rtl]{direction:rtl;text-align:right;font-family:var(--f-body);font-size:16px;padding-left:0;padding-right:2em}
+.refs li[dir=rtl] bdi{font-family:var(--f-ui);font-size:14px}
+.refs li[dir=rtl] i{font-weight:700}
+
+/* أرقام فهرس الفصل بالخط نفسه المستعمل في الكتاب */
+:where(html[lang=ar]) ol,html[lang=ar] .toc ol{list-style-type:arabic-indic}
+
+/* المصطلحات اللاتينية داخل النص العربي: أهدأ وأقرب إلى حجم الحرف العربي */
+/* :where يبقي الأحجام المحلية داخل الأشكال كما هي */
+:where(html[lang=ar]) .en{font-weight:500;font-size:.92em;letter-spacing:0}
+:where(html[lang=ar]) :is(th,b,strong,dt,h1,h2,h3,h4,h5) .en{font-weight:inherit}
+.bp-lic bdi{white-space:nowrap}
+/* الاستشهاد لا ينقسم بين سطرين فتختلط أقواسه */
+:where(html[lang=ar]) :is(p,li,dd)>.en.nb{white-space:nowrap}
+.bp-el b .en{font-size:1em;font-weight:inherit}
+
+/* النسخة الإنجليزية: لا يُفرّق المصطلح عن النص المحيط به */
+:where(html[lang=en]) .en{font-family:inherit;font-weight:inherit;letter-spacing:0}
+html[lang=en] .en{white-space:normal!important}
+html[lang=en] figure b,html[lang=en] .fig-frame b{overflow-wrap:break-word;hyphens:auto;-webkit-hyphens:auto}
+html[lang=en] .chain .el b{font-size:13.5px}
+html[lang=en] .iso b{font-size:13px}
+html[lang=en] .iso span{font-size:11.5px}
+html[lang=en] .journey b{font-size:12.5px}
+
+/* إطار الحالة الافتتاحية والمسافة بعده */
+.scene{margin-bottom:26px;border-radius:0;border-start-end-radius:12px;border-end-end-radius:12px}
+
+/* زر الأداة بلون الكتاب وخطه */
+html .bp-tool-live a{background:var(--accent);color:var(--paper)!important;font-family:var(--f-ui)}
+
+@media (max-width:640px){
+  /* شريط علوي بسطر واحد بدل سطرين */
+  html .bp-bar .bp-in{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding:8px 20px;gap:6px}
+  .bp-in::-webkit-scrollbar{display:none}
+  .bp-in .bp-book,.bp-in .bp-sp{display:none}
+  .bp-in .bp-btn{flex:none;white-space:nowrap}
+  .bp-in .bp-home{order:-3}
+  .bp-in .bp-btn.solid{order:-2}
+  .bp-in [data-bp=search]{order:-1}
+
+  h2{font-size:25px;gap:10px;margin-top:56px}
+  h3{font-size:21px}
+  .scene{padding:18px 18px 12px}
+  .callout{padding:16px 16px 14px}
+  html .checks{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .checks b{overflow-wrap:anywhere}
+  .fig-frame{padding:14px}
+  .fig-frame,figure{overflow-x:auto}
+  .pager{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .pager>*{min-width:0}
+  .pager b{overflow-wrap:break-word}
+  html[lang=en] .bp-anchor{display:none}
+  .flow .ar small{white-space:normal;text-align:center}
+
+  /* الجداول ذات الأعمدة الثلاثة تُعرض كاملة */
+  table{min-width:0;font-size:14.5px}
+  th,td{padding:9px 11px}
+  html table.defs td:first-child,html table.stk td,html table.stk th{width:auto!important}
+  /* الجداول الأعرض تتحول إلى بطاقات بدل قص الأعمدة */
+  table.stk,table.stk tbody,table.stk tr,table.stk td,table.stk th,table.stk caption{display:block}
+  table.stk thead{display:none}
+  table.stk tr{padding:10px 0;border-bottom:1px solid var(--line)}
+  table.stk tr:last-child{border-bottom:0}
+  table.stk td,table.stk tbody th{border:0;padding:4px 14px}
+  table.stk td:first-child{font-weight:700;font-size:15.5px;color:var(--accent)}
+  table.stk td[data-l]:not(:first-child)::before{content:attr(data-l);display:block;font-size:12px;font-weight:700;color:var(--ink-2)}
+  table.stk td:empty{display:none}
+
+  /* مخططان لا يُقرأ نصهما إذا صُغّرا: يبقيان بحجم مقروء مع التمرير */
+  .fig-frame.dc,.fig-frame.cost,:has(>svg.mwide){overflow-x:auto}
+  svg.mwide{min-width:var(--mw,600px);max-width:none}
+  .fig-frame.dc svg,.fig-frame.cost svg{min-width:600px}
+}
+
+/* أرقام القوائم في النسخة الإنجليزية */
+html[lang=en] .objectives li::before{content:counter(o)}

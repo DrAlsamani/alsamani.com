@@ -57,7 +57,7 @@ html[lang=ar] .refs li:not([dir=rtl]) i{font-style:italic}
 .refs li[dir=rtl] i{font-weight:700}
 
 /* أرقام فهرس الفصل بالخط نفسه المستعمل في الكتاب */
-html[lang=ar] .toc ol{list-style-type:arabic-indic}
+:where(html[lang=ar]) ol,html[lang=ar] .toc ol{list-style-type:arabic-indic}
 
 /* المصطلحات اللاتينية داخل النص العربي: أهدأ وأقرب إلى حجم الحرف العربي */
 /* :where يبقي الأحجام المحلية داخل الأشكال كما هي */
@@ -65,7 +65,7 @@ html[lang=ar] .toc ol{list-style-type:arabic-indic}
 :where(html[lang=ar]) :is(th,b,strong,dt,h1,h2,h3,h4,h5) .en{font-weight:inherit}
 .bp-lic bdi{white-space:nowrap}
 /* الاستشهاد لا ينقسم بين سطرين فتختلط أقواسه */
-:where(html[lang=ar]) :is(p,li,dd)>.en{white-space:nowrap}
+:where(html[lang=ar]) :is(p,li,dd)>.en.nb{white-space:nowrap}
 .bp-el b .en{font-size:1em;font-weight:inherit}
 
 /* النسخة الإنجليزية: لا يُفرّق المصطلح عن النص المحيط به */
@@ -97,12 +97,20 @@ html .bp-tool-live a{background:var(--accent);color:var(--paper)!important;font-
   h3{font-size:21px}
   .scene{padding:18px 18px 12px}
   .callout{padding:16px 16px 14px}
+  html .checks{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .checks b{overflow-wrap:anywhere}
   .fig-frame{padding:14px}
+  .fig-frame,figure{overflow-x:auto}
+  .pager{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .pager>*{min-width:0}
+  .pager b{overflow-wrap:break-word}
+  html[lang=en] .bp-anchor{display:none}
+  .flow .ar small{white-space:normal;text-align:center}
 
   /* الجداول ذات الأعمدة الثلاثة تُعرض كاملة */
   table{min-width:0;font-size:14.5px}
   th,td{padding:9px 11px}
-  html table.defs td:first-child{width:auto}
+  html table.defs td:first-child,html table.stk td,html table.stk th{width:auto!important}
   /* الجداول الأعرض تتحول إلى بطاقات بدل قص الأعمدة */
   table.stk,table.stk tbody,table.stk tr,table.stk td,table.stk th,table.stk caption{display:block}
   table.stk thead{display:none}
@@ -114,6 +122,10 @@ html .bp-tool-live a{background:var(--accent);color:var(--paper)!important;font-
   table.stk td:empty{display:none}
 
   /* مخططان لا يُقرأ نصهما إذا صُغّرا: يبقيان بحجم مقروء مع التمرير */
-  .fig-frame.dc,.fig-frame.cost{overflow-x:auto}
+  .fig-frame.dc,.fig-frame.cost,:has(>svg.mwide){overflow-x:auto}
+  svg.mwide{min-width:var(--mw,600px);max-width:none}
   .fig-frame.dc svg,.fig-frame.cost svg{min-width:600px}
 }
+
+/* أرقام القوائم في النسخة الإنجليزية */
+html[lang=en] .objectives li::before{content:counter(o)}
