@@ -163,6 +163,7 @@ def journey_body():
 <header class="tl-head"><p class="eyebrow">{bi('للطالب الباحث', 'For student researchers')}</p><h1>{bi(j["t_ar"], j["t_en"])}</h1><p class="tl-q">{bi(j["q_ar"], j["q_en"])}</p></header>
 <script>window.JDATA={json.dumps({k: RD[k] for k in ('M','NEEDS','ETH','DES','AG','GL')}, ensure_ascii=False)}</script><script>window.JSG={json.dumps(json.load(open(os.path.join(ROOT, 'data', 'section_guides.json'))), ensure_ascii=False)}</script>
 <div id="jr" class="jr" aria-live="polite"><noscript>{bi('تعمل هذه الأداة مع تفعيل JavaScript.', 'This tool needs JavaScript.')}</noscript></div>
+<script>window.MD_CFG={open(os.path.join(ROOT, 'data', 'maydan.json')).read().strip()};</script><script>{open(os.path.join(ROOT, 'src', 'ownai.js')).read()}</script><script>{open(os.path.join(ROOT, 'src', 'jr_review.js')).read()}</script>
 </section>'''
 
 SIGN = {'slug': 'sign', 't_ar': 'توقيع المحاضر', 't_en': 'Signing the minutes',
