@@ -450,6 +450,10 @@ html.dw-phone .tl-crumb,html.dw-phone .dw-head,html.dw-phone .dw-lead{display:no
 .dw-imgw.done .dw-img{animation:none;transform:none;filter:none;transition:transform .6s,filter .6s}
 @keyframes dwImz{from{transform:scale(4);filter:blur(16px)}60%{filter:blur(4px)}to{transform:scale(1);filter:blur(0)}}
 .dw-imcr{align-self:center;opacity:.55;font-size:.75rem;margin-top:-4px}
+/* mixed evening */
+.dw-mixc{grid-column:1/-1;background:linear-gradient(135deg,#c9822b,#8a4f1c)}.dw-mixc em{background:#fff}
+@media (min-width:641px){.dw-mixc{flex-direction:row;align-items:center}}
+.dw-mixl{display:grid;gap:8px}.dw-mixl .dw-pr.off{opacity:.55}
 </style>
 <div id="dw" class="dw-page"><noscript><span class="ar">تعمل هذه اللعبة مع تفعيل JavaScript.</span><span class="en">This game needs JavaScript.</span></noscript></div>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script>window.MD_CFG={"apiKey": "AIzaSyA50i75DT1Is1a6Yn6snW1_JVObc8S3F0Y", "authDomain": "maydan-705ae.firebaseapp.com", "databaseURL": "https://maydan-705ae-default-rtdb.europe-west1.firebasedatabase.app", "projectId": "maydan-705ae", "appId": "1:342187013133:web:d5c2396f0db413f3c51144"};window.MD_MARK="<svg class=\"md-mark\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><rect x=\"4\" y=\"4\" width=\"40\" height=\"40\" rx=\"12\" fill=\"#23336F\"/><path d=\"M24 9l4.2 6.8 7.8-1.8-1.8 7.8L41 24l-6.8 4.2 1.8 7.8-7.8-1.8L24 39l-4.2-6.8-7.8 1.8 1.8-7.8L7 24l6.8-4.2-1.8-7.8 7.8 1.8z\" fill=\"#C9822B\"/><circle cx=\"24\" cy=\"24\" r=\"6.5\" fill=\"#23336F\"/><circle cx=\"24\" cy=\"24\" r=\"3\" fill=\"#F3E3C7\"/></svg>";</script><script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script><script>/* Maydan library: ready quizzes to start at once or open and edit. Written in the editor's own format. */
@@ -1912,13 +1916,14 @@ window.Dawwara = (function () {
     el.querySelector('[data-main]').onclick = go;
   }
   function final() {
+    if (D.seq) { if (D.si < D.seq.length) return mixNext(); D.seq = null; }
     pub({ ph: 'end' }); D.done = true; const R = ranked(), w = R[0], tie = R[1] && R[1].score === w.score; SND.win();
     shell(`<div class="dw-mid dw-fin"><div class="dw-conf" aria-hidden="true">${Array.from({ length: 36 }, (_, k) => `<i style="--x:${Math.random() * 100}%;--d:${(Math.random() * 1.6).toFixed(2)}s;--c:${COL[k % COL.length]}"></i>`).join('')}</div>
       <p class="dw-sub">${esc(D.title)}</p><h2>${tie ? T('تعادل في القمة!', 'A tie at the top!') : T('الفائز', 'The winner')}</h2><p class="dw-winner" style="--c:${w.col}" dir="auto">${esc(tie ? R.filter(g => g.score === w.score).map(g => g.name).join(T(' و', ' & ')) : w.name)}</p>
       <div class="dw-pod">${R.slice(0, 3).map((g, k) => `<div class="p${k + 1}" style="--c:${g.col}"><span dir="auto">${esc(g.name)}</span><b>${NUM(g.score)}</b><i>${NUM(k + 1)}</i></div>`).join('')}</div>
-      <table class="dw-tab"><tr><th>${T('المجموعة', 'Group')}</th><th>${T('النقاط', 'Points')}</th><th>${T('إجابات صحيحة', 'Right')}</th><th>${T('سرقات', 'Steals')}</th><th>${T('تحديات فازت بها', 'Challenges won')}</th></tr>${R.map(g => `<tr><td dir="auto"><i style="background:${g.col}"></i>${esc(g.name)}</td><td>${NUM(g.score)}</td><td>${NUM(g.right)}</td><td>${NUM(g.steals)}</td><td>${NUM(g.chal || 0)}</td></tr>`).join('')}</table>
+      <table class="dw-tab"><tr><th>${T('المجموعة', 'Group')}</th><th>${T('النقاط', 'Points')}</th><th>${T('إجابات صحيحة', 'Right')}</th>${R.some(g => g.steals) ? `<th>${T('سرقات', 'Steals')}</th>` : ''}${R.some(g => g.chal) ? `<th>${T('تحديات فازت بها', 'Challenges won')}</th>` : ''}</tr>${R.map(g => `<tr><td dir="auto"><i style="background:${g.col}"></i>${esc(g.name)}</td><td>${NUM(g.score)}</td><td>${NUM(g.right)}</td>${R.some(x => x.steals) ? `<td>${NUM(g.steals)}</td>` : ''}${R.some(x => x.chal) ? `<td>${NUM(g.chal || 0)}</td>` : ''}</tr>`).join('')}</table>
       <div class="dw-acts"><button type="button" class="dw-btn" data-main>${T('العب مرة ثانية', 'Play again')}</button><button type="button" class="dw-btn ghost" data-cert>${IC.print}${T('اطبع شهادة الفائز', 'Print the winner’s certificate')}</button></div></div>`, 'dw-in');
-    el.querySelector('[data-main]').onclick = () => { if (['wr', 'qd', 'im'].includes(D.mode)) return wrSetup(D.mode); if (D.mode === 'hr') return hrSetup(D.rk); D.steps = null; setup(); };
+    el.querySelector('[data-main]').onclick = () => { if (D.mode === 'mix') return mixSetup(); if (['wr', 'qd', 'im'].includes(D.mode)) return wrSetup(D.mode); if (D.mode === 'hr') return hrSetup(D.rk); D.steps = null; setup(); };
     el.querySelector('[data-cert]').onclick = () => cert(tie ? R.filter(g => g.score === w.score) : [w]);
   }
 
@@ -2003,16 +2008,16 @@ window.Dawwara = (function () {
   const hrLeft = L => D.hr.B[L].filter((_, i) => !D.hr.used.has(L + ':' + i)).length;
   function hrLetters() {
     const H = D.hr, g = D.groups[H.turn];
-    if (!Object.keys(H.B).some(L => hrLeft(L))) return final();
+    if (!Object.keys(H.B).some(L => hrLeft(L)) || (H.lim && H.n >= H.lim)) return final();
     shell(`${board(H.turn)}<div class="dw-mid dw-hr2" style="--c:${g.col}"><h2>${T('دور', 'Turn:')} <span dir="auto">${esc(g.name)}</span></h2><p>${H.RD.pick}</p>
       <div class="dw-hrg${H.RD.cats ? ' cats' : ''}" style="--n:${Math.min(4, Object.keys(H.B).length)}">${Object.keys(H.B).map(L => { const n = hrLeft(L); return `<button type="button" data-l="${L}"${n ? '' : ' disabled'}><b>${L}</b><small>${NUM(n)}</small></button>`; }).join('')}</div>
-      <div class="dw-hrf"><button type="button" class="dw-btn ghost" data-skip>${T('تخطّي الدور', 'Skip turn')}</button><button type="button" class="dw-btn ghost" data-end>${T('إنهاء وإعلان النتيجة', 'End and show the result')}</button></div></div>`, 'dw-in');
+      <div class="dw-hrf"><button type="button" class="dw-btn ghost" data-skip>${T('تخطّي الدور', 'Skip turn')}</button><button type="button" class="dw-btn ghost" data-end>${D.seq ? T('إنهاء الجولة', 'End the round') : T('إنهاء وإعلان النتيجة', 'End and show the result')}</button></div></div>`, 'dw-in');
     el.querySelectorAll('[data-l]').forEach(b => b.onclick = () => { SND.tick(); hrNumbers(b.dataset.l); });
     const ks = Object.keys(H.B); D.q = null;
     D.pickCb = (k, x) => { if (k !== H.turn || !ks[x] || !hrLeft(ks[x])) return; SND.tick(); hrNumbers(ks[x]); };
     pub({ ph: 'hrl', team: H.turn, i: 'L' + H.n, lk: ks, ls: ks.map(hrLeft), pk: H.RD.pick });
     el.querySelector('[data-skip]').onclick = () => { H.turn = (H.turn + 1) % D.groups.length; hrLetters(); };
-    el.querySelector('[data-end]').onclick = () => { if (confirm(T('إنهاء المسابقة وإعلان النتيجة؟', 'End and show the result?'))) final(); };
+    el.querySelector('[data-end]').onclick = () => { if (confirm(D.seq ? T('إنهاء هذه الجولة والانتقال إلى التالية؟', 'End this round and go on?') : T('إنهاء المسابقة وإعلان النتيجة؟', 'End and show the result?'))) final(); };
   }
   function hrNumbers(L) {
     const H = D.hr, g = D.groups[H.turn];
@@ -2219,6 +2224,53 @@ window.Dawwara = (function () {
     rows(); foot(); send(); clock(st, end); SND.go();
   }
 
+  /* ---------- a mixed evening: the groups and phones set once, then several ready games in a row, the scores carried through ---------- */
+  const MIX = () => [['im', 5, T('صور', 'pictures')], ['hr', 6, T('أسئلة', 'questions')], ['qd', 5, T('أسئلة', 'questions')], ['mt', 4, T('أمثال', 'proverbs')], ['ay', 0, T('أسئلة', 'questions')], ['qa', 0, T('أسئلة', 'questions')], ['ro', 0, T('مجموعات', 'sets')], ['wr', 4, T('جمل', 'sentences')]];
+  function mixSetup() {
+    const c = cfgGet(); c.mix = Object.assign(Object.fromEntries(MIX().map(([k, n]) => [k, n])), c.mix || {}); if (c.hrh == null) c.hrh = 1;
+    D = { mode: 'mix', rk: 'mix', title: T('أمسية منوعة', 'A mixed evening'), cfg: Object.assign(c, { chn: false, ph: true }), steps: [] };
+    const read = () => { el.querySelectorAll('[data-name]').forEach(i => { c.names[+i.dataset.name] = i.value.trim(); }); };
+    const paint = () => {
+      const tot = MIX().reduce((s, [k]) => s + (c.mix[k] || 0), 0);
+      shell(`<div class="dw-set dw-hrset"><p class="dw-sub">${T('مسابقة جاهزة', 'Ready to play')}</p><h2>${T('أمسية منوعة', 'A mixed evening')}</h2>
+        <p class="dw-hrrule">${T('عدة مسابقات جاهزة متتالية بالمجموعات نفسها، وتُجمع النقاط إلى النهاية. يحدد المدير المسابقات وعدد أسئلة كل منها.', 'Several ready games in a row with the same groups; the points add up to the end. The host chooses the games and how many questions each.')}</p>
+        <div class="dw-row"><span>${T('عدد المجموعات', 'Groups')}</span><div class="dw-seg" data-n>${[2, 3, 4, 5, 6].map(n => `<button type="button" data-v="${n}" aria-pressed="${c.n === n}">${NUM(n)}</button>`).join('')}</div></div>
+        <div class="dw-hrnames">${Array.from({ length: c.n }, (_, k) => `<label style="--c:${COL[k]}"><i></i><input data-name="${k}" maxlength="20" dir="auto" value="${esc(c.names[k] || NAMES()[k])}"></label>`).join('')}</div>
+        <div class="dw-mixl">${MIX().map(([k, , u]) => `<div class="dw-pr${c.mix[k] ? '' : ' off'}"><div><b>${esc(READY()[k].t)}</b>${k === 'wr' ? `<small>${T('يلزم جوالان على الأقل', 'Needs two phones or more')}</small>` : ''}</div><div class="dw-step" data-mk="${k}"><button type="button" data-d="-1" aria-label="${T('أقل', 'Fewer')}">−</button><span><b>${c.mix[k] ? NUM(c.mix[k]) : T('بلا', 'None')}</b><small>${c.mix[k] ? u : ''}</small></span><button type="button" data-d="1" aria-label="${T('أكثر', 'More')}">+</button></div></div>`).join('')}</div>
+        <div class="dw-row"><span>${T('وسائل المساعدة لكل مجموعة', 'Help for each group')}</span><div class="dw-seg" data-h>${[0, 1, 2].map(n => `<button type="button" data-v="${n}" aria-pressed="${c.hrh === n}">${n ? NUM(n) : T('بلا', 'None')}</button>`).join('')}</div></div>
+        <details class="dw-wrph"${ROOM.ref ? ' open' : ''}><summary>${T('جوالات قادة المجموعات', 'The leaders’ phones')} <small>${T('يُنصح بها: تُلعب بها «قدّرها» و«سباق الكلمات» والسباقات', 'Recommended: the estimate, the word race and the races use them')}</small></summary><div id="dwPh"></div></details>
+        <p class="dw-hrleft">${T(`${NUM(tot)} سؤالًا في المجموع`, `${tot} questions in all`)}</p>
+        <div class="dw-acts"><button type="button" class="dw-btn" data-main${tot ? '' : ' disabled'}>${T('ابدأ', 'Start')}</button></div></div>`, 'dw-in');
+      el.querySelectorAll('[data-name]').forEach(i => i.oninput = () => { read(); leadPaint(); pub(); });
+      el.querySelectorAll('[data-n] [data-v]').forEach(b => b.onclick = () => { read(); c.n = +b.dataset.v; cfgSet(c); paint(); });
+      el.querySelectorAll('[data-h] [data-v]').forEach(b => b.onclick = () => { read(); c.hrh = +b.dataset.v; cfgSet(c); paint(); });
+      el.querySelectorAll('[data-mk] [data-d]').forEach(b => b.onclick = () => { read(); const k = b.closest('[data-mk]').dataset.mk; c.mix[k] = Math.max(0, Math.min(15, (c.mix[k] || 0) + +b.dataset.d)); cfgSet(c); paint(); });
+      const pd = el.querySelector('details.dw-wrph'); pd.ontoggle = () => { if (pd.open) phonesBox(); }; if (pd.open) phonesBox();
+      el.querySelector('[data-main]').onclick = () => { read(); cfgSet(c);
+        const phones = Object.keys(ROOM.lead).filter(k => +k < c.n).length;
+        let seq = MIX().map(([k]) => ({ rk: k, n: c.mix[k] || 0 })).filter(s => s.n);
+        if (phones < 2 && seq.some(s => s.rk === 'wr')) { if (!confirm(T('«سباق الكلمات» يحتاج جوالين على الأقل، وسيُتخطّى. هل تريد البدء؟', 'The word race needs two phones and will be skipped. Start?'))) return; seq = seq.filter(s => s.rk !== 'wr'); }
+        if (!seq.length) return;
+        D.groups = Array.from({ length: c.n }, (_, k) => ({ name: c.names[k] || NAMES()[k], col: COL[k], score: 0, right: 0, steals: 0, chal: 0, chances: '', h: { d: c.hrh, s: c.hrh, t: c.hrh, x: c.hrh } }));
+        D.seq = seq; D.si = 0; SND.go(); mixNext(); };
+    };
+    paint();
+  }
+  async function mixNext() {
+    const s = D.seq[D.si++]; if (!s) { D.seq = null; return final(); }
+    const RD = READY()[s.rk], no = D.si, all = D.seq.length; let B;
+    try { B = await hrLoad(s.rk); } catch (e) { flash(T('تعذّر تحميل المسابقة التالية', 'Could not load the next game')); return mixNext(); }
+    D.rk = s.rk; clearInterval(tick); D.q = null; D.pickCb = null; pub({ ph: 'round', i: 'M' + no });
+    shell(`${board(-1)}<div class="dw-mid dw-rcard"><p class="dw-sub">${T(`الجولة ${NUM(no)} من ${NUM(all)}`, `Round ${no} of ${all}`)}</p><h2>${esc(RD.t)}</h2><p>${RD.rule}</p>
+      <div class="dw-acts"><button type="button" class="dw-btn" data-main>${T('ابدأ الجولة', 'Start the round')}</button></div></div>`, 'dw-in');
+    el.querySelector('[data-main]').onclick = () => {
+      const used = hrUsed(s.rk); let pool = []; Object.keys(B).forEach(L => B[L].forEach((_, i) => { if (!used.has(L + ':' + i)) pool.push([L, i]); }));
+      const want = s.rk === 'im' ? s.n + 15 : s.n; if (pool.length < want) { hrSave(new Set()); pool = []; Object.keys(B).forEach(L => B[L].forEach((_, i) => pool.push([L, i]))); }
+      SND.go();
+      if (['wr', 'qd', 'im'].includes(s.rk)) { D.cfg.wrn = s.n; D.wr = { B, used: hrUsed(s.rk), list: shuf(pool).slice(0, want), i: 0 }; return s.rk === 'im' ? imStart() : s.rk === 'qd' ? qdQ() : wrQ(); }
+      D.hr = { B, used: hrUsed(s.rk), turn: (D.hr && D.hr.turn) || 0, n: 0, pend: {}, RD, lim: s.n }; D.cfg.hrt = D.cfg.hrt || 30; hrLetters();
+    };
+  }
   /* ---------- guess the picture: flags from flagcdn, landmarks and animals from Wikipedia's lead images; played as speed questions ---------- */
   async function imStart() {
     const W = D.wr, n = D.cfg.wrn, RD = READY().im, key = t => String(t).replace(/_/g, ' ');
@@ -2280,7 +2332,7 @@ window.Dawwara = (function () {
     mine = mine.map(z => ({ z, n: (z.qs || []).filter(usable).length })).filter(o => o.n >= 2 || (o.z.ch || []).length);
     const lib = (window.MDLib || []).map(z => ({ z, n: (z.qs || []).filter(usable).length })).filter(o => o.n >= 4);
     const item = (o, k, src) => `<button type="button" class="dw-pick" data-src="${src}" data-k="${k}"><b dir="auto">${esc(o.z.title || T('بلا عنوان', 'Untitled'))}</b><small>${T(`${NUM(o.n)} سؤالًا صالحًا`, `${o.n} usable questions`)}${o.z.who ? ' · ' + esc(o.z.who) : ''}</small></button>`;
-    root.innerHTML = `<div class="dw-start"><div class="dw-ready"><button type="button" class="dw-readyc" id="dwHr"><span class="dw-hrL">${T('ح', 'H')}</span><span><b>${T('حروف', 'Huroof')}</b><small>${T('مسابقة جاهزة للمجموعات: أسئلة في حروف الهجاء الثمانية والعشرين، تختار المجموعة الحرف ثم رقم السؤال.', 'A ready team quiz: questions across the 28 letters; the group picks a letter, then a question number.')}</small></span><em>${T('العب الآن', 'Play now')}</em></button><button type="button" class="dw-readyc" id="dwMt"><span class="dw-hrL">${T('م', 'P')}</span><span><b>${T('أكمل المثل', 'Finish the proverb')}</b><small>${T('أمثال فصيحة وشعبية وحِكم: يظهر أول المثل وتكمله المجموعة.', 'Classical and popular proverbs and sayings: the start appears and the group finishes it.')}</small></span><em>${T('العب الآن', 'Play now')}</em></button><button type="button" class="dw-readyc" id="dwAy"><span class="dw-hrL">${T('أ', 'W')}</span><span><b>${T('أين تقع؟', 'Where is it?')}</b><small>${T('مدن ومحافظات ومعالم في المملكة والعالم: في أي منطقة أو مدينة أو دولة تقع؟', 'Cities, governorates and landmarks at home and abroad: which region, city or country?')}</small></span><em>${T('العب الآن', 'Play now')}</em></button><button type="button" class="dw-readyc" id="dwQa"><span class="dw-hrL">${T('ق', 'Q')}</span><span><b>${T('من القائل؟', 'Who said it?')}</b><small>${T('أبيات مشهورة وأقوال مأثورة ومؤلفو كتب: من القائل أو المؤلف؟', 'Famous verses, sayings and book authors: who said or wrote it?')}</small></span><em>${T('العب الآن', 'Play now')}</em></button><button type="button" class="dw-readyc" id="dwRo"><span class="dw-hrL">${T('ر', 'O')}</span><span><b>${T('رتّب الأحداث', 'Put them in order')}</b><small>${T('أحداث من السيرة والتاريخ الإسلامي وتاريخ المملكة والاختراعات، ترتّبها المجموعة زمنيًا.', 'Events from the Seerah, Islamic and Saudi history and inventions, put in time order.')}</small></span><em>${T('العب الآن', 'Play now')}</em></button><button type="button" class="dw-readyc" id="dwIm"><span class="dw-hrL">${T('ص', 'P')}</span><span><b>${T('خمّن الصورة', 'Guess the picture')}</b><small>${T('أعلام الدول ومعالم وحيوانات: صورة مقرّبة ومشوشة تتضح شيئًا فشيئًا، والأسرع يفوز.', 'Flags, landmarks and animals: a close, blurred picture that clears bit by bit; the fastest wins.')}</small></span><em>${T('العب الآن', 'Play now')}</em></button><button type="button" class="dw-readyc dw-readyph" id="dwQd"><span class="dw-hrL">${T('ق', 'E')}</span><span><b>${T('قدّرها', 'Estimate it')}</b><small>${T('أسئلة جوابها رقم: يكتب كل قائد تقديره على جواله، والأقرب إلى الجواب يفوز.', 'Questions with a number for an answer: each leader types an estimate; the closest wins.')}</small></span><em>${T('العب الآن', 'Play now')}</em></button><button type="button" class="dw-readyc dw-readyph" id="dwWr"><span class="dw-hrL">${T('ك', 'W')}</span><span><b>${T('سباق الكلمات', 'Word race')}</b><small>${T('كلمات مثل أو بيت مبعثرة، يرتّبها قادة المجموعات على جوالاتهم، وتظهر محاولاتهم على الشاشة مباشرة.', 'The shuffled words of a proverb or a verse; the leaders order them on their phones, live on the screen.')}</small></span><em>${T('العب الآن', 'Play now')}</em></button></div>
+    root.innerHTML = `<div class="dw-start"><div class="dw-ready"><button type="button" class="dw-readyc dw-mixc" id="dwMix"><span class="dw-hrL">${T('م', 'M')}</span><span><b>${T('أمسية منوعة', 'A mixed evening')}</b><small>${T('عدة مسابقات جاهزة متتالية بالمجموعات نفسها، وتُجمع النقاط إلى النهاية: صور، وحروف، وتقدير، وأمثال، وسباق كلمات.', 'Several ready games in a row with the same groups; the points add up: pictures, letters, estimates, proverbs, a word race.')}</small></span><em>${T('جهّز الأمسية', 'Set it up')}</em></button><button type="button" class="dw-readyc" id="dwHr"><span class="dw-hrL">${T('ح', 'H')}</span><span><b>${T('حروف', 'Huroof')}</b><small>${T('مسابقة جاهزة للمجموعات: أسئلة في حروف الهجاء الثمانية والعشرين، تختار المجموعة الحرف ثم رقم السؤال.', 'A ready team quiz: questions across the 28 letters; the group picks a letter, then a question number.')}</small></span><em>${T('العب الآن', 'Play now')}</em></button><button type="button" class="dw-readyc" id="dwMt"><span class="dw-hrL">${T('م', 'P')}</span><span><b>${T('أكمل المثل', 'Finish the proverb')}</b><small>${T('أمثال فصيحة وشعبية وحِكم: يظهر أول المثل وتكمله المجموعة.', 'Classical and popular proverbs and sayings: the start appears and the group finishes it.')}</small></span><em>${T('العب الآن', 'Play now')}</em></button><button type="button" class="dw-readyc" id="dwAy"><span class="dw-hrL">${T('أ', 'W')}</span><span><b>${T('أين تقع؟', 'Where is it?')}</b><small>${T('مدن ومحافظات ومعالم في المملكة والعالم: في أي منطقة أو مدينة أو دولة تقع؟', 'Cities, governorates and landmarks at home and abroad: which region, city or country?')}</small></span><em>${T('العب الآن', 'Play now')}</em></button><button type="button" class="dw-readyc" id="dwQa"><span class="dw-hrL">${T('ق', 'Q')}</span><span><b>${T('من القائل؟', 'Who said it?')}</b><small>${T('أبيات مشهورة وأقوال مأثورة ومؤلفو كتب: من القائل أو المؤلف؟', 'Famous verses, sayings and book authors: who said or wrote it?')}</small></span><em>${T('العب الآن', 'Play now')}</em></button><button type="button" class="dw-readyc" id="dwRo"><span class="dw-hrL">${T('ر', 'O')}</span><span><b>${T('رتّب الأحداث', 'Put them in order')}</b><small>${T('أحداث من السيرة والتاريخ الإسلامي وتاريخ المملكة والاختراعات، ترتّبها المجموعة زمنيًا.', 'Events from the Seerah, Islamic and Saudi history and inventions, put in time order.')}</small></span><em>${T('العب الآن', 'Play now')}</em></button><button type="button" class="dw-readyc" id="dwIm"><span class="dw-hrL">${T('ص', 'P')}</span><span><b>${T('خمّن الصورة', 'Guess the picture')}</b><small>${T('أعلام الدول ومعالم وحيوانات: صورة مقرّبة ومشوشة تتضح شيئًا فشيئًا، والأسرع يفوز.', 'Flags, landmarks and animals: a close, blurred picture that clears bit by bit; the fastest wins.')}</small></span><em>${T('العب الآن', 'Play now')}</em></button><button type="button" class="dw-readyc dw-readyph" id="dwQd"><span class="dw-hrL">${T('ق', 'E')}</span><span><b>${T('قدّرها', 'Estimate it')}</b><small>${T('أسئلة جوابها رقم: يكتب كل قائد تقديره على جواله، والأقرب إلى الجواب يفوز.', 'Questions with a number for an answer: each leader types an estimate; the closest wins.')}</small></span><em>${T('العب الآن', 'Play now')}</em></button><button type="button" class="dw-readyc dw-readyph" id="dwWr"><span class="dw-hrL">${T('ك', 'W')}</span><span><b>${T('سباق الكلمات', 'Word race')}</b><small>${T('كلمات مثل أو بيت مبعثرة، يرتّبها قادة المجموعات على جوالاتهم، وتظهر محاولاتهم على الشاشة مباشرة.', 'The shuffled words of a proverb or a verse; the leaders order them on their phones, live on the screen.')}</small></span><em>${T('العب الآن', 'Play now')}</em></button></div>
       <h2>${T('أو أعدّ مسابقتك', 'Or prepare your own quiz')}</h2>
       <div class="dw-tabs" role="tablist"><button type="button" role="tab" data-tab="ready" aria-selected="true">${T('مسابقة جاهزة', 'A ready quiz')}</button><button type="button" role="tab" data-tab="ai" aria-selected="false">${T('جهّزها لي', 'Prepare it for me')}</button><button type="button" role="tab" data-tab="own" aria-selected="false">${T('اكتبها بنفسك', 'Write it yourself')}</button></div>
       <div data-pane="ai" hidden><p class="dw-pane-h">${T('ثلاثة اختيارات، وتُجهَّز لك فعالية كاملة تراجعها أو تبدأ بها مباشرة.', 'Three choices, and a whole event is prepared; review it or start straight away.')}</p>${aiBox()}</div>
@@ -2295,6 +2347,7 @@ window.Dawwara = (function () {
       <p class="dw-next">${T('بعدها تحدد عدد المجموعات والمدة، وتبدأ.', 'Then you set the groups and the length, and start.')}</p></div>`;
     root.querySelector('#dwOwn').onclick = () => editor(root, null, () => home(root));
     root.querySelector('#dwHr').onclick = () => hrSetup('hr');
+    root.querySelector('#dwMix').onclick = mixSetup;
     root.querySelector('#dwMt').onclick = () => hrSetup('mt');
     root.querySelector('#dwAy').onclick = () => hrSetup('ay');
     root.querySelector('#dwQa').onclick = () => hrSetup('qa');

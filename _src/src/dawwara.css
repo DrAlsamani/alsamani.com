@@ -399,3 +399,7 @@ html.dw-phone .tl-crumb,html.dw-phone .dw-head,html.dw-phone .dw-lead{display:no
 .dw-imgw.done .dw-img{animation:none;transform:none;filter:none;transition:transform .6s,filter .6s}
 @keyframes dwImz{from{transform:scale(4);filter:blur(16px)}60%{filter:blur(4px)}to{transform:scale(1);filter:blur(0)}}
 .dw-imcr{align-self:center;opacity:.55;font-size:.75rem;margin-top:-4px}
+/* mixed evening */
+.dw-mixc{grid-column:1/-1;background:linear-gradient(135deg,#c9822b,#8a4f1c)}.dw-mixc em{background:#fff}
+@media (min-width:641px){.dw-mixc{flex-direction:row;align-items:center}}
+.dw-mixl{display:grid;gap:8px}.dw-mixl .dw-pr.off{opacity:.55}
