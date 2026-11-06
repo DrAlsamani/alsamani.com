@@ -435,3 +435,5 @@ html.dw-phone .tl-crumb,html.dw-phone .dw-head,html.dw-phone .dw-lead{display:no
 .dwp-say [data-txs]{font:inherit;font-weight:800;border:0;border-radius:12px;padding:0 16px;background:var(--c);color:#fff}
 .dwp-rec{font:inherit;font-weight:700;border:2px solid var(--c);background:transparent;color:var(--ink);border-radius:12px;padding:12px}.dwp-rec.on{background:#b0533a;border-color:#b0533a;color:#fff}
 .dwp-tv{margin:0;text-align:center;font-weight:700;color:var(--muted)}
+.dw-remseg{flex-wrap:wrap}.dw-pmh{margin:0 0 8px;font-size:.85rem;line-height:1.7}
+.dwp-tv.lead{background:#fff4e2;color:#1d1b3a;border-radius:12px;padding:10px;font-size:1.1rem}
