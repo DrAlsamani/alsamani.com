@@ -340,3 +340,4 @@ body:not(.ml-on) #mlShBar{top:auto;bottom:calc(90px + env(safe-area-inset-bottom
 .pg-dh{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;margin-top:6px}.pg-dh .pg-d{margin:0}
 .ml-f input[type=file]{padding:8px;cursor:pointer}.ml-f input[type=file]::file-selector-button{font:inherit;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:8px 16px;margin-inline-end:10px;cursor:pointer}
 .ml-flag{display:block;color:#A0601A;font-size:.74rem;font-weight:600}
+@media (min-width:1100px){body.ml-wide #ml{max-width:1240px}#hBody.st2{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);align-items:start;gap:16px}#hBody.st2>.sh-card{grid-column:1;grid-row:1 / span 20;position:sticky;top:12px;max-height:calc(100vh - 24px);overflow-y:auto}#hBody.st2>:not(.sh-card){grid-column:2}}
