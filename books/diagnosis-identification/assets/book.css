@@ -493,3 +493,7 @@ html .bp-tool-live a{background:var(--accent);color:var(--paper)!important;font-
 
 /* أرقام القوائم في النسخة الإنجليزية */
 html[lang=en] .objectives li::before{content:counter(o)}
+
+/* ألوان ثابتة في الوضع الليلي */
+html .form th,html .form td,html .form caption{color:#111a1e}
+html .pin,html .e-act-h span{color:var(--paper)}
