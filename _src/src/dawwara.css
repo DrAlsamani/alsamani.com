@@ -461,7 +461,16 @@ html.dw-phone .tl-crumb,html.dw-phone .dw-head,html.dw-phone .dw-lead{display:no
 .dw-q:has(.dw-imgw.zoom) .dw-opts button{min-height:clamp(48px,7vh,80px);font-size:clamp(16px,1.8vw,26px);padding:10px 14px}
 @media (min-width:900px){.dw-q:has(.dw-imgw.zoom) .dw-opts{grid-template-columns:repeat(4,minmax(0,1fr))}}
 /* the decoy */
-.dw-tags b.f{border-style:dashed}.dw-tags b.f.rv{opacity:.6}.dw-tags b.f.rv::after{content:' ·  تمويه';color:#c9822b}
+.dw-tags b.f{border-style:dashed}.dw-tags b.f.rv{opacity:.6}.dw-tags b.f.rv::after{content:' | تمويه';color:#c9822b}
 .dw-fkr{margin:0 0 6px;color:#e9a54a;font-weight:700}
 .dwp-lean{margin:0;text-align:center;font-weight:700;color:#c9822b}
 .dwp-fake{font:inherit;font-weight:700;border:1.5px dashed #c9822b;background:transparent;color:var(--ink);border-radius:12px;padding:10px;display:grid;gap:2px}.dwp-fake small{font-weight:400;color:var(--muted)}
+
+/* review, 6 Nov: readable on a projector and calmer on phones */
+.dw-board div{font-size:clamp(14px,1.5vw,22px);padding:6px 14px}.dw-board b{font-weight:800}
+.dw-hrq .dw-who span[dir],.dw-hrq .dw-who span[style*="color"]{color:#fff!important;font-weight:800}
+.dw-hrq .dw-who{display:inline-flex;gap:10px;align-items:center;flex-wrap:wrap}
+.dw-hrhint{opacity:1;color:#f3c27e;font-size:clamp(16px,1.8vw,24px);font-weight:700}
+.dw-wrph summary small{color:rgba(255,255,255,.65)}
+html.dw-phone .site-foot,html.dw-phone .ribbons-foot{display:none}
+.dwp-grid.cats{grid-template-columns:repeat(2,1fr)}.dwp-grid.cats button{font-size:1.05rem;padding:14px 8px}

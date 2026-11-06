@@ -323,7 +323,7 @@ def dawwara_body():
     return f'''<section class="first tl-page sn-page-wrap">
 <nav class="tl-crumb" aria-label="breadcrumb"><a href="../index.html">{bi('منصة الألعاب التفاعلية', 'Interactive games')}</a><i class="chev"></i><span>{bi('دوّارة', 'Dawwara')}</span></nav>
 <header class="dw-head">{DW_MARK}<div><h1>{bi('دوّارة', 'Dawwara')}</h1><p>{bi('مسابقة المجموعات على شاشة واحدة', 'The team quiz on one screen')}</p></div></header>
-<p class="dw-lead">{bi('تُعرض المسابقة على شاشة واحدة ويتوزع الحضور في مجموعات، فيجيب قائد كل مجموعة شفهيًا ويسجّل المدير الإجابة، أو يجيب القائد من جواله إن توفر. وتُحتسب النقاط للإجابة الصحيحة والأسرع.', 'The quiz runs on one screen with the room in groups: each leader answers aloud and the host records it, or answers from a phone where available. Points go to the right and fastest answers.')}</p>
+<p class="dw-lead">{bi('تُعرض المسابقة على شاشة واحدة ويتوزع الحضور في مجموعات. يجيب القادة شفهيًا أو من جوالاتهم، ويمكن أن يدخل الجميع بجوالاتهم في القاعة أو عن بُعد.', 'The quiz runs on one screen with the room in groups. Leaders answer aloud or from their phones, and everyone can join by phone, in the room or from afar.')}</p>
 <style>{src('dawwara.css')}</style>
 <div id="dw" class="dw-page"><noscript>{bi("تعمل هذه اللعبة مع تفعيل JavaScript.", "This game needs JavaScript.")}</noscript></div>
 {MD_SCRIPTS()}<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script><script>{src('maydan_lib.js')}</script><script>{src('quiz_parse.js')}</script><script>{src('ownai.js')}</script><script>{src('dawwara.js')}</script>
