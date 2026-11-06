@@ -197,7 +197,7 @@
       const app = getApps().find(a => a.name === 'mdai') || initializeApp(window.MD_CFG, 'mdai');
       try { initializeAppCheck(app, { provider: new ReCaptchaEnterpriseProvider(AI_KEY), isTokenAutoRefreshEnabled: false }); } catch (e) {}
       const g = getAI(app, { backend: new VertexAIBackend('global') });
-      aiMk = m => getGenerativeModel(g, { model: m, generationConfig: { temperature: 0.4 } });
+      aiMk = m => getGenerativeModel(g, { model: m, generationConfig: { temperature: 0.4, maxOutputTokens: 16384, thinkingConfig: { thinkingBudget: 512 } } });
     }
     for (let k = aiModel ? aiModel.k : 0; k < AI_MODELS.length; k++) {
       try { const m = aiModel && aiModel.k === k ? aiModel.m : aiMk(AI_MODELS[k]); const r = await m.generateContent(parts); aiModel = { k, m }; return r.response.text().trim(); }

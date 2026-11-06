@@ -727,6 +727,33 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
   }
   return { attach, detach, policy, state() { return A ? { on: A.on, joined: A.joined, mic: A.mic, can: canTalk(A.uid), n: Object.keys(A.in).length, peers: Object.keys(A.P).map(u => A.P[u].pc.connectionState), pol: A.pol } : null; }, setHost(u) { if (A) { A.hostU = u; apply(); } } };
 })();
+</script><script>/* alsamani.com — the host's own AI assistant writes game content: copy the instructions, paste the reply. No cost to the site. */
+window.OwnAI = (function () {
+  const ar = () => document.documentElement.lang === 'ar', T = (a, e) => ar() ? a : e;
+  function style() {
+    if (document.getElementById('oaCss')) return; const s = document.createElement('style'); s.id = 'oaCss';
+    s.textContent = '.oa{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.5);display:grid;place-items:center;padding:16px;overflow:auto}.oa>div{background:var(--bg,#fff);color:var(--ink,#1d1d1f);width:min(480px,100%);border-radius:16px;padding:20px;box-sizing:border-box}.oa h3{margin:0 0 14px;font-size:1.05rem}.oa ol{margin:0;padding:0;list-style:none}.oa li{margin:0 0 16px}.oa li>b{display:block;margin-bottom:8px;font-weight:600}.oa .oa-r{display:flex;flex-wrap:wrap;gap:8px}.oa .oa-b{font:inherit;min-height:42px;padding:8px 16px;border-radius:21px;border:1px solid #bbb;background:transparent;color:inherit;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center}.oa .oa-p{background:#0071e3;border-color:#0071e3;color:#fff}.oa textarea{width:100%;box-sizing:border-box;min-height:120px;font:inherit;padding:10px;border:1px solid #bbb;border-radius:10px;background:transparent;color:inherit}.oa .oa-e{color:#b3261e;margin:8px 0 0;min-height:1em;font-size:.875rem}@media(prefers-color-scheme:dark){:root:not([data-theme=light]) .oa>div{--bg:#1c1c1e;--ink:#f5f5f7}}';
+    document.head.appendChild(s);
+  }
+  const web = (base, p) => base + (encodeURIComponent(p).length <= 6000 ? '?q=' + encodeURIComponent(p) : '');
+  function ask(prompt) {
+    style();
+    return new Promise((ok, no) => {
+      const d = document.createElement('div'); d.className = 'oa'; d.dir = ar() ? 'rtl' : 'ltr';
+      d.innerHTML = `<div role="dialog" aria-modal="true"><h3>${T('إعداد المحتوى بالذكاء الاصطناعي', 'Prepare the content with AI')}</h3><ol>
+        <li><b>${T('١. انسخ التعليمات والصقها في مساعدك', '1. Copy the instructions into your assistant')}</b><div class="oa-r"><button type="button" class="oa-b oa-p" data-c>${T('نسخ التعليمات', 'Copy the instructions')}</button><a class="oa-b" target="_blank" rel="noopener" data-a href="${web('https://chatgpt.com/', prompt)}">ChatGPT</a><a class="oa-b" target="_blank" rel="noopener" data-a href="${web('https://claude.ai/new', prompt)}">Claude</a></div></li>
+        <li><b>${T('٢. الصق رده كاملًا هنا', '2. Paste its whole reply here')}</b><textarea dir="auto" data-t></textarea><p class="oa-e" data-e aria-live="polite"></p></li></ol>
+        <div class="oa-r"><button type="button" class="oa-b oa-p" data-ok>${T('اعتماد', 'Use this')}</button><button type="button" class="oa-b" data-x>${T('إلغاء', 'Cancel')}</button></div></div>`;
+      (document.fullscreenElement || document.body).appendChild(d);
+      const q = s => d.querySelector(s), copy = async () => { try { await navigator.clipboard.writeText(prompt); q('[data-c]').textContent = T('تم النسخ', 'Copied'); } catch (e) { const t = q('[data-t]'), v = t.value; t.value = prompt; t.select(); try { document.execCommand('copy'); q('[data-c]').textContent = T('تم النسخ', 'Copied'); } catch (x) {} t.value = v; } };
+      q('[data-c]').onclick = copy; d.querySelectorAll('[data-a]').forEach(a => a.addEventListener('click', copy));
+      q('[data-x]').onclick = () => { d.remove(); no(new Error('cancel')); };
+      q('[data-ok]').onclick = () => { const v = q('[data-t]').value.trim(); if (!v) { q('[data-e]').textContent = T('الصق رد المساعد أولًا.', 'Paste the assistant’s reply first.'); return; } d.remove(); ok(v); };
+    });
+  }
+  const msg = e => e && e.message === 'cancel' ? '' : T('تعذّرت قراءة الرد. انسخ رد المساعد كاملًا وحاول مرة أخرى.', 'The reply could not be read. Copy the assistant’s whole reply and try again.');
+  return { ask, msg };
+})();
 </script><script>/* Samar (alsamani.com/play/samar): games for a gathering, on one code — the screen shows the play and each phone
    holds the player's part. Four games: the secret word, who am I, draw and guess, and the letter game.
    The device that opens the session keeps the rules; the phones send their moves (kh/{pin}/mv/{uid}); what each
@@ -890,20 +917,6 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
   }
   function remember(n, pin) { try { const L = sweep(pin).filter(r => r.pin !== pin); L.push({ n, pin, at: Date.now() }); localStorage.setItem('fbRooms', JSON.stringify(L.slice(-40))); } catch (e) {} }
 
-  /* ---------- Gemini through the project's Firebase AI Logic, with App Check (reCAPTCHA Enterprise) ---------- */
-  let gm = null;
-  async function gemini(p) {
-    if (!gm) {
-      const u = n => `https://www.gstatic.com/firebasejs/11.10.0/firebase-${n}.js`;
-      const [{ initializeApp, getApps }, { initializeAppCheck, ReCaptchaEnterpriseProvider }, { getAI, getGenerativeModel, VertexAIBackend }] = await Promise.all([import(u('app')), import(u('app-check')), import(u('ai'))]);
-      const app = getApps().find(a => a.name === 'smai') || initializeApp(window.MD_CFG, 'smai');
-      try { initializeAppCheck(app, { provider: new ReCaptchaEnterpriseProvider('6Le4gQsuAAAAAE3jS1mLgG9B2XT8AucvEecF6Kp4'), isTokenAutoRefreshEnabled: false }); } catch (e) {}
-      const ai = getAI(app, { backend: new VertexAIBackend('global') });
-      gm = ['gemini-3.6-flash', 'gemini-3.8-flash', 'gemini-3-flash-preview', 'gemini-flash-latest'].map(m => getGenerativeModel(ai, { model: m, generationConfig: { temperature: 0.9, thinkingConfig: { thinkingBudget: 512 } } }));
-    }
-    for (const m of gm) { try { return (await m.generateContent(p)).response.text(); } catch (e) { if (!/not.?found|404/i.test(String(e && e.message))) throw e; } }
-    throw new Error('no model');
-  }
 
   /* ---------- usage: anonymous counts (no names), added to the same record Maydan keeps ---------- */
   async function stat(add) {
@@ -1088,22 +1101,22 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
     d.querySelector('[data-x]').onclick = () => d.remove();
     d.querySelector('[data-occgo]').onclick = async e => {
       const btn = e.currentTarget, inp = d.querySelector('[data-occ]'), t = inp.value.trim(); if (!t) { inp.focus(); return; }
-      const was = btn.innerHTML; btn.disabled = true; btn.innerHTML = B('لحظة… يكتب المحتوى', 'One moment… writing');
+      const was = btn.innerHTML; btn.disabled = true; btn.innerHTML = was;
       const ask = isAr() ? `المناسبة: ${t}\nاكتب محتوى لسهرة ألعاب جماعية مرحة ومحترمة عن هذه المناسبة، بلهجة سعودية خفيفة، وبعبارات قصيرة واضحة، تناسب المجتمع السعودي وأجواء الاستراحة والعائلة والأصدقاء، بلا مناسبات أو عادات غربية، وبلا أي إساءة أو سخرية من شخص بعينه. أعد JSON فقط بهذا الشكل:\n{"scene":[10 مواقف يمثّلها شخص واحد، كل موقف جملة قصيرة تبدأ بفعل مثل «تقنع…» أو «تشرح…»],"charge":[8 تهم طريفة بريئة في جملة قصيرة مثل «أكل آخر قطعة من الكيكة وأنكر»],"herd":[8 أسئلة بسيطة جوابها كلمة أو كلمتان ويتوقع الناس جوابًا مشتركًا]}\nبلا أي شرح خارج JSON.`
         : `The occasion: ${t}\nWrite content for a fun, kind party game evening about this occasion, in short clear phrases. Return JSON only:\n{"scene":[10 scenes one person can act, each a short sentence starting with a verb like «Convince…» or «Explain…»],"charge":[8 harmless funny charges, short, like «Ate the last slice of cake and denied it»],"herd":[8 simple questions with a one- or two-word answer most people would share]}\nNo text outside the JSON.`;
       try {
-        const raw = await gemini(ask), j = JSON.parse(raw.slice(raw.indexOf('{'), raw.lastIndexOf('}') + 1)), cl = a => (Array.isArray(a) ? a : []).map(x => String(x).replace(/\*\*/g, '').trim()).filter(x => x && x.length <= 140);
+        const raw = await OwnAI.ask(ask), j = JSON.parse(raw.slice(raw.indexOf('{'), raw.lastIndexOf('}') + 1)), cl = a => (Array.isArray(a) ? a : []).map(x => String(x).replace(/\*\*/g, '').trim()).filter(x => x && x.length <= 140);
         const P = { topic: t, on: true, scene: cl(j.scene), charge: cl(j.charge), herd: cl(j.herd) }; if (!P.scene.length && !P.charge.length && !P.herd.length) throw new Error('empty');
         store.set('pack', P); d.remove(); settings();
-      } catch (er) { console.error(er); btn.innerHTML = B('تعذّر الآن، جرّب بعد قليل', 'Not now; try again shortly'); setTimeout(() => { btn.innerHTML = was; btn.disabled = false; }, 2500); }
+      } catch (er) { btn.disabled = false; btn.innerHTML = was; if (OwnAI.msg(er)) { btn.textContent = OwnAI.msg(er); setTimeout(() => { btn.innerHTML = was; }, 3500); } }
     };
     // the AI fills a list from a topic; the host reads it and edits before saving
     const aiFill = async (btn, sel, ask) => {
       const t = d.querySelector('[data-aitopic]').value.trim(); if (!t) { d.querySelector('[data-aitopic]').focus(); return; }
-      const was = btn.innerHTML; btn.disabled = true; btn.innerHTML = B('لحظة…', 'One moment…');
-      try { const out = (await gemini(ask(t))).split('\n').map(w => w.replace(/^[\s\-*•\d.)]+/, '').replace(/\*\*/g, '').trim()).filter(w => w && w.length <= 120);
+      const was = btn.innerHTML; btn.disabled = true; 
+      try { const out = (await OwnAI.ask(ask(t))).split('\n').map(w => w.replace(/^[\s\-*•\d.)]+/, '').replace(/\*\*/g, '').trim()).filter(w => w && w.length <= 120);
         if (!out.length) throw new Error('empty'); d.querySelector(sel).value = out.join('\n'); }
-      catch (e) { console.error(e); btn.innerHTML = B('تعذّر الآن، جرّب بعد قليل', 'Not now; try again shortly'); setTimeout(() => { btn.innerHTML = was; }, 2500); btn.disabled = false; return; }
+      catch (e) { btn.disabled = false; btn.innerHTML = was; if (OwnAI.msg(e)) { btn.textContent = OwnAI.msg(e); setTimeout(() => { btn.innerHTML = was; }, 3500); } return; }
       btn.innerHTML = was; btn.disabled = false;
     };
     d.querySelector('[data-aiw]').onclick = e => aiFill(e.currentTarget, '[data-w]', t => isAr()

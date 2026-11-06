@@ -300,7 +300,7 @@ def maydan_body():
 <header class="md-head">{MAYDAN_MARK}<div><h1>{bi('ميدان', 'Maydan')}</h1><p>{bi('مسابقات تفاعلية حية', 'Live interactive quizzes')}</p></div></header>
 <style>{src('sign.css')}{src('pdftool.css')}{src('quiz.css')}</style>
 <div id="qz" class="sn qz"><noscript>{bi("تعمل هذه الأداة مع تفعيل JavaScript.", "This tool needs JavaScript.")}</noscript></div>
-<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script><script>{src('maydan_lib.js')}</script><script>{src('quiz_parse.js')}</script><script>{src('quiz.js')}</script>
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script><script>{src('maydan_lib.js')}</script><script>{src('quiz_parse.js')}</script><script>{src('ownai.js')}</script><script>{src('quiz.js')}</script>
 <style>{src('maydan.css')}</style>{MD_SCRIPTS()}<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script><script>{src('maydan_games.js')}</script><script>{src('maydan_extra.js')}</script><script>{src('av.js')}</script><script>{src('maydan_live.js')}</script>
 </section>'''
 
@@ -324,7 +324,7 @@ def dawwara_body():
 <p class="dw-lead">{bi('تُعرض المسابقة على شاشة واحدة ويتوزع الحضور في مجموعات، فيجيب قائد كل مجموعة شفهيًا ويسجّل المدير الإجابة، أو يجيب القائد من جواله إن توفر. وتُحتسب النقاط للإجابة الصحيحة والأسرع.', 'The quiz runs on one screen with the room in groups: each leader answers aloud and the host records it, or answers from a phone where available. Points go to the right and fastest answers.')}</p>
 <style>{src('dawwara.css')}</style>
 <div id="dw" class="dw-page"><noscript>{bi("تعمل هذه اللعبة مع تفعيل JavaScript.", "This game needs JavaScript.")}</noscript></div>
-{MD_SCRIPTS()}<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script><script>{src('maydan_lib.js')}</script><script>{src('quiz_parse.js')}</script><script>{src('dawwara.js')}</script>
+{MD_SCRIPTS()}<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script><script>{src('maydan_lib.js')}</script><script>{src('quiz_parse.js')}</script><script>{src('ownai.js')}</script><script>{src('dawwara.js')}</script>
 </section>'''
 SM_MARK = '<svg class="sm-mark" viewBox="0 0 48 48" aria-hidden="true"><rect x="4" y="4" width="40" height="40" rx="12" fill="#17153a"/><path d="M27 12a12 12 0 1 0 9 20a10 10 0 1 1-9-20z" fill="#f2b84b"/><path d="M33 13l1.2 2.6 2.8.4-2 2 .5 2.8-2.5-1.3-2.5 1.3.5-2.8-2-2 2.8-.4z" fill="#f4eedf"/><circle cx="14" cy="34" r="1.6" fill="#2bb3a3"/><circle cx="20" cy="37" r="1.2" fill="#e0607e"/></svg>'
 def samar_body():
@@ -335,7 +335,7 @@ def samar_body():
 <p class="sm-lead">{bi('ألعاب تفاعلية متنوعة يستضيفها أحد الحاضرين ويديرها، ويشارك الآخرون من جوالاتهم، في المكان نفسه أو عن بُعد.', 'Varied interactive games: one person hosts and runs them, and the others take part from their phones, in the same room or remotely.')}</p>
 <style>{src('samar.css')}</style>
 <div id="sm" class="sm"><noscript>{bi("تعمل هذه اللعبة مع تفعيل JavaScript.", "This game needs JavaScript.")}</noscript></div>
-{MD_SCRIPTS()}<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script><script>{src('av.js')}</script><script>{src('samar.js')}</script>
+{MD_SCRIPTS()}<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script><script>{src('av.js')}</script><script>{src('ownai.js')}</script><script>{src('samar.js')}</script>
 </section>'''
 def khumasiya_body():
     src = lambda f: open(os.path.join(ROOT, 'src', f)).read()
