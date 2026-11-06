@@ -321,3 +321,4 @@ body.mic-q #mlCall,body.mic-q #mlTiles,body.mic-q #hlRoomV{display:none!importan
 #rmTx{margin-top:8px;position:relative;z-index:6}
 .hl-sheet>.rm-chat{margin:6px 16px 14px}
 body.ml-on #mlShPill{bottom:calc(190px + env(safe-area-inset-bottom,0px))}
+.ml-pubimg{display:block;width:100%;max-width:420px;margin:2px auto 6px;border-radius:12px;background:#fff}
