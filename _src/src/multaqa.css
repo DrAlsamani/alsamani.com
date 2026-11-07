@@ -347,3 +347,4 @@ body:not(.ml-on) #mlShBar{top:auto;bottom:calc(90px + env(safe-area-inset-bottom
 #mlStage .ml-spk.nov{aspect-ratio:auto!important;height:auto!important;min-height:0;padding:10px 14px;display:flex;align-items:center;gap:8px}#mlStage .ml-spk.nov i{display:none}#mlStage .ml-spk.nov span{position:static;font-size:1.05rem;background:none!important;padding:0!important;width:auto!important}#mlStage .ml-spk.nov::before{content:'';width:10px;height:10px;border-radius:50%;background:#7FA8D8;flex:none}#mlStage .ml-spk.nov.talk::before{background:#E3A857}
 body.mic-pill:not(.ml-on) main section.first{padding-bottom:150px}
 @media (pointer:coarse){.ml-b.sm{min-height:42px}.ml-lang,.ml-hl{padding:10px 8px}}
+#mlHall::after{content:'';position:absolute;inset:0;pointer-events:none;z-index:1;background:radial-gradient(ellipse 80% 75% at 50% 45%,transparent 62%,rgba(20,14,6,.14) 100%)}#mlHall.hl-lite::after{display:none}
