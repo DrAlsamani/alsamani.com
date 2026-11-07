@@ -363,3 +363,4 @@ body.mic-pill:not(.ml-on) main section.first{padding-bottom:150px}
 @media (max-width:640px){.mp-t{font-size:.8rem}.mp-t th,.mp-t td{padding:6px}.mp-r{grid-template-columns:1fr}}
 @media print{.mp-t{font-size:10pt}.abk-s{break-inside:auto}.mp-t tr{break-inside:avoid}}
 .abk section.abk-s{padding:0!important;min-height:0!important;margin:0!important;border:0}.mp{gap:22px}.mp .abk-s{gap:10px}.mp .abk-s p{margin:0}
+.ai-r{display:grid;gap:6px}.ai-r ul{margin:0;padding-inline-start:20px;display:grid;gap:4px}.ai-r h4{margin:6px 0 0}.ai-n{display:block;margin-top:4px}.ai-box{display:grid;gap:8px}#mtAIo:not(:empty),#pfAIo:not(:empty){border-top:1px solid var(--line,#e5e1d8);padding-top:10px}
