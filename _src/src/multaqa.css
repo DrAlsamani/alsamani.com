@@ -352,3 +352,4 @@ body.mic-pill:not(.ml-on) main section.first{padding-bottom:150px}
 @media (min-width:700px){#mlShS{align-items:center;padding:16px}#mlShS .sh-sheet{border-radius:16px;max-height:calc(100vh - 32px);padding-bottom:18px;box-shadow:0 18px 50px rgba(0,0,0,.3)}}
 #hlRoomV{justify-content:flex-start}body.ml-inroom #mlTiles{top:calc(150px + env(safe-area-inset-top,0px))}
 .rm-chatf{position:fixed;z-index:1160;top:calc(150px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);width:min(520px,calc(100% - 32px));max-height:calc(100% - 270px);overflow:auto;box-shadow:0 14px 40px rgba(0,0,0,.35)}
+.ml-flash{animation:mlFlash 1.8s ease}@keyframes mlFlash{0%,60%{background:color-mix(in srgb,var(--ml-acc,#2A66C8) 14%,transparent)}100%{background:transparent}}
