@@ -344,3 +344,5 @@ body:not(.ml-on) #mlShBar{top:auto;bottom:calc(90px + env(safe-area-inset-bottom
 #mlStage .st-rank>.wait{opacity:.35}#mlStage .st-rank>.in{animation:stIn .7s ease}@keyframes stIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 #ml .ml-stack>#mlAccB.ml-acc2{order:0;border-color:#E3A857}
 .ml-dt1 [data-dt=d]{display:none}
+#mlStage .ml-spk.nov{aspect-ratio:auto!important;height:auto!important;min-height:0;padding:10px 14px;display:flex;align-items:center;gap:8px}#mlStage .ml-spk.nov i{display:none}#mlStage .ml-spk.nov span{position:static;font-size:1.05rem;background:none!important;padding:0!important;width:auto!important}#mlStage .ml-spk.nov::before{content:'';width:10px;height:10px;border-radius:50%;background:#7FA8D8;flex:none}#mlStage .ml-spk.nov.talk::before{background:#E3A857}
+body.mic-pill:not(.ml-on) main section.first{padding-bottom:150px}
