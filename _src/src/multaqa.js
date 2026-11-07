@@ -19,7 +19,7 @@
     up: SV('<path d="M12 16V4M7 9l5-5 5 5M4 20h16"/>'), link: SV('<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>'),
     grid: SV('<rect x="4" y="4" width="7" height="7" rx="1"/><rect x="13" y="4" width="7" height="7" rx="1"/><rect x="4" y="13" width="7" height="7" rx="1"/><rect x="13" y="13" width="7" height="7" rx="1"/>')
   };
-  const COL = ['#2C3E8F', '#B9741F', '#2F7D6B', '#8A3F5E', '#3F6FA3', '#6B5AA6', '#7A7A2E', '#A2482C'];
+  const COL = ['#2C3E8F', '#9A5F14', '#2F7D6B', '#8A3F5E', '#3F6FA3', '#6B5AA6', '#7A7A2E', '#A2482C'];
   const rid = n => { const b = crypto.getRandomValues(new Uint8Array(n)); return [...b].map(x => '23456789abcdefghjkmnpqrstuvwxyz'[x % 31]).join(''); };
   const copy = (t, msg) => { const ok = () => toast(msg || T('تم النسخ', 'Copied')); if (navigator.clipboard) navigator.clipboard.writeText(t).then(ok).catch(() => {}); };
   const script = src => new Promise((ok, no) => { if ($(`script[src="${src}"]`)) return ok(); const s = document.createElement('script'); s.src = src; s.onload = ok; s.onerror = no; document.head.appendChild(s); });
@@ -247,7 +247,7 @@
 
   /* ---------- enter ---------- */
   async function enter(h) {
-    root.innerHTML = `<p class="ml-mut">${T('جارٍ التحميل…', 'Loading…')}</p>`;
+    root.innerHTML = `<div class="ml-card ml-load"><b>${T('جارٍ فتح الملتقى…', 'Opening the forum…')}</b><small class="ml-mut" id="mlLoadS"></small></div>`; { const t1 = setTimeout(() => { const e = $('#mlLoadS'); if (e) e.textContent = T('الاتصال بطيء، ويستمر التحميل.', 'The connection is slow; still loading.'); }, 6000), t2 = setTimeout(() => { const e = $('#mlLoadS'); if (e) e.innerHTML = `${T('ما زال التحميل جاريًا.', 'Still loading.')} <button class="ml-lnk" onclick="location.reload()">${T('إعادة المحاولة', 'Try again')}</button>`; }, 20000); setTimeout(() => { if (!$('#mlLoadS')) { clearTimeout(t1); clearTimeout(t2); } }, 21000); }
     teardown(); await fb(); E.id = h.e;
     let meta; try { meta = (await R('meta').once('value')).val(); } catch (e) { root.innerHTML = `<div class="ml-card"><p>${T('تعذر الاتصال بالملتقى.', 'Could not reach the forum.')}</p></div>`; return; }
     if (!meta) { root.innerHTML = `<div class="ml-card"><p>${T('لا يوجد ملتقى بهذا الرمز.', 'No forum has this code.')}</p><div><a class="ml-b" href="#">${T('رجوع', 'Back')}</a></div></div>`; return; }

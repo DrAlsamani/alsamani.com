@@ -63,7 +63,7 @@
 .ml-b:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .ml-b.main{background:var(--accent);border-color:transparent;color:var(--surface);font-weight:600}
 .ml-b.bad{color:var(--ml-bad)}.ml-b:disabled{opacity:.45;cursor:default}
-.ml-b.sm{min-height:32px;padding:0 10px;font-size:.8rem}
+.ml-b.sm{min-height:38px;padding:0 12px;font-size:.82rem}
 .ml-i{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex:none;display:block}
 .ml-mut{color:var(--muted);font-size:.85rem;margin:0}
 .ml-tabs{display:flex;gap:16px;border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none;flex:none}
@@ -398,6 +398,7 @@ body:not(.ml-on) #mlShBar{top:auto;bottom:calc(90px + env(safe-area-inset-bottom
 .ml-dt1 [data-dt=d]{display:none}
 #mlStage .ml-spk.nov{aspect-ratio:auto!important;height:auto!important;min-height:0;padding:10px 14px;display:flex;align-items:center;gap:8px}#mlStage .ml-spk.nov i{display:none}#mlStage .ml-spk.nov span{position:static;font-size:1.05rem;background:none!important;padding:0!important;width:auto!important}#mlStage .ml-spk.nov::before{content:'';width:10px;height:10px;border-radius:50%;background:#7FA8D8;flex:none}#mlStage .ml-spk.nov.talk::before{background:#E3A857}
 body.mic-pill:not(.ml-on) main section.first{padding-bottom:150px}
+@media (pointer:coarse){.ml-b.sm{min-height:42px}.ml-lang,.ml-hl{padding:10px 8px}}
 </style>
 <div id="ml"><noscript><span class="ar">تعمل هذه الأداة مع تفعيل JavaScript.</span><span class="en">This tool needs JavaScript.</span></noscript></div><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script>window.MD_CFG={"apiKey": "AIzaSyA50i75DT1Is1a6Yn6snW1_JVObc8S3F0Y", "authDomain": "maydan-705ae.firebaseapp.com", "databaseURL": "https://maydan-705ae-default-rtdb.europe-west1.firebasedatabase.app", "projectId": "maydan-705ae", "appId": "1:342187013133:web:d5c2396f0db413f3c51144"};</script>
 <script>/* alsamani.com — live voice and video for Samar and Maydan rooms, for players far apart on their phones.
@@ -710,7 +711,7 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
     up: SV('<path d="M12 16V4M7 9l5-5 5 5M4 20h16"/>'), link: SV('<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>'),
     grid: SV('<rect x="4" y="4" width="7" height="7" rx="1"/><rect x="13" y="4" width="7" height="7" rx="1"/><rect x="4" y="13" width="7" height="7" rx="1"/><rect x="13" y="13" width="7" height="7" rx="1"/>')
   };
-  const COL = ['#2C3E8F', '#B9741F', '#2F7D6B', '#8A3F5E', '#3F6FA3', '#6B5AA6', '#7A7A2E', '#A2482C'];
+  const COL = ['#2C3E8F', '#9A5F14', '#2F7D6B', '#8A3F5E', '#3F6FA3', '#6B5AA6', '#7A7A2E', '#A2482C'];
   const rid = n => { const b = crypto.getRandomValues(new Uint8Array(n)); return [...b].map(x => '23456789abcdefghjkmnpqrstuvwxyz'[x % 31]).join(''); };
   const copy = (t, msg) => { const ok = () => toast(msg || T('تم النسخ', 'Copied')); if (navigator.clipboard) navigator.clipboard.writeText(t).then(ok).catch(() => {}); };
   const script = src => new Promise((ok, no) => { if ($(`script[src="${src}"]`)) return ok(); const s = document.createElement('script'); s.src = src; s.onload = ok; s.onerror = no; document.head.appendChild(s); });
@@ -938,7 +939,7 @@ body:has(.av:not(.av-top):not(.av-pill) .av-bar){padding-bottom:calc(64px + env(
 
   /* ---------- enter ---------- */
   async function enter(h) {
-    root.innerHTML = `<p class="ml-mut">${T('جارٍ التحميل…', 'Loading…')}</p>`;
+    root.innerHTML = `<div class="ml-card ml-load"><b>${T('جارٍ فتح الملتقى…', 'Opening the forum…')}</b><small class="ml-mut" id="mlLoadS"></small></div>`; { const t1 = setTimeout(() => { const e = $('#mlLoadS'); if (e) e.textContent = T('الاتصال بطيء، ويستمر التحميل.', 'The connection is slow; still loading.'); }, 6000), t2 = setTimeout(() => { const e = $('#mlLoadS'); if (e) e.innerHTML = `${T('ما زال التحميل جاريًا.', 'Still loading.')} <button class="ml-lnk" onclick="location.reload()">${T('إعادة المحاولة', 'Try again')}</button>`; }, 20000); setTimeout(() => { if (!$('#mlLoadS')) { clearTimeout(t1); clearTimeout(t2); } }, 21000); }
     teardown(); await fb(); E.id = h.e;
     let meta; try { meta = (await R('meta').once('value')).val(); } catch (e) { root.innerHTML = `<div class="ml-card"><p>${T('تعذر الاتصال بالملتقى.', 'Could not reach the forum.')}</p></div>`; return; }
     if (!meta) { root.innerHTML = `<div class="ml-card"><p>${T('لا يوجد ملتقى بهذا الرمز.', 'No forum has this code.')}</p><div><a class="ml-b" href="#">${T('رجوع', 'Back')}</a></div></div>`; return; }
